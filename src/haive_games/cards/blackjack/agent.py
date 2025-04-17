@@ -7,7 +7,7 @@ from langgraph.graph import END
 
 from haive_core.engine.agent.agent import register_agent
 from haive_games.framework.base import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from haive_games.cards.blackjack.config import BlackjackAgentConfig
 from haive_games.cards.blackjack.state_manager import BlackjackStateManager
 from haive_games.cards.blackjack.models import (

@@ -8,7 +8,7 @@ from haive_games.debate.state import DebateState
 from haive_games.debate.state_manager import DebateStateManager
 from haive_games.debate.models import Statement, Topic, Participant, DebatePhase
 from haive_core.engine.agent.agent import register_agent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 import time
 
 @register_agent(DebateAgentConfig)

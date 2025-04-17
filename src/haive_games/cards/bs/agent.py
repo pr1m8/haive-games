@@ -6,7 +6,7 @@ from langgraph.types import Command
 from langgraph.graph import END
 from haive_core.engine.agent.agent import register_agent
 from haive_games.framework.base import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from haive_games.cards.bs.config import BullshitAgentConfig
 from haive_games.cards.bs.state_manager import BullshitStateManager
 from haive_games.cards.bs.models import (
