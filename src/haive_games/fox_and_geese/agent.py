@@ -9,7 +9,7 @@ from haive_games.fox_and_geese.config import FoxAndGeeseConfig
 from haive_games.fox_and_geese.models import FoxAndGeeseMove,FoxAndGeesePosition
 from haive_games.fox_and_geese.state import FoxAndGeeseState
 from haive_games.fox_and_geese.state_manager import FoxAndGeeseStateManager
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, List, Optional
 from langgraph.graph import Command
 import time

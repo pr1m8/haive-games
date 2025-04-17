@@ -3,7 +3,7 @@ from haive_games.mastermind.models import MastermindGuess, MastermindAnalysis, C
 from haive_games.mastermind.state import MastermindState
 from haive_games.mastermind.state_manager import MastermindStateManager
 from haive_games.framework.base.agent import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, List, Optional
 import time 
 from haive_core.engine.agent.agent import register_agent

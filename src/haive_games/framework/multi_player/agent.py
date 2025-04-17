@@ -22,7 +22,7 @@ from haive_games.framework.multi_player.state import MultiPlayerGameState
 from haive_core.engine.agent.agent import Agent
 from langgraph.graph import START, END
 from langgraph.graph import StateGraph  
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from pydantic import BaseModel
 
 

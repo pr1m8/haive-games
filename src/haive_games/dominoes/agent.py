@@ -7,7 +7,7 @@ from haive_games.dominoes.state import DominoesState
 from haive_games.dominoes.state_manager import DominoesStateManager
 from haive_games.dominoes.config import DominoesAgentConfig
 from haive_core.engine.agent.agent import register_agent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 import time
 import logging
 

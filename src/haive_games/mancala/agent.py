@@ -8,7 +8,7 @@ from haive_games.mancala.config import MancalaConfig
 from haive_games.mancala.models import MancalaMove, MancalaAnalysis
 from haive_games.mancala.state_manager import MancalaStateManager
 from haive_games.framework.base.agent import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, List, Optional
 import time 
 from langgraph.types import Command

@@ -9,7 +9,7 @@ from haive_games.checkers.state import CheckersState
 from haive_games.checkers.state_manager import CheckersStateManager
 from haive_games.checkers.config import CheckersAgentConfig
 from haive_core.engine.agent.agent import register_agent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 import time
 
 @register_agent(CheckersAgentConfig)

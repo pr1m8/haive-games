@@ -8,7 +8,7 @@ from haive_games.nim.config import NimConfig
 from haive_games.nim.state import NimState
 from haive_games.nim.state_manager import NimStateManager
 from haive_games.framework.base.agent import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, Optional
 import time 
 from langgraph.types import Command
