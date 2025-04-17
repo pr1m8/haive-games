@@ -30,7 +30,7 @@ from pydantic import BaseModel
 from haive_core.engine.agent.agent import Agent, AgentConfig, register_agent
 from haive_core.engine.aug_llm import AugLLMConfig, compose_runnable
 from haive_core.graph.NodeFactory import create_node_function
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import StateGraph
 from langgraph.constants import START, END
 
