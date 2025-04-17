@@ -6,7 +6,7 @@ from haive_games.battleship.models import ShipPlacement, MoveCommand, GamePhase,
 from haive_games.battleship.state import BattleshipState
 from haive_games.battleship.state_manager import BattleshipStateManager
 from haive_games.battleship.config import BattleshipAgentConfig
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 import time
 import json
 
