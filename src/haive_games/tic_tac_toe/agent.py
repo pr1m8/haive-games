@@ -10,7 +10,7 @@ from haive_games.tic_tac_toe.state import TicTacToeState
 from haive_games.tic_tac_toe.models import TicTacToeMove
 from haive_games.tic_tac_toe.state_manager import TicTacToeStateManager
 from haive_games.framework.base.agent import GameAgent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, List, Optional, Tuple
 import time 
 from langgraph.types import Command

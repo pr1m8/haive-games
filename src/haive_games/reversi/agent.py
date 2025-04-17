@@ -3,7 +3,7 @@ from haive_games.reversi.state import ReversiState
 from haive_games.reversi.models import ReversiMove, ReversiAnalysis
 from haive_games.reversi.state_manager import ReversiStateManager
 from haive_core.engine.agent.agent import register_agent,Agent
-from haive_core.graph.GraphBuilder import DynamicGraph
+from haive_core.graph.dynamic_graph_builder import DynamicGraph
 from typing import Dict, Any, List, Optional, Tuple
 import time 
 from langgraph.types import Command
