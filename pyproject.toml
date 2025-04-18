@@ -5,7 +5,9 @@ description = "haive-games for Haive framework"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
-
+packages=[
+    {include = "src", from="."}
+]
 [tool.poetry.dependencies]
 haive-core = {path = "../haive-core", develop = true}
 python = ">=3.12,<3.13"
