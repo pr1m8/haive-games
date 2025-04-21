@@ -5,7 +5,7 @@ automating the creation of game-specific agent classes with proper configuration
 and state management.
 
 Example:
-    >>> from haive_agents.agent_games.framework.multi_player.factory import MultiPlayerGameFactory
+    >>> from haive.agents.agent_games.framework.multi_player.factory import MultiPlayerGameFactory
     >>> 
     >>> # Create a new chess agent class
     >>> ChessAgent = MultiPlayerGameFactory.create_game_agent(

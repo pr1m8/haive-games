@@ -19,7 +19,7 @@ Key Components:
     - Engines: LLM configurations and prompts
 
 Example:
-    >>> from haive_agents.agent_games.poker import PokerAgent, PokerAgentConfig
+    >>> from haive.agents.agent_games.poker import PokerAgent, PokerAgentConfig
     >>> 
     >>> # Create a game with 4 players
     >>> config = PokerAgentConfig(

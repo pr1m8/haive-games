@@ -9,7 +9,7 @@ supporting features like:
     - Game flow control
 
 Example:
-    >>> from haive_agents.agent_games.framework.multi_player.config import MultiPlayerGameConfig
+    >>> from haive.agents.agent_games.framework.multi_player.config import MultiPlayerGameConfig
     >>> from haive.core.engine.aug_llm.base import AugLLMConfig
     >>> 
     >>> # Create a game configuration

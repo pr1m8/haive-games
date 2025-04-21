@@ -8,7 +8,7 @@ This module provides the base agent class for multi-player games, supporting:
     - Concurrent or sequential player actions
 
 Example:
-    >>> from haive_agents.agent_games.framework.multi_player.agent import MultiPlayerGameAgent
+    >>> from haive.agents.agent_games.framework.multi_player.agent import MultiPlayerGameAgent
     >>> 
     >>> class ChessAgent(MultiPlayerGameAgent[ChessState]):
     ...     def __init__(self, config: ChessConfig):

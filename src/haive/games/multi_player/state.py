@@ -9,7 +9,7 @@ supporting features like:
     - Error handling
 
 Example:
-    >>> from haive_agents.agent_games.framework.multi_player.state import MultiPlayerGameState
+    >>> from haive.agents.agent_games.framework.multi_player.state import MultiPlayerGameState
     >>> 
     >>> # Create a game state
     >>> state = MultiPlayerGameState(

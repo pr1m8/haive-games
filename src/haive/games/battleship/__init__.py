@@ -46,7 +46,7 @@ Components:
             LLM engine configurations for ship placement, moves, and analysis.
 
 Example:
-    >>> from haive_agents.agent_games.battleship import BattleshipAgent, BattleshipAgentConfig
+    >>> from haive.agents.agent_games.battleship import BattleshipAgent, BattleshipAgentConfig
     >>> agent = BattleshipAgent(BattleshipAgentConfig())
     >>> result = agent.run()
 """

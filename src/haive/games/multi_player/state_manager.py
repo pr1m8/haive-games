@@ -12,7 +12,7 @@ The state manager handles:
 
 Example:
     >>> from typing import List, Dict, Any
-    >>> from haive_agents.agent_games.framework.multi_player.state_manager import MultiPlayerGameStateManager
+    >>> from haive.agents.agent_games.framework.multi_player.state_manager import MultiPlayerGameStateManager
     >>> 
     >>> class MyGameStateManager(MultiPlayerGameStateManager[MyGameState]):
     ...     @classmethod

@@ -6,7 +6,7 @@ is designed to be flexible, extensible, and independent of any multiplayer
 game concepts.
 
 Example:
-    >>> from haive_agents.single_player import SinglePlayerGameAgent
+    >>> from haive.agents.single_player import SinglePlayerGameAgent
     >>> class WordleAgent(SinglePlayerGameAgent):
     ...     def __init__(self, config):
     ...         super().__init__(config)
