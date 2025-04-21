@@ -13,6 +13,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
+haive-agents={path="../packages/haive-agents",develop=true}
 pydantic = "^2.10.6"
 langchain = "^0.3.20"
 langchain-core = "^0.3.44"
