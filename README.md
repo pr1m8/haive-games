@@ -11,7 +11,7 @@ pip install haive-games
 ## Usage
 
 \.\.\.python
-from haive_games import *
+from haive.games import *
 
 # Your code here
 \.\.\.

@@ -1,0 +1,37 @@
+"""Chess game implementation module.
+
+This package provides a complete implementation of the Chess game, including:
+    - Game agent with LLM-powered players
+    - State management with FEN support
+    - Position analysis and evaluation
+    - Move validation and piece movement
+    - Game visualization
+
+Example:
+    >>> from haive.games.chess import ChessAgent, ChessAgentConfig
+    >>> 
+    >>> # Create and configure a Chess agent
+    >>> config = ChessAgentConfig(enable_analysis=True)
+    >>> agent = ChessAgent(config)
+"""
+
+from .agent import ChessAgent
+from .config import ChessAgentConfig
+from .models import (
+    ChessAnalysis,
+    ChessMoveModel,
+    ChessPlayerDecision,
+)
+from .state import ChessState
+from .state_manager import ChessGameStateManager
+
+__all__ = [
+    "ChessAgent",
+    "ChessAgentConfig",
+    "ChessAnalysis",
+    "ChessGameStateManager",
+    "ChessMoveModel",
+    "ChessPlayerDecision",
+    "ChessState",
+]
+

@@ -1,26 +1,25 @@
-"""
-Configuration file for pytest to properly handle imports and logging.
+"""Configuration file for pytest to properly handle imports and logging.
 Save as tests/conftest.py
 """
 
-import os
-import sys
 import logging
-import pytest
-from pathlib import Path
-from typing import Dict, Any, Optional, List, Type, Tuple
+import sys
 import uuid
+from pathlib import Path
+from typing import Any
 
-from pydantic import Field
+import pytest
 from langchain_core.runnables import RunnableConfig
+from pydantic import Field
 
-from haive_core.engine.base import Engine, InvokableEngine, NonInvokableEngine, EngineType
-from haive_core.engine.aug_llm import AugLLMConfig
-from haive_core.engine.retriever import RetrieverConfig, RetrieverType
-from haive_core.engine.vectorstore import VectorStoreConfig, VectorStoreProvider
-from haive_core.engine.embeddings import EmbeddingsEngineConfig
-from haive_core.models.embeddings.base import HuggingFaceEmbeddingConfig
-from haive_core.models.llm.base import AzureLLMConfig, OpenAILLMConfig
+from haive.core.engine.aug_llm.base import AugLLMConfig
+from haive.core.engine.base import Engine, EngineType, InvokableEngine, NonInvokableEngine
+from haive.core.engine.embeddings import EmbeddingsEngineConfig
+from haive.core.engine.retriever import RetrieverConfig, RetrieverType
+from haive.core.engine.vectorstore.vectorstore import VectorStoreConfig, VectorStoreProvider
+from haive.core.models.embeddings.base import HuggingFaceEmbeddingConfig
+from haive.core.models.llm.base import AzureLLMConfig
+
 
 # --------------------------------------------------------------------
 # ✅ Add the project root to sys.path so imports work across project
@@ -84,7 +83,7 @@ class MockEngine(Engine):
     id: str = Field(default_factory=lambda: generate_test_id("mock-engine"))
     name: str = Field(default_factory=lambda: f"mock_engine_{uuid.uuid4().hex[:4]}")
 
-    def create_runnable(self, runnable_config: Optional[RunnableConfig] = None) -> Any:
+    def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
         return lambda x: x # Simple pass-through runnable
 
 class MockInvokableEngine(InvokableEngine):
@@ -93,16 +92,16 @@ class MockInvokableEngine(InvokableEngine):
     id: str = Field(default_factory=lambda: generate_test_id("mock-invokable"))
     name: str = Field(default_factory=lambda: f"mock_invokable_engine_{uuid.uuid4().hex[:4]}")
 
-    def create_runnable(self, runnable_config: Optional[RunnableConfig] = None) -> Any:
+    def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
         return self # Runnable is the engine itself for testing
 
-    def invoke(self, input_data: Any, runnable_config: Optional[RunnableConfig] = None) -> Any:
+    def invoke(self, input_data: Any, runnable_config: RunnableConfig | None = None) -> Any:
         # Return input data plus a marker
         if isinstance(input_data, dict):
             return {**input_data, "invoked_by": self.name}
         return {"result": input_data, "invoked_by": self.name}
 
-    async def ainvoke(self, input_data: Any, runnable_config: Optional[RunnableConfig] = None) -> Any:
+    async def ainvoke(self, input_data: Any, runnable_config: RunnableConfig | None = None) -> Any:
         # Async version of invoke
         return self.invoke(input_data, runnable_config)
 
@@ -112,7 +111,7 @@ class MockNonInvokableEngine(NonInvokableEngine):
     id: str = Field(default_factory=lambda: generate_test_id("mock-non-invokable"))
     name: str = Field(default_factory=lambda: f"mock_non_invokable_engine_{uuid.uuid4().hex[:4]}")
 
-    def create_runnable(self, runnable_config: Optional[RunnableConfig] = None) -> Any:
+    def create_runnable(self, runnable_config: RunnableConfig | None = None) -> Any:
         # Return a simple dictionary indicating creation
         return {"instance_created_by": self.name}
 

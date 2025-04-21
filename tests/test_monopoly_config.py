@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""
-Test script for MonopolyAgentConfig validation
+"""Test script for MonopolyAgentConfig validation
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Add the project root to the path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from haive_games.monopoly.config import MonopolyAgentConfig
-from haive_core.engine.aug_llm import AugLLMConfig
+from haive.games.monopoly.config import MonopolyAgentConfig
+
 
 def main():
     """Test MonopolyAgentConfig instantiation."""
@@ -20,18 +18,18 @@ def main():
         config = MonopolyAgentConfig()
         print("Success! MonopolyAgentConfig created.")
         print(f"Number of engines: {len(config.engines)}")
-        
+
         # Test MonopolyAgent creation
-        from haive_games.monopoly.agent import MonopolyAgent
+        from haive.games.monopoly.agent import MonopolyAgent
         agent = MonopolyAgent(config=config)
         print("Success! MonopolyAgent created.")
-        
+
         return 0
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print(f"Error: {e!s}")
         import traceback
         traceback.print_exc()
         return 1
 
 if __name__ == "__main__":
-    sys.exit(main()) 
+    sys.exit(main())
