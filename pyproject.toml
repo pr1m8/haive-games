@@ -13,15 +13,13 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
-haive-agents={path="../packages/haive-agents",develop=true}
+haive-agents={path='../haive-agents',develop=true}
 pydantic = "^2.10.6"
 langchain = "^0.3.20"
 langchain-core = "^0.3.44"
 langgraph = "^0.3.5"
 
-[tool.poetry.dependencies.haive-core]
-path = "../haive-core"
-develop = true
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
@@ -29,9 +27,7 @@ black = "^25.1.0"
 isort = "^6.0.1"
 mypy = "^1.15.0"
 
-[tool.poetry.group.dev.dependencies.haive-core]
-path = "../haive-core"
-develop = true
+
 
 [build-system]
 requires = [
