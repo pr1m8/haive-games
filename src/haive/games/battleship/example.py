@@ -165,7 +165,7 @@ def main():
     )
 
 
-#if __name__ == "__main__":
-#    main()
-#a = BattleshipAgentConfig().build_agent()
-#a.run({})
+if __name__ == "__main__":
+    main()
+    a = BattleshipAgentConfig().build_agent()
+    a.run({})

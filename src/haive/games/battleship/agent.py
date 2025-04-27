@@ -32,10 +32,13 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
     def setup_workflow(self):
         """Set up the workflow for the Battleship game."""
-        gb = DynamicGraph(components=[self.config.engines], state_schema=self.config.state_schema)
+        
+        gb = DynamicGraph(name="battleship_game",
+            components=[self.config.engines], state_schema=self.config.state_schema)
 
         # Register nodes
         gb.add_node("initialize_game", self.initialize_game)
+        gb.set_entry_point("initialize_game")
         gb.add_node("place_ships_player1", self.place_ships_player1)
         gb.add_node("place_ships_player2", self.place_ships_player2)
         gb.add_node("player1_move", self.player1_move)
