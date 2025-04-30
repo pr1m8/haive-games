@@ -13,7 +13,7 @@ from pydantic import Field
 from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.core.engine.base import Engine, EngineType, InvokableEngine, NonInvokableEngine
 from haive.core.engine.embeddings import EmbeddingsEngineConfig
-from haive.core.engine.retriever import RetrieverConfig, RetrieverType
+from haive.core.engine.retriever import BaseRetrieverConfig, RetrieverType
 from haive.core.engine.vectorstore.vectorstore import VectorStoreConfig, VectorStoreProvider
 from haive.core.models.embeddings.base import HuggingFaceEmbeddingConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -195,9 +195,9 @@ def real_vectorstore_engine(real_embeddings_engine: EmbeddingsEngineConfig) -> V
     )
 
 @pytest.fixture
-def real_retriever_engine(real_vectorstore_engine: VectorStoreConfig) -> RetrieverConfig:
+def real_retriever_engine(real_vectorstore_engine: VectorStoreConfig) -> BaseRetrieverConfig:
     """Provides a real Retriever engine config instance."""
-    return RetrieverConfig(
+    return BaseRetrieverConfig(
         id=generate_test_id("real-retriever"),
         name=f"real_retriever_{uuid.uuid4().hex[:4]}",
         engine_type=EngineType.RETRIEVER,

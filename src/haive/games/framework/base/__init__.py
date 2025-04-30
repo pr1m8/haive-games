@@ -18,12 +18,15 @@ Example:
     >>> from haive.agents.agent_games.framework.base import GameAgent, GameConfig
     >>> from haive.agents.agent_games.framework.base import GameTemplateGenerator  # Experimental
 """
-
-from .agent import GameAgent, run_game
-from .config import GameConfig
-from .factory import GameAgentFactory
 from .state import GameState
+from .config import GameConfig
 from .state_manager import GameStateManager
+from .agent import GameAgent, run_game
+
+
+from .factory import GameAgentFactory
+
+
 from .template_generator import GameTemplateGenerator
 
 #from .utils import run_game

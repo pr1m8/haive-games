@@ -6,7 +6,7 @@ to generate moves and analyze positions in the game.
 import time
 from typing import Any
 
-from langgraph.graph import Command
+from langgraph.types import Command
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -15,7 +15,7 @@ from haive.games.fox_and_geese.models import FoxAndGeeseMove
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.fox_and_geese.state_manager import FoxAndGeeseStateManager
 from haive.games.framework.base.agent import GameAgent
-
+from langgraph.constants import START
 
 @register_agent(FoxAndGeeseConfig)
 class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
@@ -33,7 +33,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         super().__init__(config)
         self.state_manager = FoxAndGeeseStateManager
-        self.engines = config.aug_llm_configs
+        #self.engines = config.aug_llm_configs
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Fox and Geese game.
@@ -237,8 +237,15 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         and analysis. Adds edges between nodes based on the current player's turn.
         """
         # Create a graph builder
-        builder = DynamicGraph(state_schema=self.state_schema)
-
+        builder = DynamicGraph(state_schema=self.state_schema,
+                               input_schema=self.input_schema,
+                               output_schema=self.output_schema,
+                               #description=self.description,
+                               name=self.config.name)
+                               #default_runnable_config=self.default_runnable_config,
+                               #visualize=self.visualize,
+                               #debug_level=self.debug_level)
+        builder.add_edge(START, "initialize")
         # Add nodes for the main game flow
         builder.add_node("initialize", self.initialize_game)
         builder.add_node("fox_move", self.make_fox_move)
@@ -277,6 +284,3 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 self.visualize_state(state)
             return state  # Final state
         return super().run(initial_state)
-
-agent = FoxAndGeeseAgent()
-agent.run_game(visualize=True)

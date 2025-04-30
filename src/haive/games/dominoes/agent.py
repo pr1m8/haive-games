@@ -342,12 +342,14 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         """Set up the game workflow."""
         # Create the graph builder with the state schema
         gb = DynamicGraph(
+            name=self.config.name,
             components=[self.config],
             state_schema=self.config.state_schema
         )
-
+        
         # Add nodes for the main game flow
         gb.add_node("initialize", self.initialize_game)
+        gb.set_entry_point("initialize")
         gb.add_node("player1_move", self.make_player1_move)
         gb.add_node("player2_move", self.make_player2_move)
         gb.add_node("analyze_player1", self.analyze_player1)

@@ -7,7 +7,7 @@ enable_analysis, visualize, and max_turns.
 
 from pydantic import Field
 
-from haive.core.engine.agent.agent import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.games.fox_and_geese.engines import fox_and_geese_engines
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.framework.base.config import GameConfig
