@@ -2,10 +2,12 @@
 
 This module provides the game controller that manages the state and flow of the Clue game.
 """
+
 import random
 from dataclasses import dataclass, field
 
-from haive.core.engine.aug_llm.base import AugLLMEngine
+from haive.core.engine.aug_llm import AugLLMEngine
+
 from haive.games.clue.engines import clue_engines
 from haive.games.clue.models import (
     ClueCard,
@@ -23,14 +25,17 @@ from haive.games.clue.models import (
 @dataclass
 class CluePlayer:
     """Represents a player in the Clue game."""
+
     name: str
     cards: list[ClueCard] = field(default_factory=list)
     player_engine: AugLLMEngine | None = None
     analysis_engine: AugLLMEngine | None = None
 
+
 @dataclass
 class ClueGameState:
     """Represents the state of a Clue game."""
+
     solution: ClueSolution
     players: list[CluePlayer]
     current_player_index: int = 0
@@ -40,12 +45,13 @@ class ClueGameState:
     status: GameStatus = GameStatus.IN_PROGRESS
     winner: str | None = None
 
+
 class ClueGameController:
     """Controller for the Clue game."""
 
     def __init__(self, player_names: list[str], max_turns: int = 20):
         """Initialize a new Clue game.
-        
+
         Args:
             player_names: Names of the players
             max_turns: Maximum number of turns before the game ends
@@ -67,9 +73,7 @@ class ClueGameController:
         solution_room = random.choice(rooms)
 
         solution = ClueSolution(
-            suspect=solution_suspect,
-            weapon=solution_weapon,
-            room=solution_room
+            suspect=solution_suspect, weapon=solution_weapon, room=solution_room
         )
 
         # Remove solution cards from deck
@@ -94,7 +98,7 @@ class ClueGameController:
                 name=name,
                 cards=[],
                 player_engine=AugLLMEngine(clue_engines[f"{engine_prefix}_player"]),
-                analysis_engine=AugLLMEngine(clue_engines[f"{engine_prefix}_analyzer"])
+                analysis_engine=AugLLMEngine(clue_engines[f"{engine_prefix}_analyzer"]),
             )
             players.append(player)
 
@@ -106,9 +110,7 @@ class ClueGameController:
             player.cards = deck[start_idx:end_idx]
 
         return ClueGameState(
-            solution=solution,
-            players=players,
-            max_turns=self.max_turns
+            solution=solution, players=players, max_turns=self.max_turns
         )
 
     def get_game_state(self) -> ClueGameState:
@@ -117,11 +119,11 @@ class ClueGameController:
 
     def make_guess(self, player_idx: int, guess: ClueGuess) -> ClueResponse:
         """Process a player's guess and return the response.
-        
+
         Args:
             player_idx: Index of the player making the guess
             guess: The guess made by the player
-            
+
         Returns:
             A response indicating whether the guess was correct or which player refuted it
         """
@@ -132,18 +134,18 @@ class ClueGameController:
             raise ValueError("Not this player's turn")
 
         # Check if the guess matches the solution
-        if (guess.suspect == self.game_state.solution.suspect and
-            guess.weapon == self.game_state.solution.weapon and
-            guess.room == self.game_state.solution.room):
+        if (
+            guess.suspect == self.game_state.solution.suspect
+            and guess.weapon == self.game_state.solution.weapon
+            and guess.room == self.game_state.solution.room
+        ):
 
             # Player wins
             self.game_state.status = GameStatus.FINISHED
             self.game_state.winner = self.game_state.players[player_idx].name
 
             response = ClueResponse(
-                responding_player=None,
-                is_correct=True,
-                refuting_card=None
+                responding_player=None, is_correct=True, refuting_card=None
             )
 
             self.game_state.guess_history.append((guess, response))
@@ -172,13 +174,15 @@ class ClueGameController:
                 response = ClueResponse(
                     responding_player=current_player.name,
                     is_correct=False,
-                    refuting_card=refuting_card
+                    refuting_card=refuting_card,
                 )
 
                 self.game_state.guess_history.append((guess, response))
 
                 # Move to next player for next turn
-                self.game_state.current_player_index = (self.game_state.current_player_index + 1) % len(self.game_state.players)
+                self.game_state.current_player_index = (
+                    self.game_state.current_player_index + 1
+                ) % len(self.game_state.players)
                 self.game_state.current_turn += 1
 
                 # Check if max turns reached
@@ -193,15 +197,15 @@ class ClueGameController:
 
         # No player could refute
         response = ClueResponse(
-            responding_player=None,
-            is_correct=False,
-            refuting_card=None
+            responding_player=None, is_correct=False, refuting_card=None
         )
 
         self.game_state.guess_history.append((guess, response))
 
         # Move to next player for next turn
-        self.game_state.current_player_index = (self.game_state.current_player_index + 1) % len(self.game_state.players)
+        self.game_state.current_player_index = (
+            self.game_state.current_player_index + 1
+        ) % len(self.game_state.players)
         self.game_state.current_turn += 1
 
         # Check if max turns reached
@@ -218,10 +222,10 @@ class ClueGameController:
 
     def get_player_view(self, player_idx: int) -> dict:
         """Get the game state from a specific player's point of view.
-        
+
         Args:
             player_idx: Index of the player
-            
+
         Returns:
             A dictionary with the game state visible to the player
         """
@@ -235,15 +239,15 @@ class ClueGameController:
             "guess_history": self.game_state.guess_history,
             "is_your_turn": player_idx == self.game_state.current_player_index,
             "game_status": self.game_state.status,
-            "winner": self.game_state.winner
+            "winner": self.game_state.winner,
         }
 
     async def generate_ai_guess(self, player_idx: int) -> ClueGuess:
         """Generate a guess using the player's AI engine.
-        
+
         Args:
             player_idx: Index of the AI player
-            
+
         Returns:
             The generated guess
         """
@@ -265,10 +269,10 @@ class ClueGameController:
 
     async def generate_ai_analysis(self, player_idx: int) -> ClueHypothesis:
         """Generate an analysis using the player's AI analysis engine.
-        
+
         Args:
             player_idx: Index of the AI player
-            
+
         Returns:
             The generated analysis
         """
@@ -284,6 +288,8 @@ class ClueGameController:
 
         # Make sure the returned value is a ClueHypothesis
         if not isinstance(analysis, ClueHypothesis):
-            raise ValueError(f"AI engine returned {type(analysis)} instead of ClueHypothesis")
+            raise ValueError(
+                f"AI engine returned {type(analysis)} instead of ClueHypothesis"
+            )
 
         return analysis
