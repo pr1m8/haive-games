@@ -3,11 +3,11 @@
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.checkers.config import CheckersAgentConfig
 from haive.games.checkers.models import CheckersMove, CheckersPlayerDecision
 from haive.games.checkers.state import CheckersState
@@ -43,31 +43,37 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             "captured_red": state.captured_pieces["red"],
             "captured_black": state.captured_pieces["black"],
             "move_history": [str(move) for move in state.move_history[-5:]],
-            "player_analysis": player_analysis
+            "player_analysis": player_analysis,
         }
 
-    def prepare_analysis_context(self, state: CheckersState, player: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: CheckersState, player: str
+    ) -> dict[str, Any]:
         return {
             "board": state.board_string,
             "turn": state.turn,
             "color": player,
             "captured_red": state.captured_pieces["red"],
             "captured_black": state.captured_pieces["black"],
-            "move_history": [str(move) for move in state.move_history[-5:]]
+            "move_history": [str(move) for move in state.move_history[-5:]],
         }
 
     def extract_move(self, response: CheckersPlayerDecision) -> CheckersMove:
         return response.move
 
     def make_player1_move(self, state: dict[str, Any]) -> Command:
-        state_obj = state if isinstance(state, CheckersState) else CheckersState(**state)
+        state_obj = (
+            state if isinstance(state, CheckersState) else CheckersState(**state)
+        )
         if state_obj.turn != "red":
             goto = "analyze_player1" if state_obj.turn == "black" else "player2_move"
             return Command(update=state_obj.model_dump(), goto=goto)
         return self.make_move(state_obj, "red")
 
     def make_player2_move(self, state: dict[str, Any]) -> Command:
-        state_obj = state if isinstance(state, CheckersState) else CheckersState(**state)
+        state_obj = (
+            state if isinstance(state, CheckersState) else CheckersState(**state)
+        )
         if state_obj.turn != "black":
             goto = "analyze_player2" if state_obj.turn == "red" else "player1_move"
             return Command(update=state_obj.model_dump(), goto=goto)
@@ -112,13 +118,17 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return Command(update=updated_state.model_dump(), goto=goto)
 
     def analyze_player1(self, state: dict[str, Any]) -> Command:
-        state_obj = state if isinstance(state, CheckersState) else CheckersState(**state)
+        state_obj = (
+            state if isinstance(state, CheckersState) else CheckersState(**state)
+        )
         if state_obj.turn != "red":
             return Command(update=state_obj.model_dump(), goto="player1_move")
         return self.analyze_position(state_obj, "red")
 
     def analyze_player2(self, state: dict[str, Any]) -> Command:
-        state_obj = state if isinstance(state, CheckersState) else CheckersState(**state)
+        state_obj = (
+            state if isinstance(state, CheckersState) else CheckersState(**state)
+        )
         if state_obj.turn != "black":
             return Command(update=state_obj.model_dump(), goto="player2_move")
         return self.analyze_position(state_obj, "black")
@@ -142,7 +152,9 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return Command(update=updated_state.model_dump(), goto=f"{player}_move")
 
     def visualize_state(self, state: dict[str, Any]) -> None:
-        checker_state = state if isinstance(state, CheckersState) else CheckersState(**state)
+        checker_state = (
+            state if isinstance(state, CheckersState) else CheckersState(**state)
+        )
         print("\n" + "=" * 50)
         print(f"🎮 Current Player: {checker_state.turn.upper()}")
         print(f"📌 Game Status: {checker_state.game_status}")
@@ -170,7 +182,12 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         if visualize:
             initial_state = self.state_manager.initialize()
             try:
-                for step in self.app.stream(initial_state, stream_mode="values", debug=True, config=self.runnable_config):
+                for step in self.app.stream(
+                    initial_state,
+                    stream_mode="values",
+                    debug=True,
+                    config=self.runnable_config,
+                ):
                     self.visualize_state(step)
                     time.sleep(1)
                 return step
@@ -181,8 +198,12 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             return self.run({})
 
     def setup_workflow(self) -> None:
-        gb = DynamicGraph(components=[self.config], state_schema=self.config.state_schema)
+        gb = DynamicGraph(
+            components=[self.config], state_schema=self.config.state_schema
+        )
+
         gb.add_node("initialize", self.initialize_game)
+        gb.set_entry_point("initialize")
         gb.add_node("player1_move", self.make_player1_move)
         gb.add_node("player2_move", self.make_player2_move)
         gb.add_node("analyze_player1", self.analyze_player1)
