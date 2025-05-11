@@ -7,7 +7,7 @@ This module provides state models for the chess game, including:
     - Player analysis
 """
 
-from typing import Any, Literal
+from typing import Any, List, Literal, Optional
 
 import chess
 from pydantic import BaseModel, Field, computed_field
@@ -15,14 +15,14 @@ from pydantic import BaseModel, Field, computed_field
 
 class ChessState(BaseModel):
     """State for the chess game.
-    
+
     This class represents the complete game state including:
         - Board positions (current and history)
         - Move history
         - Game status
         - Player analysis
         - Captured pieces
-    
+
     Attributes:
         board_fens (List[str]): List of FEN board states (latest at the end)
         move_history (List[Tuple[str, str]]): List of (player, move) tuples
@@ -36,54 +36,46 @@ class ChessState(BaseModel):
         error_message (Optional[str]): Error message if any
     """
 
-    board_fens: list[str] = Field(
+    board_fens: Optional[List[str]] = Field(
         default_factory=lambda: [chess.Board().fen()],
-        description="List of FEN board states, latest at the end"
+        description="List of FEN board states, latest at the end",
     )
 
-    move_history: list[tuple[str, str]] = Field(
-        default_factory=list,
-        description="List of (player_color, UCI move) tuples"
+    move_history: Optional[List[tuple[str, str]]] = Field(
+        default_factory=list, description="List of (player_color, UCI move) tuples"
     )
 
-    current_player: Literal["white", "black"] = Field(
-        default="white",
-        description="Current player making a move"
+    current_player: Optional[Literal["white", "black"]] = Field(
+        default="white", description="Current player making a move"
     )
 
-    turn: Literal["white", "black"] = Field(
-        default="white",
-        description="Current turn"
+    turn: Optional[Literal["white", "black"]] = Field(
+        default="white", description="Current turn"
     )
 
-    game_status: Literal["ongoing", "check", "checkmate", "stalemate", "draw"] = Field(
-        default="ongoing",
-        description="Status of the game"
+    game_status: Optional[
+        Literal["ongoing", "check", "checkmate", "stalemate", "draw"]
+    ] = Field(default="ongoing", description="Status of the game")
+
+    game_result: Optional[str] = Field(
+        default=None, description="Final game result (white_win, black_win, draw)"
     )
 
-    game_result: str | None = Field(
-        default=None,
-        description="Final game result (white_win, black_win, draw)"
+    white_analysis: Optional[List[dict[str, Any]]] = Field(
+        default_factory=list, description="White's position analysis"
     )
 
-    white_analysis: list[dict[str, Any]] = Field(
-        default_factory=list,
-        description="White's position analysis"
+    black_analysis: Optional[List[dict[str, Any]]] = Field(
+        default_factory=list, description="Black's position analysis"
     )
 
-    black_analysis: list[dict[str, Any]] = Field(
-        default_factory=list,
-        description="Black's position analysis"
-    )
-
-    captured_pieces: dict[str, list[str]] = Field(
+    captured_pieces: Optional[dict[str, list[str]]] = Field(
         default_factory=lambda: {"white": [], "black": []},
-        description="Captured pieces by each player"
+        description="Captured pieces by each player",
     )
 
-    error_message: str | None = Field(
-        default=None,
-        description="Error message if any"
+    error_message: Optional[str] = Field(
+        default=None, description="Error message if any"
     )
 
     @computed_field
@@ -111,4 +103,5 @@ class ChessState(BaseModel):
 
     class Config:
         """Pydantic configuration."""
+
         arbitrary_types_allowed = True

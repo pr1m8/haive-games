@@ -6,23 +6,22 @@ This module provides configuration classes for the chess game agent, including:
     - Game settings and visualization options
 """
 
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
-
-from .engines import build_chess_aug_llms
-from .state import ChessState
+from haive.games.chess.engines import build_chess_aug_llms
+from haive.games.chess.state import ChessState
 
 
 class ChessAgentConfig(AgentConfig):
     """Configuration class for chess game agents.
-    
+
     This class defines the configuration parameters for chess agents, including:
         - Game settings (max moves, analysis options)
         - LLM configurations for players and analyzers
         - Visualization settings
-    
+
     Attributes:
         state_schema (BaseModel): The state schema for the game
         enable_analysis (bool): Whether to enable position analysis
@@ -33,34 +32,32 @@ class ChessAgentConfig(AgentConfig):
 
     # State schema
     state_schema: type = Field(
-        default=ChessState,
-        description="The state schema for the game"
+        default=ChessState, description="The state schema for the game"
     )
 
     # Analysis settings
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis during gameplay"
+        default=True, description="Whether to enable position analysis during gameplay"
     )
 
     # Visualization settings
     should_visualize_graph: bool = Field(
-        default=True,
-        description="Whether to visualize the game workflow graph"
+        default=True, description="Whether to visualize the game workflow graph"
     )
 
     # Game settings
     max_moves: int = Field(
-        default=200,
-        description="Maximum number of moves before forcing a draw"
+        default=200, description="Maximum number of moves before forcing a draw"
     )
 
     # LLM engines
     engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_chess_aug_llms,
-        description="LLM configurations for players and analyzers"
+        description="LLM configurations for players and analyzers",
     )
-    #runnable_config: Dict['configurable]
+
+    # runnable_config: Dict['configurable]
     class Config:
         """Pydantic configuration class."""
+
         arbitrary_types_allowed = True
