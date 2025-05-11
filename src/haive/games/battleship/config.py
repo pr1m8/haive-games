@@ -6,11 +6,9 @@ This module provides configuration classes for the Battleship game agent, includ
     - Visualization options
 """
 
-
-from pydantic import Field
-
 from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+from pydantic import Field
 
 from .engines import build_battleship_engines
 from .state import BattleshipState
@@ -18,13 +16,13 @@ from .state import BattleshipState
 
 class BattleshipAgentConfig(AgentConfig):
     """Configuration class for Battleship game agents.
-    
+
     This class defines the configuration parameters for Battleship agents, including:
         - Game settings
         - Analysis options
         - Visualization settings
         - Engine configurations
-    
+
     Attributes:
         state_schema (type): The state schema for the game
         player1_name (str): Name of player 1
@@ -34,41 +32,30 @@ class BattleshipAgentConfig(AgentConfig):
         engines (Dict[str, AugLLMConfig]): Engine configurations
     """
 
-    name: str = Field(
-        default="battleship_agent",
-        description="Name of the agent"
-    )
+    name: str = Field(default="battleship_agent", description="Name of the agent")
 
     state_schema: type = Field(
-        default=BattleshipState,
-        description="State schema for the game"
+        default=BattleshipState, description="State schema for the game"
     )
 
-    player1_name: str = Field(
-        default="Player 1",
-        description="Name of player 1"
-    )
+    player1_name: str = Field(default="Player 1", description="Name of player 1")
 
-    player2_name: str = Field(
-        default="Player 2",
-        description="Name of player 2"
-    )
+    player2_name: str = Field(default="Player 2", description="Name of player 2")
 
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable strategic analysis"
+        default=True, description="Whether to enable strategic analysis"
     )
 
     visualize_board: bool = Field(
-        default=True,
-        description="Whether to visualize the game boards"
+        default=True, description="Whether to visualize the game boards"
     )
 
     engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_battleship_engines,
-        description="Engine configurations for players and analyzers"
+        description="Engine configurations for players and analyzers",
     )
 
     class Config:
         """Pydantic configuration."""
+
         arbitrary_types_allowed = True
