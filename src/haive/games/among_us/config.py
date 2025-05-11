@@ -2,12 +2,12 @@
 
 from typing import Any, Literal
 
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import Field, root_validator
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
 from haive.games.among_us.prompts import (
     CREWMATE_PROMPT,
     IMPOSTOR_PROMPT,
@@ -19,8 +19,8 @@ from haive.games.framework.base.config import GameConfig
 
 
 class AmongUsAgentConfig(GameConfig):
-    """Configuration for Among Us game agent.
-    """
+    """Configuration for Among Us game agent."""
+
     # Base game agent fields inherited from GameAgentConfig
     name: str = Field(default="among_us_agent")
     state_schema: type = Field(default=AmongUsState)
@@ -54,18 +54,42 @@ class AmongUsAgentConfig(GameConfig):
             map_name = values.get("map_name", "skeld")
             if map_name.lower() == "skeld":
                 values["map_locations"] = [
-                    "cafeteria", "admin", "electrical", "storage", "medbay",
-                    "navigation", "shields", "weapons", "o2", "security"
+                    "cafeteria",
+                    "admin",
+                    "electrical",
+                    "storage",
+                    "medbay",
+                    "navigation",
+                    "shields",
+                    "weapons",
+                    "o2",
+                    "security",
                 ]
             elif map_name.lower() == "polus":
                 values["map_locations"] = [
-                    "dropship", "office", "laboratory", "storage", "communications",
-                    "weapons", "o2", "electrical", "security", "specimen"
+                    "dropship",
+                    "office",
+                    "laboratory",
+                    "storage",
+                    "communications",
+                    "weapons",
+                    "o2",
+                    "electrical",
+                    "security",
+                    "specimen",
                 ]
             elif map_name.lower() == "mira":
                 values["map_locations"] = [
-                    "launchpad", "medbay", "communications", "locker", "laboratory",
-                    "office", "admin", "cafeteria", "storage", "reactor"
+                    "launchpad",
+                    "medbay",
+                    "communications",
+                    "locker",
+                    "laboratory",
+                    "office",
+                    "admin",
+                    "cafeteria",
+                    "storage",
+                    "reactor",
                 ]
 
         # Set default engines if not provided
@@ -80,10 +104,7 @@ class AmongUsAgentConfig(GameConfig):
         # Default LLM config
         default_llm_config = {
             "model": "gpt-4o",
-            "parameters": {
-                "temperature": 0.8,
-                "top_p": 0.9
-            }
+            "parameters": {"temperature": 0.8, "top_p": 0.9},
         }
 
         # Merge with provided LLM config if any
@@ -93,49 +114,57 @@ class AmongUsAgentConfig(GameConfig):
         azure_llm_config = AzureLLMConfig(**llm_config)
 
         # Create prompt templates
-        crewmate_template = ChatPromptTemplate.from_messages([
-            SystemMessage(content=CREWMATE_PROMPT),
-            MessagesPlaceholder(variable_name="messages")
-        ])
+        crewmate_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=CREWMATE_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-        impostor_template = ChatPromptTemplate.from_messages([
-            SystemMessage(content=IMPOSTOR_PROMPT),
-            MessagesPlaceholder(variable_name="messages")
-        ])
+        impostor_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=IMPOSTOR_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-        meeting_template = ChatPromptTemplate.from_messages([
-            SystemMessage(content=MEETING_PROMPT),
-            MessagesPlaceholder(variable_name="messages")
-        ])
+        meeting_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=MEETING_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-        voting_template = ChatPromptTemplate.from_messages([
-            SystemMessage(content=VOTING_PROMPT),
-            MessagesPlaceholder(variable_name="messages")
-        ])
+        voting_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=VOTING_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
         # Create AugLLM configs
         crewmate_config = AugLLMConfig(
             name="crewmate_player",
             llm_config=azure_llm_config,
-            prompt_template=crewmate_template
+            prompt_template=crewmate_template,
         )
 
         impostor_config = AugLLMConfig(
             name="impostor_player",
             llm_config=azure_llm_config,
-            prompt_template=impostor_template
+            prompt_template=impostor_template,
         )
 
         meeting_config = AugLLMConfig(
             name="meeting_discussion",
             llm_config=azure_llm_config,
-            prompt_template=meeting_template
+            prompt_template=meeting_template,
         )
 
         voting_config = AugLLMConfig(
             name="voting_decision",
             llm_config=azure_llm_config,
-            prompt_template=voting_template
+            prompt_template=voting_template,
         )
 
         # Return engines configuration
@@ -143,15 +172,16 @@ class AmongUsAgentConfig(GameConfig):
             "CREWMATE": {
                 "player": crewmate_config,
                 "meeting": meeting_config,
-                "voting": voting_config
+                "voting": voting_config,
             },
             "IMPOSTOR": {
                 "player": impostor_config,
                 "meeting": meeting_config,
-                "voting": voting_config
-            }
+                "voting": voting_config,
+            },
         }
 
     class Config:
         """Pydantic model config."""
+
         arbitrary_types_allowed = True
