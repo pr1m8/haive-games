@@ -7,6 +7,7 @@ from .models import Card, PlayerState
 
 class BullshitGameState(BaseModel):
     """Represents the overall state of a Bullshit game."""
+
     players: list[PlayerState] = Field(default_factory=list)
     current_pile: list[Card] = Field(default_factory=list)
     current_claimed_value: str | None = None

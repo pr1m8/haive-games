@@ -17,5 +17,5 @@ __all__ = [
     "ClueResponse",
     "ClueSolution",
     "ClueState",
-    "ClueStateManager"
+    "ClueStateManager",
 ]

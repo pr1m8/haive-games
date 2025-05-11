@@ -3,6 +3,7 @@ from enum import Enum
 
 class ActionType(str, Enum):
     """Types of actions a player can take."""
+
     ROLL = "roll"
     BUY = "buy"
     SELL_HOUSE = "sell_house"
@@ -19,14 +20,16 @@ class ActionType(str, Enum):
 
 class PropertyType(str, Enum):
     """Types of properties on the board."""
+
     PROPERTY = "property"  # Regular property with houses/hotels
     RAILROAD = "railroad"
     UTILITY = "utility"
-    SPECIAL = "special"    # Go, Jail, Free Parking, etc.
+    SPECIAL = "special"  # Go, Jail, Free Parking, etc.
 
 
 class SpecialSquareType(str, Enum):
     """Types of special squares on the board."""
+
     GO = "go"
     JAIL = "jail"
     FREE_PARKING = "free_parking"
@@ -35,5 +38,3 @@ class SpecialSquareType(str, Enum):
     LUXURY_TAX = "luxury_tax"
     CHANCE = "chance"
     COMMUNITY_CHEST = "community_chest"
-
-

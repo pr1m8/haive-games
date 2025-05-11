@@ -9,7 +9,7 @@ from haive.games.checkers.state import CheckersState
 
 class CheckersStateManager:
     """Manager for checkers game state.
-    
+
     This class provides static methods for managing checkers game states:
         - Game initialization with default settings
         - Legal move generation
@@ -23,7 +23,7 @@ class CheckersStateManager:
     @classmethod
     def initialize(cls) -> CheckersState:
         """Initialize a new checkers game.
-        
+
         Returns:
             CheckersState: A new game state with the initial board setup.
         """
@@ -37,7 +37,7 @@ class CheckersStateManager:
             [0, 0, 0, 0, 0, 0, 0, 0],
             [1, 0, 1, 0, 1, 0, 1, 0],
             [0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0]
+            [1, 0, 1, 0, 1, 0, 1, 0],
         ]
 
         # Create the board string representation
@@ -53,16 +53,16 @@ class CheckersStateManager:
             winner=None,
             red_analysis=[],
             black_analysis=[],
-            captured_pieces={"red": [], "black": []}
+            captured_pieces={"red": [], "black": []},
         )
 
     @classmethod
     def _create_board_string(cls, board: list[list[int]]) -> str:
         """Create a string representation of the board.
-        
+
         Args:
             board: 2D list representing the checkers board
-            
+
         Returns:
             str: String representation of the board
         """
@@ -71,7 +71,7 @@ class CheckersStateManager:
             1: "r",  # Red piece
             2: "R",  # Red king
             3: "b",  # Black piece
-            4: "B"   # Black king
+            4: "B",  # Black king
         }
 
         rows = []
@@ -88,10 +88,10 @@ class CheckersStateManager:
     @classmethod
     def get_legal_moves(cls, state: CheckersState) -> list[CheckersMove]:
         """Get all legal moves for the current player.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             List[CheckersMove]: List of legal moves
         """
@@ -115,14 +115,16 @@ class CheckersStateManager:
         return cls._get_regular_moves(board, current_player, piece_values)
 
     @classmethod
-    def _get_jump_moves(cls, board: list[list[int]], player: str, piece_values: list[int]) -> list[CheckersMove]:
+    def _get_jump_moves(
+        cls, board: list[list[int]], player: str, piece_values: list[int]
+    ) -> list[CheckersMove]:
         """Get all possible jump moves for a player.
-        
+
         Args:
             board: The current board
             player: The current player ("red" or "black")
             piece_values: Values representing the player's pieces
-            
+
         Returns:
             List[CheckersMove]: List of jump moves
         """
@@ -138,15 +140,17 @@ class CheckersStateManager:
         return jumps
 
     @classmethod
-    def _get_piece_jumps(cls, board: list[list[int]], row: int, col: int, player: str) -> list[CheckersMove]:
+    def _get_piece_jumps(
+        cls, board: list[list[int]], row: int, col: int, player: str
+    ) -> list[CheckersMove]:
         """Get all possible jumps for a single piece.
-        
+
         Args:
             board: The current board
             row: Row of the piece
             col: Column of the piece
             player: The current player
-            
+
         Returns:
             List[CheckersMove]: List of jump moves for this piece
         """
@@ -171,9 +175,13 @@ class CheckersStateManager:
             new_row, new_col = row + dr, col + dc
 
             # Check if the landing square is in bounds and empty
-            if 0 <= new_row < cls.BOARD_SIZE and 0 <= new_col < cls.BOARD_SIZE and board[new_row][new_col] == 0:
+            if (
+                0 <= new_row < cls.BOARD_SIZE
+                and 0 <= new_col < cls.BOARD_SIZE
+                and board[new_row][new_col] == 0
+            ):
                 # Check if there's an opponent's piece to jump over
-                jumped_row, jumped_col = row + dr//2, col + dc//2
+                jumped_row, jumped_col = row + dr // 2, col + dc // 2
 
                 # Determine opponent's piece values
                 opponent_values = [3, 4] if player == "red" else [1, 2]
@@ -183,25 +191,31 @@ class CheckersStateManager:
                     from_pos = cls._index_to_notation(row, col)
                     to_pos = cls._index_to_notation(new_row, new_col)
 
-                    jumps.append(CheckersMove(
-                        from_position=from_pos,
-                        to_position=to_pos,
-                        player=player,
-                        is_jump=True,
-                        captured_position=cls._index_to_notation(jumped_row, jumped_col)
-                    ))
+                    jumps.append(
+                        CheckersMove(
+                            from_position=from_pos,
+                            to_position=to_pos,
+                            player=player,
+                            is_jump=True,
+                            captured_position=cls._index_to_notation(
+                                jumped_row, jumped_col
+                            ),
+                        )
+                    )
 
         return jumps
 
     @classmethod
-    def _get_regular_moves(cls, board: list[list[int]], player: str, piece_values: list[int]) -> list[CheckersMove]:
+    def _get_regular_moves(
+        cls, board: list[list[int]], player: str, piece_values: list[int]
+    ) -> list[CheckersMove]:
         """Get all possible regular moves for a player.
-        
+
         Args:
             board: The current board
             player: The current player
             piece_values: Values representing the player's pieces
-            
+
         Returns:
             List[CheckersMove]: List of regular moves
         """
@@ -217,15 +231,17 @@ class CheckersStateManager:
         return moves
 
     @classmethod
-    def _get_piece_moves(cls, board: list[list[int]], row: int, col: int, player: str) -> list[CheckersMove]:
+    def _get_piece_moves(
+        cls, board: list[list[int]], row: int, col: int, player: str
+    ) -> list[CheckersMove]:
         """Get all possible regular moves for a single piece.
-        
+
         Args:
             board: The current board
             row: Row of the piece
             col: Column of the piece
             player: The current player
-            
+
         Returns:
             List[CheckersMove]: List of regular moves for this piece
         """
@@ -250,28 +266,34 @@ class CheckersStateManager:
             new_row, new_col = row + dr, col + dc
 
             # Check if the new square is in bounds and empty
-            if 0 <= new_row < cls.BOARD_SIZE and 0 <= new_col < cls.BOARD_SIZE and board[new_row][new_col] == 0:
+            if (
+                0 <= new_row < cls.BOARD_SIZE
+                and 0 <= new_col < cls.BOARD_SIZE
+                and board[new_row][new_col] == 0
+            ):
                 # Valid move
                 from_pos = cls._index_to_notation(row, col)
                 to_pos = cls._index_to_notation(new_row, new_col)
 
-                moves.append(CheckersMove(
-                    from_position=from_pos,
-                    to_position=to_pos,
-                    player=player,
-                    is_jump=False
-                ))
+                moves.append(
+                    CheckersMove(
+                        from_position=from_pos,
+                        to_position=to_pos,
+                        player=player,
+                        is_jump=False,
+                    )
+                )
 
         return moves
 
     @classmethod
     def _index_to_notation(cls, row: int, col: int) -> str:
         """Convert board indices to algebraic notation.
-        
+
         Args:
             row: Row index (0-7)
             col: Column index (0-7)
-            
+
         Returns:
             str: Position in algebraic notation (e.g., "a3")
         """
@@ -280,10 +302,10 @@ class CheckersStateManager:
     @classmethod
     def _notation_to_index(cls, notation: str) -> tuple[int, int]:
         """Convert algebraic notation to board indices.
-        
+
         Args:
             notation: Position in algebraic notation (e.g., "a3")
-            
+
         Returns:
             Tuple[int, int]: (row, col) indices
         """
@@ -294,11 +316,11 @@ class CheckersStateManager:
     @classmethod
     def apply_move(cls, state: CheckersState, move: CheckersMove) -> CheckersState:
         """Apply a move to the current game state.
-        
+
         Args:
             state: Current game state
             move: Move to apply
-            
+
         Returns:
             CheckersState: New game state after the move
         """
@@ -332,7 +354,9 @@ class CheckersStateManager:
             if captured_piece in [1, 2]:  # Red piece or king
                 captured_pieces.append("red" + ("_king" if captured_piece == 2 else ""))
             else:  # Black piece or king
-                captured_pieces.append("black" + ("_king" if captured_piece == 4 else ""))
+                captured_pieces.append(
+                    "black" + ("_king" if captured_piece == 4 else "")
+                )
 
             # Remove the captured piece from the board
             new_state.board[captured_row][captured_col] = 0
@@ -357,10 +381,10 @@ class CheckersStateManager:
     @classmethod
     def check_game_status(cls, state: CheckersState) -> CheckersState:
         """Check and update the game status.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             CheckersState: Updated game state with correct status
         """
@@ -393,14 +417,16 @@ class CheckersStateManager:
         return new_state
 
     @classmethod
-    def update_analysis(cls, state: CheckersState, analysis: dict[str, Any], player: str) -> CheckersState:
+    def update_analysis(
+        cls, state: CheckersState, analysis: dict[str, Any], player: str
+    ) -> CheckersState:
         """Update the state with new analysis.
-        
+
         Args:
             state: Current game state
             analysis: Analysis data to add
             player: Player the analysis is for
-            
+
         Returns:
             CheckersState: Updated game state with new analysis
         """

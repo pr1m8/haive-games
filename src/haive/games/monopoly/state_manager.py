@@ -8,9 +8,10 @@ from haive.games.monopoly.state import MonopolyState
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
 class MonopolyStateManager:
     """Manages the state of the Monopoly game.
-    
+
     This class:
     - Extracts state from game objects
     - Provides helper methods for getting location info
@@ -20,7 +21,7 @@ class MonopolyStateManager:
 
     def __init__(self, max_events: int = 5):
         """Initialize the state manager.
-        
+
         Args:
             max_events: Maximum number of events to track in history
         """
@@ -70,7 +71,7 @@ class MonopolyStateManager:
             "Short Line": "Railroad property",
             "Park Place": "Blue property",
             "Luxury Tax": "Pay $1000",
-            "Boardwalk": "Blue property, most expensive on the board"
+            "Boardwalk": "Blue property, most expensive on the board",
         }
 
     def add_event(self, event: str):
@@ -84,10 +85,10 @@ class MonopolyStateManager:
 
     def extract_state(self, game_objects: dict[str, Any]) -> MonopolyState:
         """Extract the current state from the Monopoly game objects.
-        
+
         Args:
             game_objects: Dictionary containing game objects
-        
+
         Returns:
             MonopolyState object
         """
@@ -111,14 +112,24 @@ class MonopolyStateManager:
                         player_info = PlayerInfo(
                             name=f"Player {i+1}",
                             index=i,
-                            position=player_obj.place if hasattr(player_obj, "place") else (0, 0),
+                            position=(
+                                player_obj.place
+                                if hasattr(player_obj, "place")
+                                else (0, 0)
+                            ),
                             cash=player_obj.cash,
-                            total_wealth=player_obj.total_wealth if hasattr(player_obj, "total_wealth") else player_obj.cash,
+                            total_wealth=(
+                                player_obj.total_wealth
+                                if hasattr(player_obj, "total_wealth")
+                                else player_obj.cash
+                            ),
                             properties_owned=properties_owned,
                             is_in_jail=getattr(player_obj, "released", 1) == 0,
                             jail_cards=getattr(player_obj, "jail_cards", 0),
                             railways_owned=getattr(player_obj, "no_of_railways", 0),
-                            bankruptcy_status=getattr(player_obj, "bankruptcy_status", False)
+                            bankruptcy_status=getattr(
+                                player_obj, "bankruptcy_status", False
+                            ),
                         )
                         players.append(player_info)
                 except Exception as e:
@@ -137,7 +148,7 @@ class MonopolyStateManager:
                         is_in_jail=False,
                         jail_cards=0,
                         railways_owned=0,
-                        bankruptcy_status=False
+                        bankruptcy_status=False,
                     ),
                     PlayerInfo(
                         name="Player 2",
@@ -149,8 +160,8 @@ class MonopolyStateManager:
                         is_in_jail=False,
                         jail_cards=0,
                         railways_owned=0,
-                        bankruptcy_status=False
-                    )
+                        bankruptcy_status=False,
+                    ),
                 ]
 
             # Extract property information
@@ -173,11 +184,15 @@ class MonopolyStateManager:
                             position=getattr(prop_obj, "position", (0, 0)),
                             cost=prop_obj.cost,
                             rent_values=rent_values,
-                            rent=getattr(prop_obj, "rent", rent_values[0] if rent_values else 0),
-                            mortgage_value=getattr(prop_obj, "mortgage", prop_obj.cost // 2),
+                            rent=getattr(
+                                prop_obj, "rent", rent_values[0] if rent_values else 0
+                            ),
+                            mortgage_value=getattr(
+                                prop_obj, "mortgage", prop_obj.cost // 2
+                            ),
                             owner=getattr(prop_obj, "owner", None),
                             houses=getattr(prop_obj, "no_of_houses", 0),
-                            is_mortgaged=getattr(prop_obj, "is_mortgaged", False)
+                            is_mortgaged=getattr(prop_obj, "is_mortgaged", False),
                         )
                         properties[prop_name] = property_info
 
@@ -193,15 +208,19 @@ class MonopolyStateManager:
             for card_name, card_obj in special_dict.items():
                 try:
                     if hasattr(card_obj, "cost"):
-                        card_type = "railroad" if "railroad" in card_name.lower() else "utility"
+                        card_type = (
+                            "railroad" if "railroad" in card_name.lower() else "utility"
+                        )
                         special_card_info = SpecialCardInfo(
                             name=card_name,
                             card_type=card_type,
                             position=getattr(card_obj, "position", (0, 0)),
                             cost=card_obj.cost,
                             rent=getattr(card_obj, "rent", 0),
-                            mortgage_value=getattr(card_obj, "mortgage", card_obj.cost // 2),
-                            owner=getattr(card_obj, "owner", None)
+                            mortgage_value=getattr(
+                                card_obj, "mortgage", card_obj.cost // 2
+                            ),
+                            owner=getattr(card_obj, "owner", None),
                         )
                         special_cards[card_name] = special_card_info
                 except Exception as e:
@@ -226,7 +245,7 @@ class MonopolyStateManager:
                 community_chest_drawn=None,  # We don't have this information yet
                 chance_drawn=None,  # We don't have this information yet
                 has_rolled=has_rolled,
-                recent_events=list(self.recent_events)
+                recent_events=list(self.recent_events),
             )
 
         except Exception as e:
@@ -240,19 +259,19 @@ class MonopolyStateManager:
                         index=0,
                         position=(0, 0),
                         cash=15000,
-                        total_wealth=15000
+                        total_wealth=15000,
                     ),
                     PlayerInfo(
                         name="Player 2",
                         index=1,
                         position=(0, 0),
                         cash=15000,
-                        total_wealth=15000
-                    )
+                        total_wealth=15000,
+                    ),
                 ],
                 current_player_index=game_objects.get("player_index", 0),
                 has_rolled=game_objects.get("rollonce", 0) == 1,
-                recent_events=list(self.recent_events)
+                recent_events=list(self.recent_events),
             )
 
     def _update_location_info(self, properties: dict[str, PropertyInfo]) -> None:
@@ -267,11 +286,13 @@ class MonopolyStateManager:
                 if prop_info.houses > 0:
                     houses_str = f", has {prop_info.houses} houses"
 
-                self._location_info[prop_name] = f"{prop_info.color} property, costs ${prop_info.cost}{owned_str}{houses_str}"
+                self._location_info[prop_name] = (
+                    f"{prop_info.color} property, costs ${prop_info.cost}{owned_str}{houses_str}"
+                )
 
     def get_location_info(self) -> str:
         """Get information about the current location.
-        
+
         Returns:
             Description of the current location
         """
@@ -287,25 +308,24 @@ class MonopolyStateManager:
 
     def get_properties_by_country(self, color_group: str) -> list[PropertyInfo]:
         """Get all properties in a specific color group.
-        
+
         Args:
             color_group: Name of the color group
-            
+
         Returns:
             List of matching PropertyInfo objects
         """
         return [
-            prop for prop in self._property_info.values()
-            if prop.color == color_group
+            prop for prop in self._property_info.values() if prop.color == color_group
         ]
 
     def can_build_house(self, player_idx: int, property_name: str) -> bool:
         """Check if a player can build a house on a property.
-        
+
         Args:
             player_idx: Index of the player
             property_name: Name of the property
-            
+
         Returns:
             True if a house can be built
         """
@@ -341,11 +361,11 @@ class MonopolyStateManager:
 
     def can_sell_house(self, player_idx: int, property_name: str) -> bool:
         """Check if a player can sell a house from a property.
-        
+
         Args:
             player_idx: Index of the player
             property_name: Name of the property
-            
+
         Returns:
             True if a house can be sold
         """
@@ -373,11 +393,11 @@ class MonopolyStateManager:
 
     def can_mortgage(self, player_idx: int, property_name: str) -> bool:
         """Check if a player can mortgage a property.
-        
+
         Args:
             player_idx: Index of the player
             property_name: Name of the property
-            
+
         Returns:
             True if the property can be mortgaged
         """
@@ -400,14 +420,16 @@ class MonopolyStateManager:
 
         return True
 
-    def can_unmortgage(self, player_idx: int, property_name: str, player_cash: int) -> bool:
+    def can_unmortgage(
+        self, player_idx: int, property_name: str, player_cash: int
+    ) -> bool:
         """Check if a player can unmortgage a property.
-        
+
         Args:
             player_idx: Index of the player
             property_name: Name of the property
             player_cash: Player's current cash
-            
+
         Returns:
             True if the property can be unmortgaged
         """
@@ -432,7 +454,7 @@ class MonopolyStateManager:
 
     def generate_property_ownership_summary(self) -> str:
         """Generate a summary of property ownership for the game.
-        
+
         Returns:
             String summary of property ownership
         """

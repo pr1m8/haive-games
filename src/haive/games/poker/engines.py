@@ -13,9 +13,7 @@ configures them with appropriate models and prompts for poker gameplay.
 
 import os
 
-from langchain_core.prompts import ChatPromptTemplate
-
-from haive.core.engine.aug_llm.base import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import (
     AnthropicLLMConfig,
     AzureLLMConfig,
@@ -24,50 +22,63 @@ from haive.core.models.llm.base import (
     LLMProvider,
     MistralLLMConfig,
 )
+from langchain_core.prompts import ChatPromptTemplate
+
 from haive.games.poker.models import AgentDecisionSchema
 
 
 # === Poker Player Prompts ===
 def generate_poker_prompt(player_style: str) -> ChatPromptTemplate:
     """Generate a structured prompt for a poker player."""
-    return ChatPromptTemplate.from_messages([
-        ("system",
-            f"You are a {player_style} poker player in a game of Texas Hold'em. "
-            "Your goal is to make strategic decisions based on your hand, the game state, "
-            "opponent actions, and pot size. Your playing style should align with your description."
-        ),
-        ("human",
-            "Game State:\n"
-            "- Player Name: {player_id}\n"
-            "- Position: {position_name}\n"
-            "- Phase: {phase}\n"
-            "- Hand: {hand}\n"
-            "- Community Cards: {community_cards}\n"
-            "- Chips: {chips}\n"
-            "- Current Bet: {current_bet}\n"
-            "- Pot Size: {pot_size}\n\n"
-            "Recent Actions:\n{recent_actions}\n\n"
-            "Players Summary:\n{player_states}\n\n"
-            "Legal Moves: {legal_moves}\n\n"
-            "Make your move and provide reasoning."
-        )
-    ])
+    return ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                f"You are a {player_style} poker player in a game of Texas Hold'em. "
+                "Your goal is to make strategic decisions based on your hand, the game state, "
+                "opponent actions, and pot size. Your playing style should align with your description.",
+            ),
+            (
+                "human",
+                "Game State:\n"
+                "- Player Name: {player_id}\n"
+                "- Position: {position_name}\n"
+                "- Phase: {phase}\n"
+                "- Hand: {hand}\n"
+                "- Community Cards: {community_cards}\n"
+                "- Chips: {chips}\n"
+                "- Current Bet: {current_bet}\n"
+                "- Pot Size: {pot_size}\n\n"
+                "Recent Actions:\n{recent_actions}\n\n"
+                "Players Summary:\n{player_states}\n\n"
+                "Legal Moves: {legal_moves}\n\n"
+                "Make your move and provide reasoning.",
+            ),
+        ]
+    )
+
 
 def generate_hand_analysis_prompt() -> ChatPromptTemplate:
     """Generate a structured prompt for poker hand analysis."""
-    return ChatPromptTemplate.from_messages([
-        ("system",
-            "You are an expert poker hand analyzer. Your task is to evaluate the strength of hands, "
-            "potential draws, and probabilities of winning given the board state."
-        ),
-        ("human",
-            "Game State:\n"
-            "- Player Hand: {hand}\n"
-            "- Community Cards: {community_cards}\n"
-            "- Opponent Actions: {recent_actions}\n\n"
-            "Analyze the situation and determine the best move."
-        )
-    ])
+    return ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are an expert poker hand analyzer. Your task is to evaluate the strength of hands, "
+                "potential draws, and probabilities of winning given the board state.",
+            ),
+            (
+                "human",
+                "Game State:\n"
+                "- Player Hand: {hand}\n"
+                "- Community Cards: {community_cards}\n"
+                "- Opponent Actions: {recent_actions}\n\n"
+                "Analyze the situation and determine the best move.",
+            ),
+        ]
+    )
+
+
 def get_available_providers() -> list[LLMProvider]:
     """Determine all available LLM providers based on environment variables."""
     available_providers = []
@@ -94,6 +105,7 @@ def get_available_providers() -> list[LLMProvider]:
 
     return available_providers
 
+
 def get_poker_llm_provider() -> LLMProvider:
     """Determine the best available LLM provider."""
     providers = get_available_providers()
@@ -104,7 +116,7 @@ def get_poker_llm_provider() -> LLMProvider:
         LLMProvider.ANTHROPIC,
         LLMProvider.GEMINI,
         LLMProvider.MISTRALAI,
-        LLMProvider.AZURE
+        LLMProvider.AZURE,
     ]
 
     # Return the highest priority available provider
@@ -114,6 +126,8 @@ def get_poker_llm_provider() -> LLMProvider:
 
     # Default fallback
     return LLMProvider.AZURE
+
+
 def get_model_for_provider(provider: LLMProvider) -> str:
     """Get the best model for a given provider."""
     # Avoid using dict with LLMProvider as key
@@ -127,6 +141,8 @@ def get_model_for_provider(provider: LLMProvider) -> str:
         return "mistral-large-latest"
     # Default to Azure model
     return "gpt-4o"
+
+
 def create_llm_config_for_provider(provider: LLMProvider, **kwargs):
     """Create an LLM configuration for a specific provider."""
     # Get the model name for this provider
@@ -150,13 +166,15 @@ def create_llm_config_for_provider(provider: LLMProvider, **kwargs):
     base_config = {
         "model": model,
         "temperature": 0.6,
-        #"max_tokens": 150
+        # "max_tokens": 150
     }
 
     # Override defaults with any provided kwargs
     base_config.update(kwargs)
 
     return config_class(**base_config)
+
+
 # === Poker Agent Configurations ===
 def create_poker_agent_configs() -> dict[str, AugLLMConfig]:
     """Create structured configurations for poker agents."""
@@ -169,39 +187,40 @@ def create_poker_agent_configs() -> dict[str, AugLLMConfig]:
             name="conservative_player",
             llm_config=llm_config,
             prompt_template=generate_poker_prompt("tight and risk-averse"),
-            structured_output_model=AgentDecisionSchema
+            structured_output_model=AgentDecisionSchema,
         ),
         "aggressive_agent": AugLLMConfig(
             name="aggressive_player",
             llm_config=llm_config,
             prompt_template=generate_poker_prompt("aggressive and bluffs often"),
-            structured_output_model=AgentDecisionSchema
+            structured_output_model=AgentDecisionSchema,
         ),
         "balanced_agent": AugLLMConfig(
             name="balanced_player",
             llm_config=llm_config,
             prompt_template=generate_poker_prompt("balanced and adaptive"),
-            structured_output_model=AgentDecisionSchema
+            structured_output_model=AgentDecisionSchema,
         ),
         "loose_agent": AugLLMConfig(
             name="loose_player",
             llm_config=llm_config,
             prompt_template=generate_poker_prompt("loose and plays many hands"),
-            structured_output_model=AgentDecisionSchema
+            structured_output_model=AgentDecisionSchema,
         ),
         "hand_analyzer": AugLLMConfig(
             name="hand_analyzer",
             llm_config=llm_config,
             prompt_template=generate_hand_analysis_prompt(),
-            structured_output_model=AgentDecisionSchema
-        )
+            structured_output_model=AgentDecisionSchema,
+        ),
     }
+
 
 # Updated version of create_default_agent_configs to work with various providers
 def create_default_agent_configs(config):
     """Create default configurations for poker agents based on config."""
     # The issue is here - we need to properly handle LLMProvider instances
-    providers = get_available_providers()
+    get_available_providers()
 
     # Create configurations for poker playing styles
     poker_configs = create_poker_agent_configs()
@@ -213,5 +232,7 @@ def create_default_agent_configs(config):
     config.engines.update(poker_configs)
 
     return config
+
+
 # === Exposed Agent Configuration ===
 poker_agent_configs = create_poker_agent_configs()

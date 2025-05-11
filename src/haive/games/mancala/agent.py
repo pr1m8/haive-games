@@ -3,13 +3,14 @@
 This module defines the Mancala game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
+
 import time
 from typing import Any
 
-from langgraph.types import Command
-
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langgraph.types import Command
+
 from haive.games.framework.base.agent import GameAgent
 from haive.games.mancala.config import MancalaConfig
 from haive.games.mancala.models import MancalaMove
@@ -44,8 +45,16 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Returns:
             Command: Initialization command containing the new game state.
         """
-        game_state = self.state_manager.initialize(stones_per_pit=self.config.stones_per_pit)
-        return Command(update=game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict())
+        game_state = self.state_manager.initialize(
+            stones_per_pit=self.config.stones_per_pit
+        )
+        return Command(
+            update=(
+                game_state.model_dump()
+                if hasattr(game_state, "model_dump")
+                else game_state.dict()
+            )
+        )
 
     def prepare_move_context(self, state: MancalaState, player: str) -> dict[str, Any]:
         """Prepare context for move generation.
@@ -61,10 +70,12 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         legal_moves = self.state_manager.get_legal_moves(state)
 
         # Format legal moves for display
-        formatted_legal_moves = "\n".join([
-            f"Pit {move.pit_index}: {state.board[move.pit_index if player == 'player1' else move.pit_index + 7]} stones"
-            for move in legal_moves
-        ])
+        formatted_legal_moves = "\n".join(
+            [
+                f"Pit {move.pit_index}: {state.board[move.pit_index if player == 'player1' else move.pit_index + 7]} stones"
+                for move in legal_moves
+            ]
+        )
 
         # Get recent move history
         recent_moves = []
@@ -73,7 +84,9 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         # Get player's analysis if available
         player_analysis = None
-        if hasattr(state, f"{player}_analysis") and getattr(state, f"{player}_analysis"):
+        if hasattr(state, f"{player}_analysis") and getattr(
+            state, f"{player}_analysis"
+        ):
             player_analysis = getattr(state, f"{player}_analysis")[-1]
         else:
             player_analysis = "No previous analysis available."
@@ -84,10 +97,12 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             "turn": state.turn,
             "legal_moves": formatted_legal_moves,
             "move_history": "\n".join(recent_moves),
-            "player_analysis": player_analysis
+            "player_analysis": player_analysis,
         }
 
-    def prepare_analysis_context(self, state: MancalaState, player: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: MancalaState, player: str
+    ) -> dict[str, Any]:
         """Prepare context for position analysis.
 
         Args:
@@ -114,7 +129,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             "player2_score": state.player2_score,
             "player1_pits": player1_pits,
             "player2_pits": player2_pits,
-            "move_history": "\n".join(recent_moves)
+            "move_history": "\n".join(recent_moves),
         }
 
     def extract_move(self, response: Any) -> MancalaMove:
@@ -162,11 +177,19 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             Command: Updated game state after the move.
         """
         if state.turn != player:
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Check if game is over
         if state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Prepare context for the move
         context = self.prepare_move_context(state, player)
@@ -182,7 +205,13 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def analyze_player1(self, state: MancalaState) -> Command:
         """Analyze position for player1.
@@ -217,11 +246,19 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             Command: Updated game state after the analysis.
         """
         if not self.config.enable_analysis:
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Skip analysis if game is over
         if state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Prepare context for analysis
         context = self.prepare_analysis_context(state, player)
@@ -237,7 +274,13 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         new_state = self.state_manager.add_analysis(state, player, analysis)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
@@ -264,21 +307,37 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             print(f"\n📝 Last Move: {last_move!s}")
 
         # Print analyses if available
-        if hasattr(game_state, "player1_analysis") and game_state.player1_analysis and game_state.turn == "player2":
+        if (
+            hasattr(game_state, "player1_analysis")
+            and game_state.player1_analysis
+            and game_state.turn == "player2"
+        ):
             last_analysis = game_state.player1_analysis[-1]
             print("\n🔍 Player 1's Analysis:")
-            print(f"Position Evaluation: {last_analysis.position_evaluation} (Advantage: {last_analysis.advantage_level}/10)")
+            print(
+                f"Position Evaluation: {last_analysis.position_evaluation} (Advantage: {last_analysis.advantage_level}/10)"
+            )
             print(f"Strategy Focus: {last_analysis.strategy_focus}")
             print(f"Key Tactics: {', '.join(last_analysis.key_tactics)}")
-            print(f"Recommended Pits: {', '.join(str(p) for p in last_analysis.pit_recommendations)}")
+            print(
+                f"Recommended Pits: {', '.join(str(p) for p in last_analysis.pit_recommendations)}"
+            )
 
-        if hasattr(game_state, "player2_analysis") and game_state.player2_analysis and game_state.turn == "player1":
+        if (
+            hasattr(game_state, "player2_analysis")
+            and game_state.player2_analysis
+            and game_state.turn == "player1"
+        ):
             last_analysis = game_state.player2_analysis[-1]
             print("\n🔍 Player 2's Analysis:")
-            print(f"Position Evaluation: {last_analysis.position_evaluation} (Advantage: {last_analysis.advantage_level}/10)")
+            print(
+                f"Position Evaluation: {last_analysis.position_evaluation} (Advantage: {last_analysis.advantage_level}/10)"
+            )
             print(f"Strategy Focus: {last_analysis.strategy_focus}")
             print(f"Key Tactics: {', '.join(last_analysis.key_tactics)}")
-            print(f"Recommended Pits: {', '.join(str(p) for p in last_analysis.pit_recommendations)}")
+            print(
+                f"Recommended Pits: {', '.join(str(p) for p in last_analysis.pit_recommendations)}"
+            )
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -310,6 +369,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         self.graph = builder.build()
 
         # Compile the workflow
+
     def run_game(self, visualize: bool = True) -> MancalaState:
         """Run a full Mancala game loop with optional visualization.
 
@@ -330,5 +390,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                 self.visualize_state(step)
             return step  # Final state
         return super().run(initial_state)
+
+
 agent = MancalaAgent()
 agent.run_game(visualize=True)

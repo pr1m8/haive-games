@@ -13,12 +13,13 @@ if TYPE_CHECKING:
 
 from haive.games.poker.state import PokerState
 
-#from haive.games.poker.config import PokerAgentConfig
+# from haive.games.poker.config import PokerAgentConfig
 logger = logging.getLogger(__name__)
+
 
 class PokerStateManager:
     """Manager for Texas Hold'em Poker game state.
-    
+
     This class provides methods for:
     - Game initialization and lifecycle management
     - Card dealing and deck management
@@ -45,7 +46,9 @@ class PokerStateManager:
 
         # Log initialization
         self._log_event(f"Game initialized with {len(config.player_names)} players")
-        self._log_event(f"Small blind: ${config.small_blind}, Big blind: ${config.big_blind}")
+        self._log_event(
+            f"Small blind: ${config.small_blind}, Big blind: ${config.big_blind}"
+        )
 
         return self.state
 
@@ -65,25 +68,23 @@ class PokerStateManager:
         """Get the game state from a specific player's perspective"""
         return self.state.create_player_observation(player_id)
 
-    def handle_player_action(self, player_id: str, action: PlayerAction, amount: int = 0) -> tuple[bool, str]:
+    def handle_player_action(
+        self, player_id: str, action: PlayerAction, amount: int = 0
+    ) -> tuple[bool, str]:
         """Process a player's action
-        
+
         Args:
             player_id: ID of the player making the action
             action: The action to take (fold, check, call, bet, raise, all-in)
             amount: The bet/raise amount (if applicable)
-            
+
         Returns:
             Tuple of (success, message)
         """
         from haive.games.poker.models import AgentDecision
 
         # Create decision object
-        decision = AgentDecision(
-            action=action,
-            amount=amount,
-            reasoning=""
-        )
+        decision = AgentDecision(action=action, amount=amount, reasoning="")
 
         # Validate player's turn
         current_player = self.state.game.players[self.state.game.current_player_idx]
@@ -107,7 +108,10 @@ class PokerStateManager:
                 self.state.advance_game_phase()
 
                 # Check if hand is complete
-                if self.state.game.phase == GamePhase.SHOWDOWN or self.state.game.phase == GamePhase.GAME_OVER:
+                if (
+                    self.state.game.phase == GamePhase.SHOWDOWN
+                    or self.state.game.phase == GamePhase.GAME_OVER
+                ):
                     return True, "hand_complete"
 
                 # Save state snapshot after phase change
@@ -123,7 +127,7 @@ class PokerStateManager:
 
     def advance_phase(self) -> tuple[bool, str]:
         """Advance to the next game phase
-        
+
         Returns:
             Tuple of (success, message)
         """
@@ -135,7 +139,10 @@ class PokerStateManager:
             self._save_state_snapshot(f"phase_{self.state.game.phase.value}")
 
             # Check if hand is complete
-            if self.state.game.phase == GamePhase.SHOWDOWN or self.state.game.phase == GamePhase.GAME_OVER:
+            if (
+                self.state.game.phase == GamePhase.SHOWDOWN
+                or self.state.game.phase == GamePhase.GAME_OVER
+            ):
                 return True, "hand_complete"
 
             # Return next player
@@ -148,7 +155,7 @@ class PokerStateManager:
 
     def complete_hand(self) -> dict[str, Any]:
         """Complete the current hand (showdown or single winner)
-        
+
         Returns:
             Hand result information
         """
@@ -171,7 +178,7 @@ class PokerStateManager:
             "pot_sizes": [pot.amount for pot in self.state.game.pots],
             "player_chips": {
                 player.id: player.chips for player in self.state.game.players
-            }
+            },
         }
 
     def get_game_summary(self) -> dict[str, Any]:
@@ -191,7 +198,7 @@ class PokerStateManager:
                     "is_all_in": player.is_all_in,
                     "current_bet": player.current_bet,
                     "total_bet": player.total_bet,
-                    "position": player.position
+                    "position": player.position,
                 }
                 for player in self.state.game.players
             ],
@@ -199,7 +206,7 @@ class PokerStateManager:
             "current_player_idx": self.state.game.current_player_idx,
             "small_blind": self.state.game.small_blind,
             "big_blind": self.state.game.big_blind,
-            "min_raise": self.state.game.min_raise
+            "min_raise": self.state.game.min_raise,
         }
 
     def get_legal_actions(self, player_id: str) -> list[dict[str, Any]]:
@@ -215,54 +222,50 @@ class PokerStateManager:
         legal_actions = []
 
         # Fold is always legal
-        legal_actions.append({
-            "action": PlayerAction.FOLD.value,
-            "amount": 0
-        })
+        legal_actions.append({"action": PlayerAction.FOLD.value, "amount": 0})
 
         # Check is legal if no bet to call
         call_amount = self.state.game.current_bet - player.current_bet
         if call_amount <= 0:
-            legal_actions.append({
-                "action": PlayerAction.CHECK.value,
-                "amount": 0
-            })
+            legal_actions.append({"action": PlayerAction.CHECK.value, "amount": 0})
 
         # Call is legal if there's a bet to call and player has chips
         if call_amount > 0 and player.chips >= call_amount:
-            legal_actions.append({
-                "action": PlayerAction.CALL.value,
-                "amount": call_amount
-            })
+            legal_actions.append(
+                {"action": PlayerAction.CALL.value, "amount": call_amount}
+            )
 
         # Bet is legal if no current bet and player has chips
         if self.state.game.current_bet == 0 and player.chips > 0:
             # Minimum bet is big blind
             min_bet = min(self.state.game.big_blind, player.chips)
-            legal_actions.append({
-                "action": PlayerAction.BET.value,
-                "amount": min_bet,
-                "min": min_bet,
-                "max": player.chips
-            })
+            legal_actions.append(
+                {
+                    "action": PlayerAction.BET.value,
+                    "amount": min_bet,
+                    "min": min_bet,
+                    "max": player.chips,
+                }
+            )
 
         # Raise is legal if there's a bet and player has enough chips
         if self.state.game.current_bet > 0 and player.chips > call_amount:
             min_raise_to = self.state.game.current_bet + self.state.game.min_raise
             min_raise = min(min_raise_to, player.chips)
-            legal_actions.append({
-                "action": PlayerAction.RAISE.value,
-                "amount": min_raise,
-                "min": min_raise,
-                "max": player.chips
-            })
+            legal_actions.append(
+                {
+                    "action": PlayerAction.RAISE.value,
+                    "amount": min_raise,
+                    "min": min_raise,
+                    "max": player.chips,
+                }
+            )
 
         # All-in is always legal if player has chips
         if player.chips > 0:
-            legal_actions.append({
-                "action": PlayerAction.ALL_IN.value,
-                "amount": player.chips
-            })
+            legal_actions.append(
+                {"action": PlayerAction.ALL_IN.value, "amount": player.chips}
+            )
 
         return legal_actions
 
@@ -281,14 +284,14 @@ class PokerStateManager:
                     "chips": p.chips,
                     "hand": str(p.hand) if p.hand else "None",
                     "is_active": p.is_active,
-                    "current_bet": p.current_bet
+                    "current_bet": p.current_bet,
                 }
                 for p in self.state.game.players
             ],
             "community_cards": [str(card) for card in self.state.game.community_cards],
             "pots": [pot.amount for pot in self.state.game.pots],
             "current_player": self.state.game.current_player_idx,
-            "current_bet": self.state.game.current_bet
+            "current_bet": self.state.game.current_bet,
         }
 
         self.history.append(snapshot)
@@ -296,7 +299,9 @@ class PokerStateManager:
         if self.debug:
             logger.debug(f"State snapshot: {action_type}")
             logger.debug(f"Phase: {self.state.game.phase.value}")
-            logger.debug(f"Community cards: {[str(c) for c in self.state.game.community_cards]}")
+            logger.debug(
+                f"Community cards: {[str(c) for c in self.state.game.community_cards]}"
+            )
             logger.debug(f"Pot sizes: {[pot.amount for pot in self.state.game.pots]}")
             logger.debug(f"Current bet: {self.state.game.current_bet}")
 
@@ -314,6 +319,7 @@ class PokerStateManager:
         """Reset the state manager"""
         self.state = PokerState()
         self.history = []
+
     def is_game_over(self):
         """Check if the game is over based on phase"""
         return self.state.game.phase == GamePhase.GAME_OVER

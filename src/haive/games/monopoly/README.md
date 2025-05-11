@@ -26,7 +26,7 @@ The agent is designed with a clean separation of concerns:
    ```bash
    # Clone the repository with the Monopoly code
    git clone https://github.com/AniketSanghi/Monopoly-game.git
-   
+
    # Copy the agent folder into the repository
    cp -r monopoly_agent/ Monopoly-game/
    ```
@@ -36,10 +36,10 @@ The agent is designed with a clean separation of concerns:
    ```python
    # Import the setup function
    from monopoly_agent.integration import setup_monopoly_agent
-   
+
    # Setup the agent for player 1 (index 1)
    agent_integration = setup_monopoly_agent(player_index=1)
-   
+
    # Run the game normally
    mainboard.mainscreen()
    ```

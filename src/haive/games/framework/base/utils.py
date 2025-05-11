@@ -16,28 +16,29 @@ Typical usage:
 
 from typing import Any
 
-#from .agent import GameAgent
+# from .agent import GameAgent
+
 
 def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
     """Run a complete game with the given agent.
-    
+
     This function executes a game from start to finish using the provided agent.
     It handles game initialization, move execution, state visualization, and
     error reporting. The game can optionally start from a provided initial state.
-    
+
     Args:
         agent (GameAgent): The game agent to run the game with.
         initial_state (Optional[Dict[str, Any]], optional): Initial game state.
             If not provided, a new game will be initialized. Defaults to None.
-    
+
     Example:
         >>> agent = ChessAgent(ChessConfig())
         >>> # Start a new game
         >>> run_game(agent)
-        >>> 
+        >>>
         >>> # Continue from a saved state
         >>> run_game(agent, saved_state)
-    
+
     Note:
         - The function will print game progress to the console
         - Game visualization depends on the agent's visualize_state method
@@ -52,10 +53,7 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
 
     # Stream through the game steps
     for step in agent.app.stream(
-        game_state,
-        config=agent.runnable_config,
-        debug=True,
-        stream_mode="values"
+        game_state, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
         # Visualize the game state
         agent.visualize_state(step)

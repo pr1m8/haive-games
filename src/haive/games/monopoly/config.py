@@ -8,8 +8,6 @@ This module provides configuration classes for the Monopoly agent, including:
 
 from typing import Any
 
-from pydantic import BaseModel, Field, model_validator
-
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.agent.persistence.base import CheckpointerConfig
 from haive.core.engine.agent.persistence.memory_config import MemoryCheckpointerConfig
@@ -19,7 +17,14 @@ from haive.core.models.llm.base import (
     AzureLLMConfig,
     OpenAILLMConfig,
 )
-from haive.games.monopoly.models import MoveAction, PropertyAction, StrategyAnalysis, TurnDecision
+from pydantic import BaseModel, Field, model_validator
+
+from haive.games.monopoly.models import (
+    MoveAction,
+    PropertyAction,
+    StrategyAnalysis,
+    TurnDecision,
+)
 from haive.games.monopoly.prompts import (
     generate_move_decision_prompt,
     generate_property_decision_prompt,
@@ -31,102 +36,108 @@ from haive.games.monopoly.state import MonopolyState
 
 class EngineConfig(BaseModel):
     """Configuration for a specific LLM engine."""
+
     model: str = Field(..., description="Model name")
-    provider: str = Field(default="azure", description="Provider: azure, openai, anthropic")
+    provider: str = Field(
+        default="azure", description="Provider: azure, openai, anthropic"
+    )
     temperature: float = Field(default=0.7, description="Temperature for generation")
-    max_tokens: int | None = Field(default=None, description="Maximum tokens to generate")
+    max_tokens: int | None = Field(
+        default=None, description="Maximum tokens to generate"
+    )
     top_p: float | None = Field(default=None, description="Nucleus sampling parameter")
     top_k: int | None = Field(default=None, description="Top-k sampling parameter")
     api_key: str | None = Field(default=None, description="API key override")
-    parameters: dict[str, Any] = Field(default_factory=dict, description="Additional parameters")
+    parameters: dict[str, Any] = Field(
+        default_factory=dict, description="Additional parameters"
+    )
+
 
 class RetryPolicyConfig(BaseModel):
     """Configuration for retry policies."""
+
     max_retries: int = Field(default=3, description="Maximum number of retries")
     initial_delay: float = Field(default=1.0, description="Initial delay in seconds")
     backoff_factor: float = Field(default=2.0, description="Backoff multiplier")
     max_delay: float = Field(default=60.0, description="Maximum delay in seconds")
     jitter: bool = Field(default=True, description="Add jitter to delay")
 
+
 class MonopolyAgentConfig(AgentConfig):
     """Configuration for the Monopoly agent."""
 
     # Game configuration
     debug: bool = Field(default=False, description="Enable debug output")
-    max_history: int = Field(default=5, description="Maximum number of history events to track")
-    state_schema: type[BaseModel] = Field(default=MonopolyState, description="The state schema for the Monopoly game")
+    max_history: int = Field(
+        default=5, description="Maximum number of history events to track"
+    )
+    state_schema: type[BaseModel] = Field(
+        default=MonopolyState, description="The state schema for the Monopoly game"
+    )
     num_players: int = Field(default=2, description="Number of players in the game")
 
     # LLM engines configuration
     engines: dict[str, AugLLMConfig | dict[str, Any]] = Field(
         default_factory=dict,
-        description="Map of engine name to AugLLMConfig or engine config dict"
+        description="Map of engine name to AugLLMConfig or engine config dict",
     )
 
     # Multi-model configuration
     engine_configs: dict[str, EngineConfig] = Field(
-        default_factory=dict,
-        description="Configuration for different engines by name"
+        default_factory=dict, description="Configuration for different engines by name"
     )
 
     # Engine assignments
     strategy_engine: str = Field(
-        default="strategy",
-        description="Engine to use for strategy analysis"
+        default="strategy", description="Engine to use for strategy analysis"
     )
     move_engine: str = Field(
-        default="move_decision",
-        description="Engine to use for move decisions"
+        default="move_decision", description="Engine to use for move decisions"
     )
     property_engine: str = Field(
-        default="property_decision",
-        description="Engine to use for property decisions"
+        default="property_decision", description="Engine to use for property decisions"
     )
     turn_engine: str = Field(
-        default="turn_decision",
-        description="Engine to use for overall turn decisions"
+        default="turn_decision", description="Engine to use for overall turn decisions"
     )
 
     # Retry policies
     enable_retries: bool = Field(
-        default=True,
-        description="Enable retry policies for LLM calls"
+        default=True, description="Enable retry policies for LLM calls"
     )
     retry_policy: RetryPolicyConfig = Field(
-        default_factory=RetryPolicyConfig,
-        description="Retry policy configuration"
+        default_factory=RetryPolicyConfig, description="Retry policy configuration"
     )
 
     # Persistence configuration
     persistence: CheckpointerConfig | None = Field(
         default_factory=MemoryCheckpointerConfig,
-        description="Persistence configuration for state checkpointing"
+        description="Persistence configuration for state checkpointing",
     )
 
     # Monopoly specific settings
     properties_to_prioritize: list[str] = Field(
         default_factory=lambda: ["orange", "red", "light_blue"],
-        description="Property colors to prioritize (in order of preference)"
+        description="Property colors to prioritize (in order of preference)",
     )
 
     mortgage_threshold: int = Field(
         default=300,
-        description="Cash threshold below which to consider mortgaging properties"
+        description="Cash threshold below which to consider mortgaging properties",
     )
 
     cash_reserve_target: int = Field(
-        default=500,
-        description="Target amount of cash to keep in reserve"
+        default=500, description="Target amount of cash to keep in reserve"
     )
 
     target_properties_before_building: int = Field(
         default=5,
-        description="Number of properties to acquire before focusing on building"
+        description="Number of properties to acquire before focusing on building",
     )
 
     risky_strategy: bool = Field(
         default=False,
-        description="Whether to use a higher-risk strategy (spend more cash, take more risks)"
+        description="Whether to use a higher-risk strategy (spend more cash, take more risks)",
     )
 
     @model_validator(mode="after")
@@ -136,8 +147,7 @@ class MonopolyAgentConfig(AgentConfig):
         if not self.engines:
             # Create default LLM config
             llm_config = AzureLLMConfig(
-                model="gpt-4o",
-                parameters={"temperature": 0.7}
+                model="gpt-4o", parameters={"temperature": 0.7}
             ).model_dump()
 
             # Create engines for different decision types
@@ -145,28 +155,28 @@ class MonopolyAgentConfig(AgentConfig):
                 name="move_decision",
                 llm_config=llm_config,
                 prompt_template=generate_move_decision_prompt(),
-                structured_output_model=MoveAction
+                structured_output_model=MoveAction,
             )
 
             property_decision = AugLLMConfig.from_llm_config(
                 name="property_decision",
                 llm_config=llm_config,
                 prompt_template=generate_property_decision_prompt(),
-                structured_output_model=PropertyAction
+                structured_output_model=PropertyAction,
             )
 
             strategy = AugLLMConfig.from_llm_config(
                 name="strategy_analysis",
                 llm_config=llm_config,
                 prompt_template=generate_strategy_analysis_prompt(),
-                structured_output_model=StrategyAnalysis
+                structured_output_model=StrategyAnalysis,
             )
 
             turn_decision = AugLLMConfig.from_llm_config(
                 name="turn_decision",
                 llm_config=llm_config,
                 prompt_template=generate_turn_decision_prompt(),
-                structured_output_model=TurnDecision
+                structured_output_model=TurnDecision,
             )
 
             # Convert to dictionaries for storage
@@ -174,7 +184,7 @@ class MonopolyAgentConfig(AgentConfig):
                 "move_decision": move_decision.model_dump(),
                 "property_decision": property_decision.model_dump(),
                 "strategy": strategy.model_dump(),
-                "turn_decision": turn_decision.model_dump()
+                "turn_decision": turn_decision.model_dump(),
             }
 
             # Set default engine
@@ -195,7 +205,7 @@ class MonopolyAgentConfig(AgentConfig):
         **kwargs
     ) -> "MonopolyAgentConfig":
         """Create a default configuration for the Monopoly agent.
-        
+
         Args:
             model: LLM model to use
             temperature: Temperature for generation
@@ -204,14 +214,13 @@ class MonopolyAgentConfig(AgentConfig):
             max_history: Maximum history events to track
             num_players: Number of players in the game
             **kwargs: Additional arguments for configuration
-            
+
         Returns:
             MonopolyAgentConfig instance
         """
         # Set up LLM config
         llm_config = AzureLLMConfig(
-            model=model,
-            parameters={"temperature": temperature}
+            model=model, parameters={"temperature": temperature}
         ).model_dump()
 
         # Create engines for different decision types
@@ -219,28 +228,28 @@ class MonopolyAgentConfig(AgentConfig):
             name="move_decision",
             llm_config=llm_config,
             prompt_template=generate_move_decision_prompt(),
-            structured_output_model=MoveAction
+            structured_output_model=MoveAction,
         )
 
         property_decision = AugLLMConfig.from_llm_config(
             name="property_decision",
             llm_config=llm_config,
             prompt_template=generate_property_decision_prompt(),
-            structured_output_model=PropertyAction
+            structured_output_model=PropertyAction,
         )
 
         strategy = AugLLMConfig.from_llm_config(
             name="strategy_analysis",
             llm_config=llm_config,
             prompt_template=generate_strategy_analysis_prompt(),
-            structured_output_model=StrategyAnalysis
+            structured_output_model=StrategyAnalysis,
         )
 
         turn_decision = AugLLMConfig.from_llm_config(
             name="turn_decision",
             llm_config=llm_config,
             prompt_template=generate_turn_decision_prompt(),
-            structured_output_model=TurnDecision
+            structured_output_model=TurnDecision,
         )
 
         # Convert to dictionaries for storage
@@ -248,7 +257,7 @@ class MonopolyAgentConfig(AgentConfig):
             "move_decision": move_decision.model_dump(),
             "property_decision": property_decision.model_dump(),
             "strategy": strategy.model_dump(),
-            "turn_decision": turn_decision.model_dump()
+            "turn_decision": turn_decision.model_dump(),
         }
 
         # Create config
@@ -279,7 +288,7 @@ class MonopolyAgentConfig(AgentConfig):
         **kwargs
     ) -> "MonopolyAgentConfig":
         """Create a configuration with multiple models.
-        
+
         Args:
             name: Optional name for the agent
             debug: Enable debug output
@@ -291,16 +300,14 @@ class MonopolyAgentConfig(AgentConfig):
             property_engine: Engine for property decisions
             turn_engine: Engine for turn decisions
             **kwargs: Additional args for configuration
-            
+
         Returns:
             MonopolyAgentConfig instance
         """
         # Ensure we have a primary engine
         if primary_engine is None:
             primary_engine = EngineConfig(
-                model="gpt-4o",
-                provider="azure",
-                temperature=0.7
+                model="gpt-4o", provider="azure", temperature=0.7
             )
 
         # Create engine configs
@@ -309,7 +316,7 @@ class MonopolyAgentConfig(AgentConfig):
             "strategy": strategy_engine or primary_engine,
             "move": move_engine or primary_engine,
             "property": property_engine or primary_engine,
-            "turn": turn_engine or primary_engine
+            "turn": turn_engine or primary_engine,
         }
 
         # Create LLM configs
@@ -321,11 +328,15 @@ class MonopolyAgentConfig(AgentConfig):
                     model=config.model,
                     parameters={
                         "temperature": config.temperature,
-                        **({"max_tokens": config.max_tokens} if config.max_tokens else {}),
+                        **(
+                            {"max_tokens": config.max_tokens}
+                            if config.max_tokens
+                            else {}
+                        ),
                         **({"top_p": config.top_p} if config.top_p else {}),
                         **({"top_k": config.top_k} if config.top_k else {}),
-                        **config.parameters
-                    }
+                        **config.parameters,
+                    },
                 )
             elif config.provider.lower() == "openai":
                 llm_configs[engine_name] = OpenAILLMConfig(
@@ -333,10 +344,14 @@ class MonopolyAgentConfig(AgentConfig):
                     api_key=config.api_key,
                     extra_params={
                         "temperature": config.temperature,
-                        **({"max_tokens": config.max_tokens} if config.max_tokens else {}),
+                        **(
+                            {"max_tokens": config.max_tokens}
+                            if config.max_tokens
+                            else {}
+                        ),
                         **({"top_p": config.top_p} if config.top_p else {}),
-                        **config.parameters
-                    }
+                        **config.parameters,
+                    },
                 )
             elif config.provider.lower() == "anthropic":
                 llm_configs[engine_name] = AnthropicLLMConfig(
@@ -344,19 +359,20 @@ class MonopolyAgentConfig(AgentConfig):
                     api_key=config.api_key,
                     extra_params={
                         "temperature": config.temperature,
-                        **({"max_tokens": config.max_tokens} if config.max_tokens else {}),
+                        **(
+                            {"max_tokens": config.max_tokens}
+                            if config.max_tokens
+                            else {}
+                        ),
                         **({"top_p": config.top_p} if config.top_p else {}),
-                        **config.parameters
-                    }
+                        **config.parameters,
+                    },
                 )
             else:
                 # Default to Azure
                 llm_configs[engine_name] = AzureLLMConfig(
                     model=config.model,
-                    parameters={
-                        "temperature": config.temperature,
-                        **config.parameters
-                    }
+                    parameters={"temperature": config.temperature, **config.parameters},
                 )
 
         # Create AugLLM configs
@@ -364,28 +380,28 @@ class MonopolyAgentConfig(AgentConfig):
             name="move_decision",
             llm_config=llm_configs["move"],
             prompt_template=generate_move_decision_prompt(),
-            structured_output_model=MoveAction
+            structured_output_model=MoveAction,
         )
 
         property_decision = AugLLMConfig.from_llm_config(
             name="property_decision",
             llm_config=llm_configs["property"],
             prompt_template=generate_property_decision_prompt(),
-            structured_output_model=PropertyAction
+            structured_output_model=PropertyAction,
         )
 
         strategy = AugLLMConfig.from_llm_config(
             name="strategy_analysis",
             llm_config=llm_configs["strategy"],
             prompt_template=generate_strategy_analysis_prompt(),
-            structured_output_model=StrategyAnalysis
+            structured_output_model=StrategyAnalysis,
         )
 
         turn_decision = AugLLMConfig.from_llm_config(
             name="turn_decision",
             llm_config=llm_configs["turn"],
             prompt_template=generate_turn_decision_prompt(),
-            structured_output_model=TurnDecision
+            structured_output_model=TurnDecision,
         )
 
         # Convert to dictionaries for storage
@@ -393,7 +409,7 @@ class MonopolyAgentConfig(AgentConfig):
             "move_decision": move_decision.model_dump(),
             "property_decision": property_decision.model_dump(),
             "strategy": strategy.model_dump(),
-            "turn_decision": turn_decision.model_dump()
+            "turn_decision": turn_decision.model_dump(),
         }
 
         # Create config
@@ -417,10 +433,10 @@ class MonopolyAgentConfig(AgentConfig):
     @classmethod
     def create_conservative(cls, **kwargs) -> "MonopolyAgentConfig":
         """Create a configuration for a conservative player that focuses on cash reserves.
-        
+
         Args:
             **kwargs: Arguments to pass to create_default
-            
+
         Returns:
             MonopolyAgentConfig instance with conservative settings
         """
@@ -428,9 +444,13 @@ class MonopolyAgentConfig(AgentConfig):
         config = cls.create_default(**kwargs)
 
         # Adjust for conservative strategy
-        config.mortgage_threshold = 500  # Higher threshold for mortgaging (more cautious)
+        config.mortgage_threshold = (
+            500  # Higher threshold for mortgaging (more cautious)
+        )
         config.cash_reserve_target = 800  # Higher cash reserve target
-        config.target_properties_before_building = 8  # Acquire more properties before building
+        config.target_properties_before_building = (
+            8  # Acquire more properties before building
+        )
         config.risky_strategy = False
 
         # Prioritize safer property groups
@@ -441,10 +461,10 @@ class MonopolyAgentConfig(AgentConfig):
     @classmethod
     def create_aggressive(cls, **kwargs) -> "MonopolyAgentConfig":
         """Create a configuration for an aggressive player that focuses on rapid development.
-        
+
         Args:
             **kwargs: Arguments to pass to create_default
-            
+
         Returns:
             MonopolyAgentConfig instance with aggressive settings
         """
@@ -452,7 +472,9 @@ class MonopolyAgentConfig(AgentConfig):
         config = cls.create_default(**kwargs)
 
         # Adjust for aggressive strategy
-        config.mortgage_threshold = 200  # Lower threshold for mortgaging (more aggressive)
+        config.mortgage_threshold = (
+            200  # Lower threshold for mortgaging (more aggressive)
+        )
         config.cash_reserve_target = 300  # Lower cash reserve target
         config.target_properties_before_building = 3  # Build sooner
         config.risky_strategy = True

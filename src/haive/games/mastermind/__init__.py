@@ -19,5 +19,5 @@ __all__ = [
     "MastermindGuess",
     "MastermindState",
     "MastermindStateManager",
-    "mastermind_engines"
+    "mastermind_engines",
 ]

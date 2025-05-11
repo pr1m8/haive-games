@@ -149,10 +149,12 @@ For raising:
 YOUR RESPONSE: (provide a single JSON object with action, amount, and reasoning)
 """
 
-decision_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template("{system_prompt}"),
-    HumanMessagePromptTemplate.from_template(DECISION_PROMPT_TEMPLATE)
-])
+decision_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template("{system_prompt}"),
+        HumanMessagePromptTemplate.from_template(DECISION_PROMPT_TEMPLATE),
+    ]
+)
 
 # Hand analysis prompt with structured output format
 
@@ -187,10 +189,14 @@ Respond with a structured analysis in this format:
 ```
 """
 
-hand_analysis_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template("You are an expert poker analyzer. Provide accurate, objective analysis of Texas Hold'em hands."),
-    HumanMessagePromptTemplate.from_template(HAND_ANALYSIS_PROMPT)
-])
+hand_analysis_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template(
+            "You are an expert poker analyzer. Provide accurate, objective analysis of Texas Hold'em hands."
+        ),
+        HumanMessagePromptTemplate.from_template(HAND_ANALYSIS_PROMPT),
+    ]
+)
 
 # Opponent modeling prompt with structured output
 
@@ -222,10 +228,14 @@ Respond with a structured analysis in this format:
 ```
 """
 
-opponent_modeling_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template("You are a skilled poker player with a talent for reading opponents."),
-    HumanMessagePromptTemplate.from_template(OPPONENT_MODELING_PROMPT)
-])
+opponent_modeling_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template(
+            "You are a skilled poker player with a talent for reading opponents."
+        ),
+        HumanMessagePromptTemplate.from_template(OPPONENT_MODELING_PROMPT),
+    ]
+)
 
 # Game summary prompt for structured analysis
 
@@ -254,10 +264,15 @@ Respond with a structured analysis in this format:
 ```
 """
 
-game_summary_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template("You are a poker commentator providing insightful analysis of completed hands."),
-    HumanMessagePromptTemplate.from_template(GAME_SUMMARY_PROMPT)
-])
+game_summary_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template(
+            "You are a poker commentator providing insightful analysis of completed hands."
+        ),
+        HumanMessagePromptTemplate.from_template(GAME_SUMMARY_PROMPT),
+    ]
+)
+
 
 # Function to get the appropriate system prompt based on player style
 def get_system_prompt(player_style: str) -> str:
@@ -266,42 +281,91 @@ def get_system_prompt(player_style: str) -> str:
         "conservative": CONSERVATIVE_SYSTEM_PROMPT,
         "aggressive": AGGRESSIVE_SYSTEM_PROMPT,
         "balanced": BALANCED_SYSTEM_PROMPT,
-        "loose": LOOSE_SYSTEM_PROMPT
+        "loose": LOOSE_SYSTEM_PROMPT,
     }
     return style_prompts.get(player_style.lower(), BALANCED_SYSTEM_PROMPT)
+
 
 # Function to get example decisions for a given style
 def get_example_decisions(player_style: str) -> list:
     """Get example decisions appropriate for the playing style."""
     conservative_examples = [
-        {"action": "fold", "amount": 0, "reasoning": "My 8-3 offsuit is weak and out of position against a raise."},
-        {"action": "call", "amount": 50, "reasoning": "I have AK suited. Worth seeing a flop in position."},
-        {"action": "raise", "amount": 150, "reasoning": "Pocket kings are the second strongest starting hand. Building value."}
+        {
+            "action": "fold",
+            "amount": 0,
+            "reasoning": "My 8-3 offsuit is weak and out of position against a raise.",
+        },
+        {
+            "action": "call",
+            "amount": 50,
+            "reasoning": "I have AK suited. Worth seeing a flop in position.",
+        },
+        {
+            "action": "raise",
+            "amount": 150,
+            "reasoning": "Pocket kings are the second strongest starting hand. Building value.",
+        },
     ]
 
     aggressive_examples = [
-        {"action": "raise", "amount": 200, "reasoning": "Applying pressure with position even with marginal holdings."},
-        {"action": "all-in", "amount": 850, "reasoning": "Semi-bluff with the flush draw. Maximizing fold equity."},
-        {"action": "bet", "amount": 150, "reasoning": "C-betting the flop to take down the pot now."}
+        {
+            "action": "raise",
+            "amount": 200,
+            "reasoning": "Applying pressure with position even with marginal holdings.",
+        },
+        {
+            "action": "all-in",
+            "amount": 850,
+            "reasoning": "Semi-bluff with the flush draw. Maximizing fold equity.",
+        },
+        {
+            "action": "bet",
+            "amount": 150,
+            "reasoning": "C-betting the flop to take down the pot now.",
+        },
     ]
 
     balanced_examples = [
-        {"action": "fold", "amount": 0, "reasoning": "Weak hand facing multiple raises. Saving chips for better spots."},
-        {"action": "call", "amount": 100, "reasoning": "Pot odds justify continuing with my draw."},
-        {"action": "raise", "amount": 250, "reasoning": "Value betting my top pair top kicker."}
+        {
+            "action": "fold",
+            "amount": 0,
+            "reasoning": "Weak hand facing multiple raises. Saving chips for better spots.",
+        },
+        {
+            "action": "call",
+            "amount": 100,
+            "reasoning": "Pot odds justify continuing with my draw.",
+        },
+        {
+            "action": "raise",
+            "amount": 250,
+            "reasoning": "Value betting my top pair top kicker.",
+        },
     ]
 
     loose_examples = [
-        {"action": "call", "amount": 75, "reasoning": "Speculative hand with suited connectors. Worth seeing a flop."},
-        {"action": "raise", "amount": 300, "reasoning": "Representing strength to take down the pot now."},
-        {"action": "all-in", "amount": 650, "reasoning": "Going for the big bluff against the tight player."}
+        {
+            "action": "call",
+            "amount": 75,
+            "reasoning": "Speculative hand with suited connectors. Worth seeing a flop.",
+        },
+        {
+            "action": "raise",
+            "amount": 300,
+            "reasoning": "Representing strength to take down the pot now.",
+        },
+        {
+            "action": "all-in",
+            "amount": 650,
+            "reasoning": "Going for the big bluff against the tight player.",
+        },
     ]
 
     style_examples = {
         "conservative": conservative_examples,
         "aggressive": aggressive_examples,
         "balanced": balanced_examples,
-        "loose": loose_examples
+        "loose": loose_examples,
     }
 
     return style_examples.get(player_style.lower(), balanced_examples)

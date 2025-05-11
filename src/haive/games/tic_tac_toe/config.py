@@ -7,9 +7,9 @@ settings, game setup, and display options.
 
 from typing import Literal
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.config import GameConfig
 from haive.games.tic_tac_toe.engines import tictactoe_engines
 from haive.games.tic_tac_toe.state import TicTacToeState
@@ -28,31 +28,26 @@ class TicTacToeConfig(GameConfig):
         player_X (Literal['player1', 'player2']): Identity of the player using 'X'.
         player_O (Literal['player1', 'player2']): Identity of the player using 'O'.
     """
+
     name: str = Field(default="tictactoe", description="Name of the game")
-    state_schema: type[TicTacToeState] = Field(default=TicTacToeState, description="State schema for Tic Tac Toe")
+    state_schema: type[TicTacToeState] = Field(
+        default=TicTacToeState, description="State schema for Tic Tac Toe"
+    )
     engines: dict[str, AugLLMConfig] = Field(
-        default=tictactoe_engines,
-        description="Configs for the Tic Tac Toe engines"
+        default=tictactoe_engines, description="Configs for the Tic Tac Toe engines"
     )
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
     first_player: Literal["X", "O"] = Field(
-        default="X",
-        description="Which symbol goes first"
+        default="X", description="Which symbol goes first"
     )
     player_X: Literal["player1", "player2"] = Field(
-        default="player1",
-        description="Which player uses X"
+        default="player1", description="Which player uses X"
     )
     player_O: Literal["player1", "player2"] = Field(
-        default="player2",
-        description="Which player uses O"
+        default="player2", description="Which player uses O"
     )
 
     @classmethod
@@ -70,5 +65,5 @@ class TicTacToeConfig(GameConfig):
             visualize=True,
             first_player="X",
             player_X="player1",
-            player_O="player2"
+            player_O="player2",
         )

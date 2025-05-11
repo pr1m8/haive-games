@@ -1,4 +1,3 @@
-
 # src/haive/agents/agent_games/connect4/state.py
 
 from typing import Literal
@@ -11,6 +10,7 @@ from haive.games.framework.base.state import GameState
 
 class Connect4State(GameState):
     """State for a Connect 4 game."""
+
     board: list[list[str | None]] = Field(
         ..., description="6x7 board representation (rows x columns)"
     )
@@ -27,9 +27,7 @@ class Connect4State(GameState):
     yellow_analysis: list[dict] = Field(
         default_factory=list, description="Analysis history for yellow player"
     )
-    winner: str | None = Field(
-        default=None, description="Winner of the game, if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
 
     @property
     def board_string(self) -> str:
@@ -81,9 +79,4 @@ class Connect4State(GameState):
     def initialize(cls):
         """Initialize a new Connect 4 game."""
         board = [[None for _ in range(7)] for _ in range(6)]
-        return cls(
-            board=board,
-            turn="red",
-            game_status="ongoing",
-            move_history=[]
-        )
+        return cls(board=board, turn="red", game_status="ongoing", move_history=[])

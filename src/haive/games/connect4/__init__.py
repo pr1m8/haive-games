@@ -9,7 +9,7 @@ This package provides a complete implementation of the Connect4 game, including:
 
 Example:
     >>> from haive.games.connect4 import Connect4Agent, Connect4AgentConfig
-    >>> 
+    >>>
     >>> # Create and configure a Connect4 agent
     >>> config = Connect4AgentConfig(enable_analysis=True)
     >>> agent = Connect4Agent(config)

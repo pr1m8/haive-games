@@ -13,7 +13,7 @@ using Pydantic models for type safety and validation.
 
 Example:
     >>> from poker.state import PokerState
-    >>> 
+    >>>
     >>> # Initialize a new game
     >>> state = PokerState()
     >>> state.initialize_game(["Alice", "Bob", "Charlie"], starting_chips=1000)
@@ -47,9 +47,10 @@ from haive.games.poker.models import (
 
 logger = logging.getLogger(__name__)
 
+
 class PokerState(BaseModel):
     """State manager for Texas Hold'em Poker game.
-    
+
     Manages the complete state of a poker game, including player actions,
     game progression, betting rounds, and hand evaluation. Built on top of
     LangGraph for AI agent integration.
@@ -71,6 +72,7 @@ class PokerState(BaseModel):
         >>> state.start_new_hand()
         >>> obs = state.create_player_observation("player_0")
     """
+
     # Standard agent state fields
     messages: list[BaseMessage] = Field(default_factory=list)
     current_step: int = 0
@@ -86,7 +88,7 @@ class PokerState(BaseModel):
 
     def initialize_game(self, player_names: list[str], starting_chips: int = 1000):
         """Initialize a new poker game with the given players.
-        
+
         Creates a new game state with the specified players, assigning
         IDs, positions, and starting chip stacks.
 
@@ -104,7 +106,9 @@ class PokerState(BaseModel):
             ],
             active_players=[f"player_{i}" for i in range(len(player_names))],
             phase=GamePhase.SETUP,
-            pots=[Pot(eligible_players=[f"player_{i}" for i in range(len(player_names))])]
+            pots=[
+                Pot(eligible_players=[f"player_{i}" for i in range(len(player_names))])
+            ],
         )
 
         self.initialize_deck()
@@ -112,7 +116,7 @@ class PokerState(BaseModel):
 
     def initialize_deck(self):
         """Create and shuffle a new deck of cards.
-        
+
         Creates a standard 52-card deck and performs a random shuffle.
         Updates the game state with the new deck.
         """
@@ -127,7 +131,7 @@ class PokerState(BaseModel):
 
     def deal_hands(self):
         """Deal two cards to each active player.
-        
+
         Deals hole cards to all active players with chips. Skips inactive
         or busted players. Logs an error if there aren't enough cards.
         """
@@ -137,16 +141,13 @@ class PokerState(BaseModel):
 
         for player in self.game.players:
             if player.is_active and player.chips > 0:
-                player.hand = Hand(cards=[
-                    self.game.deck.pop(),
-                    self.game.deck.pop()
-                ])
+                player.hand = Hand(cards=[self.game.deck.pop(), self.game.deck.pop()])
 
         self.log_event("Hands dealt to all players")
 
     def post_blinds(self):
         """Post small and big blinds.
-        
+
         Forces the two players after the dealer to post the small and big
         blinds. Updates player chips, pot size, and current bet amount.
         Sets minimum raise to the big blind size.
@@ -187,7 +188,7 @@ class PokerState(BaseModel):
 
     def deal_community_cards(self, count: int = 3):
         """Deal community cards to the board.
-        
+
         Deals the specified number of cards from the deck to the community
         cards area. Used for flop (3 cards), turn (1 card), and river (1 card).
         Logs the dealt cards with appropriate phase name.
@@ -217,7 +218,7 @@ class PokerState(BaseModel):
 
     def start_new_hand(self):
         """Start a new hand of poker.
-        
+
         Resets all necessary state for a new hand:
             - Rotates dealer position
             - Resets player hands and bets
@@ -233,7 +234,9 @@ class PokerState(BaseModel):
             4. Start preflop betting
         """
         # Rotate dealer position
-        self.game.dealer_position = (self.game.dealer_position + 1) % len(self.game.players)
+        self.game.dealer_position = (self.game.dealer_position + 1) % len(
+            self.game.players
+        )
 
         # Reset player states
         for player in self.game.players:
@@ -261,14 +264,16 @@ class PokerState(BaseModel):
         self.post_blinds()
 
         # Set current player to first to act preflop (UTG - under the gun)
-        self.game.current_player_idx = (self.game.dealer_position + 3) % len(self.game.players)
+        self.game.current_player_idx = (self.game.dealer_position + 3) % len(
+            self.game.players
+        )
         self.game.phase = GamePhase.PREFLOP
 
         self.log_event(f"New hand started. Dealer: Player {self.game.dealer_position}")
 
     def _place_bet(self, player: Player, amount: int) -> int:
         """Place a bet for a player.
-        
+
         Internal helper method to handle bet placement, including:
             - Updating player chips and bet amounts
             - Adding to pot
@@ -304,7 +309,7 @@ class PokerState(BaseModel):
 
     def _create_side_pots_if_needed(self):
         """Create side pots when players are all-in.
-        
+
         Internal helper method to handle side pot creation when one or more
         players are all-in with different amounts. Ensures fair pot distribution
         when players can't match bets.
@@ -316,7 +321,7 @@ class PokerState(BaseModel):
         """
         all_in_players = sorted(
             [p for p in self.game.players if p.is_all_in and p.is_active],
-            key=lambda p: p.total_bet
+            key=lambda p: p.total_bet,
         )
 
         if not all_in_players:
@@ -335,10 +340,9 @@ class PokerState(BaseModel):
             bet_diff = all_in_player.total_bet - previous_bet
             if bet_diff > 0:
                 pot_amount = bet_diff * len(remaining_players)
-                new_pots.append(Pot(
-                    amount=pot_amount,
-                    eligible_players=remaining_players.copy()
-                ))
+                new_pots.append(
+                    Pot(amount=pot_amount, eligible_players=remaining_players.copy())
+                )
 
                 # For the next pot, this player is no longer eligible
                 remaining_players.remove(all_in_player.id)
@@ -350,17 +354,16 @@ class PokerState(BaseModel):
         if remaining_players:
             remaining_pot = total_pot - sum(pot.amount for pot in new_pots)
             if remaining_pot > 0:
-                new_pots.append(Pot(
-                    amount=remaining_pot,
-                    eligible_players=remaining_players
-                ))
+                new_pots.append(
+                    Pot(amount=remaining_pot, eligible_players=remaining_players)
+                )
 
         # Replace existing pots
         self.game.pots = new_pots
 
     def handle_player_action(self, player_id: str, decision: AgentDecision):
         """Process a player's action in the game.
-        
+
         Handles all possible player actions (fold, check, call, bet, raise, all-in),
         including validation, bet placement, and game state updates.
 
@@ -396,7 +399,7 @@ class PokerState(BaseModel):
             player_id=player_id,
             action=decision.action,
             amount=decision.amount,
-            phase=self.game.phase
+            phase=self.game.phase,
         )
         self.game.action_history.append(action_record)
 
@@ -423,7 +426,9 @@ class PokerState(BaseModel):
 
         elif decision.action == PlayerAction.BET:
             if self.game.current_bet > 0:
-                self.error = f"Cannot bet when there is already a bet of {self.game.current_bet}"
+                self.error = (
+                    f"Cannot bet when there is already a bet of {self.game.current_bet}"
+                )
                 return
 
             decision.amount = max(decision.amount, self.game.big_blind)
@@ -453,7 +458,9 @@ class PokerState(BaseModel):
                 self.log_event(f"{player.name} raises to ${player.current_bet}")
             else:
                 # This happens if player doesn't have enough chips to make the min raise
-                self.log_event(f"{player.name} calls ${actual_bet} (not enough for min raise)")
+                self.log_event(
+                    f"{player.name} calls ${actual_bet} (not enough for min raise)"
+                )
 
         elif decision.action == PlayerAction.ALL_IN:
             if player.chips == 0:
@@ -489,7 +496,7 @@ class PokerState(BaseModel):
 
     def _advance_to_next_player(self):
         """Move to the next active player in the game.
-        
+
         Internal helper method to advance the current player index to the
         next player who can act (active and not all-in). If no such player
         is found after a full circle, marks the round as complete.
@@ -501,7 +508,9 @@ class PokerState(BaseModel):
         start_idx = self.game.current_player_idx
 
         while True:
-            self.game.current_player_idx = (self.game.current_player_idx + 1) % len(self.game.players)
+            self.game.current_player_idx = (self.game.current_player_idx + 1) % len(
+                self.game.players
+            )
 
             # Skip inactive players
             current_player = self.game.players[self.game.current_player_idx]
@@ -515,7 +524,7 @@ class PokerState(BaseModel):
 
     def _check_round_completion(self) -> bool:
         """Check if the current betting round is complete.
-        
+
         Internal helper method to determine if the current betting round
         should end. A round is complete when:
             - Only one player remains active
@@ -537,8 +546,12 @@ class PokerState(BaseModel):
             return True
 
         # If all active players have bet the same amount (or are all-in)
-        active_non_allin_players = [p for p in self.game.players if p.is_active and not p.is_all_in]
-        if all(p.current_bet == self.game.current_bet for p in active_non_allin_players):
+        active_non_allin_players = [
+            p for p in self.game.players if p.is_active and not p.is_all_in
+        ]
+        if all(
+            p.current_bet == self.game.current_bet for p in active_non_allin_players
+        ):
             last_aggressor = self.game.last_aggressor
 
             # If there's no last aggressor, or if the current player index has reached the last aggressor
@@ -550,7 +563,7 @@ class PokerState(BaseModel):
 
     def _player_has_acted_after_last_aggressor(self) -> bool:
         """Check if all players have acted after the last aggressive action.
-        
+
         Internal helper method to determine if betting can end by checking if
         all players have had a chance to act after the last bet/raise.
 
@@ -561,8 +574,12 @@ class PokerState(BaseModel):
             return True
 
         last_aggressor_idx = next(
-            (i for i, p in enumerate(self.game.players) if p.id == self.game.last_aggressor),
-            -1
+            (
+                i
+                for i, p in enumerate(self.game.players)
+                if p.id == self.game.last_aggressor
+            ),
+            -1,
         )
 
         if last_aggressor_idx == -1:
@@ -577,7 +594,7 @@ class PokerState(BaseModel):
 
     def advance_game_phase(self):
         """Move the game to the next phase if current phase is complete.
-        
+
         Handles progression through game phases:
             1. Preflop -> Flop (deal 3 cards)
             2. Flop -> Turn (deal 1 card)
@@ -607,10 +624,16 @@ class PokerState(BaseModel):
         self.game.last_aggressor = None
 
         # Set first to act (left of dealer, except preflop)
-        self.game.current_player_idx = (self.game.dealer_position + 1) % len(self.game.players)
-        while (not self.game.players[self.game.current_player_idx].is_active or
-               self.game.players[self.game.current_player_idx].is_all_in):
-            self.game.current_player_idx = (self.game.current_player_idx + 1) % len(self.game.players)
+        self.game.current_player_idx = (self.game.dealer_position + 1) % len(
+            self.game.players
+        )
+        while (
+            not self.game.players[self.game.current_player_idx].is_active
+            or self.game.players[self.game.current_player_idx].is_all_in
+        ):
+            self.game.current_player_idx = (self.game.current_player_idx + 1) % len(
+                self.game.players
+            )
 
         # Advance the game phase
         if self.game.phase == GamePhase.PREFLOP:
@@ -633,7 +656,7 @@ class PokerState(BaseModel):
 
     def _handle_single_player_win(self):
         """Handle case where only one player remains active.
-        
+
         Internal helper method to process an early hand completion when all
         other players have folded. Awards all pots to the remaining player
         and ends the hand.
@@ -653,11 +676,13 @@ class PokerState(BaseModel):
         self.game.winners = [winner_id]
         self.game.phase = GamePhase.GAME_OVER
 
-        self.log_event(f"{winner.name} wins ${total_winnings} as the last player standing!")
+        self.log_event(
+            f"{winner.name} wins ${total_winnings} as the last player standing!"
+        )
 
     def _handle_showdown(self):
         """Handle the showdown phase of the game.
-        
+
         Internal helper method to process the showdown when multiple players
         remain after all betting rounds. Includes:
             - Evaluating all active players' hands
@@ -682,9 +707,11 @@ class PokerState(BaseModel):
                     player_id=player.id,
                     rank=hand_ranking[0],
                     high_cards=hand_ranking[1],
-                    description=hand_ranking[2]
+                    description=hand_ranking[2],
                 )
-                self.log_event(f"{player.name} shows: {player.hand} - {hand_ranking[2]}")
+                self.log_event(
+                    f"{player.name} shows: {player.hand} - {hand_ranking[2]}"
+                )
 
         # Determine winners for each pot
         pot_winners = {}
@@ -701,11 +728,14 @@ class PokerState(BaseModel):
                 continue
 
             # Find the best hand ranking among eligible players
-            best_rank = max(ranking.rank.value for ranking in eligible_rankings.values())
+            best_rank = max(
+                ranking.rank.value for ranking in eligible_rankings.values()
+            )
 
             # Get all players with the best rank
             best_players = [
-                player_id for player_id, ranking in eligible_rankings.items()
+                player_id
+                for player_id, ranking in eligible_rankings.items()
                 if ranking.rank.value == best_rank
             ]
 
@@ -721,14 +751,20 @@ class PokerState(BaseModel):
                         tied_winners = [player_id]
                     else:
                         # Compare high cards from highest to lowest
-                        for i in range(min(len(best_high_cards), len(ranking.high_cards))):
+                        for i in range(
+                            min(len(best_high_cards), len(ranking.high_cards))
+                        ):
                             if ranking.high_cards[i] > best_high_cards[i]:
                                 best_high_cards = ranking.high_cards
                                 tied_winners = [player_id]
                                 break
                             if ranking.high_cards[i] < best_high_cards[i]:
                                 break
-                            if i == min(len(best_high_cards), len(ranking.high_cards)) - 1:
+                            if (
+                                i
+                                == min(len(best_high_cards), len(ranking.high_cards))
+                                - 1
+                            ):
                                 # If we get here, it's a true tie
                                 tied_winners.append(player_id)
 
@@ -742,10 +778,14 @@ class PokerState(BaseModel):
             for player_id in best_players:
                 player = next(p for p in self.game.players if p.id == player_id)
                 # Give this player their share plus any remainder if they're first
-                winnings = split_amount + (remainder if player_id == best_players[0] else 0)
+                winnings = split_amount + (
+                    remainder if player_id == best_players[0] else 0
+                )
                 player.chips += winnings
 
-                self.log_event(f"{player.name} wins ${winnings} with {eligible_rankings[player_id].description}")
+                self.log_event(
+                    f"{player.name} wins ${winnings} with {eligible_rankings[player_id].description}"
+                )
 
         # Record all winners
         all_winners = set()
@@ -755,10 +795,9 @@ class PokerState(BaseModel):
         self.game.winners = list(all_winners)
         self.game.phase = GamePhase.GAME_OVER
 
-
     def _evaluate_hand(self, cards: list[Card]) -> tuple[HandRank, list[int], str]:
         """Evaluate the best 5-card poker hand from given cards.
-        
+
         Internal helper method to determine the best possible poker hand
         from a set of cards (hole cards + community cards). Handles all
         standard poker hand rankings and tiebreakers.
@@ -818,49 +857,64 @@ class PokerState(BaseModel):
         straight_high_card = None
 
         # Handle special case: A-5 straight (Ace counts as 1)
-        if (any(card.value == CardValue.ACE for card in sorted_cards) and
-            any(card.value == CardValue.FIVE for card in sorted_cards) and
-            any(card.value == CardValue.FOUR for card in sorted_cards) and
-            any(card.value == CardValue.THREE for card in sorted_cards) and
-            any(card.value == CardValue.TWO for card in sorted_cards)):
+        if (
+            any(card.value == CardValue.ACE for card in sorted_cards)
+            and any(card.value == CardValue.FIVE for card in sorted_cards)
+            and any(card.value == CardValue.FOUR for card in sorted_cards)
+            and any(card.value == CardValue.THREE for card in sorted_cards)
+            and any(card.value == CardValue.TWO for card in sorted_cards)
+        ):
             straight_high_card = 5  # 5-high straight
         else:
             # Check normal straights
-            unique_values = sorted(set(card.numeric_value for card in sorted_cards), reverse=True)
+            unique_values = sorted(
+                set(card.numeric_value for card in sorted_cards), reverse=True
+            )
             for i in range(len(unique_values) - 4):
                 if unique_values[i] - unique_values[i + 4] == 4:  # 5 consecutive values
                     straight_high_card = unique_values[i]
                     break
 
         # 1. Royal Flush: A-K-Q-J-10 of same suit
-        if (flush_cards and
-            flush_cards[0].value == CardValue.ACE and
-            flush_cards[1].value == CardValue.KING and
-            flush_cards[2].value == CardValue.QUEEN and
-            flush_cards[3].value == CardValue.JACK and
-            flush_cards[4].value == CardValue.TEN):
+        if (
+            flush_cards
+            and flush_cards[0].value == CardValue.ACE
+            and flush_cards[1].value == CardValue.KING
+            and flush_cards[2].value == CardValue.QUEEN
+            and flush_cards[3].value == CardValue.JACK
+            and flush_cards[4].value == CardValue.TEN
+        ):
             return (HandRank.ROYAL_FLUSH, [14], "Royal Flush")
 
         # 2. Straight Flush: 5 consecutive cards of the same suit
         if flush_cards and straight_high_card:
             # Check if the flush includes a straight
-            flush_values = sorted(set(card.numeric_value for card in flush_cards), reverse=True)
+            flush_values = sorted(
+                set(card.numeric_value for card in flush_cards), reverse=True
+            )
 
             # Handle A-5 straight flush
-            if (any(card.value == CardValue.ACE for card in flush_cards) and
-                any(card.value == CardValue.FIVE for card in flush_cards) and
-                any(card.value == CardValue.FOUR for card in flush_cards) and
-                any(card.value == CardValue.THREE for card in flush_cards) and
-                any(card.value == CardValue.TWO for card in flush_cards)):
+            if (
+                any(card.value == CardValue.ACE for card in flush_cards)
+                and any(card.value == CardValue.FIVE for card in flush_cards)
+                and any(card.value == CardValue.FOUR for card in flush_cards)
+                and any(card.value == CardValue.THREE for card in flush_cards)
+                and any(card.value == CardValue.TWO for card in flush_cards)
+            ):
                 return (HandRank.STRAIGHT_FLUSH, [5], "Five-high Straight Flush")
 
             # Check normal straight flush
             for i in range(len(flush_values) - 4):
                 if flush_values[i] - flush_values[i + 4] == 4:
                     # Get the name of the high card from its numeric value
-                    high_card_name = next(cv.name for cv in CardValue if cv.value == flush_values[i])
-                    return (HandRank.STRAIGHT_FLUSH, [flush_values[i]],
-                        f"{high_card_name.capitalize()}-high Straight Flush")
+                    high_card_name = next(
+                        cv.name for cv in CardValue if cv.value == flush_values[i]
+                    )
+                    return (
+                        HandRank.STRAIGHT_FLUSH,
+                        [flush_values[i]],
+                        f"{high_card_name.capitalize()}-high Straight Flush",
+                    )
 
         # 3. Four of a Kind: 4 cards of the same value
         quads = [value for value, count in value_counts.items() if count == 4]
@@ -868,10 +922,14 @@ class PokerState(BaseModel):
             # Get the highest quad value
             quad_value = max(quads, key=lambda v: v.value)
             # Get the highest kicker
-            kicker = next(card.numeric_value for card in sorted_cards
-                        if card.value != quad_value)
-            return (HandRank.FOUR_OF_A_KIND, [quad_value.value, kicker],
-                f"Four of a Kind, {quad_value.name}s")
+            kicker = next(
+                card.numeric_value for card in sorted_cards if card.value != quad_value
+            )
+            return (
+                HandRank.FOUR_OF_A_KIND,
+                [quad_value.value, kicker],
+                f"Four of a Kind, {quad_value.name}s",
+            )
 
         # 4. Full House: 3 cards of one value, 2 of another
         trips = [value for value, count in value_counts.items() if count == 3]
@@ -881,38 +939,56 @@ class PokerState(BaseModel):
             # Get highest trip and pair
             best_trip = max(trips, key=lambda v: v.value)
             best_pair = max(pairs, key=lambda v: v.value)
-            return (HandRank.FULL_HOUSE,
+            return (
+                HandRank.FULL_HOUSE,
                 [best_trip.value, best_pair.value],
-                f"Full House, {best_trip.name}s over {best_pair.name}s")
+                f"Full House, {best_trip.name}s over {best_pair.name}s",
+            )
         if len(trips) >= 2:  # Two sets of trips = full house with the best two
             # Sort trips by value
             sorted_trips = sorted(trips, key=lambda v: v.value, reverse=True)
-            return (HandRank.FULL_HOUSE,
+            return (
+                HandRank.FULL_HOUSE,
                 [sorted_trips[0].value, sorted_trips[1].value],
-                f"Full House, {sorted_trips[0].name}s over {sorted_trips[1].name}s")
+                f"Full House, {sorted_trips[0].name}s over {sorted_trips[1].name}s",
+            )
 
         # 5. Flush: 5 cards of the same suit
         if flush_cards:
             high_cards = [card.numeric_value for card in flush_cards[:5]]
             # Get the name of the high card
-            high_card_name = next(cv.name for cv in CardValue if cv.value == high_cards[0])
-            return (HandRank.FLUSH, high_cards,
-                f"{high_card_name.capitalize()}-high Flush")
+            high_card_name = next(
+                cv.name for cv in CardValue if cv.value == high_cards[0]
+            )
+            return (
+                HandRank.FLUSH,
+                high_cards,
+                f"{high_card_name.capitalize()}-high Flush",
+            )
 
         # 6. Straight: 5 consecutive values
         if straight_high_card:
             # Get the name of the high card
-            high_card_name = next(cv.name for cv in CardValue if cv.value == straight_high_card)
-            return (HandRank.STRAIGHT, [straight_high_card],
-                f"{high_card_name.capitalize()}-high Straight")
+            high_card_name = next(
+                cv.name for cv in CardValue if cv.value == straight_high_card
+            )
+            return (
+                HandRank.STRAIGHT,
+                [straight_high_card],
+                f"{high_card_name.capitalize()}-high Straight",
+            )
 
         # 7. Three of a Kind: 3 cards of the same value
         if trips:
             best_trip = max(trips, key=lambda v: v.value)
-            kickers = [card.numeric_value for card in sorted_cards
-                    if card.value != best_trip][:2]
-            return (HandRank.THREE_OF_A_KIND, [best_trip.value] + kickers,
-                f"Three of a Kind, {best_trip.name}s")
+            kickers = [
+                card.numeric_value for card in sorted_cards if card.value != best_trip
+            ][:2]
+            return (
+                HandRank.THREE_OF_A_KIND,
+                [best_trip.value] + kickers,
+                f"Three of a Kind, {best_trip.name}s",
+            )
 
         # 8. Two Pair: 2 cards of one value, 2 of another
         if len(pairs) >= 2:
@@ -921,30 +997,38 @@ class PokerState(BaseModel):
             best_pair = sorted_pairs[0]
             second_pair = sorted_pairs[1]
             # Find the highest kicker that isn't part of either pair
-            kicker = next(card.numeric_value for card in sorted_cards
-                        if card.value != best_pair and card.value != second_pair)
-            return (HandRank.TWO_PAIR,
+            kicker = next(
+                card.numeric_value
+                for card in sorted_cards
+                if card.value != best_pair and card.value != second_pair
+            )
+            return (
+                HandRank.TWO_PAIR,
                 [best_pair.value, second_pair.value, kicker],
-                f"Two Pair, {best_pair.name}s and {second_pair.name}s")
+                f"Two Pair, {best_pair.name}s and {second_pair.name}s",
+            )
 
         # 9. One Pair: 2 cards of the same value
         if pairs:
             best_pair = max(pairs, key=lambda v: v.value)
-            kickers = [card.numeric_value for card in sorted_cards
-                    if card.value != best_pair][:3]
-            return (HandRank.PAIR, [best_pair.value] + kickers,
-                f"Pair of {best_pair.name}s")
+            kickers = [
+                card.numeric_value for card in sorted_cards if card.value != best_pair
+            ][:3]
+            return (
+                HandRank.PAIR,
+                [best_pair.value] + kickers,
+                f"Pair of {best_pair.name}s",
+            )
 
         # 10. High Card: Highest value card
         high_cards = [card.numeric_value for card in sorted_cards[:5]]
         # Get the name of the high card
         high_card_name = next(cv.name for cv in CardValue if cv.value == high_cards[0])
-        return (HandRank.HIGH_CARD, high_cards,
-            f"{high_card_name.capitalize()}-high")
+        return (HandRank.HIGH_CARD, high_cards, f"{high_card_name.capitalize()}-high")
 
     def create_player_observation(self, player_id: str) -> PlayerObservation:
         """Create an observation object for a player.
-        
+
         Generates a view of the game state from a specific player's perspective,
         hiding information they shouldn't have access to (e.g., other players'
         hole cards).
@@ -983,7 +1067,9 @@ class PokerState(BaseModel):
             else:
                 position_names[i] = f"Middle Position {i-2}"
 
-        position_name = position_names.get(player.position, f"Position {player.position}")
+        position_name = position_names.get(
+            player.position, f"Position {player.position}"
+        )
 
         # Create visible players list (excluding hole cards of others)
         visible_players = []
@@ -991,20 +1077,26 @@ class PokerState(BaseModel):
             if p.id == player_id:
                 continue  # Skip self in the visible players list
 
-            visible_players.append({
-                "id": p.id,
-                "name": p.name,
-                "chips": p.chips,
-                "position": p.position,
-                "position_name": position_names.get(p.position, f"Position {p.position}"),
-                "is_active": p.is_active,
-                "is_all_in": p.is_all_in,
-                "current_bet": p.current_bet,
-                "total_bet": p.total_bet,
-            })
+            visible_players.append(
+                {
+                    "id": p.id,
+                    "name": p.name,
+                    "chips": p.chips,
+                    "position": p.position,
+                    "position_name": position_names.get(
+                        p.position, f"Position {p.position}"
+                    ),
+                    "is_active": p.is_active,
+                    "is_all_in": p.is_all_in,
+                    "current_bet": p.current_bet,
+                    "total_bet": p.total_bet,
+                }
+            )
 
         # Get recent actions (last 10)
-        recent_actions = self.game.action_history[-10:] if self.game.action_history else []
+        recent_actions = (
+            self.game.action_history[-10:] if self.game.action_history else []
+        )
 
         return PlayerObservation(
             player_id=player_id,
@@ -1020,12 +1112,14 @@ class PokerState(BaseModel):
             recent_actions=recent_actions,
             min_raise=self.game.min_raise,
             is_active=player.is_active,
-            is_current_player=(self.game.players[self.game.current_player_idx].id == player_id)
+            is_current_player=(
+                self.game.players[self.game.current_player_idx].id == player_id
+            ),
         )
 
     def log_event(self, message: str):
         """Add a timestamped message to the game log.
-        
+
         Records game events with timestamps for history tracking and debugging.
         Events are both added to the game_log list and sent to the logger.
 

@@ -18,19 +18,20 @@ Typical usage:
 
 from typing import Any, Generic, TypeVar
 
+# from haive.games.framework.base.state import GameState
+from haive.core.engine.agent.agent import Agent
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import BaseModel
 
-#from haive.games.framework.base.state import GameState
-from haive.core.engine.agent.agent import Agent
 from haive.games.framework.base.config import GameConfig
 
 T = TypeVar("T", bound=BaseModel)
 
+
 class GameAgent(Agent[GameConfig], Generic[T]):
     """Base game agent that implements common workflow patterns.
-    
+
     This class provides a foundation for building game-specific agents by implementing
     common patterns for game initialization, move generation, position analysis, and
     game flow control. Game-specific agents should inherit from this class and
@@ -62,10 +63,9 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         """
         super().__init__(config)
 
-
     def setup_workflow(self):
         """Setup the standard game workflow with configurable analysis.
-        
+
         This method sets up the default game workflow including initialization,
         player moves, and optional position analysis. Override this method to
         implement custom game flows.
@@ -103,7 +103,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             self.graph.add_conditional_edges(
                 "player1_move",
                 self.should_continue_game,
-                {True: "player2_analysis", False: END}
+                {True: "player2_analysis", False: END},
             )
 
             self.graph.add_edge("player2_analysis", "player2_move")
@@ -111,7 +111,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             self.graph.add_conditional_edges(
                 "player2_move",
                 self.should_continue_game,
-                {True: "player1_analysis", False: END}
+                {True: "player1_analysis", False: END},
             )
         else:
             # Simplified flow without analysis
@@ -120,13 +120,13 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             self.graph.add_conditional_edges(
                 "player1_move",
                 self.should_continue_game,
-                {True: "player2_move", False: END}
+                {True: "player2_move", False: END},
             )
 
             self.graph.add_conditional_edges(
                 "player2_move",
                 self.should_continue_game,
-                {True: "player1_move", False: END}
+                {True: "player1_move", False: END},
             )
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
@@ -144,7 +144,13 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...     return Command(update=game_state.dict())
         """
         game_state = self.state_manager.initialize()
-        return Command(update=game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict())
+        return Command(
+            update=(
+                game_state.model_dump()
+                if hasattr(game_state, "model_dump")
+                else game_state.dict()
+            )
+        )
 
     def make_move(self, state: T, player: str) -> Command:
         """Make a move for the specified player.
@@ -173,7 +179,9 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         """
         engine = self.engines.get(f"{player}_player")
         if not engine:
-            return Command(update={"error_message": f"No engine found for {player}_player"})
+            return Command(
+                update={"error_message": f"No engine found for {player}_player"}
+            )
 
         try:
             # Get decision from the engine
@@ -185,7 +193,11 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             new_state = self.state_manager.apply_move(state, move)
 
             # Convert to dict for Command
-            state_dict = new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict()
+            state_dict = (
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
             return Command(update=state_dict)
         except Exception as e:
             return Command(update={"error_message": f"Error in {player}'s move: {e!s}"})
@@ -221,15 +233,21 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             analysis = analyzer.invoke(analysis_context)
 
             # Add analysis to state
-            analysis_dict = analysis.model_dump() if hasattr(analysis, "model_dump") else analysis.dict()
+            analysis_dict = (
+                analysis.model_dump()
+                if hasattr(analysis, "model_dump")
+                else analysis.dict()
+            )
             analysis_key = f"{player}_analysis"
 
             current_analyses = getattr(state, analysis_key, [])
-            return Command(update={
-                analysis_key: current_analyses[-4:] + [analysis_dict]
-            })
+            return Command(
+                update={analysis_key: current_analyses[-4:] + [analysis_dict]}
+            )
         except Exception as e:
-            return Command(update={"error_message": f"Error in {player}'s analysis: {e!s}"})
+            return Command(
+                update={"error_message": f"Error in {player}'s analysis: {e!s}"}
+            )
 
     def should_continue_game(self, state: T) -> bool:
         """Determine if the game should continue.
@@ -406,6 +424,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         """
         raise NotImplementedError("Must be implemented by subclass")
 
+
 """Utility functions for game agents.
 
 This module provides utility functions for running and managing game agents,
@@ -424,28 +443,29 @@ Typical usage:
 
 from typing import Any
 
-#from .agent import GameAgent
+# from .agent import GameAgent
+
 
 def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
     """Run a complete game with the given agent.
-    
+
     This function executes a game from start to finish using the provided agent.
     It handles game initialization, move execution, state visualization, and
     error reporting. The game can optionally start from a provided initial state.
-    
+
     Args:
         agent (GameAgent): The game agent to run the game with.
         initial_state (Optional[Dict[str, Any]], optional): Initial game state.
             If not provided, a new game will be initialized. Defaults to None.
-    
+
     Example:
         >>> agent = ChessAgent(ChessConfig())
         >>> # Start a new game
         >>> run_game(agent)
-        >>> 
+        >>>
         >>> # Continue from a saved state
         >>> run_game(agent, saved_state)
-    
+
     Note:
         - The function will print game progress to the console
         - Game visualization depends on the agent's visualize_state method
@@ -460,10 +480,7 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
 
     # Stream through the game steps
     for step in agent.app.stream(
-        game_state,
-        config=agent.runnable_config,
-        debug=True,
-        stream_mode="values"
+        game_state, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
         # Visualize the game state
         agent.visualize_state(step)

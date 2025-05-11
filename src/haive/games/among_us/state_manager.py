@@ -17,7 +17,7 @@ from haive.games.framework.multi_player.state_manager import MultiPlayerGameStat
 
 class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     """Mixin class that implements state management for Among Us game.
-    
+
     This class separates state management from agent behavior while allowing
     any class that inherits from it to have state management capabilities.
     """
@@ -26,10 +26,21 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     def initialize(cls, player_names: list[str], **kwargs) -> AmongUsState:
         """Initialize a new Among Us game state."""
         # Default map locations if not provided
-        map_locations = kwargs.get("map_locations", [
-            "cafeteria", "admin", "electrical", "storage", "medbay",
-            "navigation", "shields", "weapons", "o2", "security"
-        ])
+        map_locations = kwargs.get(
+            "map_locations",
+            [
+                "cafeteria",
+                "admin",
+                "electrical",
+                "storage",
+                "medbay",
+                "navigation",
+                "shields",
+                "weapons",
+                "o2",
+                "security",
+            ],
+        )
 
         # Determine number of impostors based on player count
         num_players = len(player_names)
@@ -37,8 +48,11 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Randomly assign roles
         import random
+
         random.seed(kwargs.get("seed"))
-        impostor_indices = random.sample(range(num_players), min(num_impostors, num_players))
+        impostor_indices = random.sample(
+            range(num_players), min(num_impostors, num_players)
+        )
 
         # Create player states
         player_states = {}
@@ -61,7 +75,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                         type=task_type,
                         location=location,
                         description=cls._generate_task_description(task_type, location),
-                        status=TaskStatus.NOT_STARTED
+                        status=TaskStatus.NOT_STARTED,
                     )
                     player_tasks.append(task)
                     all_tasks[task_id] = task
@@ -77,7 +91,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                         type=task_type,
                         location=location,
                         description=cls._generate_task_description(task_type, location),
-                        status=TaskStatus.NOT_STARTED
+                        status=TaskStatus.NOT_STARTED,
                     )
                     player_tasks.append(task)
 
@@ -88,11 +102,14 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 "location": "cafeteria",  # Everyone starts in cafeteria
                 "tasks": player_tasks,
                 "is_alive": True,
-                "observations": []
+                "observations": [],
             }
 
         # Initialize roles dictionary
-        roles = {player_id: player_data["role"] for player_id, player_data in player_states.items()}
+        roles = {
+            player_id: player_data["role"]
+            for player_id, player_data in player_states.items()
+        }
 
         # Initialize state
         state = AmongUsState(
@@ -116,7 +133,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             impostor_count=num_impostors,
             crewmate_count=num_players - num_impostors,
             roles=roles,
-            discussion_history=[]
+            discussion_history=[],
         )
 
         return state
@@ -128,23 +145,23 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             TaskType.VISUAL: {
                 "medbay": "Submit scan",
                 "weapons": "Clear asteroids",
-                "shields": "Prime shields"
+                "shields": "Prime shields",
             },
             TaskType.COMMON: {
                 "admin": "Swipe card",
                 "electrical": "Divert power",
-                "o2": "Empty garbage"
+                "o2": "Empty garbage",
             },
             TaskType.SHORT: {
                 "electrical": "Fix wiring",
                 "navigation": "Chart course",
-                "admin": "Download data"
+                "admin": "Download data",
             },
             TaskType.LONG: {
                 "electrical": "Calibrate distributor",
                 "navigation": "Stabilize steering",
-                "medbay": "Inspect sample"
-            }
+                "medbay": "Inspect sample",
+            },
         }
 
         # Get possible descriptions for this type and location
@@ -157,13 +174,15 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             TaskType.VISUAL: "Perform visual task",
             TaskType.COMMON: "Complete common task",
             TaskType.SHORT: "Complete short task",
-            TaskType.LONG: "Complete long task"
+            TaskType.LONG: "Complete long task",
         }
 
         return f"{fallback_by_type[task_type]} in {location}"
 
     @classmethod
-    def apply_move(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def apply_move(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Apply a player's move to the game state."""
         # Create a copy of the state to avoid modifying the original
         state = state.model_copy(deep=True)
@@ -180,7 +199,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             "timestamp": datetime.now().isoformat(),
             "phase": state.game_phase,
             "round_number": state.round_number,
-            "details": move
+            "details": move,
         }
         state.move_history.append(action)
 
@@ -215,12 +234,16 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 return cls._handle_vote_action(state, player_id, move)
 
         # If we get here, the action wasn't handled
-        state.error_message = f"Invalid action '{action_type}' for phase '{state.game_phase}'"
+        state.error_message = (
+            f"Invalid action '{action_type}' for phase '{state.game_phase}'"
+        )
         return state
 
     # Action handlers for different game actions
     @classmethod
-    def _handle_move_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_move_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player moving to a new location."""
         target_location = move.get("location")
 
@@ -240,16 +263,20 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Players in the target location observe the arrival
         for pid, pstate in state.player_states.items():
-            if (pid != player_id and
-                pstate["is_alive"] and
-                pstate["location"] == target_location):
+            if (
+                pid != player_id
+                and pstate["is_alive"]
+                and pstate["location"] == target_location
+            ):
 
                 pstate["observations"].append(observation)
 
         return state
 
     @classmethod
-    def _handle_complete_task_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_complete_task_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player completing a task."""
         player_state = state.player_states[player_id]
         task_id = move.get("task_id")
@@ -285,16 +312,20 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         if task.type == TaskType.VISUAL:
             observation = f"{player_id} completed a visual task ({task.description}) in {task.location}"
             for pid, pstate in state.player_states.items():
-                if (pid != player_id and
-                    pstate["is_alive"] and
-                    pstate["location"] == player_state["location"]):
+                if (
+                    pid != player_id
+                    and pstate["is_alive"]
+                    and pstate["location"] == player_state["location"]
+                ):
 
                     pstate["observations"].append(observation)
 
         return state
 
     @classmethod
-    def _handle_kill_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_kill_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle an impostor killing a crewmate."""
         player_state = state.player_states[player_id]
         target_id = move.get("target_id")
@@ -321,12 +352,15 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Check for witnesses (other players in the same location)
         witnesses = [
-            pid for pid, pstate in state.player_states.items()
-            if (pid != player_id and
-                pid != target_id and
-                pstate["is_alive"] and
-                pstate["location"] == player_state["location"] and
-                pstate["role"] != PlayerRole.IMPOSTOR)  # Other impostors don't count as witnesses
+            pid
+            for pid, pstate in state.player_states.items()
+            if (
+                pid != player_id
+                and pid != target_id
+                and pstate["is_alive"]
+                and pstate["location"] == player_state["location"]
+                and pstate["role"] != PlayerRole.IMPOSTOR
+            )  # Other impostors don't count as witnesses
         ]
 
         if witnesses:
@@ -344,14 +378,17 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _handle_report_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_report_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player reporting a dead body."""
         player_state = state.player_states[player_id]
 
         # Check if there's a dead body in the current location
         location = player_state["location"]
         dead_bodies = [
-            pid for pid, pstate in state.player_states.items()
+            pid
+            for pid, pstate in state.player_states.items()
             if not pstate["is_alive"] and pstate["location"] == location
         ]
 
@@ -368,7 +405,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _handle_emergency_meeting_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_emergency_meeting_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player calling an emergency meeting."""
         player_state = state.player_states[player_id]
 
@@ -385,7 +424,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _handle_discussion_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_discussion_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player's discussion contribution."""
         message = move.get("message", "")
 
@@ -393,16 +434,21 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         if not hasattr(state, "discussion_history"):
             state.discussion_history = []
 
-        state.discussion_history.append({
-            "player_id": player_id,
-            "message": message,
-            "timestamp": datetime.now().isoformat()
-        })
+        state.discussion_history.append(
+            {
+                "player_id": player_id,
+                "message": message,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         # Check if all alive players have contributed to the discussion
-        alive_players = [pid for pid, pstate in state.player_states.items() if pstate.is_alive]
-        current_round_messages = [msg for msg in state.discussion_history
-                                if msg["player_id"] in alive_players]
+        alive_players = [
+            pid for pid, pstate in state.player_states.items() if pstate.is_alive
+        ]
+        current_round_messages = [
+            msg for msg in state.discussion_history if msg["player_id"] in alive_players
+        ]
 
         players_who_discussed = set(msg["player_id"] for msg in current_round_messages)
 
@@ -413,7 +459,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _handle_vote_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_vote_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle a player's vote."""
         target_id = move.get("vote_for")
 
@@ -426,7 +474,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         state.votes[player_id] = target_id
 
         # Check if all alive players have voted
-        alive_players = [pid for pid, pstate in state.player_states.items() if pstate.is_alive]
+        alive_players = [
+            pid for pid, pstate in state.player_states.items() if pstate.is_alive
+        ]
 
         if len(state.votes) >= len(alive_players):
             # Count votes and eliminate player if needed
@@ -448,8 +498,11 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
             if player_to_eject and skip_votes < max_votes:
                 # Check if anyone else has the same number of votes (tie)
-                tied_players = [pid for pid, count in vote_counts.items()
-                              if pid != "skip" and pid != player_to_eject and count == max_votes]
+                tied_players = [
+                    pid
+                    for pid, count in vote_counts.items()
+                    if pid != "skip" and pid != player_to_eject and count == max_votes
+                ]
 
                 if not tied_players:  # No tie
                     # Eject the player
@@ -457,7 +510,10 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                     state.eliminated_players.append(player_to_eject)
 
                     # Update counts
-                    if state.player_states[player_to_eject]["role"] == PlayerRole.IMPOSTOR:
+                    if (
+                        state.player_states[player_to_eject]["role"]
+                        == PlayerRole.IMPOSTOR
+                    ):
                         state.impostor_count -= 1
                     else:
                         state.crewmate_count -= 1
@@ -475,7 +531,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _handle_sabotage_action(cls, state: AmongUsState, player_id: str, move: dict[str, Any]) -> AmongUsState:
+    def _handle_sabotage_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
         """Handle an impostor sabotaging a system."""
         player_state = state.player_states[player_id]
 
@@ -492,7 +550,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             type=sabotage_type,
             location=location,
             timer=60,  # Default 60 second timer
-            resolved=False
+            resolved=False,
         )
 
         state.sabotages.append(sabotage)
@@ -500,7 +558,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def get_legal_moves(cls, state: AmongUsState, player_id: str) -> list[dict[str, Any]]:
+    def get_legal_moves(
+        cls, state: AmongUsState, player_id: str
+    ) -> list[dict[str, Any]]:
         """Get legal moves for a specific player."""
         if player_id not in state.player_states:
             return []
@@ -518,76 +578,62 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             # Movement
             for location in state.map_locations:
                 if location != player_state.location:
-                    legal_moves.append({
-                        "action": "move",
-                        "location": location
-                    })
+                    legal_moves.append({"action": "move", "location": location})
 
             # Task completion (for crewmates)
             if player_state.role == PlayerRole.CREWMATE:
                 for task in player_state.tasks:
-                    if task.location == player_state.location and task.status != TaskStatus.COMPLETED:
-                        legal_moves.append({
-                            "action": "complete_task",
-                            "task_id": task.id
-                        })
+                    if (
+                        task.location == player_state.location
+                        and task.status != TaskStatus.COMPLETED
+                    ):
+                        legal_moves.append(
+                            {"action": "complete_task", "task_id": task.id}
+                        )
 
             # Kill action (for impostors)
             if player_state.role == PlayerRole.IMPOSTOR:
                 targets = cls._get_potential_targets(state, player_id)
                 for target_id in targets:
-                    legal_moves.append({
-                        "action": "kill",
-                        "target_id": target_id
-                    })
+                    legal_moves.append({"action": "kill", "target_id": target_id})
 
             # Report action
             dead_bodies = [
-                pid for pid, pstate in state.player_states.items()
+                pid
+                for pid, pstate in state.player_states.items()
                 if not pstate.is_alive and pstate.location == player_state.location
             ]
             if dead_bodies:
-                legal_moves.append({
-                    "action": "report_body"
-                })
+                legal_moves.append({"action": "report_body"})
 
             # Emergency meeting
             if player_state.location == "cafeteria":
-                legal_moves.append({
-                    "action": "call_emergency_meeting"
-                })
+                legal_moves.append({"action": "call_emergency_meeting"})
 
             # Sabotage (for impostors)
             if player_state.role == PlayerRole.IMPOSTOR:
                 sabotage_types = ["lights", "o2", "reactor", "comms"]
                 for sabotage_type in sabotage_types:
-                    legal_moves.append({
-                        "action": "sabotage",
-                        "sabotage_type": sabotage_type,
-                        "location": sabotage_type
-                    })
+                    legal_moves.append(
+                        {
+                            "action": "sabotage",
+                            "sabotage_type": sabotage_type,
+                            "location": sabotage_type,
+                        }
+                    )
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             # Discussion
-            legal_moves.append({
-                "action": "discuss",
-                "message": "[Your message here]"
-            })
+            legal_moves.append({"action": "discuss", "message": "[Your message here]"})
 
         elif state.game_phase == AmongUsGamePhase.VOTING:
             # Voting
             for pid, pstate in state.player_states.items():
                 if pstate.is_alive and pid != player_id:
-                    legal_moves.append({
-                        "action": "vote",
-                        "vote_for": pid
-                    })
+                    legal_moves.append({"action": "vote", "vote_for": pid})
 
             # Skip vote
-            legal_moves.append({
-                "action": "vote",
-                "vote_for": "skip"
-            })
+            legal_moves.append({"action": "vote", "vote_for": "skip"})
 
         return legal_moves
 
@@ -605,19 +651,24 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         targets = []
 
         for pid, pstate in state.player_states.items():
-            if (pid != player_id and
-                pstate.is_alive and
-                pstate.role == PlayerRole.CREWMATE and
-                pstate.location == player_state.location):
+            if (
+                pid != player_id
+                and pstate.is_alive
+                and pstate.role == PlayerRole.CREWMATE
+                and pstate.location == player_state.location
+            ):
 
                 # Check for witnesses
                 witnesses = [
-                    wpid for wpid, wpstate in state.player_states.items()
-                    if (wpid != player_id and
-                        wpid != pid and
-                        wpstate.is_alive and
-                        wpstate.role != PlayerRole.IMPOSTOR and
-                        wpstate.location == player_state.location)
+                    wpid
+                    for wpid, wpstate in state.player_states.items()
+                    if (
+                        wpid != player_id
+                        and wpid != pid
+                        and wpstate.is_alive
+                        and wpstate.role != PlayerRole.IMPOSTOR
+                        and wpstate.location == player_state.location
+                    )
                 ]
 
                 if not witnesses:
@@ -646,11 +697,17 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         if task_completion >= 100:
             return "crewmates"
 
-        alive_impostors = sum(1 for pid, pstate in state.player_states.items()
-                             if pstate.is_alive and pstate.role == PlayerRole.IMPOSTOR)
+        alive_impostors = sum(
+            1
+            for pid, pstate in state.player_states.items()
+            if pstate.is_alive and pstate.role == PlayerRole.IMPOSTOR
+        )
 
-        alive_crewmates = sum(1 for pid, pstate in state.player_states.items()
-                             if pstate.is_alive and pstate.role == PlayerRole.CREWMATE)
+        alive_crewmates = sum(
+            1
+            for pid, pstate in state.player_states.items()
+            if pstate.is_alive and pstate.role == PlayerRole.CREWMATE
+        )
 
         if alive_impostors == 0:
             return "crewmates"
@@ -665,7 +722,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         """Calculate task completion percentage."""
         # Only count real tasks (not impostor fake tasks)
         crewmate_tasks = []
-        for pid, pstate in state.player_states.items():
+        for _pid, pstate in state.player_states.items():
             if pstate.role == PlayerRole.CREWMATE:
                 crewmate_tasks.extend(pstate.tasks)
 
@@ -673,7 +730,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         if total == 0:
             return 100.0
 
-        completed = sum(1 for task in crewmate_tasks if task.status == TaskStatus.COMPLETED)
+        completed = sum(
+            1 for task in crewmate_tasks if task.status == TaskStatus.COMPLETED
+        )
         return (completed / total) * 100
 
     @classmethod
@@ -700,7 +759,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     # Patched version of the filter_state_for_player method to handle discussion_history
 
     @classmethod
-    def filter_state_for_player(cls, state: "AmongUsState", player_id: str) -> dict[str, Any]:
+    def filter_state_for_player(
+        cls, state: "AmongUsState", player_id: str
+    ) -> dict[str, Any]:
         """Filter the state to include only information visible to a specific player."""
         if player_id not in state.player_states:
             return {}
@@ -714,20 +775,23 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             "meeting_active": state.meeting_active,
             "meeting_caller": state.meeting_caller,
             "round_number": state.round_number,
-
             # Player-specific info
             "player_id": player_id,
             "location": player_state.location,
             "is_alive": player_state.is_alive,
             "role": player_state.role,
-            "tasks": [task.dict() if hasattr(task, "dict") else task for task in player_state.tasks],
-            "observations": player_state.observations
+            "tasks": [
+                task.dict() if hasattr(task, "dict") else task
+                for task in player_state.tasks
+            ],
+            "observations": player_state.observations,
         }
 
         # If player is impostor, add info about other impostors
         if player_state.role == PlayerRole.IMPOSTOR:
             filtered_state["fellow_impostors"] = [
-                pid for pid, pstate in state.player_states.items()
+                pid
+                for pid, pstate in state.player_states.items()
                 if pstate.role == PlayerRole.IMPOSTOR and pid != player_id
             ]
 
@@ -738,18 +802,20 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 continue
 
             # Basic info about all players
-            player_info = {
-                "id": pid,
-                "is_alive": pstate.is_alive
-            }
+            player_info = {"id": pid, "is_alive": pstate.is_alive}
 
             # Add location if they're visible (same location or meeting)
-            if (pstate.location == player_state.location or
-                state.game_phase in [AmongUsGamePhase.MEETING, AmongUsGamePhase.VOTING]):
+            if pstate.location == player_state.location or state.game_phase in [
+                AmongUsGamePhase.MEETING,
+                AmongUsGamePhase.VOTING,
+            ]:
                 player_info["location"] = pstate.location
 
             # Add role only if they're a fellow impostor
-            if player_state.role == PlayerRole.IMPOSTOR and pstate.role == PlayerRole.IMPOSTOR:
+            if (
+                player_state.role == PlayerRole.IMPOSTOR
+                and pstate.role == PlayerRole.IMPOSTOR
+            ):
                 player_info["role"] = "impostor"
             else:
                 player_info["role"] = "unknown"
@@ -762,7 +828,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         if state.game_phase in [AmongUsGamePhase.MEETING, AmongUsGamePhase.VOTING]:
             # Only add discussion_history if it exists in the state
             if hasattr(state, "discussion_history"):
-                filtered_state["discussion_history"] = getattr(state, "discussion_history", [])
+                filtered_state["discussion_history"] = getattr(
+                    state, "discussion_history", []
+                )
             else:
                 filtered_state["discussion_history"] = []
 

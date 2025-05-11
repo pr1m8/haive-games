@@ -3,13 +3,14 @@
 This module defines the Connect 4 agent, which uses language models
 to generate moves and analyze positions in the game.
 """
+
 import copy
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
 from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Move, Connect4PlayerDecision
 from haive.games.connect4.state import Connect4State
@@ -27,7 +28,7 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
 
     def __init__(self, config: Connect4AgentConfig):
         super().__init__(config)
-        #print(self.engines)
+        # print(self.engines)
         self.state_manager = Connect4StateManager
 
     def prepare_move_context(self, state: Connect4State, player: str) -> dict[str, Any]:
@@ -55,13 +56,18 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             "turn": state.turn,
             "color": player,
             "legal_moves": formatted_legal_moves,
-            "move_history": [f"{i+1}. {state.turn}: Column {move.column}" for i, move in enumerate(state.move_history[-5:])],
+            "move_history": [
+                f"{i+1}. {state.turn}: Column {move.column}"
+                for i, move in enumerate(state.move_history[-5:])
+            ],
             "player_analysis": player_analysis,
             "threats_winning_moves": threats["winning_moves"],  # Explicitly named
             "threats_blocking_moves": threats["blocking_moves"],  # Explicitly named
         }
 
-    def _calculate_threats(self, state: Connect4State, player: str) -> dict[str, list[int]]:
+    def _calculate_threats(
+        self, state: Connect4State, player: str
+    ) -> dict[str, list[int]]:
         """Calculate immediate threats and opportunities.
 
         This method calculates the immediate threats and opportunities
@@ -95,8 +101,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             "blocking_moves": opponent_winning_moves,
         }
 
-
-    def prepare_analysis_context(self, state: Connect4State, player: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: Connect4State, player: str
+    ) -> dict[str, Any]:
         """Prepare context for position analysis with correct variables.
 
         This method prepares the context for position analysis by calculating
@@ -106,7 +113,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
 
         # ✅ Ensure all required fields exist
 
-        columns_usage = [sum(1 for row in state.board if row[col] is not None) for col in range(7)]
+        columns_usage = [
+            sum(1 for row in state.board if row[col] is not None) for col in range(7)
+        ]
         threats_winning_moves = threats.get("winning_moves", [])
         threats_blocking_moves = threats.get("blocking_moves", [])
 
@@ -114,13 +123,14 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             "board": state.board_string,
             "turn": state.turn,
             "color": player,
-            "move_history": [f"{i+1}. {state.turn}: Column {move.column}" for i, move in enumerate(state.move_history[-5:])],
+            "move_history": [
+                f"{i+1}. {state.turn}: Column {move.column}"
+                for i, move in enumerate(state.move_history[-5:])
+            ],
             "threats_winning_moves": threats_winning_moves,
             "threats_blocking_moves": threats_blocking_moves,
-            "columns_usage": columns_usage  # ✅ Now the model gets what it expects!
+            "columns_usage": columns_usage,  # ✅ Now the model gets what it expects!
         }
-
-
 
     def extract_move(self, response: Connect4PlayerDecision) -> Connect4Move:
         """Extract move from engine response.
@@ -179,7 +189,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
         if connect4_state.move_history:
             last_move = connect4_state.move_history[-1]
             player = "red" if len(connect4_state.move_history) % 2 == 1 else "yellow"
-            print(f"\n📝 **Last Move:** {player.upper()} played in column {last_move.column}")
+            print(
+                f"\n📝 **Last Move:** {player.upper()} played in column {last_move.column}"
+            )
 
         # 🔍 **Show analysis from the previous turn**
         analysis = None
@@ -196,14 +208,20 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             print(f"\n🔍 **{analysis_color} Analysis:**")
             print(f"   - 📈 Position Score: {analysis.get('position_score', 'N/A')}")
             print(f"   - 🎯 Center Control: {analysis.get('center_control', 'N/A')}/10")
-            print(f"   - 🎯 Suggested Columns: {', '.join(map(str, analysis.get('suggested_columns', [])))}")
+            print(
+                f"   - 🎯 Suggested Columns: {', '.join(map(str, analysis.get('suggested_columns', [])))}"
+            )
             print(f"   - ⚡ Winning Chances: {analysis.get('winning_chances', 'N/A')}%")
 
             # 🔺 Threat Analysis
             threats = analysis.get("threats", {})
             print("\n⚠️ **Threats:**")
-            print(f"   - 🔴 Winning Moves: {', '.join(map(str, threats.get('winning_moves', []))) or 'None'}")
-            print(f"   - 🛑 Blocking Moves: {', '.join(map(str, threats.get('blocking_moves', []))) or 'None'}")
+            print(
+                f"   - 🔴 Winning Moves: {', '.join(map(str, threats.get('winning_moves', []))) or 'None'}"
+            )
+            print(
+                f"   - 🛑 Blocking Moves: {', '.join(map(str, threats.get('blocking_moves', []))) or 'None'}"
+            )
 
         # Short delay for readability
         time.sleep(0.5)

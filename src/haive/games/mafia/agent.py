@@ -14,11 +14,11 @@ creating an engaging and strategic game experience.
 Example:
     >>> from mafia.agent import MafiaAgent
     >>> from mafia.config import MafiaAgentConfig
-    >>> 
+    >>>
     >>> # Create and initialize agent
     >>> config = MafiaAgentConfig.default_config(player_count=7)
     >>> agent = MafiaAgent(config)
-    >>> 
+    >>>
     >>> # Run the game
     >>> for state in agent.app.stream(initial_state):
     ...     agent.visualize_state(state)
@@ -29,6 +29,7 @@ import logging
 from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
+
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
 
 from .config import MafiaAgentConfig
@@ -47,10 +48,11 @@ from .state_manager import MafiaStateManager
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
 @register_agent(MafiaAgentConfig)
 class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
     """Agent for playing Mafia.
-    
+
     This class implements the core game logic for Mafia, managing player
     turns, move generation, and game progression.
 
@@ -78,7 +80,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
     def __init__(self, config: MafiaAgentConfig):
         """Initialize the Mafia agent.
-        
+
         Args:
             config (MafiaAgentConfig): Configuration for the agent
 
@@ -95,16 +97,18 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             PlayerRole.MAFIA: "mafia",
             PlayerRole.DETECTIVE: "detective",
             PlayerRole.DOCTOR: "doctor",
-            PlayerRole.NARRATOR: "narrator"
+            PlayerRole.NARRATOR: "narrator",
         }
 
         # Create the reverse mapping for lookups
-        self.role_mapping = {value: key for key, value in self.role_enum_mapping.items()}
+        self.role_mapping = {
+            value: key for key, value in self.role_enum_mapping.items()
+        }
         print(self.role_mapping)
 
     def get_player_role(self, state: MafiaGameState, player_id: str) -> PlayerRole:
         """Get the role of a player.
-        
+
         Args:
             state (MafiaGameState): Current game state
             player_id (str): ID of the player to check
@@ -123,11 +127,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         print(player_id)
         if player_id.lower() == "narrator":
             return PlayerRole.NARRATOR
-        if player_id.lower() =="doctor":
+        if player_id.lower() == "doctor":
             return PlayerRole.DOCTOR
-        if player_id.lower() =="detective":
+        if player_id.lower() == "detective":
             return PlayerRole.DETECTIVE
-        if player_id.lower() =="mafia":
+        if player_id.lower() == "mafia":
             return PlayerRole.MAFIA
         # Check if the player_id exists in roles
         if player_id in state.roles:
@@ -135,11 +139,13 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         return Exception(f"Player {player_id} not found in state")
         # Default to VILLAGER if role not found
-        #return PlayerRole.VILLAGER
+        # return PlayerRole.VILLAGER
 
-    def get_engine_for_player(self, role: PlayerRole | str, function: str) -> Any | None:
+    def get_engine_for_player(
+        self, role: PlayerRole | str, function: str
+    ) -> Any | None:
         """Get the appropriate engine for a player based on role and function.
-        
+
         Args:
             role (Union[PlayerRole, str]): Player's role or role string
             function (str): Function type (e.g., "player")
@@ -170,7 +176,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             role_key,
             role_key.lower(),
             role_key.upper(),
-            role_key.capitalize()
+            role_key.capitalize(),
         ]
 
         for variation in role_variations:
@@ -183,9 +189,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         return None
 
-    def prepare_move_context(self, state: MafiaGameState, player_id: str) -> dict[str, Any]:
+    def prepare_move_context(
+        self, state: MafiaGameState, player_id: str
+    ) -> dict[str, Any]:
         """Prepare context for move generation.
-        
+
         This method gathers all relevant information for a player's move,
         including:
             - Game state information
@@ -216,14 +224,21 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         formatted_legal_moves = [str(move) for move in legal_moves]
 
         # Create a summary of the game state
-        alive_players = [pid for pid, p_state in state.player_states.items() if p_state.is_alive]
-        dead_players = [pid for pid, p_state in state.player_states.items() if not p_state.is_alive]
+        alive_players = [
+            pid for pid, p_state in state.player_states.items() if p_state.is_alive
+        ]
+        dead_players = [
+            pid for pid, p_state in state.player_states.items() if not p_state.is_alive
+        ]
 
         # Recent actions visible to the player
         visible_actions = []
         for action in state.action_history[-10:]:  # Last 10 actions
             # Night actions are private except to narrator and the player who did the action
-            if isinstance(action, dict) and action.get("phase") == GamePhase.NIGHT.value:
+            if (
+                isinstance(action, dict)
+                and action.get("phase") == GamePhase.NIGHT.value
+            ):
                 action_player_id = action.get("player_id")
                 if action_player_id == player_id or player_role == PlayerRole.NARRATOR:
                     visible_actions.append(str(action))
@@ -239,19 +254,32 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         # Special information based on role
         if player_role == PlayerRole.MAFIA:
             # Mafia know who other mafia are
-            other_mafia = [pid for pid, role in state.roles.items()
-                        if role == PlayerRole.MAFIA and pid != player_id and state.player_states[pid].is_alive]
+            other_mafia = [
+                pid
+                for pid, role in state.roles.items()
+                if role == PlayerRole.MAFIA
+                and pid != player_id
+                and state.player_states[pid].is_alive
+            ]
             if other_mafia:
-                private_info.append(f"Your fellow mafia members are: {', '.join(other_mafia)}")
+                private_info.append(
+                    f"Your fellow mafia members are: {', '.join(other_mafia)}"
+                )
             else:
                 private_info.append("You are the only remaining mafia member.")
 
         elif player_role == PlayerRole.DETECTIVE:
             # Detectives know the results of their investigations
-            if player_state and hasattr(player_state, "investigation_results") and player_state.investigation_results:
+            if (
+                player_state
+                and hasattr(player_state, "investigation_results")
+                and player_state.investigation_results
+            ):
                 for target, is_mafia in player_state.investigation_results.items():
                     result = "is mafia" if is_mafia else "is not mafia"
-                    private_info.append(f"Your investigation revealed: {target} {result}")
+                    private_info.append(
+                        f"Your investigation revealed: {target} {result}"
+                    )
 
         # Prepare task based on phase
         current_task = "Wait for your turn"
@@ -298,12 +326,12 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             "private_info": private_info,
             "recent_actions": visible_actions,
             "phase_context": phase_context,
-            "phase_context_task": current_task  # Direct field for compatibility
+            "phase_context_task": current_task,  # Direct field for compatibility
         }
 
     def prepare_narrator_context(self, state: MafiaGameState) -> dict[str, Any]:
         """Prepare context for narrator actions.
-        
+
         This method gathers all information needed for narrator decisions,
         including:
             - Complete game state
@@ -342,7 +370,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
             for player_id, role in state.roles.items():
                 if state.player_states[player_id].is_alive:
-                    if role in [PlayerRole.MAFIA, PlayerRole.DOCTOR, PlayerRole.DETECTIVE]:
+                    if role in [
+                        PlayerRole.MAFIA,
+                        PlayerRole.DOCTOR,
+                        PlayerRole.DETECTIVE,
+                    ]:
                         expected_actions += 1
                         # Check if action was performed
                         for action in reversed(state.action_history):
@@ -356,9 +388,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                                 action_phase = getattr(action, "phase", None)
                                 action_round = getattr(action, "round_number", None)
 
-                            if (action_player == player_id and
-                                action_phase == GamePhase.NIGHT.value and
-                                action_round == state.round_number):
+                            if (
+                                action_player == player_id
+                                and action_phase == GamePhase.NIGHT.value
+                                and action_round == state.round_number
+                            ):
                                 completed_actions += 1
                                 break
 
@@ -379,15 +413,25 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             phase_info["vote_counts"] = vote_counts
 
             # Count expected votes
-            expected_votes = len([pid for pid, p_state in state.player_states.items() if p_state.is_alive])
+            expected_votes = len(
+                [
+                    pid
+                    for pid, p_state in state.player_states.items()
+                    if p_state.is_alive
+                ]
+            )
             phase_info["expected_votes"] = expected_votes
             phase_info["completed_votes"] = len(state.votes)
 
         # Create a task field for the narrator
         current_task = "Observe and narrate the game"
-        if state.game_phase == GamePhase.NIGHT and phase_info.get("completed_actions") == phase_info.get("expected_actions"):
+        if state.game_phase == GamePhase.NIGHT and phase_info.get(
+            "completed_actions"
+        ) == phase_info.get("expected_actions"):
             current_task = "Resolve night actions and transition to day"
-        elif state.game_phase == GamePhase.DAY_VOTING and phase_info.get("completed_votes") == phase_info.get("expected_votes"):
+        elif state.game_phase == GamePhase.DAY_VOTING and phase_info.get(
+            "completed_votes"
+        ) == phase_info.get("expected_votes"):
             current_task = "Count votes and transition to night"
 
         # Add phase_context_task for compatibility
@@ -405,12 +449,12 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             "public_announcements": state.public_announcements[-5:],
             "action_history": [str(action) for action in state.action_history[-10:]],
             "phase_context": phase_context,
-            "phase_context_task": current_task  # Direct field for compatibility
+            "phase_context_task": current_task,  # Direct field for compatibility
         }
 
     def extract_move(self, response, player_id: str) -> MafiaAction | NarratorAction:
         """Extract move from engine response.
-        
+
         This method processes the LLM response into a valid game action,
         handling:
             - Response validation
@@ -449,7 +493,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             try:
                 action_type = ActionType(action_type_str)
             except ValueError:
-                logger.warning(f"Unknown action type: {action_type_str}, defaulting to SPEAK")
+                logger.warning(
+                    f"Unknown action type: {action_type_str}, defaulting to SPEAK"
+                )
                 action_type = ActionType.SPEAK
 
             # Get current state info
@@ -464,7 +510,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 phase=current_phase,
                 round_number=round_number,
                 target_id=response.target_id,
-                message=response.message
+                message=response.message,
             )
 
             if role.lower() == "doctor" and action_type == ActionType.SAVE:
@@ -477,14 +523,16 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             action = NarratorAction(
                 announcement=response.announcement,
                 phase_transition=response.phase_transition,
-                round_number=1
+                round_number=1,
             )
             return action
 
         # The old approach for handling directly returned actions
         if isinstance(response, MafiaAction) or isinstance(response, NarratorAction):
             # Make sure round_number is set for MafiaAction
-            if isinstance(response, MafiaAction) and not hasattr(response, "round_number"):
+            if isinstance(response, MafiaAction) and not hasattr(
+                response, "round_number"
+            ):
                 response.round_number = 1  # Default to round 1 if none set
             return response
 
@@ -497,7 +545,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                     logger.info(f"Doctor chose to save: {action.target_id}")
 
             # Ensure round_number is set
-            if action and hasattr(action, "round_number") and action.round_number is None:
+            if (
+                action
+                and hasattr(action, "round_number")
+                and action.round_number is None
+            ):
                 action.round_number = 1
             return action
 
@@ -509,7 +561,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 action = NarratorAction(
                     announcement="The narrator observes silently.",
                     phase_transition=False,
-                    round_number=1
+                    round_number=1,
                 )
             # Ensure round_number is set
             if action.round_number is None:
@@ -524,7 +576,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 try:
                     action_type = ActionType(action_type_str)
                 except ValueError:
-                    logger.warning(f"Unknown action type: {action_type_str}, defaulting to SPEAK")
+                    logger.warning(
+                        f"Unknown action type: {action_type_str}, defaulting to SPEAK"
+                    )
                     action_type = ActionType.SPEAK
 
                 # Get current state info
@@ -538,7 +592,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                     phase=current_phase,
                     round_number=round_number,
                     target_id=response.get("target_id"),
-                    message=response.get("message")
+                    message=response.get("message"),
                 )
 
             if "announcement" in response:
@@ -546,7 +600,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 return NarratorAction(
                     announcement=response.get("announcement"),
                     phase_transition=response.get("phase_transition", False),
-                    round_number=1
+                    round_number=1,
                 )
 
             if "action" in response:
@@ -565,20 +619,25 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 return action
 
         # If we got here, we need to create a default action based on role
-        logger.warning(f"Creating default action for {player_id} - unexpected response type: {type(response)}")
+        logger.warning(
+            f"Creating default action for {player_id} - unexpected response type: {type(response)}"
+        )
 
         if role.lower() == "narrator":
             return NarratorAction(
                 announcement="The narrator observes silently.",
                 phase_transition=False,
-                round_number=1
+                round_number=1,
             )
         if role.lower() == "doctor":
             # For doctor, create a SAVE action with a random target if possible
             alive_players = []
             if hasattr(self, "state"):
-                alive_players = [pid for pid, p_state in self.state.player_states.items()
-                                if p_state.is_alive]
+                alive_players = [
+                    pid
+                    for pid, p_state in self.state.player_states.items()
+                    if p_state.is_alive
+                ]
 
             target = alive_players[0] if alive_players else "Player_1"
             logger.info(f"Created default SAVE action for doctor targeting {target}")
@@ -588,7 +647,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 action_type=ActionType.SAVE,
                 target_id=target,
                 phase=GamePhase.NIGHT,
-                round_number=1
+                round_number=1,
             )
         # Default for other roles
         return MafiaAction(
@@ -596,12 +655,12 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             action_type=ActionType.SPEAK,
             message="I have nothing to say.",
             phase=GamePhase.NIGHT,
-            round_number=1
+            round_number=1,
         )
 
     def handle_player_turn(self, state: MafiaGameState) -> dict[str, Any]:
         """Handle a player's turn with special Mafia logic.
-        
+
         This method manages a player's turn, including:
             - Role-specific behavior
             - Move generation and validation
@@ -627,7 +686,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         try:
             player_id = state.players[current_idx]
         except IndexError:
-            logger.error(f"Invalid player index: {current_idx}, max: {len(state.players)-1}")
+            logger.error(
+                f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
+            )
             # Default to first player
             player_id = state.players[0] if state.players else "Player_1"
 
@@ -641,7 +702,10 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         logger.info(f"Player {player_id} has role {player_role}")
 
         # Skip if player is dead
-        if player_id in state.player_states and not state.player_states[player_id].is_alive:
+        if (
+            player_id in state.player_states
+            and not state.player_states[player_id].is_alive
+        ):
             logger.info(f"Player {player_id} is dead, skipping turn")
             # Advance to next player
             next_idx = (current_idx + 1) % len(state.players)
@@ -666,7 +730,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         # If no engine found, log error and move to next player
         if not move_engine:
-            logger.error(f"No move engine found for player {player_id} with role {player_role}")
+            logger.error(
+                f"No move engine found for player {player_id} with role {player_role}"
+            )
             # Move to next player
             next_idx = (current_idx + 1) % len(state.players)
             new_state.current_player_idx = next_idx
@@ -695,7 +761,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                     logger.info(f"Got response from engine for player {player_id}")
                 else:
                     # Engine took too long, create a default response and move on
-                    logger.warning(f"Engine for player {player_id} timed out, using default action")
+                    logger.warning(
+                        f"Engine for player {player_id} timed out, using default action"
+                    )
                     response = None
 
             # Add fallback if response is None
@@ -704,9 +772,14 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 if player_role == PlayerRole.MAFIA:
                     # Pick random target for mafia
                     import random
-                    targets = [pid for pid, p_state in state.player_states.items()
-                            if p_state.is_alive and pid != player_id
-                            and state.roles.get(pid) != PlayerRole.MAFIA]
+
+                    targets = [
+                        pid
+                        for pid, p_state in state.player_states.items()
+                        if p_state.is_alive
+                        and pid != player_id
+                        and state.roles.get(pid) != PlayerRole.MAFIA
+                    ]
 
                     if targets:
                         target = random.choice(targets)
@@ -715,16 +788,22 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                             action_type=ActionType.KILL,
                             target_id=target,
                             phase=state.game_phase,
-                            round_number=state.round_number
+                            round_number=state.round_number,
                         )
-                        logger.info(f"Created default kill action for {player_id} targeting {target}")
+                        logger.info(
+                            f"Created default kill action for {player_id} targeting {target}"
+                        )
 
                 # Other default responses could be added for doctor/detective roles
                 elif player_role == PlayerRole.DOCTOR:
                     # Pick random target for doctor
                     import random
-                    targets = [pid for pid, p_state in state.player_states.items()
-                            if p_state.is_alive]
+
+                    targets = [
+                        pid
+                        for pid, p_state in state.player_states.items()
+                        if p_state.is_alive
+                    ]
 
                     if targets:
                         target = random.choice(targets)
@@ -733,9 +812,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                             action_type=ActionType.SAVE,
                             target_id=target,
                             phase=state.game_phase,
-                            round_number=state.round_number
+                            round_number=state.round_number,
                         )
-                        logger.info(f"Created default save action for {player_id} targeting {target}")
+                        logger.info(
+                            f"Created default save action for {player_id} targeting {target}"
+                        )
 
                 # If still no response, create a "skip turn" message
                 if response is None:
@@ -744,7 +825,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                         action_type=ActionType.SPEAK,
                         message="I pass my turn.",
                         phase=state.game_phase,
-                        round_number=state.round_number
+                        round_number=state.round_number,
                     )
                     logger.info(f"Created default speak action for {player_id}")
 
@@ -767,12 +848,14 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             logger.error(f"Error processing turn for {player_id}: {e!s}", exc_info=True)
             next_idx = (current_idx + 1) % len(state.players)
             new_state.current_player_idx = next_idx
-            new_state.public_announcements.append(f"{player_id} encountered an error during their turn.")
+            new_state.public_announcements.append(
+                f"{player_id} encountered an error during their turn."
+            )
             return self.state_to_dict(new_state)
 
     def handle_narrator_turn(self, state: MafiaGameState) -> dict[str, Any]:
         """Handle the narrator's turn.
-        
+
         This method manages narrator actions, including:
             - Phase transitions
             - Night action resolution
@@ -846,9 +929,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             new_state = self.state_manager.apply_move(state, narrator_id, action)
 
             # If we need to resolve night actions
-            if (state.game_phase == GamePhase.NIGHT and
-                action.phase_transition and
-                state.killed_at_night is not None):
+            if (
+                state.game_phase == GamePhase.NIGHT
+                and action.phase_transition
+                and state.killed_at_night is not None
+            ):
                 new_state = self.state_manager.resolve_night_actions(new_state)
                 logger.debug("Resolved night actions")
 
@@ -864,7 +949,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
     def determine_next_step_after_player_turn(self, state: MafiaGameState) -> str:
         """Determine what to do after a player's turn.
-        
+
         This method decides the next game action based on:
             - Current game phase
             - Completed actions
@@ -888,7 +973,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         # Check for maximum days limit
         if hasattr(self.config, "max_days") and state.day_number > self.config.max_days:
-            logger.info(f"Reached maximum days limit ({self.config.max_days}), ending game")
+            logger.info(
+                f"Reached maximum days limit ({self.config.max_days}), ending game"
+            )
             return "end_game"
 
         # If night phase and all night actions are complete, transition to day
@@ -898,7 +985,10 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             # Check if all expected night actors have acted
             for player_id, role in state.roles.items():
                 # Skip narrator and dead players
-                if role == PlayerRole.NARRATOR or not state.player_states[player_id].is_alive:
+                if (
+                    role == PlayerRole.NARRATOR
+                    or not state.player_states[player_id].is_alive
+                ):
                     continue
 
                 if role in [PlayerRole.MAFIA, PlayerRole.DOCTOR, PlayerRole.DETECTIVE]:
@@ -921,9 +1011,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                         if isinstance(action_phase, GamePhase):
                             action_phase = action_phase.value
 
-                        if (action_player == player_id and
-                            action_phase == GamePhase.NIGHT.value and
-                            action_round == state.round_number):
+                        if (
+                            action_player == player_id
+                            and action_phase == GamePhase.NIGHT.value
+                            and action_round == state.round_number
+                        ):
 
                             has_acted = True
                             break
@@ -938,8 +1030,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         # If day voting phase and all votes are in, transition to night
         if state.game_phase == GamePhase.DAY_VOTING:
-            alive_players = [pid for pid, p_state in state.player_states.items()
-                            if p_state.is_alive and state.roles.get(pid) != PlayerRole.NARRATOR]
+            alive_players = [
+                pid
+                for pid, p_state in state.player_states.items()
+                if p_state.is_alive and state.roles.get(pid) != PlayerRole.NARRATOR
+            ]
 
             if len(state.votes) >= len(alive_players):
                 logger.debug("All votes are in, transitioning to next phase")
@@ -950,7 +1045,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         try:
             player_id = state.players[current_idx]
         except IndexError:
-            logger.error(f"Invalid player index: {current_idx}, max: {len(state.players)-1}")
+            logger.error(
+                f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
+            )
             player_id = state.players[0] if state.players else "Player_1"
 
         # Check if current player is narrator
@@ -982,15 +1079,25 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                     if isinstance(action_phase, GamePhase):
                         action_phase = action_phase.value
 
-                    if (action_phase == GamePhase.DAY_DISCUSSION.value and
-                        action_round == state.round_number):
+                    if (
+                        action_phase == GamePhase.DAY_DISCUSSION.value
+                        and action_round == state.round_number
+                    ):
                         discussion_count += 1
 
-                alive_player_count = len([p for p, p_state in state.player_states.items()
-                                         if p_state.is_alive and state.roles.get(p) != PlayerRole.NARRATOR])
+                alive_player_count = len(
+                    [
+                        p
+                        for p, p_state in state.player_states.items()
+                        if p_state.is_alive
+                        and state.roles.get(p) != PlayerRole.NARRATOR
+                    ]
+                )
 
                 if discussion_count >= alive_player_count:
-                    logger.debug("Full discussion round completed, transitioning to voting phase")
+                    logger.debug(
+                        "Full discussion round completed, transitioning to voting phase"
+                    )
                     return "phase_transition"
 
         # Otherwise, continue with next player
@@ -999,7 +1106,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
     def visualize_state(self, state_obj, debug=False):
         """Visualize the current game state.
-        
+
         This method creates a human-readable display of:
             - Game phase and status
             - Player information
@@ -1047,7 +1154,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             if hasattr(game_phase, "value"):
                 game_phase = game_phase.value
 
-            print(f"🎮 MAFIA GAME - Day {day_number}, {str(game_phase).replace('_', ' ').title()}")
+            print(
+                f"🎮 MAFIA GAME - Day {day_number}, {str(game_phase).replace('_', ' ').title()}"
+            )
             print(f"📌 Game Status: {state_dict.get('game_status', 'unknown')}")
             print("=" * 60)
 
@@ -1063,7 +1172,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
             # Display player info
             for player_id, player_state in player_states.items():
-                is_alive = player_state.get("is_alive", True) if isinstance(player_state, dict) else getattr(player_state, "is_alive", True)
+                is_alive = (
+                    player_state.get("is_alive", True)
+                    if isinstance(player_state, dict)
+                    else getattr(player_state, "is_alive", True)
+                )
                 status = "🟢 ALIVE" if is_alive else "🔴 DEAD"
 
                 # Get role info for debug mode
@@ -1139,7 +1252,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
     def state_to_dict(self, state: MafiaGameState) -> dict[str, Any]:
         """Convert state to dictionary consistently.
-        
+
         This method handles various state formats and ensures consistent
         dictionary conversion for the game graph.
 
@@ -1179,5 +1292,5 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 "error_message": f"Error converting state: {e!s}",
                 "game_status": getattr(state, "game_status", "ongoing"),
                 "players": getattr(state, "players", []),
-                "current_player_idx": getattr(state, "current_player_idx", 0)
+                "current_player_idx": getattr(state, "current_player_idx", 0),
             }

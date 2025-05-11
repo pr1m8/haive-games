@@ -14,21 +14,26 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
     # Direction vectors for all 8 directions
     DIRECTIONS = [
-        (-1, -1), (-1, 0), (-1, 1),  # NW, N, NE
-        (0, -1),           (0, 1),   # W, E
-        (1, -1),  (1, 0),  (1, 1)    # SW, S, SE
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),  # NW, N, NE
+        (0, -1),
+        (0, 1),  # W, E
+        (1, -1),
+        (1, 0),
+        (1, 1),  # SW, S, SE
     ]
 
     @classmethod
     def initialize(cls, **kwargs) -> ReversiState:
         """Initialize a new Reversi/Othello game.
-        
+
         Args:
             **kwargs: Keyword arguments for game initialization.
                 first_player: Which player goes first ('B' or 'W'). Default is 'B'.
                 player_B: Which player is Black ('player1' or 'player2'). Default is 'player1'.
                 player_W: Which player is White ('player1' or 'player2'). Default is 'player2'.
-                
+
         Returns:
             ReversiState: A new Reversi game state.
         """
@@ -53,22 +58,21 @@ class ReversiStateManager(GameStateManager[ReversiState]):
             move_history=[],
             player_B=player_B,
             player_W=player_W,
-            skip_count=0
+            skip_count=0,
         )
 
     @classmethod
     def get_legal_moves(cls, state: ReversiState) -> list[ReversiMove]:
         """Get all legal moves for the current state.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             List[ReversiMove]: A list of all legal moves.
         """
         legal_moves = []
         player = state.turn
-        opponent = "W" if player == "B" else "B"
 
         for row in range(8):
             for col in range(8):
@@ -78,25 +82,21 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
                 # Check if placing a disc here would flip any opponent's discs
                 if cls._get_flips(state.board, row, col, player):
-                    legal_moves.append(ReversiMove(
-                        row=row,
-                        col=col,
-                        player=player
-                    ))
+                    legal_moves.append(ReversiMove(row=row, col=col, player=player))
 
         return legal_moves
 
     @classmethod
     def apply_move(cls, state: ReversiState, move: ReversiMove) -> ReversiState:
         """Apply a move to the current state and return the new state.
-        
+
         Args:
             state: The current game state.
             move: The move to apply.
-            
+
         Returns:
             ReversiState: A new game state after applying the move.
-            
+
         Raises:
             ValueError: If the move is invalid.
         """
@@ -147,10 +147,10 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     @classmethod
     def check_game_status(cls, state: ReversiState) -> ReversiState:
         """Check and update the game status.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             ReversiState: The game state with updated status.
         """
@@ -172,7 +172,9 @@ class ReversiStateManager(GameStateManager[ReversiState]):
                 state.winner = None
 
         # Check if board is full
-        if all(state.board[row][col] is not None for row in range(8) for col in range(8)):
+        if all(
+            state.board[row][col] is not None for row in range(8) for col in range(8)
+        ):
             # Count discs to determine winner
             counts = state.disc_count
             black_count = counts["B"]
@@ -193,24 +195,26 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     @classmethod
     def get_winner(cls, state: ReversiState) -> str | None:
         """Get the winner of the game, if any.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Optional[str]: The winner ('B' or 'W'), or None if the game is ongoing or a draw.
         """
         return state.winner
 
     @classmethod
-    def add_analysis(cls, state: ReversiState, player: str, analysis: ReversiAnalysis) -> ReversiState:
+    def add_analysis(
+        cls, state: ReversiState, player: str, analysis: ReversiAnalysis
+    ) -> ReversiState:
         """Add an analysis to the state.
-        
+
         Args:
             state: The current game state.
             player: The player who performed the analysis.
             analysis: The analysis to add.
-            
+
         Returns:
             ReversiState: Updated state with the analysis added.
         """
@@ -224,15 +228,17 @@ class ReversiStateManager(GameStateManager[ReversiState]):
         return new_state
 
     @classmethod
-    def _get_flips(cls, board: list[list[str | None]], row: int, col: int, player: str) -> set[tuple[int, int]]:
+    def _get_flips(
+        cls, board: list[list[str | None]], row: int, col: int, player: str
+    ) -> set[tuple[int, int]]:
         """Get the positions of opponent's discs that would be flipped by placing player's disc at (row, col).
-        
+
         Args:
             board: The current board.
             row: Row index of the move.
             col: Column index of the move.
             player: Player making the move ('B' or 'W').
-            
+
         Returns:
             Set[Tuple[int, int]]: Positions of discs that would be flipped.
         """
@@ -261,15 +267,17 @@ class ReversiStateManager(GameStateManager[ReversiState]):
         return flips
 
     @classmethod
-    def is_legal_move(cls, state: ReversiState, row: int, col: int, player: str) -> bool:
+    def is_legal_move(
+        cls, state: ReversiState, row: int, col: int, player: str
+    ) -> bool:
         """Check if a move is legal.
-        
+
         Args:
             state: The current game state.
             row: Row index of the move.
             col: Column index of the move.
             player: Player making the move ('B' or 'W').
-            
+
         Returns:
             bool: True if the move is legal, False otherwise.
         """
@@ -283,10 +291,10 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     @classmethod
     def get_skip_move(cls, state: ReversiState) -> ReversiState:
         """Apply a skip move when player has no legal moves.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             ReversiState: A new game state after skipping the turn.
         """

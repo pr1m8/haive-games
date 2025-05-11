@@ -13,10 +13,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
         """Initialize a new Connect 4 game."""
         board = [[None for _ in range(7)] for _ in range(6)]
         return Connect4State(
-            board=board,
-            turn="red",
-            game_status="ongoing",
-            move_history=[]
+            board=board, turn="red", game_status="ongoing", move_history=[]
         )
 
     @classmethod
@@ -53,7 +50,11 @@ class Connect4StateManager(GameStateManager[Connect4State]):
     @classmethod
     def get_legal_moves(cls, state: Connect4State) -> list[Connect4Move]:
         """Get all legal moves."""
-        return [Connect4Move(column=col) for col in range(7) if not state.is_column_full(col)]
+        return [
+            Connect4Move(column=col)
+            for col in range(7)
+            if not state.is_column_full(col)
+        ]
 
     @classmethod
     def check_game_over(cls, state: Connect4State) -> bool:
@@ -79,13 +80,19 @@ class Connect4StateManager(GameStateManager[Connect4State]):
         # Check diagonal /
         for offset in range(-3, 1):
             if 0 <= row + offset <= 2 and 0 <= col + offset <= 3:
-                if all(board[row + offset + i][col + offset + i] == player for i in range(4)):
+                if all(
+                    board[row + offset + i][col + offset + i] == player
+                    for i in range(4)
+                ):
                     return True
 
         # Check diagonal \
         for offset in range(-3, 1):
             if 0 <= row + offset <= 2 and 3 <= col - offset <= 6:
-                if all(board[row + offset + i][col - offset - i] == player for i in range(4)):
+                if all(
+                    board[row + offset + i][col - offset - i] == player
+                    for i in range(4)
+                ):
                     return True
 
         return False

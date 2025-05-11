@@ -8,7 +8,6 @@ from haive.core.engine.agent.persistence.postgres_config import (
 
 from haive.games.chess.agent import ChessAgent
 from haive.games.chess.config import ChessAgentConfig
-from haive.games.chess.models import ChessPlayerDecision
 from haive.games.chess.state import ChessState
 
 

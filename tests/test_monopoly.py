@@ -23,6 +23,7 @@ def test_init():
 
     return "Basic initialization tests passed"
 
+
 def test_move():
     print("\nTesting move functionality...")
     agent = MonopolyAgent()
@@ -31,17 +32,14 @@ def test_move():
     state_obj = MonopolyState(**initialized_state)
 
     # Create a move action
-    move_action = MoveAction(
-        action_type="roll",
-        reasoning="Testing roll action"
-    )
+    move_action = MoveAction(action_type="roll", reasoning="Testing roll action")
 
     # Create a turn decision with the move action
     turn_decision = TurnDecision(
         move_action=move_action,
         property_actions=[],
         end_turn=False,
-        reasoning="Test roll action"
+        reasoning="Test roll action",
     )
 
     # Add turn decision to state
@@ -54,6 +52,7 @@ def test_move():
 
     return "Move tests passed"
 
+
 def test_property_management():
     print("\nTesting property management...")
     agent = MonopolyAgent()
@@ -65,7 +64,7 @@ def test_property_management():
     property_action = PropertyAction(
         action_type="buy",
         property_name="Mediterranean Avenue",
-        reasoning="Testing buy property"
+        reasoning="Testing buy property",
     )
 
     # Create a turn decision with the property action
@@ -73,7 +72,7 @@ def test_property_management():
         move_action=None,
         property_actions=[property_action],
         end_turn=False,
-        reasoning="Test property action"
+        reasoning="Test property action",
     )
 
     # Add turn decision to state
@@ -88,6 +87,7 @@ def test_property_management():
     print("Property management successful")
 
     return "Property management tests passed"
+
 
 if __name__ == "__main__":
     result1 = test_init()

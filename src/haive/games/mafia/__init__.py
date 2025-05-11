@@ -9,7 +9,7 @@ This package provides a complete implementation of the Mafia party game, includi
 
 Example:
     >>> from haive.games.mafia import MafiaAgent, MafiaAgentConfig
-    >>> 
+    >>>
     >>> # Create and configure a Mafia game agent
     >>> config = MafiaAgentConfig(
     ...     num_players=6,

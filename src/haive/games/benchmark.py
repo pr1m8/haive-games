@@ -23,19 +23,17 @@ from haive.games.poker.test import PokerAgentTester
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("benchmark.log", mode="w")
-    ]
+    handlers=[logging.StreamHandler(), logging.FileHandler("benchmark.log", mode="w")],
 )
 
 logger = logging.getLogger(__name__)
 
+
 def run_monopoly_benchmark():
     """Run benchmark tests for the Monopoly agent."""
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("MONOPOLY AGENT BENCHMARK")
-    print("="*50)
+    print("=" * 50)
 
     try:
         start_time = time.time()
@@ -55,11 +53,12 @@ def run_monopoly_benchmark():
         print(f"Error running Monopoly benchmark: {e}")
         return 0, 1, [{"test": "benchmark_setup", "error": str(e)}]
 
+
 def run_poker_benchmark():
     """Run benchmark tests for the Poker agent."""
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("POKER AGENT BENCHMARK")
-    print("="*50)
+    print("=" * 50)
 
     try:
         start_time = time.time()
@@ -79,27 +78,20 @@ def run_poker_benchmark():
         print(f"Error running Poker benchmark: {e}")
         return 0, 1, [{"test": "benchmark_setup", "error": str(e)}]
 
+
 def main():
     """Run all benchmarks based on command line arguments."""
     parser = argparse.ArgumentParser(description="Benchmark game agents")
 
     parser.add_argument(
-        "--monopoly",
-        action="store_true",
-        help="Run Monopoly agent benchmark"
+        "--monopoly", action="store_true", help="Run Monopoly agent benchmark"
     )
 
     parser.add_argument(
-        "--poker",
-        action="store_true",
-        help="Run Poker agent benchmark"
+        "--poker", action="store_true", help="Run Poker agent benchmark"
     )
 
-    parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Run all benchmarks"
-    )
+    parser.add_argument("--all", action="store_true", help="Run all benchmarks")
 
     args = parser.parse_args()
 
@@ -124,16 +116,17 @@ def main():
 
     # Print summary
     total_duration = time.time() - start_time
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("BENCHMARK SUMMARY")
-    print("="*50)
+    print("=" * 50)
     print(f"Total benchmarks completed in {total_duration:.2f}s")
     print(f"Total successful tests: {total_success}")
     print(f"Total failed tests: {total_fails}")
-    print("="*50)
+    print("=" * 50)
 
     # Return exit code based on success/failure
     return 0 if total_fails == 0 else 1
+
 
 if __name__ == "__main__":
     exit_code = main()

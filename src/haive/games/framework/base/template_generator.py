@@ -32,15 +32,15 @@ from textwrap import dedent
 
 class GameTemplateGenerator:
     """Experimental template generator for new board game implementations.
-    
+
     This class automates the creation of boilerplate code for implementing
     new board games within the framework. It generates a complete set of
     files with proper structure, documentation, and type hints.
-    
+
     Warning:
         This class is experimental and its API may change without notice.
         Generated code may need manual adjustments for specific games.
-    
+
     Attributes:
         game_name (str): The name of the game (used for class names).
         player1_name (str): Name for player 1.
@@ -49,27 +49,29 @@ class GameTemplateGenerator:
         game_slug (str): Slugified version of the game name for file paths.
         game_class_name (str): CamelCase version of game name for class names.
         base_dir (str): Base directory for generated files.
-    
+
     Example:
         >>> generator = GameTemplateGenerator("Tic Tac Toe")
         >>> generator.generate_templates()
         ✅ Generated template files for Tic Tac Toe in src/haive/agents/agent_games/tic_tac_toe
     """
 
-    def __init__(self,
-                 game_name: str,
-                 player1_name: str = "player1",
-                 player2_name: str = "player2",
-                 enable_analysis: bool = True):
+    def __init__(
+        self,
+        game_name: str,
+        player1_name: str = "player1",
+        player2_name: str = "player2",
+        enable_analysis: bool = True,
+    ):
         """Initialize the template generator.
-        
+
         Args:
             game_name (str): The name of the game (used for class names).
             player1_name (str, optional): Name for player 1. Defaults to "player1".
             player2_name (str, optional): Name for player 2. Defaults to "player2".
             enable_analysis (bool, optional): Whether to include analysis in templates.
                 Defaults to True.
-        
+
         Example:
             >>> generator = GameTemplateGenerator(
             ...     game_name="Chess",
@@ -84,22 +86,24 @@ class GameTemplateGenerator:
 
         # Convert game name to reasonable formats
         self.game_slug = self.game_name.lower().replace(" ", "_")
-        self.game_class_name = "".join(word.capitalize() for word in self.game_name.split())
+        self.game_class_name = "".join(
+            word.capitalize() for word in self.game_name.split()
+        )
 
         # Create directory paths
         self.base_dir = f"src/haive/agents/agent_games/{self.game_slug}"
 
     def generate_templates(self, output_dir: str = None) -> None:
         """Generate all template files for the game.
-        
+
         This method creates a complete set of files needed for a new game
         implementation, including models, state management, configuration,
         and example usage.
-        
+
         Args:
             output_dir (str, optional): Optional directory to write files to.
                 If not provided, uses the standard package structure.
-        
+
         Example:
             >>> generator = GameTemplateGenerator("Chess")
             >>> # Generate in default location
@@ -124,17 +128,18 @@ class GameTemplateGenerator:
 
     def _generate_models_file(self) -> None:
         """Generate the models.py file with game-specific data models.
-        
+
         This method creates a file containing Pydantic models for:
         - Game moves
         - Player decisions
         - Game state
         - Analysis (if enabled)
-        
+
         The generated models include proper type hints, field descriptions,
         and validation rules.
         """
-        content = dedent(f'''
+        content = dedent(
+            f'''
         from typing import List, Dict, Literal, Optional, Tuple, Union
         from pydantic import BaseModel, Field, field_validator
         from ...framework.base import GameState
@@ -148,11 +153,13 @@ class GameTemplateGenerator:
             def __str__(self):
                 # Provide a string representation of the move
                 return f"Move description"
-        ''')
+        '''
+        )
 
         # Add analysis model if enabled
         if self.enable_analysis:
-            content += dedent(f'''
+            content += dedent(
+                f'''
             
             class {self.game_class_name}Analysis(BaseModel):
                 """Analysis of a {self.game_name} position."""
@@ -160,10 +167,12 @@ class GameTemplateGenerator:
                 # Example:
                 # position_score: int = Field(..., description="Evaluation of the position (-10 to 10)")
                 # recommendations: List[str] = Field(default_factory=list, description="Strategic recommendations")
-            ''')
+            '''
+            )
 
         # Add the game state class
-        content += dedent(f'''
+        content += dedent(
+            f'''
         
         class {self.game_class_name}State(GameState):
             """State for a {self.game_name} game."""
@@ -177,21 +186,25 @@ class GameTemplateGenerator:
             move_history: List[{self.game_class_name}Move] = Field(
                 default_factory=list, description="History of moves"
             )
-        ''')
+        '''
+        )
 
         # Add analysis fields if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
             {self.player1_name}_analysis: List[Dict] = Field(
                 default_factory=list, description="Analysis history for {self.player1_name}"
             )
             {self.player2_name}_analysis: List[Dict] = Field(
                 default_factory=list, description="Analysis history for {self.player2_name}"
             )
-            """)
+            """
+            )
 
         # Add winner field
-        content += dedent('''
+        content += dedent(
+            '''
             winner: Optional[str] = Field(
                 default=None, description="Winner of the game, if any"
             )
@@ -201,7 +214,8 @@ class GameTemplateGenerator:
                 """Get a string representation of the board."""
                 # Implement board visualization here
                 return "Board visualization"
-        ''')
+        '''
+        )
 
         # Write the file
         with open(f"{self.base_dir}/models.py", "w") as f:
@@ -209,16 +223,17 @@ class GameTemplateGenerator:
 
     def _generate_state_manager_file(self) -> None:
         """Generate the state.py file with game state management logic.
-        
+
         This method creates a file containing the state manager class with:
         - Game initialization logic
         - Move application logic
         - Legal move generation
         - Game status checking
-        
+
         The generated code includes placeholders for game-specific logic.
         """
-        content = dedent(f'''
+        content = dedent(
+            f'''
         from typing import List, Optional, Dict, Tuple
         import copy
         from .models import {self.game_class_name}State, {self.game_class_name}Move
@@ -283,7 +298,8 @@ class GameTemplateGenerator:
                 # ...
                 
                 return state
-        ''')
+        '''
+        )
 
         # Write the file
         with open(f"{self.base_dir}/state.py", "w") as f:
@@ -291,15 +307,16 @@ class GameTemplateGenerator:
 
     def _generate_config_file(self) -> None:
         """Generate the config.py file with agent configuration.
-        
+
         This method creates a file containing:
         - LLM prompt templates for moves and analysis
         - AugLLM configurations for players and analyzers
         - Game-specific agent configuration class
-        
+
         The generated code includes default configurations that can be customized.
         """
-        content = dedent(f"""
+        content = dedent(
+            f"""
         from ...framework.base import GameConfig
         from .models import {self.game_class_name}State, {self.game_class_name}PlayerDecision
         from ....core.aug_llm.base import AugLLMConfig
@@ -307,15 +324,19 @@ class GameTemplateGenerator:
         from langchain_core.prompts import ChatPromptTemplate
         from pydantic import Field
         from typing import Dict
-        """)
+        """
+        )
 
         # Add analysis import if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
             from .models import {self.game_class_name}Analysis
-            """)
+            """
+            )
 
-        content += dedent(f'''
+        content += dedent(
+            f'''
 
         # Define the prompts for each agent
 
@@ -334,11 +355,13 @@ class GameTemplateGenerator:
                     "Choose the best move. Provide your reasoning."
                 )
             ])
-        ''')
+        '''
+        )
 
         # Add analysis prompt if enabled
         if self.enable_analysis:
-            content += dedent(f'''
+            content += dedent(
+                f'''
 
             def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
                 """Generate a prompt for analyzing a {self.game_name} position."""
@@ -357,9 +380,11 @@ class GameTemplateGenerator:
                         "3. Recommended moves or plans"
                     )
                 ])
-            ''')
+            '''
+            )
 
-        content += dedent(f"""
+        content += dedent(
+            f"""
 
         # Define the AugLLM configurations
         aug_llm_configs = {{
@@ -374,11 +399,13 @@ class GameTemplateGenerator:
                 llm_config=AzureLLMConfig(model="gpt-4o"),
                 prompt_template=generate_move_prompt("{self.player2_name}"),
                 structured_output_model={self.game_class_name}PlayerDecision
-            ),""")
+            ),"""
+        )
 
         # Add analyzer configs if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
             "{self.player1_name}_analyzer": AugLLMConfig(
                 name="{self.player1_name}_analyzer",
                 llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -390,9 +417,11 @@ class GameTemplateGenerator:
                 llm_config=AzureLLMConfig(model="gpt-4o"),
                 prompt_template=generate_analysis_prompt("{self.player2_name}"),
                 structured_output_model={self.game_class_name}Analysis
-            ),""")
+            ),"""
+            )
 
-        content += dedent(f'''
+        content += dedent(
+            f'''
         }}
 
         class {self.game_class_name}AgentConfig(GameConfig):
@@ -417,7 +446,8 @@ class GameTemplateGenerator:
                     enable_analysis={self.enable_analysis!s},
                     visualize=True
                 )
-        ''')
+        '''
+        )
 
         # Write the file
         with open(f"{self.base_dir}/config.py", "w") as f:
@@ -425,16 +455,17 @@ class GameTemplateGenerator:
 
     def _generate_agent_file(self) -> None:
         """Generate the agent.py file with the main agent class.
-        
+
         This method creates a file containing the game agent class with:
         - Move generation and extraction
         - Position analysis (if enabled)
         - Game state visualization
         - Integration with the framework
-        
+
         The generated code includes proper error handling and logging.
         """
-        content = dedent(f"""
+        content = dedent(
+            f"""
         from typing import Dict, Any, List
         from langgraph.types import Command
         from ...framework.base import GameAgent
@@ -443,18 +474,22 @@ class GameTemplateGenerator:
         from .config import {self.game_class_name}AgentConfig
         from ...base import register_agent
         import time
-        """)
+        """
+        )
 
         # Add analysis retrieval if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
                 if player == "{self.player1_name}" and state.{self.player1_name}_analysis:
                     player_analysis = state.{self.player1_name}_analysis[-1]
                 elif player == "{self.player2_name}" and state.{self.player2_name}_analysis:
                     player_analysis = state.{self.player2_name}_analysis[-1]
-            """)
+            """
+            )
 
-        content += dedent(f'''
+        content += dedent(
+            f'''
                 # Prepare the context
                 return {{
                     "board": state.board_string,
@@ -476,11 +511,13 @@ class GameTemplateGenerator:
             def make_player2_move(self, state: {self.game_class_name}State) -> Command:
                 """Make a move for {self.player2_name}."""
                 return self.make_move(state, "{self.player2_name}")
-        ''')
+        '''
+        )
 
         # Add analysis methods if enabled
         if self.enable_analysis:
-            content += dedent(f'''
+            content += dedent(
+                f'''
             
             def prepare_analysis_context(self, state: {self.game_class_name}State, player: str) -> Dict[str, Any]:
                 """Prepare context for position analysis."""
@@ -498,9 +535,11 @@ class GameTemplateGenerator:
             def analyze_player2(self, state: {self.game_class_name}State) -> Command:
                 """Analyze position for {self.player2_name}."""
                 return self.analyze_position(state, "{self.player2_name}")
-            ''')
+            '''
+            )
 
-        content += dedent(f'''
+        content += dedent(
+            f'''
             
             def visualize_state(self, state: Dict[str, Any]) -> None:
                 """Visualize the current game state."""
@@ -519,11 +558,13 @@ class GameTemplateGenerator:
                 if game_state.move_history:
                     last_move = game_state.move_history[-1]
                     print(f"\\n📝 Last Move: {{last_move}}")
-        ''')
+        '''
+        )
 
         # Add analysis visualization if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
                 
                 # Print analyses if available
                 if game_state.{self.player1_name}_analysis and game_state.turn == "{self.player2_name}":
@@ -535,13 +576,16 @@ class GameTemplateGenerator:
                     last_analysis = game_state.{self.player2_name}_analysis[-1]
                     print(f"\\n🔍 {self.player2_name.capitalize()}'s Analysis:")
                     # Print key analysis points here based on your analysis model structure
-            """)
+            """
+            )
 
-        content += dedent("""
+        content += dedent(
+            """
                 
                 # Add a short delay for readability
                 time.sleep(0.5)
-        """)
+        """
+        )
 
         # Write the file
         with open(f"{self.base_dir}/agent.py", "w") as f:
@@ -549,15 +593,16 @@ class GameTemplateGenerator:
 
     def _generate_example_file(self) -> None:
         """Generate an example.py file to demonstrate agent usage.
-        
+
         This method creates a file containing:
         - Example game setup and configuration
         - Game execution with visualization
         - State history saving
-        
+
         The generated code serves as a starting point for using the agent.
         """
-        content = dedent(f'''
+        content = dedent(
+            f'''
         from .agent import {self.game_class_name}Agent
         from .config import {self.game_class_name}AgentConfig
         import time
@@ -573,16 +618,20 @@ class GameTemplateGenerator:
                 "turn": "{self.player1_name}",
                 "game_status": "ongoing",
                 "move_history": [],
-        ''')
+        '''
+        )
 
         # Add analysis state fields if enabled
         if self.enable_analysis:
-            content += dedent(f"""
+            content += dedent(
+                f"""
                 "{self.player1_name}_analysis": [],
                 "{self.player2_name}_analysis": [],
-            """)
+            """
+            )
 
-        content += dedent(f"""
+        content += dedent(
+            f"""
             }}
             
             # Run the game
@@ -610,7 +659,8 @@ class GameTemplateGenerator:
 
         if __name__ == "__main__":
             run_{self.game_slug}_game()
-        """)
+        """
+        )
 
         # Write the file
         with open(f"{self.base_dir}/example.py", "w") as f:

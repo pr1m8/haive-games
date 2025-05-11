@@ -5,9 +5,9 @@ which includes the state schema, engines, enable_analysis,
 visualize, and pile_sizes.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.config import GameConfig
 from haive.games.nim.engines import default_nim_engines
 from haive.games.nim.state import NimState
@@ -22,6 +22,7 @@ class NimConfig(GameConfig):
         enable_analysis (bool): Whether to enable analysis.
         visualize (bool): Whether to visualize the game.
     """
+
     state_schema: type[NimState] = Field(default=NimState)
     engines: dict[str, AugLLMConfig] = Field(
         default=default_nim_engines, description="Config for the Nim agent."
@@ -29,12 +30,8 @@ class NimConfig(GameConfig):
     enable_analysis: bool = Field(
         default=True, description="Whether to enable analysis."
     )
-    visualize: bool = Field(
-        default=True, description="Whether to visualize the game."
-    )
-    pile_sizes: list[int] = Field(
-        default=[3, 5, 7], description="Initial pile sizes."
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game.")
+    pile_sizes: list[int] = Field(default=[3, 5, 7], description="Initial pile sizes.")
     misere_mode: bool = Field(
         default=False, description="If True, player taking last stone loses."
     )
@@ -52,5 +49,5 @@ class NimConfig(GameConfig):
             enable_analysis=True,
             visualize=True,
             pile_sizes=[3, 5, 7],
-            misere_mode=False
+            misere_mode=False,
         )

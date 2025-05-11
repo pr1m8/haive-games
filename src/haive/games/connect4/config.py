@@ -7,7 +7,7 @@ This module provides configuration classes for the Connect4 game agent, includin
 
 Example:
     >>> from haive.games.connect4 import Connect4AgentConfig
-    >>> 
+    >>>
     >>> # Create a config with analysis enabled
     >>> config = Connect4AgentConfig(
     ...     enable_analysis=True,
@@ -16,28 +16,28 @@ Example:
     ... )
 """
 
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.connect4.engines import aug_llm_configs
 from haive.games.connect4.state import Connect4State
 
 
 class Connect4AgentConfig(AgentConfig):
     """Configuration class for Connect4 game agents.
-    
+
     This class defines the configuration parameters for Connect4 agents, including:
         - Game settings (max moves, analysis options)
         - LLM configurations for players and analyzers
         - Visualization settings
-    
+
     Attributes:
         enable_analysis (bool): Whether to enable position analysis.
         should_visualize_graph (bool): Whether to visualize the game workflow graph.
         max_moves (int): Maximum number of moves before forcing a draw.
         aug_llm_configs (Dict[str, AugLLMConfig]): LLM configurations for players and analyzers.
-    
+
     Example:
         >>> config = Connect4AgentConfig(
         ...     enable_analysis=True,
@@ -51,30 +51,31 @@ class Connect4AgentConfig(AgentConfig):
         ...     }
         ... )
     """
+
     state_schema: type[BaseModel] = Field(default=Connect4State)
     enable_analysis: bool = Field(
         default=False,
-        description="Whether to enable position analysis during gameplay."
+        description="Whether to enable position analysis during gameplay.",
     )
 
     should_visualize_graph: bool = Field(
-        default=False,
-        description="Whether to visualize the game workflow graph."
+        default=False, description="Whether to visualize the game workflow graph."
     )
 
     max_moves: int = Field(
         default=42,  # 7 columns * 6 rows
-        description="Maximum number of moves before forcing a draw."
+        description="Maximum number of moves before forcing a draw.",
     )
 
     engines: dict[str, AugLLMConfig] = Field(
         default=aug_llm_configs,
-        description="LLM configurations for players and analyzers."
+        description="LLM configurations for players and analyzers.",
     )
 
     class Config:
         """Pydantic configuration class.
-        
+
         This inner class configures Pydantic behavior for the Connect4AgentConfig.
         """
+
         arbitrary_types_allowed = True

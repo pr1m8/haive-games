@@ -20,7 +20,7 @@ Key Components:
 
 Example:
     >>> from haive.agents.agent_games.poker import PokerAgent, PokerAgentConfig
-    >>> 
+    >>>
     >>> # Create a game with 4 players
     >>> config = PokerAgentConfig(
     ...     player_names=["Alice", "Bob", "Charlie", "Dave"],
@@ -28,7 +28,7 @@ Example:
     ...     small_blind=5,
     ...     big_blind=10
     ... )
-    >>> 
+    >>>
     >>> agent = PokerAgent(config)
     >>> result = agent.run()
 """
@@ -62,7 +62,7 @@ __all__ = [
     "PokerAgentConfig",
     "PokerState",
     "PokerStateManager",
-    "poker_agent_configs"
+    "poker_agent_configs",
 ]
 
 # Version of the poker game implementation

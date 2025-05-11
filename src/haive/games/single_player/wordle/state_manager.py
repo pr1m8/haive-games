@@ -15,6 +15,7 @@ try:
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import WebDriverWait
     from webdriver_manager.chrome import ChromeDriverManager
+
     SELENIUM_AVAILABLE = True
 except ImportError:
     SELENIUM_AVAILABLE = False
@@ -23,9 +24,11 @@ except ImportError:
 try:
     import playwright
     from playwright.sync_api import sync_playwright
+
     PLAYWRIGHT_AVAILABLE = True
 except ImportError:
     PLAYWRIGHT_AVAILABLE = False
+
 
 class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
     """Manager for Word Connections game state."""
@@ -57,7 +60,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
         "Celestial Bodies": ["SUN", "MOON", "STAR", "COMET"],
         "Occupations": ["DOCTOR", "TEACHER", "ENGINEER", "ARTIST"],
         "Game Pieces": ["PAWN", "KNIGHT", "BISHOP", "ROOK"],
-        "Card Suits": ["HEARTS", "DIAMONDS", "CLUBS", "SPADES"]
+        "Card Suits": ["HEARTS", "DIAMONDS", "CLUBS", "SPADES"],
     }
 
     # More complex and interesting categories for variety
@@ -69,7 +72,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
         "Words with Double Letters": ["BOOK", "DOOR", "SHEET", "MILLION"],
         "Units of Time": ["SECOND", "MINUTE", "HOUR", "YEAR"],
         "Computer Terms": ["MOUSE", "WINDOW", "MEMORY", "DISK"],
-        "Olympic Sports": ["BOXING", "ROWING", "DIVING", "ARCHERY"]
+        "Olympic Sports": ["BOXING", "ROWING", "DIVING", "ARCHERY"],
     }
 
     # Combine all categories
@@ -80,11 +83,11 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
     @classmethod
     def initialize(cls, source: str = "internal", **kwargs) -> WordConnectionsState:
         """Initialize a new Word Connections game.
-        
+
         Args:
             source: Source of the game data ('internal' or 'nyt')
             **kwargs: Additional options for game creation
-        
+
         Returns:
             WordConnectionsState: The initialized game state
         """
@@ -119,7 +122,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
                 remaining = 4 - len(categories)
                 available = [k for k in categories_to_use.keys() if k not in categories]
                 if available:
-                    additional = random.sample(available, min(remaining, len(available)))
+                    additional = random.sample(
+                        available, min(remaining, len(available))
+                    )
                     for name in additional:
                         categories[name] = categories_to_use[name]
         else:
@@ -150,12 +155,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
         # Create cell objects
         cells = []
         for i, word in enumerate(cell_words):
-            cells.append(WordCell(
-                word=word,
-                index=i,
-                selected=False,
-                solved=False
-            ))
+            cells.append(WordCell(word=word, index=i, selected=False, solved=False))
 
         # Create and return the initial state
         return WordConnectionsState(
@@ -170,7 +170,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
             turn="player",
             game_status="ongoing",
             move_history=[],
-            score=0
+            score=0,
         )
 
     @classmethod
@@ -200,8 +200,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         # Initialize the browser
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=chrome_options
+            service=Service(ChromeDriverManager().install()), options=chrome_options
         )
 
         try:
@@ -220,7 +219,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
             # Click play button
             try:
                 play_button = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, "button.primary-button"))
+                    EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, "button.primary-button")
+                    )
                 )
                 play_button.click()
             except Exception as e:
@@ -233,7 +234,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
             # Extract words from the grid
             word_elements = WebDriverWait(driver, 10).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, "div.item-content"))
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "div.item-content")
+                )
             )
 
             words = [element.text.strip().upper() for element in word_elements]
@@ -257,12 +260,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
             # Create cell objects
             cells = []
             for i, word in enumerate(words):
-                cells.append(WordCell(
-                    word=word,
-                    index=i,
-                    selected=False,
-                    solved=False
-                ))
+                cells.append(WordCell(word=word, index=i, selected=False, solved=False))
 
             # Get the current date for the game
             today = datetime.now().strftime("%Y-%m-%d")
@@ -281,7 +279,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
                 turn="player",
                 game_status="ongoing",
                 move_history=[],
-                score=0
+                score=0,
             )
         finally:
             # Close the browser
@@ -338,7 +336,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
                 # Extract words from the grid
                 word_elements = page.query_selector_all("div.item-content")
-                words = [element.inner_text().strip().upper() for element in word_elements]
+                words = [
+                    element.inner_text().strip().upper() for element in word_elements
+                ]
 
                 if len(words) != 16:
                     raise ValueError(f"Expected 16 words, found {len(words)}")
@@ -359,12 +359,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
                 # Create cell objects
                 cells = []
                 for i, word in enumerate(words):
-                    cells.append(WordCell(
-                        word=word,
-                        index=i,
-                        selected=False,
-                        solved=False
-                    ))
+                    cells.append(
+                        WordCell(word=word, index=i, selected=False, solved=False)
+                    )
 
                 # Get the current date for the game
                 today = datetime.now().strftime("%Y-%m-%d")
@@ -383,14 +380,16 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
                     turn="player",
                     game_status="ongoing",
                     move_history=[],
-                    score=0
+                    score=0,
                 )
             finally:
                 # Close the browser
                 browser.close()
 
     @classmethod
-    def apply_move(cls, state: WordConnectionsState, move: WordConnectionsMove) -> WordConnectionsState:
+    def apply_move(
+        cls, state: WordConnectionsState, move: WordConnectionsMove
+    ) -> WordConnectionsState:
         """Apply a move to the Word Connections state."""
         # Create a deep copy of the state to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -460,7 +459,9 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
         return new_state
 
     @classmethod
-    def select_cell(cls, state: WordConnectionsState, cell_index: int) -> WordConnectionsState:
+    def select_cell(
+        cls, state: WordConnectionsState, cell_index: int
+    ) -> WordConnectionsState:
         """Toggle selection of a cell."""
         # Create a deep copy of the state to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -508,8 +509,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         # Create a move
         move = WordConnectionsMove(
-            words=selected_words,
-            indices=new_state.selected_indices.copy()
+            words=selected_words, indices=new_state.selected_indices.copy()
         )
 
         # Apply the move

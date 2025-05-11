@@ -2,23 +2,18 @@
 name = "haive-games"
 version = "0.1.0"
 description = "haive-games for Haive framework"
-authors = [
-    "pr1m8 <william.astley@algebraicwealth.com>",
-]
+authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [
-    { include = "haive", from = "src" },
-]
+packages = [{ include = "haive", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
-haive-agents={path='../haive-agents',develop=true}
+haive-agents = { path = '../haive-agents', develop = true }
 pydantic = "^2.10.6"
 langchain = "^0.3.20"
 langchain-core = "^0.3.44"
 langgraph = "^0.3.5"
-
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,9 +23,6 @@ isort = "^6.0.1"
 mypy = "^1.15.0"
 
 
-
 [build-system]
-requires = [
-    "poetry-core>=1.0.0",
-]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

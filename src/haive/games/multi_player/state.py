@@ -10,13 +10,13 @@ supporting features like:
 
 Example:
     >>> from haive.agents.agent_games.framework.multi_player.state import MultiPlayerGameState
-    >>> 
+    >>>
     >>> # Create a game state
     >>> state = MultiPlayerGameState(
     ...     players=["player1", "player2", "player3"],
     ...     game_phase=GamePhase.SETUP
     ... )
-    >>> 
+    >>>
     >>> # Advance to next player
     >>> next_player = state.advance_player()
 """
@@ -30,11 +30,11 @@ from haive.games.framework.multi_player.models import GamePhase
 
 class MultiPlayerGameState(BaseModel):
     """Base game state for multi-player games.
-    
+
     This class provides the foundation for managing game state in multi-player
     games. It handles player turns, game phases, move history, and both public
     and private state information.
-    
+
     Attributes:
         players (List[str]): List of player names/IDs.
         current_player_idx (int): Index of current player in players list.
@@ -45,7 +45,7 @@ class MultiPlayerGameState(BaseModel):
         player_data (Dict[str, Dict[str, Any]]): Private data for each player.
         public_state (Dict[str, Any]): Public game state visible to all.
         error_message (Optional[str]): Error message if any.
-    
+
     Example:
         >>> state = MultiPlayerGameState(
         ...     players=["player1", "player2"],
@@ -57,13 +57,23 @@ class MultiPlayerGameState(BaseModel):
     """
 
     players: list[str] = Field(..., description="List of player names/IDs")
-    current_player_idx: int = Field(default=0, description="Index of current player in players list")
-    game_phase: str = Field(default=GamePhase.SETUP, description="Current phase of the game")
+    current_player_idx: int = Field(
+        default=0, description="Index of current player in players list"
+    )
+    game_phase: str = Field(
+        default=GamePhase.SETUP, description="Current phase of the game"
+    )
     game_status: str = Field(default="ongoing", description="Status of the game")
-    move_history: list[dict[str, Any]] = Field(default_factory=list, description="History of moves")
+    move_history: list[dict[str, Any]] = Field(
+        default_factory=list, description="History of moves"
+    )
     round_number: int = Field(default=0, description="Current round number")
-    player_data: dict[str, dict[str, Any]] = Field(default_factory=dict, description="Player-specific data")
-    public_state: dict[str, Any] = Field(default_factory=dict, description="Public game state visible to all players")
+    player_data: dict[str, dict[str, Any]] = Field(
+        default_factory=dict, description="Player-specific data"
+    )
+    public_state: dict[str, Any] = Field(
+        default_factory=dict, description="Public game state visible to all players"
+    )
     error_message: str | None = Field(default=None, description="Error message if any")
 
     class Config:
@@ -72,10 +82,10 @@ class MultiPlayerGameState(BaseModel):
     @property
     def current_player(self) -> str:
         """Get the current player's name/ID.
-        
+
         Returns:
             str: The current player's name/ID, or empty string if invalid index.
-        
+
         Example:
             >>> state = MultiPlayerGameState(players=["p1", "p2"])
             >>> state.current_player
@@ -87,13 +97,13 @@ class MultiPlayerGameState(BaseModel):
 
     def advance_player(self) -> str:
         """Advance to the next player and return their name/ID.
-        
+
         This method updates the current_player_idx to the next player in
         the rotation and returns the new current player's name/ID.
-        
+
         Returns:
             str: The next player's name/ID.
-        
+
         Example:
             >>> state = MultiPlayerGameState(players=["p1", "p2", "p3"])
             >>> state.advance_player()
@@ -108,16 +118,16 @@ class MultiPlayerGameState(BaseModel):
 
     def get_player_private_data(self, player_id: str) -> dict[str, Any]:
         """Get private data for a specific player.
-        
+
         This method safely retrieves the private state data for a given player,
         returning an empty dict if no data exists.
-        
+
         Args:
             player_id (str): The ID of the player whose data to retrieve.
-        
+
         Returns:
             Dict[str, Any]: The player's private data, or empty dict if none exists.
-        
+
         Example:
             >>> state = MultiPlayerGameState(players=["p1", "p2"])
             >>> state.player_data["p1"] = {"secret_info": 42}

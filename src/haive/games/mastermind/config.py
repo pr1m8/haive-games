@@ -5,15 +5,16 @@ including game state schema, engines, analysis settings, visualization,
 and game parameters.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.config import GameConfig
 from haive.games.mastermind.engines import mastermind_engines
 from haive.games.mastermind.state import MastermindState
 
 # Version information for tracking changes
 VERSION = "1.1.0"
+
 
 class MastermindConfig(GameConfig):
     """Configuration for the Mastermind game agent.
@@ -22,40 +23,32 @@ class MastermindConfig(GameConfig):
     including game state schema, engines, analysis settings, visualization,
     and game parameters.
     """
+
     name: str = Field(default="mastermind", description="Name of the game")
-    version: str = Field(default=VERSION, description="Version of the game implementation")
+    version: str = Field(
+        default=VERSION, description="Version of the game implementation"
+    )
     state_schema: type[MastermindState] = Field(default=MastermindState)
     engines: dict[str, AugLLMConfig] = Field(
-        default=mastermind_engines,
-        description="Configs for the Mastermind engines"
+        default=mastermind_engines, description="Configs for the Mastermind engines"
     )
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
-    max_turns: int = Field(
-        default=10,
-        description="Maximum number of turns"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
+    max_turns: int = Field(default=10, description="Maximum number of turns")
     codemaker: str = Field(
         default="player1",
-        description="Player who creates the code (player1 or player2)"
+        description="Player who creates the code (player1 or player2)",
     )
     colors: list[str] = Field(
         default=["red", "blue", "green", "yellow", "purple", "orange"],
-        description="List of available colors"
+        description="List of available colors",
     )
-    code_length: int = Field(
-        default=4,
-        description="Length of the secret code"
-    )
+    code_length: int = Field(default=4, description="Length of the secret code")
     secret_code: list[str] | None = Field(
         default=None,
-        description="Predetermined secret code (if None, will be generated)"
+        description="Predetermined secret code (if None, will be generated)",
     )
 
     @classmethod
@@ -75,5 +68,5 @@ class MastermindConfig(GameConfig):
             codemaker="player1",
             colors=["red", "blue", "green", "yellow", "purple", "orange"],
             code_length=4,
-            secret_code=None
+            secret_code=None,
         )

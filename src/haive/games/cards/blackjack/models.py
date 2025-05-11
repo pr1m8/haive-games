@@ -10,8 +10,10 @@ class CardSuit(str, Enum):
     CLUBS = "clubs"
     SPADES = "spades"
 
+
 class Card(BaseModel):
     """Represents a playing card."""
+
     value: str
     suit: CardSuit
 
@@ -26,19 +28,21 @@ class Card(BaseModel):
             return 11
         return int(self.value)
 
+
 class PlayerAction(BaseModel):
     """Represents a player's action in Blackjack."""
+
     action: Literal["hit", "stand", "double_down", "split", "surrender"] = Field(
-        ...,
-        description="Player's chosen action"
+        ..., description="Player's chosen action"
     )
     reasoning: str | None = Field(
-        default=None,
-        description="Reasoning behind the action"
+        default=None, description="Reasoning behind the action"
     )
+
 
 class PlayerHand(BaseModel):
     """Represents a player's hand in Blackjack."""
+
     cards: list[Card] = Field(default_factory=list)
     is_split: bool = Field(default=False)
     is_active: bool = Field(default=True)
@@ -64,8 +68,10 @@ class PlayerHand(BaseModel):
         """Check if the hand is a blackjack."""
         return len(self.cards) == 2 and self.total_value() == 21
 
+
 class PlayerState(BaseModel):
     """Represents a player's state in the game."""
+
     name: str
     hands: list[PlayerHand] = Field(default_factory=list)
     total_chips: float = Field(default=1000.0)
@@ -76,12 +82,16 @@ class PlayerState(BaseModel):
         """Add a hand to the player's state."""
         self.hands.append(hand)
 
+
 class BlackjackGameState(BaseModel):
     """Represents the overall state of a Blackjack game."""
+
     players: list[PlayerState] = Field(default_factory=list)
     dealer_hand: list[Card] = Field(default_factory=list)
     current_player_index: int = Field(default=0)
     current_hand_index: int = Field(default=0)
     deck: list[Card] = Field(default_factory=list)
-    game_status: Literal["betting", "playing", "dealer_turn", "game_over"] = Field(default="betting")
+    game_status: Literal["betting", "playing", "dealer_turn", "game_over"] = Field(
+        default="betting"
+    )
     round_winner: str | None = Field(default=None)

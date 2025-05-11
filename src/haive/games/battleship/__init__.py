@@ -65,7 +65,11 @@ from .models import (
     ShipPlacement,
     ShipPlacementWrapper,
 )
-from .prompts import generate_analysis_prompt, generate_move_prompt, generate_ship_placement_prompt
+from .prompts import (
+    generate_analysis_prompt,
+    generate_move_prompt,
+    generate_ship_placement_prompt,
+)
 from .state import BattleshipState
 from .state_manager import BattleshipStateManager
 
@@ -75,7 +79,6 @@ __all__ = [
     "BattleshipAgentConfig",
     "BattleshipState",
     "BattleshipStateManager",
-
     # Models
     "Ship",
     "Coordinates",
@@ -86,14 +89,12 @@ __all__ = [
     "Analysis",
     "GamePhase",
     "PlayerBoard",
-
     # Prompts
     "generate_ship_placement_prompt",
     "generate_move_prompt",
     "generate_analysis_prompt",
-
     # Engines
-    "build_battleship_engines"
+    "build_battleship_engines",
 ]
 
 __version__ = "1.0.0"

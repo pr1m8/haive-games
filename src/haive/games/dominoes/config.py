@@ -1,9 +1,9 @@
 # src/haive/agents/agent_games/dominoes/config.py
 
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.dominoes.engines import aug_llm_configs
 from haive.games.dominoes.state import DominoesState
 from haive.games.framework.base.config import GameConfig
@@ -22,13 +22,9 @@ class DominoesAgentConfig(GameConfig):
         default=True, description="Whether to enable in-game analysis"
     )
 
-    visualize: bool = Field(
-        default=True, description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
 
-    hand_size: int = Field(
-        default=7, description="Tiles per player at start"
-    )
+    hand_size: int = Field(default=7, description="Tiles per player at start")
 
     @classmethod
     def default_config(cls):

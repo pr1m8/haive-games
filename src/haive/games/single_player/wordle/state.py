@@ -3,55 +3,64 @@ from typing import Literal
 from pydantic import Field
 
 from haive.games.framework.base.state import GameState
-from haive.games.single_player.wordle.models import GameSource, WordCell, WordConnectionsMove
+from haive.games.single_player.wordle.models import (
+    GameSource,
+    WordCell,
+    WordConnectionsMove,
+)
 
 
 class WordConnectionsState(GameState):
     """State for a Word Connections game."""
+
     # Grid and word tracking
-    cells: list[WordCell] = Field(..., description="Grid cells with words and their states")
-    remaining_words: list[str] = Field(..., description="Words still available on the grid")
+    cells: list[WordCell] = Field(
+        ..., description="Grid cells with words and their states"
+    )
+    remaining_words: list[str] = Field(
+        ..., description="Words still available on the grid"
+    )
 
     # Game progress tracking
     discovered_groups: dict[str, list[str]] = Field(
         default_factory=dict,
-        description="Groups that have been correctly identified with their category"
+        description="Groups that have been correctly identified with their category",
     )
     incorrect_attempts: list[list[str]] = Field(
         default_factory=list,
-        description="List of incorrect word groups that have been attempted"
+        description="List of incorrect word groups that have been attempted",
     )
     attempts_remaining: int = Field(
-        default=4,
-        description="Number of incorrect attempts allowed before game ends"
+        default=4, description="Number of incorrect attempts allowed before game ends"
     )
     incorrect_submissions: int = Field(
-        default=0,
-        description="Number of incorrect submissions made"
+        default=0, description="Number of incorrect submissions made"
     )
 
     # Game definition (private to the game)
     categories: dict[str, list[str]] = Field(
         ...,
-        description="The correct categories and word groupings (hidden from players during game)"
+        description="The correct categories and word groupings (hidden from players during game)",
     )
     category_difficulty: dict[str, str] = Field(
         default_factory=dict,
-        description="Difficulty level for each category (yellow, green, blue, purple from easiest to hardest)"
+        description="Difficulty level for each category (yellow, green, blue, purple from easiest to hardest)",
     )
 
     # Game metadata
     game_source: GameSource = Field(
         default=GameSource.INTERNAL,
-        description="Source of the game data (internal or NYT)"
+        description="Source of the game data (internal or NYT)",
     )
     game_date: str | None = Field(
-        default=None,
-        description="Date of the game if from NYT"
+        default=None, description="Date of the game if from NYT"
     )
 
     # Game state
-    turn: str = Field(default="player", description="Current player's turn (always 'player' in single-player mode)")
+    turn: str = Field(
+        default="player",
+        description="Current player's turn (always 'player' in single-player mode)",
+    )
     game_status: Literal["ongoing", "victory", "defeat"] = Field(
         default="ongoing", description="Status of the game"
     )
@@ -61,14 +70,11 @@ class WordConnectionsState(GameState):
     analysis_history: list[dict] = Field(
         default_factory=list, description="History of analyses"
     )
-    score: int = Field(
-        default=0, description="Number of categories found"
-    )
+    score: int = Field(default=0, description="Number of categories found")
 
     # Current selection tracking
     selected_indices: list[int] = Field(
-        default_factory=list,
-        description="Currently selected cell indices"
+        default_factory=list, description="Currently selected cell indices"
     )
 
     @property
@@ -85,7 +91,7 @@ class WordConnectionsState(GameState):
 
         # Format in a 4x4 grid with cell states
         for i in range(0, 16, 4):
-            row_cells = self.cells[i:i+4]
+            row_cells = self.cells[i : i + 4]
             row = []
             for cell in row_cells:
                 word = cell.word
@@ -96,8 +102,10 @@ class WordConnectionsState(GameState):
                     category = cell.category or ""
                     difficulty = self.category_difficulty.get(category, "")
                     color_code = {
-                        "yellow": "🟨", "green": "🟩",
-                        "blue": "🟦", "purple": "🟪"
+                        "yellow": "🟨",
+                        "green": "🟩",
+                        "blue": "🟦",
+                        "purple": "🟪",
                     }.get(difficulty, "")
                     formatted = f"{color_code} {word.ljust(max_len)}"
                 elif cell.selected or cell.index in self.selected_indices:
@@ -116,7 +124,7 @@ class WordConnectionsState(GameState):
         # Add cell indices for reference
         display += "\nCell indices for reference:\n"
         for i in range(0, 16, 4):
-            indices = [str(j).ljust(max_len) for j in range(i, i+4)]
+            indices = [str(j).ljust(max_len) for j in range(i, i + 4)]
             display += "  " + " | ".join(indices) + "\n"
 
         # Add information about discovered groups
@@ -125,8 +133,10 @@ class WordConnectionsState(GameState):
             for category, words in self.discovered_groups.items():
                 difficulty = self.category_difficulty.get(category, "")
                 color_code = {
-                    "yellow": "🟨", "green": "🟩",
-                    "blue": "🟦", "purple": "🟪"
+                    "yellow": "🟨",
+                    "green": "🟩",
+                    "blue": "🟦",
+                    "purple": "🟪",
                 }.get(difficulty, "")
                 display += f"{color_code} {category}: {', '.join(words)}\n"
 

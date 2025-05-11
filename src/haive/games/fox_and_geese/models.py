@@ -3,6 +3,7 @@
 This module defines the models for the Fox and Geese game,
 including the move and analysis models.
 """
+
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -14,6 +15,7 @@ class FoxAndGeesePosition(BaseModel):
     This class defines the structure of a position on the Fox and Geese board,
     which includes a row and column coordinate.
     """
+
     row: int = Field(..., ge=0, lt=7, description="Row (0-6)")
     col: int = Field(..., ge=0, lt=7, description="Column (0-6)")
 
@@ -28,6 +30,7 @@ class FoxAndGeesePosition(BaseModel):
     def __hash__(self):
         return hash((self.row, self.col))
 
+
 class FoxAndGeeseMove(BaseModel):
     """Represents a move in Fox and Geese.
 
@@ -35,15 +38,20 @@ class FoxAndGeeseMove(BaseModel):
     which includes a starting position, an ending position,
     a piece type, and an optional captured position.
     """
+
     from_pos: FoxAndGeesePosition = Field(..., description="Starting position")
     to_pos: FoxAndGeesePosition = Field(..., description="Ending position")
     piece_type: Literal["fox", "goose"] = Field(..., description="Type of piece moved")
-    capture: FoxAndGeesePosition | None = Field(default=None, description="Position of captured goose, if any")
+    capture: FoxAndGeesePosition | None = Field(
+        default=None, description="Position of captured goose, if any"
+    )
 
     def __str__(self):
         if self.capture:
             return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {self.to_pos}, capturing at {self.capture}"
         return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {self.to_pos}"
+
+
 class FoxAndGeeseAnalysis(BaseModel):
     """Analysis of a Fox and Geese position.
 
@@ -52,6 +60,7 @@ class FoxAndGeeseAnalysis(BaseModel):
     key features, fox strategy, geese strategy,
     and critical squares.
     """
+
     advantage: Literal["fox", "geese", "equal"] = Field(
         ..., description="Which side has the advantage"
     )
@@ -61,15 +70,9 @@ class FoxAndGeeseAnalysis(BaseModel):
     key_features: list[str] = Field(
         ..., description="Key strategic features of the position"
     )
-    fox_strategy: str = Field(
-        ..., description="Recommended strategy for the fox"
-    )
-    geese_strategy: str = Field(
-        ..., description="Recommended strategy for the geese"
-    )
+    fox_strategy: str = Field(..., description="Recommended strategy for the fox")
+    geese_strategy: str = Field(..., description="Recommended strategy for the geese")
     critical_squares: list[str] = Field(
         ..., description="Critical squares or formations in the position"
     )
-    explanation: str = Field(
-        ..., description="Detailed explanation of the analysis"
-    )
+    explanation: str = Field(..., description="Detailed explanation of the analysis")

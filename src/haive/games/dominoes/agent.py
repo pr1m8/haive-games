@@ -2,11 +2,11 @@ import logging
 import time
 from typing import Any, Literal
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.dominoes.config import DominoesAgentConfig
 from haive.games.dominoes.models import DominoesPlayerDecision, DominoMove
 from haive.games.dominoes.state import DominoesState
@@ -14,6 +14,7 @@ from haive.games.dominoes.state_manager import DominoesStateManager
 from haive.games.framework.base.agent import GameAgent
 
 logger = logging.getLogger(__name__)
+
 
 @register_agent(DominoesAgentConfig)
 class DominoesAgent(GameAgent[DominoesAgentConfig]):
@@ -30,10 +31,10 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Dominoes game.
-        
+
         Args:
             state (Dict[str, Any]): The initial state.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -64,17 +65,19 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             "open_ends": [state.left_value, state.right_value] if state.board else [],
             "legal_moves": formatted_legal_moves,
             "boneyard_count": len(state.boneyard),
-            "opponent_count": {p: len(state.hands[p]) for p in state.players if p != player},
+            "opponent_count": {
+                p: len(state.hands[p]) for p in state.players if p != player
+            },
             "move_history": state.move_history[-5:],
-            "player_analysis": player_analysis
+            "player_analysis": player_analysis,
         }
 
     def make_player1_move(self, state: DominoesState) -> Command:
         """Make a move for player1.
-        
+
         Args:
             state (DominoesState): The current game state.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -88,10 +91,10 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def make_player2_move(self, state: DominoesState) -> Command:
         """Make a move for player2.
-        
+
         Args:
             state (DominoesState): The current game state.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -105,11 +108,11 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def make_move(self, state: DominoesState, player: str) -> Command:
         """Make a move for the specified player.
-        
+
         Args:
             state (DominoesState): The current game state.
             player (str): The player to make the move for.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -146,9 +149,16 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                         continue
 
                     # Check if tiles match (regardless of orientation)
-                    if ((legal_move.tile.left == move.tile.left and legal_move.tile.right == move.tile.right) or
-                        (legal_move.tile.left == move.tile.right and legal_move.tile.right == move.tile.left)) and \
-                       legal_move.location == move.location:
+                    if (
+                        (
+                            legal_move.tile.left == move.tile.left
+                            and legal_move.tile.right == move.tile.right
+                        )
+                        or (
+                            legal_move.tile.left == move.tile.right
+                            and legal_move.tile.right == move.tile.left
+                        )
+                    ) and legal_move.location == move.location:
                         valid_move = legal_move
                         break
 
@@ -171,20 +181,27 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             updated_state = self.state_manager.apply_move(state, fallback_move)
 
         # Return the updated state with conditional goto
-        if updated_state.game_status == "game_over" or "win" in updated_state.game_status:
+        if (
+            updated_state.game_status == "game_over"
+            or "win" in updated_state.game_status
+        ):
             return Command(update=updated_state, goto=END)
 
         # Determine next node based on player
         goto = "analyze_player2" if player == "player1" else "analyze_player1"
         return Command(update=updated_state, goto=goto)
 
-    def extract_move(self, response: DominoesPlayerDecision) -> DominoMove | Literal["pass"]:
+    def extract_move(
+        self, response: DominoesPlayerDecision
+    ) -> DominoMove | Literal["pass"]:
         """Extract move from engine response."""
         if response.pass_turn:
             return "pass"
         return response.move
 
-    def prepare_analysis_context(self, state: DominoesState, player: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: DominoesState, player: str
+    ) -> dict[str, Any]:
         """Prepare context for position analysis."""
         hand = state.hands[player]
         formatted_hand = [str(tile) for tile in hand]
@@ -193,7 +210,9 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         value_counts = {}
         for i in range(7):  # Values 0-6
-            value_counts[i] = sum(1 for tile in hand if tile.left == i or tile.right == i)
+            value_counts[i] = sum(
+                1 for tile in hand if tile.left == i or tile.right == i
+            )
 
         return {
             "player": player,
@@ -203,16 +222,18 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             "board": state.board_string,
             "open_ends": [state.left_value, state.right_value] if state.board else [],
             "boneyard_count": len(state.boneyard),
-            "opponent_count": {p: len(state.hands[p]) for p in state.players if p != player},
-            "move_history": state.move_history[-5:]  # Last 5 moves
+            "opponent_count": {
+                p: len(state.hands[p]) for p in state.players if p != player
+            },
+            "move_history": state.move_history[-5:],  # Last 5 moves
         }
 
     def analyze_player1(self, state: DominoesState) -> Command:
         """Analyze position for player1.
-        
+
         Args:
             state (DominoesState): The current game state.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -224,10 +245,10 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def analyze_player2(self, state: DominoesState) -> Command:
         """Analyze position for player2.
-        
+
         Args:
             state (DominoesState): The current game state.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -239,11 +260,11 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def analyze_position(self, state: DominoesState, player: str) -> Command:
         """Analyze the current position for the specified player.
-        
+
         Args:
             state (DominoesState): The current game state.
             player (str): The player to analyze the position for.
-            
+
         Returns:
             Command: Command with updated state.
         """
@@ -278,10 +299,10 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def check_game_status(self, state: DominoesState) -> str:
         """Check if the game is over.
-        
+
         Args:
             state (DominoesState): The current game state.
-            
+
         Returns:
             str: Next node to go to.
         """
@@ -308,7 +329,9 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         for player in domino_state.players:
             hand = domino_state.hands[player]
             formatted_hand = [str(tile) for tile in hand]
-            print(f"\n{player}'s hand: {', '.join(formatted_hand)} (Pip count: {sum(tile.left + tile.right for tile in hand)})")
+            print(
+                f"\n{player}'s hand: {', '.join(formatted_hand)} (Pip count: {sum(tile.left + tile.right for tile in hand)})"
+            )
 
         # Print boneyard
         print(f"\nBoneyard: {len(domino_state.boneyard)} remaining tiles")
@@ -318,17 +341,32 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             print(f"\nLast move: {domino_state.move_history[-1]}")
 
         # Print analysis if available
-        if hasattr(domino_state, "player1_analysis") and domino_state.player1_analysis and domino_state.turn == "player1":
+        if (
+            hasattr(domino_state, "player1_analysis")
+            and domino_state.player1_analysis
+            and domino_state.turn == "player1"
+        ):
             print(f"\nPlayer 1 Analysis: {domino_state.player1_analysis[-1]}")
-        if hasattr(domino_state, "player2_analysis") and domino_state.player2_analysis and domino_state.turn == "player2":
+        if (
+            hasattr(domino_state, "player2_analysis")
+            and domino_state.player2_analysis
+            and domino_state.turn == "player2"
+        ):
             print(f"\nPlayer 2 Analysis: {domino_state.player2_analysis[-1]}")
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run the full game, optionally visualizing each step."""
         if visualize:
-            initial_state = self.state_manager.initialize()  # Start with empty state, the initialize node will create the proper state
+            initial_state = (
+                self.state_manager.initialize()
+            )  # Start with empty state, the initialize node will create the proper state
             try:
-                for step in self.app.stream(initial_state, stream_mode="values", debug=True, config=self.runnable_config):
+                for step in self.app.stream(
+                    initial_state,
+                    stream_mode="values",
+                    debug=True,
+                    config=self.runnable_config,
+                ):
                     self.visualize_state(step)
                     time.sleep(1)  # Add delay for better visualization
                 return step
@@ -344,9 +382,9 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         gb = DynamicGraph(
             name=self.config.name,
             components=[self.config],
-            state_schema=self.config.state_schema
+            state_schema=self.config.state_schema,
         )
-        
+
         # Add nodes for the main game flow
         gb.add_node("initialize", self.initialize_game)
         gb.set_entry_point("initialize")
@@ -368,9 +406,11 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         # Store app for later use in run_game
         self.app = self.graph.compile()
 
+
 # For direct script execution
 if __name__ == "__main__":
     import logging
+
     logging.basicConfig(level=logging.INFO)
 
     # Create and run the game agent

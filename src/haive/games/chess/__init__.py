@@ -9,7 +9,7 @@ This package provides a complete implementation of the Chess game, including:
 
 Example:
     >>> from haive.games.chess import ChessAgent, ChessAgentConfig
-    >>> 
+    >>>
     >>> # Create and configure a Chess agent
     >>> config = ChessAgentConfig(enable_analysis=True)
     >>> agent = ChessAgent(config)
@@ -34,4 +34,3 @@ __all__ = [
     "ChessPlayerDecision",
     "ChessState",
 ]
-

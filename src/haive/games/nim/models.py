@@ -1,5 +1,4 @@
-"""Models for the Nim game.
-"""
+"""Models for the Nim game."""
 
 from pydantic import BaseModel, Field
 
@@ -11,8 +10,10 @@ class NimMove(BaseModel):
         pile_index (int): Index of the pile to take from.
         stones_taken (int): Number of stones to take.
     """
+
     pile_index: int = Field(..., description="Index of the pile to take from")
     stones_taken: int = Field(..., description="Number of stones to take")
+
 
 class NimAnalysis(BaseModel):
     """Analysis of a Nim position.
@@ -23,8 +24,13 @@ class NimAnalysis(BaseModel):
         recommended_move (NimMove): Recommended move.
         explanation (str): Explanation of the analysis.
     """
-    nim_sum: int = Field(..., description="Binary XOR sum of pile sizes (relevant for optimal play)")
-    position_evaluation: str = Field(..., description="Whether position is winning, losing, or unclear")
+
+    nim_sum: int = Field(
+        ..., description="Binary XOR sum of pile sizes (relevant for optimal play)"
+    )
+    position_evaluation: str = Field(
+        ..., description="Whether position is winning, losing, or unclear"
+    )
     recommended_move: NimMove = Field(..., description="Recommended move")
     explanation: str = Field(..., description="Explanation of the analysis")
 

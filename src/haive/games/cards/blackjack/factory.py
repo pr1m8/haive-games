@@ -8,16 +8,16 @@ def create_blackjack_agent(
     num_players: int = 2,
     max_rounds: int = 10,
     initial_chips: float = 1000.0,
-    visualize: bool = True
+    visualize: bool = True,
 ) -> BlackjackAgent:
     """Create a Blackjack agent with customizable parameters.
-    
+
     Args:
         num_players: Number of players in the game
         max_rounds: Maximum number of rounds to play
         initial_chips: Starting chip amount for each player
         visualize: Whether to visualize the game state during play
-    
+
     Returns:
         Configured BlackjackAgent
     """
@@ -27,7 +27,7 @@ def create_blackjack_agent(
         num_players=num_players,
         max_rounds=max_rounds,
         initial_chips=initial_chips,
-        engines=BlackjackAgentConfig.build_blackjack_aug_llms()
+        engines=BlackjackAgentConfig.build_blackjack_aug_llms(),
     )
 
     # Create and return the agent
@@ -39,20 +39,21 @@ def create_blackjack_agent(
 
     return agent
 
+
 def run_blackjack_game(
     num_players: int = 2,
     max_rounds: int = 10,
     initial_chips: float = 1000.0,
-    visualize: bool = True
+    visualize: bool = True,
 ) -> dict:
     """Convenience function to create and run a Blackjack game.
-    
+
     Args:
         num_players: Number of players in the game
         max_rounds: Maximum number of rounds to play
         initial_chips: Starting chip amount for each player
         visualize: Whether to visualize the game state during play
-    
+
     Returns:
         Final game state
     """
@@ -61,7 +62,7 @@ def run_blackjack_game(
         num_players=num_players,
         max_rounds=max_rounds,
         initial_chips=initial_chips,
-        visualize=visualize
+        visualize=visualize,
     )
 
     # Run the game with visualization
@@ -69,10 +70,7 @@ def run_blackjack_game(
         final_state = {}
         try:
             for step in agent.app.stream(
-                {},
-                stream_mode="values",
-                debug=True,
-                config=agent.runnable_config
+                {}, stream_mode="values", debug=True, config=agent.runnable_config
             ):
                 agent.visualize_state(step)
                 final_state = step
@@ -85,31 +83,29 @@ def run_blackjack_game(
     # Run without visualization
     return agent.run({})
 
+
 # Example usage
 if __name__ == "__main__":
     # Run a game with default settings
-    final_state = run_blackjack_game(
-        num_players=2,
-        max_rounds=3,
-        visualize=True
-    )
+    final_state = run_blackjack_game(num_players=2, max_rounds=3, visualize=True)
 
     # Print final game summary
     print("\n=== Game Summary ===")
     from haive.games.cards.blackjack.models import BlackjackGameState
+
     final_game_state = BlackjackGameState(**final_state)
 
     print("Final Chip Stacks:")
     for i, player in enumerate(final_game_state.players):
         print(f"Player {i+1}: ${player.total_chips:.2f}")
 
-    print(f"\nDealer's Final Hand: {' '.join(str(card) for card in final_game_state.dealer_hand)}")
-    print(f"Dealer Total: {sum(card.point_value() for card in final_game_state.dealer_hand)}")
+    print(
+        f"\nDealer's Final Hand: {' '.join(str(card) for card in final_game_state.dealer_hand)}"
+    )
+    print(
+        f"Dealer Total: {sum(card.point_value() for card in final_game_state.dealer_hand)}"
+    )
 
 
 # Create and run a game with 4 players, 20 rounds, with visualization
-final_state = run_blackjack_game(
-    num_players=4,
-    max_rounds=20,
-    visualize=True
-)
+final_state = run_blackjack_game(num_players=4, max_rounds=20, visualize=True)

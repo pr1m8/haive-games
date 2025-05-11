@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""Debug script for testing Battleship game.
-"""
+"""Debug script for testing Battleship game."""
 import time
 
 from rich.console import Console
@@ -15,6 +14,7 @@ from haive.games.battleship.config import BattleshipAgentConfig
 install()
 console = Console()
 
+
 def test_battleship():
     """Run a test game of Battleship with detailed logging."""
     console.rule("[bold blue]Battleship Game Debug Test")
@@ -22,10 +22,7 @@ def test_battleship():
 
     # Create configuration with debugging enabled
     config = BattleshipAgentConfig(
-        name="battleship_debug",
-        enable_analysis=True,
-        visualize_board=True,
-        debug=True
+        name="battleship_debug", enable_analysis=True, visualize_board=True, debug=True
     )
 
     try:
@@ -35,7 +32,9 @@ def test_battleship():
 
         # Run the game step by step
         step_count = 0
-        for state in agent.app.stream({}, stream_mode="values", debug=True, config=agent.runnable_config):
+        for state in agent.app.stream(
+            {}, stream_mode="values", debug=True, config=agent.runnable_config
+        ):
             step_count += 1
 
             # Display step information
@@ -54,33 +53,39 @@ def test_battleship():
             status.add_row(
                 f"[bold]{phase}[/bold]",
                 f"[bold]{current_player}[/bold]",
-                f"[bold green]{winner}[/bold green]" if winner else "None"
+                f"[bold green]{winner}[/bold green]" if winner else "None",
             )
             console.print(status)
 
             # Display error if any
             if state.get("error_message"):
-                console.print(Panel(
-                    f"[bold red]{state['error_message']}[/bold red]",
-                    title="ERROR",
-                    border_style="red"
-                ))
+                console.print(
+                    Panel(
+                        f"[bold red]{state['error_message']}[/bold red]",
+                        title="ERROR",
+                        border_style="red",
+                    )
+                )
 
             # Phase-specific displays
             if phase == "setup":
-                player1_placed = state.get("player1_state", {}).get("has_placed_ships", False)
-                player2_placed = state.get("player2_state", {}).get("has_placed_ships", False)
+                player1_placed = state.get("player1_state", {}).get(
+                    "has_placed_ships", False
+                )
+                player2_placed = state.get("player2_state", {}).get(
+                    "has_placed_ships", False
+                )
 
                 setup_status = Table(title="Setup Status")
                 setup_status.add_column("Player")
                 setup_status.add_column("Ships Placed")
                 setup_status.add_row(
                     "Player 1",
-                    "[green]Yes[/green]" if player1_placed else "[red]No[/red]"
+                    "[green]Yes[/green]" if player1_placed else "[red]No[/red]",
                 )
                 setup_status.add_row(
                     "Player 2",
-                    "[green]Yes[/green]" if player2_placed else "[red]No[/red]"
+                    "[green]Yes[/green]" if player2_placed else "[red]No[/red]",
                 )
                 console.print(setup_status)
 
@@ -92,23 +97,35 @@ def test_battleship():
                     ships_table.add_column("Coordinates")
 
                     if player1_placed:
-                        placements = state.get("player1_state", {}).get("ship_placements", [])
+                        placements = state.get("player1_state", {}).get(
+                            "ship_placements", []
+                        )
                         for placement in placements:
                             ships_table.add_row(
                                 "Player 1",
                                 str(placement.get("ship_type", "Unknown")),
-                                str([f"({c.get('row', '?')},{c.get('col', '?')})"
-                                     for c in placement.get("coordinates", [])])
+                                str(
+                                    [
+                                        f"({c.get('row', '?')},{c.get('col', '?')})"
+                                        for c in placement.get("coordinates", [])
+                                    ]
+                                ),
                             )
 
                     if player2_placed:
-                        placements = state.get("player2_state", {}).get("ship_placements", [])
+                        placements = state.get("player2_state", {}).get(
+                            "ship_placements", []
+                        )
                         for placement in placements:
                             ships_table.add_row(
                                 "Player 2",
                                 str(placement.get("ship_type", "Unknown")),
-                                str([f"({c.get('row', '?')},{c.get('col', '?')})"
-                                     for c in placement.get("coordinates", [])])
+                                str(
+                                    [
+                                        f"({c.get('row', '?')},{c.get('col', '?')})"
+                                        for c in placement.get("coordinates", [])
+                                    ]
+                                ),
                             )
 
                     console.print(ships_table)
@@ -129,20 +146,24 @@ def test_battleship():
                             "hit": "[bold green]HIT[/bold green]",
                             "miss": "[bold red]MISS[/bold red]",
                             "sunk": "[bold yellow]SUNK[/bold yellow]",
-                            "invalid": "[bold orange]INVALID[/bold orange]"
+                            "invalid": "[bold orange]INVALID[/bold orange]",
                         }.get(result_text, result_text)
 
                         moves_table.add_row(
                             player,
                             f"({result.get('row', '?')}, {result.get('col', '?')})",
-                            result_style
+                            result_style,
                         )
 
                     console.print(moves_table)
 
                 # Display strategic analysis if available
-                player1_analysis = state.get("player1_state", {}).get("strategic_analysis", [])
-                player2_analysis = state.get("player2_state", {}).get("strategic_analysis", [])
+                player1_analysis = state.get("player1_state", {}).get(
+                    "strategic_analysis", []
+                )
+                player2_analysis = state.get("player2_state", {}).get(
+                    "strategic_analysis", []
+                )
 
                 if player1_analysis or player2_analysis:
                     analysis_table = Table(title="Strategic Analysis")
@@ -153,25 +174,27 @@ def test_battleship():
                         latest = player1_analysis[-1] if player1_analysis else ""
                         analysis_table.add_row(
                             "Player 1",
-                            latest[:100] + "..." if len(latest) > 100 else latest
+                            latest[:100] + "..." if len(latest) > 100 else latest,
                         )
 
                     if player2_analysis:
                         latest = player2_analysis[-1] if player2_analysis else ""
                         analysis_table.add_row(
                             "Player 2",
-                            latest[:100] + "..." if len(latest) > 100 else latest
+                            latest[:100] + "..." if len(latest) > 100 else latest,
                         )
 
                     console.print(analysis_table)
 
             # Game over display
             elif phase == "ended":
-                console.print(Panel(
-                    f"[bold green]Game Over! Winner: {winner}[/bold green]",
-                    title="🏆 VICTORY 🏆",
-                    border_style="green"
-                ))
+                console.print(
+                    Panel(
+                        f"[bold green]Game Over! Winner: {winner}[/bold green]",
+                        title="🏆 VICTORY 🏆",
+                        border_style="green",
+                    )
+                )
 
             # Brief pause between steps
             time.sleep(0.5)
@@ -183,6 +206,7 @@ def test_battleship():
     except Exception as e:
         console.print_exception()
         console.print(f"[bold red]Error:[/bold red] {e!s}")
+
 
 if __name__ == "__main__":
     test_battleship()

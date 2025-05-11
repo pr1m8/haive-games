@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 from haive.core.engine.aug_llm import AugLLMConfig
+
 from haive.games.poker.agent import PokerAgent
 from haive.games.poker.config import PokerAgentConfig
 from haive.games.poker.debug import StructuredOutputTester
@@ -33,13 +34,11 @@ from haive.games.poker.state_manager import PokerStateManager
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("poker_test.log", mode="w")
-    ]
+    handlers=[logging.StreamHandler(), logging.FileHandler("poker_test.log", mode="w")],
 )
 
 logger = logging.getLogger(__name__)
+
 
 class PokerAgentTester:
     """Test suite for the Poker agent."""
@@ -65,27 +64,21 @@ class PokerAgentTester:
         else:
             # Create custom LLM configs for different agent types
             conservative_agent = AugLLMConfig(
-                model="gpt-4o",
-                temperature=0.3,
-                request_timeout=60
+                model="gpt-4o", temperature=0.3, request_timeout=60
             )
 
             aggressive_agent = AugLLMConfig(
-                model="gpt-4o",
-                temperature=0.7,
-                request_timeout=60
+                model="gpt-4o", temperature=0.7, request_timeout=60
             )
 
             hand_analyzer = AugLLMConfig(
-                model="gpt-4o",
-                temperature=0.2,
-                request_timeout=60
+                model="gpt-4o", temperature=0.2, request_timeout=60
             )
 
             engines = {
                 "conservative_agent": conservative_agent,
                 "aggressive_agent": aggressive_agent,
-                "hand_analyzer": hand_analyzer
+                "hand_analyzer": hand_analyzer,
             }
 
         # Create agent config with 2 players
@@ -96,7 +89,7 @@ class PokerAgentTester:
             small_blind=10,
             big_blind=20,
             enable_detailed_analysis=True,
-            engines=engines
+            engines=engines,
         )
 
         # Create agent
@@ -125,12 +118,12 @@ class PokerAgentTester:
         # Set specific player cards for testing
         player0_cards = [
             Card(value=CardValue.ACE, suit=Suit.SPADES),
-            Card(value=CardValue.ACE, suit=Suit.HEARTS)
+            Card(value=CardValue.ACE, suit=Suit.HEARTS),
         ]
 
         player1_cards = [
             Card(value=CardValue.KING, suit=Suit.DIAMONDS),
-            Card(value=CardValue.KING, suit=Suit.CLUBS)
+            Card(value=CardValue.KING, suit=Suit.CLUBS),
         ]
 
         game.players[0].cards = player0_cards
@@ -140,7 +133,7 @@ class PokerAgentTester:
         game.community_cards = [
             Card(value=CardValue.TEN, suit=Suit.HEARTS),
             Card(value=CardValue.JACK, suit=Suit.HEARTS),
-            Card(value=CardValue.QUEEN, suit=Suit.HEARTS)
+            Card(value=CardValue.QUEEN, suit=Suit.HEARTS),
         ]
 
         # Update game phase
@@ -183,11 +176,13 @@ class PokerAgentTester:
             logger.error(f"Game initialization test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "initialize_game",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "initialize_game",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_setup_hand(self):
@@ -229,11 +224,13 @@ class PokerAgentTester:
             logger.error(f"Hand setup test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "setup_hand",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "setup_hand",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_player_decision(self):
@@ -274,11 +271,13 @@ class PokerAgentTester:
             logger.error(f"Player decision test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "player_decision",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "player_decision",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_update_game_phase(self):
@@ -308,8 +307,13 @@ class PokerAgentTester:
                 raise ValueError(f"Game phase not updated from {state.game.phase}")
 
             # If phase is FLOP, check that community cards were dealt
-            if result.game.phase == GamePhase.FLOP and len(result.game.community_cards) != 3:
-                raise ValueError(f"Expected 3 community cards for FLOP, got {len(result.game.community_cards)}")
+            if (
+                result.game.phase == GamePhase.FLOP
+                and len(result.game.community_cards) != 3
+            ):
+                raise ValueError(
+                    f"Expected 3 community cards for FLOP, got {len(result.game.community_cards)}"
+                )
 
             # Log success
             logger.info(f"Game phase update successful in {duration:.2f}s")
@@ -321,11 +325,13 @@ class PokerAgentTester:
             logger.error(f"Game phase update test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "update_game_phase",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "update_game_phase",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_structured_output(self):
@@ -342,7 +348,7 @@ class PokerAgentTester:
             runnable = player_agent["runnable"]
 
             # Create a state for testing
-            state = self._create_advanced_test_state()
+            self._create_advanced_test_state()
 
             # Create a test context similar to what the agent would use
             test_context = {
@@ -355,8 +361,8 @@ class PokerAgentTester:
                 "opponent_chips": 980,
                 "legal_actions": [
                     {"action": "CHECK", "amount": 0},
-                    {"action": "BET", "min_amount": 20, "max_amount": 1000}
-                ]
+                    {"action": "BET", "min_amount": 20, "max_amount": 1000},
+                ],
             }
 
             # Use the StructuredOutputTester
@@ -365,7 +371,9 @@ class PokerAgentTester:
 
             # Check results
             if not result.get("success", False):
-                raise ValueError(f"Structured output test failed: {result.get('error', 'Unknown error')}")
+                raise ValueError(
+                    f"Structured output test failed: {result.get('error', 'Unknown error')}"
+                )
 
             # Print report
             tester.print_report()
@@ -379,11 +387,13 @@ class PokerAgentTester:
             logger.error(f"Structured output test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "structured_output",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "structured_output",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_hand_evaluation(self):
@@ -425,11 +435,13 @@ class PokerAgentTester:
             logger.error(f"Hand evaluation test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "hand_evaluation",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "hand_evaluation",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def run_all_tests(self):
@@ -448,9 +460,9 @@ class PokerAgentTester:
         duration = time.time() - start_time
 
         # Report results
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("POKER AGENT TEST RESULTS")
-        print("="*50)
+        print("=" * 50)
         print(f"Tests completed in {duration:.2f}s")
         print(f"Successful tests: {self.successful_tests}")
         print(f"Failed tests: {self.failed_tests}")
@@ -461,9 +473,10 @@ class PokerAgentTester:
                 print(f"\n- Test: {issue['test']}")
                 print(f"  Error: {issue['error']}")
 
-        print("="*50)
+        print("=" * 50)
 
         return self.successful_tests, self.failed_tests, self.issues_found
+
 
 def main():
     """Run the Poker agent tests."""
@@ -472,6 +485,7 @@ def main():
     # Run with default engine configurations
     tester = PokerAgentTester(use_default_engines=True)
     tester.run_all_tests()
+
 
 if __name__ == "__main__":
     main()

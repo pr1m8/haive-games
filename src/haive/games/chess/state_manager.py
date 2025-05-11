@@ -8,10 +8,10 @@ This module provides state management functionality for chess games, including:
 
 Example:
     >>> from haive.games.chess import ChessGameStateManager
-    >>> 
+    >>>
     >>> # Initialize a new game state
     >>> state = ChessGameStateManager.initialize()
-    >>> 
+    >>>
     >>> # Apply a move
     >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
 """
@@ -21,13 +21,13 @@ from .state import ChessState
 
 class ChessGameStateManager:
     """Chess game state manager.
-    
+
     This class provides static methods for managing chess game states:
         - Game initialization with default settings
         - Move application with validation
         - Game status updates
         - Captured pieces tracking
-    
+
     Example:
         >>> state = ChessGameStateManager.initialize()
         >>> print(state.board_fen)
@@ -37,22 +37,23 @@ class ChessGameStateManager:
     @staticmethod
     def initialize() -> ChessState:
         """Initialize a new chess game state.
-        
+
         This method:
             1. Creates a new chess board
             2. Sets up initial piece positions
             3. Configures starting player
             4. Initializes game status
-        
+
         Returns:
             ChessGameState: A fresh game state with default settings.
-        
+
         Example:
             >>> state = ChessGameStateManager.initialize()
             >>> assert state.turn == "white"
             >>> assert state.game_status == "ongoing"
         """
         import chess
+
         return ChessState(
             board_fen=chess.Board().fen(),
             turn="white",
@@ -60,34 +61,35 @@ class ChessGameStateManager:
             captured_pieces={},
             game_status="ongoing",
             analysis={},
-            #current_player="white"
-            #turn="white"
+            # current_player="white"
+            # turn="white"
         )
 
     @staticmethod
     def apply_move(state: ChessState, move_uci: str) -> ChessState:
         """Apply a move to the current game state.
-        
+
         This method:
             1. Validates the move format
             2. Updates the board position
             3. Tracks captured pieces
             4. Updates game status
             5. Switches the current player
-        
+
         Args:
             state (ChessGameState): Current game state.
             move_uci (str): Move in UCI notation (e.g., "e2e4").
-        
+
         Returns:
             ChessGameState: New game state after applying the move.
-        
+
         Example:
             >>> state = ChessGameStateManager.initialize()
             >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
             >>> assert new_state.turn == "black"
         """
         import chess
+
         board = chess.Board(state.board_fen)
         move = chess.Move.from_uci(move_uci)
 
@@ -104,7 +106,7 @@ class ChessGameStateManager:
             captured_pieces=dict(state.captured_pieces),
             turn="black" if state.turn == "white" else "white",
             game_status=state.game_status,
-            analysis=state.analysis
+            analysis=state.analysis,
         )
 
         # Update game status

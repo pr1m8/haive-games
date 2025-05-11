@@ -18,7 +18,7 @@ Core Components:
 Example:
     >>> from haive.agents.agent_games.framework.multi_player import MultiPlayerGameAgent
     >>> from haive.agents.agent_games.framework.multi_player import MultiPlayerGameConfig
-    >>> 
+    >>>
     >>> # Create a custom multi-player game agent
     >>> class MyGameAgent(MultiPlayerGameAgent):
     ...     def __init__(self, config: MultiPlayerGameConfig):

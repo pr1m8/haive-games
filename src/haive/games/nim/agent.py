@@ -3,12 +3,13 @@
 This module defines the Nim agent, which uses language models
 to generate moves and analyze positions in the game.
 """
+
 import time
 from typing import Any
 
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.types import Command
 
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.framework.base.agent import GameAgent
 from haive.games.nim.config import NimConfig
 from haive.games.nim.state import NimState
@@ -16,8 +17,7 @@ from haive.games.nim.state_manager import NimStateManager
 
 
 class NimAgent(GameAgent[NimConfig]):
-    """Agent for playing Nim.
-    """
+    """Agent for playing Nim."""
 
     def __init__(self, config: NimConfig = NimConfig()):
         """Initialize the Nim agent.
@@ -40,7 +40,13 @@ class NimAgent(GameAgent[NimConfig]):
         game_state = self.state_manager.initialize(pile_sizes=self.config.pile_sizes)
         # Set misere mode from src.config
         game_state.misere_mode = self.config.misere_mode
-        return Command(update=game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict())
+        return Command(
+            update=(
+                game_state.model_dump()
+                if hasattr(game_state, "model_dump")
+                else game_state.dict()
+            )
+        )
 
     def prepare_move_context(self, state: NimState, player: str) -> dict[str, Any]:
         """Prepare context for move generation.
@@ -53,10 +59,12 @@ class NimAgent(GameAgent[NimConfig]):
             Dict[str, Any]: The context for the move generation.
         """
         # Format legal moves for display
-        formatted_legal_moves = "\n".join([
-            f"Take {move.stones_taken} stones from pile {move.pile_index} (current size: {state.piles[move.pile_index]})"
-            for move in self.state_manager.get_legal_moves(state)
-        ])
+        formatted_legal_moves = "\n".join(
+            [
+                f"Take {move.stones_taken} stones from pile {move.pile_index} (current size: {state.piles[move.pile_index]})"
+                for move in self.state_manager.get_legal_moves(state)
+            ]
+        )
 
         # Get recent move history
         recent_moves = []
@@ -69,7 +77,7 @@ class NimAgent(GameAgent[NimConfig]):
             "player": player,
             "legal_moves": formatted_legal_moves,
             "move_history": "\n".join(recent_moves),
-            "misere_mode": state.misere_mode
+            "misere_mode": state.misere_mode,
         }
 
     def extract_move(self, response: Any) -> Any:
@@ -132,7 +140,13 @@ class NimAgent(GameAgent[NimConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def prepare_analysis_context(self, state: NimState, player: str) -> dict[str, Any]:
         """Prepare context for position analysis.
@@ -149,7 +163,7 @@ class NimAgent(GameAgent[NimConfig]):
             "player": player,
             "move_history": [str(move) for move in state.move_history[-5:]],
             "misere_mode": state.misere_mode,
-            "nim_sum": state.nim_sum
+            "nim_sum": state.nim_sum,
         }
 
     def analyze_player1(self, state: NimState) -> Command:
@@ -185,7 +199,11 @@ class NimAgent(GameAgent[NimConfig]):
             Command: The command to analyze the position.
         """
         if not self.config.enable_analysis:
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
         # Prepare context for analysis
         context = self.prepare_analysis_context(state, player)
 
@@ -200,7 +218,14 @@ class NimAgent(GameAgent[NimConfig]):
         new_state = self.state_manager.add_analysis(state, player, analysis)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
+
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run a complete Nim game with optional visualization.
 
@@ -212,8 +237,7 @@ class NimAgent(GameAgent[NimConfig]):
         """
         # Initialize the game state
         initial_state = self.state_manager.initialize(
-            pile_sizes=self.config.pile_sizes,
-            misere_mode=self.config.misere_mode
+            pile_sizes=self.config.pile_sizes, misere_mode=self.config.misere_mode
         )
 
         # Run the game with visualization
@@ -235,7 +259,9 @@ class NimAgent(GameAgent[NimConfig]):
         print("\n" + "=" * 50)
         print(f"🎮 Current Player: {game_state.turn}")
         print(f"📌 Game Status: {game_state.game_status}")
-        print(f"🎲 Game Mode: {'Misere (last takes loses)' if game_state.misere_mode else 'Standard (last takes wins)'}")
+        print(
+            f"🎲 Game Mode: {'Misere (last takes loses)' if game_state.misere_mode else 'Standard (last takes wins)'}"
+        )
         print("=" * 50)
 
         # Print the board
@@ -247,13 +273,21 @@ class NimAgent(GameAgent[NimConfig]):
             print(f"\n📝 Last Move: {last_move!s}")
 
         # Print analyses if available
-        if hasattr(game_state, "player1_analysis") and game_state.player1_analysis and game_state.turn == "player2":
+        if (
+            hasattr(game_state, "player1_analysis")
+            and game_state.player1_analysis
+            and game_state.turn == "player2"
+        ):
             last_analysis = game_state.player1_analysis[-1]
             print("\n🔍 Player 1's Analysis:")
             print(f"Position Evaluation: {last_analysis.position_evaluation}")
             print(f"Explanation: {last_analysis.explanation}")
 
-        if hasattr(game_state, "player2_analysis") and game_state.player2_analysis and game_state.turn == "player1":
+        if (
+            hasattr(game_state, "player2_analysis")
+            and game_state.player2_analysis
+            and game_state.turn == "player1"
+        ):
             last_analysis = game_state.player2_analysis[-1]
             print("\n🔍 Player 2's Analysis:")
             print(f"Position Evaluation: {last_analysis.position_evaluation}")
@@ -288,5 +322,6 @@ class NimAgent(GameAgent[NimConfig]):
         # Build the graph
         self.graph = builder.build()
 
-#a=NimAgent()
-#a.run_game(visualize=True)
+
+# a=NimAgent()
+# a.run_game(visualize=True)

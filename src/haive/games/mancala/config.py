@@ -5,9 +5,9 @@ which includes the game name, state schema, AugLLM configurations,
 enable_analysis, visualize, and stones_per_pit.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.config import GameConfig
 from haive.games.mancala.engines import mancala_engines
 from haive.games.mancala.state import MancalaState
@@ -20,23 +20,18 @@ class MancalaConfig(GameConfig):
     which includes the game name, state schema, AugLLM configurations,
     enable_analysis, visualize, and stones_per_pit.
     """
+
     name: str = Field(default="mancala", description="Name of the game")
     state_schema: type[MancalaState] = Field(default=MancalaState)
     aug_llm_configs: dict[str, AugLLMConfig] = Field(
-        default=mancala_engines,
-        description="Configs for the Mancala engines"
+        default=mancala_engines, description="Configs for the Mancala engines"
     )
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
     stones_per_pit: int = Field(
-        default=4,
-        description="Initial number of stones per pit"
+        default=4, description="Initial number of stones per pit"
     )
 
     @classmethod
@@ -52,5 +47,5 @@ class MancalaConfig(GameConfig):
             aug_llm_configs=mancala_engines,
             enable_analysis=True,
             visualize=True,
-            stones_per_pit=4
+            stones_per_pit=4,
         )

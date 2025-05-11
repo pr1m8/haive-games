@@ -1,9 +1,9 @@
-
 from haive.games.monopoly.game.property import Property
 
 
 class Player:
     """Represents a player in the game."""
+
     def __init__(self, name: str, index: int, starting_cash: int = 1500):
         self.name = name
         self.index = index
@@ -27,10 +27,10 @@ class Player:
 
     def pay(self, amount: int) -> bool:
         """Pay an amount from the player's cash.
-        
+
         Args:
             amount: Amount to pay
-            
+
         Returns:
             True if the payment was successful, False if player can't afford it
         """
@@ -44,7 +44,7 @@ class Player:
 
     def receive(self, amount: int) -> None:
         """Receive an amount of cash.
-        
+
         Args:
             amount: Amount to receive
         """
@@ -53,10 +53,10 @@ class Player:
 
     def net_worth(self, board_properties: list[Property]) -> int:
         """Calculate the player's net worth including property values.
-        
+
         Args:
             board_properties: List of all properties on the board
-            
+
         Returns:
             The player's total net worth
         """

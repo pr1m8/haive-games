@@ -11,9 +11,10 @@ from haive.games.connect4.state_manager import Connect4StateManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def run_connect4_game(debug: bool = False):
     """Run a Connect 4 game with LangGraph-based streaming.
-    
+
     Args:
         debug: Enable debug mode
     """
@@ -48,7 +49,7 @@ def run_connect4_game(debug: bool = False):
             initial_state.model_dump(),  # Convert state to dictionary
             config={"configurable": {"thread_id": thread_id}},
             debug=debug,
-            stream_mode="values"
+            stream_mode="values",
         ):
             # 🔄 **Visualize the current game state**
             agent.visualize_state(step)
@@ -75,6 +76,7 @@ def run_connect4_game(debug: bool = False):
         traceback.print_exc()
 
     print("\n✅ Game Complete!")
+
 
 if __name__ == "__main__":
     import argparse

@@ -15,16 +15,24 @@ from pydantic import BaseModel, Field, model_validator
 # Game State Models - Core data structures
 # ==============================================================
 
+
 class PropertyInfo(BaseModel):
     """Information about a property on the board."""
+
     name: str = Field(description="The name of the property")
     color: str | None = Field(None, description="The color group of the property")
-    position: int = Field(description="The position of the property on the board (0-39)")
+    position: int = Field(
+        description="The position of the property on the board (0-39)"
+    )
     cost: int = Field(description="The purchase cost of the property")
-    rent_values: list[int] = Field(description="The rent values based on number of houses/hotels")
+    rent_values: list[int] = Field(
+        description="The rent values based on number of houses/hotels"
+    )
     rent: int = Field(description="Current rent value for this property")
     mortgage_value: int = Field(description="The mortgage value of the property")
-    owner: int | None = Field(None, description="The player index who owns this property, if any")
+    owner: int | None = Field(
+        None, description="The player index who owns this property, if any"
+    )
     houses: int = Field(description="Number of houses on the property (5 = hotel)")
     is_mortgaged: bool = Field(description="Whether the property is mortgaged")
 
@@ -40,32 +48,49 @@ class PropertyInfo(BaseModel):
 
 class SpecialCardInfo(BaseModel):
     """Information about special properties like railroads and utilities."""
+
     name: str = Field(description="The name of the card")
-    card_type: Literal["railroad", "utility"] = Field(description="The type of the card")
+    card_type: Literal["railroad", "utility"] = Field(
+        description="The type of the card"
+    )
     position: int = Field(description="The board position")
     cost: int = Field(description="The purchase cost")
     rent: int = Field(description="Current rent value")
     mortgage_value: int = Field(description="Mortgage value")
     owner: int | None = Field(None, description="The player index who owns this")
-    is_mortgaged: bool = Field(default=False, description="Whether the property is mortgaged")
+    is_mortgaged: bool = Field(
+        default=False, description="Whether the property is mortgaged"
+    )
 
 
 class PlayerInfo(BaseModel):
     """Information about a player."""
+
     name: str = Field(description="Player's name")
     index: int = Field(description="Player index")
     position: int = Field(description="Current board position (0-39)")
     cash: int = Field(description="Current cash on hand")
     total_wealth: int = Field(description="Net worth including cash and property value")
-    properties_owned: list[str] = Field(default_factory=list, description="Names of properties owned")
-    is_in_jail: bool = Field(default=False, description="Is the player currently in jail")
-    jail_cards: int = Field(default=0, description="Number of Get Out of Jail Free cards")
-    railways_owned: int = Field(default=0, description="How many railroads this player owns")
-    bankruptcy_status: bool = Field(default=False, description="Whether the player is bankrupt")
+    properties_owned: list[str] = Field(
+        default_factory=list, description="Names of properties owned"
+    )
+    is_in_jail: bool = Field(
+        default=False, description="Is the player currently in jail"
+    )
+    jail_cards: int = Field(
+        default=0, description="Number of Get Out of Jail Free cards"
+    )
+    railways_owned: int = Field(
+        default=0, description="How many railroads this player owns"
+    )
+    bankruptcy_status: bool = Field(
+        default=False, description="Whether the player is bankrupt"
+    )
 
 
 class DiceInfo(BaseModel):
     """Information about a dice roll."""
+
     values: tuple[int, int] = Field(description="Two dice values")
     sum: int = Field(description="Sum of the dice roll")
 
@@ -86,8 +111,10 @@ class DiceInfo(BaseModel):
 # LLM Decision Models - For Agent Outputs
 # ==============================================================
 
+
 class PropertyAction(BaseModel):
     """Model for property management actions."""
+
     action_type: Literal["buy", "build", "sell", "mortgage", "unmortgage"] = Field(
         description="Action to take with property"
     )
@@ -97,6 +124,7 @@ class PropertyAction(BaseModel):
 
 class MoveAction(BaseModel):
     """Model for movement actions."""
+
     action_type: Literal["roll", "pay_to_exit_jail", "roll_for_double"] = Field(
         description="Type of move action"
     )
@@ -105,21 +133,17 @@ class MoveAction(BaseModel):
 
 class TurnDecision(BaseModel):
     """Model for comprehensive turn decisions."""
+
     move_action: MoveAction | None = Field(
-        default=None,
-        description="Movement decision for this turn"
+        default=None, description="Movement decision for this turn"
     )
     property_actions: list[PropertyAction] = Field(
-        default_factory=list,
-        description="Property management actions for this turn"
+        default_factory=list, description="Property management actions for this turn"
     )
     end_turn: bool = Field(
-        default=False,
-        description="Whether to end the turn after these actions"
+        default=False, description="Whether to end the turn after these actions"
     )
-    reasoning: str = Field(
-        description="Overall strategy or reasoning for decisions"
-    )
+    reasoning: str = Field(description="Overall strategy or reasoning for decisions")
 
     @model_validator(mode="after")
     def validate_decision(self):
@@ -132,12 +156,12 @@ class TurnDecision(BaseModel):
 
 class StrategyAnalysis(BaseModel):
     """Model for strategic game analysis."""
+
     analysis: str = Field(
         description="Comprehensive analysis of the current game state"
     )
     recommended_properties: list[str] = Field(
-        default_factory=list,
-        description="Properties recommended to acquire next"
+        default_factory=list, description="Properties recommended to acquire next"
     )
     risk_assessment: str = Field(
         description="Assessment of risks in the current situation"
@@ -146,8 +170,7 @@ class StrategyAnalysis(BaseModel):
         description="Assessment of opportunities in the current situation"
     )
     cash_recommendation: str | None = Field(
-        default=None,
-        description="Recommendation for cash management"
+        default=None, description="Recommendation for cash management"
     )
 
 
@@ -155,28 +178,23 @@ class StrategyAnalysis(BaseModel):
 # Composite Decision Models
 # ==============================================================
 
+
 class AgentDecision(BaseModel):
     """Composite model for all agent decisions."""
+
     turn_decision: TurnDecision | None = Field(
-        default=None,
-        description="Main turn decision"
+        default=None, description="Main turn decision"
     )
     strategy_analysis: StrategyAnalysis | None = Field(
-        default=None,
-        description="Strategic analysis of the game"
+        default=None, description="Strategic analysis of the game"
     )
     move_action: MoveAction | None = Field(
-        default=None,
-        description="Specific move action"
+        default=None, description="Specific move action"
     )
     property_actions: list[PropertyAction] = Field(
-        default_factory=list,
-        description="Property actions to take"
+        default_factory=list, description="Property actions to take"
     )
-    error_message: str | None = Field(
-        default=None,
-        description="Error message if any"
-    )
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     def get_next_action(self) -> MoveAction | PropertyAction | None:
         """Get the next action to take."""
@@ -203,12 +221,16 @@ class AgentDecision(BaseModel):
 # Game Event Models
 # ==============================================================
 
+
 class GameEvent(BaseModel):
     """Model for a game event."""
+
     event_type: str = Field(description="Type of event")
     player_index: int | None = Field(default=None, description="Player involved")
     description: str = Field(description="Event description")
-    timestamp: float = Field(default_factory=lambda: __import__("time").time(), description="Event timestamp")
+    timestamp: float = Field(
+        default_factory=lambda: __import__("time").time(), description="Event timestamp"
+    )
 
     @property
     def formatted_description(self) -> str:

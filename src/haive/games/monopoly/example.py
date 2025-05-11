@@ -27,13 +27,15 @@ def main():
         player_index=1,  # 0-based index, so this is player 2
         model="gpt-4o",
         temperature=0.7,
-        debug=True
+        debug=True,
     )
 
     # The agent is now integrated with the game
     # When it's player 1's turn, the agent will automatically make decisions
     logger.info("Agent setup complete. Run the game normally.")
-    logger.info("The agent will automatically make decisions when it's player 1's turn.")
+    logger.info(
+        "The agent will automatically make decisions when it's player 1's turn."
+    )
 
     # Example of manually running a turn (normally not needed as the integration handles this)
     # This is just for demonstration purposes
@@ -56,9 +58,9 @@ def main():
         # The integration module would normally handle executing this decision
 
     # Explain how to use the agent
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("MONOPOLY AGENT INTEGRATION")
-    print("="*50)
+    print("=" * 50)
     print("\nThe AI agent has been set up to control Player 2.")
     print("When it's Player 2's turn, the agent will automatically:")
     print("1. Analyze the game state")
@@ -66,7 +68,8 @@ def main():
     print("3. Execute those actions in the game")
     print("\nYou can see the agent's decisions in the log output.")
     print("Just play the game normally, and the agent will handle Player 2's turns.")
-    print("="*50 + "\n")
+    print("=" * 50 + "\n")
+
 
 if __name__ == "__main__":
     main()

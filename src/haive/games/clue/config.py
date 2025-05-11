@@ -13,6 +13,7 @@ from haive.games.framework.base.config import GameConfig
 # Version information for tracking changes
 VERSION = "1.0.0"
 
+
 class ClueConfig(GameConfig):
     """Configuration for the Clue game agent.
 
@@ -20,26 +21,21 @@ class ClueConfig(GameConfig):
     including game state schema, engines, analysis settings, visualization,
     and game parameters.
     """
+
     name: str = Field(default="clue", description="Name of the game")
-    version: str = Field(default=VERSION, description="Version of the game implementation")
+    version: str = Field(
+        default=VERSION, description="Version of the game implementation"
+    )
     state_schema: type[ClueState] = Field(default=ClueState)
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
-    max_turns: int = Field(
-        default=20,
-        description="Maximum number of turns"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
+    max_turns: int = Field(default=20, description="Maximum number of turns")
     first_player: str = Field(
-        default="player1",
-        description="Player who starts the game (player1 or player2)"
+        default="player1", description="Player who starts the game (player1 or player2)"
     )
     solution: dict | None = Field(
         default=None,
-        description="Predetermined solution (if None, will be generated randomly)"
+        description="Predetermined solution (if None, will be generated randomly)",
     )

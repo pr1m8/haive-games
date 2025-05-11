@@ -4,6 +4,7 @@ This module defines the state for the Mancala game,
 which includes the board, turn, game status, move history,
 free turn, winner, and player analyses.
 """
+
 from typing import Literal
 
 from pydantic import Field
@@ -19,25 +20,32 @@ class MancalaState(GameState):
     which includes the board, turn, game status, move history,
     free turn, winner, and player analyses.
     """
+
     # The board has 14 pits:
     # - Indices 0-5: Player 1's pits (bottom row, left to right)
     # - Index 6: Player 1's store (right)
     # - Indices 7-12: Player 2's pits (top row, right to left)
     # - Index 13: Player 2's store (left)
     board: list[int] = Field(..., min_items=14, max_items=14, description="Game board")
-    turn: Literal["player1", "player2"] = Field(..., description="Current player's turn")
+    turn: Literal["player1", "player2"] = Field(
+        ..., description="Current player's turn"
+    )
     game_status: Literal["ongoing", "player1_win", "player2_win", "draw"] = Field(
         default="ongoing", description="Status of the game"
     )
     move_history: list[MancalaMove] = Field(
         default_factory=list, description="History of moves"
     )
-    free_turn: bool = Field(default=False, description="Whether player gets an extra turn")
-    winner: str | None = Field(
-        default=None, description="Winner of the game, if any"
+    free_turn: bool = Field(
+        default=False, description="Whether player gets an extra turn"
     )
-    player1_analysis: list[MancalaAnalysis] = Field(default_factory=list, description="Analyses by player1")
-    player2_analysis: list[MancalaAnalysis] = Field(default_factory=list, description="Analyses by player2")
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
+    player1_analysis: list[MancalaAnalysis] = Field(
+        default_factory=list, description="Analyses by player1"
+    )
+    player2_analysis: list[MancalaAnalysis] = Field(
+        default_factory=list, description="Analyses by player2"
+    )
 
     @property
     def player1_score(self) -> int:

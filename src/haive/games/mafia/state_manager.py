@@ -12,11 +12,11 @@ The state manager is responsible for:
 
 Example:
     >>> from mafia.state_manager import MafiaStateManager
-    >>> 
+    >>>
     >>> # Initialize a new game
     >>> players = ["Player_1", "Player_2", "Player_3", "Narrator"]
     >>> state = MafiaStateManager.initialize(players)
-    >>> 
+    >>>
     >>> # Apply a move
     >>> move = MafiaAction(
     ...     player_id="Player_1",
@@ -36,13 +36,20 @@ from loguru import logger
 
 from haive.games.framework.multi_player.state_manager import MultiPlayerGameStateManager
 
-from .models import ActionType, GamePhase, MafiaAction, NarratorAction, PlayerRole, PlayerState
+from .models import (
+    ActionType,
+    GamePhase,
+    MafiaAction,
+    NarratorAction,
+    PlayerRole,
+    PlayerState,
+)
 from .state import MafiaGameState
 
 
 class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     """Manager for the Mafia game state.
-    
+
     This class extends MultiPlayerGameStateManager to provide Mafia-specific
     state management functionality. It handles game progression, move validation,
     and state transitions.
@@ -62,7 +69,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def advance_phase(cls, state: MafiaGameState) -> MafiaGameState:
         """Advance the game to the next phase.
-        
+
         This method handles the transition between game phases, including:
             - Setup → Night (first night)
             - Night → Day Discussion (with night action resolution)
@@ -130,25 +137,33 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                     f"Night {new_state.day_number} falls upon the village. The residents go to sleep."
                 )
 
-
         elif current_phase == GamePhase.NIGHT:
             # From NIGHT, transition to DAY_DISCUSSION
             new_state.game_phase = GamePhase.DAY_DISCUSSION
-            new_state.add_public_announcement(f"Day {new_state.day_number} begins. The village awakens.")
+            new_state.add_public_announcement(
+                f"Day {new_state.day_number} begins. The village awakens."
+            )
 
             # Process night actions (usually done by narrator in their turn)
             # This is a fallback if narrator didn't process them
-            if new_state.killed_at_night and new_state.killed_at_night != new_state.saved_at_night:
+            if (
+                new_state.killed_at_night
+                and new_state.killed_at_night != new_state.saved_at_night
+            ):
                 victim_id = new_state.killed_at_night
                 if victim_id in new_state.player_states:
                     new_state.player_states[victim_id].is_alive = False
-                    new_state.add_public_announcement(f"{victim_id} was found dead this morning!")
+                    new_state.add_public_announcement(
+                        f"{victim_id} was found dead this morning!"
+                    )
 
         elif current_phase == GamePhase.DAY_DISCUSSION:
             # From DAY_DISCUSSION, transition to DAY_VOTING
             new_state.game_phase = GamePhase.DAY_VOTING
             new_state.votes = {}  # Reset votes
-            new_state.add_public_announcement("The discussion period has ended. Time to vote!")
+            new_state.add_public_announcement(
+                "The discussion period has ended. Time to vote!"
+            )
 
         elif current_phase == GamePhase.DAY_VOTING:
             # From DAY_VOTING, transition to NIGHT (or GAME_OVER if end conditions met)
@@ -174,23 +189,33 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
                 # Eliminate the chosen player
                 if tied_players:
-                    eliminated_player = random.choice(tied_players) if len(tied_players) > 1 else tied_players[0]
+                    eliminated_player = (
+                        random.choice(tied_players)
+                        if len(tied_players) > 1
+                        else tied_players[0]
+                    )
                     new_state.player_states[eliminated_player].is_alive = False
-                    new_state.add_public_announcement(f"{eliminated_player} has been eliminated by the village vote!")
+                    new_state.add_public_announcement(
+                        f"{eliminated_player} has been eliminated by the village vote!"
+                    )
 
             # Check game end conditions
             if new_state.alive_mafia_count == 0:
                 new_state.game_phase = GamePhase.GAME_OVER
                 new_state.winner = "village"
                 new_state.game_status = "ended"
-                new_state.add_public_announcement("All mafia members have been eliminated! The village wins!")
+                new_state.add_public_announcement(
+                    "All mafia members have been eliminated! The village wins!"
+                )
                 return new_state
 
             if new_state.alive_mafia_count >= new_state.alive_village_count:
                 new_state.game_phase = GamePhase.GAME_OVER
                 new_state.winner = "mafia"
                 new_state.game_status = "ended"
-                new_state.add_public_announcement("The mafia now equals or outnumbers the villagers! The mafia wins!")
+                new_state.add_public_announcement(
+                    "The mafia now equals or outnumbers the villagers! The mafia wins!"
+                )
                 return new_state
 
             # Continue to next night
@@ -199,7 +224,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             new_state.round_number += 1
             new_state.killed_at_night = None
             new_state.saved_at_night = None
-            new_state.add_public_announcement(f"Night {new_state.day_number} falls. The village sleeps.")
+            new_state.add_public_announcement(
+                f"Night {new_state.day_number} falls. The village sleeps."
+            )
 
         elif current_phase == GamePhase.GAME_OVER:
             # Game is already over, do nothing
@@ -209,15 +236,20 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         if current_phase != GamePhase.GAME_OVER:
             # For night phase, set to first alive player
             # For day phases, also set to first alive player
-            alive_players = [idx for idx, pid in enumerate(new_state.players) if new_state.player_states[pid].is_alive]
+            alive_players = [
+                idx
+                for idx, pid in enumerate(new_state.players)
+                if new_state.player_states[pid].is_alive
+            ]
             if alive_players:
                 new_state.current_player_idx = alive_players[0]
 
         return new_state
+
     @classmethod
-    def resolve_night_actions(cls,state: MafiaGameState) -> MafiaGameState:
+    def resolve_night_actions(cls, state: MafiaGameState) -> MafiaGameState:
         """Resolve night actions and determine outcomes.
-        
+
         This method processes all night actions in the correct order:
             1. Mafia kill attempt
             2. Doctor save attempt
@@ -283,7 +315,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def handle_phase_transition(cls, state: dict[str, Any]) -> dict[str, Any]:
         """Handle phase transition with error handling.
-        
+
         This method safely transitions the game phase, handling any errors
         that might occur during the transition.
 
@@ -315,6 +347,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
                 # Create a proper game state
                 from .state import MafiaGameState
+
                 mafia_state = MafiaGameState.model_validate(state)
             else:
                 mafia_state = state
@@ -351,15 +384,14 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 return dict(state)
             except:
                 # Last resort, create a new dict
-                return {
-                    "error_message": error_msg,
-                    "game_status": "ended"
-                }
+                return {"error_message": error_msg, "game_status": "ended"}
 
     @classmethod
-    def apply_move(cls,state: MafiaGameState, player_id: str, move: MafiaAction | NarratorAction) -> MafiaGameState:
+    def apply_move(
+        cls, state: MafiaGameState, player_id: str, move: MafiaAction | NarratorAction
+    ) -> MafiaGameState:
         """Apply a move to the game state.
-        
+
         This method validates and applies a player's move or narrator's action
         to the game state, updating all relevant state fields.
 
@@ -398,27 +430,44 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 # Record vote
                 new_state.votes[player_id] = move.target_id
                 # Add to public announcements
-                new_state.public_announcements.append(f"{player_id} has voted for {move.target_id}.")
+                new_state.public_announcements.append(
+                    f"{player_id} has voted for {move.target_id}."
+                )
 
-            elif move.action_type == ActionType.KILL and new_state.game_phase == GamePhase.NIGHT:
+            elif (
+                move.action_type == ActionType.KILL
+                and new_state.game_phase == GamePhase.NIGHT
+            ):
                 # Record kill target
                 new_state.killed_at_night = move.target_id
 
-            elif move.action_type == ActionType.INVESTIGATE and new_state.game_phase == GamePhase.NIGHT:
+            elif (
+                move.action_type == ActionType.INVESTIGATE
+                and new_state.game_phase == GamePhase.NIGHT
+            ):
                 # Perform investigation
                 target_id = move.target_id
                 is_mafia = new_state.roles.get(target_id) == PlayerRole.MAFIA
 
                 # Store investigation result
                 if player_id not in new_state.player_states:
-                    new_state.player_states[player_id] = PlayerState(role=PlayerRole.DETECTIVE)
+                    new_state.player_states[player_id] = PlayerState(
+                        role=PlayerRole.DETECTIVE
+                    )
 
-                if not hasattr(new_state.player_states[player_id], "investigation_results"):
+                if not hasattr(
+                    new_state.player_states[player_id], "investigation_results"
+                ):
                     new_state.player_states[player_id].investigation_results = {}
 
-                new_state.player_states[player_id].investigation_results[target_id] = is_mafia
+                new_state.player_states[player_id].investigation_results[
+                    target_id
+                ] = is_mafia
 
-            elif move.action_type == ActionType.SAVE and new_state.game_phase == GamePhase.NIGHT:
+            elif (
+                move.action_type == ActionType.SAVE
+                and new_state.game_phase == GamePhase.NIGHT
+            ):
                 # Record save target
                 new_state.saved_at_night = move.target_id
 
@@ -436,10 +485,11 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 new_state = cls.handle_phase_transition(new_state)
 
         return new_state
+
     @classmethod
     def initialize(cls, player_names: list[str], **kwargs) -> MafiaGameState:
         """Initialize a new Mafia game with the given players.
-        
+
         This method sets up a new game state with:
             - Random role assignment
             - Initial player states
@@ -485,7 +535,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             num_doctors = min(1, num_regular_players // 3)
             num_mafia = min(1, num_regular_players // 3)
 
-        num_villagers = num_regular_players - num_mafia - num_detectives - num_doctors
+        num_regular_players - num_mafia - num_detectives - num_doctors
 
         # Assign roles - fix narrator key to match the player ID exactly
         narrator_id = player_names[-1]  # Last player is narrator
@@ -495,6 +545,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         # Shuffle players for random role assignment
         shuffled_players = list(regular_players)
         import random
+
         random.shuffle(shuffled_players)
 
         # Keep track of assigned players
@@ -513,7 +564,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 assigned_players.append(shuffled_players[i])
 
         # Assign doctor roles
-        for i in range(num_mafia + num_detectives, num_mafia + num_detectives + num_doctors):
+        for i in range(
+            num_mafia + num_detectives, num_mafia + num_detectives + num_doctors
+        ):
             if i < len(shuffled_players):
                 roles[shuffled_players[i]] = PlayerRole.DOCTOR
                 assigned_players.append(shuffled_players[i])
@@ -542,15 +595,18 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 known_roles = roles.copy()
 
             player_states[player_id] = PlayerState(
-                player_id=player_id,
-                role=role,
-                known_roles=known_roles
+                player_id=player_id, role=role, known_roles=known_roles
             )
 
         # Count alive players by role
-        alive_mafia_count = sum(1 for pid, role in roles.items() if role == PlayerRole.MAFIA)
-        alive_village_count = sum(1 for pid, role in roles.items()
-                                if role != PlayerRole.MAFIA and role != PlayerRole.NARRATOR)
+        alive_mafia_count = sum(
+            1 for pid, role in roles.items() if role == PlayerRole.MAFIA
+        )
+        alive_village_count = sum(
+            1
+            for pid, role in roles.items()
+            if role != PlayerRole.MAFIA and role != PlayerRole.NARRATOR
+        )
 
         # Create the initial state
         state = MafiaGameState(
@@ -564,15 +620,17 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             action_history=[],
             public_announcements=["The game of Mafia begins!"],
             alive_mafia_count=alive_mafia_count,
-            alive_village_count=alive_village_count
+            alive_village_count=alive_village_count,
         )
 
         return state
 
     @classmethod
-    def _apply_player_action(cls, state: MafiaGameState, player_id: str, action: MafiaAction) -> MafiaGameState:
+    def _apply_player_action(
+        cls, state: MafiaGameState, player_id: str, action: MafiaAction
+    ) -> MafiaGameState:
         """Apply a player's action to the game state.
-        
+
         This internal method handles the details of applying a player's action,
         including validation and state updates.
 
@@ -591,8 +649,13 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             This is an internal method used by apply_move.
         """
         # Verify player is alive
-        if player_id not in state.player_states or not state.player_states[player_id].is_alive:
-            raise ValueError(f"Player {player_id} is not alive and cannot perform actions.")
+        if (
+            player_id not in state.player_states
+            or not state.player_states[player_id].is_alive
+        ):
+            raise ValueError(
+                f"Player {player_id} is not alive and cannot perform actions."
+            )
 
         # Make sure round_number is set
         if action.round_number is None:
@@ -613,33 +676,58 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             # For voting actions
             if state.game_phase == GamePhase.DAY_VOTING:
                 # Ensure the target is alive
-                if action.target_id in state.player_states and state.player_states[action.target_id].is_alive:
+                if (
+                    action.target_id in state.player_states
+                    and state.player_states[action.target_id].is_alive
+                ):
                     state.votes[player_id] = action.target_id
-                    state.add_public_announcement(f"{player_id} has voted for {action.target_id}.")
+                    state.add_public_announcement(
+                        f"{player_id} has voted for {action.target_id}."
+                    )
                 else:
-                    state.add_public_announcement(f"{player_id} tried to vote for {action.target_id}, but they are not an eligible target.")
+                    state.add_public_announcement(
+                        f"{player_id} tried to vote for {action.target_id}, but they are not an eligible target."
+                    )
 
         elif action.action_type == ActionType.KILL:
             # For kill actions (mafia only)
-            if state.game_phase == GamePhase.NIGHT and state.roles[player_id] == PlayerRole.MAFIA:
+            if (
+                state.game_phase == GamePhase.NIGHT
+                and state.roles[player_id] == PlayerRole.MAFIA
+            ):
                 # Ensure the target is alive
-                if action.target_id in state.player_states and state.player_states[action.target_id].is_alive:
+                if (
+                    action.target_id in state.player_states
+                    and state.player_states[action.target_id].is_alive
+                ):
                     state.killed_at_night = action.target_id
                     # This is private information until processed by the narrator
 
         elif action.action_type == ActionType.SAVE:
             # For save actions (doctor only)
-            if state.game_phase == GamePhase.NIGHT and state.roles[player_id] == PlayerRole.DOCTOR:
+            if (
+                state.game_phase == GamePhase.NIGHT
+                and state.roles[player_id] == PlayerRole.DOCTOR
+            ):
                 # Ensure the target is alive
-                if action.target_id in state.player_states and state.player_states[action.target_id].is_alive:
+                if (
+                    action.target_id in state.player_states
+                    and state.player_states[action.target_id].is_alive
+                ):
                     state.saved_at_night = action.target_id
                     # This is private information until processed by the narrator
 
         elif action.action_type == ActionType.INVESTIGATE:
             # For investigate actions (detective only)
-            if state.game_phase == GamePhase.NIGHT and state.roles[player_id] == PlayerRole.DETECTIVE:
+            if (
+                state.game_phase == GamePhase.NIGHT
+                and state.roles[player_id] == PlayerRole.DETECTIVE
+            ):
                 # Ensure the target is alive
-                if action.target_id in state.player_states and state.player_states[action.target_id].is_alive:
+                if (
+                    action.target_id in state.player_states
+                    and state.player_states[action.target_id].is_alive
+                ):
                     # Determine if target is mafia
                     is_mafia = state.roles[action.target_id] == PlayerRole.MAFIA
 
@@ -647,7 +735,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                     if "investigation_results" not in state.player_states[player_id]:
                         state.player_states[player_id].investigation_results = {}
 
-                    state.player_states[player_id].investigation_results[action.target_id] = is_mafia
+                    state.player_states[player_id].investigation_results[
+                        action.target_id
+                    ] = is_mafia
                     # This is private information for the detective
 
         # Move to the next player
@@ -658,7 +748,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def get_legal_moves(cls, state: MafiaGameState, player_id: str) -> list[Any]:
         """Get legal moves for a specific player.
-        
+
         This method determines what moves are legal for a player based on:
             - Current game phase
             - Player's role
@@ -683,7 +773,10 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         if player_id not in state.player_states:
             return legal_moves
 
-        if not state.player_states[player_id].is_alive and state.roles.get(player_id) != PlayerRole.NARRATOR:
+        if (
+            not state.player_states[player_id].is_alive
+            and state.roles.get(player_id) != PlayerRole.NARRATOR
+        ):
             return legal_moves
 
         # Get player role
@@ -697,7 +790,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                     announcement="[Example announcement]",
                     player_state_updates={},
                     phase_transition=False,
-                    round_number=state.round_number
+                    round_number=state.round_number,
                 )
             )
 
@@ -709,7 +802,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         player_state_updates={},
                         phase_transition=True,
                         next_phase=GamePhase.NIGHT,
-                        round_number=state.round_number
+                        round_number=state.round_number,
                     )
                 )
 
@@ -721,7 +814,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         player_state_updates={},
                         phase_transition=True,
                         next_phase=GamePhase.DAY_DISCUSSION,
-                        round_number=state.round_number
+                        round_number=state.round_number,
                     )
                 )
 
@@ -732,7 +825,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         player_state_updates={},
                         phase_transition=True,
                         next_phase=GamePhase.DAY_VOTING,
-                        round_number=state.round_number
+                        round_number=state.round_number,
                     )
                 )
 
@@ -743,14 +836,17 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         player_state_updates={},
                         phase_transition=True,
                         next_phase=GamePhase.NIGHT,
-                        round_number=state.round_number
+                        round_number=state.round_number,
                     )
                 )
 
             return legal_moves
 
         # Player moves based on game phase
-        if state.game_phase == GamePhase.DAY_DISCUSSION or state.game_phase == GamePhase.DAY_VOTING:
+        if (
+            state.game_phase == GamePhase.DAY_DISCUSSION
+            or state.game_phase == GamePhase.DAY_VOTING
+        ):
             # All players can speak during the day
             legal_moves.append(
                 MafiaAction(
@@ -758,7 +854,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                     action_type=ActionType.SPEAK,
                     message="[Example message]",
                     phase=state.game_phase,
-                    round_number=state.round_number
+                    round_number=state.round_number,
                 )
             )
 
@@ -773,7 +869,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                             action_type=ActionType.VOTE,
                             target_id=target_id,
                             phase=state.game_phase,
-                            round_number=state.round_number
+                            round_number=state.round_number,
                         )
                     )
 
@@ -783,14 +879,17 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 # Mafia can kill during the night
                 for target_id, target_state in state.player_states.items():
                     # Can only kill alive players who are not mafia
-                    if target_state.is_alive and state.roles.get(target_id) != PlayerRole.MAFIA:
+                    if (
+                        target_state.is_alive
+                        and state.roles.get(target_id) != PlayerRole.MAFIA
+                    ):
                         legal_moves.append(
                             MafiaAction(
                                 player_id=player_id,
                                 action_type=ActionType.KILL,
                                 target_id=target_id,
                                 phase=state.game_phase,
-                                round_number=state.round_number
+                                round_number=state.round_number,
                             )
                         )
 
@@ -805,7 +904,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                                 action_type=ActionType.SAVE,
                                 target_id=target_id,
                                 phase=state.game_phase,
-                                round_number=state.round_number
+                                round_number=state.round_number,
                             )
                         )
 
@@ -820,7 +919,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                                 action_type=ActionType.INVESTIGATE,
                                 target_id=target_id,
                                 phase=state.game_phase,
-                                round_number=state.round_number
+                                round_number=state.round_number,
                             )
                         )
 
@@ -829,7 +928,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def check_game_status(cls, state: MafiaGameState) -> MafiaGameState:
         """Check if the game has ended and determine the winner.
-        
+
         This method checks win conditions:
             - Village wins if all mafia are dead
             - Mafia wins if they equal/outnumber villagers
@@ -851,22 +950,28 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         if new_state.alive_mafia_count == 0:
             new_state.game_status = "ended"
             new_state.winner = "village"
-            new_state.public_announcements.append("All mafia members have been eliminated! The village wins!")
+            new_state.public_announcements.append(
+                "All mafia members have been eliminated! The village wins!"
+            )
             logger.info("Game over: Village wins (all mafia eliminated)")
 
         # Game ends if mafia equals or outnumbers villagers (mafia wins)
         elif new_state.alive_mafia_count >= new_state.alive_village_count:
             new_state.game_status = "ended"
             new_state.winner = "mafia"
-            new_state.public_announcements.append("The mafia has won! They now equal or outnumber the villagers.")
+            new_state.public_announcements.append(
+                "The mafia has won! They now equal or outnumber the villagers."
+            )
             logger.info("Game over: Mafia wins (villagers outnumbered)")
 
         return new_state
 
     @classmethod
-    def filter_state_for_player(cls, state: MafiaGameState, player_id: str) -> dict[str, Any]:
+    def filter_state_for_player(
+        cls, state: MafiaGameState, player_id: str
+    ) -> dict[str, Any]:
         """Filter the state to include only information visible to a specific player.
-        
+
         This method implements information hiding, ensuring players only see
         information they should have access to based on their role and the
         game phase.
@@ -895,8 +1000,12 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         filtered_state["public_announcements"] = state.public_announcements
 
         # Information about who is alive
-        filtered_state["alive_players"] = [pid for pid, p_state in state.player_states.items() if p_state.is_alive]
-        filtered_state["dead_players"] = [pid for pid, p_state in state.player_states.items() if not p_state.is_alive]
+        filtered_state["alive_players"] = [
+            pid for pid, p_state in state.player_states.items() if p_state.is_alive
+        ]
+        filtered_state["dead_players"] = [
+            pid for pid, p_state in state.player_states.items() if not p_state.is_alive
+        ]
 
         # Player's own information
         if player_id in state.player_states:
@@ -905,7 +1014,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
             # Add investigation results for detectives
             if state.roles.get(player_id) == PlayerRole.DETECTIVE:
-                filtered_state["investigation_results"] = state.player_states[player_id].investigation_results
+                filtered_state["investigation_results"] = state.player_states[
+                    player_id
+                ].investigation_results
 
         # During voting, everyone can see the votes
         if state.game_phase == GamePhase.DAY_VOTING:
@@ -915,14 +1026,19 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         if state.roles.get(player_id) == PlayerRole.NARRATOR:
             filtered_state["full_state"] = {
                 "roles": {pid: role.value for pid, role in state.roles.items()},
-                "player_states": {pid: {
-                    "is_alive": p_state.is_alive,
-                    "role": state.roles.get(pid).value,
-                    "known_roles": {k: v.value for k, v in p_state.known_roles.items()},
-                    "investigation_results": p_state.investigation_results
-                } for pid, p_state in state.player_states.items()},
+                "player_states": {
+                    pid: {
+                        "is_alive": p_state.is_alive,
+                        "role": state.roles.get(pid).value,
+                        "known_roles": {
+                            k: v.value for k, v in p_state.known_roles.items()
+                        },
+                        "investigation_results": p_state.investigation_results,
+                    }
+                    for pid, p_state in state.player_states.items()
+                },
                 "killed_at_night": state.killed_at_night,
-                "saved_at_night": state.saved_at_night
+                "saved_at_night": state.saved_at_night,
             }
 
         return filtered_state

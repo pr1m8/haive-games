@@ -15,11 +15,13 @@ from pydantic import BaseModel, Field, field_validator, root_validator
 
 class ShipType(str, Enum):
     """Ship types in Battleship."""
+
     CARRIER = "Carrier"
     BATTLESHIP = "Battleship"
     CRUISER = "Cruiser"
     SUBMARINE = "Submarine"
     DESTROYER = "Destroyer"
+
 
 # Ship sizes by type
 SHIP_SIZES = {
@@ -27,11 +29,13 @@ SHIP_SIZES = {
     ShipType.BATTLESHIP: 4,
     ShipType.CRUISER: 3,
     ShipType.SUBMARINE: 3,
-    ShipType.DESTROYER: 2
+    ShipType.DESTROYER: 2,
 }
+
 
 class Coordinates(BaseModel):
     """Represents a coordinate on the board."""
+
     row: int = Field(..., ge=0, le=9, description="Row index (0-9)")
     col: int = Field(..., ge=0, le=9, description="Column index (0-9)")
 
@@ -43,8 +47,10 @@ class Coordinates(BaseModel):
         """String representation of coordinates."""
         return f"({self.row}, {self.col})"
 
+
 class Ship(BaseModel):
     """Represents a ship on the board."""
+
     ship_type: ShipType
     size: int = Field(..., description="Size of the ship")
     coordinates: list[Coordinates] = Field(default_factory=list)
@@ -63,8 +69,10 @@ class Ship(BaseModel):
         """String representation of the ship."""
         return f"{self.ship_type} ({self.size}): {[str(c) for c in self.coordinates]}"
 
+
 class ShipPlacement(BaseModel):
     """Represents a ship placement command."""
+
     ship_type: ShipType
     coordinates: list[Coordinates]
 
@@ -90,8 +98,10 @@ class ShipPlacement(BaseModel):
         """String representation of the placement."""
         return f"{self.ship_type} at {[str(c) for c in self.coordinates]}"
 
+
 class ShipPlacementWrapper(BaseModel):
     """Wrapper for a list of ship placements returned by LLM."""
+
     placements: list[ShipPlacement] = Field(..., description="List of ship placements")
 
     @root_validator(skip_on_failure=True)
@@ -109,24 +119,32 @@ class ShipPlacementWrapper(BaseModel):
             # Find missing ship types
             missing_types = set(all_ship_types) - set(ship_types)
             if missing_types:
-                raise ValueError(f"Missing ship types: {', '.join(t.value for t in missing_types)}")
+                raise ValueError(
+                    f"Missing ship types: {', '.join(t.value for t in missing_types)}"
+                )
 
             # Find duplicate ship types
             duplicates = [t for t in ship_types if ship_types.count(t) > 1]
             if duplicates:
-                raise ValueError(f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}")
+                raise ValueError(
+                    f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}"
+                )
 
         return values
 
+
 class MoveResult(str, Enum):
     """Possible results of a move."""
+
     HIT = "hit"
     MISS = "miss"
     SUNK = "sunk"
     INVALID = "invalid"
 
+
 class MoveCommand(BaseModel):
     """Represents an attack command."""
+
     row: int = Field(..., ge=0, le=9)
     col: int = Field(..., ge=0, le=9)
 
@@ -138,8 +156,10 @@ class MoveCommand(BaseModel):
         """String representation of the move."""
         return f"Attack ({self.row}, {self.col})"
 
+
 class MoveOutcome(BaseModel):
     """Outcome of a move."""
+
     row: int
     col: int
     result: MoveResult
@@ -152,10 +172,14 @@ class MoveOutcome(BaseModel):
             result += f" - {self.sunk_ship} sunk!"
         return result
 
+
 class Analysis(BaseModel):
     """Strategic analysis of the game state."""
+
     analysis: str = Field(..., description="Strategic analysis text")
-    priority_targets: list[Coordinates] | None = Field(default_factory=list, description="Priority targets for next attacks")
+    priority_targets: list[Coordinates] | None = Field(
+        default_factory=list, description="Priority targets for next attacks"
+    )
 
     @field_validator("priority_targets")
     @classmethod
@@ -176,14 +200,22 @@ class Analysis(BaseModel):
 
         return processed_targets
 
+
 class PlayerBoard(BaseModel):
     """Represents a player's board state."""
+
     ships: list[Ship] = Field(default_factory=list)
     hits: list[Coordinates] = Field(default_factory=list)  # Hits by opponent
     misses: list[Coordinates] = Field(default_factory=list)  # Misses by opponent
-    attacks: list[Coordinates] = Field(default_factory=list)  # All attacks made by this player
-    successful_hits: list[Coordinates] = Field(default_factory=list)  # Successful hits made by player
-    failed_attacks: list[Coordinates] = Field(default_factory=list)  # Missed attacks made by player
+    attacks: list[Coordinates] = Field(
+        default_factory=list
+    )  # All attacks made by this player
+    successful_hits: list[Coordinates] = Field(
+        default_factory=list
+    )  # Successful hits made by player
+    failed_attacks: list[Coordinates] = Field(
+        default_factory=list
+    )  # Missed attacks made by player
     sunk_ships: list[ShipType] = Field(default_factory=list)  # Ships sunk by opponent
 
     def is_valid_placement(self, placement: ShipPlacement) -> bool:
@@ -213,7 +245,9 @@ class PlayerBoard(BaseModel):
 
         # Check if ship overlaps with existing ships
         proposed_coords = {(c.row, c.col) for c in placement.coordinates}
-        existing_coords = {(c.row, c.col) for ship in self.ships for c in ship.coordinates}
+        existing_coords = {
+            (c.row, c.col) for ship in self.ships for c in ship.coordinates
+        }
 
         if proposed_coords.intersection(existing_coords):
             return False
@@ -228,7 +262,7 @@ class PlayerBoard(BaseModel):
         ship = Ship(
             ship_type=placement.ship_type,
             size=SHIP_SIZES[placement.ship_type],
-            coordinates=placement.coordinates
+            coordinates=placement.coordinates,
         )
 
         self.ships.append(ship)
@@ -259,7 +293,12 @@ class PlayerBoard(BaseModel):
                     if ship.is_sunk:
                         # Record ship as sunk
                         self.sunk_ships.append(ship.ship_type)
-                        return MoveOutcome(row=row, col=col, result=MoveResult.SUNK, sunk_ship=ship.ship_type)
+                        return MoveOutcome(
+                            row=row,
+                            col=col,
+                            result=MoveResult.SUNK,
+                            sunk_ship=ship.ship_type,
+                        )
 
                     return MoveOutcome(row=row, col=col, result=MoveResult.HIT)
 
@@ -275,8 +314,10 @@ class PlayerBoard(BaseModel):
         """Get all positions occupied by ships."""
         return [(c.row, c.col) for ship in self.ships for c in ship.coordinates]
 
+
 class GamePhase(str, Enum):
     """Game phases."""
+
     SETUP = "setup"
     PLAYING = "playing"
     ENDED = "ended"

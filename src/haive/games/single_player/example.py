@@ -1,8 +1,6 @@
-
-
 def run_interactive_game(agent: SinglePlayerGameAgent, commands: List[str] = None):
     """Run an interactive single-player game.
-    
+
     Args:
         agent: The game agent
         commands: Optional list of commands to execute (for testing)
@@ -89,7 +87,7 @@ def run_interactive_game(agent: SinglePlayerGameAgent, commands: List[str] = Non
 
 def run_auto_game(agent: SinglePlayerGameAgent):
     """Run a fully automated single-player game.
-    
+
     Args:
         agent: The game agent
     """
@@ -102,10 +100,7 @@ def run_auto_game(agent: SinglePlayerGameAgent):
 
     # Stream through the game steps
     for step in agent.app.stream(
-        state_dict,
-        config=agent.runnable_config,
-        debug=True,
-        stream_mode="values"
+        state_dict, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
         # Visualize the game state
         agent.visualize_state(step)
@@ -122,4 +117,3 @@ def run_auto_game(agent: SinglePlayerGameAgent):
 
     # Save state history
     agent.save_state_history()
-

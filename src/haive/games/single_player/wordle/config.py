@@ -1,21 +1,28 @@
 from typing import Any
 
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
 from haive.games.framework.base import GameConfig
 
-from .models import WordConnectionsAnalysis, WordConnectionsPlayerDecision, WordConnectionsState
+from .models import (
+    WordConnectionsAnalysis,
+    WordConnectionsPlayerDecision,
+    WordConnectionsState,
+)
 
 # Define the prompts for the agent
 
+
 def generate_move_prompt() -> ChatPromptTemplate:
     """Generate a prompt for making a move in Word Connections."""
-    return ChatPromptTemplate.from_messages([
-        ("system",
-            """You are an expert at the Word Connections puzzle game. In this game, you must identify groups of four words that share a common theme or category.
+    return ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert at the Word Connections puzzle game. In this game, you must identify groups of four words that share a common theme or category.
 
             The game presents a 4x4 grid containing 16 words. Your objective is to correctly group these into four distinct categories of four words each.
             
@@ -41,21 +48,25 @@ def generate_move_prompt() -> ChatPromptTemplate:
             - Learn from incorrect attempts - they provide valuable clues
             
             The player will see your reasoning, so explain your thought process clearly and comprehensively.
-            """
-        ),
-        ("human",
-            "Current Game State:\n"
-            "{board}\n\n"
-            "Choose the best group of 4 words that you believe form a category. Think step by step about all possible connections. Be thorough in your analysis and don't rush to conclusions."
-        )
-    ])
+            """,
+            ),
+            (
+                "human",
+                "Current Game State:\n"
+                "{board}\n\n"
+                "Choose the best group of 4 words that you believe form a category. Think step by step about all possible connections. Be thorough in your analysis and don't rush to conclusions.",
+            ),
+        ]
+    )
 
 
 def generate_analysis_prompt() -> ChatPromptTemplate:
     """Generate a prompt for analyzing a Word Connections position."""
-    return ChatPromptTemplate.from_messages([
-        ("system",
-            """You are a Word Connections puzzle expert and analyst. Your job is to carefully analyze the current board state and provide strategic insights.
+    return ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a Word Connections puzzle expert and analyst. Your job is to carefully analyze the current board state and provide strategic insights.
             
             For this analysis, think more deeply than just finding the immediate connections. Consider:
             
@@ -74,20 +85,22 @@ def generate_analysis_prompt() -> ChatPromptTemplate:
             - Words that belong to specialized categories
             
             Your analysis should help the player make better decisions by understanding the puzzle more deeply.
-            """
-        ),
-        ("human",
-            "Current Game State:\n"
-            "{board}\n\n"
-            "Recent Moves:\n{move_history}\n\n"
-            "Provide a detailed analysis including:\n"
-            "1. Potential groups of words that might form categories\n"
-            "2. Words that seem ambiguous or difficult to categorize\n"
-            "3. Patterns you observe in the remaining words\n"
-            "4. Analysis of why previous attempts may have failed\n"
-            "5. Strategic recommendations for the next move"
-        )
-    ])
+            """,
+            ),
+            (
+                "human",
+                "Current Game State:\n"
+                "{board}\n\n"
+                "Recent Moves:\n{move_history}\n\n"
+                "Provide a detailed analysis including:\n"
+                "1. Potential groups of words that might form categories\n"
+                "2. Words that seem ambiguous or difficult to categorize\n"
+                "3. Patterns you observe in the remaining words\n"
+                "4. Analysis of why previous attempts may have failed\n"
+                "5. Strategic recommendations for the next move",
+            ),
+        ]
+    )
 
 
 # Define the AugLLM configurations
@@ -96,18 +109,20 @@ aug_llm_configs = {
         name="player_move",
         llm_config=AzureLLMConfig(model="gpt-4o"),
         prompt_template=generate_move_prompt(),
-        structured_output_model=WordConnectionsPlayerDecision
+        structured_output_model=WordConnectionsPlayerDecision,
     ),
     "game_analyzer": AugLLMConfig(
         name="game_analyzer",
         llm_config=AzureLLMConfig(model="gpt-4o"),
         prompt_template=generate_analysis_prompt(),
-        structured_output_model=WordConnectionsAnalysis
-    )
+        structured_output_model=WordConnectionsAnalysis,
+    ),
 }
+
 
 class WordConnectionsAgentConfig(GameConfig):
     """Configuration for the Word Connections agent."""
+
     state_schema: type = Field(default=WordConnectionsState)
     aug_llm_configs: dict[str, AugLLMConfig] = Field(
         default=aug_llm_configs, description="Config for the Word Connections agent."
@@ -115,9 +130,7 @@ class WordConnectionsAgentConfig(GameConfig):
     enable_analysis: bool = Field(
         default=True, description="Whether to enable analysis."
     )
-    visualize: bool = Field(
-        default=True, description="Whether to visualize the game."
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game.")
     auto_submit: bool = Field(
         default=False, description="Whether to automatically submit selections."
     )
@@ -125,7 +138,8 @@ class WordConnectionsAgentConfig(GameConfig):
         default="internal", description="Source of the game data ('internal' or 'nyt')."
     )
     categories: list[str] = Field(
-        default_factory=list, description="Specific categories to use (if empty, use random)."
+        default_factory=list,
+        description="Specific categories to use (if empty, use random).",
     )
 
     # Examples of real connections puzzles
@@ -136,31 +150,31 @@ class WordConnectionsAgentConfig(GameConfig):
                     "Units of weight": ["OUNCE", "POUND", "TON", "GRAM"],
                     "High winds": ["GALE", "TORNADO", "CYCLONE", "HURRICANE"],
                     "Financial indicators": ["DOW", "S&P", "NASDAQ", "NYSE"],
-                    "Parts of a play": ["ACT", "SCENE", "SCRIPT", "INTERMISSION"]
+                    "Parts of a play": ["ACT", "SCENE", "SCRIPT", "INTERMISSION"],
                 },
                 "difficulties": {
                     "Units of weight": "yellow",
                     "High winds": "green",
                     "Financial indicators": "blue",
-                    "Parts of a play": "purple"
-                }
+                    "Parts of a play": "purple",
+                },
             },
             {
                 "categories": {
                     "Card games": ["POKER", "BLACKJACK", "HEARTS", "BRIDGE"],
                     "Hair products": ["GEL", "SPRAY", "MOUSSE", "SHAMPOO"],
                     "Words meaning 'talk'": ["CHAT", "SPEAK", "CONVERSE", "ADDRESS"],
-                    "Things with shells": ["TURTLE", "NUT", "EGG", "TACO"]
+                    "Things with shells": ["TURTLE", "NUT", "EGG", "TACO"],
                 },
                 "difficulties": {
                     "Card games": "yellow",
                     "Hair products": "green",
                     "Words meaning 'talk'": "blue",
-                    "Things with shells": "purple"
-                }
-            }
+                    "Things with shells": "purple",
+                },
+            },
         ],
-        description="Examples of real Connections puzzles for reference."
+        description="Examples of real Connections puzzles for reference.",
     )
 
     @classmethod
@@ -172,7 +186,7 @@ class WordConnectionsAgentConfig(GameConfig):
             enable_analysis=True,
             visualize=True,
             auto_submit=False,
-            source="internal"
+            source="internal",
         )
 
     @classmethod
@@ -184,5 +198,5 @@ class WordConnectionsAgentConfig(GameConfig):
             enable_analysis=True,
             visualize=True,
             auto_submit=False,
-            source="nyt"
+            source="nyt",
         )

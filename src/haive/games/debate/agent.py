@@ -2,11 +2,11 @@
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.debate.config import DebateAgentConfig
 from haive.games.debate.models import DebatePhase, Participant, Statement, Topic
 from haive.games.debate.state import DebateState
@@ -25,10 +25,13 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize the debate with topic and participants."""
         # Extract debate topic if provided, otherwise use default
-        topic_data = state.get("topic", {
-            "title": "AI Ethics in Society",
-            "description": "Discuss the ethical implications of AI in modern society"
-        })
+        topic_data = state.get(
+            "topic",
+            {
+                "title": "AI Ethics in Society",
+                "description": "Discuss the ethical implications of AI in modern society",
+            },
+        )
 
         if isinstance(topic_data, str):
             topic_data = {"title": topic_data, "description": topic_data}
@@ -47,7 +50,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             format_type=self.config.debate_format,
             time_limit=self.config.time_limit,
             max_statements=self.config.max_statements,
-            allow_interruptions=self.config.allow_interruptions
+            allow_interruptions=self.config.allow_interruptions,
         )
 
         # Convert to dict for graph
@@ -64,8 +67,10 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             return state.participants[player_id].role
         return "debater"  # Default role
 
-   # src/haive/games/debate/agent.py (continued)
-    def prepare_move_context(self, state: DebateState, player_id: str) -> dict[str, Any]:
+    # src/haive/games/debate/agent.py (continued)
+    def prepare_move_context(
+        self, state: DebateState, player_id: str
+    ) -> dict[str, Any]:
         """Prepare context for a participant's move."""
         participant = state.participants.get(player_id)
         if not participant:
@@ -76,12 +81,17 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         formatted_recent = []
 
         for stmt in recent_statements:
-            speaker_name = state.participants.get(stmt.speaker_id, Participant(id=stmt.speaker_id, name=stmt.speaker_id, role="unknown")).name
+            speaker_name = state.participants.get(
+                stmt.speaker_id,
+                Participant(id=stmt.speaker_id, name=stmt.speaker_id, role="unknown"),
+            ).name
             formatted_recent.append(f"{speaker_name}: {stmt.content}")
 
         # Get this player's previous statements
         player_statements = [s for s in state.statements if s.speaker_id == player_id]
-        formatted_player = [f"{s.statement_type.capitalize()}: {s.content}" for s in player_statements]
+        formatted_player = [
+            f"{s.statement_type.capitalize()}: {s.content}" for s in player_statements
+        ]
 
         # Determine statement type based on phase
         statement_type = "statement"
@@ -96,7 +106,9 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         # Format based on role
         if participant.role == "moderator":
-            action_prompt = "provide guidance or ask a question to move the debate forward"
+            action_prompt = (
+                "provide guidance or ask a question to move the debate forward"
+            )
             if state.debate_phase in [DebatePhase.SETUP, DebatePhase.JUDGMENT]:
                 action_prompt = "summarize the current state and suggest next steps"
 
@@ -104,16 +116,23 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 "topic": state.topic.title,
                 "topic_description": state.topic.description,
                 "debate_phase": state.debate_phase,
-                "participants": "\n".join([f"{p.name} ({p.role})" for p in state.participants.values()]),
+                "participants": "\n".join(
+                    [f"{p.name} ({p.role})" for p in state.participants.values()]
+                ),
                 "recent_statements": "\n".join(formatted_recent),
-                "current_speaker": state.participants.get(state.current_speaker, Participant(id="unknown", name="Unknown", role="unknown")).name,
-                "action_prompt": action_prompt
+                "current_speaker": state.participants.get(
+                    state.current_speaker,
+                    Participant(id="unknown", name="Unknown", role="unknown"),
+                ).name,
+                "action_prompt": action_prompt,
             }
 
         if participant.role == "judge":
             # For trial format
-            all_statements = [f"{state.participants.get(s.speaker_id, Participant(id=s.speaker_id, name=s.speaker_id, role='unknown')).name}: {s.content}"
-                            for s in state.statements]
+            all_statements = [
+                f"{state.participants.get(s.speaker_id, Participant(id=s.speaker_id, name=s.speaker_id, role='unknown')).name}: {s.content}"
+                for s in state.statements
+            ]
 
             action_prompt = "provide your analysis of the arguments presented so far"
             if state.debate_phase == DebatePhase.JUDGMENT:
@@ -125,16 +144,26 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 "debate_phase": state.debate_phase,
                 "all_statements": "\n".join(all_statements),
                 "key_arguments": self._extract_key_arguments(state),
-                "action_prompt": action_prompt
+                "action_prompt": action_prompt,
             }
 
         if participant.role in ["prosecutor", "defense"]:
             # For trial format
-            opponent_role = "defense" if participant.role == "prosecutor" else "prosecutor"
-            opponent_claims = [s.content for s in state.statements
-                              if state.participants.get(s.speaker_id, Participant(id="", name="", role="")).role == opponent_role]
+            opponent_role = (
+                "defense" if participant.role == "prosecutor" else "prosecutor"
+            )
+            opponent_claims = [
+                s.content
+                for s in state.statements
+                if state.participants.get(
+                    s.speaker_id, Participant(id="", name="", role="")
+                ).role
+                == opponent_role
+            ]
 
-            evidence = "Evidence is still being collected" # Would be populated from state
+            evidence = (
+                "Evidence is still being collected"  # Would be populated from state
+            )
 
             return {
                 "topic": state.topic.title,
@@ -143,8 +172,12 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 "witness_statements": self._format_witness_statements(state),
                 "recent_statements": "\n".join(formatted_recent),
                 "statement_type": statement_type,
-                "prosecution_claims": "\n".join(opponent_claims) if participant.role == "defense" else "",
-                "client_info": "Defendant information" if participant.role == "defense" else ""
+                "prosecution_claims": (
+                    "\n".join(opponent_claims) if participant.role == "defense" else ""
+                ),
+                "client_info": (
+                    "Defendant information" if participant.role == "defense" else ""
+                ),
             }
 
         # Standard debater
@@ -155,7 +188,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             "position": participant.position or "neutral",
             "recent_statements": "\n".join(formatted_recent),
             "your_statements": "\n".join(formatted_player),
-            "statement_type": statement_type
+            "statement_type": statement_type,
         }
 
     def _extract_key_arguments(self, state: DebateState) -> str:
@@ -169,9 +202,17 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 continue
 
             if participant.position == "pro":
-                pro_args.append(f"- {stmt.content[:100]}..." if len(stmt.content) > 100 else f"- {stmt.content}")
+                pro_args.append(
+                    f"- {stmt.content[:100]}..."
+                    if len(stmt.content) > 100
+                    else f"- {stmt.content}"
+                )
             elif participant.position == "con":
-                con_args.append(f"- {stmt.content[:100]}..." if len(stmt.content) > 100 else f"- {stmt.content}")
+                con_args.append(
+                    f"- {stmt.content[:100]}..."
+                    if len(stmt.content) > 100
+                    else f"- {stmt.content}"
+                )
 
         result = "PRO Arguments:\n" + "\n".join(pro_args[-3:])  # Last 3 arguments
         result += "\n\nCON Arguments:\n" + "\n".join(con_args[-3:])
@@ -201,7 +242,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 "content": response.content,
                 "statement_type": response.statement_type,
                 "target_id": response.target_id,
-                "references": response.references
+                "references": response.references,
             }
 
         # Handle other response types based on role
@@ -211,13 +252,13 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                     "type": "vote",
                     "vote_value": response.get("vote_value"),
                     "target_id": response.get("target_id"),
-                    "reason": response.get("reason", "")
+                    "reason": response.get("reason", ""),
                 }
             if "action" in response and role == "moderator":
                 return {
                     "type": "moderation",
                     "action": response.get("action"),
-                    "note": response.get("note", "")
+                    "note": response.get("note", ""),
                 }
 
         # Fallback: treat as general statement
@@ -225,11 +266,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         if hasattr(response, "content"):
             content = response.content
 
-        return {
-            "type": "statement",
-            "content": content,
-            "statement_type": "general"
-        }
+        return {"type": "statement", "content": content, "statement_type": "general"}
 
     def debate_setup(self, state: dict[str, Any]) -> Command:
         """Handle debate setup phase."""
@@ -252,7 +289,9 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         updated_state = self.state_manager.advance_phase(state_obj)
 
         if hasattr(updated_state, "model_dump"):
-            return Command(update=updated_state.model_dump(), goto="handle_participant_turn")
+            return Command(
+                update=updated_state.model_dump(), goto="handle_participant_turn"
+            )
         return Command(update=updated_state.dict(), goto="handle_participant_turn")
 
     def handle_participant_turn(self, state: dict[str, Any]) -> Command:
@@ -260,7 +299,10 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         state_obj = DebateState(**state) if isinstance(state, dict) else state
 
         # Check for game end
-        if state_obj.game_status != "ongoing" or state_obj.debate_phase == DebatePhase.CONCLUSION:
+        if (
+            state_obj.game_status != "ongoing"
+            or state_obj.debate_phase == DebatePhase.CONCLUSION
+        ):
             if hasattr(state_obj, "model_dump"):
                 return Command(update=state_obj.model_dump(), goto=END)
             return Command(update=state_obj.dict(), goto=END)
@@ -271,11 +313,18 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             # No current speaker, advance phase
             updated_state = self.state_manager.advance_phase(state_obj)
             if hasattr(updated_state, "model_dump"):
-                return Command(update=updated_state.model_dump(), goto="handle_phase_transition")
+                return Command(
+                    update=updated_state.model_dump(), goto="handle_phase_transition"
+                )
             return Command(update=updated_state.dict(), goto="handle_phase_transition")
 
         # Check if special handling needed for moderator
-        if state_obj.participants.get(current_speaker, Participant(id="", name="", role="")).role == "moderator":
+        if (
+            state_obj.participants.get(
+                current_speaker, Participant(id="", name="", role="")
+            ).role
+            == "moderator"
+        ):
             updated_state = self.handle_moderator_turn(state_obj)
             next_step = self.determine_next_step(updated_state)
             if hasattr(updated_state, "model_dump"):
@@ -286,9 +335,13 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         participant = state_obj.participants.get(current_speaker)
         if not participant:
             # Invalid participant, skip turn
-            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(state_obj.turn_order)
+            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(
+                state_obj.turn_order
+            )
             if hasattr(state_obj, "model_dump"):
-                return Command(update=state_obj.model_dump(), goto="handle_participant_turn")
+                return Command(
+                    update=state_obj.model_dump(), goto="handle_participant_turn"
+                )
             return Command(update=state_obj.dict(), goto="handle_participant_turn")
 
         # Get the appropriate engine for this role
@@ -308,9 +361,13 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         if not engine:
             # Still no engine, skip turn
-            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(state_obj.turn_order)
+            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(
+                state_obj.turn_order
+            )
             if hasattr(state_obj, "model_dump"):
-                return Command(update=state_obj.model_dump(), goto="handle_participant_turn")
+                return Command(
+                    update=state_obj.model_dump(), goto="handle_participant_turn"
+                )
             return Command(update=state_obj.dict(), goto="handle_participant_turn")
 
         # Generate move
@@ -320,7 +377,9 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             move = self.extract_move(response, role)
 
             # Apply move
-            updated_state = self.state_manager.apply_move(state_obj, current_speaker, move)
+            updated_state = self.state_manager.apply_move(
+                state_obj, current_speaker, move
+            )
 
             # Check game status
             updated_state = self.state_manager.check_game_status(updated_state)
@@ -335,9 +394,13 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         except Exception as e:
             print(f"Error in participant turn: {e}")
             # Skip turn on error
-            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(state_obj.turn_order)
+            state_obj.current_speaker_idx = (state_obj.current_speaker_idx + 1) % len(
+                state_obj.turn_order
+            )
             if hasattr(state_obj, "model_dump"):
-                return Command(update=state_obj.model_dump(), goto="handle_participant_turn")
+                return Command(
+                    update=state_obj.model_dump(), goto="handle_participant_turn"
+                )
             return Command(update=state_obj.dict(), goto="handle_participant_turn")
 
     def handle_moderator_turn(self, state: DebateState) -> DebateState:
@@ -345,13 +408,17 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         moderator_id = state.moderator_id
         if not moderator_id:
             # No designated moderator, skip
-            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(state.turn_order)
+            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(
+                state.turn_order
+            )
             return state
 
         engine = self.get_engine_for_player("moderator", "moderate")
         if not engine:
             # No moderator engine, skip
-            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(state.turn_order)
+            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(
+                state.turn_order
+            )
             return state
 
         try:
@@ -363,7 +430,10 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             updated_state = self.state_manager.apply_move(state, moderator_id, move)
 
             # Special handling for moderator actions
-            if move.get("type") == "moderation" and move.get("action") == "advance_phase":
+            if (
+                move.get("type") == "moderation"
+                and move.get("action") == "advance_phase"
+            ):
                 updated_state = self.state_manager.advance_phase(updated_state)
 
             return updated_state
@@ -371,20 +441,31 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         except Exception as e:
             print(f"Error in moderator turn: {e}")
             # Skip turn on error
-            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(state.turn_order)
+            state.current_speaker_idx = (state.current_speaker_idx + 1) % len(
+                state.turn_order
+            )
             return state
 
     def determine_next_step(self, state: DebateState) -> str:
         """Determine the next step in the debate flow."""
         # End if game over
-        if state.game_status != "ongoing" or state.debate_phase == DebatePhase.CONCLUSION:
+        if (
+            state.game_status != "ongoing"
+            or state.debate_phase == DebatePhase.CONCLUSION
+        ):
             return END
 
         # Check phase completion
-        if state.debate_phase in [DebatePhase.OPENING_STATEMENTS, DebatePhase.CLOSING_STATEMENTS]:
+        if state.debate_phase in [
+            DebatePhase.OPENING_STATEMENTS,
+            DebatePhase.CLOSING_STATEMENTS,
+        ]:
             # Count statements in current phase
-            phase_statements = [s for s in state.statements
-                               if getattr(s, "timestamp", "").startswith(state.debate_phase)]
+            phase_statements = [
+                s
+                for s in state.statements
+                if getattr(s, "timestamp", "").startswith(state.debate_phase)
+            ]
 
             participant_count = len(state.participants)
             if len(phase_statements) >= participant_count:
@@ -410,14 +491,19 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             updated_state.current_speaker_idx = 0
 
             # Check if game has ended
-            if updated_state.game_status != "ongoing" or updated_state.debate_phase == DebatePhase.CONCLUSION:
+            if (
+                updated_state.game_status != "ongoing"
+                or updated_state.debate_phase == DebatePhase.CONCLUSION
+            ):
                 if hasattr(updated_state, "model_dump"):
                     return Command(update=updated_state.model_dump(), goto=END)
                 return Command(update=updated_state.dict(), goto=END)
 
             # Continue with participant turns in new phase
             if hasattr(updated_state, "model_dump"):
-                return Command(update=updated_state.model_dump(), goto="handle_participant_turn")
+                return Command(
+                    update=updated_state.model_dump(), goto="handle_participant_turn"
+                )
             return Command(update=updated_state.dict(), goto="handle_participant_turn")
 
         except Exception as e:
@@ -445,9 +531,19 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         if state_obj.statements:
             print("\n📝 Recent Statements:")
             for i, stmt in enumerate(state_obj.statements[-5:]):
-                participant = state_obj.participants.get(stmt.speaker_id, Participant(id=stmt.speaker_id, name=f"Unknown-{stmt.speaker_id}", role="unknown"))
-                print(f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content[:100]}..."
-                     if len(stmt.content) > 100 else f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content}")
+                participant = state_obj.participants.get(
+                    stmt.speaker_id,
+                    Participant(
+                        id=stmt.speaker_id,
+                        name=f"Unknown-{stmt.speaker_id}",
+                        role="unknown",
+                    ),
+                )
+                print(
+                    f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content[:100]}..."
+                    if len(stmt.content) > 100
+                    else f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content}"
+                )
 
         # Show votes in voting phase
         if state_obj.debate_phase == DebatePhase.VOTING and state_obj.votes:
@@ -455,11 +551,29 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             for voter_id, vote_list in state_obj.votes.items():
                 if not vote_list:
                     continue
-                voter = state_obj.participants.get(voter_id, Participant(id=voter_id, name=f"Unknown-{voter_id}", role="unknown"))
+                voter = state_obj.participants.get(
+                    voter_id,
+                    Participant(
+                        id=voter_id, name=f"Unknown-{voter_id}", role="unknown"
+                    ),
+                )
                 latest_vote = vote_list[-1]
-                target = state_obj.participants.get(latest_vote.target_id, Participant(id=latest_vote.target_id, name=f"Unknown-{latest_vote.target_id}", role="unknown")) if latest_vote.target_id else None
+                target = (
+                    state_obj.participants.get(
+                        latest_vote.target_id,
+                        Participant(
+                            id=latest_vote.target_id,
+                            name=f"Unknown-{latest_vote.target_id}",
+                            role="unknown",
+                        ),
+                    )
+                    if latest_vote.target_id
+                    else None
+                )
                 if target:
-                    print(f"- {voter.name} voted for {target.name}: {latest_vote.vote_value}")
+                    print(
+                        f"- {voter.name} voted for {target.name}: {latest_vote.vote_value}"
+                    )
                 else:
                     print(f"- {voter.name} voted: {latest_vote.vote_value}")
 
@@ -467,7 +581,9 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
     def setup_workflow(self) -> None:
         """Setup the debate workflow."""
-        gb = DynamicGraph(components=[self.config], state_schema=self.config.state_schema)
+        gb = DynamicGraph(
+            components=[self.config], state_schema=self.config.state_schema
+        )
 
         # Add the nodes
         gb.add_node("initialize", self.initialize_game)

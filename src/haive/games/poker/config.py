@@ -13,7 +13,7 @@ game parameters through a Pydantic-based configuration system.
 
 Example:
     >>> from poker.config import PokerAgentConfig
-    >>> 
+    >>>
     >>> # Create default config for 6 players
     >>> config = PokerAgentConfig.default_config(
     ...     player_names=["P1", "P2", "P3", "P4", "P5", "P6"],
@@ -25,10 +25,10 @@ Example:
 
 from typing import Any
 
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.poker.engines import (
     create_default_agent_configs,
     get_available_providers,
@@ -76,59 +76,44 @@ class PokerAgentConfig(AgentConfig):
     """
 
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=dict,
-        description="Configuration for different poker agents"
+        default_factory=dict, description="Configuration for different poker agents"
     )
 
     player_names: list[str] = Field(
-        default=["Alice", "Bob", "Charlie", "Dave"],
-        description="List of player names"
+        default=["Alice", "Bob", "Charlie", "Dave"], description="List of player names"
     )
 
     state_schema: type[BaseModel] = Field(
-        default=PokerState,
-        description="State schema for the poker game"
+        default=PokerState, description="State schema for the poker game"
     )
 
     state_schema_manager: Any = Field(
         default=PokerStateManager(),
-        description="State schema manager for the poker game"
+        description="State schema manager for the poker game",
     )
 
     starting_chips: int = Field(
-        default=1000,
-        description="Starting chips for each player"
+        default=1000, description="Starting chips for each player"
     )
 
-    small_blind: int = Field(
-        default=50,
-        description="Small blind amount"
-    )
+    small_blind: int = Field(default=50, description="Small blind amount")
 
-    big_blind: int = Field(
-        default=100,
-        description="Big blind amount"
-    )
+    big_blind: int = Field(default=100, description="Big blind amount")
 
-    max_hands: int = Field(
-        default=10,
-        description="Maximum number of hands to play"
-    )
+    max_hands: int = Field(default=10, description="Maximum number of hands to play")
 
     enable_detailed_analysis: bool = Field(
-        default=True,
-        description="Whether to include detailed hand analysis in the log"
+        default=True, description="Whether to include detailed hand analysis in the log"
     )
 
     save_game_history: bool = Field(
-        default=True,
-        description="Whether to save game history"
+        default=True, description="Whether to save game history"
     )
 
     @classmethod
     def default_config(cls, **kwargs) -> "PokerAgentConfig":
         """Create a default configuration for poker agents.
-        
+
         This class method generates a default configuration with reasonable
         starting values for all parameters. Any parameter can be overridden
         by passing it as a keyword argument.
@@ -157,9 +142,6 @@ class PokerAgentConfig(AgentConfig):
             kwargs["engines"] = engines
 
         # Create default poker agent config
-        config = cls(
-            name="poker_game",
-            **kwargs
-        )
+        config = cls(name="poker_game", **kwargs)
 
         return config

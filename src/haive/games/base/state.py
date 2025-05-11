@@ -24,10 +24,10 @@ from pydantic import BaseModel, Field
 
 class GameState(BaseModel, ABC):
     """Base game state that all game states should inherit from.
-    
+
     This class defines the core state attributes that all games need to track,
     including the current turn, game status, move history, and error handling.
-    
+
     Attributes:
         players (List[str]): List of players in the game.
         turn (str): Current player's turn.
@@ -36,30 +36,17 @@ class GameState(BaseModel, ABC):
         error_message (Optional[str]): Error message if any error occurred.
     """
 
-    players: list[str] = Field(
-        default_factory=list,
-        description="List of players"
-    )
+    players: list[str] = Field(default_factory=list, description="List of players")
 
-    turn: str = Field(
-        default_factory=str,
-        description="Current player's turn"
-    )
+    turn: str = Field(default_factory=str, description="Current player's turn")
 
-    game_status: str = Field(
-        default="ongoing",
-        description="Status of the game"
-    )
+    game_status: str = Field(default="ongoing", description="Status of the game")
 
     move_history: list[Any] = Field(
-        default_factory=list,
-        description="History of moves"
+        default_factory=list, description="History of moves"
     )
 
-    error_message: str | None = Field(
-        default=None,
-        description="Error message if any"
-    )
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     class Config:
         arbitrary_types_allowed = True
@@ -68,10 +55,10 @@ class GameState(BaseModel, ABC):
     @abstractmethod
     def initialize(cls, **kwargs) -> "GameState":
         """Abstract method that all subclasses must implement to initialize the game state.
-        
+
         Returns:
             GameState: A fully initialized game state object.
-        
+
         Example:
             >>> return Connect4State.initialize(first_player="red")
         """

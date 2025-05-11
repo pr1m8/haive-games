@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from haive.core.engine.agent.persistence.memory_config import MemoryCheckpointerConfig
+
 from haive.games.monopoly.agent import MonopolyAgent
 from haive.games.monopoly.config import MonopolyAgentConfig
 from haive.games.monopoly.state_manager import MonopolyStateManager
@@ -25,16 +26,16 @@ def setup_monopoly_agent(
     player_index: int = 1,
     model: str = "gpt-4o",
     temperature: float = 0.7,
-    debug: bool = False
+    debug: bool = False,
 ) -> MonopolyAgent:
     """Set up a Monopoly agent integrated with the existing game.
-    
+
     Args:
         player_index: Index of the player to control (0-based)
         model: LLM model to use
         temperature: Temperature for generation
         debug: Enable debug logging
-        
+
     Returns:
         Configured MonopolyAgent instance
     """
@@ -49,7 +50,7 @@ def setup_monopoly_agent(
         model=model,
         temperature=temperature,
         debug=debug,
-        persistence=MemoryCheckpointerConfig()
+        persistence=MemoryCheckpointerConfig(),
     )
 
     # Initialize the agent
@@ -69,9 +70,10 @@ def setup_monopoly_agent(
     logger.info(f"Monopoly agent initialized with thread ID: {thread_id}")
     return agent
 
+
 def _patch_game_for_agent(agent: MonopolyAgent, player_index: int) -> None:
     """Patch the game functions to use the agent for decision making.
-    
+
     Args:
         agent: The MonopolyAgent instance
         player_index: The player index to control
@@ -185,7 +187,9 @@ def _patch_game_for_agent(agent: MonopolyAgent, player_index: int) -> None:
                 """Patched build function to log activity."""
                 logger.info("Agent building house")
                 result = original_functions["build"]()
-                agent.state_manager.add_event(f"Player {player_index + 1} built a house")
+                agent.state_manager.add_event(
+                    f"Player {player_index + 1} built a house"
+                )
                 return result
 
             functions_module.build = patched_build
@@ -198,7 +202,9 @@ def _patch_game_for_agent(agent: MonopolyAgent, player_index: int) -> None:
                 """Patched mortgage function to log activity."""
                 logger.info("Agent mortgaging property")
                 result = original_functions["mortgage"]()
-                agent.state_manager.add_event(f"Player {player_index + 1} mortgaged a property")
+                agent.state_manager.add_event(
+                    f"Player {player_index + 1} mortgaged a property"
+                )
                 return result
 
             functions_module.mortgage = patched_mortgage
@@ -211,7 +217,9 @@ def _patch_game_for_agent(agent: MonopolyAgent, player_index: int) -> None:
                 """Patched unmortgage function to log activity."""
                 logger.info("Agent unmortgaging property")
                 result = original_functions["unmortgage"]()
-                agent.state_manager.add_event(f"Player {player_index + 1} unmortgaged a property")
+                agent.state_manager.add_event(
+                    f"Player {player_index + 1} unmortgaged a property"
+                )
                 return result
 
             functions_module.unmortgage = patched_unmortgage
@@ -230,14 +238,17 @@ def _patch_game_for_agent(agent: MonopolyAgent, player_index: int) -> None:
             functions_module.endturn = patched_endturn
             logger.info("Patched 'endturn' function")
 
-        logger.info(f"Successfully patched game for agent to control player {player_index + 1}")
+        logger.info(
+            f"Successfully patched game for agent to control player {player_index + 1}"
+        )
 
     except Exception as e:
         logger.error(f"Error patching game for agent: {e}")
 
+
 def _get_game_state() -> dict[str, Any]:
     """Extract the current game state from the game modules.
-    
+
     Returns:
         Dictionary with game state information
     """
@@ -245,7 +256,7 @@ def _get_game_state() -> dict[str, Any]:
 
     try:
         # Look for key game state modules
-        for module_name, module in sys.modules.items():
+        for _module_name, module in sys.modules.items():
             # Check for player module
             if hasattr(module, "player") and isinstance(module.player, (list, tuple)):
                 game_state["player"] = module.player
@@ -272,13 +283,16 @@ def _get_game_state() -> dict[str, Any]:
         logger.error(f"Error getting game state: {e}")
         return {}
 
-def _make_agent_decision(agent: MonopolyAgent, game_state: dict[str, Any]) -> dict[str, Any]:
+
+def _make_agent_decision(
+    agent: MonopolyAgent, game_state: dict[str, Any]
+) -> dict[str, Any]:
     """Use the agent to make a decision based on the current game state.
-    
+
     Args:
         agent: The MonopolyAgent instance
         game_state: The current game state
-        
+
     Returns:
         Decision dictionary
     """
@@ -303,14 +317,17 @@ def _make_agent_decision(agent: MonopolyAgent, game_state: dict[str, Any]) -> di
         logger.error(f"Error making agent decision: {e}")
         return {"error": str(e)}
 
-def _execute_decision(agent: MonopolyAgent, decision: dict[str, Any], functions_module) -> Any:
+
+def _execute_decision(
+    agent: MonopolyAgent, decision: dict[str, Any], functions_module
+) -> Any:
     """Execute the agent's decision by calling appropriate game functions.
-    
+
     Args:
         agent: The MonopolyAgent instance
         decision: The decision to execute
         functions_module: Module containing game functions
-        
+
     Returns:
         Result of the executed function
     """
@@ -335,7 +352,9 @@ def _execute_decision(agent: MonopolyAgent, decision: dict[str, Any], functions_
                 logger.info("Executing roll action")
                 return functions_module.roll()
 
-            if action_type == "pay_to_exit_jail" and hasattr(functions_module, "payjail"):
+            if action_type == "pay_to_exit_jail" and hasattr(
+                functions_module, "payjail"
+            ):
                 logger.info("Executing pay jail action")
                 return functions_module.payjail()
 

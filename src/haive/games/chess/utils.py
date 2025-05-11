@@ -6,16 +6,15 @@ This module provides helper functions for the chess game, including:
     - Move validation
 """
 
-
 import chess
 
 
 def determine_game_status(board: chess.Board) -> str:
     """Determine the current game status based on the board position.
-    
+
     Args:
         board: Chess board to analyze
-        
+
     Returns:
         String indicating the game status
     """
@@ -29,13 +28,14 @@ def determine_game_status(board: chess.Board) -> str:
         return "check"
     return "ongoing"
 
+
 def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
     """Generate an ASCII representation of the chess board.
-    
+
     Args:
         fen: FEN string representation of the board
         last_move: Last move in UCI notation (optional)
-        
+
     Returns:
         ASCII representation of the board
     """
@@ -65,13 +65,14 @@ def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
     # Join the lines and add the file coordinates
     return "\n".join(lines) + "\n" + file_coords
 
+
 def validate_move(fen: str, move_uci: str) -> tuple[bool, str | None, str | None]:
     """Validate a chess move.
-    
+
     Args:
         fen: FEN string of the current position
         move_uci: Move in UCI notation
-        
+
     Returns:
         Tuple of (is_valid, error_message, resulting_fen)
     """

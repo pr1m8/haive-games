@@ -13,11 +13,11 @@ The state model tracks:
 Example:
     >>> from mafia.state import MafiaGameState
     >>> from mafia.models import PlayerRole, GamePhase
-    >>> 
+    >>>
     >>> # Create a new game state
     >>> state = MafiaGameState(
     ...     players=["Player_1", "Player_2", "Narrator"],
-    ...     roles={"Player_1": PlayerRole.VILLAGER, 
+    ...     roles={"Player_1": PlayerRole.VILLAGER,
     ...            "Player_2": PlayerRole.MAFIA,
     ...            "Narrator": PlayerRole.NARRATOR},
     ...     game_phase=GamePhase.SETUP
@@ -43,7 +43,7 @@ from .models import (
 
 class MafiaGameState(MultiPlayerGameState):
     """State model for a Mafia game.
-    
+
     This class extends MultiPlayerGameState to provide Mafia-specific state
     tracking, including roles, votes, and game progression.
 
@@ -85,35 +85,69 @@ class MafiaGameState(MultiPlayerGameState):
 
     # Required fields from MultiPlayerGameState - declare them explicitly
     # to ensure they're properly recognized
-    players: list[str] = Field(default_factory=list, description="List of player names/IDs")
-    current_player_idx: int = Field(default=0, description="Index of current player in players list")
-    game_status: str = Field(default="ongoing", description="Status of the game (ongoing, ended)")
-    move_history: list[dict[str, Any]] = Field(default_factory=list, description="History of moves")
+    players: list[str] = Field(
+        default_factory=list, description="List of player names/IDs"
+    )
+    current_player_idx: int = Field(
+        default=0, description="Index of current player in players list"
+    )
+    game_status: str = Field(
+        default="ongoing", description="Status of the game (ongoing, ended)"
+    )
+    move_history: list[dict[str, Any]] = Field(
+        default_factory=list, description="History of moves"
+    )
     round_number: int = Field(default=0, description="Current round number")
-    player_data: dict[str, dict[str, Any]] = Field(default_factory=dict, description="Player-specific data")
-    public_state: dict[str, Any] = Field(default_factory=dict, description="Public game state visible to all players")
+    player_data: dict[str, dict[str, Any]] = Field(
+        default_factory=dict, description="Player-specific data"
+    )
+    public_state: dict[str, Any] = Field(
+        default_factory=dict, description="Public game state visible to all players"
+    )
     error_message: str | None = Field(default=None, description="Error message if any")
 
     # Override the game_phase field to use our enum
-    game_phase: GamePhase = Field(default=GamePhase.SETUP, description="Current phase of the game")
+    game_phase: GamePhase = Field(
+        default=GamePhase.SETUP, description="Current phase of the game"
+    )
 
     # Mafia-specific fields
-    roles: dict[str, PlayerRole] = Field(default_factory=dict, description="Player roles")
-    player_states: dict[str, PlayerState] = Field(default_factory=dict, description="Player states")
-    votes: dict[str, str] = Field(default_factory=dict, description="Player votes during voting phase")
-    action_history: list[dict[str, Any]] = Field(default_factory=list, description="History of actions")
-    public_announcements: list[str] = Field(default_factory=list, description="Public announcements")
+    roles: dict[str, PlayerRole] = Field(
+        default_factory=dict, description="Player roles"
+    )
+    player_states: dict[str, PlayerState] = Field(
+        default_factory=dict, description="Player states"
+    )
+    votes: dict[str, str] = Field(
+        default_factory=dict, description="Player votes during voting phase"
+    )
+    action_history: list[dict[str, Any]] = Field(
+        default_factory=list, description="History of actions"
+    )
+    public_announcements: list[str] = Field(
+        default_factory=list, description="Public announcements"
+    )
 
     # Counters for game status
-    alive_mafia_count: int = Field(default=0, description="Number of mafia members alive")
+    alive_mafia_count: int = Field(
+        default=0, description="Number of mafia members alive"
+    )
     alive_village_count: int = Field(default=0, description="Number of villagers alive")
     alive_doctor_count: int = Field(default=0, description="Number of doctors alive")
-    alive_detective_count: int = Field(default=0, description="Number of detectives alive")
+    alive_detective_count: int = Field(
+        default=0, description="Number of detectives alive"
+    )
 
     # Night action tracking
-    killed_at_night: str | None = Field(default=None, description="Player targeted by mafia")
-    saved_at_night: str | None = Field(default=None, description="Player saved by doctor")
-    night_deaths: list[str] = Field(default_factory=list, description="Players who died during the night")
+    killed_at_night: str | None = Field(
+        default=None, description="Player targeted by mafia"
+    )
+    saved_at_night: str | None = Field(
+        default=None, description="Player saved by doctor"
+    )
+    night_deaths: list[str] = Field(
+        default_factory=list, description="Players who died during the night"
+    )
 
     # Game progression tracking
     day_number: int = Field(default=0, description="Current day number")
@@ -126,39 +160,45 @@ class MafiaGameState(MultiPlayerGameState):
 
     def update_alive_counts(self):
         """Update the count of alive players in different roles.
-        
+
         This method recalculates the number of alive players in each role
         category based on the current player states.
 
         Note:
             This should be called after any change that might affect player
             life status (e.g., night kills, voting execution).
-        
+
         Example:
             >>> state.player_states["Player_1"].is_alive = False
             >>> state.update_alive_counts()
             >>> print(state.alive_village_count)  # Shows updated count
         """
         self.alive_village_count = sum(
-            1 for player_id, state in self.player_states.items()
-            if state.is_alive and self.roles.get(player_id) in {PlayerRole.VILLAGER, PlayerRole.DETECTIVE, PlayerRole.DOCTOR}
+            1
+            for player_id, state in self.player_states.items()
+            if state.is_alive
+            and self.roles.get(player_id)
+            in {PlayerRole.VILLAGER, PlayerRole.DETECTIVE, PlayerRole.DOCTOR}
         )
         self.alive_mafia_count = sum(
-            1 for player_id, state in self.player_states.items()
+            1
+            for player_id, state in self.player_states.items()
             if state.is_alive and self.roles.get(player_id) == PlayerRole.MAFIA
         )
         self.alive_doctor_count = sum(
-            1 for player_id, state in self.player_states.items()
+            1
+            for player_id, state in self.player_states.items()
             if state.is_alive and self.roles.get(player_id) == PlayerRole.DOCTOR
         )
         self.alive_detective_count = sum(
-            1 for player_id, state in self.player_states.items()
+            1
+            for player_id, state in self.player_states.items()
             if state.is_alive and self.roles.get(player_id) == PlayerRole.DETECTIVE
         )
 
     def add_public_announcement(self, announcement: str) -> None:
         """Add an announcement to the public record.
-        
+
         Args:
             announcement (str): The announcement to add
 
@@ -172,7 +212,7 @@ class MafiaGameState(MultiPlayerGameState):
 
     def log_action(self, action: MafiaAction | NarratorAction) -> None:
         """Log an action in the game history.
-        
+
         This method records player and narrator actions in both the action_history
         and move_history, ensuring proper serialization of complex objects.
 
@@ -197,18 +237,26 @@ class MafiaGameState(MultiPlayerGameState):
             action_dict = {
                 "type": "MafiaAction",
                 "player_id": action.player_id,
-                "action_type": action.action_type.value if hasattr(action.action_type, "value") else str(action.action_type),
-                "phase": action.phase.value if hasattr(action.phase, "value") else str(action.phase),
+                "action_type": (
+                    action.action_type.value
+                    if hasattr(action.action_type, "value")
+                    else str(action.action_type)
+                ),
+                "phase": (
+                    action.phase.value
+                    if hasattr(action.phase, "value")
+                    else str(action.phase)
+                ),
                 "round_number": action.round_number,
                 "target_id": action.target_id if hasattr(action, "target_id") else None,
-                "message": action.message if hasattr(action, "message") else None
+                "message": action.message if hasattr(action, "message") else None,
             }
         elif isinstance(action, NarratorAction):
             action_dict = {
                 "type": "NarratorAction",
                 "announcement": action.announcement,
                 "phase_transition": action.phase_transition,
-                "round_number": action.round_number
+                "round_number": action.round_number,
             }
         else:
             # fallback for other types
@@ -226,7 +274,7 @@ class MafiaGameState(MultiPlayerGameState):
 
     def model_copy(self, *, deep: bool = False, **kwargs):
         """Create a copy of the model.
-        
+
         Args:
             deep (bool, optional): Whether to create a deep copy. Defaults to False.
             **kwargs: Additional arguments to pass to model_copy

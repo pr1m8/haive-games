@@ -1,7 +1,7 @@
-
 """Monopoly Game Engine - Core implementation optimized for AI agent experimentation.
 This module contains the core game rules and state management without UI dependencies.
 """
+
 import logging
 import random
 from typing import Any
@@ -24,46 +24,374 @@ class MonopolyGame:
     # Standard Monopoly board configuration
     DEFAULT_BOARD = [
         # Position, Name, Type, Price, Color Group, [Rent Values], House Cost
-        (0, "Go", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.GO),
-        (1, "Mediterranean Avenue", PropertyType.PROPERTY, 60, "Brown", [2, 10, 30, 90, 160, 250], 50),
-        (2, "Community Chest", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.COMMUNITY_CHEST),
-        (3, "Baltic Avenue", PropertyType.PROPERTY, 60, "Brown", [4, 20, 60, 180, 320, 450], 50),
-        (4, "Income Tax", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.INCOME_TAX),
-        (5, "Reading Railroad", PropertyType.RAILROAD, 200, "Railroad", [25, 50, 100, 200], None),
-        (6, "Oriental Avenue", PropertyType.PROPERTY, 100, "Light Blue", [6, 30, 90, 270, 400, 550], 50),
-        (7, "Chance", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.CHANCE),
-        (8, "Vermont Avenue", PropertyType.PROPERTY, 100, "Light Blue", [6, 30, 90, 270, 400, 550], 50),
-        (9, "Connecticut Avenue", PropertyType.PROPERTY, 120, "Light Blue", [8, 40, 100, 300, 450, 600], 50),
-        (10, "Jail", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.JAIL),
-        (11, "St. Charles Place", PropertyType.PROPERTY, 140, "Pink", [10, 50, 150, 450, 625, 750], 100),
+        (
+            0,
+            "Go",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.GO,
+        ),
+        (
+            1,
+            "Mediterranean Avenue",
+            PropertyType.PROPERTY,
+            60,
+            "Brown",
+            [2, 10, 30, 90, 160, 250],
+            50,
+        ),
+        (
+            2,
+            "Community Chest",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.COMMUNITY_CHEST,
+        ),
+        (
+            3,
+            "Baltic Avenue",
+            PropertyType.PROPERTY,
+            60,
+            "Brown",
+            [4, 20, 60, 180, 320, 450],
+            50,
+        ),
+        (
+            4,
+            "Income Tax",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.INCOME_TAX,
+        ),
+        (
+            5,
+            "Reading Railroad",
+            PropertyType.RAILROAD,
+            200,
+            "Railroad",
+            [25, 50, 100, 200],
+            None,
+        ),
+        (
+            6,
+            "Oriental Avenue",
+            PropertyType.PROPERTY,
+            100,
+            "Light Blue",
+            [6, 30, 90, 270, 400, 550],
+            50,
+        ),
+        (
+            7,
+            "Chance",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.CHANCE,
+        ),
+        (
+            8,
+            "Vermont Avenue",
+            PropertyType.PROPERTY,
+            100,
+            "Light Blue",
+            [6, 30, 90, 270, 400, 550],
+            50,
+        ),
+        (
+            9,
+            "Connecticut Avenue",
+            PropertyType.PROPERTY,
+            120,
+            "Light Blue",
+            [8, 40, 100, 300, 450, 600],
+            50,
+        ),
+        (
+            10,
+            "Jail",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.JAIL,
+        ),
+        (
+            11,
+            "St. Charles Place",
+            PropertyType.PROPERTY,
+            140,
+            "Pink",
+            [10, 50, 150, 450, 625, 750],
+            100,
+        ),
         (12, "Electric Company", PropertyType.UTILITY, 150, "Utility", [4, 10], None),
-        (13, "States Avenue", PropertyType.PROPERTY, 140, "Pink", [10, 50, 150, 450, 625, 750], 100),
-        (14, "Virginia Avenue", PropertyType.PROPERTY, 160, "Pink", [12, 60, 180, 500, 700, 900], 100),
-        (15, "Pennsylvania Railroad", PropertyType.RAILROAD, 200, "Railroad", [25, 50, 100, 200], None),
-        (16, "St. James Place", PropertyType.PROPERTY, 180, "Orange", [14, 70, 200, 550, 750, 950], 100),
-        (17, "Community Chest", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.COMMUNITY_CHEST),
-        (18, "Tennessee Avenue", PropertyType.PROPERTY, 180, "Orange", [14, 70, 200, 550, 750, 950], 100),
-        (19, "New York Avenue", PropertyType.PROPERTY, 200, "Orange", [16, 80, 220, 600, 800, 1000], 100),
-        (20, "Free Parking", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.FREE_PARKING),
-        (21, "Kentucky Avenue", PropertyType.PROPERTY, 220, "Red", [18, 90, 250, 700, 875, 1050], 150),
-        (22, "Chance", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.CHANCE),
-        (23, "Indiana Avenue", PropertyType.PROPERTY, 220, "Red", [18, 90, 250, 700, 875, 1050], 150),
-        (24, "Illinois Avenue", PropertyType.PROPERTY, 240, "Red", [20, 100, 300, 750, 925, 1100], 150),
-        (25, "B&O Railroad", PropertyType.RAILROAD, 200, "Railroad", [25, 50, 100, 200], None),
-        (26, "Atlantic Avenue", PropertyType.PROPERTY, 260, "Yellow", [22, 110, 330, 800, 975, 1150], 150),
-        (27, "Ventnor Avenue", PropertyType.PROPERTY, 260, "Yellow", [22, 110, 330, 800, 975, 1150], 150),
+        (
+            13,
+            "States Avenue",
+            PropertyType.PROPERTY,
+            140,
+            "Pink",
+            [10, 50, 150, 450, 625, 750],
+            100,
+        ),
+        (
+            14,
+            "Virginia Avenue",
+            PropertyType.PROPERTY,
+            160,
+            "Pink",
+            [12, 60, 180, 500, 700, 900],
+            100,
+        ),
+        (
+            15,
+            "Pennsylvania Railroad",
+            PropertyType.RAILROAD,
+            200,
+            "Railroad",
+            [25, 50, 100, 200],
+            None,
+        ),
+        (
+            16,
+            "St. James Place",
+            PropertyType.PROPERTY,
+            180,
+            "Orange",
+            [14, 70, 200, 550, 750, 950],
+            100,
+        ),
+        (
+            17,
+            "Community Chest",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.COMMUNITY_CHEST,
+        ),
+        (
+            18,
+            "Tennessee Avenue",
+            PropertyType.PROPERTY,
+            180,
+            "Orange",
+            [14, 70, 200, 550, 750, 950],
+            100,
+        ),
+        (
+            19,
+            "New York Avenue",
+            PropertyType.PROPERTY,
+            200,
+            "Orange",
+            [16, 80, 220, 600, 800, 1000],
+            100,
+        ),
+        (
+            20,
+            "Free Parking",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.FREE_PARKING,
+        ),
+        (
+            21,
+            "Kentucky Avenue",
+            PropertyType.PROPERTY,
+            220,
+            "Red",
+            [18, 90, 250, 700, 875, 1050],
+            150,
+        ),
+        (
+            22,
+            "Chance",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.CHANCE,
+        ),
+        (
+            23,
+            "Indiana Avenue",
+            PropertyType.PROPERTY,
+            220,
+            "Red",
+            [18, 90, 250, 700, 875, 1050],
+            150,
+        ),
+        (
+            24,
+            "Illinois Avenue",
+            PropertyType.PROPERTY,
+            240,
+            "Red",
+            [20, 100, 300, 750, 925, 1100],
+            150,
+        ),
+        (
+            25,
+            "B&O Railroad",
+            PropertyType.RAILROAD,
+            200,
+            "Railroad",
+            [25, 50, 100, 200],
+            None,
+        ),
+        (
+            26,
+            "Atlantic Avenue",
+            PropertyType.PROPERTY,
+            260,
+            "Yellow",
+            [22, 110, 330, 800, 975, 1150],
+            150,
+        ),
+        (
+            27,
+            "Ventnor Avenue",
+            PropertyType.PROPERTY,
+            260,
+            "Yellow",
+            [22, 110, 330, 800, 975, 1150],
+            150,
+        ),
         (28, "Water Works", PropertyType.UTILITY, 150, "Utility", [4, 10], None),
-        (29, "Marvin Gardens", PropertyType.PROPERTY, 280, "Yellow", [24, 120, 360, 850, 1025, 1200], 150),
-        (30, "Go To Jail", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.GO_TO_JAIL),
-        (31, "Pacific Avenue", PropertyType.PROPERTY, 300, "Green", [26, 130, 390, 900, 1100, 1275], 200),
-        (32, "North Carolina Avenue", PropertyType.PROPERTY, 300, "Green", [26, 130, 390, 900, 1100, 1275], 200),
-        (33, "Community Chest", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.COMMUNITY_CHEST),
-        (34, "Pennsylvania Avenue", PropertyType.PROPERTY, 320, "Green", [28, 150, 450, 1000, 1200, 1400], 200),
-        (35, "Short Line", PropertyType.RAILROAD, 200, "Railroad", [25, 50, 100, 200], None),
-        (36, "Chance", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.CHANCE),
-        (37, "Park Place", PropertyType.PROPERTY, 350, "Blue", [35, 175, 500, 1100, 1300, 1500], 200),
-        (38, "Luxury Tax", PropertyType.SPECIAL, 0, None, None, None, None, SpecialSquareType.LUXURY_TAX),
-        (39, "Boardwalk", PropertyType.PROPERTY, 400, "Blue", [50, 200, 600, 1400, 1700, 2000], 200)
+        (
+            29,
+            "Marvin Gardens",
+            PropertyType.PROPERTY,
+            280,
+            "Yellow",
+            [24, 120, 360, 850, 1025, 1200],
+            150,
+        ),
+        (
+            30,
+            "Go To Jail",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.GO_TO_JAIL,
+        ),
+        (
+            31,
+            "Pacific Avenue",
+            PropertyType.PROPERTY,
+            300,
+            "Green",
+            [26, 130, 390, 900, 1100, 1275],
+            200,
+        ),
+        (
+            32,
+            "North Carolina Avenue",
+            PropertyType.PROPERTY,
+            300,
+            "Green",
+            [26, 130, 390, 900, 1100, 1275],
+            200,
+        ),
+        (
+            33,
+            "Community Chest",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.COMMUNITY_CHEST,
+        ),
+        (
+            34,
+            "Pennsylvania Avenue",
+            PropertyType.PROPERTY,
+            320,
+            "Green",
+            [28, 150, 450, 1000, 1200, 1400],
+            200,
+        ),
+        (
+            35,
+            "Short Line",
+            PropertyType.RAILROAD,
+            200,
+            "Railroad",
+            [25, 50, 100, 200],
+            None,
+        ),
+        (
+            36,
+            "Chance",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.CHANCE,
+        ),
+        (
+            37,
+            "Park Place",
+            PropertyType.PROPERTY,
+            350,
+            "Blue",
+            [35, 175, 500, 1100, 1300, 1500],
+            200,
+        ),
+        (
+            38,
+            "Luxury Tax",
+            PropertyType.SPECIAL,
+            0,
+            None,
+            None,
+            None,
+            None,
+            SpecialSquareType.LUXURY_TAX,
+        ),
+        (
+            39,
+            "Boardwalk",
+            PropertyType.PROPERTY,
+            400,
+            "Blue",
+            [50, 200, 600, 1400, 1700, 2000],
+            200,
+        ),
     ]
 
     # Standard Monopoly configuration values
@@ -81,10 +409,10 @@ class MonopolyGame:
         starting_cash: int = 1500,
         max_rounds: int = 100,
         free_parking_money: bool = False,
-        auction_properties: bool = True
+        auction_properties: bool = True,
     ):
         """Initialize a new Monopoly game.
-        
+
         Args:
             player_names: List of player names
             board_config: Optional custom board configuration
@@ -113,17 +441,29 @@ class MonopolyGame:
         board_data = board_config or self.DEFAULT_BOARD
         self.properties = []
 
-        for pos, name, prop_type, price, color, rents, house_cost, _, special_type in board_data:
-            self.properties.append(Property(
-                name=name,
-                position=pos,
-                property_type=prop_type,
-                price=price,
-                color_group=color,
-                rent_values=rents,
-                house_cost=house_cost,
-                special_type=special_type
-            ))
+        for (
+            pos,
+            name,
+            prop_type,
+            price,
+            color,
+            rents,
+            house_cost,
+            _,
+            special_type,
+        ) in board_data:
+            self.properties.append(
+                Property(
+                    name=name,
+                    position=pos,
+                    property_type=prop_type,
+                    price=price,
+                    color_group=color,
+                    rent_values=rents,
+                    house_cost=house_cost,
+                    special_type=special_type,
+                )
+            )
 
         # Initialize deck of cards
         self.chance_cards = self._create_chance_cards()
@@ -146,21 +486,45 @@ class MonopolyGame:
         """Create the standard Chance cards."""
         return [
             Card("Advance to Go. Collect $200.", "move_to", 0),
-            Card("Advance to Illinois Avenue. If you pass Go, collect $200.", "move_to", 24),
-            Card("Advance to St. Charles Place. If you pass Go, collect $200.", "move_to", 11),
+            Card(
+                "Advance to Illinois Avenue. If you pass Go, collect $200.",
+                "move_to",
+                24,
+            ),
+            Card(
+                "Advance to St. Charles Place. If you pass Go, collect $200.",
+                "move_to",
+                11,
+            ),
             Card("Advance to nearest Utility.", "move_to_nearest", "Utility"),
             Card("Advance to nearest Railroad.", "move_to_nearest", "Railroad"),
             Card("Bank pays you dividend of $50.", "collect", 50),
             Card("Get Out of Jail Free.", "jail_card", None),
             Card("Go back 3 spaces.", "move_relative", -3),
-            Card("Go to Jail. Go directly to Jail, do not pass Go, do not collect $200.", "go_to_jail", None),
-            Card("Make general repairs on all your property. For each house pay $25, for each hotel pay $100.", "pay_repairs", (25, 100)),
+            Card(
+                "Go to Jail. Go directly to Jail, do not pass Go, do not collect $200.",
+                "go_to_jail",
+                None,
+            ),
+            Card(
+                "Make general repairs on all your property. For each house pay $25, for each hotel pay $100.",
+                "pay_repairs",
+                (25, 100),
+            ),
             Card("Pay poor tax of $15.", "pay", 15),
-            Card("Take a trip to Reading Railroad. If you pass Go, collect $200.", "move_to", 5),
+            Card(
+                "Take a trip to Reading Railroad. If you pass Go, collect $200.",
+                "move_to",
+                5,
+            ),
             Card("Take a walk on the Boardwalk. Advance to Boardwalk.", "move_to", 39),
-            Card("You have been elected Chairman of the Board. Pay each player $50.", "pay_each", 50),
+            Card(
+                "You have been elected Chairman of the Board. Pay each player $50.",
+                "pay_each",
+                50,
+            ),
             Card("Your building loan matures. Collect $150.", "collect", 150),
-            Card("You have won a crossword competition. Collect $100.", "collect", 100)
+            Card("You have won a crossword competition. Collect $100.", "collect", 100),
         ]
 
     def _create_community_chest_cards(self) -> list[Card]:
@@ -171,23 +535,43 @@ class MonopolyGame:
             Card("Doctor's fee. Pay $50.", "pay", 50),
             Card("From sale of stock you get $50.", "collect", 50),
             Card("Get Out of Jail Free.", "jail_card", None),
-            Card("Go to Jail. Go directly to jail, do not pass Go, do not collect $200.", "go_to_jail", None),
-            Card("Grand Opera Night. Collect $50 from every player for opening night seats.", "collect_each", 50),
+            Card(
+                "Go to Jail. Go directly to jail, do not pass Go, do not collect $200.",
+                "go_to_jail",
+                None,
+            ),
+            Card(
+                "Grand Opera Night. Collect $50 from every player for opening night seats.",
+                "collect_each",
+                50,
+            ),
             Card("Holiday fund matures. Receive $100.", "collect", 100),
             Card("Income tax refund. Collect $20.", "collect", 20),
-            Card("It is your birthday. Collect $10 from every player.", "collect_each", 10),
+            Card(
+                "It is your birthday. Collect $10 from every player.",
+                "collect_each",
+                10,
+            ),
             Card("Life insurance matures. Collect $100.", "collect", 100),
             Card("Pay hospital fees of $100.", "pay", 100),
             Card("Pay school fees of $50.", "pay", 50),
             Card("Receive $25 consultancy fee.", "collect", 25),
-            Card("You are assessed for street repair. $40 per house, $115 per hotel.", "pay_repairs", (40, 115)),
-            Card("You have won second prize in a beauty contest. Collect $10.", "collect", 10),
-            Card("You inherit $100.", "collect", 100)
+            Card(
+                "You are assessed for street repair. $40 per house, $115 per hotel.",
+                "pay_repairs",
+                (40, 115),
+            ),
+            Card(
+                "You have won second prize in a beauty contest. Collect $10.",
+                "collect",
+                10,
+            ),
+            Card("You inherit $100.", "collect", 100),
         ]
 
     def log_event(self, event: str) -> None:
         """Add an event to the game log.
-        
+
         Args:
             event: Description of the event
         """
@@ -196,7 +580,7 @@ class MonopolyGame:
 
     def roll_dice(self) -> tuple[int, int]:
         """Roll two dice.
-        
+
         Returns:
             Tuple of (die1, die2)
         """
@@ -215,7 +599,7 @@ class MonopolyGame:
 
     def get_current_player(self) -> Player:
         """Get the current player.
-        
+
         Returns:
             Current Player object
         """
@@ -223,10 +607,10 @@ class MonopolyGame:
 
     def get_property_at(self, position: int) -> Property | None:
         """Get the property at a specific position.
-        
+
         Args:
             position: Board position
-            
+
         Returns:
             Property object or None if not found
         """
@@ -237,10 +621,10 @@ class MonopolyGame:
 
     def get_properties_by_group(self, color_group: str) -> list[Property]:
         """Get all properties in a color group.
-        
+
         Args:
             color_group: Name of the color group
-            
+
         Returns:
             List of Property objects
         """
@@ -248,10 +632,10 @@ class MonopolyGame:
 
     def get_properties_owned_by_player(self, player_idx: int) -> list[Property]:
         """Get all properties owned by a player.
-        
+
         Args:
             player_idx: Index of the player
-            
+
         Returns:
             List of Property objects
         """
@@ -259,11 +643,11 @@ class MonopolyGame:
 
     def player_owns_all_in_group(self, player_idx: int, color_group: str) -> bool:
         """Check if a player owns all properties in a group.
-        
+
         Args:
             player_idx: Index of the player
             color_group: Name of the color group
-            
+
         Returns:
             True if player owns all properties in the group
         """
@@ -272,10 +656,10 @@ class MonopolyGame:
 
     def can_build_house(self, property_position: int) -> bool:
         """Check if a house can be built on a property.
-        
+
         Args:
             property_position: Position of the property
-            
+
         Returns:
             True if a house can be built
         """
@@ -308,10 +692,10 @@ class MonopolyGame:
 
     def can_sell_house(self, property_position: int) -> bool:
         """Check if a house can be sold from a property.
-        
+
         Args:
             property_position: Position of the property
-            
+
         Returns:
             True if a house can be sold
         """
@@ -332,10 +716,10 @@ class MonopolyGame:
 
     def can_mortgage(self, property_position: int) -> bool:
         """Check if a property can be mortgaged.
-        
+
         Args:
             property_position: Position of the property
-            
+
         Returns:
             True if the property can be mortgaged
         """
@@ -361,11 +745,11 @@ class MonopolyGame:
 
     def can_unmortgage(self, property_position: int, player: Player) -> bool:
         """Check if a property can be unmortgaged.
-        
+
         Args:
             property_position: Position of the property
             player: Player attempting to unmortgage
-            
+
         Returns:
             True if the property can be unmortgaged
         """
@@ -381,14 +765,16 @@ class MonopolyGame:
         unmortgage_cost = int(prop.mortgage_value * 1.1)
         return player.cash >= unmortgage_cost
 
-    def perform_action(self, action_type: ActionType, player_idx: int, **kwargs) -> bool:
+    def perform_action(
+        self, action_type: ActionType, player_idx: int, **kwargs
+    ) -> bool:
         """Perform an action for a player.
-        
+
         Args:
             action_type: Type of action to perform
             player_idx: Index of the player performing the action
             **kwargs: Action-specific parameters
-            
+
         Returns:
             True if the action was successful
         """
@@ -444,8 +830,12 @@ class MonopolyGame:
             give_money = kwargs.get("give_money", 0)
             take_money = kwargs.get("take_money", 0)
             return self._handle_trade_action(
-                player, other_player_idx, give_properties, take_properties,
-                give_money, take_money
+                player,
+                other_player_idx,
+                give_properties,
+                take_properties,
+                give_money,
+                take_money,
             )
 
         if action_type == ActionType.AUCTION:
@@ -461,19 +851,24 @@ class MonopolyGame:
             return False
 
         if player.in_jail:
-            self.log_event(f"{player.name} is in jail and must pay, use a card, or roll for doubles.")
+            self.log_event(
+                f"{player.name} is in jail and must pay, use a card, or roll for doubles."
+            )
             return False
 
         # Roll the dice
         die1, die2 = self.roll_dice()
         total = die1 + die2
-        is_doubles = die1 == die2
 
-        self.log_event(f"{player.name} rolled {die1} and {die2} for a total of {total}.")
+        self.log_event(
+            f"{player.name} rolled {die1} and {die2} for a total of {total}."
+        )
 
         # Check for three doubles in a row
         if self.doubles_count >= 3:
-            self.log_event(f"{player.name} rolled doubles three times in a row. Go to Jail!")
+            self.log_event(
+                f"{player.name} rolled doubles three times in a row. Go to Jail!"
+            )
             return self._send_to_jail(player)
 
         # Move the player
@@ -508,12 +903,16 @@ class MonopolyGame:
             return False
 
         if prop.owner is not None:
-            self.log_event(f"{prop.name} is already owned by {self.players[prop.owner].name}.")
+            self.log_event(
+                f"{prop.name} is already owned by {self.players[prop.owner].name}."
+            )
             return False
 
         # Check if player has enough money
         if player.cash < prop.price:
-            self.log_event(f"{player.name} does not have enough money to buy {prop.name}.")
+            self.log_event(
+                f"{player.name} does not have enough money to buy {prop.name}."
+            )
             return False
 
         # Buy the property
@@ -550,10 +949,14 @@ class MonopolyGame:
         player.receive(sell_value)
 
         house_or_hotel = "hotel" if prop.houses == 4 else "house"
-        self.log_event(f"{player.name} sold a {house_or_hotel} from {prop.name} for ${sell_value}.")
+        self.log_event(
+            f"{player.name} sold a {house_or_hotel} from {prop.name} for ${sell_value}."
+        )
         return True
 
-    def _handle_build_house_action(self, player: Player, property_position: int) -> bool:
+    def _handle_build_house_action(
+        self, player: Player, property_position: int
+    ) -> bool:
         """Handle building a house on a property."""
         if not property_position:
             self.log_event("No property specified for building a house.")
@@ -575,7 +978,9 @@ class MonopolyGame:
 
         # Check if player has enough money
         if player.cash < prop.house_cost:
-            self.log_event(f"{player.name} does not have enough money to build a house on {prop.name}.")
+            self.log_event(
+                f"{player.name} does not have enough money to build a house on {prop.name}."
+            )
             return False
 
         # Build the house
@@ -583,7 +988,9 @@ class MonopolyGame:
         prop.houses += 1
 
         house_or_hotel = "hotel" if prop.houses == 5 else "house"
-        self.log_event(f"{player.name} built a {house_or_hotel} on {prop.name} for ${prop.house_cost}.")
+        self.log_event(
+            f"{player.name} built a {house_or_hotel} on {prop.name} for ${prop.house_cost}."
+        )
         return True
 
     def _handle_mortgage_action(self, player: Player, property_position: int) -> bool:
@@ -610,7 +1017,9 @@ class MonopolyGame:
         prop.is_mortgaged = True
         player.receive(prop.mortgage_value)
 
-        self.log_event(f"{player.name} mortgaged {prop.name} for ${prop.mortgage_value}.")
+        self.log_event(
+            f"{player.name} mortgaged {prop.name} for ${prop.mortgage_value}."
+        )
         return True
 
     def _handle_unmortgage_action(self, player: Player, property_position: int) -> bool:
@@ -666,7 +1075,9 @@ class MonopolyGame:
             return False
 
         if player.cash < self.JAIL_FEE:
-            self.log_event(f"{player.name} does not have enough money to pay the jail fee.")
+            self.log_event(
+                f"{player.name} does not have enough money to pay the jail fee."
+            )
             return False
 
         # Pay the fee
@@ -703,14 +1114,18 @@ class MonopolyGame:
 
         # Check if this is the third turn in jail
         if player.jail_turns >= 2:
-            self.log_event(f"This is {player.name}'s third turn in jail and must pay to get out.")
+            self.log_event(
+                f"This is {player.name}'s third turn in jail and must pay to get out."
+            )
             return self._handle_pay_jail_fee_action(player)
 
         # Roll the dice
         die1, die2 = self.roll_dice()
         is_doubles = die1 == die2
 
-        self.log_event(f"{player.name} rolled {die1} and {die2} attempting to get out of jail.")
+        self.log_event(
+            f"{player.name} rolled {die1} and {die2} attempting to get out of jail."
+        )
 
         if is_doubles:
             # Success! Get out of jail
@@ -744,7 +1159,7 @@ class MonopolyGame:
         give_properties: list[int],
         take_properties: list[int],
         give_money: int,
-        take_money: int
+        take_money: int,
     ) -> bool:
         """Handle trading between players."""
         # Check if other player exists
@@ -765,14 +1180,18 @@ class MonopolyGame:
             return False
 
         if other_player.cash < take_money:
-            self.log_event(f"{other_player.name} does not have enough money for this trade.")
+            self.log_event(
+                f"{other_player.name} does not have enough money for this trade."
+            )
             return False
 
         # Check if players own the properties they're giving away
         for pos in give_properties:
             prop = self.get_property_at(pos)
             if not prop or prop.owner != player.index:
-                self.log_event(f"{player.name} does not own property at position {pos}.")
+                self.log_event(
+                    f"{player.name} does not own property at position {pos}."
+                )
                 return False
 
             # Check if property has houses (must sell houses first)
@@ -783,7 +1202,9 @@ class MonopolyGame:
         for pos in take_properties:
             prop = self.get_property_at(pos)
             if not prop or prop.owner != other_player.index:
-                self.log_event(f"{other_player.name} does not own property at position {pos}.")
+                self.log_event(
+                    f"{other_player.name} does not own property at position {pos}."
+                )
                 return False
 
             # Check if property has houses (must sell houses first)
@@ -831,7 +1252,9 @@ class MonopolyGame:
         # In a real implementation, this would be a more complex auction process
 
         # Find the player with the most money
-        eligible_players = [p for p in self.players if not p.bankruptcy_status and p.cash >= prop.price]
+        eligible_players = [
+            p for p in self.players if not p.bankruptcy_status and p.cash >= prop.price
+        ]
 
         if not eligible_players:
             self.log_event(f"No players can afford {prop.name}.")
@@ -844,8 +1267,11 @@ class MonopolyGame:
         prop.owner = winner.index
         winner.own_property(prop.position)
 
-        self.log_event(f"{winner.name} won the auction for {prop.name} at ${prop.price}.")
+        self.log_event(
+            f"{winner.name} won the auction for {prop.name} at ${prop.price}."
+        )
         return True
+
     def _handle_landing(self, player: Player, position: int) -> None:
         """Handle a player landing on a space."""
         prop = self.get_property_at(position)
@@ -864,7 +1290,9 @@ class MonopolyGame:
         # Handle property, railroad, or utility
         if prop.owner is None:
             # Unowned property - can be purchased
-            self.log_event(f"{prop.name} is unowned and can be purchased for ${prop.price}.")
+            self.log_event(
+                f"{prop.name} is unowned and can be purchased for ${prop.price}."
+            )
             return
 
         if prop.owner == player.index:
@@ -887,9 +1315,14 @@ class MonopolyGame:
 
         elif prop.property_type == PropertyType.RAILROAD:
             # Count how many railroads the owner has
-            railroads_owned = len([p for p in self.properties
-                                   if p.property_type == PropertyType.RAILROAD
-                                   and p.owner == prop.owner])
+            railroads_owned = len(
+                [
+                    p
+                    for p in self.properties
+                    if p.property_type == PropertyType.RAILROAD
+                    and p.owner == prop.owner
+                ]
+            )
 
             # Railroad rent increases with more railroads owned
             railroad_index = min(railroads_owned - 1, len(prop.rent_values) - 1)
@@ -897,9 +1330,13 @@ class MonopolyGame:
 
         elif prop.property_type == PropertyType.UTILITY:
             # Count how many utilities the owner has
-            utilities_owned = len([p for p in self.properties
-                                   if p.property_type == PropertyType.UTILITY
-                                   and p.owner == prop.owner])
+            utilities_owned = len(
+                [
+                    p
+                    for p in self.properties
+                    if p.property_type == PropertyType.UTILITY and p.owner == prop.owner
+                ]
+            )
 
             # Get the multiplier (4 for 1 utility, 10 for 2)
             multiplier = 4 if utilities_owned == 1 else 10
@@ -935,7 +1372,9 @@ class MonopolyGame:
             # If using house rule, collect money from Free Parking
             if self.free_parking_money and self.free_parking_pot > 0:
                 player.receive(self.free_parking_pot)
-                self.log_event(f"{player.name} collected ${self.free_parking_pot} from Free Parking!")
+                self.log_event(
+                    f"{player.name} collected ${self.free_parking_pot} from Free Parking!"
+                )
                 self.free_parking_pot = 0
             else:
                 self.log_event(f"{player.name} is taking a break at Free Parking.")
@@ -1021,9 +1460,13 @@ class MonopolyGame:
             player.position = card.value
 
             # Check if passed Go
-            if player.position < old_position and card.value != 0:  # Don't pay twice for Go
+            if (
+                player.position < old_position and card.value != 0
+            ):  # Don't pay twice for Go
                 player.receive(self.GO_SALARY)
-                self.log_event(f"{player.name} passed Go and collected ${self.GO_SALARY}.")
+                self.log_event(
+                    f"{player.name} passed Go and collected ${self.GO_SALARY}."
+                )
 
             # Handle landing on the new space
             self._handle_landing(player, player.position)
@@ -1039,7 +1482,9 @@ class MonopolyGame:
                 # Check if passed Go
                 if player.position < old_position:
                     player.receive(self.GO_SALARY)
-                    self.log_event(f"{player.name} passed Go and collected ${self.GO_SALARY}.")
+                    self.log_event(
+                        f"{player.name} passed Go and collected ${self.GO_SALARY}."
+                    )
 
                 # Handle landing on the new space
                 self._handle_landing(player, player.position)
@@ -1052,7 +1497,9 @@ class MonopolyGame:
             # Check if passed Go
             if card.value < 0 and player.position > old_position:
                 player.receive(self.GO_SALARY)
-                self.log_event(f"{player.name} passed Go and collected ${self.GO_SALARY}.")
+                self.log_event(
+                    f"{player.name} passed Go and collected ${self.GO_SALARY}."
+                )
 
             # Handle landing on the new space
             self._handle_landing(player, player.position)
@@ -1096,7 +1543,9 @@ class MonopolyGame:
 
                     player.pay(per_player * (len(self.players) - 1))
 
-                self.log_event(f"{player.name} couldn't afford to pay everyone ${amount}.")
+                self.log_event(
+                    f"{player.name} couldn't afford to pay everyone ${amount}."
+                )
             else:
                 for p in self.players:
                     if p.index != player.index and not p.bankruptcy_status:
@@ -1162,14 +1611,22 @@ class MonopolyGame:
             prop = self.get_property_at(check_pos)
 
             if prop and (
-                (property_type == "Railroad" and prop.property_type == PropertyType.RAILROAD) or
-                (property_type == "Utility" and prop.property_type == PropertyType.UTILITY)
+                (
+                    property_type == "Railroad"
+                    and prop.property_type == PropertyType.RAILROAD
+                )
+                or (
+                    property_type == "Utility"
+                    and prop.property_type == PropertyType.UTILITY
+                )
             ):
                 return check_pos
 
         return None
 
-    def _handle_bankruptcy(self, player: Player, creditor: Player | None, amount: int) -> None:
+    def _handle_bankruptcy(
+        self, player: Player, creditor: Player | None, amount: int
+    ) -> None:
         """Handle a player going bankrupt."""
         self.log_event(f"{player.name} is bankrupt!")
 
@@ -1191,7 +1648,9 @@ class MonopolyGame:
             creditor.jail_cards += player.jail_cards
             player.jail_cards = 0
 
-            self.log_event(f"{player.name}'s assets were transferred to {creditor.name}.")
+            self.log_event(
+                f"{player.name}'s assets were transferred to {creditor.name}."
+            )
         else:
             # Bankrupt to the bank - assets return to the bank
             player.cash = 0
@@ -1246,11 +1705,15 @@ class MonopolyGame:
         # Handle player in jail
         if current_player.in_jail:
             current_player.jail_turns += 1
-            self.log_event(f"{current_player.name} is in jail (turn {current_player.jail_turns}).")
+            self.log_event(
+                f"{current_player.name} is in jail (turn {current_player.jail_turns})."
+            )
 
             # If third turn in jail, force payment
             if current_player.jail_turns >= 3:
-                self.log_event(f"This is {current_player.name}'s third turn in jail and must pay to get out.")
+                self.log_event(
+                    f"This is {current_player.name}'s third turn in jail and must pay to get out."
+                )
                 self._handle_pay_jail_fee_action(current_player)
 
     def _check_game_over(self) -> bool:
@@ -1282,15 +1745,19 @@ class MonopolyGame:
         active_players = [p for p in self.players if not p.bankruptcy_status]
 
         if active_players:
-            self.winner = max(active_players, key=lambda p: p.net_worth(self.properties))
-            self.log_event(f"Game over! {self.winner.name} wins with net worth ${self.winner.net_worth(self.properties)}!")
+            self.winner = max(
+                active_players, key=lambda p: p.net_worth(self.properties)
+            )
+            self.log_event(
+                f"Game over! {self.winner.name} wins with net worth ${self.winner.net_worth(self.properties)}!"
+            )
         else:
             self.winner = None
             self.log_event("Game over! All players are bankrupt.")
 
     def get_game_state(self) -> dict[str, Any]:
         """Get the current game state.
-        
+
         Returns:
             Dictionary with the game state
         """
@@ -1314,7 +1781,7 @@ class MonopolyGame:
                     "in_jail": p.in_jail,
                     "jail_turns": p.jail_turns,
                     "bankruptcy_status": p.bankruptcy_status,
-                    "net_worth": p.net_worth(self.properties)
+                    "net_worth": p.net_worth(self.properties),
                 }
                 for p in self.players
             ],
@@ -1328,11 +1795,11 @@ class MonopolyGame:
                     "owner": p.owner,
                     "houses": p.houses,
                     "is_mortgaged": p.is_mortgaged,
-                    "rent": p.get_rent()
+                    "rent": p.get_rent(),
                 }
                 for p in self.properties
             ],
-            "recent_events": self.event_log[-10:] if self.event_log else []
+            "recent_events": self.event_log[-10:] if self.event_log else [],
         }
 
     def print_game_state(self) -> None:
@@ -1351,7 +1818,9 @@ class MonopolyGame:
             status = "BANKRUPT" if player.bankruptcy_status else ""
             jail_status = "IN JAIL" if player.in_jail else ""
 
-            print(f"  {player.name}: ${player.cash} - Position: {self.properties[player.position].name} {status} {jail_status}")
+            print(
+                f"  {player.name}: ${player.cash} - Position: {self.properties[player.position].name} {status} {jail_status}"
+            )
 
             # Print properties
             if player.properties:

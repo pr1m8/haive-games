@@ -12,7 +12,7 @@ The framework is organized into:
 Example:
     >>> from haive.games.framework import GameAgent, GameConfig
     >>> from haive.games.framework.base import GameState
-    >>> 
+    >>>
     >>> # Create a game-specific agent
     >>> class MyGameAgent(GameAgent[MyGameConfig]):
     ...     def __init__(self, config: MyGameConfig):

@@ -4,6 +4,7 @@ This module defines the state manager for the Fox and Geese game,
 which manages the state of the game and provides methods for initializing,
 applying moves, checking game status, and getting legal moves for the Fox and Geese game.
 """
+
 import copy
 
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
@@ -37,11 +38,13 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
             turn="fox",  # Fox goes first
             game_status="ongoing",
             move_history=[],
-            num_geese=len(geese_positions)
+            num_geese=len(geese_positions),
         )
 
     @classmethod
-    def apply_move(cls, state: FoxAndGeeseState, move: FoxAndGeeseMove) -> FoxAndGeeseState:
+    def apply_move(
+        cls, state: FoxAndGeeseState, move: FoxAndGeeseMove
+    ) -> FoxAndGeeseState:
         """Apply a move to the Fox and Geese state.
 
         This method updates the state of the game based on the move made by the current player.
@@ -114,32 +117,42 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
                 # Check if position is empty
                 new_pos = FoxAndGeesePosition(row=new_row, col=new_col)
                 if new_pos not in state.geese_positions:
-                    moves.append(FoxAndGeeseMove(
-                        from_pos=state.fox_position,
-                        to_pos=new_pos,
-                        piece_type="fox"
-                    ))
+                    moves.append(
+                        FoxAndGeeseMove(
+                            from_pos=state.fox_position,
+                            to_pos=new_pos,
+                            piece_type="fox",
+                        )
+                    )
 
             # Capture move - jump over a goose
             capture_row, capture_col = row + dr, col + dc
-            land_row, land_col = row + 2*dr, col + 2*dc
+            land_row, land_col = row + 2 * dr, col + 2 * dc
 
-            if (0 <= capture_row < 7 and 0 <= capture_col < 7 and
-                0 <= land_row < 7 and 0 <= land_col < 7):
+            if (
+                0 <= capture_row < 7
+                and 0 <= capture_col < 7
+                and 0 <= land_row < 7
+                and 0 <= land_col < 7
+            ):
 
                 capture_pos = FoxAndGeesePosition(row=capture_row, col=capture_col)
                 land_pos = FoxAndGeesePosition(row=land_row, col=land_col)
 
                 # Check if there's a goose to capture and landing spot is empty
-                if (capture_pos in state.geese_positions and
-                    land_pos not in state.geese_positions):
+                if (
+                    capture_pos in state.geese_positions
+                    and land_pos not in state.geese_positions
+                ):
 
-                    moves.append(FoxAndGeeseMove(
-                        from_pos=state.fox_position,
-                        to_pos=land_pos,
-                        piece_type="fox",
-                        capture=capture_pos
-                    ))
+                    moves.append(
+                        FoxAndGeeseMove(
+                            from_pos=state.fox_position,
+                            to_pos=land_pos,
+                            piece_type="fox",
+                            capture=capture_pos,
+                        )
+                    )
 
         return moves
 
@@ -165,12 +178,15 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
                 if 0 <= new_row < 7 and 0 <= new_col < 7:
                     # Check if position is empty
                     new_pos = FoxAndGeesePosition(row=new_row, col=new_col)
-                    if new_pos not in state.geese_positions and new_pos != state.fox_position:
-                        moves.append(FoxAndGeeseMove(
-                            from_pos=goose,
-                            to_pos=new_pos,
-                            piece_type="goose"
-                        ))
+                    if (
+                        new_pos not in state.geese_positions
+                        and new_pos != state.fox_position
+                    ):
+                        moves.append(
+                            FoxAndGeeseMove(
+                                from_pos=goose, to_pos=new_pos, piece_type="goose"
+                            )
+                        )
 
         return moves
 

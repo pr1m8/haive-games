@@ -3,19 +3,21 @@
 This module defines the Fox and Geese game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
+
 import time
 from typing import Any
 
-from langgraph.types import Command
-
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langgraph.constants import START
+from langgraph.types import Command
+
 from haive.games.fox_and_geese.config import FoxAndGeeseConfig
 from haive.games.fox_and_geese.models import FoxAndGeeseMove
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.fox_and_geese.state_manager import FoxAndGeeseStateManager
 from haive.games.framework.base.agent import GameAgent
-from langgraph.constants import START
+
 
 @register_agent(FoxAndGeeseConfig)
 class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
@@ -33,7 +35,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         super().__init__(config)
         self.state_manager = FoxAndGeeseStateManager
-        #self.engines = config.aug_llm_configs
+        # self.engines = config.aug_llm_configs
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Fox and Geese game.
@@ -45,9 +47,17 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             Command: Initialization command containing the new game state.
         """
         game_state = self.state_manager.initialize()
-        return Command(update=game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict())
+        return Command(
+            update=(
+                game_state.model_dump()
+                if hasattr(game_state, "model_dump")
+                else game_state.dict()
+            )
+        )
 
-    def prepare_move_context(self, state: FoxAndGeeseState, player: str) -> dict[str, Any]:
+    def prepare_move_context(
+        self, state: FoxAndGeeseState, player: str
+    ) -> dict[str, Any]:
         """Prepare context for move generation.
 
         Args:
@@ -58,7 +68,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             Dict[str, Any]: Context dictionary for move generation.
         """
         # Format legal moves for display
-        formatted_legal_moves = "\n".join([str(move) for move in self.state_manager.get_legal_moves(state)])
+        formatted_legal_moves = "\n".join(
+            [str(move) for move in self.state_manager.get_legal_moves(state)]
+        )
 
         # Get recent move history
         recent_moves = []
@@ -70,7 +82,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             "board_string": state.board_string,
             "legal_moves": formatted_legal_moves,
             "move_history": "\n".join(recent_moves),
-            "num_geese": state.num_geese
+            "num_geese": state.num_geese,
         }
 
     def extract_move(self, response: Any) -> FoxAndGeeseMove:
@@ -96,7 +108,11 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         # Ensure it's the fox's turn
         if state.turn != "fox":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Prepare context for the fox player
         context = self.prepare_move_context(state, "fox")
@@ -112,7 +128,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def make_geese_move(self, state: FoxAndGeeseState) -> Command:
         """Make a move for the geese.
@@ -125,7 +147,11 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         # Ensure it's the geese's turn
         if state.turn != "geese":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Prepare context for the geese player
         context = self.prepare_move_context(state, "geese")
@@ -141,7 +167,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def analyze_fox_position(self, state: FoxAndGeeseState) -> Command:
         """Analyze the current position from the Fox's perspective.
@@ -156,7 +188,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             "board_string": state.board_string,
             "turn": state.turn,
             "num_geese": state.num_geese,
-            "move_history": "\n".join([str(move) for move in state.move_history[-5:]])
+            "move_history": "\n".join([str(move) for move in state.move_history[-5:]]),
         }
 
         fox_analyzer = self.engines["fox_analysis"].create_runnable()
@@ -167,7 +199,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             new_state.fox_analysis = []
         new_state.fox_analysis.append(analysis)
 
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def analyze_geese_position(self, state: FoxAndGeeseState) -> Command:
         """Analyze the current position from the Geese's perspective.
@@ -182,7 +220,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             "board_string": state.board_string,
             "turn": state.turn,
             "num_geese": state.num_geese,
-            "move_history": "\n".join([str(move) for move in state.move_history[-5:]])
+            "move_history": "\n".join([str(move) for move in state.move_history[-5:]]),
         }
 
         geese_analyzer = self.engines["geese_analysis"].create_runnable()
@@ -193,7 +231,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             new_state.geese_analysis = []
         new_state.geese_analysis.append(analysis)
 
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
@@ -237,14 +281,16 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         and analysis. Adds edges between nodes based on the current player's turn.
         """
         # Create a graph builder
-        builder = DynamicGraph(state_schema=self.state_schema,
-                               input_schema=self.input_schema,
-                               output_schema=self.output_schema,
-                               #description=self.description,
-                               name=self.config.name)
-                               #default_runnable_config=self.default_runnable_config,
-                               #visualize=self.visualize,
-                               #debug_level=self.debug_level)
+        builder = DynamicGraph(
+            state_schema=self.state_schema,
+            input_schema=self.input_schema,
+            output_schema=self.output_schema,
+            # description=self.description,
+            name=self.config.name,
+        )
+        # default_runnable_config=self.default_runnable_config,
+        # visualize=self.visualize,
+        # debug_level=self.debug_level)
         builder.add_edge(START, "initialize")
         # Add nodes for the main game flow
         builder.add_node("initialize", self.initialize_game)
@@ -263,6 +309,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         self.graph = builder.build()
 
         # Compile the workflow
+
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run the full Fox and Geese game, optionally visualizing each step.
 

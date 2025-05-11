@@ -12,13 +12,11 @@ from haive.games.cards.blackjack.models import (
 
 
 class BlackjackStateManager:
-    """Manages the state and core logic for a Blackjack game.
-    """
+    """Manages the state and core logic for a Blackjack game."""
 
     @classmethod
     def create_deck(cls) -> list[Card]:
-        """Create a full deck of 52 cards.
-        """
+        """Create a full deck of 52 cards."""
         suits = list(CardSuit)
         values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
         deck = [Card(value=value, suit=suit) for suit in suits for value in values]
@@ -28,38 +26,35 @@ class BlackjackStateManager:
     @classmethod
     def initialize_game(cls, num_players: int = 1) -> BlackjackGameState:
         """Initialize a new Blackjack game.
-        
+
         Args:
             num_players: Number of players in the game
-            
+
         Returns:
             Initialized game state
         """
         # Create deck and players
         deck = cls.create_deck()
-        players = [
-            PlayerState(name=f"Player_{i+1}")
-            for i in range(num_players)
-        ]
+        players = [PlayerState(name=f"Player_{i+1}") for i in range(num_players)]
 
         # Create game state
         game_state = BlackjackGameState(
-            players=players,
-            deck=deck,
-            game_status="betting"
+            players=players, deck=deck, game_status="betting"
         )
 
         return game_state
 
     @classmethod
-    def place_bet(cls, state: BlackjackGameState, player_index: int, bet_amount: float) -> BlackjackGameState:
+    def place_bet(
+        cls, state: BlackjackGameState, player_index: int, bet_amount: float
+    ) -> BlackjackGameState:
         """Place a bet for a player.
-        
+
         Args:
             state: Current game state
             player_index: Index of the player placing the bet
             bet_amount: Amount to bet
-            
+
         Returns:
             Updated game state
         """
@@ -82,10 +77,10 @@ class BlackjackStateManager:
     @classmethod
     def deal_initial_cards(cls, state: BlackjackGameState) -> BlackjackGameState:
         """Deal initial cards to players and dealer.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated game state with initial cards dealt
         """
@@ -110,12 +105,14 @@ class BlackjackStateManager:
         return new_state
 
     @classmethod
-    def get_current_player_and_hand(cls, state: BlackjackGameState) -> tuple[PlayerState, PlayerHand]:
+    def get_current_player_and_hand(
+        cls, state: BlackjackGameState
+    ) -> tuple[PlayerState, PlayerHand]:
         """Get the current active player and their current hand.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Tuple of current player and current hand
         """
@@ -125,16 +122,14 @@ class BlackjackStateManager:
 
     @classmethod
     def process_player_action(
-        cls,
-        state: BlackjackGameState,
-        action: PlayerAction
+        cls, state: BlackjackGameState, action: PlayerAction
     ) -> BlackjackGameState:
         """Process a player's action during their turn.
-        
+
         Args:
             state: Current game state
             action: Player's chosen action
-            
+
         Returns:
             Updated game state
         """
@@ -171,7 +166,10 @@ class BlackjackStateManager:
 
         elif action.action == "split":
             # Validate split is possible
-            if len(current_hand.cards) != 2 or current_hand.cards[0].value != current_hand.cards[1].value:
+            if (
+                len(current_hand.cards) != 2
+                or current_hand.cards[0].value != current_hand.cards[1].value
+            ):
                 raise ValueError("Cannot split this hand")
 
             # Validate player has enough chips
@@ -180,14 +178,10 @@ class BlackjackStateManager:
 
             # Create two new hands
             new_hand1 = PlayerHand(
-                cards=[current_hand.cards[0]],
-                bet=current_hand.bet,
-                is_split=True
+                cards=[current_hand.cards[0]], bet=current_hand.bet, is_split=True
             )
             new_hand2 = PlayerHand(
-                cards=[current_hand.cards[1]],
-                bet=current_hand.bet,
-                is_split=True
+                cards=[current_hand.cards[1]], bet=current_hand.bet, is_split=True
             )
 
             # Update player's state
@@ -211,7 +205,7 @@ class BlackjackStateManager:
     @classmethod
     def _advance_turn(cls, state: BlackjackGameState):
         """Advance to the next active hand or player.
-        
+
         Args:
             state: Current game state
         """
@@ -237,10 +231,10 @@ class BlackjackStateManager:
     @classmethod
     def dealer_turn(cls, state: BlackjackGameState) -> BlackjackGameState:
         """Execute dealer's turn according to standard Blackjack rules.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Final game state with results
         """
@@ -262,10 +256,10 @@ class BlackjackStateManager:
     @classmethod
     def _determine_winners(cls, state: BlackjackGameState) -> BlackjackGameState:
         """Determine winners and distribute chips.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Final game state with results
         """
@@ -306,17 +300,19 @@ class BlackjackStateManager:
     @classmethod
     def reset_game(cls, state: BlackjackGameState) -> BlackjackGameState:
         """Reset the game for a new round.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Reset game state
         """
         new_state = cls.initialize_game(len(state.players))
 
         # Preserve players' total chips
-        for new_player, old_player in zip(new_state.players, state.players, strict=False):
+        for new_player, old_player in zip(
+            new_state.players, state.players, strict=False
+        ):
             new_player.total_chips = old_player.total_chips
 
         return new_state

@@ -27,47 +27,55 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Generic, TypeVar
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
-
 # Type variables for generics
 T = TypeVar("T", bound=BaseModel)
 
+
 class PlayerType(str, Enum):
     """Type of player in a single-player game."""
+
     HUMAN = "human"  # Human player with interactive interface
-    LLM = "llm"      # LLM as the player
+    LLM = "llm"  # LLM as the player
     HYBRID = "hybrid"  # Human with LLM assistance
+
 
 class GameMode(str, Enum):
     """Mode of operation for the game."""
+
     INTERACTIVE = "interactive"  # Interactive mode with user input
-    AUTO = "auto"                # Fully automated mode with LLM
-    ASSIST = "assist"            # LLM provides assistance but human makes decisions
+    AUTO = "auto"  # Fully automated mode with LLM
+    ASSIST = "assist"  # LLM provides assistance but human makes decisions
+
 
 class GameDifficulty(str, Enum):
     """Difficulty level for a game."""
+
     EASY = "easy"
     MEDIUM = "medium"
     HARD = "hard"
     EXPERT = "expert"
 
+
 class GameSourceType(str, Enum):
     """Source of the game content."""
+
     INTERNAL = "internal"  # Generated within the system
     EXTERNAL = "external"  # Scraped or imported from external source
-    CUSTOM = "custom"      # Custom user-provided content
+    CUSTOM = "custom"  # Custom user-provided content
+
 
 class SinglePlayerGameState(BaseModel):
     """Base state for single-player games.
-    
+
     This class defines the core state attributes that all single-player games
     need to track, including game status, move history, and analysis.
-    
+
     Attributes:
         player_type (PlayerType): Type of player (human, LLM, hybrid)
         move_count (int): Number of moves made
@@ -78,38 +86,23 @@ class SinglePlayerGameState(BaseModel):
         analysis_history (List[Dict]): History of analyses made
         error_message (Optional[str]): Error message if any
     """
+
     player_type: PlayerType = Field(
-        default=PlayerType.LLM,
-        description="Type of player"
+        default=PlayerType.LLM, description="Type of player"
     )
-    move_count: int = Field(
-        default=0,
-        description="Number of moves made"
-    )
-    hint_count: int = Field(
-        default=0,
-        description="Number of hints used"
-    )
+    move_count: int = Field(default=0, description="Number of moves made")
+    hint_count: int = Field(default=0, description="Number of hints used")
     difficulty: GameDifficulty = Field(
-        default=GameDifficulty.MEDIUM,
-        description="Difficulty level of the game"
+        default=GameDifficulty.MEDIUM, description="Difficulty level of the game"
     )
-    game_status: str = Field(
-        default="ongoing",
-        description="Status of the game"
-    )
+    game_status: str = Field(default="ongoing", description="Status of the game")
     move_history: list[dict[str, Any]] = Field(
-        default_factory=list,
-        description="History of moves"
+        default_factory=list, description="History of moves"
     )
     analysis_history: list[dict[str, Any]] = Field(
-        default_factory=list,
-        description="History of analyses"
+        default_factory=list, description="History of analyses"
     )
-    error_message: str | None = Field(
-        default=None,
-        description="Error message if any"
-    )
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     def is_game_over(self) -> bool:
         """Check if the game is over."""
@@ -134,14 +127,14 @@ class SinglePlayerGameState(BaseModel):
 
 class SinglePlayerStateManager(Generic[T]):
     """Base state manager for single-player games.
-    
+
     This class provides the interface for managing game state transitions
     and operations. Each game should extend this with game-specific logic
     by implementing the required methods.
-    
+
     Type Parameters:
         T: The type of the game state, must be a Pydantic BaseModel.
-    
+
     Methods:
         initialize: Initialize a new game state
         apply_move: Apply a move to the game state
@@ -151,15 +144,19 @@ class SinglePlayerStateManager(Generic[T]):
     """
 
     @classmethod
-    def initialize(cls, difficulty: GameDifficulty = GameDifficulty.MEDIUM,
-                  player_type: PlayerType = PlayerType.LLM, **kwargs) -> T:
+    def initialize(
+        cls,
+        difficulty: GameDifficulty = GameDifficulty.MEDIUM,
+        player_type: PlayerType = PlayerType.LLM,
+        **kwargs,
+    ) -> T:
         """Initialize a new game state.
-        
+
         Args:
             difficulty: Difficulty level of the game
             player_type: Type of player
             **kwargs: Additional game-specific initialization parameters
-            
+
         Returns:
             A new game state
         """
@@ -168,11 +165,11 @@ class SinglePlayerStateManager(Generic[T]):
     @classmethod
     def apply_move(cls, state: T, move: Any) -> T:
         """Apply a move to the game state.
-        
+
         Args:
             state: Current game state
             move: Move to apply
-            
+
         Returns:
             Updated game state
         """
@@ -181,10 +178,10 @@ class SinglePlayerStateManager(Generic[T]):
     @classmethod
     def generate_hint(cls, state: T) -> tuple[T, str]:
         """Generate a hint for the current game state.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Tuple of (updated state, hint text)
         """
@@ -202,10 +199,10 @@ class SinglePlayerStateManager(Generic[T]):
     @classmethod
     def check_game_status(cls, state: T) -> T:
         """Check and update the game status.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated game state with status checked
         """
@@ -214,10 +211,10 @@ class SinglePlayerStateManager(Generic[T]):
     @classmethod
     def get_legal_moves(cls, state: T) -> list[Any]:
         """Get all legal moves for the current state.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             List of legal moves
         """
@@ -226,14 +223,14 @@ class SinglePlayerStateManager(Generic[T]):
     @classmethod
     def interactive_input(cls, state: T, user_input: str) -> T:
         """Process interactive input from the player.
-        
+
         This method handles general commands like 'hint', 'quit', etc.
         Game-specific commands should be handled by overriding this method.
-        
+
         Args:
             state: Current game state
             user_input: User input string
-            
+
         Returns:
             Updated game state
         """
@@ -263,10 +260,10 @@ class SinglePlayerStateManager(Generic[T]):
 
 class SinglePlayerGameConfig(BaseModel):
     """Configuration for single-player games.
-    
+
     This class defines the core configuration parameters that all single-player
     games need, including player type, game mode, and difficulty.
-    
+
     Attributes:
         state_schema: The state schema class for the game
         player_type: Type of player (human, LLM, hybrid)
@@ -279,64 +276,47 @@ class SinglePlayerGameConfig(BaseModel):
 
     name: str = Field(
         default_factory=lambda: f"spgame_{uuid.uuid4().hex[:8]}",
-        description="Name of the game agent"
+        description="Name of the game agent",
     )
     state_schema: type[SinglePlayerGameState] = Field(
-        ...,
-        description="State schema for the game"
+        ..., description="State schema for the game"
     )
     player_type: PlayerType = Field(
-        default=PlayerType.LLM,
-        description="Type of player"
+        default=PlayerType.LLM, description="Type of player"
     )
-    game_mode: GameMode = Field(
-        default=GameMode.AUTO,
-        description="Mode of operation"
-    )
+    game_mode: GameMode = Field(default=GameMode.AUTO, description="Mode of operation")
     difficulty: GameDifficulty = Field(
-        default=GameDifficulty.MEDIUM,
-        description="Difficulty level of the game"
+        default=GameDifficulty.MEDIUM, description="Difficulty level of the game"
     )
-    max_hints: int = Field(
-        default=3,
-        description="Maximum number of hints allowed"
-    )
+    max_hints: int = Field(default=3, description="Maximum number of hints allowed")
     auto_analyze: bool = Field(
-        default=True,
-        description="Whether to automatically analyze after each move"
+        default=True, description="Whether to automatically analyze after each move"
     )
     game_source: GameSourceType = Field(
-        default=GameSourceType.INTERNAL,
-        description="Source of the game content"
+        default=GameSourceType.INTERNAL, description="Source of the game content"
     )
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=dict,
-        description="Configurations for game LLMs"
+        default_factory=dict, description="Configurations for game LLMs"
     )
     save_history: bool = Field(
-        default=True,
-        description="Whether to save state history after execution"
+        default=True, description="Whether to save state history after execution"
     )
     visualize: bool = Field(
-        default=True,
-        description="Whether to generate graph visualizations"
+        default=True, description="Whether to generate graph visualizations"
     )
-    output_dir: str = Field(
-        default="outputs",
-        description="Directory for output files"
-    )
+    output_dir: str = Field(default="outputs", description="Directory for output files")
     runtime_config: dict[str, Any] = Field(
         default_factory=lambda: {"configurable": {"thread_id": str(uuid.uuid4())}},
-        description="Configuration for graph execution"
+        description="Configuration for graph execution",
     )
 
 
 class SinglePlayerGameAgent:
     """Base agent for single-player games.
-    
+
     This class provides the core functionality for single-player game agents,
     including state initialization, move handling, analysis, and visualization.
-    
+
     Attributes:
         config: Configuration for the game agent
         state_manager: Manager for game state transitions
@@ -347,7 +327,7 @@ class SinglePlayerGameAgent:
 
     def __init__(self, config):
         """Initialize the game agent.
-        
+
         Args:
             config: Configuration for the game agent
         """
@@ -386,46 +366,47 @@ class SinglePlayerGameAgent:
         self.state_history_dir = os.path.join(self.config.output_dir, "State_History")
         os.makedirs(self.state_history_dir, exist_ok=True)
         self.state_filename = os.path.join(
-            self.state_history_dir,
-            f"{self.config.name}_{timestamp}.json"
+            self.state_history_dir, f"{self.config.name}_{timestamp}.json"
         )
 
         # Set up graphs directory and file
         self.graphs_dir = os.path.join(self.config.output_dir, "Graphs")
         os.makedirs(self.graphs_dir, exist_ok=True)
         self.graph_image_path = os.path.join(
-            self.graphs_dir,
-            f"{self.config.name}_{timestamp}.png"
+            self.graphs_dir, f"{self.config.name}_{timestamp}.png"
         )
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new game.
-        
+
         Args:
             state: Initial state (usually empty)
-            
+
         Returns:
             Command with the initialized game state
         """
         # Initialize with configured difficulty and player type
         game_state = self.state_manager.initialize(
-            difficulty=self.config.difficulty,
-            player_type=self.config.player_type
+            difficulty=self.config.difficulty, player_type=self.config.player_type
         )
 
         # Convert to dict for Command
-        state_dict = game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict()
+        state_dict = (
+            game_state.model_dump()
+            if hasattr(game_state, "model_dump")
+            else game_state.dict()
+        )
         return Command(update=state_dict)
 
     def make_player_move(self, state: T) -> Command:
         """Make a move for the player.
-        
+
         In auto mode, this uses the LLM to generate a move.
         In interactive mode, this just returns the state unchanged.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Command with the updated game state
         """
@@ -433,7 +414,9 @@ class SinglePlayerGameAgent:
         if self.config.game_mode == GameMode.AUTO:
             engine = self.engines.get("player_move")
             if not engine:
-                return Command(update={"error_message": "No player move engine configured"})
+                return Command(
+                    update={"error_message": "No player move engine configured"}
+                )
 
             try:
                 # Get decision from the engine
@@ -449,10 +432,16 @@ class SinglePlayerGameAgent:
                     new_state.move_history[-1]["reasoning"] = response.reasoning
 
                 # Convert to dict for Command
-                state_dict = new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict()
+                state_dict = (
+                    new_state.model_dump()
+                    if hasattr(new_state, "model_dump")
+                    else new_state.dict()
+                )
                 return Command(update=state_dict)
             except Exception as e:
-                return Command(update={"error_message": f"Error in player's move: {e!s}"})
+                return Command(
+                    update={"error_message": f"Error in player's move: {e!s}"}
+                )
 
         # For other modes, just return the state unchanged
         # Interactive commands are handled separately
@@ -460,10 +449,10 @@ class SinglePlayerGameAgent:
 
     def analyze_position(self, state: T) -> Command:
         """Analyze the current game state.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Command with the updated game state including analysis
         """
@@ -477,20 +466,26 @@ class SinglePlayerGameAgent:
             analysis = analyzer.invoke(analysis_context)
 
             # Add analysis to state
-            analysis_dict = analysis.model_dump() if hasattr(analysis, "model_dump") else analysis.dict()
+            analysis_dict = (
+                analysis.model_dump()
+                if hasattr(analysis, "model_dump")
+                else analysis.dict()
+            )
 
-            return Command(update={
-                "analysis_history": state.analysis_history[-4:] + [analysis_dict]
-            })
+            return Command(
+                update={
+                    "analysis_history": state.analysis_history[-4:] + [analysis_dict]
+                }
+            )
         except Exception as e:
             return Command(update={"error_message": f"Error in analysis: {e!s}"})
 
     def get_hint(self, state: T) -> Command:
         """Get a hint for the current game state.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Command with the updated game state including a hint
         """
@@ -516,18 +511,22 @@ class SinglePlayerGameAgent:
                 pass
 
         # Convert to dict for Command
-        state_dict = new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict()
+        state_dict = (
+            new_state.model_dump()
+            if hasattr(new_state, "model_dump")
+            else new_state.dict()
+        )
         state_dict["error_message"] = f"HINT: {hint_text}"
 
         return Command(update=state_dict)
 
     def interactive_command(self, state: T, command: str) -> Command:
         """Process an interactive command.
-        
+
         Args:
             state: Current game state
             command: Command string
-            
+
         Returns:
             Command with the updated game state
         """
@@ -535,12 +534,16 @@ class SinglePlayerGameAgent:
         new_state = self.state_manager.interactive_input(state, command)
 
         # Convert to dict for Command
-        state_dict = new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict()
+        state_dict = (
+            new_state.model_dump()
+            if hasattr(new_state, "model_dump")
+            else new_state.dict()
+        )
         return Command(update=state_dict)
 
     def setup_workflow(self):
         """Setup the workflow for the game.
-        
+
         The workflow depends on the game mode:
         - Auto: Initialize -> Analyze -> Move -> Check -> Repeat
         - Interactive: Initialize -> Listen for commands
@@ -565,7 +568,7 @@ class SinglePlayerGameAgent:
                 self.graph.add_conditional_edges(
                     "make_player_move",
                     self.should_continue_game,
-                    {True: "analyze_position", False: END}
+                    {True: "analyze_position", False: END},
                 )
             else:
                 # Interactive or assist mode flow with analysis
@@ -578,7 +581,7 @@ class SinglePlayerGameAgent:
             self.graph.add_conditional_edges(
                 "make_player_move",
                 self.should_continue_game,
-                {True: "make_player_move", False: END}
+                {True: "make_player_move", False: END},
             )
         else:
             # Interactive or assist mode without analysis
@@ -586,10 +589,10 @@ class SinglePlayerGameAgent:
 
     def should_continue_game(self, state: T) -> bool:
         """Check if the game should continue.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             True if the game should continue, False otherwise
         """
@@ -597,10 +600,10 @@ class SinglePlayerGameAgent:
 
     def prepare_move_context(self, state: T) -> dict[str, Any]:
         """Prepare context for move generation.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Context dictionary for the move engine
         """
@@ -608,10 +611,10 @@ class SinglePlayerGameAgent:
 
     def prepare_analysis_context(self, state: T) -> dict[str, Any]:
         """Prepare context for analysis.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Context dictionary for the analysis engine
         """
@@ -619,10 +622,10 @@ class SinglePlayerGameAgent:
 
     def extract_move(self, response: Any) -> Any:
         """Extract move from engine response.
-        
+
         Args:
             response: Response from the engine
-            
+
         Returns:
             Extracted move
         """
@@ -630,7 +633,7 @@ class SinglePlayerGameAgent:
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
-        
+
         Args:
             state: Current game state
         """
@@ -639,7 +642,9 @@ class SinglePlayerGameAgent:
     def save_state_history(self) -> None:
         """Save the current agent state to a JSON file."""
         if not self.app or not self.memory:
-            print("Cannot save state history: Workflow graph not compiled or memory not initialized")
+            print(
+                "Cannot save state history: Workflow graph not compiled or memory not initialized"
+            )
             return
 
         state_json = self.app.get_state(self.runnable_config)

@@ -9,7 +9,7 @@ agent, including:
 
 Example:
     >>> from mafia.config import MafiaAgentConfig
-    >>> 
+    >>>
     >>> # Create a default configuration for 7 players
     >>> config = MafiaAgentConfig.default_config(
     ...     player_count=7,
@@ -18,10 +18,9 @@ Example:
     >>> print(config.max_days)  # Shows 3
 """
 
-
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.multi_player.config import MultiPlayerGameConfig
 
 from .engines import aug_llm_configs
@@ -31,7 +30,7 @@ from .state import MafiaGameState
 
 class MafiaAgentConfig(MultiPlayerGameConfig):
     """Configuration for the Mafia game agent.
-    
+
     This class extends MultiPlayerGameConfig to provide Mafia-specific
     configuration options and defaults.
 
@@ -53,10 +52,15 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
         >>> print(config.max_days)  # Shows 3
     """
 
-    max_days: int = Field(default=3, description="Maximum number of days before forcing game end")
-    day_discussion_rounds: int = Field(default=1, description="Number of discussion rounds per day")
+    max_days: int = Field(
+        default=3, description="Maximum number of days before forcing game end"
+    )
+    day_discussion_rounds: int = Field(
+        default=1, description="Number of discussion rounds per day"
+    )
     engines: dict[str, dict[str, AugLLMConfig]] = Field(
-        default_factory=dict, description="Configurations for game LLMs by role and function"
+        default_factory=dict,
+        description="Configurations for game LLMs by role and function",
     )
     state_schema: type[MafiaGameState] = Field(
         default=MafiaGameState, description="State schema for the game"
@@ -67,9 +71,11 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
     debug: bool = Field(default=False, description="Enable debug mode")
 
     @classmethod
-    def default_config(cls, player_count: int = 7, max_days: int = 3) -> "MafiaAgentConfig":
+    def default_config(
+        cls, player_count: int = 7, max_days: int = 3
+    ) -> "MafiaAgentConfig":
         """Create a default configuration for a Mafia game.
-        
+
         This method creates a standard configuration with appropriate role
         mappings and engine configurations for the specified number of players.
 
@@ -95,7 +101,7 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
             "mafia": PlayerRole.MAFIA,
             "detective": PlayerRole.DETECTIVE,
             "doctor": PlayerRole.DOCTOR,
-            "narrator": PlayerRole.NARRATOR
+            "narrator": PlayerRole.NARRATOR,
         }
 
         # Return config with engines and role mapping
@@ -106,5 +112,5 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
             role_mapping=role_mapping,
             initial_player_count=player_count,
             state_schema=MafiaGameState,
-            debug=False
+            debug=False,
         )

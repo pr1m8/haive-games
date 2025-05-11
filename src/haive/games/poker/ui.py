@@ -49,7 +49,7 @@ class PokerUI:
         self.layout["body"]["right_panel"].split(
             Layout(name="active_player", size=10),
             Layout(name="decisions", size=10),
-            Layout(name="info")
+            Layout(name="info"),
         )
 
     def assign_ai_models(self, player_names):
@@ -59,18 +59,22 @@ class PokerUI:
             "GPT-4o": {"model": "GPT-4o", "arch": "OpenAI"},
             "Gemini": {"model": "Gemini", "arch": "Google"},
             "DeepSeek": {"model": "DeepSeek", "arch": "DeepSeek"},
-            "Mistral": {"model": "Mistral", "arch": "Mistral AI"}
+            "Mistral": {"model": "Mistral", "arch": "Mistral AI"},
         }
 
         # Default model for any player not in the predefined list
         default_model = {"model": "Custom", "arch": "Generic"}
 
         # Assign models to players
-        self.player_models = {name: ai_models.get(name, default_model) for name in player_names}
+        self.player_models = {
+            name: ai_models.get(name, default_model) for name in player_names
+        }
 
     def render_header(self):
         """Render a clean header with title"""
-        header_text = Text("♠️ TEXAS HOLD'EM POKER ♥️", justify="center", style="bold white on blue")
+        header_text = Text(
+            "♠️ TEXAS HOLD'EM POKER ♥️", justify="center", style="bold white on blue"
+        )
         return Panel(header_text, border_style="blue")
 
     def render_footer(self):
@@ -79,7 +83,7 @@ class PokerUI:
             ("ENTER", "Continue"),
             ("ESC", "Exit"),
             ("S", "Statistics"),
-            ("H", "History")
+            ("H", "History"),
         ]
 
         footer_content = Text()
@@ -120,15 +124,19 @@ class PokerUI:
     def render_action_history(self):
         """Render clean action history"""
         if not self.current_game_state:
-            return Panel("No actions yet", title="Recent Actions", border_style="yellow")
+            return Panel(
+                "No actions yet", title="Recent Actions", border_style="yellow"
+            )
 
         game = self.current_game_state["game"]
 
         if not hasattr(game, "action_history") or not game.action_history:
-            return Panel("No actions yet", title="Recent Actions", border_style="yellow")
+            return Panel(
+                "No actions yet", title="Recent Actions", border_style="yellow"
+            )
 
         # Get last 5 actions
-        recent_actions = game.action_history[-min(5, len(game.action_history)):]
+        recent_actions = game.action_history[-min(5, len(game.action_history)) :]
 
         # Create action history text
         content = Text()
@@ -171,7 +179,9 @@ class PokerUI:
 
         # Add community cards if available
         if hasattr(game, "community_cards") and game.community_cards:
-            cards_text = " ".join(self._format_card(card) for card in game.community_cards)
+            cards_text = " ".join(
+                self._format_card(card) for card in game.community_cards
+            )
             content.append("Community Cards:\n", style="bold")
             content.append(f"{cards_text}\n\n", style="cyan")
         else:
@@ -187,11 +197,7 @@ class PokerUI:
                 pot_name = "Main Pot" if i == 0 else f"Side Pot {i}"
                 content.append(f"{pot_name}: ${pot.amount}\n", style="green")
 
-        return Panel(
-            Align.center(content),
-            title="♦️ Poker Table ♣️",
-            border_style="red"
-        )
+        return Panel(Align.center(content), title="♦️ Poker Table ♣️", border_style="red")
 
     def render_players(self):
         """Render players table with clear information"""
@@ -208,7 +214,7 @@ class PokerUI:
             border_style="blue",
             header_style="bold cyan",
             show_header=True,
-            expand=True
+            expand=True,
         )
 
         # Add columns
@@ -219,8 +225,12 @@ class PokerUI:
         table.add_column("Status", style="yellow")
 
         # Add rows for each player
-        current_player_idx = game.current_player_idx if hasattr(game, "current_player_idx") else -1
-        dealer_position = game.dealer_position if hasattr(game, "dealer_position") else -1
+        current_player_idx = (
+            game.current_player_idx if hasattr(game, "current_player_idx") else -1
+        )
+        dealer_position = (
+            game.dealer_position if hasattr(game, "dealer_position") else -1
+        )
 
         for player in game.players:
             # Determine position name
@@ -246,10 +256,16 @@ class PokerUI:
                 status_style = "yellow"
 
             # Highlight current player
-            row_style = "on dark_blue" if player.id == game.players[current_player_idx].id else ""
+            row_style = (
+                "on dark_blue"
+                if player.id == game.players[current_player_idx].id
+                else ""
+            )
 
             # Get AI model info
-            model_info = self.player_models.get(player.name, {"model": "Unknown", "arch": "Unknown"})
+            model_info = self.player_models.get(
+                player.name, {"model": "Unknown", "arch": "Unknown"}
+            )
             model_text = f"{model_info['model']}"
 
             # Add player to table
@@ -259,32 +275,38 @@ class PokerUI:
                 model_text,
                 f"${player.chips}",
                 Text(status, style=status_style),
-                style=row_style
+                style=row_style,
             )
 
             # Show cards for active players (in a real game, this would only show for the human player)
-            if player.is_active and hasattr(player, "hand") and player.hand and player.hand.cards:
-                cards_text = " ".join([self._format_card(card) for card in player.hand.cards])
-                table.add_row(
-                    "",
-                    f"Hand: {cards_text}",
-                    "",
-                    "",
-                    "",
-                    style=row_style
+            if (
+                player.is_active
+                and hasattr(player, "hand")
+                and player.hand
+                and player.hand.cards
+            ):
+                cards_text = " ".join(
+                    [self._format_card(card) for card in player.hand.cards]
                 )
+                table.add_row("", f"Hand: {cards_text}", "", "", "", style=row_style)
 
         return table
 
     def render_active_player(self):
         """Render active player information"""
         if not self.current_game_state:
-            return Panel("No active player", title="🎮 Active Player 🎮", border_style="cyan")
+            return Panel(
+                "No active player", title="🎮 Active Player 🎮", border_style="cyan"
+            )
 
         game = self.current_game_state["game"]
 
-        if not hasattr(game, "current_player_idx") or game.current_player_idx >= len(game.players):
-            return Panel("No active player", title="🎮 Active Player 🎮", border_style="cyan")
+        if not hasattr(game, "current_player_idx") or game.current_player_idx >= len(
+            game.players
+        ):
+            return Panel(
+                "No active player", title="🎮 Active Player 🎮", border_style="cyan"
+            )
 
         # Get current player
         current_player = game.players[game.current_player_idx]
@@ -304,7 +326,9 @@ class PokerUI:
         content.append(f"${current_player.current_bet}\n", style="yellow")
 
         # Add AI model info if available
-        model_info = self.player_models.get(current_player.name, {"model": "Unknown", "arch": "Unknown"})
+        model_info = self.player_models.get(
+            current_player.name, {"model": "Unknown", "arch": "Unknown"}
+        )
         content.append("\nAI: ", style="bold")
         content.append(f"{model_info['model']} ({model_info['arch']})", style="cyan")
 
@@ -312,17 +336,14 @@ class PokerUI:
 
     def _format_card(self, card):
         """Format a card with unicode symbols"""
-        suits = {
-            "hearts": "♥",
-            "diamonds": "♦",
-            "clubs": "♣",
-            "spades": "♠"
-        }
+        suits = {"hearts": "♥", "diamonds": "♦", "clubs": "♣", "spades": "♠"}
 
         suit_value = card.suit.value if hasattr(card.suit, "value") else str(card.suit)
         suit_symbol = suits.get(suit_value, suit_value)
 
-        card_value = card.value.value if hasattr(card.value, "value") else str(card.value)
+        card_value = (
+            card.value.value if hasattr(card.value, "value") else str(card.value)
+        )
 
         # Color based on suit
         color = "red" if suit_value in ["hearts", "diamonds"] else "white"

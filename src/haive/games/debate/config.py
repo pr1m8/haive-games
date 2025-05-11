@@ -1,8 +1,8 @@
 # src/haive/games/debate/config.py
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.debate.engines import build_debate_engines
 from haive.games.debate.state import DebateState
 
@@ -11,22 +11,33 @@ class DebateAgentConfig(AgentConfig):
     """Configuration for debate agents."""
 
     debate_format: str = Field(default="standard", description="Format of the debate")
-    time_limit: int | None = Field(default=None, description="Time limit in seconds per phase")
-    max_statements: int | None = Field(default=None, description="Max statements per participant")
-    allow_interruptions: bool = Field(default=False, description="Allow participants to interrupt")
+    time_limit: int | None = Field(
+        default=None, description="Time limit in seconds per phase"
+    )
+    max_statements: int | None = Field(
+        default=None, description="Max statements per participant"
+    )
+    allow_interruptions: bool = Field(
+        default=False, description="Allow participants to interrupt"
+    )
     voting_enabled: bool = Field(default=True, description="Enable voting at the end")
 
     # Role configurations
-    moderator_role: str | None = Field(default=None, description="Specific role for moderator")
-    participant_roles: dict[str, str] = Field(default_factory=dict, description="Role assignments")
+    moderator_role: str | None = Field(
+        default=None, description="Specific role for moderator"
+    )
+    participant_roles: dict[str, str] = Field(
+        default_factory=dict, description="Role assignments"
+    )
 
     # State schema
-    state_schema: type[BaseModel] = Field(default=DebateState, description="State schema for the debate")
+    state_schema: type[BaseModel] = Field(
+        default=DebateState, description="State schema for the debate"
+    )
 
     # Engine configurations
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=build_debate_engines,
-        description="LLM engines for debate roles"
+        default_factory=build_debate_engines, description="LLM engines for debate roles"
     )
 
     @classmethod
@@ -38,7 +49,7 @@ class DebateAgentConfig(AgentConfig):
             time_limit=120,
             max_statements=3,
             allow_interruptions=False,
-            voting_enabled=True
+            voting_enabled=True,
         )
 
     @classmethod
@@ -51,7 +62,7 @@ class DebateAgentConfig(AgentConfig):
             max_statements=None,
             allow_interruptions=True,
             voting_enabled=False,
-            moderator_role="moderator"
+            moderator_role="moderator",
         )
 
     @classmethod
@@ -68,8 +79,8 @@ class DebateAgentConfig(AgentConfig):
                 "judge": "JUDGE",
                 "prosecution": "PROSECUTOR",
                 "defense": "DEFENSE",
-                "jury": "JURY"
-            }
+                "jury": "JURY",
+            },
         )
 
     @classmethod
@@ -82,5 +93,5 @@ class DebateAgentConfig(AgentConfig):
             max_statements=None,
             allow_interruptions=True,
             voting_enabled=False,
-            moderator_role="moderator"
+            moderator_role="moderator",
         )

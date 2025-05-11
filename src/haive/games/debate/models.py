@@ -6,40 +6,63 @@ from pydantic import BaseModel, Field
 
 class Statement(BaseModel):
     """Represents a single statement in a debate or discussion."""
+
     content: str = Field(..., description="The text of the statement")
     speaker_id: str = Field(..., description="ID of the speaker")
-    target_id: str | None = Field(None, description="ID of targeted participant (if any)")
-    statement_type: str = Field("general", description="Type of statement (question, rebuttal, etc.)")
-    references: list[str] = Field(default_factory=list, description="References or citations")
+    target_id: str | None = Field(
+        None, description="ID of targeted participant (if any)"
+    )
+    statement_type: str = Field(
+        "general", description="Type of statement (question, rebuttal, etc.)"
+    )
+    references: list[str] = Field(
+        default_factory=list, description="References or citations"
+    )
     sentiment: float | None = Field(None, description="Sentiment score if applicable")
     timestamp: str = Field(..., description="When the statement was made")
 
+
 class Topic(BaseModel):
     """Represents a debate topic or question."""
+
     title: str = Field(..., description="Title of the topic")
     description: str = Field(..., description="Detailed description of the topic")
-    keywords: list[str] = Field(default_factory=list, description="Key terms related to topic")
-    constraints: dict[str, str] | None = Field(None, description="Any constraints on discussion")
+    keywords: list[str] = Field(
+        default_factory=list, description="Key terms related to topic"
+    )
+    constraints: dict[str, str] | None = Field(
+        None, description="Any constraints on discussion"
+    )
+
 
 class Participant(BaseModel):
     """Represents a participant in the debate."""
+
     id: str = Field(..., description="Unique identifier for participant")
     name: str = Field(..., description="Display name of participant")
     role: str = Field(..., description="Role in the debate (moderator, debater, etc.)")
-    position: str | None = Field(None, description="Position on topic (pro/con/neutral)")
-    persona: dict[str, str] | None = Field(None, description="Personality traits and characteristics")
+    position: str | None = Field(
+        None, description="Position on topic (pro/con/neutral)"
+    )
+    persona: dict[str, str] | None = Field(
+        None, description="Personality traits and characteristics"
+    )
     expertise: list[str] = Field(default_factory=list, description="Areas of expertise")
     bias: float | None = Field(None, description="Bias level (-1.0 to 1.0)")
 
+
 class Vote(BaseModel):
     """Represents a vote from a participant."""
+
     voter_id: str = Field(..., description="ID of the voter")
     vote_value: str | int | float = Field(..., description="Value of the vote")
     target_id: str | None = Field(None, description="Target of the vote if applicable")
     reason: str | None = Field(None, description="Reasoning behind the vote")
 
+
 class DebatePhase(str, Enum):
     """Phases specific to debate-style interactions."""
+
     SETUP = "setup"
     OPENING_STATEMENTS = "opening_statements"
     DISCUSSION = "discussion"

@@ -1,5 +1,5 @@
-"""State manager for the Nim game.
-"""
+"""State manager for the Nim game."""
+
 from typing import Any
 
 from langgraph.types import Command
@@ -20,11 +20,11 @@ class NimStateManager(GameStateManager[NimState]):
     @classmethod
     def initialize(cls, **kwargs) -> NimState:
         """Initialize a new Nim game with the given pile sizes.
-        
+
         Args:
             **kwargs: Keyword arguments for game initialization.
                 pile_sizes: Optional list of pile sizes. Defaults to [3, 5, 7].
-                
+
         Returns:
             NimState: A new Nim game state.
         """
@@ -34,10 +34,10 @@ class NimStateManager(GameStateManager[NimState]):
     @classmethod
     def get_legal_moves(cls, state: NimState) -> list[NimMove]:
         """Get all legal moves for the current state.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             List[NimMove]: A list of all legal moves.
         """
@@ -46,21 +46,23 @@ class NimStateManager(GameStateManager[NimState]):
         for pile_idx, pile_size in enumerate(state.piles):
             if pile_size > 0:
                 for stones in range(1, pile_size + 1):
-                    legal_moves.append(NimMove(pile_index=pile_idx, stones_taken=stones))
+                    legal_moves.append(
+                        NimMove(pile_index=pile_idx, stones_taken=stones)
+                    )
 
         return legal_moves
 
     @classmethod
     def apply_move(cls, state: NimState, move: NimMove) -> NimState:
         """Apply a move to the current state and return the new state.
-        
+
         Args:
             state: The current game state.
             move: The move to apply.
-            
+
         Returns:
             NimState: A new game state after applying the move.
-            
+
         Raises:
             ValueError: If the move is invalid.
         """
@@ -85,14 +87,16 @@ class NimStateManager(GameStateManager[NimState]):
         return cls.check_game_status(new_state)
 
     @classmethod
-    def add_analysis(cls, state: NimState, player: str, analysis: NimAnalysis) -> NimState:
+    def add_analysis(
+        cls, state: NimState, player: str, analysis: NimAnalysis
+    ) -> NimState:
         """Add an analysis to the state.
-        
+
         Args:
             state: The current game state.
             player: The player who performed the analysis.
             analysis: The analysis to add.
-            
+
         Returns:
             NimState: Updated state with the analysis added.
         """
@@ -110,17 +114,19 @@ class NimStateManager(GameStateManager[NimState]):
         return new_state
 
     @classmethod
-    def make_move(cls, state: NimState | dict[str, Any], player: str, move: NimMove) -> Command:
+    def make_move(
+        cls, state: NimState | dict[str, Any], player: str, move: NimMove
+    ) -> Command:
         """Make a move and return a Command with the updated state.
-        
+
         Args:
             state: The current game state.
             player: The player making the move.
             move: The move to make.
-            
+
         Returns:
             Command: Command with the updated state.
-            
+
         Raises:
             ValueError: If it's not the player's turn.
         """
@@ -141,10 +147,10 @@ class NimStateManager(GameStateManager[NimState]):
     @classmethod
     def get_winner(cls, state: NimState) -> str | None:
         """Get the winner of the game, if any.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Optional[str]: The winner, or None if the game is ongoing.
         """
@@ -157,10 +163,10 @@ class NimStateManager(GameStateManager[NimState]):
     @classmethod
     def check_game_status(cls, state: NimState) -> NimState:
         """Check and update the game status.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             NimState: The game state with updated status.
         """

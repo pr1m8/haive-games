@@ -4,6 +4,7 @@ This module defines the state manager for the Mastermind game,
 which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
+
 import random
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -61,35 +62,37 @@ class MastermindStateManager(GameStateManager[MastermindState]):
             turn=codebreaker,  # Codebreaker starts
             codemaker=codemaker,
             max_turns=max_turns,
-            game_status="ongoing"
+            game_status="ongoing",
         )
 
     @classmethod
     def get_legal_moves(cls, state: MastermindState) -> list[MastermindGuess]:
         """Get all legal moves for the current state.
-        
+
         For Mastermind, this is impractical to enumerate all possible color combinations,
         so this method returns an empty list. The agent will generate guesses based on analysis.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             List[MastermindGuess]: An empty list (agent should generate its own guesses).
         """
         return []
 
     @classmethod
-    def apply_move(cls, state: MastermindState, move: MastermindGuess) -> MastermindState:
+    def apply_move(
+        cls, state: MastermindState, move: MastermindGuess
+    ) -> MastermindState:
         """Apply a guess to the current state and return the new state.
-        
+
         Args:
             state: The current game state.
             move: The guess to apply.
-            
+
         Returns:
             MastermindState: A new game state after applying the guess.
-            
+
         Raises:
             ValueError: If the move is invalid.
         """
@@ -124,18 +127,22 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         return new_state
 
     @classmethod
-    def _calculate_feedback(cls, secret_code: list[str], guess: list[str]) -> MastermindFeedback:
+    def _calculate_feedback(
+        cls, secret_code: list[str], guess: list[str]
+    ) -> MastermindFeedback:
         """Calculate feedback for a guess compared to the secret code.
-        
+
         Args:
             secret_code: The secret code to guess.
             guess: The player's guess.
-            
+
         Returns:
             MastermindFeedback: Feedback with correct position and color counts.
         """
         # Count exact matches (correct position and color)
-        correct_position = sum(1 for s, g in zip(secret_code, guess, strict=False) if s == g)
+        correct_position = sum(
+            1 for s, g in zip(secret_code, guess, strict=False) if s == g
+        )
 
         # Count color matches (regardless of position)
         # We need to handle duplicates carefully
@@ -149,25 +156,27 @@ class MastermindStateManager(GameStateManager[MastermindState]):
             guess_counts[color] = guess_counts.get(color, 0) + 1
 
         # Count colors that appear in both lists (take minimum count for each color)
-        correct_color_total = sum(min(secret_counts.get(color, 0), guess_counts.get(color, 0)) for color in set(secret_code + guess))
+        correct_color_total = sum(
+            min(secret_counts.get(color, 0), guess_counts.get(color, 0))
+            for color in set(secret_code + guess)
+        )
 
         # Subtract exact matches to get only color matches
         correct_color = correct_color_total - correct_position
 
         return MastermindFeedback(
-            correct_position=correct_position,
-            correct_color=correct_color
+            correct_position=correct_position, correct_color=correct_color
         )
 
     @classmethod
     def check_game_status(cls, state: MastermindState) -> MastermindState:
         """Check and update the game status.
-        
+
         For Mastermind, this is handled in apply_move, so this method just returns the state.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             MastermindState: The game state (unchanged).
         """
@@ -176,24 +185,26 @@ class MastermindStateManager(GameStateManager[MastermindState]):
     @classmethod
     def get_winner(cls, state: MastermindState) -> str | None:
         """Get the winner of the game, if any.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Optional[str]: The winner, or None if the game is ongoing.
         """
         return state.winner
 
     @classmethod
-    def add_analysis(cls, state: MastermindState, player: str, analysis: MastermindAnalysis) -> MastermindState:
+    def add_analysis(
+        cls, state: MastermindState, player: str, analysis: MastermindAnalysis
+    ) -> MastermindState:
         """Add an analysis to the state.
-        
+
         Args:
             state: The current game state.
             player: The player who performed the analysis.
             analysis: The analysis to add.
-            
+
         Returns:
             MastermindState: Updated state with the analysis added.
         """
@@ -209,12 +220,12 @@ class MastermindStateManager(GameStateManager[MastermindState]):
     @classmethod
     def get_possible_codes(cls, state: MastermindState) -> set[tuple[str, ...]]:
         """Get all possible secret codes that are consistent with all guesses and feedback so far.
-        
+
         This is computationally expensive for a full game, so it's limited to use for analysis.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Set[Tuple[str, ...]]: Set of possible codes as tuples.
         """
@@ -224,26 +235,31 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         # Generate all possible codes (expensive, but acceptable for analysis)
         import itertools
+
         all_codes = set(itertools.product(colors, repeat=code_length))
 
         # Filter based on previous guesses and feedback
         for guess, feedback in zip(state.guesses, state.feedback, strict=False):
             guess_tuple = tuple(guess.colors)
-            all_codes = {code for code in all_codes if
-                         cls._is_consistent_with_feedback(code, guess_tuple, feedback)}
+            all_codes = {
+                code
+                for code in all_codes
+                if cls._is_consistent_with_feedback(code, guess_tuple, feedback)
+            }
 
         return all_codes
 
     @classmethod
-    def _is_consistent_with_feedback(cls, code: tuple[str, ...], guess: tuple[str, ...],
-                                    feedback: MastermindFeedback) -> bool:
+    def _is_consistent_with_feedback(
+        cls, code: tuple[str, ...], guess: tuple[str, ...], feedback: MastermindFeedback
+    ) -> bool:
         """Check if a potential code is consistent with a guess and its feedback.
-        
+
         Args:
             code: Potential secret code.
             guess: A previous guess.
             feedback: Feedback for the guess.
-            
+
         Returns:
             bool: True if the code is consistent with the guess and feedback.
         """
@@ -251,5 +267,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         calculated_feedback = cls._calculate_feedback(list(code), list(guess))
 
         # Check if it matches the actual feedback
-        return (calculated_feedback.correct_position == feedback.correct_position and
-                calculated_feedback.correct_color == feedback.correct_color)
+        return (
+            calculated_feedback.correct_position == feedback.correct_position
+            and calculated_feedback.correct_color == feedback.correct_color
+        )

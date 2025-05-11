@@ -9,10 +9,10 @@ import logging
 import random
 from typing import Any
 
+from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.graph import END
 from langgraph.types import Command, RetryPolicy
 
-from haive.core.engine.agent.agent import Agent, register_agent
 from haive.games.monopoly.config import MonopolyAgentConfig
 from haive.games.monopoly.models import DiceInfo, PlayerInfo, PropertyInfo
 from haive.games.monopoly.state import MonopolyState
@@ -20,10 +20,11 @@ from haive.games.monopoly.state import MonopolyState
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
 @register_agent(MonopolyAgentConfig)
 class MonopolyAgent(Agent[MonopolyAgentConfig]):
     """Monopoly agent implementation using LangGraph.
-    
+
     This agent manages a Monopoly game with multiple players, including:
         - Game state tracking
         - Move validation and execution
@@ -32,7 +33,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         - Turn management
     """
 
-    def __init__(self, config: MonopolyAgentConfig=MonopolyAgentConfig()):
+    def __init__(self, config: MonopolyAgentConfig = MonopolyAgentConfig()):
         """Initialize the Monopoly agent."""
         super().__init__(config)
         self.engines = {}
@@ -42,6 +43,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             # Check if it's a dictionary and convert to AugLLMConfig if needed
             if isinstance(engine_config, dict):
                 from haive.core.engine.aug_llm import AugLLMConfig
+
                 engine_obj = AugLLMConfig(**engine_config)
                 self.engines[key] = engine_obj.create_runnable()
             else:
@@ -57,12 +59,12 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             initial_interval=1.0,
             backoff_factor=2.0,
             max_interval=10.0,
-            jitter=True
+            jitter=True,
         )
 
     def setup_workflow(self):
         """Set up the workflow graph for the Monopoly game.
-        
+
         This method:
             1. Adds nodes for game actions (initialize, move, property management)
             2. Connects nodes with edges based on game flow
@@ -93,8 +95,8 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 "move": "execute_move",
                 "manage_properties": "manage_properties",
                 "end_turn": "end_player_turn",
-                "game_over": END
-            }
+                "game_over": END,
+            },
         )
 
         # Connect move execution to property management
@@ -107,8 +109,8 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             {
                 "continue": "manage_properties",
                 "end_turn": "end_player_turn",
-                "game_over": END
-            }
+                "game_over": END,
+            },
         )
 
         # Connect property management to decision node
@@ -119,10 +121,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def run_research(self, state: MonopolyState) -> dict[str, Any]:
         """Run a Monopoly game simulation from the given state.
-        
+
         Args:
             state: Starting game state
-            
+
         Returns:
             Final game state
         """
@@ -136,7 +138,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     position=0,
                     cash=1500,
                     total_wealth=1500,
-                    properties_owned=[]
+                    properties_owned=[],
                 ),
                 PlayerInfo(
                     name="Player 2",
@@ -144,8 +146,8 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     position=0,
                     cash=1500,
                     total_wealth=1500,
-                    properties_owned=[]
-                )
+                    properties_owned=[],
+                ),
             ]
             print("🎮 Initialized game with two default players")
 
@@ -157,10 +159,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def initialize_game(self, state: dict[str, Any] | MonopolyState) -> dict[str, Any]:
         """Initialize a new Monopoly game.
-        
+
         Args:
             state: Initial state data (may be empty)
-            
+
         Returns:
             Initialized game state
         """
@@ -180,7 +182,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     position=0,
                     cash=1500,
                     total_wealth=1500,
-                    properties_owned=[]
+                    properties_owned=[],
                 ),
                 PlayerInfo(
                     name="Player 2",
@@ -188,8 +190,8 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     position=0,
                     cash=1500,
                     total_wealth=1500,
-                    properties_owned=[]
-                )
+                    properties_owned=[],
+                ),
             ]
 
             # Add some properties (simplified)
@@ -204,7 +206,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     mortgage_value=30,
                     owner=None,
                     houses=0,
-                    is_mortgaged=False
+                    is_mortgaged=False,
                 ),
                 "Baltic Avenue": PropertyInfo(
                     name="Baltic Avenue",
@@ -216,8 +218,8 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                     mortgage_value=30,
                     owner=None,
                     houses=0,
-                    is_mortgaged=False
-                )
+                    is_mortgaged=False,
+                ),
             }
 
             state_obj.properties = initial_properties
@@ -228,10 +230,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def analyze_strategy(self, state: dict[str, Any]) -> dict[str, Any]:
         """Analyze the current game state and determine strategy.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated state with strategic analysis
         """
@@ -258,13 +260,18 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             # Prepare context for LLM
             context = {
                 "turn": state_obj.current_player_index,
-                "current_round": len(state_obj.recent_events) // 2,  # Approximate round count
+                "current_round": len(state_obj.recent_events)
+                // 2,  # Approximate round count
                 "current_player_cash": current_player.cash,
                 "current_player_wealth": current_player.total_wealth,
                 "board_representation": self._get_board_representation(state_obj),
-                "player_properties": self._get_property_summary(state_obj, current_player.index),
-                "opponent_properties": self._get_property_summary(state_obj, opponent.index),
-                "recent_events": "\n".join(state_obj.recent_events[-5:])
+                "player_properties": self._get_property_summary(
+                    state_obj, current_player.index
+                ),
+                "opponent_properties": self._get_property_summary(
+                    state_obj, opponent.index
+                ),
+                "recent_events": "\n".join(state_obj.recent_events[-5:]),
             }
 
             # Get strategy analysis from LLM
@@ -286,10 +293,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def decide_turn_actions(self, state: dict[str, Any]) -> Command:
         """Decide what actions to take for the current turn.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Command with decision and next step
         """
@@ -324,8 +331,12 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 "in_jail": current_player.is_in_jail,
                 "has_rolled": state_obj.has_rolled,
                 "board_representation": self._get_board_representation(state_obj),
-                "player_properties": self._get_property_summary(state_obj, current_player.index),
-                "opponent_properties": self._get_property_summary(state_obj, opponent.index),
+                "player_properties": self._get_property_summary(
+                    state_obj, current_player.index
+                ),
+                "opponent_properties": self._get_property_summary(
+                    state_obj, opponent.index
+                ),
                 "legal_moves": self._get_legal_moves(state_obj),
                 "available_property_actions": self._get_property_actions(state_obj),
                 "recent_events": "\n".join(state_obj.recent_events[-5:]),
@@ -334,8 +345,14 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             # Add strategy analysis if available
             if hasattr(state_obj, "strategy_analysis") and state_obj.strategy_analysis:
                 context["strategy_analysis"] = state_obj.strategy_analysis.analysis
-            elif isinstance(state, dict) and "strategy_analysis" in state and state["strategy_analysis"]:
-                context["strategy_analysis"] = state["strategy_analysis"].get("analysis", "No analysis available")
+            elif (
+                isinstance(state, dict)
+                and "strategy_analysis" in state
+                and state["strategy_analysis"]
+            ):
+                context["strategy_analysis"] = state["strategy_analysis"].get(
+                    "analysis", "No analysis available"
+                )
             else:
                 context["strategy_analysis"] = "No analysis available"
 
@@ -360,8 +377,7 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
             # Update state with decision
             return Command(
-                update={"turn_decision": turn_decision.model_dump()},
-                goto=next_step
+                update={"turn_decision": turn_decision.model_dump()}, goto=next_step
             )
 
         except Exception as e:
@@ -371,10 +387,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def execute_move(self, state: dict[str, Any]) -> dict[str, Any]:
         """Execute a player's move on the board.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated state after executing the move
         """
@@ -399,7 +415,11 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         move_action = None
         if hasattr(turn_decision, "move_action") and turn_decision.move_action:
             move_action = turn_decision.move_action
-        elif isinstance(turn_decision, dict) and "move_action" in turn_decision and turn_decision["move_action"]:
+        elif (
+            isinstance(turn_decision, dict)
+            and "move_action" in turn_decision
+            and turn_decision["move_action"]
+        ):
             move_action = turn_decision["move_action"]
 
         if not move_action:
@@ -433,7 +453,9 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             # Calculate total steps
             if hasattr(state_obj.dice, "sum"):
                 steps = state_obj.dice.sum
-            elif hasattr(state_obj.dice, "values") and isinstance(state_obj.dice.values, tuple):
+            elif hasattr(state_obj.dice, "values") and isinstance(
+                state_obj.dice.values, tuple
+            ):
                 steps = sum(state_obj.dice.values)
             else:
                 # Assume it's a list
@@ -445,7 +467,9 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             new_position = (current_position + steps) % 40  # Wrap around at 40
 
             # Check if passing GO (not in jail and moved forward past position 39)
-            passes_go = current_position > new_position and not current_player.is_in_jail
+            passes_go = (
+                current_position > new_position and not current_player.is_in_jail
+            )
 
             # Update player position
             state_obj.players[state_obj.current_player_index].position = new_position
@@ -454,11 +478,19 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             if passes_go:
                 # Add $200 for passing GO
                 state_obj.players[state_obj.current_player_index].cash += 200
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} passed GO and collected $200")
-                print(f"💵 Player {state_obj.current_player_index + 1} passed GO and collected $200")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} passed GO and collected $200"
+                )
+                print(
+                    f"💵 Player {state_obj.current_player_index + 1} passed GO and collected $200"
+                )
 
-            print(f"🚶 Moved from position {current_position} to position {new_position}")
-            state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} moved from position {current_position} to position {new_position}")
+            print(
+                f"🚶 Moved from position {current_position} to position {new_position}"
+            )
+            state_obj.recent_events.append(
+                f"Player {state_obj.current_player_index + 1} moved from position {current_position} to position {new_position}"
+            )
 
             # Update has_rolled flag
             state_obj.has_rolled = True
@@ -470,13 +502,19 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 if current_player.cash >= 50:
                     state_obj.players[state_obj.current_player_index].cash -= 50
                     state_obj.players[state_obj.current_player_index].is_in_jail = False
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} paid $50 to get out of jail")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} paid $50 to get out of jail"
+                    )
                     print("💵 Paid $50 to get out of jail")
                 else:
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} cannot pay $50 to get out of jail")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} cannot pay $50 to get out of jail"
+                    )
                     print("❌ Insufficient funds to pay jail fine")
             else:
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to pay to exit jail but is not in jail")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} tried to pay to exit jail but is not in jail"
+                )
                 print("❌ Not in jail, cannot pay to exit")
 
         # Handle roll for double to exit jail
@@ -491,36 +529,48 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 # Check if rolled doubles
                 if dice1 == dice2:
                     state_obj.players[state_obj.current_player_index].is_in_jail = False
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} rolled doubles and got out of jail")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} rolled doubles and got out of jail"
+                    )
                     print("🎉 Rolled doubles! You're out of jail")
 
                     # Move player according to dice roll
                     steps = dice1 + dice2
                     current_position = current_player.position
                     new_position = (current_position + steps) % 40
-                    state_obj.players[state_obj.current_player_index].position = new_position
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} moved to position {new_position}")
+                    state_obj.players[state_obj.current_player_index].position = (
+                        new_position
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} moved to position {new_position}"
+                    )
                     print(f"🚶 Moved to position {new_position}")
                 else:
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} failed to roll doubles and remains in jail")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} failed to roll doubles and remains in jail"
+                    )
                     print("❌ Not doubles, still in jail")
 
                 # Update has_rolled flag
                 state_obj.has_rolled = True
             else:
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to roll for double but is not in jail")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} tried to roll for double but is not in jail"
+                )
                 print("❌ Not in jail, cannot roll for double")
 
         else:
             print(f"❌ Unknown move action: {action_type}")
-            state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried an unknown move action: {action_type}")
+            state_obj.recent_events.append(
+                f"Player {state_obj.current_player_index + 1} tried an unknown move action: {action_type}"
+            )
 
         # Check if landed on a property
         new_position = current_player.position
         property_at_position = None
 
         # Look for property at the current position
-        for prop_name, prop in state_obj.properties.items():
+        for _prop_name, prop in state_obj.properties.items():
             if prop.position == new_position:
                 property_at_position = prop
                 break
@@ -531,48 +581,75 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             # Handle property landing logic
             if property_at_position.owner is None:
                 # Property is unowned
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} landed on unowned property {property_at_position.name}")
-                print(f"💰 {property_at_position.name} is unowned and available for purchase (${property_at_position.cost})")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} landed on unowned property {property_at_position.name}"
+                )
+                print(
+                    f"💰 {property_at_position.name} is unowned and available for purchase (${property_at_position.cost})"
+                )
 
             elif property_at_position.owner != state_obj.current_player_index:
                 # Property is owned by another player - pay rent
                 if not property_at_position.is_mortgaged:
                     # Calculate rent
-                    rent_amount = self._calculate_rent(state_obj, property_at_position.name)
+                    rent_amount = self._calculate_rent(
+                        state_obj, property_at_position.name
+                    )
 
                     # Pay rent if player has enough cash
                     if current_player.cash >= rent_amount:
                         # Update cash for both players
-                        state_obj.players[state_obj.current_player_index].cash -= rent_amount
-                        state_obj.players[property_at_position.owner].cash += rent_amount
+                        state_obj.players[
+                            state_obj.current_player_index
+                        ].cash -= rent_amount
+                        state_obj.players[
+                            property_at_position.owner
+                        ].cash += rent_amount
 
-                        state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} paid ${rent_amount} rent to Player {property_at_position.owner + 1}")
-                        print(f"💵 Paid ${rent_amount} rent to Player {property_at_position.owner + 1}")
+                        state_obj.recent_events.append(
+                            f"Player {state_obj.current_player_index + 1} paid ${rent_amount} rent to Player {property_at_position.owner + 1}"
+                        )
+                        print(
+                            f"💵 Paid ${rent_amount} rent to Player {property_at_position.owner + 1}"
+                        )
                     else:
                         # Handle insufficient funds (bankruptcy)
-                        state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} cannot pay ${rent_amount} rent and is bankrupt")
+                        state_obj.recent_events.append(
+                            f"Player {state_obj.current_player_index + 1} cannot pay ${rent_amount} rent and is bankrupt"
+                        )
                         print(f"⚠️ Cannot pay ${rent_amount} rent - player is bankrupt")
-                        if hasattr(state_obj.players[state_obj.current_player_index], "bankruptcy_status"):
-                            state_obj.players[state_obj.current_player_index].bankruptcy_status = True
+                        if hasattr(
+                            state_obj.players[state_obj.current_player_index],
+                            "bankruptcy_status",
+                        ):
+                            state_obj.players[
+                                state_obj.current_player_index
+                            ].bankruptcy_status = True
                         else:
                             # Backwards compatibility with older PlayerInfo model
-                            state_obj.players[state_obj.current_player_index].bankrupt = True
+                            state_obj.players[
+                                state_obj.current_player_index
+                            ].bankrupt = True
                 else:
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} landed on mortgaged property {property_at_position.name} - no rent paid")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} landed on mortgaged property {property_at_position.name} - no rent paid"
+                    )
                     print("📝 Property is mortgaged - no rent paid")
             else:
                 # Player owns this property
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} landed on their own property {property_at_position.name}")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} landed on their own property {property_at_position.name}"
+                )
                 print("🏡 You own this property")
 
         return state_obj.model_dump()
 
     def manage_properties(self, state: dict[str, Any]) -> dict[str, Any]:
         """Manage properties (buy, sell, mortgage, etc).
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated state after property management
         """
@@ -595,7 +672,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
         # Handle the property action
         property_actions = []
-        if hasattr(turn_decision, "property_actions") and turn_decision.property_actions:
+        if (
+            hasattr(turn_decision, "property_actions")
+            and turn_decision.property_actions
+        ):
             property_actions = turn_decision.property_actions
         elif isinstance(turn_decision, dict) and "property_actions" in turn_decision:
             property_actions = turn_decision["property_actions"]
@@ -616,7 +696,9 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
             if not property_name or property_name not in state_obj.properties:
                 print(f"❌ Invalid property: {property_name}")
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to manage invalid property: {property_name}")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} tried to manage invalid property: {property_name}"
+                )
                 continue
 
             property_obj = state_obj.properties[property_name]
@@ -625,40 +707,62 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             if action == "buy":
                 # Check if property is unowned
                 if property_obj.owner is not None:
-                    print(f"❌ Cannot buy {property_name} - already owned by Player {property_obj.owner + 1}")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to buy {property_name}, but it's already owned")
+                    print(
+                        f"❌ Cannot buy {property_name} - already owned by Player {property_obj.owner + 1}"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to buy {property_name}, but it's already owned"
+                    )
                     continue
 
                 # Check if player has enough money
                 if current_player.cash < property_obj.cost:
-                    print(f"❌ Cannot buy {property_name} - insufficient funds (need ${property_obj.cost}, have ${current_player.cash})")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to buy {property_name}, but has insufficient funds")
+                    print(
+                        f"❌ Cannot buy {property_name} - insufficient funds (need ${property_obj.cost}, have ${current_player.cash})"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to buy {property_name}, but has insufficient funds"
+                    )
                     continue
 
                 # Buy the property
                 state_obj.properties[property_name].owner = current_player.index
                 state_obj.players[current_player.index].cash -= property_obj.cost
 
-                if not hasattr(state_obj.players[current_player.index], "properties_owned"):
+                if not hasattr(
+                    state_obj.players[current_player.index], "properties_owned"
+                ):
                     state_obj.players[current_player.index].properties_owned = []
 
-                state_obj.players[current_player.index].properties_owned.append(property_name)
+                state_obj.players[current_player.index].properties_owned.append(
+                    property_name
+                )
 
                 print(f"✅ Bought {property_name} for ${property_obj.cost}")
-                state_obj.recent_events.append(f"Player {current_player.index + 1} bought {property_name} for ${property_obj.cost}")
+                state_obj.recent_events.append(
+                    f"Player {current_player.index + 1} bought {property_name} for ${property_obj.cost}"
+                )
 
             # BUILD house
             elif action == "build":
                 # Check if player owns the property
                 if property_obj.owner != current_player.index:
-                    print(f"❌ Cannot build on {property_name} - not owned by current player")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but doesn't own it")
+                    print(
+                        f"❌ Cannot build on {property_name} - not owned by current player"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but doesn't own it"
+                    )
                     continue
 
                 # Check if property has max houses
                 if property_obj.houses >= 5:  # 5 houses = hotel
-                    print(f"❌ Cannot build on {property_name} - already has maximum improvements")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but it already has maximum improvements")
+                    print(
+                        f"❌ Cannot build on {property_name} - already has maximum improvements"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but it already has maximum improvements"
+                    )
                     continue
 
                 # Calculate house cost (simplified)
@@ -666,8 +770,12 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
                 # Check if player has enough money
                 if current_player.cash < house_cost:
-                    print(f"❌ Cannot build on {property_name} - insufficient funds (need ${house_cost}, have ${current_player.cash})")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but has insufficient funds")
+                    print(
+                        f"❌ Cannot build on {property_name} - insufficient funds (need ${house_cost}, have ${current_player.cash})"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to build on {property_name}, but has insufficient funds"
+                    )
                     continue
 
                 # Buy the house
@@ -677,23 +785,37 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 # Determine if this is a house or hotel
                 if property_obj.houses == 5:
                     print(f"✅ Built a hotel on {property_name} for ${house_cost}")
-                    state_obj.recent_events.append(f"Player {current_player.index + 1} built a hotel on {property_name} for ${house_cost}")
+                    state_obj.recent_events.append(
+                        f"Player {current_player.index + 1} built a hotel on {property_name} for ${house_cost}"
+                    )
                 else:
-                    print(f"✅ Built a house on {property_name} for ${house_cost} (now {property_obj.houses} houses)")
-                    state_obj.recent_events.append(f"Player {current_player.index + 1} built a house on {property_name} for ${house_cost}")
+                    print(
+                        f"✅ Built a house on {property_name} for ${house_cost} (now {property_obj.houses} houses)"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {current_player.index + 1} built a house on {property_name} for ${house_cost}"
+                    )
 
             # SELL house
             elif action == "sell":
                 # Check if player owns the property
                 if property_obj.owner != current_player.index:
-                    print(f"❌ Cannot sell house from {property_name} - not owned by current player")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to sell house from {property_name}, but doesn't own it")
+                    print(
+                        f"❌ Cannot sell house from {property_name} - not owned by current player"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to sell house from {property_name}, but doesn't own it"
+                    )
                     continue
 
                 # Check if property has houses
                 if property_obj.houses <= 0:
-                    print(f"❌ Cannot sell house from {property_name} - no houses to sell")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to sell house from {property_name}, but there are no houses")
+                    print(
+                        f"❌ Cannot sell house from {property_name} - no houses to sell"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to sell house from {property_name}, but there are no houses"
+                    )
                     continue
 
                 # Calculate house cost (simplified)
@@ -708,29 +830,43 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 was_hotel = property_obj.houses == 4
                 if was_hotel:
                     print(f"✅ Sold a hotel from {property_name} for ${sell_value}")
-                    state_obj.recent_events.append(f"Player {current_player.index + 1} sold a hotel from {property_name} for ${sell_value}")
+                    state_obj.recent_events.append(
+                        f"Player {current_player.index + 1} sold a hotel from {property_name} for ${sell_value}"
+                    )
                 else:
-                    print(f"✅ Sold a house from {property_name} for ${sell_value} (now {property_obj.houses} houses)")
-                    state_obj.recent_events.append(f"Player {current_player.index + 1} sold a house from {property_name} for ${sell_value}")
+                    print(
+                        f"✅ Sold a house from {property_name} for ${sell_value} (now {property_obj.houses} houses)"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {current_player.index + 1} sold a house from {property_name} for ${sell_value}"
+                    )
 
             # MORTGAGE property
             elif action == "mortgage":
                 # Check if player owns the property
                 if property_obj.owner != current_player.index:
-                    print(f"❌ Cannot mortgage {property_name} - not owned by current player")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but doesn't own it")
+                    print(
+                        f"❌ Cannot mortgage {property_name} - not owned by current player"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but doesn't own it"
+                    )
                     continue
 
                 # Check if property is already mortgaged
                 if property_obj.is_mortgaged:
                     print(f"❌ Cannot mortgage {property_name} - already mortgaged")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but it's already mortgaged")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but it's already mortgaged"
+                    )
                     continue
 
                 # Check if property has buildings
                 if property_obj.houses > 0:
                     print(f"❌ Cannot mortgage {property_name} - has buildings")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but it has buildings")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to mortgage {property_name}, but it has buildings"
+                    )
                     continue
 
                 # Calculate mortgage value
@@ -741,20 +877,28 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 state_obj.players[current_player.index].cash += mortgage_value
 
                 print(f"✅ Mortgaged {property_name} for ${mortgage_value}")
-                state_obj.recent_events.append(f"Player {current_player.index + 1} mortgaged {property_name} for ${mortgage_value}")
+                state_obj.recent_events.append(
+                    f"Player {current_player.index + 1} mortgaged {property_name} for ${mortgage_value}"
+                )
 
             # UNMORTGAGE property
             elif action == "unmortgage":
                 # Check if player owns the property
                 if property_obj.owner != current_player.index:
-                    print(f"❌ Cannot unmortgage {property_name} - not owned by current player")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but doesn't own it")
+                    print(
+                        f"❌ Cannot unmortgage {property_name} - not owned by current player"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but doesn't own it"
+                    )
                     continue
 
                 # Check if property is mortgaged
                 if not property_obj.is_mortgaged:
                     print(f"❌ Cannot unmortgage {property_name} - not mortgaged")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but it's not mortgaged")
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but it's not mortgaged"
+                    )
                     continue
 
                 # Calculate unmortgage cost (mortgage value + 10% interest)
@@ -763,8 +907,12 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
                 # Check if player has enough money
                 if current_player.cash < unmortgage_cost:
-                    print(f"❌ Cannot unmortgage {property_name} - insufficient funds (need ${unmortgage_cost}, have ${current_player.cash})")
-                    state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but has insufficient funds")
+                    print(
+                        f"❌ Cannot unmortgage {property_name} - insufficient funds (need ${unmortgage_cost}, have ${current_player.cash})"
+                    )
+                    state_obj.recent_events.append(
+                        f"Player {state_obj.current_player_index + 1} tried to unmortgage {property_name}, but has insufficient funds"
+                    )
                     continue
 
                 # Unmortgage the property
@@ -772,11 +920,15 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 state_obj.players[current_player.index].cash -= unmortgage_cost
 
                 print(f"✅ Unmortgaged {property_name} for ${unmortgage_cost}")
-                state_obj.recent_events.append(f"Player {current_player.index + 1} unmortgaged {property_name} for ${unmortgage_cost}")
+                state_obj.recent_events.append(
+                    f"Player {current_player.index + 1} unmortgaged {property_name} for ${unmortgage_cost}"
+                )
 
             else:
                 print(f"❌ Unknown property action: {action}")
-                state_obj.recent_events.append(f"Player {state_obj.current_player_index + 1} tried unknown property action: {action}")
+                state_obj.recent_events.append(
+                    f"Player {state_obj.current_player_index + 1} tried unknown property action: {action}"
+                )
 
         return state_obj.model_dump()
 
@@ -809,8 +961,11 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             owner = property_obj.owner
             color_group = getattr(property_obj, "color", None)
             if owner is not None and color_group:
-                properties_in_group = [p for p_name, p in state.properties.items()
-                                      if getattr(p, "color", None) == color_group]
+                properties_in_group = [
+                    p
+                    for p_name, p in state.properties.items()
+                    if getattr(p, "color", None) == color_group
+                ]
                 if all(p.owner == owner for p in properties_in_group):
                     # Double rent for monopoly
                     base_rent *= 2
@@ -841,17 +996,17 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
             "yellow": 150,
             "green": 200,
             "dark blue": 200,
-            "dark_blue": 200
+            "dark_blue": 200,
         }
 
         return house_costs.get(property_group, 100)  # Default to 100
 
     def check_game_status(self, state: dict[str, Any]) -> Command:
         """Check if game can continue or should end.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Command with routing decision
         """
@@ -890,10 +1045,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
 
     def end_player_turn(self, state: dict[str, Any]) -> dict[str, Any]:
         """End the current player's turn and switch to the next player.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated state for next player
         """
@@ -949,7 +1104,11 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         # Get the turn decision
         if hasattr(state_obj, "turn_decision") and state_obj.turn_decision:
             turn_decision = state_obj.turn_decision
-        elif isinstance(state, dict) and "turn_decision" in state and state["turn_decision"]:
+        elif (
+            isinstance(state, dict)
+            and "turn_decision" in state
+            and state["turn_decision"]
+        ):
             turn_decision = state["turn_decision"]
         else:
             print("⚠️ No turn decision found, defaulting to end_turn")
@@ -968,7 +1127,10 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         # Object-based turn decision
         elif hasattr(turn_decision, "move_action") and turn_decision.move_action:
             return "move"
-        elif hasattr(turn_decision, "property_actions") and turn_decision.property_actions:
+        elif (
+            hasattr(turn_decision, "property_actions")
+            and turn_decision.property_actions
+        ):
             return "manage_properties"
         elif hasattr(turn_decision, "end_turn") and turn_decision.end_turn:
             return "end_turn"
@@ -1006,16 +1168,46 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         """Get location name from position."""
         # This would be replaced with actual game board data
         locations = [
-            "Go", "Mediterranean Avenue", "Community Chest", "Baltic Avenue",
-            "Income Tax", "Reading Railroad", "Oriental Avenue", "Chance",
-            "Vermont Avenue", "Connecticut Avenue", "Jail/Just Visiting", "St. Charles Place",
-            "Electric Company", "States Avenue", "Virginia Avenue", "Pennsylvania Railroad",
-            "St. James Place", "Community Chest", "Tennessee Avenue", "New York Avenue",
-            "Free Parking", "Kentucky Avenue", "Chance", "Indiana Avenue",
-            "Illinois Avenue", "B&O Railroad", "Atlantic Avenue", "Ventnor Avenue",
-            "Water Works", "Marvin Gardens", "Go To Jail", "Pacific Avenue",
-            "North Carolina Avenue", "Community Chest", "Pennsylvania Avenue", "Short Line",
-            "Chance", "Park Place", "Luxury Tax", "Boardwalk"
+            "Go",
+            "Mediterranean Avenue",
+            "Community Chest",
+            "Baltic Avenue",
+            "Income Tax",
+            "Reading Railroad",
+            "Oriental Avenue",
+            "Chance",
+            "Vermont Avenue",
+            "Connecticut Avenue",
+            "Jail/Just Visiting",
+            "St. Charles Place",
+            "Electric Company",
+            "States Avenue",
+            "Virginia Avenue",
+            "Pennsylvania Railroad",
+            "St. James Place",
+            "Community Chest",
+            "Tennessee Avenue",
+            "New York Avenue",
+            "Free Parking",
+            "Kentucky Avenue",
+            "Chance",
+            "Indiana Avenue",
+            "Illinois Avenue",
+            "B&O Railroad",
+            "Atlantic Avenue",
+            "Ventnor Avenue",
+            "Water Works",
+            "Marvin Gardens",
+            "Go To Jail",
+            "Pacific Avenue",
+            "North Carolina Avenue",
+            "Community Chest",
+            "Pennsylvania Avenue",
+            "Short Line",
+            "Chance",
+            "Park Place",
+            "Luxury Tax",
+            "Boardwalk",
         ]
 
         if 0 <= position < len(locations):
@@ -1100,7 +1292,9 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
         # Check if player is in jail
         if current_player.is_in_jail:
             legal_moves.append("pay_to_exit_jail: Pay $50 to get out of jail")
-            legal_moves.append("roll_for_double: Try to roll a double to get out of jail")
+            legal_moves.append(
+                "roll_for_double: Try to roll a double to get out of jail"
+            )
 
         # Always can end turn (though this might not be a good idea in some cases)
         legal_moves.append("end_turn: End your turn")
@@ -1132,31 +1326,43 @@ class MonopolyAgent(Agent[MonopolyAgentConfig]):
                 can_build = not prop.is_mortgaged and prop.houses < 5
                 if can_build:
                     house_cost = int(prop.cost / 5)
-                    property_actions.append(f"build: Build house on {prop_name} for ${house_cost}")
+                    property_actions.append(
+                        f"build: Build house on {prop_name} for ${house_cost}"
+                    )
 
                 # Check if can sell houses
                 if prop.houses > 0:
                     house_value = int(prop.cost / 10)
-                    property_actions.append(f"sell: Sell house from {prop_name} for ${house_value}")
+                    property_actions.append(
+                        f"sell: Sell house from {prop_name} for ${house_value}"
+                    )
 
                 # Check if can mortgage
                 if not prop.is_mortgaged and prop.houses == 0:
-                    property_actions.append(f"mortgage: Mortgage {prop_name} for ${prop.mortgage_value}")
+                    property_actions.append(
+                        f"mortgage: Mortgage {prop_name} for ${prop.mortgage_value}"
+                    )
 
                 # Check if can unmortgage
                 if prop.is_mortgaged:
                     unmortgage_cost = int(prop.mortgage_value * 1.1)
-                    property_actions.append(f"unmortgage: Unmortgage {prop_name} for ${unmortgage_cost}")
+                    property_actions.append(
+                        f"unmortgage: Unmortgage {prop_name} for ${unmortgage_cost}"
+                    )
 
         # Also check special properties (railroads, utilities)
         for card_name, card in state.special_cards.items():
             if card.owner == current_player.index:
                 # Special properties can only be mortgaged or unmortgaged
                 if not card.is_mortgaged:
-                    property_actions.append(f"mortgage: Mortgage {card_name} for ${card.mortgage_value}")
+                    property_actions.append(
+                        f"mortgage: Mortgage {card_name} for ${card.mortgage_value}"
+                    )
                 else:
                     unmortgage_cost = int(card.mortgage_value * 1.1)
-                    property_actions.append(f"unmortgage: Unmortgage {card_name} for ${unmortgage_cost}")
+                    property_actions.append(
+                        f"unmortgage: Unmortgage {card_name} for ${unmortgage_cost}"
+                    )
 
         if not property_actions:
             return "No property actions available"

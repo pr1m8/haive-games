@@ -3,6 +3,7 @@
 This module defines the models for the Mancala game,
 including the move and analysis models.
 """
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
@@ -14,8 +15,13 @@ class MancalaMove(BaseModel):
     This class defines the structure of a move in Mancala,
     which includes the pit index to sow from and the player making the move.
     """
-    pit_index: int = Field(..., ge=0, lt=6, description="Index of the pit to sow from (0-5)")
-    player: Literal["player1", "player2"] = Field(..., description="Player making the move")
+
+    pit_index: int = Field(
+        ..., ge=0, lt=6, description="Index of the pit to sow from (0-5)"
+    )
+    player: Literal["player1", "player2"] = Field(
+        ..., description="Player making the move"
+    )
 
     @field_validator("pit_index")
     def validate_pit_index(cls, v, values):
@@ -48,24 +54,19 @@ class MancalaAnalysis(BaseModel):
     stone distribution, pit recommendations, strategic focus, key tactics,
     and reasoning.
     """
+
     position_evaluation: Literal["winning", "losing", "equal", "unclear"] = Field(
         ..., description="Overall position evaluation"
     )
     advantage_level: int = Field(
         ..., ge=0, le=10, description="Level of advantage (0-10, where 10 is winning)"
     )
-    stone_distribution: str = Field(
-        ..., description="Analysis of stone distribution"
-    )
+    stone_distribution: str = Field(..., description="Analysis of stone distribution")
     pit_recommendations: list[int] = Field(
         ..., description="Recommended pits to play from"
     )
     strategy_focus: Literal["offensive", "defensive", "balanced"] = Field(
         ..., description="Current strategic focus"
     )
-    key_tactics: list[str] = Field(
-        ..., description="Key tactical considerations"
-    )
-    reasoning: str = Field(
-        ..., description="Detailed reasoning for the analysis"
-    )
+    key_tactics: list[str] = Field(..., description="Key tactical considerations")
+    reasoning: str = Field(..., description="Detailed reasoning for the analysis")

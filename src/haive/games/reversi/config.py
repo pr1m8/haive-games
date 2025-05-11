@@ -6,9 +6,9 @@ the game loop and decision-making by language models.
 
 from typing import Literal
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.config import GameConfig
 from haive.games.reversi.engines import reversi_engines
 from haive.games.reversi.state import ReversiState
@@ -27,31 +27,26 @@ class ReversiConfig(GameConfig):
         player_B (Literal['player1', 'player2']): Who controls the Black pieces.
         player_W (Literal['player1', 'player2']): Who controls the White pieces.
     """
+
     name: str = Field(default="reversi", description="Name of the game")
-    state_schema: type[ReversiState] = Field(default=ReversiState, description="State schema for Reversi")
+    state_schema: type[ReversiState] = Field(
+        default=ReversiState, description="State schema for Reversi"
+    )
     engines: dict[str, AugLLMConfig] = Field(
-        default=reversi_engines,
-        description="Configs for the Reversi engines"
+        default=reversi_engines, description="Configs for the Reversi engines"
     )
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
     first_player: Literal["B", "W"] = Field(
-        default="B",
-        description="Which symbol goes first (Black is traditional)"
+        default="B", description="Which symbol goes first (Black is traditional)"
     )
     player_B: Literal["player1", "player2"] = Field(
-        default="player1",
-        description="Which player uses Black"
+        default="player1", description="Which player uses Black"
     )
     player_W: Literal["player1", "player2"] = Field(
-        default="player2",
-        description="Which player uses White"
+        default="player2", description="Which player uses White"
     )
 
     @classmethod
@@ -69,5 +64,5 @@ class ReversiConfig(GameConfig):
             visualize=True,
             first_player="B",
             player_B="player1",
-            player_W="player2"
+            player_W="player2",
         )

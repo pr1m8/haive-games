@@ -3,10 +3,12 @@
 This module defines the agent for the Clue game,
 which handles game state management and player actions.
 """
+
 import time
 from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
+
 from haive.games.clue.config import ClueConfig
 from haive.games.clue.state import ClueState
 from haive.games.clue.state_manager import ClueStateManager
@@ -43,10 +45,14 @@ class ClueAgent(GameAgent[ClueConfig]):
         game_state = self.state_manager.initialize(
             solution=self.config.solution,
             first_player=self.config.first_player,
-            max_turns=self.config.max_turns
+            max_turns=self.config.max_turns,
         )
 
-        return game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict()
+        return (
+            game_state.model_dump()
+            if hasattr(game_state, "model_dump")
+            else game_state.dict()
+        )
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
@@ -68,7 +74,9 @@ class ClueAgent(GameAgent[ClueConfig]):
 
         # Only show solution if game is over
         if game_state.game_status != "ongoing":
-            print(f"🔑 Solution: {game_state.solution.suspect}, {game_state.solution.weapon}, {game_state.solution.room}")
+            print(
+                f"🔑 Solution: {game_state.solution.suspect}, {game_state.solution.weapon}, {game_state.solution.room}"
+            )
 
         print("=" * 50)
 
@@ -94,7 +102,7 @@ class ClueAgent(GameAgent[ClueConfig]):
         initial_state = self.state_manager.initialize(
             solution=self.config.solution,
             first_player=self.config.first_player,
-            max_turns=self.config.max_turns
+            max_turns=self.config.max_turns,
         )
 
         # Run the game
@@ -117,9 +125,11 @@ class ClueAgent(GameAgent[ClueConfig]):
                 # Detect if we're stuck in an infinite loop by comparing with last state
                 if last_state:
                     # If we've seen the same guesses twice, we might be in a loop
-                    if (len(current_state.guesses) == len(last_state.guesses) and
-                        len(current_state.guesses) > 0 and
-                        len(last_state.guesses) > 0):
+                    if (
+                        len(current_state.guesses) == len(last_state.guesses)
+                        and len(current_state.guesses) > 0
+                        and len(last_state.guesses) > 0
+                    ):
                         # Check if max turns reached
                         if len(current_state.guesses) >= current_state.max_turns:
                             print("\n⚠️ Maximum turns reached. Ending game.")

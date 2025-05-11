@@ -1,5 +1,6 @@
 
 from haive.games.framework.base.state_manager import GameStateManager
+
 from haive.games.base.state
 
 class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):

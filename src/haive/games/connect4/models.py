@@ -10,7 +10,7 @@ This module provides data models for the Connect4 game implementation, including
 
 Example:
     >>> from haive.games.connect4.models import Connect4Move
-    >>> 
+    >>>
     >>> # Create and validate a move
     >>> move = Connect4Move(
     ...     column=3,
@@ -26,16 +26,16 @@ from pydantic import BaseModel, Field, field_validator
 
 class Connect4Move(BaseModel):
     """Model for Connect4 moves with validation.
-    
+
     This class represents a Connect4 move with:
         - Column number (0-6)
         - Optional explanation
         - Move validation
-    
+
     Attributes:
         column (int): Column number (0-6).
         explanation (Optional[str]): Explanation of the move's purpose.
-    
+
     Example:
         >>> move = Connect4Move(
         ...     column=3,
@@ -44,25 +44,23 @@ class Connect4Move(BaseModel):
     """
 
     column: int = Field(
-        ...,
-        description="Column number (0-6) where the piece will be dropped."
+        ..., description="Column number (0-6) where the piece will be dropped."
     )
 
     explanation: str | None = Field(
-        default=None,
-        description="Optional explanation of the move's purpose."
+        default=None, description="Optional explanation of the move's purpose."
     )
 
     @field_validator("column")
     def validate_column(cls, v: int) -> int:
         """Validate the column number.
-        
+
         Args:
             v (int): Column number to validate.
-        
+
         Returns:
             int: Validated column number.
-        
+
         Raises:
             ValueError: If the column number is not between 0 and 6.
         """
@@ -73,21 +71,22 @@ class Connect4Move(BaseModel):
     def __str__(self):
         return f"Drop in column {self.column}"
 
+
 class Connect4PlayerDecision(BaseModel):
     """Model for Connect4 player decisions.
-    
+
     This class represents a player's decision-making process:
         - Move selection
         - Position evaluation
         - Alternative moves considered
         - Reasoning process
-    
+
     Attributes:
         move (Connect4Move): Chosen move with explanation.
         position_eval (str): Player's assessment of the position.
         alternatives (List[Connect4Move]): Alternative moves considered.
         reasoning (str): Detailed reasoning for the move choice.
-    
+
     Example:
         >>> decision = Connect4PlayerDecision(
         ...     move=Connect4Move(column=3, explanation="Control center"),
@@ -99,42 +98,35 @@ class Connect4PlayerDecision(BaseModel):
         ... )
     """
 
-    move: Connect4Move = Field(
-        ...,
-        description="Selected move with explanation."
-    )
+    move: Connect4Move = Field(..., description="Selected move with explanation.")
 
     position_eval: str = Field(
-        ...,
-        description="Player's assessment of the current position."
+        ..., description="Player's assessment of the current position."
     )
 
     alternatives: list[Connect4Move] = Field(
-        default_factory=list,
-        description="Alternative moves that were considered."
+        default_factory=list, description="Alternative moves that were considered."
     )
 
-    reasoning: str = Field(
-        ...,
-        description="Detailed reasoning for the move choice."
-    )
+    reasoning: str = Field(..., description="Detailed reasoning for the move choice.")
+
 
 class Connect4Analysis(BaseModel):
     """Model for Connect4 position analysis.
-    
+
     This class represents a detailed analysis of a Connect4 position:
         - Position evaluation
         - Center control assessment
         - Threat detection
         - Strategic plans
-    
+
     Attributes:
         position_score (float): Position evaluation (-1.0 to 1.0).
         center_control (int): Center control rating (0-10).
         threats (Dict[str, List[int]]): Detected threats and opportunities.
         suggested_columns (List[int]): Recommended columns to play.
         winning_chances (int): Estimated winning chances (0-100).
-    
+
     Example:
         >>> analysis = Connect4Analysis(
         ...     position_score=0.5,
@@ -150,39 +142,36 @@ class Connect4Analysis(BaseModel):
 
     position_score: float = Field(
         default=0.0,
-        description="Position evaluation (-1.0 to 1.0, positive favors current player)."
+        description="Position evaluation (-1.0 to 1.0, positive favors current player).",
     )
 
     center_control: int = Field(
-        default=5,
-        description="Rating of center column control (0-10)."
+        default=5, description="Rating of center column control (0-10)."
     )
 
     threats: dict[str, list[int]] = Field(
         default_factory=lambda: {"winning_moves": [], "blocking_moves": []},
-        description="Detected threats and opportunities."
+        description="Detected threats and opportunities.",
     )
 
     suggested_columns: list[int] = Field(
-        default_factory=list,
-        description="List of recommended columns to play."
+        default_factory=list, description="List of recommended columns to play."
     )
 
     winning_chances: int = Field(
-        default=50,
-        description="Estimated winning chances (0-100)."
+        default=50, description="Estimated winning chances (0-100)."
     )
 
     @field_validator("center_control")
     def validate_center_control(cls, v: int) -> int:
         """Validate the center control rating.
-        
+
         Args:
             v (int): Center control rating to validate.
-        
+
         Returns:
             int: Validated center control rating.
-        
+
         Raises:
             ValueError: If the rating is not between 0 and 10.
         """
@@ -193,17 +182,16 @@ class Connect4Analysis(BaseModel):
     @field_validator("winning_chances")
     def validate_winning_chances(cls, v: int) -> int:
         """Validate the winning chances percentage.
-        
+
         Args:
             v (int): Winning chances percentage to validate.
-        
+
         Returns:
             int: Validated winning chances percentage.
-        
+
         Raises:
             ValueError: If the percentage is not between 0 and 100.
         """
         if not isinstance(v, int) or v < 0 or v > 100:
             raise ValueError("Winning chances must be an integer between 0 and 100")
         return v
-

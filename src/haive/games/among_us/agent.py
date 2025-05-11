@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
+
 from haive.games.among_us.config import AmongUsAgentConfig
 from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
 from haive.games.among_us.state import AmongUsState
@@ -15,7 +16,7 @@ from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
 @register_agent(AmongUsAgentConfig)
 class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentConfig]):
     """Agent implementation for the Among Us game.
-    
+
     This class inherits state management from AmongUsStateManagerMixin
     and agent behavior from MultiPlayerGameAgent.
     """
@@ -28,15 +29,16 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
     def visualize_state(self, state: dict[str, Any] | AmongUsState) -> None:
         """Visualize the current game state using the AmongUsUI.
-        
+
         This method is required by the MultiPlayerGameAgent parent class.
-        
+
         Args:
             state: Current game state (dict or AmongUsState object)
         """
         # Ensure state is in the right format
         if isinstance(state, dict):
             from haive.games.among_us.state import AmongUsState
+
             try:
                 state_obj = AmongUsState(**state)
             except Exception as e:
@@ -50,17 +52,19 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
         # Print the display
         from rich.console import Console
+
         console = Console()
         console.print(display)
+
     # Add this method to the AmongUsAgent class
 
     def get_engine_for_player(self, role: str, engine_key: str):
         """Get the appropriate engine for a player based on their role and the current phase.
-        
+
         Args:
             role: Player role (CREWMATE or IMPOSTOR)
             engine_key: Engine type key (player, meeting, voting)
-            
+
         Returns:
             The appropriate engine runnable
         """
@@ -97,7 +101,10 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
             return engine.create_runnable()
 
         return engine
-    def prepare_move_context(self, state: AmongUsState, player_id: str) -> dict[str, Any]:
+
+    def prepare_move_context(
+        self, state: AmongUsState, player_id: str
+    ) -> dict[str, Any]:
         """Prepare context for a player's move decision."""
         if player_id not in state.player_states:
             return {"error": f"Player {player_id} not found"}
@@ -114,27 +121,39 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
             # Add role-specific information
             if player_state.role == PlayerRole.CREWMATE:
-                filtered_state["task_completion"] = self._get_task_completion_percentage(state)
+                filtered_state["task_completion"] = (
+                    self._get_task_completion_percentage(state)
+                )
             else:  # Impostor
-                filtered_state["potential_targets"] = self._get_potential_targets(state, player_id)
-                filtered_state["kill_cooldown"] = getattr(self.config, "kill_cooldown", 45)  # Default 45s
+                filtered_state["potential_targets"] = self._get_potential_targets(
+                    state, player_id
+                )
+                filtered_state["kill_cooldown"] = getattr(
+                    self.config, "kill_cooldown", 45
+                )  # Default 45s
                 filtered_state["fellow_impostors"] = [
-                    pid for pid, pstate in state.player_states.items()
+                    pid
+                    for pid, pstate in state.player_states.items()
                     if pstate.role == PlayerRole.IMPOSTOR and pid != player_id
                 ]
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             # Add meeting-specific context
-            filtered_state["discussion_time"] = getattr(self.config, "discussion_time", 45)
-            filtered_state["alive_players"] = [pid for pid, pdata in state.player_states.items()
-                                            if pdata.is_alive]
+            filtered_state["discussion_time"] = getattr(
+                self.config, "discussion_time", 45
+            )
+            filtered_state["alive_players"] = [
+                pid for pid, pdata in state.player_states.items() if pdata.is_alive
+            ]
 
             # Add reason for meeting
             if state.reported_body:
                 filtered_state["reason"] = "Body Reported"
                 filtered_state["reported_body"] = state.reported_body
                 if state.reported_body in state.player_states:
-                    filtered_state["body_location"] = state.player_states[state.reported_body].location
+                    filtered_state["body_location"] = state.player_states[
+                        state.reported_body
+                    ].location
             else:
                 filtered_state["reason"] = "Emergency Meeting"
                 filtered_state["reported_body"] = None
@@ -142,16 +161,19 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
         elif state.game_phase == AmongUsGamePhase.VOTING:
             # Add voting-specific context
             filtered_state["voting_time"] = getattr(self.config, "voting_time", 30)
-            filtered_state["alive_players"] = [pid for pid, pdata in state.player_states.items()
-                                            if pdata.is_alive]
+            filtered_state["alive_players"] = [
+                pid for pid, pdata in state.player_states.items() if pdata.is_alive
+            ]
             filtered_state["voted_players"] = list(state.votes.keys())
 
             # Add discussion summary
             if hasattr(state, "discussion_history") and state.discussion_history:
-                filtered_state["discussion_summary"] = "\n".join([
-                    f"{msg['player_id']}: {msg['message']}"
-                    for msg in state.discussion_history[-10:]  # Last 10 messages
-                ])
+                filtered_state["discussion_summary"] = "\n".join(
+                    [
+                        f"{msg['player_id']}: {msg['message']}"
+                        for msg in state.discussion_history[-10:]  # Last 10 messages
+                    ]
+                )
 
         # Add game configuration information
         filtered_state["player_count"] = len(state.players)
@@ -171,7 +193,9 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
         # Format observations
         if player_state.observations:
-            filtered_state["observations"] = "\n".join([f"• {obs}" for obs in player_state.observations])
+            filtered_state["observations"] = "\n".join(
+                [f"• {obs}" for obs in player_state.observations]
+            )
         else:
             filtered_state["observations"] = "None"
 
@@ -189,13 +213,17 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                 situation += f" Overall task completion: {filtered_state.get('task_completion', 0)}%."
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
-            situation = f"Emergency meeting called by {filtered_state['meeting_caller']}!"
+            situation = (
+                f"Emergency meeting called by {filtered_state['meeting_caller']}!"
+            )
             if filtered_state.get("reported_body"):
                 situation += f" Body of {filtered_state['reported_body']} was found."
 
         elif state.game_phase == AmongUsGamePhase.VOTING:
             situation = "It's time to vote! Discussion summary:\n"
-            situation += filtered_state.get("discussion_summary", "No discussion recorded.")
+            situation += filtered_state.get(
+                "discussion_summary", "No discussion recorded."
+            )
 
         # Add observations
         situation += f"\nRecent observations: {filtered_state['observations']}"
@@ -216,6 +244,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
             # Try to parse as JSON
             try:
                 import json
+
                 parsed = json.loads(response)
                 if isinstance(parsed, dict) and "action" in parsed:
                     return parsed
@@ -227,53 +256,34 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                 # Extract location from text like "I move to electrical"
                 for location in self.config.map_locations:
                     if location.lower() in response.lower():
-                        return {
-                            "action": "move",
-                            "location": location
-                        }
+                        return {"action": "move", "location": location}
 
             elif "complete task" in response.lower() or "do task" in response.lower():
                 # Try to extract task ID from message
                 task_match = re.search(r"task[_\s]*(\w+)", response, re.IGNORECASE)
                 if task_match:
-                    return {
-                        "action": "complete_task",
-                        "task_id": task_match.group(1)
-                    }
+                    return {"action": "complete_task", "task_id": task_match.group(1)}
 
             elif "kill" in response.lower():
                 # Try to extract target from message like "I kill blue"
                 for player in self.config.player_names:
                     if player.lower() in response.lower():
-                        return {
-                            "action": "kill",
-                            "target_id": player
-                        }
+                        return {"action": "kill", "target_id": player}
 
             elif "report" in response.lower() or "body" in response.lower():
-                return {
-                    "action": "report_body"
-                }
+                return {"action": "report_body"}
 
             elif "emergency" in response.lower() or "meeting" in response.lower():
-                return {
-                    "action": "call_emergency_meeting"
-                }
+                return {"action": "call_emergency_meeting"}
 
             elif "vote" in response.lower():
                 # Try to extract vote target
                 for player in self.config.player_names:
                     if player.lower() in response.lower():
-                        return {
-                            "action": "vote",
-                            "vote_for": player
-                        }
+                        return {"action": "vote", "vote_for": player}
 
                 if "skip" in response.lower():
-                    return {
-                        "action": "vote",
-                        "vote_for": "skip"
-                    }
+                    return {"action": "vote", "vote_for": "skip"}
 
             elif "sabotage" in response.lower():
                 # Try to identify sabotage type
@@ -283,7 +293,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                     "o2": "o2",
                     "reactor": "reactor",
                     "communication": "comms",
-                    "comms": "comms"
+                    "comms": "comms",
                 }
 
                 for key, value in sabotage_types.items():
@@ -291,17 +301,12 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                         return {
                             "action": "sabotage",
                             "sabotage_type": value,
-                            "location": value
+                            "location": value,
                         }
 
             # If we couldn't parse a specific action, but we're in discussion phase
             if "discuss" in response.lower() or len(response) > 20:
-                return {
-                    "action": "discuss",
-                    "message": response
-                }
+                return {"action": "discuss", "message": response}
 
         # If we couldn't extract a structured move, return an "observe" action as fallback
-        return {
-            "action": "observe"
-        }
+        return {"action": "observe"}

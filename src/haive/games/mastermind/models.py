@@ -3,6 +3,7 @@
 This module defines the models for the Mastermind game,
 including the secret code, guess, feedback, and analysis.
 """
+
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -17,11 +18,12 @@ class ColorCode(BaseModel):
     This class defines the structure of the secret code, which is a list of 4 colors
     chosen from a predefined set of valid colors.
     """
+
     code: list[ValidColor] = Field(
         ...,
         min_items=4,
         max_items=4,
-        description="The secret code: 4 colors chosen from the allowed set"
+        description="The secret code: 4 colors chosen from the allowed set",
     )
 
 
@@ -31,8 +33,13 @@ class MastermindGuess(BaseModel):
     This class defines the structure of a guess, which is a list of 4 colors
     chosen from a predefined set of valid colors.
     """
-    colors: list[ValidColor] = Field(..., min_items=4, max_items=4, description="List of 4 colors")
-    player: Literal["player1", "player2"] = Field(..., description="Player making the guess")
+
+    colors: list[ValidColor] = Field(
+        ..., min_items=4, max_items=4, description="List of 4 colors"
+    )
+    player: Literal["player1", "player2"] = Field(
+        ..., description="Player making the guess"
+    )
 
     def __str__(self):
         return f"{self.player} guesses: {', '.join(self.colors)}"
@@ -45,8 +52,16 @@ class MastermindFeedback(BaseModel):
     which includes the number of pegs with correct color and position,
     and the number of pegs with correct color but wrong position.
     """
-    correct_position: int = Field(..., ge=0, le=4, description="Number of pegs with correct color and position")
-    correct_color: int = Field(..., ge=0, le=4, description="Number of pegs with correct color but wrong position")
+
+    correct_position: int = Field(
+        ..., ge=0, le=4, description="Number of pegs with correct color and position"
+    )
+    correct_color: int = Field(
+        ...,
+        ge=0,
+        le=4,
+        description="Number of pegs with correct color but wrong position",
+    )
 
     def __str__(self):
         return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {self.correct_color}"
@@ -66,15 +81,24 @@ class MastermindAnalysis(BaseModel):
     the colors likely eliminated,
     and the fixed positions.
     """
-    possible_combinations: int = Field(..., description="Estimated number of possible combinations left")
-    high_probability_colors: list[ValidColor] = Field(..., description="Colors with high probability of being in the solution")
-    eliminated_colors: list[ValidColor] = Field(default_factory=list, description="Colors likely eliminated")
+
+    possible_combinations: int = Field(
+        ..., description="Estimated number of possible combinations left"
+    )
+    high_probability_colors: list[ValidColor] = Field(
+        ..., description="Colors with high probability of being in the solution"
+    )
+    eliminated_colors: list[ValidColor] = Field(
+        default_factory=list, description="Colors likely eliminated"
+    )
 
     fixed_positions: list[dict[str, ValidColor]] = Field(
         default_factory=list,
-        description="List of fixed positions as dicts like {'index': 'color'}"
+        description="List of fixed positions as dicts like {'index': 'color'}",
     )
 
     strategy: str = Field(..., description="Current strategy recommendation")
     reasoning: str = Field(..., description="Detailed reasoning for the analysis")
-    confidence: int = Field(..., ge=1, le=10, description="Confidence level in this analysis (1-10)")
+    confidence: int = Field(
+        ..., ge=1, le=10, description="Confidence level in this analysis (1-10)"
+    )

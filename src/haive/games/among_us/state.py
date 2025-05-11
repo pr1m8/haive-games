@@ -32,8 +32,7 @@ class AmongUsState(MultiPlayerGameState):
 
     def get_alive_players(self) -> list[str]:
         """Get list of alive player IDs."""
-        return [pid for pid, pstate in self.player_states.items()
-                if pstate.is_alive]
+        return [pid for pid, pstate in self.player_states.items() if pstate.is_alive]
 
     def get_task_completion_percentage(self) -> float:
         """Calculate task completion percentage."""
@@ -41,8 +40,9 @@ class AmongUsState(MultiPlayerGameState):
         if total == 0:
             return 100.0
 
-        completed = sum(1 for task in self.tasks.values()
-                       if task.status == TaskStatus.COMPLETED)
+        completed = sum(
+            1 for task in self.tasks.values() if task.status == TaskStatus.COMPLETED
+        )
         return (completed / total) * 100
 
     def check_win_condition(self) -> Literal["crewmates", "impostors"] | None:
@@ -50,10 +50,16 @@ class AmongUsState(MultiPlayerGameState):
         if self.get_task_completion_percentage() >= 100:
             return "crewmates"
 
-        alive_impostors = sum(1 for pid, pstate in self.player_states.items()
-                             if pstate.is_alive and pstate.role == PlayerRole.IMPOSTOR)
-        alive_crewmates = sum(1 for pid, pstate in self.player_states.items()
-                             if pstate.is_alive and pstate.role == PlayerRole.CREWMATE)
+        alive_impostors = sum(
+            1
+            for pid, pstate in self.player_states.items()
+            if pstate.is_alive and pstate.role == PlayerRole.IMPOSTOR
+        )
+        alive_crewmates = sum(
+            1
+            for pid, pstate in self.player_states.items()
+            if pstate.is_alive and pstate.role == PlayerRole.CREWMATE
+        )
 
         if alive_impostors == 0:
             return "crewmates"

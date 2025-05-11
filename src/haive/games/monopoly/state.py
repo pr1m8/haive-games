@@ -22,65 +22,49 @@ class MonopolyState(BaseModel):
     """Represents the complete state of the Monopoly game.
     This model tracks all the information needed to render and update the game.
     """
+
     # Core game state
     properties: dict[str, PropertyInfo] = Field(
-        default_factory=dict,
-        description="The properties on the board"
+        default_factory=dict, description="The properties on the board"
     )
     special_cards: dict[str, SpecialCardInfo] = Field(
         default_factory=dict,
-        description="The special cards on the board (railroads, utilities)"
+        description="The special cards on the board (railroads, utilities)",
     )
     players: list[PlayerInfo] = Field(
-        default_factory=list,
-        description="The players in the game"
+        default_factory=list, description="The players in the game"
     )
     current_player_index: int = Field(
-        default=0,
-        description="The index of the current player"
+        default=0, description="The index of the current player"
     )
 
     # Turn-specific state
-    dice: DiceInfo | None = Field(
-        None,
-        description="The last rolled dice"
-    )
+    dice: DiceInfo | None = Field(None, description="The last rolled dice")
     has_rolled: bool = Field(
-        default=False,
-        description="Whether the dice has been rolled this turn"
+        default=False, description="Whether the dice has been rolled this turn"
     )
 
     # Game events
     recent_events: list[str] = Field(
-        default_factory=list,
-        description="The recent events in the game"
+        default_factory=list, description="The recent events in the game"
     )
 
     # Cards drawn
     community_chest_drawn: str | None = Field(
-        None,
-        description="The community chest card drawn"
+        None, description="The community chest card drawn"
     )
-    chance_drawn: str | None = Field(
-        None,
-        description="The chance card drawn"
-    )
+    chance_drawn: str | None = Field(None, description="The chance card drawn")
 
     # Decision state
     turn_decision: TurnDecision | None = Field(
-        None,
-        description="The current turn decision"
+        None, description="The current turn decision"
     )
     strategy_analysis: StrategyAnalysis | None = Field(
-        None,
-        description="The current strategic analysis"
+        None, description="The current strategic analysis"
     )
 
     # Error handling
-    error_message: str | None = Field(
-        None,
-        description="Error message if any"
-    )
+    error_message: str | None = Field(None, description="Error message if any")
 
     @computed_field
     def active_players(self) -> int:
@@ -112,7 +96,7 @@ class MonopolyState(BaseModel):
                 position=0,
                 cash=1500,
                 total_wealth=1500,
-                properties_owned=[]
+                properties_owned=[],
             )
         return self.players[self.current_player_index]
 
@@ -127,7 +111,7 @@ class MonopolyState(BaseModel):
                 position=0,
                 cash=1500,
                 total_wealth=1500,
-                properties_owned=[]
+                properties_owned=[],
             )
 
         # In a multi-player game, get the next active player
@@ -149,10 +133,12 @@ class MonopolyState(BaseModel):
             position=0,
             cash=1500,
             total_wealth=1500,
-            properties_owned=[]
+            properties_owned=[],
         )
 
-    def get_property_at_position(self, position: int) -> PropertyInfo | SpecialCardInfo | None:
+    def get_property_at_position(
+        self, position: int
+    ) -> PropertyInfo | SpecialCardInfo | None:
         """Get the property or special card at a specific position."""
         # Check regular properties
         for prop in self.properties.values():
@@ -178,10 +164,7 @@ class MonopolyState(BaseModel):
 
     def roll_dice(self, dice_values: tuple[int, int]) -> None:
         """Record a dice roll."""
-        self.dice = DiceInfo(
-            values=dice_values,
-            sum=sum(dice_values)
-        )
+        self.dice = DiceInfo(values=dice_values, sum=sum(dice_values))
         self.has_rolled = True
 
     def player_owns_all_in_color(self, player_index: int, color: str) -> bool:

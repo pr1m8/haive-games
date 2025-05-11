@@ -1,4 +1,3 @@
-
 # Export the available components
 __all__ = [
     "GameDifficulty",
@@ -10,5 +9,5 @@ __all__ = [
     "SinglePlayerGameState",
     "SinglePlayerStateManager",
     "run_auto_game",
-    "run_interactive_game"
+    "run_interactive_game",
 ]

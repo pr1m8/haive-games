@@ -34,16 +34,17 @@ from .state_manager import MafiaStateManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True):
     """Run a complete Mafia game simulation with visualization.
-    
+
     This function sets up and executes a full Mafia game, handling:
         - Player creation and role assignment
         - Game state initialization
         - Turn-based gameplay execution
         - State visualization
         - Game end conditions
-    
+
     Args:
         player_count (int, optional): Total number of players including narrator.
             Must be at least 4 (3 players + narrator). Defaults to 5.
@@ -51,11 +52,11 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
             game end. Defaults to 3.
         debug (bool, optional): Enable debug mode for detailed logging.
             Defaults to True.
-    
+
     Raises:
         ValueError: If player_count is less than 4.
         Exception: If game setup or execution fails.
-    
+
     Example:
         >>> run_mafia_game(player_count=7, max_days=3)
         🎭 Setting up Mafia Game
@@ -82,8 +83,7 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
 
         # Create agent config
         config = MafiaAgentConfig.default_config(
-            player_count=player_count,
-            max_days=max_days
+            player_count=player_count, max_days=max_days
         )
 
         # Set debug mode
@@ -129,21 +129,31 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
         try:
             # Create a simple thread ID for the session
             import uuid
+
             thread_id = str(uuid.uuid4())
 
             # Stream the game execution
             for step in agent.app.stream(
-                initial_state.dict() if hasattr(initial_state, "dict") else initial_state,
+                (
+                    initial_state.dict()
+                    if hasattr(initial_state, "dict")
+                    else initial_state
+                ),
                 config={"configurable": {"thread_id": thread_id}},
                 debug=debug,
-                stream_mode="values"
+                stream_mode="values",
             ):
                 # Visualize the game state
                 agent.visualize_state(step)
 
                 # Check for game over
-                if step.get("game_status") != "ongoing" or step.get("game_phase") == GamePhase.GAME_OVER.value:
-                    print(f"\n🏆 Game Status: {step.get('game_status', 'unknown').upper()}")
+                if (
+                    step.get("game_status") != "ongoing"
+                    or step.get("game_phase") == GamePhase.GAME_OVER.value
+                ):
+                    print(
+                        f"\n🏆 Game Status: {step.get('game_status', 'unknown').upper()}"
+                    )
                     if step.get("winner"):
                         print(f"🎖️ Winner: {step.get('winner').upper()}")
                     break
@@ -177,11 +187,14 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
 
     print("\n✅ Game Complete!")
 
+
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Run a Mafia game simulation")
-    parser.add_argument("--players", type=int, default=9, help="Number of players (including narrator)")
+    parser.add_argument(
+        "--players", type=int, default=9, help="Number of players (including narrator)"
+    )
     parser.add_argument("--days", type=int, default=3, help="Maximum number of days")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 

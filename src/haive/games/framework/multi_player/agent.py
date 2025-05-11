@@ -9,7 +9,7 @@ This module provides the base agent class for multi-player games, supporting:
 
 Example:
     >>> from haive.agents.agent_games.framework.multi_player.agent import MultiPlayerGameAgent
-    >>> 
+    >>>
     >>> class ChessAgent(MultiPlayerGameAgent[ChessState]):
     ...     def __init__(self, config: ChessConfig):
     ...         super().__init__(config)
@@ -18,32 +18,33 @@ Example:
 
 from typing import Any, Generic, TypeVar
 
+from haive.core.engine.agent.agent import Agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END, START
 from pydantic import BaseModel
 
-from haive.core.engine.agent.agent import Agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.framework.multi_player.config import MultiPlayerGameConfig
 from haive.games.framework.multi_player.state import MultiPlayerGameState
 
 T = TypeVar("T", bound=BaseModel)
 
+
 class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
     """Base game agent for multi-player games.
-    
+
     This class provides the foundation for implementing multi-player game agents
     with support for role-based configurations, phase-based gameplay, and
     information hiding between players.
-    
+
     Type Parameters:
         T: The game state type, must be a Pydantic BaseModel.
-    
+
     Attributes:
         config (MultiPlayerGameConfig): Agent configuration.
         engines (Dict[str, Dict[str, Any]]): LLM engines by role and function.
         state_manager (Type[MultiPlayerGameStateManager]): State manager class.
         graph (StateGraph): Game workflow graph.
-    
+
     Example:
         >>> class MafiaAgent(MultiPlayerGameAgent[MafiaState]):
         ...     def __init__(self, config: MafiaConfig):
@@ -59,7 +60,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def __init__(self, config: MultiPlayerGameConfig):
         """Initialize the multi-player game agent.
-        
+
         Args:
             config (MultiPlayerGameConfig): Agent configuration including
                 state schema, LLM configurations, and game settings.
@@ -69,7 +70,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def _init_engines(self):
         """Initialize the engines from the configuration.
-        
+
         This method sets up LLM engines for each role and function,
         handling both AugLLM configurations and direct runnables.
         """
@@ -87,37 +88,46 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                     # Convert AugLLMConfig to runnable if possible
                     try:
                         if hasattr(engine_config, "create_runnable"):
-                            self.engines[role][engine_name] = engine_config.create_runnable()
+                            self.engines[role][
+                                engine_name
+                            ] = engine_config.create_runnable()
                         else:
                             # If it already looks like a runnable, store as is
                             self.engines[role][engine_name] = engine_config
                     except Exception as e:
                         import logging
-                        logging.exception(f"Error creating runnable for {role}.{engine_name}: {e}")
-                        self.engines[role][engine_name] = engine_config  # Store config for debugging
+
+                        logging.exception(
+                            f"Error creating runnable for {role}.{engine_name}: {e}"
+                        )
+                        self.engines[role][
+                            engine_name
+                        ] = engine_config  # Store config for debugging
 
         # Log the available engines for debugging
         import logging
+
         logging.info(f"Initialized engines for {list(self.engines.keys())} roles")
         for role, engines in self.engines.items():
             logging.debug(f"Role {role} has engines: {list(engines.keys())}")
+
     def setup_workflow(self):
         """Setup the standard game workflow with phases.
-        
+
         This method creates a workflow graph with the following structure:
             1. Game initialization
             2. Setup phase
             3. Player turns
             4. Phase transitions
             5. Game end
-        
+
         The workflow supports conditional transitions based on game state
         and can be overridden for custom game flows.
         """
         # Use DynamicGraph to build the workflow
         graph_builder = DynamicGraph(
             components=[],  # Not using components directly here
-            state_schema=self.config.state_schema
+            state_schema=self.config.state_schema,
         )
 
         # Add the phase nodes
@@ -136,7 +146,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         graph_builder.add_conditional_edges(
             "setup_phase",
             self.should_continue_to_main_phase,
-            {True: "player_turn", False: "end_game"}
+            {True: "player_turn", False: "end_game"},
         )
 
         # Player turn can continue with next player, go to phase transition, or end
@@ -146,15 +156,15 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             {
                 "next_player": "player_turn",
                 "phase_transition": "phase_transition",
-                "end_game": "end_game"
-            }
+                "end_game": "end_game",
+            },
         )
 
         # Phase transition can go back to player turns or end
         graph_builder.add_conditional_edges(
             "phase_transition",
             self.should_continue_after_phase_transition,
-            {True: "player_turn", False: "end_game"}
+            {True: "player_turn", False: "end_game"},
         )
 
         # End game goes to END
@@ -165,17 +175,17 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def get_player_role(self, state: MultiPlayerGameState, player_id: str) -> str:
         """Get the role of a player, handling case sensitivity.
-        
+
         This method attempts to find the player's role while handling different
         case variations of player IDs and special roles like 'narrator'.
-        
+
         Args:
             state (MultiPlayerGameState): Current game state.
             player_id (str): ID of the player to look up.
-        
+
         Returns:
             str: Role of the player, defaulting to "VILLAGER" if not found.
-        
+
         Example:
             >>> state = MafiaGameState(roles={"player1": "MAFIA", "narrator": "NARRATOR"})
             >>> agent.get_player_role(state, "Player1")  # Case-insensitive
@@ -201,22 +211,22 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def determine_next_step_after_player_turn(self, state: MultiPlayerGameState) -> str:
         """Determine what to do after a player's turn.
-        
+
         This method handles complex game flow logic, including:
         - Checking game end conditions
         - Managing phase transitions
         - Handling night/day cycle transitions
         - Processing voting and action completions
-        
+
         Args:
             state (MultiPlayerGameState): Current game state.
-        
+
         Returns:
             str: Next step to take, one of:
                 - "end_game": Game is over
                 - "phase_transition": Move to next phase
                 - "next_player": Continue with next player
-        
+
         Example:
             >>> state = MafiaGameState(game_phase="NIGHT", votes={"p1": "p2"})
             >>> # If all night actions complete
@@ -242,16 +252,22 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                 if player_id.lower() == "narrator":
                     continue  # Skip narrator when checking night actions
 
-                if (state.player_states[player_id].is_alive and
-                    role in ["MAFIA", "DOCTOR", "DETECTIVE"]):
+                if state.player_states[player_id].is_alive and role in [
+                    "MAFIA",
+                    "DOCTOR",
+                    "DETECTIVE",
+                ]:
 
                     has_acted = False
                     for action in reversed(state.action_history):
-                        if (hasattr(action, "player_id") and
-                            action.player_id == player_id and
-                            hasattr(action, "phase") and
-                            action.phase == "NIGHT" and
-                            state.round_number == getattr(action, "round_number", -1)):
+                        if (
+                            hasattr(action, "player_id")
+                            and action.player_id == player_id
+                            and hasattr(action, "phase")
+                            and action.phase == "NIGHT"
+                            and state.round_number
+                            == getattr(action, "round_number", -1)
+                        ):
 
                             has_acted = True
                             break
@@ -265,7 +281,9 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         # If day voting phase and all votes are in, transition to night
         if state.game_phase == "DAY_VOTING":
-            alive_players = [pid for pid, p_state in state.player_states.items() if p_state.is_alive]
+            alive_players = [
+                pid for pid, p_state in state.player_states.items() if p_state.is_alive
+            ]
             if len(state.votes) >= len(alive_players):
                 return "phase_transition"
 
@@ -280,8 +298,9 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         elif current_player.lower() in state.roles:
             current_player_role = state.roles[current_player.lower()]
 
-        is_narrator = (current_player_role == "NARRATOR" or
-                    current_player.lower() == "narrator")
+        is_narrator = (
+            current_player_role == "NARRATOR" or current_player.lower() == "narrator"
+        )
 
         # If current player is narrator, check for phase transition
         if is_narrator:
@@ -290,12 +309,16 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                 # Check if a full discussion round has occurred
                 discussion_count = 0
                 for action in reversed(state.action_history):
-                    if (hasattr(action, "phase") and
-                        action.phase == "DAY_DISCUSSION" and
-                        state.round_number == getattr(action, "round_number", -1)):
+                    if (
+                        hasattr(action, "phase")
+                        and action.phase == "DAY_DISCUSSION"
+                        and state.round_number == getattr(action, "round_number", -1)
+                    ):
                         discussion_count += 1
 
-                alive_player_count = len([p for p in state.player_states.values() if p.is_alive])
+                alive_player_count = len(
+                    [p for p in state.player_states.values() if p.is_alive]
+                )
                 if discussion_count >= alive_player_count:
                     return "phase_transition"
 
@@ -304,33 +327,32 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def handle_narrator_turn(self, state: MultiPlayerGameState) -> dict[str, Any]:
         """Handle the narrator's turn in the game.
-        
+
         This method manages the narrator's actions, including:
         - Getting the appropriate narrator engine
         - Preparing narrator context
         - Processing narrator decisions
         - Applying narrator actions to the game state
-        
+
         Args:
             state (MultiPlayerGameState): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Updated game state after narrator's action.
-        
+
         Example:
             >>> state = MafiaGameState(phase="NIGHT")
             >>> # Narrator processes night actions
             >>> new_state = agent.handle_narrator_turn(state)
             >>> new_state["phase"]  # Narrator may have changed phase
             'DAY'
-        
+
         Notes:
             - Handles case sensitivity issues with narrator role
             - Provides error handling for missing narrator engine
             - Converts state between dict and model forms as needed
         """
         # Get the narrator engine - fix case sensitivity issues
-        narrator_key = "narrator"
         narrator_engine = None
 
         # Try different capitalization options for narrator engines
@@ -371,19 +393,19 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def prepare_narrator_context(self, state: MultiPlayerGameState) -> dict[str, Any]:
         """Prepare context for narrator's decision making.
-        
+
         This method should be implemented by game-specific agents to provide
         the narrator with appropriate context for the current game state.
-        
+
         Args:
             state (MultiPlayerGameState): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Context for narrator's decision making.
-        
+
         Raises:
             NotImplementedError: Must be implemented by subclass.
-        
+
         Example:
             >>> def prepare_narrator_context(self, state):
             ...     return {
@@ -394,24 +416,29 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         """
         raise NotImplementedError("Must be implemented by subclass")
 
-    def initialize_game(self, state:BaseModel) -> dict[str, Any]:
+    def initialize_game(self, state: BaseModel) -> dict[str, Any]:
         """Initialize the game state.
-        
+
         Args:
             state (BaseModel): Initial state data or empty state.
-        
+
         Returns:
             Dict[str, Any]: Initialized game state.
-        
+
         Raises:
             ValueError: If state manager is not set.
         """
         if not self.state_manager:
             raise ValueError("State manager must be set by subclass")
         if isinstance(state, dict):
-            player_list = state.get("players", [f"player_{i}" for i in range(self.config.initial_player_count)])
+            player_list = state.get(
+                "players",
+                [f"player_{i}" for i in range(self.config.initial_player_count)],
+            )
         elif state.players is None:
-            player_list = [f"player_{i}" for i in range(self.config.initial_player_count)]
+            player_list = [
+                f"player_{i}" for i in range(self.config.initial_player_count)
+            ]
         else:
             player_list = state.players
         # Create initial game state with player list
@@ -424,10 +451,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def handle_setup_phase(self, state: T) -> dict[str, Any]:
         """Handle the setup phase of the game.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Updated game state after setup.
         """
@@ -442,17 +469,17 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def handle_player_turn(self, state: T) -> dict[str, Any]:
         """Handle a player's turn.
-        
+
         This method:
         1. Gets the current player and their role
         2. Retrieves the appropriate move engine
         3. Filters state information for the player
         4. Gets and applies the player's move
         5. Checks game status after the move
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Updated game state after the player's move.
         """
@@ -465,11 +492,13 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         # Get the move engine for this role
         move_engine = self.get_engine_for_player(player_role, "player")
         if not move_engine:
-            return {"error_message": f"No move engine found for player {player_id} with role {player_role}"}
+            return {
+                "error_message": f"No move engine found for player {player_id} with role {player_role}"
+            }
 
         try:
             # Filter state for this player (information hiding)
-            player_view = self.state_manager.filter_state_for_player(state, player_id)
+            self.state_manager.filter_state_for_player(state, player_id)
 
             # Get decision from the engine
             move_context = self.prepare_move_context(state, player_id)
@@ -497,10 +526,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def handle_phase_transition(self, state: T) -> dict[str, Any]:
         """Handle transition between game phases.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Updated game state in the new phase.
         """
@@ -524,10 +553,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def handle_end_game(self, state: T) -> dict[str, Any]:
         """Handle the end of the game.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             Dict[str, Any]: Final game state.
         """
@@ -542,24 +571,22 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
     # Router methods
     def should_continue_to_main_phase(self, state: T) -> bool:
         """Determine if we should continue to the main phase.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             bool: True if game should continue to main phase.
         """
         # Default: continue if game is ongoing
         return state.game_status == "ongoing"
 
-
-
     def should_continue_after_phase_transition(self, state: T) -> bool:
         """Determine if we should continue after a phase transition.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             bool: True if game should continue.
         """
@@ -568,10 +595,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def should_transition_phase(self, state: T) -> bool:
         """Determine if we should transition to a new phase.
-        
+
         Args:
             state (T): Current game state.
-        
+
         Returns:
             bool: True if phase transition should occur.
         """
@@ -582,11 +609,11 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
     # Helper methods
     def get_player_role(self, state: T, player_id: str) -> str:
         """Get the role of a player.
-        
+
         Args:
             state (T): Current game state.
             player_id (str): ID of the player.
-        
+
         Returns:
             str: Role of the player.
         """
@@ -596,11 +623,11 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def get_engine_for_player(self, role: str, function: str) -> Any | None:
         """Get the appropriate engine for a player based on role and function.
-        
+
         Args:
             role (str): Player's role.
             function (str): Function to get engine for.
-        
+
         Returns:
             Optional[Any]: Engine for the role and function, or None if not found.
         """
@@ -615,14 +642,14 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def prepare_move_context(self, state: T, player_id: str) -> dict[str, Any]:
         """Prepare context for move generation.
-        
+
         Args:
             state (T): Current game state.
             player_id (str): ID of the player.
-        
+
         Returns:
             Dict[str, Any]: Context for move generation.
-        
+
         Raises:
             NotImplementedError: Must be implemented by subclass.
         """
@@ -631,14 +658,14 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def extract_move(self, response: Any, role: str) -> Any:
         """Extract move from engine response.
-        
+
         Args:
             response (Any): Response from the engine.
             role (str): Role of the player.
-        
+
         Returns:
             Any: Extracted move.
-        
+
         Raises:
             NotImplementedError: Must be implemented by subclass.
         """
@@ -647,10 +674,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
-        
+
         Args:
             state (Dict[str, Any]): Current game state.
-        
+
         Raises:
             NotImplementedError: Must be implemented by subclass.
         """

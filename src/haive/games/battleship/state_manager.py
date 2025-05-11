@@ -1,12 +1,19 @@
 import copy
 
-from .models import Coordinates, GamePhase, MoveCommand, MoveResult, ShipPlacement, ShipType
+from .models import (
+    Coordinates,
+    GamePhase,
+    MoveCommand,
+    MoveResult,
+    ShipPlacement,
+    ShipType,
+)
 from .state import BattleshipState, PlayerState
 
 
 class BattleshipStateManager:
     """Manager for Battleship game state transitions.
-    
+
     This class provides methods for:
         - Initializing a new game
         - Placing ships
@@ -17,7 +24,7 @@ class BattleshipStateManager:
     @staticmethod
     def initialize() -> BattleshipState:
         """Initialize a new Battleship game state.
-        
+
         Returns:
             BattleshipState: Fresh game state with default settings
         """
@@ -27,11 +34,13 @@ class BattleshipStateManager:
             current_player="player1",
             game_phase=GamePhase.SETUP,
             move_history=[],
-            error_message=None
+            error_message=None,
         )
 
     @staticmethod
-    def place_ships(state: BattleshipState, player: str, placements: list[ShipPlacement]) -> BattleshipState:
+    def place_ships(
+        state: BattleshipState, player: str, placements: list[ShipPlacement]
+    ) -> BattleshipState:
         """Place ships for a player.
 
         Args:
@@ -63,7 +72,9 @@ class BattleshipStateManager:
         if sorted(ship_types) != sorted(all_ship_types):
             missing_types = set(all_ship_types) - set(ship_types)
             if missing_types:
-                new_state.error_message = f"Missing ship types: {', '.join(t.value for t in missing_types)}"
+                new_state.error_message = (
+                    f"Missing ship types: {', '.join(t.value for t in missing_types)}"
+                )
             else:
                 duplicates = [t for t in ship_types if ship_types.count(t) > 1]
                 new_state.error_message = f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}"
@@ -75,7 +86,9 @@ class BattleshipStateManager:
         # Try to place each ship
         for placement in placements:
             if not player_state.board.place_ship(placement):
-                new_state.error_message = f"Invalid placement for {placement.ship_type.value}"
+                new_state.error_message = (
+                    f"Invalid placement for {placement.ship_type.value}"
+                )
                 return new_state
 
         # Record successful placements
@@ -93,14 +106,16 @@ class BattleshipStateManager:
         return new_state
 
     @staticmethod
-    def make_move(state: BattleshipState, player: str, move: MoveCommand) -> BattleshipState:
+    def make_move(
+        state: BattleshipState, player: str, move: MoveCommand
+    ) -> BattleshipState:
         """Make a move for a player.
-        
+
         Args:
             state: Current game state
             player: Player making the move ("player1" or "player2")
             move: Attack command
-            
+
         Returns:
             BattleshipState: Updated game state
         """
@@ -109,7 +124,9 @@ class BattleshipStateManager:
 
         # Check if it's the right game phase
         if new_state.game_phase != GamePhase.PLAYING:
-            new_state.error_message = f"Cannot make move in {new_state.game_phase.value} phase"
+            new_state.error_message = (
+                f"Cannot make move in {new_state.game_phase.value} phase"
+            )
             return new_state
 
         # Check if it's the player's turn
@@ -148,14 +165,16 @@ class BattleshipStateManager:
         return new_state
 
     @staticmethod
-    def add_analysis(state: BattleshipState, player: str, analysis: str) -> BattleshipState:
+    def add_analysis(
+        state: BattleshipState, player: str, analysis: str
+    ) -> BattleshipState:
         """Add strategic analysis for a player.
-        
+
         Args:
             state: Current game state
             player: Player for whom to add analysis
             analysis: Analysis text
-            
+
         Returns:
             BattleshipState: Updated game state
         """

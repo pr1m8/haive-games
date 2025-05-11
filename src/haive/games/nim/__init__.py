@@ -18,5 +18,5 @@ __all__ = [
     "NimMove",
     "NimState",
     "NimStateManager",
-    "nim_engines"
+    "nim_engines",
 ]

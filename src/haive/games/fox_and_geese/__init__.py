@@ -17,5 +17,5 @@ __all__ = [
     "FoxAndGeeseMove",
     "FoxAndGeesePosition",
     "FoxAndGeeseState",
-    "FoxAndGeeseStateManager"
+    "FoxAndGeeseStateManager",
 ]

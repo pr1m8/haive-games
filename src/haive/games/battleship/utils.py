@@ -13,11 +13,11 @@ from .models import ShipType
 
 def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:
     """Create a string representation of the Battleship board.
-    
+
     Args:
         board: Dictionary containing board information
         is_opponent: Whether this is the opponent's board
-    
+
     Returns:
         String representation of the board
     """
@@ -28,11 +28,11 @@ def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:
     if board and "ships" in board:
         for ship in board.get("ships", []):
             ship_type_to_emoji = {
-                "Carrier": "⛵",      # Carrier
-                "Battleship": "🚢",   # Battleship
-                "Cruiser": "⛴️",      # Cruiser
-                "Submarine": "🛥️",    # Submarine
-                "Destroyer": "🚤"     # Destroyer
+                "Carrier": "⛵",  # Carrier
+                "Battleship": "🚢",  # Battleship
+                "Cruiser": "⛴️",  # Cruiser
+                "Submarine": "🛥️",  # Submarine
+                "Destroyer": "🚤",  # Destroyer
             }
 
             # Always show both players' ships if board is being displayed
@@ -49,12 +49,13 @@ def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:
 
     return board_str
 
+
 def format_coordinates_list(coords_list: list[dict[str, int]]) -> str:
     """Format a list of coordinates for display.
-    
+
     Args:
         coords_list: List of coordinate dictionaries
-        
+
     Returns:
         Formatted string of coordinates
     """
@@ -68,12 +69,13 @@ def format_coordinates_list(coords_list: list[dict[str, int]]) -> str:
 
     return ", ".join(formatted)
 
+
 def format_ship_types(ship_types: list[str]) -> str:
     """Format a list of ship types for display.
-    
+
     Args:
         ship_types: List of ship type strings
-        
+
     Returns:
         Formatted string of ship types
     """
@@ -82,12 +84,15 @@ def format_ship_types(ship_types: list[str]) -> str:
 
     return ", ".join(ship_types)
 
-def calculate_game_stats(move_history: list[tuple[str, dict[str, Any]]]) -> dict[str, Any]:
+
+def calculate_game_stats(
+    move_history: list[tuple[str, dict[str, Any]]],
+) -> dict[str, Any]:
     """Calculate game statistics from move history.
-    
+
     Args:
         move_history: List of (player, outcome) tuples
-        
+
     Returns:
         Dictionary of game statistics
     """
@@ -95,14 +100,38 @@ def calculate_game_stats(move_history: list[tuple[str, dict[str, Any]]]) -> dict
     player1_moves = sum(1 for player, _ in move_history if player == "player1")
     player2_moves = sum(1 for player, _ in move_history if player == "player2")
 
-    player1_hits = sum(1 for player, outcome in move_history if player == "player1" and outcome["result"] in ["hit", "sunk"])
-    player2_hits = sum(1 for player, outcome in move_history if player == "player2" and outcome["result"] in ["hit", "sunk"])
+    player1_hits = sum(
+        1
+        for player, outcome in move_history
+        if player == "player1" and outcome["result"] in ["hit", "sunk"]
+    )
+    player2_hits = sum(
+        1
+        for player, outcome in move_history
+        if player == "player2" and outcome["result"] in ["hit", "sunk"]
+    )
 
-    player1_misses = sum(1 for player, outcome in move_history if player == "player1" and outcome["result"] == "miss")
-    player2_misses = sum(1 for player, outcome in move_history if player == "player2" and outcome["result"] == "miss")
+    player1_misses = sum(
+        1
+        for player, outcome in move_history
+        if player == "player1" and outcome["result"] == "miss"
+    )
+    player2_misses = sum(
+        1
+        for player, outcome in move_history
+        if player == "player2" and outcome["result"] == "miss"
+    )
 
-    player1_sunk = sum(1 for player, outcome in move_history if player == "player1" and outcome["result"] == "sunk")
-    player2_sunk = sum(1 for player, outcome in move_history if player == "player2" and outcome["result"] == "sunk")
+    player1_sunk = sum(
+        1
+        for player, outcome in move_history
+        if player == "player1" and outcome["result"] == "sunk"
+    )
+    player2_sunk = sum(
+        1
+        for player, outcome in move_history
+        if player == "player2" and outcome["result"] == "sunk"
+    )
 
     return {
         "total_moves": total_moves,
@@ -114,16 +143,23 @@ def calculate_game_stats(move_history: list[tuple[str, dict[str, Any]]]) -> dict
         "player2_misses": player2_misses,
         "player1_sunk": player1_sunk,
         "player2_sunk": player2_sunk,
-        "player1_accuracy": round(player1_hits / player1_moves * 100, 1) if player1_moves > 0 else 0,
-        "player2_accuracy": round(player2_hits / player2_moves * 100, 1) if player2_moves > 0 else 0
+        "player1_accuracy": (
+            round(player1_hits / player1_moves * 100, 1) if player1_moves > 0 else 0
+        ),
+        "player2_accuracy": (
+            round(player2_hits / player2_moves * 100, 1) if player2_moves > 0 else 0
+        ),
     }
 
-def check_all_ships_placed(ship_placements: list[dict[str, Any]]) -> tuple[bool, str | None]:
+
+def check_all_ships_placed(
+    ship_placements: list[dict[str, Any]],
+) -> tuple[bool, str | None]:
     """Check if all required ships have been placed.
-    
+
     Args:
         ship_placements: List of ship placement dictionaries
-        
+
     Returns:
         Tuple of (is_complete, error_message)
     """

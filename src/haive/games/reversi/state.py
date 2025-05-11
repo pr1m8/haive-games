@@ -27,19 +27,20 @@ class ReversiState(GameState):
         player2_analysis (List[Dict[str, any]]): Analysis history by player2.
         skip_count (int): Number of consecutive turns skipped (used for endgame).
     """
+
     board: list[list[str | None]] = Field(
         ..., description="8x8 game board, each cell can be None, 'B', or 'W'"
     )
-    turn: Literal["B", "W"] = Field(..., description="Current player's turn (B=Black, W=White)")
+    turn: Literal["B", "W"] = Field(
+        ..., description="Current player's turn (B=Black, W=White)"
+    )
     game_status: Literal["ongoing", "B_win", "W_win", "draw"] = Field(
         default="ongoing", description="Status of the game"
     )
     move_history: list[ReversiMove] = Field(
         default_factory=list, description="History of moves"
     )
-    winner: str | None = Field(
-        default=None, description="Winner of the game, if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
     player_B: Literal["player1", "player2"] = Field(
         default="player1", description="Which player is Black"
     )
@@ -76,7 +77,9 @@ class ReversiState(GameState):
                 raise ValueError("Each row must have 8 columns")
             for cell in row:
                 if cell is not None and cell not in ["B", "W"]:
-                    raise ValueError(f"Cell values must be None, 'B', or 'W', got {cell}")
+                    raise ValueError(
+                        f"Cell values must be None, 'B', or 'W', got {cell}"
+                    )
         return board
 
     @property
@@ -127,7 +130,7 @@ class ReversiState(GameState):
         cls,
         first_player: str = "B",
         player_B: str = "player1",
-        player_W: str = "player2"
+        player_W: str = "player2",
     ) -> "ReversiState":
         """Class-level initializer for ReversiState.
 
@@ -140,8 +143,7 @@ class ReversiState(GameState):
             ReversiState: Initialized state.
         """
         from haive.games.reversi.state_manager import ReversiStateManager
+
         return ReversiStateManager.initialize(
-            first_player=first_player,
-            player_B=player_B,
-            player_W=player_W
+            first_player=first_player, player_B=player_B, player_W=player_W
         )

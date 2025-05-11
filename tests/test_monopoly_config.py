@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Test script for MonopolyAgentConfig validation
-"""
+"""Test script for MonopolyAgentConfig validation"""
 
 import sys
 from pathlib import Path
@@ -21,6 +20,7 @@ def main():
 
         # Test MonopolyAgent creation
         from haive.games.monopoly.agent import MonopolyAgent
+
         agent = MonopolyAgent(config=config)
         print("Success! MonopolyAgent created.")
 
@@ -28,8 +28,10 @@ def main():
     except Exception as e:
         print(f"Error: {e!s}")
         import traceback
+
         traceback.print_exc()
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

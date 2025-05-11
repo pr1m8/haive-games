@@ -15,13 +15,13 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
     @classmethod
     def initialize(cls, **kwargs) -> TicTacToeState:
         """Initialize a new Tic Tac Toe game.
-        
+
         Args:
             **kwargs: Keyword arguments for game initialization.
                 first_player: Which player goes first ('X' or 'O'). Default is 'X'.
                 player_X: Which player is X ('player1' or 'player2'). Default is 'player1'.
                 player_O: Which player is O ('player1' or 'player2'). Default is 'player2'.
-                
+
         Returns:
             TicTacToeState: A new Tic Tac Toe game state.
         """
@@ -38,16 +38,16 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
             game_status="ongoing",
             move_history=[],
             player_X=player_X,
-            player_O=player_O
+            player_O=player_O,
         )
 
     @classmethod
     def get_legal_moves(cls, state: TicTacToeState) -> list[TicTacToeMove]:
         """Get all legal moves for the current state.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             List[TicTacToeMove]: A list of all legal moves.
         """
@@ -61,25 +61,23 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
         for row in range(3):
             for col in range(3):
                 if state.board[row][col] is None:
-                    legal_moves.append(TicTacToeMove(
-                        row=row,
-                        col=col,
-                        player=state.turn
-                    ))
+                    legal_moves.append(
+                        TicTacToeMove(row=row, col=col, player=state.turn)
+                    )
 
         return legal_moves
 
     @classmethod
     def apply_move(cls, state: TicTacToeState, move: TicTacToeMove) -> TicTacToeState:
         """Apply a move to the current state and return the new state.
-        
+
         Args:
             state: The current game state.
             move: The move to apply.
-            
+
         Returns:
             TicTacToeState: A new game state after applying the move.
-            
+
         Raises:
             ValueError: If the move is invalid.
         """
@@ -107,16 +105,19 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
     @classmethod
     def check_game_status(cls, state: TicTacToeState) -> TicTacToeState:
         """Check and update the game status.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             TicTacToeState: The game state with updated status.
         """
         # Check rows for a win
         for row in range(3):
-            if state.board[row][0] is not None and state.board[row][0] == state.board[row][1] == state.board[row][2]:
+            if (
+                state.board[row][0] is not None
+                and state.board[row][0] == state.board[row][1] == state.board[row][2]
+            ):
                 winner = state.board[row][0]
                 state.game_status = f"{winner}_win"
                 state.winner = winner
@@ -124,20 +125,29 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         # Check columns for a win
         for col in range(3):
-            if state.board[0][col] is not None and state.board[0][col] == state.board[1][col] == state.board[2][col]:
+            if (
+                state.board[0][col] is not None
+                and state.board[0][col] == state.board[1][col] == state.board[2][col]
+            ):
                 winner = state.board[0][col]
                 state.game_status = f"{winner}_win"
                 state.winner = winner
                 return state
 
         # Check diagonals for a win
-        if state.board[0][0] is not None and state.board[0][0] == state.board[1][1] == state.board[2][2]:
+        if (
+            state.board[0][0] is not None
+            and state.board[0][0] == state.board[1][1] == state.board[2][2]
+        ):
             winner = state.board[0][0]
             state.game_status = f"{winner}_win"
             state.winner = winner
             return state
 
-        if state.board[0][2] is not None and state.board[0][2] == state.board[1][1] == state.board[2][0]:
+        if (
+            state.board[0][2] is not None
+            and state.board[0][2] == state.board[1][1] == state.board[2][0]
+        ):
             winner = state.board[0][2]
             state.game_status = f"{winner}_win"
             state.winner = winner
@@ -155,24 +165,26 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
     @classmethod
     def get_winner(cls, state: TicTacToeState) -> str | None:
         """Get the winner of the game, if any.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Optional[str]: The winner ('X' or 'O'), or None if the game is ongoing or a draw.
         """
         return state.winner
 
     @classmethod
-    def add_analysis(cls, state: TicTacToeState, player: str, analysis: TicTacToeAnalysis) -> TicTacToeState:
+    def add_analysis(
+        cls, state: TicTacToeState, player: str, analysis: TicTacToeAnalysis
+    ) -> TicTacToeState:
         """Add an analysis to the state.
-        
+
         Args:
             state: The current game state.
             player: The player who performed the analysis.
             analysis: The analysis to add.
-            
+
         Returns:
             TicTacToeState: Updated state with the analysis added.
         """
@@ -186,13 +198,15 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
         return new_state
 
     @classmethod
-    def find_winning_move(cls, state: TicTacToeState, player: str) -> list[tuple[int, int]]:
+    def find_winning_move(
+        cls, state: TicTacToeState, player: str
+    ) -> list[tuple[int, int]]:
         """Find a winning move for the specified player, if any.
-        
+
         Args:
             state: The current game state.
             player: The player to find a winning move for ('X' or 'O').
-            
+
         Returns:
             List[Tuple[int, int]]: List of winning move coordinates (row, col), or empty list if none.
         """
@@ -213,11 +227,11 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
     @classmethod
     def _is_winning_board(cls, board: list[list[str | None]], player: str) -> bool:
         """Check if the board is a win for the specified player.
-        
+
         Args:
             board: The board to check.
             player: The player to check for ('X' or 'O').
-            
+
         Returns:
             bool: True if the player has won, False otherwise.
         """

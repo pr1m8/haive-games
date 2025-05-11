@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
+
 from haive.games.monopoly.agent import MonopolyAgent
 from haive.games.monopoly.config import MonopolyAgentConfig
 from haive.games.monopoly.models import PlayerInfo as Player
@@ -28,11 +29,12 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("monopoly_test.log", mode="w")
-    ]
+        logging.FileHandler("monopoly_test.log", mode="w"),
+    ],
 )
 
 logger = logging.getLogger(__name__)
+
 
 class MonopolyAgentTester:
     """Test suite for the Monopoly agent."""
@@ -54,27 +56,20 @@ class MonopolyAgentTester:
         """Create a Monopoly agent with test configuration."""
         # Create LLM config
         azure_config = AzureLLMConfig(
-            model=self.model,
-            parameters={"temperature": self.temperature}
+            model=self.model, parameters={"temperature": self.temperature}
         )
 
         # Create AugLLM configs for the different engines
         strategy_engine = AugLLMConfig.from_llm_config(
-            llm_config=azure_config,
-            name="strategy",
-            request_timeout=60
+            llm_config=azure_config, name="strategy", request_timeout=60
         )
 
         turn_decision_engine = AugLLMConfig.from_llm_config(
-            llm_config=azure_config,
-            name="turn_decision",
-            request_timeout=60
+            llm_config=azure_config, name="turn_decision", request_timeout=60
         )
 
         property_engine = AugLLMConfig.from_llm_config(
-            llm_config=azure_config,
-            name="property",
-            request_timeout=60
+            llm_config=azure_config, name="property", request_timeout=60
         )
 
         # Create agent config
@@ -83,8 +78,8 @@ class MonopolyAgentTester:
             engines={
                 "strategy": strategy_engine,
                 "turn_decision": turn_decision_engine,
-                "property": property_engine
-            }
+                "property": property_engine,
+            },
         )
 
         # Create agent
@@ -103,7 +98,7 @@ class MonopolyAgentTester:
                 properties_owned=["Mediterranean Avenue", "Baltic Avenue"],
                 jail_cards=0,
                 bankruptcy_status=False,
-                total_wealth=1500  # Add total_wealth field
+                total_wealth=1500,  # Add total_wealth field
             ),
             Player(
                 index=1,
@@ -111,11 +106,15 @@ class MonopolyAgentTester:
                 cash=1500,
                 position=10,  # Just Visiting
                 is_in_jail=False,
-                properties_owned=["Oriental Avenue", "Vermont Avenue", "Connecticut Avenue"],
+                properties_owned=[
+                    "Oriental Avenue",
+                    "Vermont Avenue",
+                    "Connecticut Avenue",
+                ],
                 jail_cards=1,
                 bankruptcy_status=False,
-                total_wealth=1500  # Add total_wealth field
-            )
+                total_wealth=1500,  # Add total_wealth field
+            ),
         ]
 
         # Create some properties
@@ -130,7 +129,7 @@ class MonopolyAgentTester:
                 houses=0,
                 owner=0,  # Owned by Player 1
                 is_mortgaged=False,
-                mortgage_value=30
+                mortgage_value=30,
             ),
             "Baltic Avenue": Property(
                 name="Baltic Avenue",
@@ -142,7 +141,7 @@ class MonopolyAgentTester:
                 houses=0,
                 owner=0,  # Owned by Player 1
                 is_mortgaged=False,
-                mortgage_value=30
+                mortgage_value=30,
             ),
             "Oriental Avenue": Property(
                 name="Oriental Avenue",
@@ -154,7 +153,7 @@ class MonopolyAgentTester:
                 houses=0,
                 owner=1,  # Owned by Player 2
                 is_mortgaged=False,
-                mortgage_value=50
+                mortgage_value=50,
             ),
             "Vermont Avenue": Property(
                 name="Vermont Avenue",
@@ -166,7 +165,7 @@ class MonopolyAgentTester:
                 houses=0,
                 owner=1,  # Owned by Player 2
                 is_mortgaged=False,
-                mortgage_value=50
+                mortgage_value=50,
             ),
             "Connecticut Avenue": Property(
                 name="Connecticut Avenue",
@@ -178,7 +177,7 @@ class MonopolyAgentTester:
                 houses=1,
                 owner=1,  # Owned by Player 2
                 is_mortgaged=False,
-                mortgage_value=60
+                mortgage_value=60,
             ),
             "St. James Place": Property(
                 name="St. James Place",
@@ -190,7 +189,7 @@ class MonopolyAgentTester:
                 houses=0,
                 owner=None,  # Unowned
                 is_mortgaged=False,
-                mortgage_value=90
+                mortgage_value=90,
             ),
         }
 
@@ -204,7 +203,7 @@ class MonopolyAgentTester:
             dice=None,
             special_cards={},
             community_chest_drawn=None,
-            chance_drawn=None
+            chance_drawn=None,
         )
 
         return state
@@ -236,11 +235,13 @@ class MonopolyAgentTester:
             logger.error(f"Strategy analysis test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "analyze_strategy",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "analyze_strategy",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_decide_turn_actions(self):
@@ -273,11 +274,13 @@ class MonopolyAgentTester:
             logger.error(f"Turn decision test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "decide_turn_actions",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "decide_turn_actions",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_execute_move(self):
@@ -292,12 +295,13 @@ class MonopolyAgentTester:
 
             # Create a mock turn decision with a roll move
             from haive.games.monopoly.models import MoveAction, TurnDecision
+
             move_action = MoveAction(action_type="roll", reasoning="Test roll")
             turn_decision = TurnDecision(
                 move_action=move_action,
                 property_actions=[],
                 end_turn=False,
-                reasoning="Testing move execution"
+                reasoning="Testing move execution",
             )
 
             # Add the decision to state
@@ -332,11 +336,13 @@ class MonopolyAgentTester:
             logger.error(f"Execute move test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "execute_move",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "execute_move",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_manage_properties(self):
@@ -366,10 +372,11 @@ class MonopolyAgentTester:
 
             # Create a property action to buy it
             from haive.games.monopoly.models import PropertyAction, TurnDecision
+
             property_action = PropertyAction(
                 action_type="buy",
                 property_name=mediterranean_ave,
-                reasoning="Test buying property"
+                reasoning="Test buying property",
             )
 
             # Create turn decision
@@ -377,7 +384,7 @@ class MonopolyAgentTester:
                 move_action=None,
                 property_actions=[property_action],
                 end_turn=False,
-                reasoning="Testing property management"
+                reasoning="Testing property management",
             )
 
             # Add to state
@@ -393,14 +400,18 @@ class MonopolyAgentTester:
 
             # Verify the property was bought
             if result_state.properties[mediterranean_ave].owner != 0:
-                raise ValueError(f"Property {mediterranean_ave} was not purchased by player 0")
+                raise ValueError(
+                    f"Property {mediterranean_ave} was not purchased by player 0"
+                )
 
             # Verify player cash was reduced
             property_cost = test_state.properties[mediterranean_ave].cost
             expected_cash = test_state.players[0].cash - property_cost
 
             if result_state.players[0].cash != expected_cash:
-                raise ValueError(f"Player cash not updated correctly after purchase. Expected {expected_cash}, got {result_state.players[0].cash}")
+                raise ValueError(
+                    f"Player cash not updated correctly after purchase. Expected {expected_cash}, got {result_state.players[0].cash}"
+                )
 
             # Log success
             logger.info(f"Property management test successful in {duration:.2f}s")
@@ -411,11 +422,13 @@ class MonopolyAgentTester:
             logger.error(f"Property management test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "manage_properties",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "manage_properties",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def test_game_flow(self):
@@ -472,11 +485,13 @@ class MonopolyAgentTester:
             logger.error(f"Game flow test failed: {e}")
             logger.error(traceback.format_exc())
             self.failed_tests += 1
-            self.issues_found.append({
-                "test": "game_flow",
-                "error": str(e),
-                "traceback": traceback.format_exc()
-            })
+            self.issues_found.append(
+                {
+                    "test": "game_flow",
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                }
+            )
             return False
 
     def run_all_tests(self):
@@ -489,7 +504,7 @@ class MonopolyAgentTester:
             self.test_decide_turn_actions,
             self.test_execute_move,
             self.test_manage_properties,
-            self.test_game_flow
+            self.test_game_flow,
         ]
 
         for test_func in tests:
@@ -500,20 +515,25 @@ class MonopolyAgentTester:
                 logger.error(f"Test {test_func.__name__} failed: {e}")
                 logger.error(traceback.format_exc())
                 self.failed_tests += 1
-                self.issues_found.append({
-                    "test": test_func.__name__,
-                    "error": str(e),
-                    "traceback": traceback.format_exc()
-                })
+                self.issues_found.append(
+                    {
+                        "test": test_func.__name__,
+                        "error": str(e),
+                        "traceback": traceback.format_exc(),
+                    }
+                )
 
         # Print results
-        logger.info(f"Tests completed. Successful: {self.successful_tests}, Failed: {self.failed_tests}")
+        logger.info(
+            f"Tests completed. Successful: {self.successful_tests}, Failed: {self.failed_tests}"
+        )
 
         # Log any issues
         for issue in self.issues_found:
             logger.error(f"Issue in {issue['test']}: {issue['error']}")
 
         return self.successful_tests, self.failed_tests, self.issues_found
+
 
 def main():
     """Run the Monopoly agent tests."""
@@ -522,6 +542,7 @@ def main():
     # Run with default GPT-4o model
     tester = MonopolyAgentTester(model="gpt-4o", temperature=0.7)
     tester.run_all_tests()
+
 
 if __name__ == "__main__":
     main()

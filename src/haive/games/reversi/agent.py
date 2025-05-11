@@ -1,10 +1,10 @@
 import time
 from typing import Any
 
-from langgraph.types import Command
-
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langgraph.types import Command
+
 from haive.games.framework.base.agent import GameAgent
 from haive.games.reversi.config import ReversiConfig
 from haive.games.reversi.models import ReversiMove
@@ -25,6 +25,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         """
         self.state_manager = ReversiStateManager
         super().__init__(config)
+
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Reversi game by constructing the initial game state.
 
@@ -37,9 +38,15 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         game_state = self.state_manager.initialize(
             first_player=self.config.first_player,
             player_B=self.config.player_B,
-            player_W=self.config.player_W
+            player_W=self.config.player_W,
         )
-        return Command(update=game_state.model_dump() if hasattr(game_state, "model_dump") else game_state.dict())
+        return Command(
+            update=(
+                game_state.model_dump()
+                if hasattr(game_state, "model_dump")
+                else game_state.dict()
+            )
+        )
 
     def prepare_move_context(self, state: ReversiState) -> dict[str, Any]:
         """Prepare the prompt context used by the move generation engine.
@@ -53,10 +60,17 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         """
         # Format legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
-        formatted_legal_moves = ", ".join([f"({move.row}, {move.col})" for move in legal_moves])
+        formatted_legal_moves = ", ".join(
+            [f"({move.row}, {move.col})" for move in legal_moves]
+        )
 
         # Get player's analysis if available
-        current_player = "player1" if (state.turn == "B" and state.player_B == "player1") or (state.turn == "W" and state.player_W == "player1") else "player2"
+        current_player = (
+            "player1"
+            if (state.turn == "B" and state.player_B == "player1")
+            or (state.turn == "W" and state.player_W == "player1")
+            else "player2"
+        )
         player_analysis = None
 
         if current_player == "player1" and state.player1_analysis:
@@ -72,10 +86,12 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             "board_string": state.board_string,
             "current_player": state.turn,
             "legal_moves": formatted_legal_moves,
-            "player_analysis": player_analysis
+            "player_analysis": player_analysis,
         }
 
-    def prepare_analysis_context(self, state: ReversiState, symbol: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: ReversiState, symbol: str
+    ) -> dict[str, Any]:
         """Prepare the prompt context for board analysis by the strategy engine.
 
         Args:
@@ -92,7 +108,9 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         """
         # Format legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
-        formatted_legal_moves = ", ".join([f"({move.row}, {move.col})" for move in legal_moves])
+        formatted_legal_moves = ", ".join(
+            [f"({move.row}, {move.col})" for move in legal_moves]
+        )
 
         # Get disc counts
         counts = state.disc_count
@@ -107,9 +125,8 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             "opponent_color": opponent_color,
             "legal_moves": formatted_legal_moves,
             "black_count": counts["B"],
-            "white_count": counts["W"]
+            "white_count": counts["W"],
         }
-
 
     def extract_move(self, response: Any) -> ReversiMove:
         """Extract a ReversiMove object from an engine response.
@@ -134,14 +151,24 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             Command: Command containing the updated ReversiState.
         """
         if state.turn != "B" or state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Check if Black has legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
         if not legal_moves:
             # No legal moves, must skip turn
             new_state = self.state_manager.get_skip_move(state)
-            return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+            return Command(
+                update=(
+                    new_state.model_dump()
+                    if hasattr(new_state, "model_dump")
+                    else new_state.dict()
+                )
+            )
 
         # Prepare context for the move
         context = self.prepare_move_context(state)
@@ -156,7 +183,13 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def make_W_move(self, state: ReversiState) -> Command:
         """Make a move for player W (White).
@@ -168,14 +201,24 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             Command: Command containing the updated ReversiState.
         """
         if state.turn != "W" or state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
 
         # Check if White has legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
         if not legal_moves:
             # No legal moves, must skip turn
             new_state = self.state_manager.get_skip_move(state)
-            return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+            return Command(
+                update=(
+                    new_state.model_dump()
+                    if hasattr(new_state, "model_dump")
+                    else new_state.dict()
+                )
+            )
 
         # Prepare context for the move
         context = self.prepare_move_context(state)
@@ -190,7 +233,13 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         new_state = self.state_manager.apply_move(state, move)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def analyze_B(self, state: ReversiState) -> Command:
         """Analyze position for player B (Black).
@@ -202,7 +251,11 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             Command: Command containing the updated ReversiState.
         """
         if not self.config.enable_analysis or state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
         # Prepare context for analysis
         context = self.prepare_analysis_context(state, "B")
 
@@ -219,7 +272,13 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         new_state = self.state_manager.add_analysis(state, player, analysis)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def analyze_W(self, state: ReversiState) -> Command:
         """Analyze position for player W (White).
@@ -231,7 +290,11 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             Command: Command containing the updated ReversiState.
         """
         if not self.config.enable_analysis or state.game_status != "ongoing":
-            return Command(update=state.model_dump() if hasattr(state, "model_dump") else state.dict())
+            return Command(
+                update=(
+                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                )
+            )
         # Prepare context for analysis
         context = self.prepare_analysis_context(state, "W")
 
@@ -248,7 +311,13 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         new_state = self.state_manager.add_analysis(state, player, analysis)
 
         # Return the updated state
-        return Command(update=new_state.model_dump() if hasattr(new_state, "model_dump") else new_state.dict())
+        return Command(
+            update=(
+                new_state.model_dump()
+                if hasattr(new_state, "model_dump")
+                else new_state.dict()
+            )
+        )
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
@@ -267,14 +336,20 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         print("\n" + "=" * 50)
         print(f"🎮 Game Status: {game_state.game_status}")
         if game_state.game_status == "ongoing":
-            print(f"Current Turn: {game_state.turn} ({'Black' if game_state.turn == 'B' else 'White'} - "
-                  f"{game_state.player_B if game_state.turn == 'B' else game_state.player_W})")
+            print(
+                f"Current Turn: {game_state.turn} ({'Black' if game_state.turn == 'B' else 'White'} - "
+                f"{game_state.player_B if game_state.turn == 'B' else game_state.player_W})"
+            )
         elif game_state.game_status == "draw":
             print("Game ended in a draw!")
         elif game_state.game_status.endswith("_win"):
             winner_symbol = game_state.game_status.split("_")[0]
-            winner_player = game_state.player_B if winner_symbol == "B" else game_state.player_W
-            print(f"🏆 Winner: {winner_symbol} ({'Black' if winner_symbol == 'B' else 'White'} - {winner_player})")
+            winner_player = (
+                game_state.player_B if winner_symbol == "B" else game_state.player_W
+            )
+            print(
+                f"🏆 Winner: {winner_symbol} ({'Black' if winner_symbol == 'B' else 'White'} - {winner_player})"
+            )
 
         # Print disc count
         counts = game_state.disc_count
@@ -290,31 +365,45 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             print(f"\n📝 Last Move: {last_move!s}")
 
         # Print analyses if available
-        current_player = game_state.player_B if game_state.turn == "B" else game_state.player_W
+        current_player = (
+            game_state.player_B if game_state.turn == "B" else game_state.player_W
+        )
 
         if current_player == "player1" and game_state.player2_analysis:
             # Show player2's last analysis after their move
             last_analysis = game_state.player2_analysis[-1]
             print("\n🔍 Previous Player's Analysis:")
             print(f"Position evaluation: {last_analysis['position_evaluation']}")
-            print(f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}")
-            print(f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}")
+            print(
+                f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}"
+            )
+            print(
+                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}"
+            )
             print(f"Positional score: {last_analysis['positional_score']}")
             print(f"Strategy: {last_analysis['strategy']}")
             if last_analysis["recommended_moves"]:
-                print(f"Recommended moves: {', '.join([str(m) for m in last_analysis['recommended_moves']])}")
+                print(
+                    f"Recommended moves: {', '.join([str(m) for m in last_analysis['recommended_moves']])}"
+                )
 
         elif current_player == "player2" and game_state.player1_analysis:
             # Show player1's last analysis after their move
             last_analysis = game_state.player1_analysis[-1]
             print("\n🔍 Previous Player's Analysis:")
             print(f"Position evaluation: {last_analysis['position_evaluation']}")
-            print(f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}")
-            print(f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}")
+            print(
+                f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}"
+            )
+            print(
+                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}"
+            )
             print(f"Positional score: {last_analysis['positional_score']}")
             print(f"Strategy: {last_analysis['strategy']}")
             if last_analysis["recommended_moves"]:
-                print(f"Recommended moves: {', '.join([str(m) for m in last_analysis['recommended_moves']])}")
+                print(
+                    f"Recommended moves: {', '.join([str(m) for m in last_analysis['recommended_moves']])}"
+                )
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -336,7 +425,10 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         builder.add_node("analyze_W", self.analyze_W)
 
         # Set up the game flow
-        builder.add_edge("initialize", "make_B_move" if self.config.first_player == "B" else "make_W_move")
+        builder.add_edge(
+            "initialize",
+            "make_B_move" if self.config.first_player == "B" else "make_W_move",
+        )
 
         # B's turn flow
         builder.add_edge("make_B_move", "analyze_B")
@@ -350,16 +442,14 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         self.graph = builder.build()
 
         # Compile the workflow
-        #self.compile()
-
-
+        # self.compile()
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run a complete Reversi game with visualization.
-        
+
         Args:
             visualize: Whether to visualize each game state
-            
+
         Returns:
             Final game state
         """
@@ -379,13 +469,13 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
 
 # Initialize the agent
-#a = ReversiAgent()
-#a.run_game(visualize=True)
+# a = ReversiAgent()
+# a.run_game(visualize=True)
 # Run the game with visualization
-#final_state = a.run_game(visualize=True)
+# final_state = a.run_game(visualize=True)
 
 # Print the winner
-#if final_state.get("game_status", "") == "draw":
+# if final_state.get("game_status", "") == "draw":
 #     print("\nGame ended in a draw!")
 # elif final_state.get("game_status", "").endswith("_win"):
 #     winner_symbol = final_state["game_status"].split("_")[0]

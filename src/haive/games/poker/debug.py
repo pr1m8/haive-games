@@ -25,6 +25,7 @@ from haive.games.poker.models import (
 
 logger = logging.getLogger(__name__)
 
+
 class StructuredOutputTester:
     """Test harness for validating LLM structured output handling."""
 
@@ -51,7 +52,7 @@ class StructuredOutputTester:
                     "duration": end_time - start_time,
                     "success": False,
                     "response_type": str(type(response)),
-                    "raw_response": response
+                    "raw_response": response,
                 }
 
                 # Check if it's a structured output
@@ -84,7 +85,7 @@ class StructuredOutputTester:
                     "duration": end_time - start_time,
                     "success": False,
                     "error": str(e),
-                    "traceback": traceback.format_exc()
+                    "traceback": traceback.format_exc(),
                 }
 
             # Wait before retrying
@@ -117,9 +118,11 @@ class StructuredOutputTester:
         stats = {
             "total_tests": len(self.results),
             "success_rate": successes / len(self.results) if self.results else 0,
-            "structured_rate": structured_outputs / len(self.results) if self.results else 0,
+            "structured_rate": (
+                structured_outputs / len(self.results) if self.results else 0
+            ),
             "avg_duration": avg_duration,
-            "action_distribution": action_counts
+            "action_distribution": action_counts,
         }
 
         return stats
@@ -130,11 +133,13 @@ class StructuredOutputTester:
             print("No test results available.")
             return
 
-        stats = self.run_batch_test(iterations=0)  # Just compile stats without running more tests
+        stats = self.run_batch_test(
+            iterations=0
+        )  # Just compile stats without running more tests
 
-        print("="*60)
+        print("=" * 60)
         print("STRUCTURED OUTPUT TEST REPORT")
-        print("="*60)
+        print("=" * 60)
         print(f"Total tests: {stats['total_tests']}")
         print(f"Success rate: {stats['success_rate']*100:.2f}%")
         print(f"Structured output rate: {stats['structured_rate']*100:.2f}%")
@@ -165,9 +170,9 @@ class GameStatePrinter:
         """Print a human-readable version of the current game state."""
         game = state.game
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print(f"GAME STATE: {game.phase.value.upper()}")
-        print("="*80)
+        print("=" * 80)
 
         # Print community cards
         print("\nCommunity Cards:")
@@ -231,14 +236,17 @@ class GameStatePrinter:
             print("  None")
         else:
             # Get the last 5 actions
-            recent_actions = game.action_history[-min(5, len(game.action_history)):]
+            recent_actions = game.action_history[-min(5, len(game.action_history)) :]
             for action in recent_actions:
-                player_name = next((p.name for p in game.players if p.id == action.player_id), action.player_id)
+                player_name = next(
+                    (p.name for p in game.players if p.id == action.player_id),
+                    action.player_id,
+                )
                 action_str = action.action.value.upper()
                 amount_str = f" ${action.amount}" if action.amount > 0 else ""
                 print(f"  {player_name}: {action_str}{amount_str}")
 
-        print("\n" + "-"*80)
+        print("\n" + "-" * 80)
 
     @staticmethod
     def _format_card(card: Card) -> str:
@@ -257,7 +265,7 @@ class GameStatePrinter:
             CardValue.JACK: "J",
             CardValue.QUEEN: "Q",
             CardValue.KING: "K",
-            CardValue.ACE: "A"
+            CardValue.ACE: "A",
         }
 
         # Map suits to unicode symbols
@@ -265,7 +273,7 @@ class GameStatePrinter:
             Suit.HEARTS: "♥",
             Suit.DIAMONDS: "♦",
             Suit.CLUBS: "♣",
-            Suit.SPADES: "♠"
+            Suit.SPADES: "♠",
         }
 
         value_str = value_map.get(card.value, str(card.value.value))
@@ -278,7 +286,9 @@ class DecisionAnalyzer:
     """Analyze and validate player decisions for correctness."""
 
     @staticmethod
-    def validate_decision(decision: AgentDecision, player: Player, game_state) -> dict[str, Any]:
+    def validate_decision(
+        decision: AgentDecision, player: Player, game_state
+    ) -> dict[str, Any]:
         """Validate if a decision is legal and reasonable."""
         # Start with a clean validation result
         validation = {
@@ -286,7 +296,7 @@ class DecisionAnalyzer:
             "optimal": True,
             "warnings": [],
             "suggestions": [],
-            "reasoning_quality": "good"
+            "reasoning_quality": "good",
         }
 
         # Check if action is a valid enum value
@@ -294,7 +304,9 @@ class DecisionAnalyzer:
             try:
                 # Try to convert string to enum
                 action = PlayerAction(decision.action.lower())
-                validation["warnings"].append(f"Decision action was a string '{decision.action}', not an enum")
+                validation["warnings"].append(
+                    f"Decision action was a string '{decision.action}', not an enum"
+                )
                 decision.action = action
             except (ValueError, AttributeError):
                 validation["legal"] = False
@@ -308,7 +320,9 @@ class DecisionAnalyzer:
                 decision.amount = int(decision.amount)
             except (ValueError, TypeError):
                 validation["legal"] = False
-                validation["warnings"].append("Invalid amount: cannot be converted to a number")
+                validation["warnings"].append(
+                    "Invalid amount: cannot be converted to a number"
+                )
                 return validation
 
         # Ensure amount is non-negative
@@ -325,9 +339,13 @@ class DecisionAnalyzer:
         if decision.action == PlayerAction.CHECK:
             if current_bet > player_bet:
                 validation["legal"] = False
-                validation["warnings"].append(f"Cannot check when there's a bet to call (${current_bet - player_bet})")
+                validation["warnings"].append(
+                    f"Cannot check when there's a bet to call (${current_bet - player_bet})"
+                )
             if decision.amount != 0:
-                validation["warnings"].append(f"Check should have amount 0, not {decision.amount}")
+                validation["warnings"].append(
+                    f"Check should have amount 0, not {decision.amount}"
+                )
                 decision.amount = 0
 
         # CALL validation
@@ -337,10 +355,14 @@ class DecisionAnalyzer:
                 validation["legal"] = False
                 validation["warnings"].append("Cannot call when there's no bet to call")
             elif decision.amount != call_amount:
-                validation["warnings"].append(f"Call amount should be {call_amount}, not {decision.amount}")
+                validation["warnings"].append(
+                    f"Call amount should be {call_amount}, not {decision.amount}"
+                )
             if player.chips < call_amount:
                 validation["legal"] = False
-                validation["warnings"].append(f"Not enough chips to call (need {call_amount}, have {player.chips})")
+                validation["warnings"].append(
+                    f"Not enough chips to call (need {call_amount}, have {player.chips})"
+                )
 
         # BET validation
         elif decision.action == PlayerAction.BET:
@@ -349,24 +371,38 @@ class DecisionAnalyzer:
                 validation["warnings"].append("Cannot bet when there's already a bet")
             elif decision.amount > player.chips:
                 validation["legal"] = False
-                validation["warnings"].append(f"Bet amount ({decision.amount}) exceeds available chips ({player.chips})")
+                validation["warnings"].append(
+                    f"Bet amount ({decision.amount}) exceeds available chips ({player.chips})"
+                )
             elif decision.amount < game_state.big_blind:
-                validation["warnings"].append(f"Bet less than big blind (${decision.amount} < ${game_state.big_blind})")
-                validation["suggestions"].append(f"Minimum bet should be at least the big blind (${game_state.big_blind})")
+                validation["warnings"].append(
+                    f"Bet less than big blind (${decision.amount} < ${game_state.big_blind})"
+                )
+                validation["suggestions"].append(
+                    f"Minimum bet should be at least the big blind (${game_state.big_blind})"
+                )
 
         # RAISE validation
         elif decision.action == PlayerAction.RAISE:
             if current_bet == 0:
                 validation["legal"] = False
-                validation["warnings"].append("Cannot raise when there's no bet (use BET instead)")
+                validation["warnings"].append(
+                    "Cannot raise when there's no bet (use BET instead)"
+                )
             else:
                 min_raise = current_bet + game_state.min_raise - player_bet
                 if decision.amount < min_raise:
-                    validation["warnings"].append(f"Raise amount less than minimum ({decision.amount} < {min_raise})")
-                    validation["suggestions"].append(f"Minimum raise should be {min_raise}")
+                    validation["warnings"].append(
+                        f"Raise amount less than minimum ({decision.amount} < {min_raise})"
+                    )
+                    validation["suggestions"].append(
+                        f"Minimum raise should be {min_raise}"
+                    )
                 if decision.amount > player.chips:
                     validation["legal"] = False
-                    validation["warnings"].append(f"Raise amount exceeds available chips ({decision.amount} > {player.chips})")
+                    validation["warnings"].append(
+                        f"Raise amount exceeds available chips ({decision.amount} > {player.chips})"
+                    )
 
         # ALL_IN validation
         elif decision.action == PlayerAction.ALL_IN:
@@ -374,7 +410,9 @@ class DecisionAnalyzer:
                 validation["legal"] = False
                 validation["warnings"].append("Player already all-in")
             elif decision.amount != player.chips:
-                validation["warnings"].append(f"All-in amount should be {player.chips}, not {decision.amount}")
+                validation["warnings"].append(
+                    f"All-in amount should be {player.chips}, not {decision.amount}"
+                )
                 decision.amount = player.chips
 
         # Check reasoning quality

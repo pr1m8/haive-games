@@ -1,11 +1,11 @@
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from haive.games.cards.blackjack.config import BlackjackAgentConfig
 from haive.games.cards.blackjack.models import BlackjackGameState, PlayerAction
 from haive.games.cards.blackjack.state_manager import BlackjackStateManager
@@ -16,7 +16,7 @@ from haive.games.framework.base import GameAgent
 class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
     """Multi-player Blackjack game agent."""
 
-    def __init__(self, config: BlackjackAgentConfig=BlackjackAgentConfig()):
+    def __init__(self, config: BlackjackAgentConfig = BlackjackAgentConfig()):
         """Initialize the Blackjack agent."""
         self.state_manager = BlackjackStateManager
         super().__init__(config)
@@ -27,10 +27,10 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Blackjack game.
-        
+
         Args:
             state: Initial state dictionary (typically empty)
-        
+
         Returns:
             Command to set up the game
         """
@@ -42,17 +42,14 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
         # Reset round counter
         self.current_round = 0
 
-        return Command(
-            update=game_state.model_dump(),
-            goto="betting_phase"
-        )
+        return Command(update=game_state.model_dump(), goto="betting_phase")
 
     def betting_phase(self, state: dict[str, Any]) -> Command:
         """Manage the betting phase for all players.
-        
+
         Args:
             state: Current game state
-        
+
         Returns:
             Command for next phase
         """
@@ -68,7 +65,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
             context = {
                 "total_chips": player.total_chips,
                 "previous_round_summary": self.previous_round_summary,
-                "game_context": f"Round {self.current_round + 1}"
+                "game_context": f"Round {self.current_round + 1}",
             }
 
             try:
@@ -77,34 +74,24 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
                 # Validate and place bet
                 game_state = self.state_manager.place_bet(
-                    game_state,
-                    player_index=i,
-                    bet_amount=float(bet_amount)
+                    game_state, player_index=i, bet_amount=float(bet_amount)
                 )
             except Exception:
                 # Fallback: random bet between 10-100 or 10% of chips
-                fallback_bet = min(
-                    max(10, player.total_chips * 0.1),
-                    100
-                )
+                fallback_bet = min(max(10, player.total_chips * 0.1), 100)
                 game_state = self.state_manager.place_bet(
-                    game_state,
-                    player_index=i,
-                    bet_amount=fallback_bet
+                    game_state, player_index=i, bet_amount=fallback_bet
                 )
 
         # Move to deal cards
-        return Command(
-            update=game_state.model_dump(),
-            goto="deal_cards"
-        )
+        return Command(update=game_state.model_dump(), goto="deal_cards")
 
     def deal_cards(self, state: dict[str, Any]) -> Command:
         """Deal initial cards to all players and dealer.
-        
+
         Args:
             state: Current game state
-        
+
         Returns:
             Command for player turns
         """
@@ -113,31 +100,32 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
         # Deal initial cards
         game_state = self.state_manager.deal_initial_cards(game_state)
 
-        return Command(
-            update=game_state.model_dump(),
-            goto="player_turns"
-        )
+        return Command(update=game_state.model_dump(), goto="player_turns")
 
     def player_turns(self, state: dict[str, Any]) -> Command:
         """Manage player turns for decision making.
-        
+
         Args:
             state: Current game state
-        
+
         Returns:
             Command for next phase
         """
         game_state = BlackjackGameState(**state)
 
         # Get current player and hand
-        player, current_hand = self.state_manager.get_current_player_and_hand(game_state)
+        player, current_hand = self.state_manager.get_current_player_and_hand(
+            game_state
+        )
 
         # Prepare context for action decision
         context = {
             "hand_details": " ".join(str(card) for card in current_hand.cards),
-            "dealer_card": str(game_state.dealer_hand[0]) if game_state.dealer_hand else "Unknown",
+            "dealer_card": (
+                str(game_state.dealer_hand[0]) if game_state.dealer_hand else "Unknown"
+            ),
             "current_bet": current_hand.bet,
-            "total_chips": player.total_chips
+            "total_chips": player.total_chips,
         }
 
         # Use player action engine
@@ -152,24 +140,21 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
             # Fallback action
             player_action = PlayerAction(
                 action="hit" if current_hand.total_value() < 17 else "stand",
-                reasoning="Default fallback strategy"
+                reasoning="Default fallback strategy",
             )
 
         # Process the action
         try:
             game_state = self.state_manager.process_player_action(
-                game_state,
-                player_action
+                game_state, player_action
             )
         except Exception:
             # If action is invalid, default to safe action
             fallback_action = PlayerAction(
-                action="stand",
-                reasoning="Invalid action, defaulting to stand"
+                action="stand", reasoning="Invalid action, defaulting to stand"
             )
             game_state = self.state_manager.process_player_action(
-                game_state,
-                fallback_action
+                game_state, fallback_action
             )
 
         # Determine next step based on game status
@@ -178,17 +163,14 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
         else:
             goto = "player_turns"
 
-        return Command(
-            update=game_state.model_dump(),
-            goto=goto
-        )
+        return Command(update=game_state.model_dump(), goto=goto)
 
     def dealer_turn(self, state: dict[str, Any]) -> Command:
         """Execute dealer's turn.
-        
+
         Args:
             state: Current game state
-        
+
         Returns:
             Command for game conclusion
         """
@@ -208,21 +190,15 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         # Determine next step
         if self.current_round >= self.config.max_rounds:
-            return Command(
-                update=game_state.model_dump(),
-                goto=END
-            )
+            return Command(update=game_state.model_dump(), goto=END)
         # Reset for next round
         game_state = self.state_manager.reset_game(game_state)
 
-        return Command(
-            update=game_state.model_dump(),
-            goto="betting_phase"
-        )
+        return Command(update=game_state.model_dump(), goto="betting_phase")
 
     def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
-        
+
         Args:
             state: Current game state
         """
@@ -252,11 +228,9 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
         time.sleep(1)  # Add a small delay for readability
 
     def setup_workflow(self) -> None:
-        """Set up the workflow for the Blackjack game.
-        """
+        """Set up the workflow for the Blackjack game."""
         gb = DynamicGraph(
-            components=[self.config],
-            state_schema=self.config.state_schema
+            components=[self.config], state_schema=self.config.state_schema
         )
 
         # Define nodes for the game workflow

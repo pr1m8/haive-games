@@ -18,5 +18,5 @@ __all__ = [
     "MancalaMove",
     "MancalaState",
     "MancalaStateManager",
-    "mancala_engines"
+    "mancala_engines",
 ]

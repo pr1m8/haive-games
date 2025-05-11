@@ -1,10 +1,9 @@
 import copy
 import random
 
-from haive.games.cards.bs.models import (
+from haive.games.cards.bs.models import (  # BullshitGameState,
     Card,
     ChallengeAction,
-    #BullshitGameState,
     PlayerClaimAction,
     PlayerState,
 )
@@ -12,16 +11,15 @@ from haive.games.cards.bs.state import BullshitGameState
 
 
 class BullshitStateManager:
-    """Manages the state and core logic for a Bullshit (BS) card game.
-    """
+    """Manages the state and core logic for a Bullshit (BS) card game."""
 
     @classmethod
     def initialize_game(cls, num_players: int = 4) -> BullshitGameState:
         """Initialize a new Bullshit game.
-        
+
         Args:
             num_players: Number of players in the game
-            
+
         Returns:
             Initialized game state
         """
@@ -42,27 +40,21 @@ class BullshitStateManager:
             else:
                 player_cards = deck[start_index:end_index]
 
-            players.append(PlayerState(
-                name=f"Player_{i+1}",
-                hand=player_cards
-            ))
+            players.append(PlayerState(name=f"Player_{i+1}", hand=player_cards))
 
         # Create game state
-        game_state = BullshitGameState(
-            players=players,
-            game_status="ongoing"
-        )
+        game_state = BullshitGameState(players=players, game_status="ongoing")
 
         return game_state
 
     @classmethod
     def validate_claim(cls, state: BullshitGameState, claim: PlayerClaimAction) -> bool:
         """Validate if a player's claim is potentially true.
-        
+
         Args:
             state: Current game state
             claim: Player's claim about played cards
-            
+
         Returns:
             Whether the claim could be true
         """
@@ -70,8 +62,7 @@ class BullshitStateManager:
 
         # Check if player has enough cards of the claimed value
         cards_of_value = [
-            card for card in current_player.hand
-            if card.value == claim.claimed_value
+            card for card in current_player.hand if card.value == claim.claimed_value
         ]
 
         # If claim matches actual cards, it's potentially true
@@ -79,16 +70,14 @@ class BullshitStateManager:
 
     @classmethod
     def process_player_claim(
-        cls,
-        state: BullshitGameState,
-        claim: PlayerClaimAction
+        cls, state: BullshitGameState, claim: PlayerClaimAction
     ) -> BullshitGameState:
         """Process a player's claim and card play.
-        
+
         Args:
             state: Current game state
             claim: Player's claim about played cards
-            
+
         Returns:
             Updated game state
         """
@@ -99,15 +88,13 @@ class BullshitStateManager:
         if claim.is_truth:
             # Truthful play: use actual cards of the claimed value
             play_cards = [
-                card for card in current_player.hand
+                card
+                for card in current_player.hand
                 if card.value == claim.claimed_value
-            ][:claim.number_of_cards]
+            ][: claim.number_of_cards]
         else:
             # Bluffing: randomly select cards
-            play_cards = random.sample(
-                current_player.hand,
-                claim.number_of_cards
-            )
+            play_cards = random.sample(current_player.hand, claim.number_of_cards)
 
         # Play the cards
         current_player.play_cards(play_cards)
@@ -118,22 +105,22 @@ class BullshitStateManager:
         new_state.current_claimed_value = claim.claimed_value
 
         # Move to next player
-        new_state.current_player_index = (new_state.current_player_index + 1) % len(new_state.players)
+        new_state.current_player_index = (new_state.current_player_index + 1) % len(
+            new_state.players
+        )
 
         return new_state
 
     @classmethod
     def process_challenge(
-        cls,
-        state: BullshitGameState,
-        challenge: ChallengeAction
+        cls, state: BullshitGameState, challenge: ChallengeAction
     ) -> BullshitGameState:
         """Process a challenge to a player's claim.
-        
+
         Args:
             state: Current game state
             challenge: Challenge action
-            
+
         Returns:
             Updated game state
         """
@@ -163,11 +150,13 @@ class BullshitStateManager:
         new_state.current_pile.clear()
 
         # Record challenge in history
-        new_state.challenge_history.append({
-            "challenger": new_state.players[challenger_index].name,
-            "challenged_player": challenged_player.name,
-            "result": challenge_result
-        })
+        new_state.challenge_history.append(
+            {
+                "challenger": new_state.players[challenger_index].name,
+                "challenged_player": challenged_player.name,
+                "result": challenge_result,
+            }
+        )
 
         # Check for game end
         new_state = cls.check_game_status(new_state)
@@ -177,10 +166,10 @@ class BullshitStateManager:
     @classmethod
     def check_game_status(cls, state: BullshitGameState) -> BullshitGameState:
         """Check if the game has ended.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Updated game state
         """
@@ -198,10 +187,10 @@ class BullshitStateManager:
     @classmethod
     def reset_game(cls, state: BullshitGameState) -> BullshitGameState:
         """Reset the game for a new round.
-        
+
         Args:
             state: Current game state
-            
+
         Returns:
             Reset game state
         """

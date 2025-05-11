@@ -5,9 +5,9 @@ which includes the game name, state schema, AugLLM configurations,
 enable_analysis, visualize, and max_turns.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.aug_llm import AugLLMConfig
 from haive.games.fox_and_geese.engines import fox_and_geese_engines
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.framework.base.config import GameConfig
@@ -20,23 +20,19 @@ class FoxAndGeeseConfig(GameConfig):
     which includes the game name, state schema, AugLLM configurations,
     enable_analysis, visualize, and max_turns.
     """
+
     name: str = Field(default="fox_and_geese", description="Name of the game")
     state_schema: type[FoxAndGeeseState] = Field(default=FoxAndGeeseState)
     engines: dict[str, AugLLMConfig] = Field(
         default=fox_and_geese_engines,
-        description="Configs for the Fox and Geese engines"
+        description="Configs for the Fox and Geese engines",
     )
     enable_analysis: bool = Field(
-        default=True,
-        description="Whether to enable position analysis"
+        default=True, description="Whether to enable position analysis"
     )
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
     max_turns: int = Field(
-        default=100,
-        description="Maximum number of turns before declaring a draw"
+        default=100, description="Maximum number of turns before declaring a draw"
     )
 
     @classmethod
@@ -48,5 +44,5 @@ class FoxAndGeeseConfig(GameConfig):
             engines=fox_and_geese_engines,
             enable_analysis=True,
             visualize=True,
-            max_turns=100
+            max_turns=100,
         )

@@ -6,7 +6,7 @@ and state management.
 
 Example:
     >>> from haive.agents.agent_games.framework.multi_player.factory import MultiPlayerGameFactory
-    >>> 
+    >>>
     >>> # Create a new chess agent class
     >>> ChessAgent = MultiPlayerGameFactory.create_game_agent(
     ...     name="ChessAgent",
@@ -23,7 +23,8 @@ Example:
 from collections.abc import Callable
 
 from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.aug_llm.base import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
 from haive.games.framework.multi_player.config import MultiPlayerGameConfig
 from haive.games.framework.multi_player.state import MultiPlayerGameState
@@ -32,7 +33,7 @@ from haive.games.framework.multi_player.state_manager import MultiPlayerGameStat
 
 class MultiPlayerGameFactory:
     """Factory for creating multi-player game agents.
-    
+
     This class provides static methods for creating game-specific agent
     classes with proper configuration and state management. It handles:
         - Agent class creation with proper inheritance
@@ -40,7 +41,7 @@ class MultiPlayerGameFactory:
         - State management integration
         - Custom method injection
         - Agent registration
-    
+
     Example:
         >>> # Create a new game agent class
         >>> MafiaAgent = MultiPlayerGameFactory.create_game_agent(
@@ -63,14 +64,14 @@ class MultiPlayerGameFactory:
         state_manager: type[MultiPlayerGameStateManager],
         player_roles: list[str],
         aug_llm_configs: dict[str, dict[str, AugLLMConfig]],
-        custom_methods: dict[str, Callable] = None
+        custom_methods: dict[str, Callable] = None,
     ) -> type[Agent]:
         """Create a new multi-player game agent class.
-        
+
         This method creates a new agent class with proper configuration,
         state management, and custom methods. The created class is
         automatically registered with the agent registry.
-        
+
         Args:
             name (str): Name of the agent class.
             state_schema (Type[MultiPlayerGameState]): The game state schema class.
@@ -78,10 +79,10 @@ class MultiPlayerGameFactory:
             player_roles (List[str]): List of player roles.
             aug_llm_configs (Dict[str, Dict[str, AugLLMConfig]]): LLM configurations by role and function.
             custom_methods (Dict[str, Callable], optional): Additional methods for the agent.
-        
+
         Returns:
             Type[Agent]: A new agent class ready for instantiation.
-        
+
         Example:
             >>> # Create a chess agent with custom methods
             >>> ChessAgent = MultiPlayerGameFactory.create_game_agent(
@@ -108,15 +109,16 @@ class MultiPlayerGameFactory:
                 "aug_llm_configs": aug_llm_configs,
                 "player_roles": player_roles,
                 "visualize": True,
-
                 # Add a classmethod for default config
-                "default_config": classmethod(lambda cls: cls(
-                    state_schema=state_schema,
-                    aug_llm_configs=aug_llm_configs,
-                    player_roles=player_roles,
-                    visualize=True
-                ))
-            }
+                "default_config": classmethod(
+                    lambda cls: cls(
+                        state_schema=state_schema,
+                        aug_llm_configs=aug_llm_configs,
+                        player_roles=player_roles,
+                        visualize=True,
+                    )
+                ),
+            },
         )
 
         # Define initialization for the agent class
@@ -136,11 +138,7 @@ class MultiPlayerGameFactory:
             methods.update(custom_methods)
 
         # Create and register the agent class
-        agent_class = type(
-            name,
-            (MultiPlayerGameAgent,),
-            methods
-        )
+        agent_class = type(name, (MultiPlayerGameAgent,), methods)
 
         # Register the agent with its config
         register_agent(config_class)(agent_class)

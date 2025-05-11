@@ -13,7 +13,7 @@ and consistent data structures throughout the game.
 
 Example:
     >>> from poker.models import Card, Suit, CardValue
-    >>> 
+    >>>
     >>> # Create a card
     >>> ace_of_spades = Card(suit=Suit.SPADES, value=CardValue.ACE)
     >>> print(ace_of_spades)  # Shows "Ace of spades"
@@ -28,7 +28,7 @@ from pydantic import BaseModel, Field
 # Enums for card suits and values
 class Suit(str, Enum):
     """Card suit enumeration.
-    
+
     Represents the four standard playing card suits. Inherits from str.Enum
     for easy serialization and string comparison.
 
@@ -38,14 +38,16 @@ class Suit(str, Enum):
         CLUBS (str): Clubs suit
         SPADES (str): Spades suit
     """
+
     HEARTS = "hearts"
     DIAMONDS = "diamonds"
     CLUBS = "clubs"
     SPADES = "spades"
 
+
 class CardValue(int, Enum):
     """Card value enumeration.
-    
+
     Represents standard playing card values from 2 to Ace. Inherits from int.Enum
     for numeric comparison (e.g., King > Queen). Ace is highest by default (14)
     but can be treated as 1 in certain contexts (e.g., A-2-3-4-5 straight).
@@ -57,6 +59,7 @@ class CardValue(int, Enum):
         KING (int): Value 13
         ACE (int): Value 14 (or 1 in some contexts)
     """
+
     TWO = 2
     THREE = 3
     FOUR = 4
@@ -71,10 +74,11 @@ class CardValue(int, Enum):
     KING = 13
     ACE = 14  # Ace can also be 1 in some contexts
 
+
 # Enum for poker hand rankings
 class HandRank(int, Enum):
     """Poker hand ranking enumeration.
-    
+
     Represents the standard poker hand rankings from high card to royal flush.
     Inherits from int.Enum for easy comparison of hand strengths.
 
@@ -90,6 +94,7 @@ class HandRank(int, Enum):
         STRAIGHT_FLUSH (int): Sequential cards of same suit
         ROYAL_FLUSH (int): A-K-Q-J-10 of same suit
     """
+
     HIGH_CARD = 0
     PAIR = 1
     TWO_PAIR = 2
@@ -101,10 +106,11 @@ class HandRank(int, Enum):
     STRAIGHT_FLUSH = 8
     ROYAL_FLUSH = 9
 
+
 # Enum for game phases
 class GamePhase(str, Enum):
     """Poker game phase enumeration.
-    
+
     Represents the different phases of a Texas Hold'em poker game.
     Inherits from str.Enum for easy serialization and comparison.
 
@@ -117,6 +123,7 @@ class GamePhase(str, Enum):
         SHOWDOWN (str): Hand comparison
         GAME_OVER (str): Game completed
     """
+
     SETUP = "setup"
     PREFLOP = "preflop"
     FLOP = "flop"
@@ -125,10 +132,11 @@ class GamePhase(str, Enum):
     SHOWDOWN = "showdown"
     GAME_OVER = "game_over"
 
+
 # Enum for player actions
 class PlayerAction(str, Enum):
     """Player action enumeration.
-    
+
     Represents the possible actions a player can take during their turn.
     Inherits from str.Enum for easy serialization and comparison.
 
@@ -140,6 +148,7 @@ class PlayerAction(str, Enum):
         RAISE (str): Increase current bet
         ALL_IN (str): Bet all remaining chips
     """
+
     FOLD = "fold"
     CHECK = "check"
     CALL = "call"
@@ -147,10 +156,11 @@ class PlayerAction(str, Enum):
     RAISE = "raise"
     ALL_IN = "all_in"
 
+
 # Card model
 class Card(BaseModel):
     """Playing card model.
-    
+
     Represents a standard playing card with suit and value.
     Provides methods for numeric value comparison.
 
@@ -163,6 +173,7 @@ class Card(BaseModel):
         >>> print(card)  # Shows "Ace of hearts"
         >>> print(card.numeric_value)  # Shows 14
     """
+
     suit: Suit = Field(description="The suit of the card")
     value: CardValue = Field(description="The value of the card")
 
@@ -178,15 +189,16 @@ class Card(BaseModel):
     @property
     def numeric_value_low(self) -> int:
         """Get numeric value treating Ace as 1.
-        
+
         Used for A-2-3-4-5 straight calculations.
         """
         return 1 if self.value == CardValue.ACE else self.value.value
 
+
 # Hand model (combination of cards a player has)
 class Hand(BaseModel):
     """Playing hand model.
-    
+
     Represents a collection of cards held by a player or on the board.
     Limited to 7 cards maximum (2 hole cards + 5 community cards).
 
@@ -200,20 +212,20 @@ class Hand(BaseModel):
         ... ])
         >>> print(hand)  # Shows "Ace of hearts, King of hearts"
     """
+
     cards: list[Card] = Field(
-        default_factory=list,
-        max_length=7,
-        description="The cards in the hand"
+        default_factory=list, max_length=7, description="The cards in the hand"
     )
 
     def __str__(self) -> str:
         """String representation of the hand."""
         return ", ".join(str(card) for card in self.cards)
 
+
 # Player model
 class Player(BaseModel):
     """Player model for poker game.
-    
+
     Represents a player in the game, tracking their cards, chips, and game status.
     Includes betting information and position at the table.
 
@@ -237,24 +249,36 @@ class Player(BaseModel):
         ... )
         >>> print(player)  # Shows "Player Alice ($1000)"
     """
+
     id: str = Field(description="The unique identifier for the player")
     name: str = Field(description="The name of the player")
     chips: int = Field(default=1000, description="The number of chips the player has")
-    hand: Hand = Field(default_factory=Hand, description="The cards the player has in their hand")
-    is_active: bool = Field(default=True, description="Whether the player is still in the game")
+    hand: Hand = Field(
+        default_factory=Hand, description="The cards the player has in their hand"
+    )
+    is_active: bool = Field(
+        default=True, description="Whether the player is still in the game"
+    )
     is_all_in: bool = Field(default=False, description="Whether the player is all in")
-    current_bet: int = Field(default=0, description="The amount of chips the player has bet or raised")
-    total_bet: int = Field(default=0, description="The total amount of chips the player has bet")
-    position: int = Field(default=0, description="The position of the player in the game")
+    current_bet: int = Field(
+        default=0, description="The amount of chips the player has bet or raised"
+    )
+    total_bet: int = Field(
+        default=0, description="The total amount of chips the player has bet"
+    )
+    position: int = Field(
+        default=0, description="The position of the player in the game"
+    )
 
     def __str__(self) -> str:
         """String representation of the player."""
         return f"Player {self.name} (${self.chips})"
 
+
 # Action model for tracking player actions
 class ActionRecord(BaseModel):
     """Record of a player's action.
-    
+
     Tracks a single action taken by a player during the game,
     including the type of action, amount (if any), and game phase.
 
@@ -272,15 +296,21 @@ class ActionRecord(BaseModel):
         ...     phase=GamePhase.FLOP
         ... )
     """
+
     player_id: str = Field(description="The unique identifier for the player")
     action: PlayerAction = Field(description="The action taken by the player")
-    amount: int = Field(default=0, description="The amount of chips the player bet or raised")
-    phase: GamePhase = Field(description="The phase of the game when the action was taken")
+    amount: int = Field(
+        default=0, description="The amount of chips the player bet or raised"
+    )
+    phase: GamePhase = Field(
+        description="The phase of the game when the action was taken"
+    )
+
 
 # Hand ranking result
 class HandRanking(BaseModel):
     """Poker hand ranking result.
-    
+
     Represents the evaluation of a player's best possible hand,
     including rank, high cards for tiebreakers, and description.
 
@@ -298,15 +328,19 @@ class HandRanking(BaseModel):
         ...     description="Ace-high flush"
         ... )
     """
+
     player_id: str = Field(description="The unique identifier for the player")
     rank: HandRank = Field(description="The rank of the hand")
-    high_cards: list[CardValue] = Field(default_factory=list, description="The highest cards in the hand")
+    high_cards: list[CardValue] = Field(
+        default_factory=list, description="The highest cards in the hand"
+    )
     description: str = Field(default="", description="The description of the hand")
+
 
 # Pot model
 class Pot(BaseModel):
     """Poker pot model.
-    
+
     Represents a pot of chips in the game, tracking both the amount
     and which players are eligible to win it (for side pots).
 
@@ -320,13 +354,17 @@ class Pot(BaseModel):
         ...     eligible_players=["p1", "p2", "p3"]
         ... )
     """
+
     amount: int = Field(default=0, description="The amount of chips in the pot")
-    eligible_players: list[str] = Field(default_factory=list, description="The players who are eligible to win the pot")
+    eligible_players: list[str] = Field(
+        default_factory=list, description="The players who are eligible to win the pot"
+    )
+
 
 # Texas Hold'em specific
 class PokerGameState(BaseModel):
     """Texas Hold'em poker game state.
-    
+
     Comprehensive model of the current game state, including all player
     information, community cards, betting status, and game progression.
 
@@ -356,23 +394,50 @@ class PokerGameState(BaseModel):
         ...     big_blind=10
         ... )
     """
-    players: list[Player] = Field(default_factory=list, description="The players in the game")
-    active_players: list[str] = Field(default_factory=list, description="The players who are still in the game")
+
+    players: list[Player] = Field(
+        default_factory=list, description="The players in the game"
+    )
+    active_players: list[str] = Field(
+        default_factory=list, description="The players who are still in the game"
+    )
     dealer_position: int = Field(default=0, description="The position of the dealer")
-    current_player_idx: int = Field(default=0, description="The index of the current player")
-    community_cards: list[Card] = Field(default_factory=list, max_length=5, description="The community cards on the table")
-    deck: list[Card] = Field(default_factory=list, max_length=52, description="The deck of cards in the game")
-    phase: GamePhase = Field(default=GamePhase.SETUP, description="The current phase of the game")
-    pots: list[Pot] = Field(default_factory=lambda: [Pot()], description="The pots in the game")
+    current_player_idx: int = Field(
+        default=0, description="The index of the current player"
+    )
+    community_cards: list[Card] = Field(
+        default_factory=list,
+        max_length=5,
+        description="The community cards on the table",
+    )
+    deck: list[Card] = Field(
+        default_factory=list, max_length=52, description="The deck of cards in the game"
+    )
+    phase: GamePhase = Field(
+        default=GamePhase.SETUP, description="The current phase of the game"
+    )
+    pots: list[Pot] = Field(
+        default_factory=lambda: [Pot()], description="The pots in the game"
+    )
     current_bet: int = Field(default=0, description="The current bet amount")
     small_blind: int = Field(default=5, description="The small blind amount")
     big_blind: int = Field(default=10, description="The big blind amount")
     min_raise: int = Field(default=10, description="The minimum raise amount")
-    action_history: list[ActionRecord] = Field(default_factory=list, description="The history of actions taken by the players")
-    last_aggressor: str | None = Field(default=None, description="The last player to make a bet or raise")
-    hand_rankings: dict[str, HandRanking] = Field(default_factory=dict, description="The rankings of the hands of each player")
-    winners: list[str] = Field(default_factory=list, description="The players who won the game")
-    round_complete: bool = Field(default=False, description="Whether the current round is complete")
+    action_history: list[ActionRecord] = Field(
+        default_factory=list, description="The history of actions taken by the players"
+    )
+    last_aggressor: str | None = Field(
+        default=None, description="The last player to make a bet or raise"
+    )
+    hand_rankings: dict[str, HandRanking] = Field(
+        default_factory=dict, description="The rankings of the hands of each player"
+    )
+    winners: list[str] = Field(
+        default_factory=list, description="The players who won the game"
+    )
+    round_complete: bool = Field(
+        default=False, description="Whether the current round is complete"
+    )
 
     @property
     def active_player_count(self) -> int:
@@ -380,11 +445,10 @@ class PokerGameState(BaseModel):
         return len(self.active_players)
 
 
-
 # Player observation (what a player can see)
 class PlayerObservation(BaseModel):
     """Player's view of the game state.
-    
+
     Represents what a specific player can observe about the current game
     state, hiding information they shouldn't have access to (e.g., other
     players' hole cards).
@@ -413,26 +477,35 @@ class PlayerObservation(BaseModel):
         ...     position_name="Button"
         ... )
     """
+
     player_id: str = Field(description="The unique identifier for the player")
     hand: Hand = Field(description="The cards the player has in their hand")
     chips: int = Field(description="The number of chips the player has")
     position: int = Field(description="The position of the player in the game")
     position_name: str = Field(description="The name of the player's position")
     community_cards: list[Card] = Field(description="The community cards on the table")
-    visible_players: list[dict[str, Any]] = Field(description="The players that are still in the game")
+    visible_players: list[dict[str, Any]] = Field(
+        description="The players that are still in the game"
+    )
     phase: GamePhase = Field(description="The current phase of the game")
     current_bet: int = Field(description="The current bet amount")
     pot_sizes: list[int] = Field(description="The sizes of the pots in the game")
-    recent_actions: list[ActionRecord] = Field(description="The recent actions taken by the players")
+    recent_actions: list[ActionRecord] = Field(
+        description="The recent actions taken by the players"
+    )
     min_raise: int = Field(description="The minimum raise amount for the current bet")
     is_active: bool = Field(description="Whether the player is still in the game")
-    is_current_player: bool = Field(description="Whether the player is the current player")
+    is_current_player: bool = Field(
+        description="Whether the player is the current player"
+    )
+
 
 # Agent decision
 
+
 class AgentDecision(BaseModel):
     """Agent's decision in the game.
-    
+
     Represents a decision made by an AI agent, including the action,
     bet amount (if any), and reasoning behind the decision.
 
@@ -449,18 +522,22 @@ class AgentDecision(BaseModel):
         ... )
         >>> print(decision)  # Shows decision details
     """
+
     action: PlayerAction = Field(description="The action the player is taking")
-    amount: int = Field(default=0, description="The amount of chips the player is betting or raising")
+    amount: int = Field(
+        default=0, description="The amount of chips the player is betting or raising"
+    )
     reasoning: str = Field(description="The reasoning behind the player's decision")
 
     def __str__(self):
         """String representation of the decision."""
         return f"Decision: {self.action.value} (${self.amount}) - {self.reasoning}"
 
+
 # Agent decision schema
 class AgentDecisionSchema(BaseModel):
     """Schema for LLM decision output.
-    
+
     Defines the expected structure for decisions generated by the language
     model, ensuring consistent and valid output format.
 
@@ -476,23 +553,25 @@ class AgentDecisionSchema(BaseModel):
         ...     reasoning="Good pot odds with drawing hand"
         ... )
     """
+
     action: PlayerAction = Field(description="The action taken by the player")
     amount: int = Field(default=0, description="Amount of chips for bet/raise")
     reasoning: str = Field(description="The reasoning behind the decision")
 
     class Config:
-        json_schema_extra= {
+        json_schema_extra = {
             "example": {
                 "action": "raise",
                 "amount": 100,
-                "reasoning": "Raising to build the pot with a strong hand"
+                "reasoning": "Raising to build the pot with a strong hand",
             }
         }
+
 
 # Game result for record-keeping
 class GameResult(BaseModel):
     """Poker game result record.
-    
+
     Stores the final outcome of a completed game, including winners,
     chip counts, and hand rankings.
 
@@ -510,7 +589,14 @@ class GameResult(BaseModel):
         ...     total_hands_played=1
         ... )
     """
+
     winners: list[str] = Field(description="The players who won the game")
-    final_chips: dict[str, int] = Field(description="The final number of chips each player has")
-    hand_rankings: dict[str, HandRanking] = Field(description="The rankings of the hands of each player")
-    total_hands_played: int = Field(description="The total number of hands played in the game")
+    final_chips: dict[str, int] = Field(
+        description="The final number of chips each player has"
+    )
+    hand_rankings: dict[str, HandRanking] = Field(
+        description="The rankings of the hands of each player"
+    )
+    total_hands_played: int = Field(
+        description="The total number of hands played in the game"
+    )

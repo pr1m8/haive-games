@@ -1,9 +1,9 @@
-
 from haive.games.monopoly.game.types import PropertyType, SpecialSquareType
 
 
 class Property:
     """Represents a property on the board."""
+
     def __init__(
         self,
         name: str,
@@ -14,7 +14,7 @@ class Property:
         rent_values: list[int] | None = None,
         mortgage_value: int | None = None,
         house_cost: int | None = None,
-        special_type: SpecialSquareType | None = None
+        special_type: SpecialSquareType | None = None,
     ):
         self.name = name
         self.position = position
@@ -33,10 +33,10 @@ class Property:
 
     def get_rent(self, dice_roll: int | None = None) -> int:
         """Calculate the rent for this property.
-        
+
         Args:
             dice_roll: The dice roll (needed for utilities)
-            
+
         Returns:
             The rent amount
         """
@@ -55,7 +55,8 @@ class Property:
         if self.property_type == PropertyType.UTILITY:
             # Utility rent based on dice roll and how many utilities the owner has
             multiplier = self.rent_values[0]  # Will be updated by the game engine
-            return (dice_roll or 7) * multiplier  # Default to 7 if no dice roll provided
+            return (
+                dice_roll or 7
+            ) * multiplier  # Default to 7 if no dice roll provided
 
         return 0
-

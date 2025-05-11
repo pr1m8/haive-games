@@ -1,7 +1,10 @@
 import time
 import uuid
 
-from haive.core.engine.agent.persistence.postgres_config import PostgresCheckpointerConfig
+from haive.core.engine.agent.persistence.postgres_config import (
+    PostgresCheckpointerConfig,
+)
+
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
 
@@ -29,8 +32,8 @@ def run_connect4_game():
         enable_analysis=True,
         runnable_config={
             "configurable": {"thread_id": thread_id},
-            "recursion_limit": 100
-        }
+            "recursion_limit": 100,
+        },
     )
 
     # ✅ Instantiate agent
@@ -46,7 +49,7 @@ def run_connect4_game():
         "game_status": "ongoing",
         "winner": None,
         "captured": None,
-        "error_message": None
+        "error_message": None,
     }
 
     # ✅ Run the game for a few turns
@@ -61,6 +64,7 @@ def run_connect4_game():
 
     print("🏁 Game Over!")
     print(f"🎉 Winner: {state.get('winner', 'None')}")
+
 
 # Run game
 if __name__ == "__main__":

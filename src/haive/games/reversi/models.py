@@ -15,8 +15,10 @@ class Position(BaseModel):
         row (int): Row index (0-7).
         col (int): Column index (0-7).
     """
+
     row: int = Field(..., ge=0, lt=8, description="Row index (0-7)")
     col: int = Field(..., ge=0, lt=8, description="Column index (0-7)")
+
 
 class ReversiMove(BaseModel):
     """Represents a single Reversi move.
@@ -26,14 +28,18 @@ class ReversiMove(BaseModel):
         col (int): Column position of the move (0-7).
         player (str): The player making the move ('B' or 'W').
     """
+
     row: int = Field(..., ge=0, lt=8, description="Row index (0-7)")
     col: int = Field(..., ge=0, lt=8, description="Column index (0-7)")
-    player: Literal["B", "W"] = Field(..., description="Player making the move (B=Black, W=White)")
+    player: Literal["B", "W"] = Field(
+        ..., description="Player making the move (B=Black, W=White)"
+    )
 
     def __str__(self):
         row_letter = chr(ord("A") + self.row)
         col_num = self.col + 1
         return f"{self.player} places at {row_letter}{col_num} ({self.row}, {self.col})"
+
 
 class ReversiAnalysis(BaseModel):
     """Strategy and evaluation report for a Reversi position.
@@ -50,11 +56,16 @@ class ReversiAnalysis(BaseModel):
         strategy (str): Summary of strategic approach.
         reasoning (str): Detailed explanation of analysis.
     """
+
     mobility: int = Field(..., description="Number of legal moves available")
-    frontier_discs: int = Field(..., description="Number of discs adjacent to empty spaces")
+    frontier_discs: int = Field(
+        ..., description="Number of discs adjacent to empty spaces"
+    )
     corner_discs: int = Field(..., description="Number of corner positions captured")
     stable_discs: int = Field(..., description="Number of discs that cannot be flipped")
-    positional_score: int = Field(..., description="Score based on strategic position values")
+    positional_score: int = Field(
+        ..., description="Score based on strategic position values"
+    )
     position_evaluation: Literal["winning", "losing", "equal", "unclear"] = Field(
         ..., description="Overall position evaluation"
     )

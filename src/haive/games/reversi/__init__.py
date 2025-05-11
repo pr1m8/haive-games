@@ -18,5 +18,5 @@ __all__ = [
     "ReversiMove",
     "ReversiState",
     "ReversiStateManager",
-    "reversi_engines"
+    "reversi_engines",
 ]

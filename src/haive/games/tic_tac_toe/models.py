@@ -18,6 +18,7 @@ class TicTacToeMove(BaseModel):
         col (int): Column index (0-2) where the player wants to place their symbol.
         player (Literal['X', 'O']): The symbol representing the player ('X' or 'O').
     """
+
     row: int = Field(..., ge=0, lt=3, description="Row index (0-2)")
     col: int = Field(..., ge=0, lt=3, description="Column index (0-2)")
     player: Literal["X", "O"] = Field(..., description="Player making the move")
@@ -39,35 +40,33 @@ class TicTacToeAnalysis(BaseModel):
         recommended_move (Optional[Dict[str, int]]): Suggested best move based on analysis.
         strategy (str): Strategic recommendation and explanation.
     """
+
     winning_moves: list[dict[str, int]] = Field(
         default_factory=list,
-        description="List of winning moves (row, col) for the current player, if any"
+        description="List of winning moves (row, col) for the current player, if any",
     )
     blocking_moves: list[dict[str, int]] = Field(
         default_factory=list,
-        description="List of moves (row, col) to block opponent from winning immediately"
+        description="List of moves (row, col) to block opponent from winning immediately",
     )
     fork_opportunities: list[dict[str, int]] = Field(
         default_factory=list,
-        description="List of moves (row, col) that create multiple simultaneous threats (forks)"
+        description="List of moves (row, col) that create multiple simultaneous threats (forks)",
     )
     center_available: bool = Field(
-        ...,
-        description="Whether the center square (1,1) is currently unoccupied"
+        ..., description="Whether the center square (1,1) is currently unoccupied"
     )
     corner_available: bool = Field(
-        ...,
-        description="Whether any corner square is currently unoccupied"
+        ..., description="Whether any corner square is currently unoccupied"
     )
     position_evaluation: Literal["winning", "losing", "drawing", "unclear"] = Field(
         ...,
-        description="High-level evaluation of the board position from the current player's perspective"
+        description="High-level evaluation of the board position from the current player's perspective",
     )
     recommended_move: dict[str, int] | None = Field(
-        default=None,
-        description="Best move (row, col) to play next, if applicable"
+        default=None, description="Best move (row, col) to play next, if applicable"
     )
     strategy: str = Field(
         ...,
-        description="Narrative explanation of the best strategy for the current position"
+        description="Narrative explanation of the best strategy for the current position",
     )

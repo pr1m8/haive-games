@@ -4,6 +4,7 @@ This module defines the state manager for the Mancala game,
 which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
+
 from typing import Any
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -20,11 +21,11 @@ class MancalaStateManager(GameStateManager[MancalaState]):
     @classmethod
     def initialize(cls, **kwargs) -> MancalaState:
         """Initialize a new Mancala game.
-        
+
         Args:
             **kwargs: Keyword arguments for game initialization.
                 stones_per_pit: Number of stones per pit initially. Defaults to 4.
-                
+
         Returns:
             MancalaState: A new Mancala game state.
         """
@@ -44,16 +45,16 @@ class MancalaStateManager(GameStateManager[MancalaState]):
             turn="player1",  # Player 1 starts
             game_status="ongoing",
             move_history=[],
-            free_turn=False
+            free_turn=False,
         )
 
     @classmethod
     def get_legal_moves(cls, state: MancalaState) -> list[MancalaMove]:
         """Get all legal moves for the current state.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             List[MancalaMove]: A list of all legal moves.
         """
@@ -81,14 +82,14 @@ class MancalaStateManager(GameStateManager[MancalaState]):
     @classmethod
     def apply_move(cls, state: MancalaState, move: MancalaMove) -> MancalaState:
         """Apply a move to the current state and return the new state.
-        
+
         Args:
             state: The current game state.
             move: The move to apply.
-            
+
         Returns:
             MancalaState: A new game state after applying the move.
-            
+
         Raises:
             ValueError: If the move is invalid.
         """
@@ -131,13 +132,17 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         last_pit = current_pit
         if last_pit != player_store and new_state.board[last_pit] == 1:
             # The last stone landed in an empty pit on the player's side
-            if (move.player == "player1" and 0 <= last_pit < 6) or (move.player == "player2" and 7 <= last_pit < 13):
+            if (move.player == "player1" and 0 <= last_pit < 6) or (
+                move.player == "player2" and 7 <= last_pit < 13
+            ):
                 opposite_pit = 12 - last_pit
 
                 # If the opposite pit has stones, capture them
                 if new_state.board[opposite_pit] > 0:
                     # Add the stones from both pits to the player's store
-                    new_state.board[player_store] += new_state.board[last_pit] + new_state.board[opposite_pit]
+                    new_state.board[player_store] += (
+                        new_state.board[last_pit] + new_state.board[opposite_pit]
+                    )
                     new_state.board[last_pit] = 0
                     new_state.board[opposite_pit] = 0
 
@@ -158,10 +163,10 @@ class MancalaStateManager(GameStateManager[MancalaState]):
     @classmethod
     def check_game_status(cls, state: MancalaState) -> MancalaState:
         """Check and update the game status.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             MancalaState: The game state with updated status.
         """
@@ -198,10 +203,10 @@ class MancalaStateManager(GameStateManager[MancalaState]):
     @classmethod
     def get_winner(cls, state: MancalaState) -> str | None:
         """Get the winner of the game, if any.
-        
+
         Args:
             state: The current game state.
-            
+
         Returns:
             Optional[str]: The winner, or None if the game is ongoing or a draw.
         """
@@ -212,14 +217,16 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         return None
 
     @classmethod
-    def add_analysis(cls, state: MancalaState, player: str, analysis: Any) -> MancalaState:
+    def add_analysis(
+        cls, state: MancalaState, player: str, analysis: Any
+    ) -> MancalaState:
         """Add an analysis to the state.
-        
+
         Args:
             state: The current game state.
             player: The player who performed the analysis.
             analysis: The analysis to add.
-            
+
         Returns:
             MancalaState: Updated state with the analysis added.
         """

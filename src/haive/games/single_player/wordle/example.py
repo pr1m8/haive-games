@@ -1,4 +1,3 @@
-
 from haive.games.single_player.wordle.agent import WordConnectionsAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
 from haive.games.single_player.wordle.state_manager import WordConnectionsStateManager
@@ -6,7 +5,7 @@ from haive.games.single_player.wordle.state_manager import WordConnectionsStateM
 
 def run_word_connections_game(source="internal", categories=None, auto_analyze=True):
     """Run a Word Connections game with visualization.
-    
+
     Args:
         source (str): Source of game data ('internal' or 'nyt')
         categories (List[str], optional): Specific categories to use
@@ -14,10 +13,7 @@ def run_word_connections_game(source="internal", categories=None, auto_analyze=T
     """
     # Create agent with appropriate config
     config = WordConnectionsAgentConfig(
-        enable_analysis=auto_analyze,
-        visualize=True,
-        auto_submit=False,
-        source=source
+        enable_analysis=auto_analyze, visualize=True, auto_submit=False, source=source
     )
 
     if categories:
@@ -40,10 +36,7 @@ def run_word_connections_game(source="internal", categories=None, auto_analyze=T
 
     # Stream through the game steps
     for step in agent.app.stream(
-        game_state,
-        config=agent.runnable_config,
-        debug=True,
-        stream_mode="values"
+        game_state, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
         # Visualize the game state
         agent.visualize_state(step)
@@ -60,19 +53,17 @@ def run_word_connections_game(source="internal", categories=None, auto_analyze=T
     agent.save_state_history()
     print("\n✅ Game Complete!")
 
+
 def run_interactive_word_connections_game(source="internal", categories=None):
     """Run an interactive version of Word Connections where the user makes selections.
-    
+
     Args:
         source (str): Source of game data ('internal' or 'nyt')
         categories (List[str], optional): Specific categories to use
     """
     # Create agent with config
     config = WordConnectionsAgentConfig(
-        enable_analysis=True,
-        visualize=True,
-        auto_submit=False,
-        source=source
+        enable_analysis=True, visualize=True, auto_submit=False, source=source
     )
 
     if categories:
@@ -131,7 +122,11 @@ def run_interactive_word_connections_game(source="internal", categories=None):
             break
 
         # Get user input
-        command = input("\nEnter command (0-15, submit, analyze, auto, quit): ").strip().lower()
+        command = (
+            input("\nEnter command (0-15, submit, analyze, auto, quit): ")
+            .strip()
+            .lower()
+        )
 
         if command == "quit":
             print("Exiting game...")
@@ -148,19 +143,31 @@ def run_interactive_word_connections_game(source="internal", categories=None):
                 try:
                     analysis_context = agent.prepare_analysis_context(state)
                     analysis = analyzer.invoke(analysis_context)
-                    analysis_dict = analysis.model_dump() if hasattr(analysis, "model_dump") else analysis.dict()
+                    analysis_dict = (
+                        analysis.model_dump()
+                        if hasattr(analysis, "model_dump")
+                        else analysis.dict()
+                    )
 
                     print("\n🔍 Analysis:")
 
                     # Print potential groups
-                    if hasattr(analysis, "potential_groups") and analysis.potential_groups:
+                    if (
+                        hasattr(analysis, "potential_groups")
+                        and analysis.potential_groups
+                    ):
                         print("\nPotential Groups:")
                         for i, group in enumerate(analysis.potential_groups[:3]):
                             if "category" in group and "words" in group:
-                                print(f"{i+1}. {group['category']}: {', '.join(group['words'])}")
+                                print(
+                                    f"{i+1}. {group['category']}: {', '.join(group['words'])}"
+                                )
 
                     # Print difficult words
-                    if hasattr(analysis, "difficult_words") and analysis.difficult_words:
+                    if (
+                        hasattr(analysis, "difficult_words")
+                        and analysis.difficult_words
+                    ):
                         print("\nAmbiguous Words:")
                         print(", ".join(analysis.difficult_words[:8]))
 
@@ -216,6 +223,7 @@ def run_interactive_word_connections_game(source="internal", categories=None):
                 print("Invalid command.")
 
     print("\n✅ Game Complete!")
+
 
 if __name__ == "__main__":
     # Choose your game mode

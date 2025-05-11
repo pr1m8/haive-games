@@ -1,6 +1,6 @@
 """Tic Tac Toe game models, including core state definition for gameplay and logic.
 
-This module defines the `TicTacToeState` class used to represent the board, track players, and capture gameplay data such as history and analysis. 
+This module defines the `TicTacToeState` class used to represent the board, track players, and capture gameplay data such as history and analysis.
 It includes helper properties to assess the board and enforce its structure.
 """
 
@@ -37,9 +37,7 @@ class TicTacToeState(GameState):
     move_history: list[TicTacToeMove] = Field(
         default_factory=list, description="History of moves"
     )
-    winner: str | None = Field(
-        default=None, description="Winner of the game, if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
     player_X: Literal["player1", "player2"] = Field(
         default="player1", description="Which player is X"
     )
@@ -73,7 +71,9 @@ class TicTacToeState(GameState):
                 raise ValueError("Each row must have 3 columns")
             for cell in row:
                 if cell is not None and cell not in ["X", "O"]:
-                    raise ValueError(f"Cell values must be None, 'X', or 'O', got {cell}")
+                    raise ValueError(
+                        f"Cell values must be None, 'X', or 'O', got {cell}"
+                    )
         return board
 
     @property
@@ -115,10 +115,10 @@ class TicTacToeState(GameState):
             result.append(row_str)
             result.append("  -------")
         return "\n".join(result)
+
     @classmethod
     def initialize(cls, **kwargs):
-        """Initialize a new Tic Tac Toe game.
-        """
+        """Initialize a new Tic Tac Toe game."""
         first_player = kwargs.get("first_player", "X")
         player_X = kwargs.get("player_X", "player1")
         player_O = kwargs.get("player_O", "player2")

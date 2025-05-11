@@ -1,9 +1,9 @@
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import register_agent
 from haive.games.framework.base import GameAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
 from haive.games.single_player.wordle.models import (
@@ -18,12 +18,16 @@ from haive.games.single_player.wordle.state_manager import WordConnectionsStateM
 class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
     """Agent for playing the Word Connections game."""
 
-    def __init__(self, config: WordConnectionsAgentConfig = WordConnectionsAgentConfig()):
+    def __init__(
+        self, config: WordConnectionsAgentConfig = WordConnectionsAgentConfig()
+    ):
         """Initialize the Word Connections agent."""
         super().__init__(config)
         self.state_manager = WordConnectionsStateManager
 
-    def prepare_move_context(self, state: WordConnectionsState, player: str) -> dict[str, Any]:
+    def prepare_move_context(
+        self, state: WordConnectionsState, player: str
+    ) -> dict[str, Any]:
         """Prepare context for move generation."""
         # Format recent moves for display
         formatted_move_history = []
@@ -40,17 +44,21 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
             player_analysis = state.player2_analysis[-1]
 
         # Prepare the context
-        return Command(update={
-            "board": state.board_string,
-            "turn": state.turn,
-            "player": player,
-            "move_history": formatted_move_history,
-            "player_analysis": player_analysis,
-            "player1_score": state.player1_score,
-            "player2_score": state.player2_score
-        })
+        return Command(
+            update={
+                "board": state.board_string,
+                "turn": state.turn,
+                "player": player,
+                "move_history": formatted_move_history,
+                "player_analysis": player_analysis,
+                "player1_score": state.player1_score,
+                "player2_score": state.player2_score,
+            }
+        )
 
-    def extract_move(self, response: WordConnectionsPlayerDecision) -> WordConnectionsMove:
+    def extract_move(
+        self, response: WordConnectionsPlayerDecision
+    ) -> WordConnectionsMove:
         """Extract move from engine response."""
         return response.move
 
@@ -62,7 +70,9 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
         """Make a move for player2."""
         return self.make_move(state, "player2")
 
-    def prepare_analysis_context(self, state: WordConnectionsState, player: str) -> dict[str, Any]:
+    def prepare_analysis_context(
+        self, state: WordConnectionsState, player: str
+    ) -> dict[str, Any]:
         """Prepare context for position analysis."""
         # Format recent moves for display
         formatted_move_history = []
@@ -75,7 +85,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
             "player": player,
             "move_history": formatted_move_history,
             "player1_score": state.player1_score,
-            "player2_score": state.player2_score
+            "player2_score": state.player2_score,
         }
 
     def analyze_player1(self, state: WordConnectionsState) -> Command:
@@ -121,7 +131,9 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
                 print("\nPotential Groups:")
                 for i, group in enumerate(last_analysis["potential_groups"][:3]):
                     if "category" in group and "words" in group:
-                        print(f"{i+1}. {group['category']}: {', '.join(group['words'])}")
+                        print(
+                            f"{i+1}. {group['category']}: {', '.join(group['words'])}"
+                        )
 
             # Print difficult words
             if last_analysis.get("difficult_words"):

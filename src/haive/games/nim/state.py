@@ -7,15 +7,28 @@ from haive.games.nim.models import NimAnalysis, NimMove
 
 class NimState(BaseModel):
     """Represents the state of a Nim game."""
-    piles: list[int] = Field(default=[3, 5, 7], description="Current sizes of the piles")
-    turn: Literal["player1", "player2"] = Field(default="player1", description="Current player's turn")
+
+    piles: list[int] = Field(
+        default=[3, 5, 7], description="Current sizes of the piles"
+    )
+    turn: Literal["player1", "player2"] = Field(
+        default="player1", description="Current player's turn"
+    )
     game_status: Literal["in_progress", "player1_win", "player2_win"] = Field(
         default="in_progress", description="Current status of the game"
     )
-    move_history: list[NimMove] = Field(default_factory=list, description="History of moves")
-    player1_analysis: list[NimAnalysis] = Field(default_factory=list, description="Analyses by player1")
-    player2_analysis: list[NimAnalysis] = Field(default_factory=list, description="Analyses by player2")
-    misere_mode: bool = Field(default=False, description="If True, player taking last stone loses")
+    move_history: list[NimMove] = Field(
+        default_factory=list, description="History of moves"
+    )
+    player1_analysis: list[NimAnalysis] = Field(
+        default_factory=list, description="Analyses by player1"
+    )
+    player2_analysis: list[NimAnalysis] = Field(
+        default_factory=list, description="Analyses by player2"
+    )
+    misere_mode: bool = Field(
+        default=False, description="If True, player taking last stone loses"
+    )
 
     @property
     def board_string(self) -> str:

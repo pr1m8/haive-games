@@ -21,10 +21,10 @@ def run_among_us_demo(
     load_path: str = None,
     interactive: bool = True,
     max_rounds: int = 15,
-    speed: float = 1.0
+    speed: float = 1.0,
 ):
     """Run a demo of the Among Us game with AI agents and enhanced visibility.
-    
+
     Args:
         player_count: Number of players (4-10)
         impostor_count: Number of impostors (1-3)
@@ -37,25 +37,42 @@ def run_among_us_demo(
     """
     console = Console()
 
-    console.print(Panel.fit(
-        "[bold magenta]Among Us AI Game Demo[/bold magenta]\n\n"
-        "This demo simulates an Among Us game with AI agents and enhanced visibility.",
-        title="Welcome"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold magenta]Among Us AI Game Demo[/bold magenta]\n\n"
+            "This demo simulates an Among Us game with AI agents and enhanced visibility.",
+            title="Welcome",
+        )
+    )
 
     # Load game if specified
     if load_path and os.path.exists(load_path):
         console.print(f"Loading game from {load_path}...")
         import json
+
         with open(load_path) as f:
             saved_game = json.load(f)
 
-        player_names = saved_game.get("players", [f"Player{i+1}" for i in range(player_count)])
+        player_names = saved_game.get(
+            "players", [f"Player{i+1}" for i in range(player_count)]
+        )
         game_config = saved_game.get("game_config", {})
     else:
         # Get player names
-        colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple",
-                  "White", "Black", "Pink", "Brown", "Cyan", "Lime"]
+        colors = [
+            "Red",
+            "Blue",
+            "Green",
+            "Yellow",
+            "Orange",
+            "Purple",
+            "White",
+            "Black",
+            "Pink",
+            "Brown",
+            "Cyan",
+            "Lime",
+        ]
         player_names = colors[:player_count]
 
         # Configure game parameters
@@ -68,26 +85,49 @@ def run_among_us_demo(
         # Use different map layouts based on map name
         if map_name.lower() == "skeld":
             game_config["map_locations"] = [
-                "cafeteria", "admin", "electrical", "storage", "medbay",
-                "navigation", "shields", "weapons", "o2", "security"
+                "cafeteria",
+                "admin",
+                "electrical",
+                "storage",
+                "medbay",
+                "navigation",
+                "shields",
+                "weapons",
+                "o2",
+                "security",
             ]
         elif map_name.lower() == "polus":
             game_config["map_locations"] = [
-                "dropship", "office", "laboratory", "storage", "communications",
-                "weapons", "o2", "electrical", "security", "specimen"
+                "dropship",
+                "office",
+                "laboratory",
+                "storage",
+                "communications",
+                "weapons",
+                "o2",
+                "electrical",
+                "security",
+                "specimen",
             ]
         elif map_name.lower() == "mira":
             game_config["map_locations"] = [
-                "launchpad", "medbay", "communications", "locker", "laboratory",
-                "office", "admin", "cafeteria", "storage", "reactor"
+                "launchpad",
+                "medbay",
+                "communications",
+                "locker",
+                "laboratory",
+                "office",
+                "admin",
+                "cafeteria",
+                "storage",
+                "reactor",
             ]
 
     # Create the game agent
-    console.print(f"Creating game with {len(player_names)} players and {impostor_count} impostors...")
-    agent = create_among_us_game(
-        player_names=player_names,
-        game_config=game_config
+    console.print(
+        f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
     )
+    agent = create_among_us_game(player_names=player_names, game_config=game_config)
 
     # Initialize the game or load saved state
     if load_path and os.path.exists(load_path):
@@ -95,6 +135,7 @@ def run_among_us_demo(
 
         # Convert to state object
         from haive.games.among_us.state import AmongUsState
+
         state = AmongUsState(**state)
     else:
         console.print("Initializing new game...")
@@ -138,11 +179,15 @@ def run_among_us_demo(
                     break
 
                 # Process player turn with enhanced visibility
-                state = process_player_turn(agent, state, player_id, console, interactive, speed)
+                state = process_player_turn(
+                    agent, state, player_id, console, interactive, speed
+                )
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             # Process meeting discussion phase
-            state = process_meeting_discussion(agent, state, console, interactive, speed)
+            state = process_meeting_discussion(
+                agent, state, console, interactive, speed
+            )
 
         elif state.game_phase == AmongUsGamePhase.VOTING:
             # Process voting phase
@@ -177,8 +222,13 @@ def run_among_us_demo(
     stats_table.add_column("Value", style="yellow")
 
     stats_table.add_row("Rounds Played", str(round_number))
-    stats_table.add_row("Task Completion", f"{state.get_task_completion_percentage():.1f}%")
-    stats_table.add_row("Eliminated Players", ", ".join(state.eliminated_players) if state.eliminated_players else "None")
+    stats_table.add_row(
+        "Task Completion", f"{state.get_task_completion_percentage():.1f}%"
+    )
+    stats_table.add_row(
+        "Eliminated Players",
+        ", ".join(state.eliminated_players) if state.eliminated_players else "None",
+    )
 
     console.print(stats_table)
 
@@ -189,7 +239,9 @@ def run_among_us_demo(
         role_style = "green" if pstate.role == PlayerRole.CREWMATE else "red"
         status = "ALIVE" if pstate.is_alive else "DEAD"
         status_style = "green" if pstate.is_alive else "red"
-        console.print(f"[{role_style}]{pid}: {role}[/{role_style}] - [{status_style}]{status}[/{status_style}]")
+        console.print(
+            f"[{role_style}]{pid}: {role}[/{role_style}] - [{status_style}]{status}[/{status_style}]"
+        )
 
     # Save game if requested
     if save_path:
@@ -198,14 +250,21 @@ def run_among_us_demo(
             os.makedirs(dir_path)
 
         import json
+
         with open(save_path, "w") as f:
-            json.dump({
-                "players": player_names,
-                "game_config": game_config,
-                "state": state.dict() if hasattr(state, "dict") else state
-            }, f, indent=2)
+            json.dump(
+                {
+                    "players": player_names,
+                    "game_config": game_config,
+                    "state": state.dict() if hasattr(state, "dict") else state,
+                },
+                f,
+                indent=2,
+            )
 
         console.print(f"\nGame saved to {save_path}")
+
+
 def format_action(move, verbose=False):
     """Format an action for display."""
     action_type = move.get("action", "unknown")
@@ -245,19 +304,28 @@ def format_action(move, verbose=False):
 
     return f"{action_type} {move!s}"
 
+
 def get_role_color(role):
     """Get color for a player role."""
     if role == PlayerRole.CREWMATE:
         return "green"
     return "red"
+
+
 def process_player_turn(agent, state, player_id, console, interactive, speed):
     """Process a single player's turn with enhanced visibility into AI thoughts."""
     # Skip dead players during task phase
     player_state = state.player_states.get(player_id)
-    if state.game_phase == AmongUsGamePhase.TASKS and player_state and not player_state.is_alive:
+    if (
+        state.game_phase == AmongUsGamePhase.TASKS
+        and player_state
+        and not player_state.is_alive
+    ):
         return state
 
-    console.print(f"\n[bold {get_role_color(player_state.role)}]{player_id}'s turn[/bold {get_role_color(player_state.role)}]")
+    console.print(
+        f"\n[bold {get_role_color(player_state.role)}]{player_id}'s turn[/bold {get_role_color(player_state.role)}]"
+    )
 
     # Display player status first
     console.print(f"Location: [cyan]{player_state.location}[/cyan]")
@@ -269,7 +337,8 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
     else:
         console.print("Role: [red]IMPOSTOR[/red]")
         fellow_impostors = [
-            pid for pid, pstate in state.player_states.items()
+            pid
+            for pid, pstate in state.player_states.items()
             if pstate.role == PlayerRole.IMPOSTOR and pid != player_id
         ]
         if fellow_impostors:
@@ -282,8 +351,14 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
     for i, task in enumerate(player_state.tasks):
         status = "✓" if task.status == TaskStatus.COMPLETED else "□"
         style = "green" if task.status == TaskStatus.COMPLETED else "yellow"
-        highlight = " [bold cyan](current location)[/bold cyan]" if task.location == player_state.location else ""
-        console.print(f"{i+1}. [{style}]{status} {task.description} (in {task.location}){highlight}[/{style}]")
+        highlight = (
+            " [bold cyan](current location)[/bold cyan]"
+            if task.location == player_state.location
+            else ""
+        )
+        console.print(
+            f"{i+1}. [{style}]{status} {task.description} (in {task.location}){highlight}[/{style}]"
+        )
 
     # Show observations
     if player_state.observations:
@@ -315,7 +390,9 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
     # Get the engine
     engine = agent.get_engine_for_player(player_role, engine_key)
     if not engine:
-        console.print(f"[bold red]No engine found for {player_id} (role={player_role}, key={engine_key})[/bold red]")
+        console.print(
+            f"[bold red]No engine found for {player_id} (role={player_role}, key={engine_key})[/bold red]"
+        )
         return state
 
     # Invoke the engine
@@ -330,20 +407,26 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
 
     # Extract structured move
     move = agent.extract_move(response, player_role)
-    console.print(f"\n[bold]{player_id} decided to:[/bold] {format_action(move, verbose=True)}")
+    console.print(
+        f"\n[bold]{player_id} decided to:[/bold] {format_action(move, verbose=True)}"
+    )
 
     # Apply the move
     new_state = agent.apply_move(state, player_id, move)
 
     # Check for phase transitions
-    if (new_state.game_phase == AmongUsGamePhase.MEETING and
-        player_id == new_state.players[-1]):  # Last player in discussion
+    if (
+        new_state.game_phase == AmongUsGamePhase.MEETING
+        and player_id == new_state.players[-1]
+    ):  # Last player in discussion
         # Transition to voting
         new_state = agent.advance_phase(new_state)
 
-    elif (new_state.game_phase == AmongUsGamePhase.VOTING and
-            len(new_state.votes) >= len([pid for pid, pstate in new_state.player_states.items()
-                                       if pstate.is_alive])):
+    elif new_state.game_phase == AmongUsGamePhase.VOTING and len(
+        new_state.votes
+    ) >= len(
+        [pid for pid, pstate in new_state.player_states.items() if pstate.is_alive]
+    ):
         # Transition back to tasks
         new_state = agent.advance_phase(new_state)
 
@@ -365,29 +448,36 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
         time.sleep(min(0.5, delay))  # Cap at 0.5 seconds for non-interactive mode
 
     return new_state
+
+
 def process_meeting_discussion(agent, state, console, interactive, speed):
     """Process a meeting's discussion phase with enhanced visibility.
-    
+
     Args:
         agent: The AmongUsAgent instance
         state: Current game state
         console: Rich console for display
         interactive: Whether in interactive mode
         speed: Simulation speed multiplier
-    
+
     Returns:
         Updated state
     """
     # Display meeting information
     if state.reported_body:
         console.print("\n[bold red]BODY REPORTED![/bold red]")
-        console.print(f"[bold]{state.meeting_caller}[/bold] found the body of [bold]{state.reported_body}[/bold]")
+        console.print(
+            f"[bold]{state.meeting_caller}[/bold] found the body of [bold]{state.reported_body}[/bold]"
+        )
     else:
         console.print("\n[bold yellow]EMERGENCY MEETING CALLED![/bold yellow]")
-        console.print(f"[bold]{state.meeting_caller}[/bold] called an emergency meeting")
+        console.print(
+            f"[bold]{state.meeting_caller}[/bold] called an emergency meeting"
+        )
 
     # Create a table for player positions
     from rich.table import Table
+
     location_table = Table(title="Player Locations at Time of Meeting")
     location_table.add_column("Player", style="cyan")
     location_table.add_column("Location", style="green")
@@ -397,16 +487,16 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
         role_style = "green" if player_state.role == PlayerRole.CREWMATE else "red"
         status = "[green]ALIVE[/green]" if player_state.is_alive else "[red]DEAD[/red]"
         location_table.add_row(
-            f"[{role_style}]{player_id}[/{role_style}]",
-            player_state.location,
-            status
+            f"[{role_style}]{player_id}[/{role_style}]", player_state.location, status
         )
 
     console.print(location_table)
     console.print("\n[bold]DISCUSSION PHASE[/bold]")
 
     # Process each player's discussion contribution
-    alive_players = [pid for pid, pstate in state.player_states.items() if pstate.is_alive]
+    alive_players = [
+        pid for pid, pstate in state.player_states.items() if pstate.is_alive
+    ]
 
     for player_id in alive_players:
         player_state = state.player_states[player_id]
@@ -414,7 +504,9 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
 
         # Show whose turn it is to speak
         role_style = "green" if role == PlayerRole.CREWMATE else "red"
-        console.print(f"\n[bold {role_style}]{player_id}'s turn to speak[/bold {role_style}]")
+        console.print(
+            f"\n[bold {role_style}]{player_id}'s turn to speak[/bold {role_style}]"
+        )
 
         # Create context for the player
         move_context = agent.prepare_move_context(state, player_id)
@@ -422,7 +514,9 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
         # Get the discussion engine
         engine = agent.get_engine_for_player(role, "meeting")
         if not engine:
-            console.print(f"[bold red]No discussion engine found for {player_id}[/bold red]")
+            console.print(
+                f"[bold red]No discussion engine found for {player_id}[/bold red]"
+            )
             continue
 
         # Generate the player's statement
@@ -441,7 +535,9 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
         message = move.get("message", "No comment.")
 
         # Display the message in a speech bubble style
-        console.print(f'[bold {role_style}]{player_id}:[/bold {role_style}] [italic]"{message}"[/italic]')
+        console.print(
+            f'[bold {role_style}]{player_id}:[/bold {role_style}] [italic]"{message}"[/italic]'
+        )
 
         # Update the state with the discussion
         state = agent.apply_move(state, player_id, move)
@@ -454,21 +550,24 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
             time.sleep(1.0 / speed)
 
     # Transition to voting phase
-    console.print("\n[bold yellow]Discussion complete. Moving to voting phase...[/bold yellow]")
+    console.print(
+        "\n[bold yellow]Discussion complete. Moving to voting phase...[/bold yellow]"
+    )
     state = agent.advance_phase(state)
 
     return state
 
+
 def process_voting_phase(agent, state, console, interactive, speed):
     """Process a meeting's voting phase with enhanced visibility.
-    
+
     Args:
         agent: The AmongUsAgent instance
         state: Current game state
         console: Rich console for display
         interactive: Whether in interactive mode
         speed: Simulation speed multiplier
-    
+
     Returns:
         Updated state
     """
@@ -477,7 +576,9 @@ def process_voting_phase(agent, state, console, interactive, speed):
     # Show discussion summary
     if hasattr(state, "discussion_history") and state.discussion_history:
         console.print("\n[bold]Discussion Summary:[/bold]")
-        for msg in state.discussion_history[-len(state.player_states):]:  # Show last messages
+        for msg in state.discussion_history[
+            -len(state.player_states) :
+        ]:  # Show last messages
             player_id = msg.get("player_id", "Unknown")
             message = msg.get("message", "")
 
@@ -486,10 +587,14 @@ def process_voting_phase(agent, state, console, interactive, speed):
                 role = state.player_states[player_id].role
                 player_style = "green" if role == PlayerRole.CREWMATE else "red"
 
-            console.print(f"[{player_style}]{player_id}[/{player_style}]: [dim]{message[:100]}{'...' if len(message) > 100 else ''}[/dim]")
+            console.print(
+                f"[{player_style}]{player_id}[/{player_style}]: [dim]{message[:100]}{'...' if len(message) > 100 else ''}[/dim]"
+            )
 
     # Process each player's vote
-    alive_players = [pid for pid, pstate in state.player_states.items() if pstate.is_alive]
+    alive_players = [
+        pid for pid, pstate in state.player_states.items() if pstate.is_alive
+    ]
 
     for player_id in alive_players:
         player_state = state.player_states[player_id]
@@ -503,7 +608,9 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
         # Show whose turn it is to vote
         role_style = "green" if role == PlayerRole.CREWMATE else "red"
-        console.print(f"\n[bold {role_style}]{player_id}'s turn to vote[/bold {role_style}]")
+        console.print(
+            f"\n[bold {role_style}]{player_id}'s turn to vote[/bold {role_style}]"
+        )
 
         # Create context for the player
         move_context = agent.prepare_move_context(state, player_id)
@@ -511,7 +618,9 @@ def process_voting_phase(agent, state, console, interactive, speed):
         # Get the voting engine
         engine = agent.get_engine_for_player(role, "voting")
         if not engine:
-            console.print(f"[bold red]No voting engine found for {player_id}[/bold red]")
+            console.print(
+                f"[bold red]No voting engine found for {player_id}[/bold red]"
+            )
             continue
 
         # Generate the player's vote
@@ -524,7 +633,9 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
         # Display the vote
         vote_style = "yellow" if vote_target == "skip" else "bold"
-        console.print(f"[{role_style}]{player_id}[/{role_style}] votes for [{vote_style}]{vote_target}[/{vote_style}]")
+        console.print(
+            f"[{role_style}]{player_id}[/{role_style}] votes for [{vote_style}]{vote_target}[/{vote_style}]"
+        )
 
         # Update the state with the vote
         state = agent.apply_move(state, player_id, move)
@@ -558,8 +669,11 @@ def process_voting_phase(agent, state, console, interactive, speed):
     skip_votes = vote_counts.get("skip", 0)
     if ejected_player and skip_votes < max_votes:
         # Check for ties
-        tied_players = [p for p, c in vote_counts.items()
-                      if p != "skip" and p != ejected_player and c == max_votes]
+        tied_players = [
+            p
+            for p, c in vote_counts.items()
+            if p != "skip" and p != ejected_player and c == max_votes
+        ]
 
         if not tied_players:  # No tie
             player_role = "unknown"
@@ -568,10 +682,14 @@ def process_voting_phase(agent, state, console, interactive, speed):
                 player_role = "CREWMATE" if role == PlayerRole.CREWMATE else "IMPOSTOR"
                 role_style = "green" if role == PlayerRole.CREWMATE else "red"
 
-            console.print(f"\n[bold red]EJECTED: {ejected_player} - {player_role}[/bold red]")
+            console.print(
+                f"\n[bold red]EJECTED: {ejected_player} - {player_role}[/bold red]"
+            )
         else:
             console.print("\n[bold yellow]TIE VOTE - No one ejected[/bold yellow]")
-            console.print(f"Tied between: {ejected_player} and {', '.join(tied_players)}")
+            console.print(
+                f"Tied between: {ejected_player} and {', '.join(tied_players)}"
+            )
     else:
         console.print("\n[bold yellow]SKIPPED - No one ejected[/bold yellow]")
 
@@ -580,20 +698,26 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
     return state
 
+
 def process_random_events(agent, state, console, interactive, speed):
     """Process random events that might occur during the task phase."""
     # Check if a random event should occur
     if random.random() < 0.3 and not state.meeting_active:
         # Random player calls meeting or reports body
-        alive_players = [pid for pid, pstate in state.player_states.items() if pstate.is_alive]
+        alive_players = [
+            pid for pid, pstate in state.player_states.items() if pstate.is_alive
+        ]
         if alive_players:
             caller = random.choice(alive_players)
-            console.print(f"[bold yellow]{caller} discovered something suspicious![/bold yellow]")
+            console.print(
+                f"[bold yellow]{caller} discovered something suspicious![/bold yellow]"
+            )
 
             # Check for dead bodies in caller's location
             caller_location = state.player_states[caller].location
             dead_bodies = [
-                pid for pid, pstate in state.player_states.items()
+                pid
+                for pid, pstate in state.player_states.items()
                 if not pstate.is_alive and pstate.location == caller_location
             ]
 
@@ -604,7 +728,9 @@ def process_random_events(agent, state, console, interactive, speed):
             else:
                 # Call emergency meeting
                 move = {"action": "call_emergency_meeting"}
-                console.print(f"[bold yellow]{caller} called an emergency meeting![/bold yellow]")
+                console.print(
+                    f"[bold yellow]{caller} called an emergency meeting![/bold yellow]"
+                )
 
             state = agent.apply_move(state, caller, move)
 
@@ -613,23 +739,42 @@ def process_random_events(agent, state, console, interactive, speed):
                 agent.visualize_state(state)
 
                 if interactive:
-                    console.print("[bold cyan]Press Enter to continue to meeting...[/bold cyan]")
+                    console.print(
+                        "[bold cyan]Press Enter to continue to meeting...[/bold cyan]"
+                    )
                     input()
                 else:
                     time.sleep(2.0 / speed)
 
     return state
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run an Among Us AI game simulation")
-    parser.add_argument("--players", type=int, default=6, help="Number of players (4-10)")
-    parser.add_argument("--impostors", type=int, default=1, help="Number of impostors (1-3)")
-    parser.add_argument("--map", type=str, default="skeld", choices=["skeld", "polus", "mira"], help="Map name")
+    parser.add_argument(
+        "--players", type=int, default=6, help="Number of players (4-10)"
+    )
+    parser.add_argument(
+        "--impostors", type=int, default=1, help="Number of impostors (1-3)"
+    )
+    parser.add_argument(
+        "--map",
+        type=str,
+        default="skeld",
+        choices=["skeld", "polus", "mira"],
+        help="Map name",
+    )
     parser.add_argument("--save", type=str, help="Path to save game")
     parser.add_argument("--load", type=str, help="Path to load game")
-    parser.add_argument("--non-interactive", action="store_true", help="Run in non-interactive mode")
-    parser.add_argument("--rounds", type=int, default=15, help="Maximum number of rounds")
-    parser.add_argument("--speed", type=float, default=1.0, help="Simulation speed multiplier")
+    parser.add_argument(
+        "--non-interactive", action="store_true", help="Run in non-interactive mode"
+    )
+    parser.add_argument(
+        "--rounds", type=int, default=15, help="Maximum number of rounds"
+    )
+    parser.add_argument(
+        "--speed", type=float, default=1.0, help="Simulation speed multiplier"
+    )
 
     args = parser.parse_args()
 
@@ -641,5 +786,5 @@ if __name__ == "__main__":
         load_path=args.load,
         interactive=not args.non_interactive,
         max_rounds=args.rounds,
-        speed=args.speed
+        speed=args.speed,
     )

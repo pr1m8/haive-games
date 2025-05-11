@@ -12,15 +12,21 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
     """Manager for debate game states."""
 
     @classmethod
-    def initialize(cls, player_names: list[str], topic: Topic, format_type: str = "standard", **kwargs) -> DebateState:
+    def initialize(
+        cls,
+        player_names: list[str],
+        topic: Topic,
+        format_type: str = "standard",
+        **kwargs,
+    ) -> DebateState:
         """Initialize a new debate state.
-        
+
         Args:
             player_names: List of participant IDs
             topic: The debate topic
             format_type: Type of debate (presidential, trial, etc.)
             **kwargs: Additional format-specific parameters
-            
+
         Returns:
             DebateState: A new debate state
         """
@@ -29,7 +35,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
             players=player_names,
             topic=topic,
             game_phase=DebatePhase.SETUP,
-            debate_phase=DebatePhase.SETUP
+            debate_phase=DebatePhase.SETUP,
         )
 
         # Set up participants
@@ -57,10 +63,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                 position = "pro" if idx % 2 == 0 else "con"
 
             participants[player_id] = Participant(
-                id=player_id,
-                name=f"Participant {idx+1}",
-                role=role,
-                position=position
+                id=player_id, name=f"Participant {idx+1}", role=role, position=position
             )
 
         state.participants = participants
@@ -81,14 +84,16 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
         return state
 
     @classmethod
-    def apply_move(cls, state: DebateState, player_id: str, move: dict[str, Any]) -> DebateState:
+    def apply_move(
+        cls, state: DebateState, player_id: str, move: dict[str, Any]
+    ) -> DebateState:
         """Apply a player's move to the state.
-        
+
         Args:
             state: Current debate state
             player_id: ID of the player making the move
             move: Move to apply (typically a statement)
-            
+
         Returns:
             DebateState: Updated debate state
         """
@@ -105,14 +110,18 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                 target_id=move.get("target_id"),
                 statement_type=move.get("statement_type", "general"),
                 references=move.get("references", []),
-                timestamp=datetime.now().isoformat()
+                timestamp=datetime.now().isoformat(),
             )
 
             new_state.statements.append(statement)
 
             # Advance to next speaker if not an interruption
-            if not (move.get("is_interruption", False) and new_state.interruptions_allowed):
-                new_state.current_speaker_idx = (new_state.current_speaker_idx + 1) % len(new_state.turn_order)
+            if not (
+                move.get("is_interruption", False) and new_state.interruptions_allowed
+            ):
+                new_state.current_speaker_idx = (
+                    new_state.current_speaker_idx + 1
+                ) % len(new_state.turn_order)
 
         elif move_type == "vote":
             # Add a vote
@@ -120,7 +129,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                 voter_id=player_id,
                 vote_value=move.get("vote_value"),
                 target_id=move.get("target_id"),
-                reason=move.get("reason")
+                reason=move.get("reason"),
             )
 
             if player_id not in new_state.votes:
@@ -136,28 +145,34 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                 if action == "advance_phase":
                     new_state = cls.advance_phase(new_state)
                 elif action == "interrupt":
-                    new_state.moderation_notes.append(move.get("note", "Moderator interruption"))
+                    new_state.moderation_notes.append(
+                        move.get("note", "Moderator interruption")
+                    )
                 elif action == "change_turn_order":
                     new_state.turn_order = move.get("new_order", new_state.turn_order)
 
         # Record move in history
-        new_state.move_history.append({
-            "player_id": player_id,
-            "move_type": move_type,
-            "move_data": move,
-            "timestamp": datetime.now().isoformat()
-        })
+        new_state.move_history.append(
+            {
+                "player_id": player_id,
+                "move_type": move_type,
+                "move_data": move,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         return new_state
 
     @classmethod
-    def get_legal_moves(cls, state: DebateState, player_id: str) -> list[dict[str, Any]]:
+    def get_legal_moves(
+        cls, state: DebateState, player_id: str
+    ) -> list[dict[str, Any]]:
         """Get legal moves for a player.
-        
+
         Args:
             state: Current debate state
             player_id: ID of the player
-            
+
         Returns:
             List[Dict[str, Any]]: List of legal moves
         """
@@ -195,10 +210,10 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
     @classmethod
     def check_game_status(cls, state: DebateState) -> DebateState:
         """Check and update game status.
-        
+
         Args:
             state: Current debate state
-            
+
         Returns:
             DebateState: Updated debate state with status
         """
@@ -211,8 +226,9 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
         # Check for phase completion
         if state.phase_statement_limit:
             # Count statements in current phase
-            phase_statements = [s for s in state.statements
-                               if s.statement_type == state.debate_phase]
+            phase_statements = [
+                s for s in state.statements if s.statement_type == state.debate_phase
+            ]
 
             if len(phase_statements) >= state.phase_statement_limit:
                 new_state = cls.advance_phase(new_state)
@@ -222,10 +238,10 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
     @classmethod
     def advance_phase(cls, state: DebateState) -> DebateState:
         """Advance to the next debate phase.
-        
+
         Args:
             state: Current debate state
-            
+
         Returns:
             DebateState: State in the next phase
         """
@@ -240,10 +256,12 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
             DebatePhase.QUESTIONS: DebatePhase.CLOSING_STATEMENTS,
             DebatePhase.CLOSING_STATEMENTS: DebatePhase.VOTING,
             DebatePhase.VOTING: DebatePhase.JUDGMENT,
-            DebatePhase.JUDGMENT: DebatePhase.CONCLUSION
+            DebatePhase.JUDGMENT: DebatePhase.CONCLUSION,
         }
 
-        new_state.debate_phase = phase_map.get(state.debate_phase, DebatePhase.CONCLUSION)
+        new_state.debate_phase = phase_map.get(
+            state.debate_phase, DebatePhase.CONCLUSION
+        )
 
         # Move game phase if debate is over
         if new_state.debate_phase == DebatePhase.CONCLUSION:
@@ -261,8 +279,9 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
             scores = {}
             for participant_id in new_state.participants:
                 # Simple scoring: count statements
-                statement_count = len([s for s in new_state.statements
-                                      if s.speaker_id == participant_id])
+                statement_count = len(
+                    [s for s in new_state.statements if s.speaker_id == participant_id]
+                )
                 scores[participant_id] = statement_count
 
             new_state.scores = scores
@@ -270,13 +289,15 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
         return new_state
 
     @classmethod
-    def filter_state_for_player(cls, state: DebateState, player_id: str) -> dict[str, Any]:
+    def filter_state_for_player(
+        cls, state: DebateState, player_id: str
+    ) -> dict[str, Any]:
         """Filter state information for a specific player.
-        
+
         Args:
             state: Current debate state
             player_id: ID of the player
-            
+
         Returns:
             Dict[str, Any]: Filtered state visible to the player
         """
@@ -286,7 +307,9 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
         # Hide other players' private data
         for pid, data in state.player_data.items():
             if pid != player_id:
-                visible_state["player_data"][pid] = {"public_info": data.get("public_info", {})}
+                visible_state["player_data"][pid] = {
+                    "public_info": data.get("public_info", {})
+                }
 
         # Hide future topics or questions if planned ahead
         # (implementation would depend on specific debate format)

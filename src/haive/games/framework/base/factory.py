@@ -14,7 +14,7 @@ Example:
     ...     state_manager=ChessStateManager,
     ...     enable_analysis=True
     ... )
-    >>> 
+    >>>
     >>> # Create a standard workflow
     >>> graph = StateGraph()
     >>> graph = GameAgentFactory.create_standard_workflow(graph)
@@ -28,33 +28,39 @@ Typical usage:
 from collections.abc import Callable
 from typing import Any, TypeVar
 
+from haive.core.engine.agent.agent import Agent, register_agent
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.constants import END, START
 from langgraph.graph import StateGraph
 from pydantic import BaseModel
 
-from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.aug_llm.base import AugLLMConfig
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
-from haive.games.framework.base import GameAgent, GameConfig, GameState, GameStateManager
+from haive.games.framework.base import (
+    GameAgent,
+    GameConfig,
+    GameState,
+    GameStateManager,
+)
 
 # Type variable for generic state
 T = TypeVar("T", bound=BaseModel)
 
+
 class GameAgentFactory:
     """Factory for creating game agents using a flexible, composable pattern.
-    
+
     This factory class provides methods for creating game agents and their
     workflows. It simplifies the process of creating new game agents by:
     1. Generating workflow nodes from a standardized template
     2. Using DynamicGraph for simplified graph building
     3. Supporting consistent extension patterns for analysis and custom workflows
-    
+
     The factory supports:
     - Creation of game agent classes with standard methods
     - Configuration of analysis steps and custom nodes
     - Flexible workflow definition with conditional edges
     - Registration of agents with their configs
-    
+
     Example:
         >>> # Create a new chess agent
         >>> chess_agent = GameAgentFactory.create_game_agent(
@@ -62,7 +68,7 @@ class GameAgentFactory:
         ...     state_schema=ChessState,
         ...     state_manager=ChessStateManager
         ... )
-        >>> 
+        >>>
         >>> # Create an instance with custom config
         >>> agent = chess_agent(ChessConfig())
     """
@@ -78,14 +84,14 @@ class GameAgentFactory:
         aug_llm_configs: dict[str, AugLLMConfig] | None = None,
         custom_nodes: dict[str, Callable] | None = None,
         custom_edges: list[dict[str, Any]] | None = None,
-        conditional_edges: dict[str, dict[str, Any]] | None = None
+        conditional_edges: dict[str, dict[str, Any]] | None = None,
     ) -> type[Agent]:
         """Create a new game agent class with a complete workflow.
-        
+
         This method generates a new game agent class with all necessary methods
         and workflow configuration. It creates both the agent class and its
         corresponding config class.
-        
+
         Args:
             name (str): Name of the agent class.
             state_schema (Type[GameState]): The game state schema class.
@@ -97,10 +103,10 @@ class GameAgentFactory:
             custom_nodes (Optional[Dict[str, Callable]], optional): Custom node functions. Defaults to None.
             custom_edges (Optional[List[Dict[str, Any]]], optional): Custom edges. Defaults to None.
             conditional_edges (Optional[Dict[str, Dict[str, Any]]], optional): Conditional edges. Defaults to None.
-            
+
         Returns:
             Type[Agent]: A new agent class with all methods and workflow configured.
-            
+
         Example:
             >>> # Create a chess agent with analysis
             >>> chess_agent = GameAgentFactory.create_game_agent(
@@ -123,15 +129,16 @@ class GameAgentFactory:
                 "aug_llm_configs": aug_llm_configs or {},
                 "enable_analysis": enable_analysis,
                 "visualize": True,
-
                 # Add a classmethod for default config
-                "default_config": classmethod(lambda cls: cls(
-                    state_schema=state_schema,
-                    aug_llm_configs=aug_llm_configs or {},
-                    enable_analysis=enable_analysis,
-                    visualize=True
-                ))
-            }
+                "default_config": classmethod(
+                    lambda cls: cls(
+                        state_schema=state_schema,
+                        aug_llm_configs=aug_llm_configs or {},
+                        enable_analysis=enable_analysis,
+                        visualize=True,
+                    )
+                ),
+            },
         )
 
         # Define methods for the agent class
@@ -155,8 +162,7 @@ class GameAgentFactory:
         def setup_workflow(self):
             # Use DynamicGraph to build the workflow
             graph_builder = DynamicGraph(
-                components=[self.config.engine],
-                state_schema=self.config.state_schema
+                components=[self.config.engine], state_schema=self.config.state_schema
             )
 
             # Add core nodes
@@ -182,7 +188,7 @@ class GameAgentFactory:
                 graph_builder.add_conditional_edge(
                     "player1_move",
                     self.should_continue_game,
-                    {True: "player2_analysis", False: END}
+                    {True: "player2_analysis", False: END},
                 )
 
                 graph_builder.add_edge("player2_analysis", "player2_move")
@@ -190,7 +196,7 @@ class GameAgentFactory:
                 graph_builder.add_conditional_edge(
                     "player2_move",
                     self.should_continue_game,
-                    {True: "player1_analysis", False: END}
+                    {True: "player1_analysis", False: END},
                 )
             else:
                 # Simplified flow without analysis
@@ -200,13 +206,13 @@ class GameAgentFactory:
                 graph_builder.add_conditional_edge(
                     "player1_move",
                     self.should_continue_game,
-                    {True: "player2_move", False: END}
+                    {True: "player2_move", False: END},
                 )
 
                 graph_builder.add_conditional_edge(
                     "player2_move",
                     self.should_continue_game,
-                    {True: "player1_move", False: END}
+                    {True: "player1_move", False: END},
                 )
 
             # Add any custom edges
@@ -218,9 +224,7 @@ class GameAgentFactory:
             if conditional_edges:
                 for source, conditions in conditional_edges.items():
                     graph_builder.add_conditional_edge(
-                        source,
-                        conditions["condition"],
-                        conditions["routes"]
+                        source, conditions["condition"], conditions["routes"]
                     )
 
             # Build the graph
@@ -236,8 +240,8 @@ class GameAgentFactory:
                 "make_player2_move": make_player2_move,
                 "analyze_player1": analyze_player1,
                 "analyze_player2": analyze_player2,
-                "setup_workflow": setup_workflow
-            }
+                "setup_workflow": setup_workflow,
+            },
         )
 
         # Register the agent with its config
@@ -246,21 +250,23 @@ class GameAgentFactory:
         return agent_class
 
     @staticmethod
-    def create_standard_workflow(graph: StateGraph, enable_analysis: bool = True) -> StateGraph:
+    def create_standard_workflow(
+        graph: StateGraph, enable_analysis: bool = True
+    ) -> StateGraph:
         """Add a standard game workflow to an existing graph.
-        
+
         This method creates the typical workflow for a turn-based game with
         two players, optionally including analysis steps. It modifies the
         provided graph by adding nodes and edges for the standard game flow.
-        
+
         Args:
             graph (StateGraph): The state graph to modify.
             enable_analysis (bool, optional): Whether to include analysis steps.
                 Defaults to True.
-            
+
         Returns:
             StateGraph: The modified graph with standard workflow added.
-            
+
         Example:
             >>> # Create a basic graph and add standard workflow
             >>> graph = StateGraph()
@@ -282,10 +288,7 @@ class GameAgentFactory:
             graph.add_conditional_edges(
                 "player1_move",
                 lambda state: state.game_status == "ongoing",
-                {
-                    True: "player2_analysis",
-                    False: END
-                }
+                {True: "player2_analysis", False: END},
             )
 
             graph.add_edge("player2_analysis", "player2_move")
@@ -293,10 +296,7 @@ class GameAgentFactory:
             graph.add_conditional_edges(
                 "player2_move",
                 lambda state: state.game_status == "ongoing",
-                {
-                    True: "player1_analysis",
-                    False: END
-                }
+                {True: "player1_analysis", False: END},
             )
         else:
             # Simplified flow without analysis
@@ -306,19 +306,13 @@ class GameAgentFactory:
             graph.add_conditional_edges(
                 "player1_move",
                 lambda state: state.game_status == "ongoing",
-                {
-                    True: "player2_move",
-                    False: END
-                }
+                {True: "player2_move", False: END},
             )
 
             graph.add_conditional_edges(
                 "player2_move",
                 lambda state: state.game_status == "ongoing",
-                {
-                    True: "player1_move",
-                    False: END
-                }
+                {True: "player1_move", False: END},
             )
 
         return graph

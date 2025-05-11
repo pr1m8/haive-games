@@ -59,7 +59,9 @@ class ChessRichUI:
         )
 
     def render_header(self) -> Panel:
-        header_text = Text("♟️ AI Chess Arena", justify="center", style="bold white on blue")
+        header_text = Text(
+            "♟️ AI Chess Arena", justify="center", style="bold white on blue"
+        )
         return Panel(header_text, border_style="blue")
 
     def render_footer(self) -> Panel:
@@ -77,9 +79,12 @@ class ChessRichUI:
 
     def render_board(self) -> Panel:
         if not self.state:
-            return Panel("Waiting for game state...", title="Board", border_style="magenta")
+            return Panel(
+                "Waiting for game state...", title="Board", border_style="magenta"
+            )
 
         import chess  # Only import if you have it installed locally
+
         board = chess.Board(self.state["board_fens"][-1])
         lines = str(board).splitlines()
 
@@ -109,7 +114,6 @@ class ChessRichUI:
 
         table = Table(box=SIMPLE, style="dim")
 
-
         table.add_column("Color", style="dim", width=6)
         table.add_column("Move", style="bold")
 
@@ -121,16 +125,24 @@ class ChessRichUI:
 
     def render_analysis(self, color: str) -> Panel:
         if not self.state:
-            return Panel("No data", title=f"{color.capitalize()} Analysis", border_style="cyan")
+            return Panel(
+                "No data", title=f"{color.capitalize()} Analysis", border_style="cyan"
+            )
 
         analysis = self.state.get(f"{color}_analysis", [])
         if not analysis:
-            return Panel("No analysis yet", title=f"{color.capitalize()} Analysis", border_style="cyan")
+            return Panel(
+                "No analysis yet",
+                title=f"{color.capitalize()} Analysis",
+                border_style="cyan",
+            )
 
         last = analysis[-1]
         panel = Text()
         panel.append(f"Score: {last.get('position_score', 'N/A')}\n", style="bold")
-        panel.append(f"Attack: {last.get('attacking_chances', 'N/A')}\n", style="yellow")
+        panel.append(
+            f"Attack: {last.get('attacking_chances', 'N/A')}\n", style="yellow"
+        )
         panel.append(f"Defense: {last.get('defensive_needs', 'N/A')}\n", style="yellow")
 
         plans = last.get("suggested_plans", [])
@@ -164,9 +176,12 @@ class ChessRichUI:
 
         text = Text()
         text.append(f"Status: {status}\n", style="bold")
-        text.append(f"Current Player: {player}", style="green" if player == "White" else "red")
+        text.append(
+            f"Current Player: {player}", style="green" if player == "White" else "red"
+        )
 
         return Panel(text, title="Game Info", border_style="cyan")
+
     def run(self, agent, delay: float = 1.0):
         """Run the live UI using LangGraph agent streaming.
 
@@ -187,22 +202,39 @@ class ChessRichUI:
         }
 
         with Live(self.layout, screen=True, refresh_per_second=4):
-            for step in agent.app.stream(initial_state, config=agent.runnable_config, debug=False, stream_mode="values"):
+            for step in agent.app.stream(
+                initial_state,
+                config=agent.runnable_config,
+                debug=False,
+                stream_mode="values",
+            ):
                 self.state = step
-                self.last_move = step["move_history"][-1][1] if step.get("move_history") else None
+                self.last_move = (
+                    step["move_history"][-1][1] if step.get("move_history") else None
+                )
 
                 # Update all components
                 self.layout["header"].update(self.render_header())
                 self.layout["footer"].update(self.render_footer())
 
-                self.layout["body"]["left_panel"]["white_analysis"].update(self.render_analysis("white"))
-                self.layout["body"]["left_panel"]["move_history"].update(self.render_move_history())
+                self.layout["body"]["left_panel"]["white_analysis"].update(
+                    self.render_analysis("white")
+                )
+                self.layout["body"]["left_panel"]["move_history"].update(
+                    self.render_move_history()
+                )
 
                 self.layout["body"]["main"]["board"].update(self.render_board())
 
-                self.layout["body"]["right_panel"]["black_analysis"].update(self.render_analysis("black"))
-                self.layout["body"]["right_panel"]["captured"].update(self.render_captured())
-                self.layout["body"]["right_panel"]["status"].update(self.render_status())
+                self.layout["body"]["right_panel"]["black_analysis"].update(
+                    self.render_analysis("black")
+                )
+                self.layout["body"]["right_panel"]["captured"].update(
+                    self.render_captured()
+                )
+                self.layout["body"]["right_panel"]["status"].update(
+                    self.render_status()
+                )
 
                 if step.get("game_status") != "ongoing":
                     time.sleep(2)
@@ -211,10 +243,12 @@ class ChessRichUI:
         self.console.print("\n[bold magenta]🏁 Game Over[/bold magenta]")
         agent.save_state_history()
 
+
 def main():
     ui = ChessRichUI()
     agent = ChessAgent(config=ChessAgentConfig())
     ui.run(agent)
+
 
 if __name__ == "__main__":
     main()

@@ -9,7 +9,7 @@ This package provides a complete implementation of the Go game, including:
 
 Example:
     >>> from haive.games.go import GoAgent, GoAgentConfig
-    >>> 
+    >>>
     >>> # Create and configure a Go agent
     >>> config = GoAgentConfig(board_size=19, enable_analysis=True)
     >>> agent = GoAgent(config)

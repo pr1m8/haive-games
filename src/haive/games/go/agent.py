@@ -9,11 +9,11 @@ This module provides a Go game agent that supports:
 
 Example:
     >>> from haive.games.go import GoAgent, GoAgentConfig
-    >>> 
+    >>>
     >>> # Create a Go agent with analysis enabled
     >>> config = GoAgentConfig(include_analysis=True)
     >>> agent = GoAgent(config)
-    >>> 
+    >>>
     >>> # Run a game
     >>> run_go_game(agent)
 """
@@ -21,10 +21,10 @@ Example:
 from typing import Any
 
 import sente
+from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.constants import END, START
 from langgraph.types import Command
 
-from haive.core.engine.agent.agent import Agent, register_agent
 from haive.games.go.config import GoAgentConfig
 from haive.games.go.state import GoGameState, GoGameStateManager
 
@@ -32,18 +32,18 @@ from haive.games.go.state import GoGameState, GoGameStateManager
 @register_agent(GoAgentConfig)
 class GoAgent(Agent[GoAgentConfig]):
     """Go game agent implementation.
-    
+
     This class provides the core functionality for playing Go games, including:
         - Move generation for both black and white players
         - Position analysis and evaluation
         - Game state management and validation
         - Workflow control for game progression
-    
+
     Attributes:
         config (GoAgentConfig): Configuration for the Go agent
         engines (Dict[str, Any]): LLM engines for players and analysis
         graph (StateGraph): Game workflow graph
-    
+
     Example:
         >>> config = GoAgentConfig(
         ...     include_analysis=True,
@@ -55,7 +55,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def __init__(self, config: GoAgentConfig):
         """Initialize the Go agent.
-        
+
         Args:
             config (GoAgentConfig): Configuration for the Go agent.
         """
@@ -63,16 +63,16 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def setup_workflow(self):
         """Define the Go game workflow.
-        
+
         Sets up the game flow graph with nodes for:
             - Game initialization
             - Black and white moves
             - Position analysis (if enabled)
             - Game status checks
-        
+
         The workflow supports two main paths:
             1. Basic: Initialize -> Black Move -> White Move -> Repeat
-            2. With Analysis: Initialize -> Black Move -> Black Analysis -> 
+            2. With Analysis: Initialize -> Black Move -> Black Analysis ->
                White Move -> White Analysis -> Repeat
         """
         self.graph.add_node("initialize_game", self.initialize_game)
@@ -90,28 +90,36 @@ class GoAgent(Agent[GoAgentConfig]):
         if self.config.include_analysis:
             self.graph.add_edge("black_move", "black_analysis_position")
             self.graph.add_conditional_edges(
-                "black_analysis_position", self.should_continue_game, {True: "white_move", False: END}
+                "black_analysis_position",
+                self.should_continue_game,
+                {True: "white_move", False: END},
             )
 
             self.graph.add_edge("white_move", "white_analysis_position")
             self.graph.add_conditional_edges(
-                "white_analysis_position", self.should_continue_game, {True: "black_move", False: END}
+                "white_analysis_position",
+                self.should_continue_game,
+                {True: "black_move", False: END},
             )
         else:
             self.graph.add_conditional_edges(
-                "black_move", self.should_continue_game, {True: "white_move", False: END}
+                "black_move",
+                self.should_continue_game,
+                {True: "white_move", False: END},
             )
             self.graph.add_conditional_edges(
-                "white_move", self.should_continue_game, {True: "black_move", False: END}
+                "white_move",
+                self.should_continue_game,
+                {True: "black_move", False: END},
             )
 
     def initialize_game(self, state: GoGameState | None = None) -> Command:
         """Initialize a new game of Go.
-        
+
         Args:
             state (Optional[GoGameState]): Optional initial state. If None,
                 creates a new game with standard settings.
-        
+
         Returns:
             Command: Command to update the game state with initial settings.
         """
@@ -120,17 +128,17 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def make_move(self, state: GoGameState, color: str) -> Command:
         """Execute a move for the given player.
-        
+
         Args:
             state (GoGameState): Current game state.
             color (str): Player color ("black" or "white").
-        
+
         Returns:
             Command: Command to update the game state with the new move.
-        
+
         Raises:
             ValueError: If no LLM engine is found for the player.
-        
+
         Notes:
             - Provides the last 5 moves as context to the LLM
             - Includes recent position analysis if available
@@ -140,16 +148,23 @@ class GoAgent(Agent[GoAgentConfig]):
         if player is None:
             raise ValueError(f"Missing LLM for {color}_player")
 
-        move_response = player.invoke({
-            "board_size": state.board_size,
-            "move_history": state.move_history[-5:],  # Last 5 moves
-            "color": color,
-            "captured_stones": state.captured_stones,
-            "player_analysis": (
-                state.black_analysis[-1] if color == "black" and state.black_analysis else
-                state.white_analysis[-1] if color == "white" and state.white_analysis else "N/A"
-            )
-        })
+        move_response = player.invoke(
+            {
+                "board_size": state.board_size,
+                "move_history": state.move_history[-5:],  # Last 5 moves
+                "color": color,
+                "captured_stones": state.captured_stones,
+                "player_analysis": (
+                    state.black_analysis[-1]
+                    if color == "black" and state.black_analysis
+                    else (
+                        state.white_analysis[-1]
+                        if color == "white" and state.white_analysis
+                        else "N/A"
+                    )
+                ),
+            }
+        )
 
         move = move_response.move  # Extract move tuple (row, col)
         new_state = GoGameStateManager.apply_move(state, move)
@@ -158,17 +173,17 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def analyze_position(self, state: GoGameState, color: str) -> Command:
         """Analyze the current position for a player.
-        
+
         Args:
             state (GoGameState): Current game state.
             color (str): Player color ("black" or "white").
-        
+
         Returns:
             Command: Command to update the game state with the analysis.
-        
+
         Raises:
             ValueError: If no LLM engine is found for analysis.
-        
+
         Notes:
             - Maintains a history of the last 4 analyses
             - Provides territory evaluation and strategic advice
@@ -178,26 +193,32 @@ class GoAgent(Agent[GoAgentConfig]):
         if analyzer is None:
             raise ValueError(f"Missing LLM for {color}_analyzer")
 
-        analysis = analyzer.invoke({
-            "board_size": state.board_size,
-            "move_history": state.move_history[-5:],  # Last 5 moves
-            "color": color,
-            "captured_stones": state.captured_stones,
-        })
+        analysis = analyzer.invoke(
+            {
+                "board_size": state.board_size,
+                "move_history": state.move_history[-5:],  # Last 5 moves
+                "color": color,
+                "captured_stones": state.captured_stones,
+            }
+        )
 
         if color == "black":
-            return Command(update={"black_analysis": state.black_analysis[-4:] + [analysis.dict()]})
-        return Command(update={"white_analysis": state.white_analysis[-4:] + [analysis.dict()]})
+            return Command(
+                update={"black_analysis": state.black_analysis[-4:] + [analysis.dict()]}
+            )
+        return Command(
+            update={"white_analysis": state.white_analysis[-4:] + [analysis.dict()]}
+        )
 
     def check_game_status(self, state: GoGameState) -> Command:
         """Check and update the Go game status.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             Command: Command to update the game status.
-        
+
         Notes:
             - Uses sente library to validate game state
             - Detects game end conditions (resignation, passes)
@@ -213,10 +234,10 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def should_continue_game(self, state: GoGameState) -> bool:
         """Determine if the game should continue.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             bool: True if game is ongoing, False otherwise.
         """
@@ -224,10 +245,10 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def make_black_move(self, state: GoGameState) -> Command:
         """Handle black's move in the game.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             Command: Command to update the game state with black's move.
         """
@@ -235,10 +256,10 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def make_white_move(self, state: GoGameState) -> Command:
         """Handle white's move in the game.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             Command: Command to update the game state with white's move.
         """
@@ -246,10 +267,10 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def analyze_black_position(self, state: GoGameState) -> Command:
         """Analyze black's position if analysis is enabled.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             Command: Command to update the game state with black's analysis.
         """
@@ -257,10 +278,10 @@ class GoAgent(Agent[GoAgentConfig]):
 
     def analyze_white_position(self, state: GoGameState) -> Command:
         """Analyze white's position if analysis is enabled.
-        
+
         Args:
             state (GoGameState): Current game state.
-        
+
         Returns:
             Command: Command to update the game state with white's analysis.
         """
@@ -269,7 +290,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
 def run_go_game(agent: GoAgent):
     """Run a Go game with visualization and structured output.
-    
+
     This function manages the game loop and provides rich visualization
     of the game state, including:
         - Board visualization using ASCII art
@@ -277,14 +298,14 @@ def run_go_game(agent: GoAgent):
         - Position analysis display
         - Captured stones counting
         - Game status updates
-    
+
     Args:
         agent (GoAgent): The Go agent to run the game with.
-    
+
     Example:
         >>> agent = GoAgent(GoAgentConfig(include_analysis=True))
         >>> run_go_game(agent)
-        
+
         🔷 Current Board Position:
         . . . . . . . . .
         . . . . . . . . .
@@ -295,7 +316,7 @@ def run_go_game(agent: GoAgent):
         . . + . . . + . .
         . . . . . . . . .
         . . . . . . . . .
-        
+
         🎮 Current Player: Black
         📌 Game Status: ongoing
         --------------------------------------------------
@@ -311,11 +332,13 @@ def run_go_game(agent: GoAgent):
         "game_status": "ongoing",
         "black_analysis": [],
         "white_analysis": [],
-        "error_message": None
+        "error_message": None,
     }
 
     # ✅ Stream the game loop
-    for step in agent.app.stream(initial_state, config=agent.runnable_config, debug=True, stream_mode="values"):
+    for step in agent.app.stream(
+        initial_state, config=agent.runnable_config, debug=True, stream_mode="values"
+    ):
         print(sente.sgf.loads(step["board_sgf"]))
         game = sente.sgf.loads(step["board_sgf"])
 
@@ -335,21 +358,41 @@ def run_go_game(agent: GoAgent):
 
         # ✅ **Handle Black's Analysis Safely**
         if step.get("black_analysis"):
-            last_black_analysis: dict[str, Any] = step["black_analysis"][-1]  # Extract last analysis dictionary
+            last_black_analysis: dict[str, Any] = step["black_analysis"][
+                -1
+            ]  # Extract last analysis dictionary
             print("\n🔍 Black's Analysis:")
-            print(f"   - Territory Estimate: {last_black_analysis.get('territory_evaluation', 'N/A')}")
-            print(f"   - Strong Positions: {last_black_analysis.get('strong_positions', 'N/A')}")
-            print(f"   - Weak Positions: {last_black_analysis.get('weak_positions', 'N/A')}")
-            print(f"   - Strategic Advice: {', '.join(last_black_analysis.get('strategic_advice', []))}")
+            print(
+                f"   - Territory Estimate: {last_black_analysis.get('territory_evaluation', 'N/A')}"
+            )
+            print(
+                f"   - Strong Positions: {last_black_analysis.get('strong_positions', 'N/A')}"
+            )
+            print(
+                f"   - Weak Positions: {last_black_analysis.get('weak_positions', 'N/A')}"
+            )
+            print(
+                f"   - Strategic Advice: {', '.join(last_black_analysis.get('strategic_advice', []))}"
+            )
 
         # ✅ **Handle White's Analysis Safely**
         if step.get("white_analysis"):
-            last_white_analysis: dict[str, Any] = step["white_analysis"][-1]  # Extract last analysis dictionary
+            last_white_analysis: dict[str, Any] = step["white_analysis"][
+                -1
+            ]  # Extract last analysis dictionary
             print("\n🔍 White's Analysis:")
-            print(f"   - Territory Estimate: {last_white_analysis.get('territory_evaluation', 'N/A')}")
-            print(f"   - Strong Positions: {last_white_analysis.get('strong_positions', 'N/A')}")
-            print(f"   - Weak Positions: {last_white_analysis.get('weak_positions', 'N/A')}")
-            print(f"   - Strategic Advice: {', '.join(last_white_analysis.get('strategic_advice', []))}")
+            print(
+                f"   - Territory Estimate: {last_white_analysis.get('territory_evaluation', 'N/A')}"
+            )
+            print(
+                f"   - Strong Positions: {last_white_analysis.get('strong_positions', 'N/A')}"
+            )
+            print(
+                f"   - Weak Positions: {last_white_analysis.get('weak_positions', 'N/A')}"
+            )
+            print(
+                f"   - Strategic Advice: {', '.join(last_white_analysis.get('strategic_advice', []))}"
+            )
 
         # ✅ **Captured Stones**
         if step.get("captured_stones"):
