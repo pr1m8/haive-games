@@ -16,26 +16,25 @@ Typical usage:
     - Use as configuration for game agents
 """
 
-
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm.base import AugLLMConfig
 from haive.games.framework.base.state import GameState
 
 
 class GameConfig(AgentConfig):
     """Base configuration for game agents.
-    
+
     This class defines the core configuration parameters that all game agents
     need, including state schema, LLM engines, and analysis settings.
-    
+
     Attributes:
         state_schema (Type[GameState]): The state schema class for the game.
         engines (Dict[str, AugLLMConfig]): Configurations for game LLMs.
         enable_analysis (bool): Whether to enable move analysis.
         visualize (bool): Whether to visualize the game.
-    
+
     Example:
         >>> class ChessConfig(GameConfig):
         ...     state_schema: Type[GameState] = ChessState
@@ -47,25 +46,20 @@ class GameConfig(AgentConfig):
     """
 
     state_schema: type[GameState] = Field(
-        default_factory=GameState,
-        description="State schema for the game"
+        default_factory=GameState, description="State schema for the game"
     )
 
     engines: dict[str, AugLLMConfig] = Field(
-        default_factory=dict,
-        description="Configurations for game LLMs"
+        default_factory=dict, description="Configurations for game LLMs"
     )
 
     enable_analysis: bool = Field(
-        default=False,
-        description="Whether to enable move analysis"
+        default=False, description="Whether to enable move analysis"
     )
 
-    visualize: bool = Field(
-        default=True,
-        description="Whether to visualize the game"
-    )
+    visualize: bool = Field(default=True, description="Whether to visualize the game")
 
     class Config:
         """Pydantic configuration."""
+
         arbitrary_types_allowed = True
