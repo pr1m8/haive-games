@@ -201,47 +201,79 @@ class ChessRichUI:
             "error_message": None,
         }
 
-        with Live(self.layout, screen=True, refresh_per_second=4):
-            for step in agent.app.stream(
-                initial_state,
-                config=agent.runnable_config,
-                debug=False,
-                stream_mode="values",
-            ):
-                self.state = step
-                self.last_move = (
-                    step["move_history"][-1][1] if step.get("move_history") else None
-                )
+        # Show initial state before streaming starts
+        self.state = initial_state
+        self._update_layout()
 
-                # Update all components
-                self.layout["header"].update(self.render_header())
-                self.layout["footer"].update(self.render_footer())
+        try:
+            with Live(self.layout, refresh_per_second=4) as live:
+                last_update_time = time.time()
 
-                self.layout["body"]["left_panel"]["white_analysis"].update(
-                    self.render_analysis("white")
-                )
-                self.layout["body"]["left_panel"]["move_history"].update(
-                    self.render_move_history()
-                )
+                for step in agent.app.stream(
+                    initial_state,
+                    config=agent.runnable_config,
+                    debug=True,  # Enable debug to see what's happening
+                    stream_mode="values",
+                ):
+                    # Update state
+                    self.state = step
+                    self.last_move = (
+                        step["move_history"][-1][1]
+                        if step.get("move_history")
+                        else None
+                    )
 
-                self.layout["body"]["main"]["board"].update(self.render_board())
+                    # Only update the UI at most once per 'delay' seconds
+                    # This prevents UI freezing from too-frequent updates
+                    current_time = time.time()
+                    if current_time - last_update_time >= delay:
+                        self._update_layout()
+                        live.refresh()
+                        last_update_time = current_time
 
-                self.layout["body"]["right_panel"]["black_analysis"].update(
-                    self.render_analysis("black")
-                )
-                self.layout["body"]["right_panel"]["captured"].update(
-                    self.render_captured()
-                )
-                self.layout["body"]["right_panel"]["status"].update(
-                    self.render_status()
-                )
+                    # Check for game end or errors
+                    if step.get("error_message"):
+                        self.console.print(
+                            f"\n[bold red]Error: {step['error_message']}[/bold red]"
+                        )
+                        time.sleep(1)
+                        break
 
-                if step.get("game_status") != "ongoing":
-                    time.sleep(2)
-                    break
+                    if step.get("game_status") != "ongoing":
+                        self._update_layout()
+                        live.refresh()
+                        time.sleep(2)
+                        break
+        except Exception as e:
+            self.console.print(
+                f"\n[bold red]Error during game execution: {str(e)}[/bold red]"
+            )
+            import traceback
+
+            self.console.print(traceback.format_exc())
 
         self.console.print("\n[bold magenta]🏁 Game Over[/bold magenta]")
         agent.save_state_history()
+
+    def _update_layout(self):
+        """Update all layout components with current state"""
+        self.layout["header"].update(self.render_header())
+        self.layout["footer"].update(self.render_footer())
+
+        self.layout["body"]["left_panel"]["white_analysis"].update(
+            self.render_analysis("white")
+        )
+        self.layout["body"]["left_panel"]["move_history"].update(
+            self.render_move_history()
+        )
+
+        self.layout["body"]["main"]["board"].update(self.render_board())
+
+        self.layout["body"]["right_panel"]["black_analysis"].update(
+            self.render_analysis("black")
+        )
+        self.layout["body"]["right_panel"]["captured"].update(self.render_captured())
+        self.layout["body"]["right_panel"]["status"].update(self.render_status())
 
 
 def main():

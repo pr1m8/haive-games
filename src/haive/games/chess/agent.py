@@ -109,16 +109,12 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
             self.graph.add_edge("black_move", "check_game_status")
 
+    # In agent.py - update context preparation with error handling:
+
+    # In agent.py - update the make_move method:
+
     def make_move(self, state: dict[str, Any], color: str) -> Command:
-        """Make a move for the specified player.
-
-        Args:
-            state: Current game state
-            color: Player color ("white" or "black")
-
-        Returns:
-            Command with updated state or error message
-        """
+        """Make a move for the specified player."""
         print(f"\n🎲 {color.capitalize()}'s turn to move")
 
         # Handle both dict and ChessState inputs
@@ -135,49 +131,53 @@ class ChessAgent(Agent[ChessAgentConfig]):
             return Command(update={"error_message": error_msg})
 
         try:
+            # Create board for validation
+            board = chess.Board(state_obj.board_fen)
+
+            # Determine if we should provide legal moves
+            move_count = len(state_obj.move_history)
+            should_provide_moves = (
+                move_count < 6  # First 3 moves for each player
+                or state_obj.error_message is not None  # Previous error occurred
+            )
+
+            # Prepare legal moves section
+            legal_moves_section = ""
+            if should_provide_moves:
+                legal_moves = [move.uci() for move in board.legal_moves]
+                legal_moves_section = f"\nLEGAL MOVES ({len(legal_moves)} available): {', '.join(legal_moves)}"
+                print(f"📋 Providing {len(legal_moves)} legal moves to {color}")
+
             # Prepare context for the LLM
             context = {
                 "color": color,
                 "current_board_fen": state_obj.board_fen,
-                "previous_board_fen": (
-                    state_obj.board_fens[-2] if len(state_obj.board_fens) > 1 else None
-                ),
                 "recent_moves": (
                     state_obj.move_history[-5:] if state_obj.move_history else []
                 ),
                 "captured_pieces": state_obj.captured_pieces,
-                "player_analysis": (
-                    (
-                        state_obj.white_analysis[-1]
-                        if color == "white" and state_obj.white_analysis
-                        else None
-                    ),
-                    (
-                        state_obj.black_analysis[-1]
-                        if color == "black" and state_obj.black_analysis
-                        else None
-                    ),
-                )[0],
+                "legal_moves_section": legal_moves_section,
             }
 
             # Get move from LLM
             player_decision = player_engine.invoke(context)
 
-            # Extract and validate the move
-            if hasattr(player_decision, "selected_move") and hasattr(
-                player_decision.selected_move, "move"
-            ):
-                move_uci = player_decision.selected_move.move
-            else:
-                # Try to extract from dictionary format
-                move_uci = player_decision.get("selected_move", {}).get("move", None)
-                if not move_uci:
-                    raise ValueError("Invalid move format returned by LLM")
+            # Extract move from structured output
+            move_uci = None
+            if hasattr(player_decision, "selected_move"):
+                if hasattr(player_decision.selected_move, "move"):
+                    move_uci = player_decision.selected_move.move
+                elif isinstance(player_decision.selected_move, dict):
+                    move_uci = player_decision.selected_move.get("move")
 
-            print(f"🎯 {color.capitalize()} suggests move: {move_uci}")
+            if not move_uci:
+                raise ValueError(
+                    f"Could not extract move from decision: {player_decision}"
+                )
 
-            # Convert to chess.Move and validate
-            board = chess.Board(state_obj.board_fen)
+            print(f"🎯 {color.capitalize()} selected: {move_uci}")
+
+            # Validate move
             try:
                 move = chess.Move.from_uci(move_uci)
             except ValueError:
@@ -185,27 +185,33 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
             # Check if move is legal
             if move not in board.legal_moves:
-                # Get legal moves for debugging
                 legal_moves = [m.uci() for m in board.legal_moves]
-                print(f"❌ Illegal move! Legal moves are: {legal_moves}")
+                print(f"❌ Illegal move {move_uci}! Legal moves: {legal_moves[:10]}...")
 
-                # Try to make a random legal move as fallback
+                # If we didn't provide moves before, retry with them
+                if not should_provide_moves:
+                    print("🔄 Retrying with legal moves provided...")
+                    state_obj.error_message = f"Illegal move attempted: {move_uci}"
+                    return self.make_move(state_obj, color)
+
+                # Otherwise use fallback
                 if board.legal_moves:
-                    move = list(board.legal_moves)[0]  # Take first legal move
-                    print(f"⚠️ Fallback to legal move: {move.uci()}")
+                    move = list(board.legal_moves)[0]
+                    print(f"⚠️ Using fallback move: {move.uci()}")
                 else:
                     raise ValueError("No legal moves available")
 
-            # Track captured piece if any
+            # Check for captures
             captured = None
-            captured_piece_type = board.piece_at(move.to_square)
-            if captured_piece_type and board.is_capture(move):
-                captured = captured_piece_type.symbol()
+            if board.is_capture(move):
+                captured_piece = board.piece_at(move.to_square)
+                if captured_piece:
+                    captured = captured_piece.symbol()
 
             # Apply the move
             board.push(move)
 
-            # Update captured pieces if a piece was captured
+            # Update captured pieces
             updated_captured = copy.deepcopy(state_obj.captured_pieces)
             if captured:
                 opponent = "black" if color == "white" else "white"
@@ -214,9 +220,6 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
             # Determine new game status
             new_status = determine_game_status(board)
-            print(f"📊 New game status: {new_status}")
-
-            # Update state
             next_player = "black" if color == "white" else "white"
 
             return Command(
@@ -227,7 +230,7 @@ class ChessAgent(Agent[ChessAgentConfig]):
                     "turn": next_player,
                     "game_status": new_status,
                     "captured_pieces": updated_captured,
-                    "error_message": None,
+                    "error_message": None,  # Clear any error
                 }
             )
 

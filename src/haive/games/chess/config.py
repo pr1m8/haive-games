@@ -6,8 +6,12 @@ This module provides configuration classes for the chess game agent, including:
     - Game settings and visualization options
 """
 
+import uuid
+
+from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
+from langchain_core.runnables import RunnableConfig
 from pydantic import Field
 
 from haive.games.chess.engines import build_chess_aug_llms
@@ -54,6 +58,11 @@ class ChessAgentConfig(AgentConfig):
     engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_chess_aug_llms,
         description="LLM configurations for players and analyzers",
+    )
+    runnable_config: RunnableConfig = Field(
+        default_factory=lambda: RunnableConfigManager.create(
+            thread_id=str(uuid.uuid4()), recursion_limit=200
+        )
     )
 
     # runnable_config: Dict['configurable]
