@@ -28,9 +28,10 @@ class TicTacToeState(GameState):
     """
 
     board: list[list[str | None]] = Field(
-        ..., description="3x3 game board, each cell can be None, 'X', or 'O'"
+        default_factory=lambda: [[None for _ in range(3)] for _ in range(3)],
+        description="3x3 game board, each cell can be None, 'X', or 'O'",
     )
-    turn: Literal["X", "O"] = Field(..., description="Current player's turn")
+    turn: Literal["X", "O"] = Field(default="X", description="Current player's turn")
     game_status: Literal["ongoing", "X_win", "O_win", "draw"] = Field(
         default="ongoing", description="Status of the game"
     )
@@ -123,10 +124,8 @@ class TicTacToeState(GameState):
         player_X = kwargs.get("player_X", "player1")
         player_O = kwargs.get("player_O", "player2")
 
-        board = [[None for _ in range(3)] for _ in range(3)]
-
         return cls(
-            board=board,
+            board=[[None for _ in range(3)] for _ in range(3)],
             turn=first_player,
             game_status="ongoing",
             move_history=[],

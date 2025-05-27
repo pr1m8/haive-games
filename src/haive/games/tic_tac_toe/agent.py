@@ -322,6 +322,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
         builder = DynamicGraph(state_schema=self.state_schema)
 
         builder.add_node("initialize", self.initialize_game)
+        builder.set_entry_point("initialize")
         builder.add_node("make_X_move", self.make_X_move)
         builder.add_node("analyze_X", self.analyze_X)
         builder.add_node("make_O_move", self.make_O_move)
@@ -381,7 +382,3 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 self.visualize_state(step)
             return step
         return super().run(initial_state)
-
-
-# agent = TicTacToeAgent()
-# agent.run_game(visualize=True)
