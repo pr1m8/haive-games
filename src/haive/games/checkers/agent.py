@@ -27,25 +27,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         game_state = self.state_manager.initialize()
         return Command(update=game_state, goto="player1_move")
 
-    def prepare_move_context(self, state: CheckersState, player: str) -> dict[str, Any]:
-        legal_moves = self.state_manager.get_legal_moves(state)
-        formatted_legal_moves = [str(move) for move in legal_moves]
-        player_analysis = None
-        if player == "red" and state.red_analysis:
-            player_analysis = state.red_analysis[-1]
-        elif player == "black" and state.black_analysis:
-            player_analysis = state.black_analysis[-1]
-        return {
-            "board": state.board_string,
-            "turn": state.turn,
-            "color": player,
-            "legal_moves": formatted_legal_moves,
-            "captured_red": state.captured_pieces["red"],
-            "captured_black": state.captured_pieces["black"],
-            "move_history": [str(move) for move in state.move_history[-5:]],
-            "player_analysis": player_analysis,
-        }
-
     def prepare_analysis_context(
         self, state: CheckersState, player: str
     ) -> dict[str, Any]:
@@ -79,43 +60,162 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             return Command(update=state_obj.model_dump(), goto=goto)
         return self.make_move(state_obj, "black")
 
+    # In agent.py - update the make_move method:
     def make_move(self, state: CheckersState, player: str) -> Command:
+        """Make a move with error handling and retry logic."""
         if state.turn != player:
             return Command(update=state.model_dump(), goto=f"analyze_{player}")
 
-        context = self.prepare_move_context(state, player)
         engine = self.engines.get(f"{player}_player")
         if not engine:
             raise ValueError(f"Missing engine for {player}_player")
 
-        try:
-            move_decision = engine.invoke(context)
-            move = self.extract_move(move_decision)
-            legal_moves = self.state_manager.get_legal_moves(state)
-            valid_move = next((m for m in legal_moves if str(m) == str(move)), None)
+        # Retry logic
+        max_attempts = 3
+        attempt = 0
+        previous_error = None
 
-            if valid_move:
-                updated_state = self.state_manager.apply_move(state, valid_move)
-            else:
-                fallback_move = legal_moves[0] if legal_moves else None
-                if fallback_move:
-                    updated_state = self.state_manager.apply_move(state, fallback_move)
+        while attempt < max_attempts:
+            attempt += 1
+
+            try:
+                # Get legal moves
+                legal_moves = self.state_manager.get_legal_moves(state)
+                if not legal_moves:
+                    # No legal moves means game over
+                    winner = "black" if player == "red" else "red"
+                    return Command(
+                        update={"game_status": "game_over", "winner": winner}, goto=END
+                    )
+
+                # Format legal moves for prompt
+                formatted_legal_moves = [str(move) for move in legal_moves]
+
+                # Build error context
+                error_context = ""
+                if previous_error and attempt > 1:
+                    error_context = (
+                        f"⚠️ PREVIOUS ATTEMPT ERROR: {previous_error}\n"
+                        f"Please select a DIFFERENT move from the legal moves list.\n\n"
+                    )
+
+                # Prepare context with error info
+                context = self.prepare_move_context(state, player)
+                context["error_context"] = error_context
+
+                print(
+                    f"📋 Attempt {attempt}/{max_attempts}: {player.capitalize()} has {len(legal_moves)} legal moves"
+                )
+                if previous_error:
+                    print(f"⚠️ Retrying after error: {previous_error}")
+
+                # Get move decision
+                move_decision = engine.invoke(context)
+                move = self.extract_move(move_decision)
+
+                # Validate the move
+                valid_move = None
+                for legal_move in legal_moves:
+                    if (
+                        legal_move.from_position == move.from_position
+                        and legal_move.to_position == move.to_position
+                    ):
+                        valid_move = legal_move
+                        break
+
+                if not valid_move:
+                    # Try to match by string representation
+                    move_str = str(move)
+                    valid_move = next(
+                        (m for m in legal_moves if str(m) == move_str), None
+                    )
+
+                if valid_move:
+                    print(f"✅ {player.capitalize()} plays: {valid_move}")
+                    updated_state = self.state_manager.apply_move(state, valid_move)
+
+                    # Check game status
+                    if updated_state.game_status == "game_over" or updated_state.winner:
+                        return Command(update=updated_state.model_dump(), goto=END)
+
+                    # Determine next step
+                    goto = "analyze_player2" if player == "red" else "analyze_player1"
+                    return Command(update=updated_state.model_dump(), goto=goto)
                 else:
-                    return Command(update={"game_status": "game_over"}, goto=END)
-        except Exception as e:
-            print(f"Error making move: {e}")
-            legal_moves = self.state_manager.get_legal_moves(state)
-            fallback_move = legal_moves[0] if legal_moves else None
-            if fallback_move:
-                updated_state = self.state_manager.apply_move(state, fallback_move)
-            else:
-                return Command(update={"game_status": "game_over"}, goto=END)
+                    # Invalid move
+                    previous_error = (
+                        f"Move '{move}' is not in legal moves. "
+                        f"Legal moves are: {', '.join(formatted_legal_moves[:10])}"
+                        f"{' ...' if len(formatted_legal_moves) > 10 else ''}"
+                    )
 
-        if updated_state.game_status == "game_over" or updated_state.winner:
-            return Command(update=updated_state.model_dump(), goto=END)
+                    if attempt < max_attempts:
+                        continue
+                    else:
+                        # Use fallback after max attempts
+                        print(
+                            f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
+                        )
 
-        goto = "analyze_player2" if player == "red" else "analyze_player1"
-        return Command(update=updated_state.model_dump(), goto=goto)
+            except Exception as e:
+                print(f"❌ Error in attempt {attempt}: {e}")
+                previous_error = str(e)
+
+                if attempt >= max_attempts:
+                    # Use fallback move
+                    legal_moves = self.state_manager.get_legal_moves(state)
+                    if legal_moves:
+                        fallback_move = legal_moves[0]
+                        print(f"⚠️ Using fallback move: {fallback_move}")
+                        updated_state = self.state_manager.apply_move(
+                            state, fallback_move
+                        )
+
+                        if (
+                            updated_state.game_status == "game_over"
+                            or updated_state.winner
+                        ):
+                            return Command(update=updated_state.model_dump(), goto=END)
+
+                        goto = (
+                            "analyze_player2" if player == "red" else "analyze_player1"
+                        )
+                        return Command(update=updated_state.model_dump(), goto=goto)
+                    else:
+                        return Command(update={"game_status": "game_over"}, goto=END)
+
+    def prepare_move_context(self, state: CheckersState, player: str) -> dict[str, Any]:
+        """Prepare context for move generation."""
+        legal_moves = self.state_manager.get_legal_moves(state)
+        formatted_legal_moves = [str(move) for move in legal_moves]
+
+        # Get latest analysis
+        player_analysis = None
+        if player == "red" and state.red_analysis:
+            player_analysis = state.red_analysis[-1]
+        elif player == "black" and state.black_analysis:
+            player_analysis = state.black_analysis[-1]
+
+        # Format analysis for prompt
+        analysis_str = "No previous analysis"
+        if player_analysis:
+            analysis_str = (
+                f"Material: {player_analysis.material_advantage}, "
+                f"Center: {player_analysis.control_of_center}, "
+                f"Position: {player_analysis.positional_evaluation}"
+            )
+
+        return {
+            "board": state.board_string,
+            "turn": state.turn,
+            "color": player,
+            "legal_moves": ", ".join(formatted_legal_moves),  # Join as string
+            "captured_red": len(state.captured_pieces["red"]),
+            "captured_black": len(state.captured_pieces["black"]),
+            "move_history": ", ".join(str(m) for m in state.move_history[-50:]),
+            "player_analysis": analysis_str,
+            "error_context": "",  # Will be filled by retry logic
+        }
 
     def analyze_player1(self, state: dict[str, Any]) -> Command:
         state_obj = (
