@@ -8,7 +8,7 @@ the winner, and the number of geese remaining.
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_serializer, field_validator
 
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
 from haive.games.framework.base.state import GameState
@@ -36,6 +36,31 @@ class FoxAndGeeseState(GameState):
     )
     winner: str | None = Field(default=None, description="Winner of the game, if any")
     num_geese: int = Field(default=0, description="Number of geese remaining")
+    fox_analysis: list[str] = Field(
+        default_factory=list, description="List of fox position analyses"
+    )
+    geese_analysis: list[str] = Field(
+        default_factory=list, description="List of geese position analyses"
+    )
+
+    @field_validator("geese_positions", mode="before")
+    @classmethod
+    def validate_geese_positions(cls, v):
+        """Validate and convert geese positions to a set."""
+        if isinstance(v, list):
+            # Convert from list of dicts to set of FoxAndGeesePosition objects
+            return {
+                FoxAndGeesePosition(**pos) if isinstance(pos, dict) else pos
+                for pos in v
+            }
+        return v
+
+    @field_serializer("geese_positions")
+    def serialize_geese_positions(
+        self, geese_positions: set[FoxAndGeesePosition]
+    ) -> list[dict]:
+        """Serialize geese positions as a list of dictionaries."""
+        return [pos.model_dump() for pos in geese_positions]
 
     @classmethod
     def initialize(cls) -> "FoxAndGeeseState":
