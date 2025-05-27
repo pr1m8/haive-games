@@ -23,6 +23,9 @@ isort = "^6.0.1"
 mypy = "^1.15.0"
 
 
+[tool.poetry.group.games-chess.dependencies]
+chess = "^1.11.2"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
