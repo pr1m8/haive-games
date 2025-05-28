@@ -5,10 +5,11 @@ which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
-from typing import Any
+import json
+from typing import Any, List
 
 from haive.games.framework.base.state_manager import GameStateManager
-from haive.games.mancala.models import MancalaMove
+from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 from haive.games.mancala.state import MancalaState
 
 
@@ -230,7 +231,42 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         Returns:
             MancalaState: Updated state with the analysis added.
         """
+        from haive.games.mancala.models import MancalaAnalysis
+
+        # Create a copy of the state
         new_state = state.model_copy()
+
+        # Ensure analysis is of the correct type
+        if not isinstance(analysis, MancalaAnalysis):
+            import json
+
+            from langchain_core.messages import AIMessage
+
+            # Try to convert AIMessage to MancalaAnalysis
+            if isinstance(analysis, AIMessage):
+                try:
+                    # Check additional_kwargs for tool_calls
+                    if (
+                        hasattr(analysis, "additional_kwargs")
+                        and "tool_calls" in analysis.additional_kwargs
+                    ):
+                        tool_calls = analysis.additional_kwargs["tool_calls"]
+                        if tool_calls and len(tool_calls) > 0:
+                            # Get the first tool call
+                            tool_call = tool_calls[0]
+                            # Parse the arguments from the function
+                            if (
+                                "function" in tool_call
+                                and "arguments" in tool_call["function"]
+                            ):
+                                # Parse the JSON string in arguments
+                                args = json.loads(tool_call["function"]["arguments"])
+                                analysis = MancalaAnalysis(**args)
+                except Exception as e:
+                    # If conversion fails, log error but continue
+                    print(f"Error converting AIMessage to MancalaAnalysis: {e}")
+                    # Return state unchanged
+                    return state
 
         # Add analysis field if it doesn't exist
         if not hasattr(new_state, f"{player}_analysis"):
