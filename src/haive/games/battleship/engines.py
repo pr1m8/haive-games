@@ -41,6 +41,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_ship_placement_prompt("Player 1"),
             structured_output_model=ShipPlacementWrapper,
             description="Player 1 ship placement",
+            structured_output_version="v1",
         ),
         "player2_ship_placement": AugLLMConfig(
             name="player2_ship_placement",
@@ -48,6 +49,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_ship_placement_prompt("Player 2"),
             structured_output_model=ShipPlacementWrapper,
             description="Player 2 ship placement",
+            structured_output_version="v1",
         ),
         "player1_move": AugLLMConfig(
             name="player1_move",
@@ -55,6 +57,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_move_prompt("Player 1"),
             structured_output_model=MoveCommand,
             description="Player 1 move selection",
+            structured_output_version="v1",
         ),
         "player2_move": AugLLMConfig(
             name="player2_move",
@@ -62,6 +65,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_move_prompt("Player 2"),
             structured_output_model=MoveCommand,
             description="Player 2 move selection",
+            structured_output_version="v1",
         ),
         "player1_analyzer": AugLLMConfig(
             name="player1_analyzer",
@@ -69,6 +73,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_analysis_prompt("Player 1"),
             structured_output_model=Analysis,
             description="Player 1 analysis",
+            structured_output_version="v1",
         ),
         "player2_analyzer": AugLLMConfig(
             name="player2_analyzer",
@@ -76,6 +81,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
             prompt_template=generate_analysis_prompt("Player 2"),
             structured_output_model=Analysis,
             description="Player 2 analysis",
+            structured_output_version="v1",
         ),
     }
 
