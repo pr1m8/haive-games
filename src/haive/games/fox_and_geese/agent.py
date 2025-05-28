@@ -1,21 +1,63 @@
-"""Fox and Geese game agent.
+"""Fox and Geese game agent with fixed state handling and UI integration.
 
 This module defines the Fox and Geese game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+import logging
 import time
-from typing import Any
+from typing import Any, Dict, Union
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
-from langgraph.constants import START
+from langgraph.constants import END, START
+from langgraph.types import Command
+from rich.console import Console
+from rich.live import Live
 
 from haive.games.fox_and_geese.config import FoxAndGeeseConfig
-from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
+from haive.games.fox_and_geese.models import (
+    FoxAndGeeseAnalysis,
+    FoxAndGeeseMove,
+    FoxAndGeesePosition,
+)
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.fox_and_geese.state_manager import FoxAndGeeseStateManager
 from haive.games.framework.base.agent import GameAgent
+
+# Import the UI module
+try:
+    from haive.games.fox_and_geese.ui import FoxAndGeeseUI
+
+    UI_AVAILABLE = True
+except ImportError:
+    UI_AVAILABLE = False
+
+logger = logging.getLogger(__name__)
+
+
+def ensure_game_state(
+    state_input: Union[Dict[str, Any], FoxAndGeeseState],
+) -> FoxAndGeeseState:
+    """Ensure input is converted to FoxAndGeeseState.
+
+    Args:
+        state_input: State input as dict or FoxAndGeeseState
+
+    Returns:
+        FoxAndGeeseState instance
+    """
+    if isinstance(state_input, FoxAndGeeseState):
+        return state_input
+    elif isinstance(state_input, dict):
+        try:
+            return FoxAndGeeseState.model_validate(state_input)
+        except Exception as e:
+            logger.error(f"Failed to convert dict to FoxAndGeeseState: {e}")
+            logger.debug(f"Dict contents: {state_input}")
+            raise
+    else:
+        raise ValueError(f"Cannot convert {type(state_input)} to FoxAndGeeseState")
 
 
 @register_agent(FoxAndGeeseConfig)
@@ -35,40 +77,67 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         super().__init__(config)
         self.state_manager = FoxAndGeeseStateManager
         self.engines = config.engines
+        self.console = Console()
+        self.game_over = False
 
-    def initialize_game(self, state: dict[str, Any]) -> FoxAndGeeseState:
+        # Initialize UI if available
+        self.ui = FoxAndGeeseUI(self.console) if UI_AVAILABLE else None
+        if not UI_AVAILABLE:
+            logger.warning("Rich UI not available - falling back to text output")
+
+    def initialize_game(self, state: FoxAndGeeseState) -> Dict[str, Any]:
         """Initialize a new Fox and Geese game.
 
         Args:
-            state (Dict[str, Any]): Initial state dictionary (unused here but required for interface).
+            state: Input state (ignored for initialization)
 
         Returns:
-            FoxAndGeeseState: Initialization command containing the new game state.
+            Dict[str, Any]: State updates for the new game
         """
+        logger.info("Initializing new Fox and Geese game")
         game_state = self.state_manager.initialize()
-        return game_state
+        logger.debug(
+            f"Initialized game state: fox at {game_state.fox_position}, {game_state.num_geese} geese"
+        )
+
+        # Return the state as a Command with dictionary update
+        return Command(
+            update={
+                "fox_position": game_state.fox_position,
+                "geese_positions": game_state.geese_positions,
+                "turn": game_state.turn,
+                "game_status": game_state.game_status,
+                "move_history": game_state.move_history,
+                "winner": game_state.winner,
+                "num_geese": game_state.num_geese,
+                "fox_analysis": game_state.fox_analysis,
+                "geese_analysis": game_state.geese_analysis,
+                "error_message": None,  # Add an error_message field for consistency
+            }
+        )
 
     def prepare_move_context(
         self, state: FoxAndGeeseState, player: str
-    ) -> dict[str, Any]:
+    ) -> Dict[str, Any]:
         """Prepare context for move generation.
 
         Args:
-            state (FoxAndGeeseState): Current game state.
-            player (str): The player making the move ('fox' or 'geese').
+            state: Current game state
+            player: The player making the move ('fox' or 'geese')
 
         Returns:
-            Dict[str, Any]: Context dictionary for move generation.
+            Dict[str, Any]: Context dictionary for move generation
         """
         # Format legal moves for display
-        formatted_legal_moves = "\n".join(
-            [str(move) for move in self.state_manager.get_legal_moves(state)]
-        )
+        legal_moves = self.state_manager.get_legal_moves(state)
+        formatted_legal_moves = "\n".join([str(move) for move in legal_moves])
 
         # Get recent move history
         recent_moves = []
         for move in state.move_history[-5:]:
             recent_moves.append(str(move))
+
+        logger.debug(f"Prepared context for {player}: {len(legal_moves)} legal moves")
 
         # Prepare the context
         return {
@@ -78,79 +147,137 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             "num_geese": state.num_geese,
         }
 
+    def prepare_analysis_context(
+        self, state: FoxAndGeeseState, player: str
+    ) -> Dict[str, Any]:
+        """Prepare context for position analysis.
+
+        Args:
+            state: Current game state
+            player: The player for whom to prepare the analysis context
+
+        Returns:
+            Dict[str, Any]: The context dictionary for position analysis
+        """
+        return {
+            "board_string": state.board_string,
+            "turn": state.turn,
+            "num_geese": state.num_geese,
+            "move_history": "\n".join([str(move) for move in state.move_history[-5:]]),
+        }
+
     def extract_move(self, response: Any, piece_type: str = "fox") -> FoxAndGeeseMove:
         """Extract move from engine response.
 
         Args:
-            response (Any): Response from the engine.
-            piece_type (str): Type of piece making the move ('fox' or 'goose').
+            response: Response from the engine
+            piece_type: Type of piece making the move ('fox' or 'goose')
 
         Returns:
-            FoxAndGeeseMove: Parsed move object.
+            FoxAndGeeseMove: Parsed move object
         """
+        logger.debug(f"Extracting move from response type: {type(response)}")
+        import json
+        import re
+
         # Handle different response types
         if isinstance(response, FoxAndGeeseMove):
             # Already the right type
+            logger.debug("Response is already FoxAndGeeseMove")
             return response
         elif hasattr(response, "content"):
             # AIMessage with content
             if isinstance(response.content, FoxAndGeeseMove):
                 # Content is already the structured object
+                logger.debug("Response content is FoxAndGeeseMove")
                 return response.content
             elif isinstance(response.content, dict):
                 # Content is a dict, convert to FoxAndGeeseMove
-                return FoxAndGeeseMove(**response.content)
+                logger.debug("Converting response content dict to FoxAndGeeseMove")
+                return FoxAndGeeseMove.model_validate(response.content)
             elif isinstance(response.content, str):
-                # String content - this shouldn't happen with structured output
-                print(
-                    f"⚠️ Warning: Received string content (structured output might not be working): {response.content[:100]}..."
+                # String content - try to parse structured data from it
+                logger.debug(
+                    f"Received string content, trying to extract structured data"
                 )
-                # Try to parse JSON from the string
-                import json
 
+                # Try to extract a JSON object from the string
                 try:
-                    parsed = json.loads(response.content)
-                    if isinstance(parsed, dict):
-                        return FoxAndGeeseMove(**parsed)
-                except:
-                    pass
-                # Return a dummy move for debugging - use correct piece type
-                print(f"🔧 Creating dummy {piece_type} move for debugging")
-                return self._create_dummy_move(piece_type)
-            else:
-                # Content is already a structured object
-                return response.content
+                    # Look for JSON-like content within the string
+                    json_match = re.search(r"\{.*\}", response.content, re.DOTALL)
+                    if json_match:
+                        json_str = json_match.group(0)
+                        parsed = json.loads(json_str)
+                        if isinstance(parsed, dict):
+                            logger.debug("Found JSON object in content string")
+                            return FoxAndGeeseMove.model_validate(parsed)
+                except Exception as e:
+                    logger.warning(f"Failed to extract JSON from string content: {e}")
+
+                # Check if content has move information in text format
+                move_pattern = r"from\s*\((\d+),?\s*(\d+)\)\s*to\s*\((\d+),?\s*(\d+)\)"
+                match = re.search(move_pattern, response.content)
+                if match:
+                    try:
+                        from_row, from_col, to_row, to_col = map(int, match.groups())
+                        logger.debug(
+                            f"Extracted move coordinates from text: ({from_row},{from_col}) to ({to_row},{to_col})"
+                        )
+
+                        # Check for capture info
+                        capture = None
+                        capture_pattern = r"capture.*\((\d+),?\s*(\d+)\)"
+                        capture_match = re.search(capture_pattern, response.content)
+                        if capture_match:
+                            cap_row, cap_col = map(int, capture_match.groups())
+                            capture = FoxAndGeesePosition(row=cap_row, col=cap_col)
+
+                        return FoxAndGeeseMove(
+                            from_pos=FoxAndGeesePosition(row=from_row, col=from_col),
+                            to_pos=FoxAndGeesePosition(row=to_row, col=to_col),
+                            piece_type=piece_type,
+                            capture=capture,
+                        )
+                    except Exception as e:
+                        logger.warning(f"Failed to parse move from text pattern: {e}")
         elif isinstance(response, dict):
             # Response is a dict, convert to FoxAndGeeseMove
-            return FoxAndGeeseMove(**response)
-        else:
-            # Fallback - create a dummy move
-            print(f"❌ Warning: Unexpected response type: {type(response)}")
-            return self._create_dummy_move(piece_type)
+            logger.debug("Converting response dict to FoxAndGeeseMove")
+            return FoxAndGeeseMove.model_validate(response)
+        elif hasattr(response, "tool_calls") and response.tool_calls:
+            # Handle tool calls directly
+            logger.debug("Extracting move from tool_calls attribute")
+            tool_call = response.tool_calls[0]
+            if hasattr(tool_call, "args") and isinstance(tool_call.args, dict):
+                return FoxAndGeeseMove.model_validate(tool_call.args)
+            elif hasattr(tool_call, "function") and "arguments" in tool_call.function:
+                try:
+                    args = json.loads(tool_call.function["arguments"])
+                    return FoxAndGeeseMove.model_validate(args)
+                except Exception as e:
+                    logger.warning(f"Failed to parse tool call arguments: {e}")
+        elif (
+            hasattr(response, "additional_kwargs")
+            and "tool_calls" in response.additional_kwargs
+        ):
+            # Handle tool calls in additional_kwargs
+            logger.debug("Extracting move from additional_kwargs.tool_calls")
+            tool_calls = response.additional_kwargs["tool_calls"]
+            if tool_calls and len(tool_calls) > 0:
+                tool_call = tool_calls[0]
+                if "function" in tool_call and "arguments" in tool_call["function"]:
+                    try:
+                        args = json.loads(tool_call["function"]["arguments"])
+                        return FoxAndGeeseMove.model_validate(args)
+                    except Exception as e:
+                        logger.warning(
+                            f"Failed to parse tool call arguments from additional_kwargs: {e}"
+                        )
 
-    def _create_dummy_move(self, piece_type: str) -> FoxAndGeeseMove:
-        """Create a dummy move for debugging purposes.
-
-        Args:
-            piece_type (str): Type of piece ('fox' or 'goose').
-
-        Returns:
-            FoxAndGeeseMove: A dummy move.
-        """
-        if piece_type == "fox":
-            # Simple fox move
-            return FoxAndGeeseMove(
-                from_pos=FoxAndGeesePosition(row=3, col=3),
-                to_pos=FoxAndGeesePosition(row=2, col=2),
-                piece_type="fox",
-            )
-        else:
-            # Simple goose move
-            return FoxAndGeeseMove(
-                from_pos=FoxAndGeesePosition(row=1, col=0),
-                to_pos=FoxAndGeesePosition(row=2, col=1),
-                piece_type="goose",
-            )
+        # If we got here, we couldn't extract a valid move
+        error_msg = f"Could not extract move from response type: {type(response)}"
+        logger.error(error_msg)
+        raise ValueError(error_msg)
 
     def _get_legal_move_fallback(
         self, game_state: FoxAndGeeseState, piece_type: str
@@ -158,315 +285,461 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """Get a legal move as a fallback when LLM fails.
 
         Args:
-            game_state (FoxAndGeeseState): Current game state.
-            piece_type (str): Type of piece ('fox' or 'goose').
+            game_state: Current game state
+            piece_type: Type of piece ('fox' or 'goose')
 
         Returns:
-            FoxAndGeeseMove: A legal move, or dummy if no legal moves.
+            FoxAndGeeseMove: A legal move
         """
-        try:
-            legal_moves = self.state_manager.get_legal_moves(game_state)
-            if legal_moves:
-                # Return the first legal move
-                return legal_moves[0]
-            else:
-                # No legal moves - game should be over
-                print(f"⚠️ No legal moves available for {piece_type}")
-                return self._create_dummy_move(piece_type)
-        except Exception as e:
-            print(f"❌ Error getting legal moves: {e}")
-            return self._create_dummy_move(piece_type)
+        legal_moves = self.state_manager.get_legal_moves(game_state)
+        if not legal_moves:
+            raise ValueError(f"No legal moves available for {piece_type}")
 
-    def make_fox_move(self, state: dict[str, Any]) -> FoxAndGeeseState:
+        # Return the first legal move as fallback
+        logger.info(
+            f"Using first legal move as fallback for {piece_type}: {legal_moves[0]}"
+        )
+        return legal_moves[0]
+
+    def make_player1_move(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+        """Make a move for player 1 (fox).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Dict[str, Any]: State updates after the move
+        """
+        new_state = self.make_fox_move(state)
+        return Command(
+            update={
+                "fox_position": new_state.fox_position,
+                "geese_positions": new_state.geese_positions,
+                "turn": new_state.turn,
+                "game_status": new_state.game_status,
+                "move_history": new_state.move_history,
+                "winner": new_state.winner,
+                "num_geese": new_state.num_geese,
+                "error_message": None,
+            }
+        )
+
+    def make_player2_move(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+        """Make a move for player 2 (geese).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Dict[str, Any]: State updates after the move
+        """
+        new_state = self.make_geese_move(state)
+        return Command(
+            update={
+                "fox_position": new_state.fox_position,
+                "geese_positions": new_state.geese_positions,
+                "turn": new_state.turn,
+                "game_status": new_state.game_status,
+                "move_history": new_state.move_history,
+                "winner": new_state.winner,
+                "num_geese": new_state.num_geese,
+                "error_message": None,
+            }
+        )
+
+    def analyze_player1(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+        """Analyze position for player 1 (fox).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Dict[str, Any]: State updates with analysis
+        """
+        new_state = self.analyze_fox_position(state)
+        return Command(
+            update={"fox_analysis": new_state.fox_analysis, "error_message": None}
+        )
+
+    def analyze_player2(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+        """Analyze position for player 2 (geese).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Dict[str, Any]: State updates with analysis
+        """
+        new_state = self.analyze_geese_position(state)
+        return Command(
+            update={"geese_analysis": new_state.geese_analysis, "error_message": None}
+        )
+
+    def make_fox_move(self, state: FoxAndGeeseState) -> FoxAndGeeseState:
         """Make a move for the fox.
 
         Args:
-            state (dict[str, Any]): Current game state.
+            state: Current game state
 
         Returns:
-            FoxAndGeeseState: Updated game state after the move.
+            FoxAndGeeseState: Updated game state after the move
         """
         try:
-            # Convert dict to FoxAndGeeseState
-            game_state = FoxAndGeeseState(**state)
-
-            print(f"🦊 Fox move - Current turn: {game_state.turn}")
+            # Ensure we have a proper FoxAndGeeseState
+            game_state = ensure_game_state(state)
+            logger.info(f"Fox move - Current turn: {game_state.turn}")
 
             # Ensure it's the fox's turn
             if game_state.turn != "fox":
-                print(
-                    f"⚠️ Not fox's turn (current: {game_state.turn}), skipping fox move"
+                logger.warning(
+                    f"Not fox's turn (current: {game_state.turn}), skipping fox move"
                 )
                 return game_state
 
             # Check if fox has legal moves
             legal_moves = self.state_manager.get_legal_moves(game_state)
             if not legal_moves:
-                print("🏁 Fox has no legal moves - game over!")
-                game_state.game_status = "geese_win"
-                game_state.winner = "geese"
-                return game_state
+                logger.info("Fox has no legal moves - game over!")
+                new_state = game_state.model_copy(deep=True)
+                new_state.game_status = "geese_win"
+                new_state.winner = "geese"
+                return new_state
 
             # Prepare context for the fox player
             context = self.prepare_move_context(game_state, "fox")
 
-            try:
-                # Call the fox player engine
-                fox_player = self.engines["fox_player"].create_runnable()
-                response = fox_player.invoke(context)
+            # Try up to 3 times to get a valid move
+            max_attempts = 3
+            for attempt in range(max_attempts):
+                try:
+                    # Call the fox player engine
+                    fox_player = self.engines["fox_player"].create_runnable()
+                    response = fox_player.invoke(context)
 
-                # Extract the move
-                move = self.extract_move(response, "fox")
+                    # Extract the move
+                    move = self.extract_move(response, "fox")
 
-                # Validate move is legal
-                if move not in legal_moves:
-                    print(f"⚠️ LLM move {move} not in legal moves, using fallback")
-                    move = self._get_legal_move_fallback(game_state, "fox")
+                    # Validate move is legal
+                    if move in legal_moves:
+                        # We have a valid move, apply it
+                        logger.info(f"Applying fox move: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
+                    else:
+                        logger.warning(
+                            f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                        )
+                        if attempt == max_attempts - 1:
+                            # Last attempt, use fallback
+                            move = self._get_legal_move_fallback(game_state, "fox")
+                            logger.info(f"Using fallback move: {move}")
+                            new_state = self.state_manager.apply_move(game_state, move)
+                            return new_state
 
-            except Exception as e:
-                print(f"❌ Error calling fox engine: {e}")
-                print("🔄 Using fallback legal move")
-                move = self._get_legal_move_fallback(game_state, "fox")
+                except Exception as e:
+                    logger.error(
+                        f"Attempt {attempt+1}/{max_attempts}: Error calling fox engine: {e}"
+                    )
+                    if attempt == max_attempts - 1:
+                        # Last attempt, use fallback
+                        move = self._get_legal_move_fallback(game_state, "fox")
+                        logger.info(f"Using fallback move after error: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
 
-            # Apply the move
-            print(f"🦊 Applying fox move: {move}")
+            # Fallback in case all attempts fail
+            move = self._get_legal_move_fallback(game_state, "fox")
+            logger.info(f"Using fallback move after all attempts failed: {move}")
             new_state = self.state_manager.apply_move(game_state, move)
-
-            # Return the updated state
             return new_state
 
         except Exception as e:
-            print(f"❌ Critical error in fox move: {e}")
+            logger.error(f"Critical error in fox move: {e}", exc_info=True)
             # Return original state to prevent crashes
-            game_state = FoxAndGeeseState(**state)
-            return game_state
+            return ensure_game_state(state)
 
-    def make_geese_move(self, state: dict[str, Any]) -> FoxAndGeeseState:
+    def make_geese_move(self, state: FoxAndGeeseState) -> FoxAndGeeseState:
         """Make a move for the geese.
 
         Args:
-            state (dict[str, Any]): Current game state.
+            state: Current game state
 
         Returns:
-            FoxAndGeeseState: Updated game state after the move.
+            FoxAndGeeseState: Updated game state after the move
         """
         try:
-            # Convert dict to FoxAndGeeseState
-            game_state = FoxAndGeeseState(**state)
-
-            print(f"🐺 Geese move - Current turn: {game_state.turn}")
+            # Ensure we have a proper FoxAndGeeseState
+            game_state = ensure_game_state(state)
+            logger.info(f"Geese move - Current turn: {game_state.turn}")
 
             # Ensure it's the geese's turn
             if game_state.turn != "geese":
-                print(
-                    f"⚠️ Not geese's turn (current: {game_state.turn}), skipping geese move"
+                logger.warning(
+                    f"Not geese's turn (current: {game_state.turn}), skipping geese move"
                 )
                 return game_state
 
             # Check if geese have legal moves
             legal_moves = self.state_manager.get_legal_moves(game_state)
             if not legal_moves:
-                print("🏁 Geese have no legal moves - game over!")
-                game_state.game_status = "fox_win"
-                game_state.winner = "fox"
-                return game_state
+                logger.info("Geese have no legal moves - game over!")
+                new_state = game_state.model_copy(deep=True)
+                new_state.game_status = "fox_win"
+                new_state.winner = "fox"
+                return new_state
 
             # Prepare context for the geese player
             context = self.prepare_move_context(game_state, "geese")
 
-            try:
-                # Call the geese player engine
-                geese_player = self.engines["geese_player"].create_runnable()
-                response = geese_player.invoke(context)
+            # Try up to 3 times to get a valid move
+            max_attempts = 3
+            for attempt in range(max_attempts):
+                try:
+                    # Call the geese player engine
+                    geese_player = self.engines["geese_player"].create_runnable()
+                    response = geese_player.invoke(context)
 
-                # Extract the move
-                move = self.extract_move(response, "goose")
+                    # Extract the move
+                    move = self.extract_move(response, "goose")
 
-                # Validate move is legal
-                if move not in legal_moves:
-                    print(f"⚠️ LLM move {move} not in legal moves, using fallback")
-                    move = self._get_legal_move_fallback(game_state, "goose")
+                    # Validate move is legal
+                    if move in legal_moves:
+                        # We have a valid move, apply it
+                        logger.info(f"Applying geese move: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
+                    else:
+                        logger.warning(
+                            f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                        )
+                        if attempt == max_attempts - 1:
+                            # Last attempt, use fallback
+                            move = self._get_legal_move_fallback(game_state, "goose")
+                            logger.info(f"Using fallback move: {move}")
+                            new_state = self.state_manager.apply_move(game_state, move)
+                            return new_state
 
-            except Exception as e:
-                print(f"❌ Error calling geese engine: {e}")
-                print("🔄 Using fallback legal move")
-                move = self._get_legal_move_fallback(game_state, "goose")
+                except Exception as e:
+                    logger.error(
+                        f"Attempt {attempt+1}/{max_attempts}: Error calling geese engine: {e}"
+                    )
+                    if attempt == max_attempts - 1:
+                        # Last attempt, use fallback
+                        move = self._get_legal_move_fallback(game_state, "goose")
+                        logger.info(f"Using fallback move after error: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
 
-            # Apply the move
-            print(f"🐺 Applying geese move: {move}")
+            # Fallback in case all attempts fail
+            move = self._get_legal_move_fallback(game_state, "goose")
+            logger.info(f"Using fallback move after all attempts failed: {move}")
             new_state = self.state_manager.apply_move(game_state, move)
-
-            # Return the updated state
             return new_state
 
         except Exception as e:
-            print(f"❌ Critical error in geese move: {e}")
+            logger.error(f"Critical error in geese move: {e}", exc_info=True)
             # Return original state to prevent crashes
-            return game_state
+            return ensure_game_state(state)
 
-    def analyze_fox_position(self, state: dict[str, Any]) -> FoxAndGeeseState:
+    def analyze_fox_position(self, state: FoxAndGeeseState) -> FoxAndGeeseState:
         """Analyze the current position from the Fox's perspective.
 
         Args:
-            state (dict[str, Any]): Current game state.
+            state: Current game state
 
         Returns:
-            FoxAndGeeseState: Updated game state after the analysis.
+            FoxAndGeeseState: Updated game state with analysis
         """
-        # Convert dict to FoxAndGeeseState
-        game_state = FoxAndGeeseState(**state)
+        try:
+            # Ensure we have a proper FoxAndGeeseState
+            game_state = ensure_game_state(state)
 
-        context = {
-            "board_string": game_state.board_string,
-            "turn": game_state.turn,
-            "num_geese": game_state.num_geese,
-            "move_history": "\n".join(
-                [str(move) for move in game_state.move_history[-5:]]
-            ),
-        }
+            context = self.prepare_analysis_context(game_state, "fox")
 
-        fox_analyzer = self.engines["fox_analysis"].create_runnable()
-        analysis = fox_analyzer.invoke(context)
+            try:
+                fox_analyzer = self.engines["fox_analysis"].create_runnable()
+                analysis_response = fox_analyzer.invoke(context)
 
-        # Handle different analysis response types
-        if hasattr(analysis, "content"):
-            # AIMessage with content
-            if isinstance(analysis.content, str):
-                analysis_text = analysis.content
-            else:
-                analysis_text = str(analysis.content)
-        else:
-            analysis_text = str(analysis)
+                # Try to extract structured analysis data
+                analysis = self._extract_analysis_data(analysis_response, "fox")
 
-        new_state = (
-            game_state.model_copy()
-            if hasattr(game_state, "model_copy")
-            else game_state.copy()
-        )
-        new_state.fox_analysis.append(analysis_text)
+                # Create new state with analysis
+                new_state = game_state.model_copy(deep=True)
+                new_state.fox_analysis.append(analysis)
 
-        return new_state
+                logger.debug("Added fox analysis to state")
+                return new_state
 
-    def analyze_geese_position(self, state: dict[str, Any]) -> FoxAndGeeseState:
+            except Exception as e:
+                logger.error(f"Error in fox analysis: {e}")
+                return game_state
+
+        except Exception as e:
+            logger.error(f"Critical error in fox analysis: {e}", exc_info=True)
+            try:
+                return ensure_game_state(state)
+            except:
+                return self.state_manager.initialize()
+
+    def analyze_geese_position(self, state: FoxAndGeeseState) -> FoxAndGeeseState:
         """Analyze the current position from the Geese's perspective.
 
         Args:
-            state (dict[str, Any]): Current game state.
+            state: Current game state
 
         Returns:
-            FoxAndGeeseState: Updated game state after the analysis.
+            FoxAndGeeseState: Updated game state with analysis
         """
-        # Convert dict to FoxAndGeeseState
-        game_state = FoxAndGeeseState(**state)
+        try:
+            # Ensure we have a proper FoxAndGeeseState
+            game_state = ensure_game_state(state)
 
-        context = {
-            "board_string": game_state.board_string,
-            "turn": game_state.turn,
-            "num_geese": game_state.num_geese,
-            "move_history": "\n".join(
-                [str(move) for move in game_state.move_history[-5:]]
-            ),
-        }
+            context = self.prepare_analysis_context(game_state, "geese")
 
-        geese_analyzer = self.engines["geese_analysis"].create_runnable()
-        analysis = geese_analyzer.invoke(context)
+            try:
+                geese_analyzer = self.engines["geese_analysis"].create_runnable()
+                analysis_response = geese_analyzer.invoke(context)
 
-        # Handle different analysis response types
-        if hasattr(analysis, "content"):
-            # AIMessage with content
-            if isinstance(analysis.content, str):
-                analysis_text = analysis.content
+                # Try to extract structured analysis data
+                analysis = self._extract_analysis_data(analysis_response, "geese")
+
+                # Create new state with analysis
+                new_state = game_state.model_copy(deep=True)
+                new_state.geese_analysis.append(analysis)
+
+                logger.debug("Added geese analysis to state")
+                return new_state
+
+            except Exception as e:
+                logger.error(f"Error in geese analysis: {e}")
+                return game_state
+
+        except Exception as e:
+            logger.error(f"Critical error in geese analysis: {e}", exc_info=True)
+            try:
+                return ensure_game_state(state)
+            except:
+                return self.state_manager.initialize()
+
+    def _extract_analysis_data(self, response: Any, perspective: str) -> str:
+        """Extract analysis data from LLM response.
+
+        Args:
+            response: Response from the LLM
+            perspective: The perspective of the analysis ('fox' or 'geese')
+
+        Returns:
+            String representation of the analysis
+        """
+        import json
+        import re
+
+        # Try to extract structured data
+        try:
+            # If it's a FoxAndGeeseAnalysis already
+            if isinstance(response, FoxAndGeeseAnalysis):
+                return str(response)
+
+            # If it has tool_calls directly
+            if hasattr(response, "tool_calls") and response.tool_calls:
+                tool_call = response.tool_calls[0]
+                if hasattr(tool_call, "args") and isinstance(tool_call.args, dict):
+                    analysis = FoxAndGeeseAnalysis.model_validate(tool_call.args)
+                    return str(analysis)
+                elif (
+                    hasattr(tool_call, "function") and "arguments" in tool_call.function
+                ):
+                    args = json.loads(tool_call.function["arguments"])
+                    analysis = FoxAndGeeseAnalysis.model_validate(args)
+                    return str(analysis)
+
+            # If it has tool_calls in additional_kwargs
+            if (
+                hasattr(response, "additional_kwargs")
+                and "tool_calls" in response.additional_kwargs
+            ):
+                tool_calls = response.additional_kwargs["tool_calls"]
+                if tool_calls and len(tool_calls) > 0:
+                    tool_call = tool_calls[0]
+                    if "function" in tool_call and "arguments" in tool_call["function"]:
+                        args = json.loads(tool_call["function"]["arguments"])
+                        analysis = FoxAndGeeseAnalysis.model_validate(args)
+                        return str(analysis)
+
+            # If it has content
+            if hasattr(response, "content"):
+                if isinstance(response.content, FoxAndGeeseAnalysis):
+                    return str(response.content)
+                elif isinstance(response.content, dict):
+                    analysis = FoxAndGeeseAnalysis.model_validate(response.content)
+                    return str(analysis)
+                elif isinstance(response.content, str):
+                    # Try to extract JSON from the string
+                    json_match = re.search(r"\{.*\}", response.content, re.DOTALL)
+                    if json_match:
+                        json_str = json_match.group(0)
+                        parsed = json.loads(json_str)
+                        if isinstance(parsed, dict):
+                            analysis = FoxAndGeeseAnalysis.model_validate(parsed)
+                            return str(analysis)
+                    # Just return the content if we can't parse it
+                    return response.content
+
+            # If it's a dict
+            if isinstance(response, dict):
+                analysis = FoxAndGeeseAnalysis.model_validate(response)
+                return str(analysis)
+
+            # Fallback: convert to string
+            return str(response)
+
+        except Exception as e:
+            logger.warning(f"Failed to extract structured analysis data: {e}")
+            # Return a simple analysis string as fallback
+            if perspective == "fox":
+                return f"Fox analysis: The fox should aim to capture geese while maintaining mobility."
             else:
-                analysis_text = str(analysis.content)
-        else:
-            analysis_text = str(analysis)
+                return f"Geese analysis: The geese should coordinate to restrict the fox's movement."
 
-        new_state = (
-            game_state.model_copy()
-            if hasattr(game_state, "model_copy")
-            else game_state.copy()
-        )
-        new_state.geese_analysis.append(analysis_text)
-
-        return new_state
-
-    def analyze_position(self, state: dict[str, Any]) -> FoxAndGeeseState:
-        """Analyze the current position based on the current turn.
+    def should_continue_game(self, state: FoxAndGeeseState) -> bool:
+        """Determine if the game should continue.
 
         Args:
-            state (dict[str, Any]): Current game state.
+            state: Current game state
 
         Returns:
-            FoxAndGeeseState: Updated game state after the analysis.
+            bool: True if the game should continue, False otherwise
         """
-        # Convert dict to FoxAndGeeseState
-        game_state = FoxAndGeeseState(**state)
+        try:
+            # Convert state to FoxAndGeeseState if needed
+            if isinstance(state, dict):
+                game_state = FoxAndGeeseState.model_validate(state)
+            else:
+                game_state = state
 
-        # Call the appropriate analyzer based on whose turn it is
-        if game_state.turn == "fox":
-            return self.analyze_fox_position(state)
-        else:
-            return self.analyze_geese_position(state)
+            # Check if game is over by status
+            if game_state.game_status != "ongoing":
+                logger.info(f"Game ending: {game_state.game_status}")
+                return False
 
-    def visualize_state(self, state: dict[str, Any]) -> None:
-        """Visualize the current game state.
+            # Check for too many moves (prevent infinite loops)
+            if len(game_state.move_history) >= 100:  # Max 100 moves
+                logger.info("Game ending: Too many moves (100+ moves)")
+                return False
 
-        Args:
-            state (Dict[str, Any]): Current game state.
-        """
-        if not self.config.visualize:
-            return
-
-        # Extract the actual game state from the nested structure
-        # The state might be nested under a node key (like 'initialize', 'fox_move', etc.)
-        game_state_dict = None
-
-        # Check if this is a nested state from the workflow
-        for key, value in state.items():
-            if isinstance(value, dict) and "turn" in value:
-                game_state_dict = value
-                break
-
-        # If no nested state found, assume the state is at the top level
-        if game_state_dict is None:
-            game_state_dict = state
-
-        # Create a FoxAndGeeseState from the dict
-        game_state = FoxAndGeeseState(**game_state_dict)
-
-        print("\n" + "=" * 50)
-        print(f"🎮 Current Player: {game_state.turn}")
-        print(f"📌 Game Status: {game_state.game_status}")
-        print(f"🦊 Fox position: {game_state.fox_position}")
-        print(f"🐺 Geese remaining: {game_state.num_geese}")
-        print("=" * 50)
-
-        # Print the board
-        print("\n" + game_state.board_string)
-
-        # Print last move if available
-        if game_state.move_history:
-            last_move = game_state.move_history[-1]
-            print(f"\n📝 Last Move: {last_move!s}")
-
-        # Print analysis if available
-        if hasattr(game_state, "fox_analysis") and game_state.fox_analysis:
-            print("\n🦊 Latest Fox Analysis:")
-            print(game_state.fox_analysis[-1])
-
-        if hasattr(game_state, "geese_analysis") and game_state.geese_analysis:
-            print("\n🐺 Latest Geese Analysis:")
-            print(game_state.geese_analysis[-1])
-
-        # Add a short delay for readability
-        time.sleep(0.5)
+            return True
+        except Exception as e:
+            logger.error(f"Error in should_continue_game: {e}")
+            return False
 
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
         Creates a dynamic graph with nodes for game initialization, move making,
-        and analysis. Uses conditional branching to ensure only one player moves at a time.
+        and analysis. Uses the base GameAgent workflow pattern.
         """
+        logger.info("Setting up Fox and Geese workflow")
+
         # Create a graph builder
         builder = DynamicGraph(
             state_schema=self.state_schema,
@@ -476,74 +749,213 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         )
 
         # Add nodes for the main game flow
-        builder.add_node("initialize", self.initialize_game)
-        builder.add_node("fox_move", self.make_fox_move)
-        builder.add_node("geese_move", self.make_geese_move)
-        builder.add_node("analyze_fox", self.analyze_fox_position)
-        builder.add_node("analyze_geese", self.analyze_geese_position)
+        builder.add_node("initialize_game", self.initialize_game)
+        builder.add_node("player1_move", self.make_player1_move)  # fox
+        builder.add_node("player2_move", self.make_player2_move)  # geese
 
-        def game_over_node(state: dict[str, Any]) -> FoxAndGeeseState:
-            """Final node for game over state."""
-            return FoxAndGeeseState(**state)
+        # Start the game
+        builder.add_edge(START, "initialize_game")
 
-        # Helper function to check if game is over
-        def should_continue(state: dict) -> str:
-            game_state = FoxAndGeeseState(**state)
+        # Analysis nodes (optional)
+        if self.config.enable_analysis:
+            builder.add_node("player1_analysis", self.analyze_player1)
+            builder.add_node("player2_analysis", self.analyze_player2)
 
-            # Check if game is over by status
-            if game_state.game_status != "ongoing":
-                print(
-                    f"🏁 Game over: {game_state.game_status} - Winner: {game_state.winner}"
-                )
-                return "game_over"
+            # Flow with analysis
+            builder.add_edge("initialize_game", "player1_analysis")
+            builder.add_edge("player1_analysis", "player1_move")
 
-            # Check for too many moves (prevent infinite loops)
-            if len(game_state.move_history) >= 100:  # Max 100 moves
-                print("🏁 Game ended: Too many moves (100+ moves)")
-                return "game_over"
+            builder.add_conditional_edges(
+                "player1_move",
+                self.should_continue_game,
+                {True: "player2_analysis", False: END},
+            )
 
-            return "continue"
+            builder.add_edge("player2_analysis", "player2_move")
 
-        # Set up linear flow to prevent concurrent updates
-        builder.add_edge(START, "initialize")
-        builder.add_edge("initialize", "fox_move")  # Start with fox
+            builder.add_conditional_edges(
+                "player2_move",
+                self.should_continue_game,
+                {True: "player1_analysis", False: END},
+            )
+        else:
+            # Simplified flow without analysis
+            builder.add_edge("initialize_game", "player1_move")
 
-        # Add conditional edges for game termination
-        builder.add_conditional_edges(
-            "fox_move",
-            should_continue,
-            {"continue": "analyze_fox", "game_over": "game_over"},
-        )
-        builder.add_edge("analyze_fox", "geese_move")
+            builder.add_conditional_edges(
+                "player1_move",
+                self.should_continue_game,
+                {True: "player2_move", False: END},
+            )
 
-        builder.add_conditional_edges(
-            "geese_move",
-            should_continue,
-            {"continue": "analyze_geese", "game_over": "game_over"},
-        )
-        builder.add_edge("analyze_geese", "fox_move")  # Back to fox for next turn
+            builder.add_conditional_edges(
+                "player2_move",
+                self.should_continue_game,
+                {True: "player1_move", False: END},
+            )
 
         # Build the graph
-        self.graph = builder.build()
+        self.graph = builder
+        self.graph.build()
+        logger.info("Fox and Geese workflow setup complete")
 
-    def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run the full Fox and Geese game, optionally visualizing each step.
+    def run_game_with_ui(self, delay: float = 2.0) -> FoxAndGeeseState:
+        """Run the full Fox and Geese game with UI visualization.
 
         Args:
-            visualize (bool): Whether to visualize the game state.
+            delay: Delay between moves in seconds
 
         Returns:
-            Dict[str, Any]: Final game state after completion.
+            FoxAndGeeseState: Final game state after completion
         """
+        if not self.ui:
+            logger.error("UI not available - falling back to regular run")
+            result = self.run_game(visualize=False)
+            return (
+                result
+                if isinstance(result, FoxAndGeeseState)
+                else self.state_manager.initialize()
+            )
+
+        logger.info("Starting Fox and Geese game with UI")
+
+        # Display welcome
+        self.ui.display_welcome()
+        time.sleep(2)
+
         # Initialize game state
         initial_state = self.state_manager.initialize()
 
-        # Run the game
-        game_state = self.stream(initial_state, stream_mode="values")
+        # Create live display
+        with Live(self.ui.create_layout(initial_state), refresh_per_second=4) as live:
+            final_state = initial_state
 
-        # Visualize the game if requested
-        if visualize:
-            for state in game_state:
-                self.visualize_state(state)
-            return state  # Final state
-        return super().run(initial_state)
+            try:
+                # Run the game using agent.stream()
+                logger.debug(
+                    f"Starting stream with initial state type: {type(initial_state)}"
+                )
+
+                step_count = 0
+                for state_update in self.stream(
+                    initial_state, stream_mode="values", debug=True
+                ):
+                    step_count += 1
+                    logger.debug(f"Stream step {step_count}: Received state update")
+
+                    # Handle None state from stream
+                    if state_update is None:
+                        logger.warning("Received None state from stream, skipping")
+                        continue
+
+                    # Debug the state update
+                    # self.ui.print_debug_info(state_update, f"step {step_count}")
+
+                    # Extract the game state and update display
+                    game_state = self.ui.extract_game_state(state_update)
+                    if game_state:
+                        # Update the live display
+                        live.update(self.ui.create_layout(game_state))
+                        final_state = game_state
+
+                        # Check if game is over
+                        if game_state.game_status != "ongoing" or self.game_over:
+                            logger.info(
+                                f"Game completed with status: {game_state.game_status}"
+                            )
+                            time.sleep(delay * 2)  # Show final state longer
+                            break
+
+                        # Delay between moves
+                        time.sleep(delay)
+                    else:
+                        logger.warning(
+                            "Could not extract game state from stream update"
+                        )
+
+                logger.info(f"Stream completed after {step_count} steps")
+
+            except Exception as e:
+                logger.error(f"Error during game execution: {e}", exc_info=True)
+                self.console.print(f"[red]Error during game: {e}[/red]")
+
+        # Display final results
+        if final_state and self.ui:
+            self.ui.display_final_results(final_state)
+
+        return final_state
+
+    def run_game(self, visualize: bool = True) -> FoxAndGeeseState:
+        """Run the full Fox and Geese game, optionally visualizing each step.
+
+        Args:
+            visualize: Whether to visualize the game state
+
+        Returns:
+            FoxAndGeeseState: Final game state after completion
+        """
+        if visualize and self.config.visualize and self.ui:
+            return self.run_game_with_ui()
+
+        logger.info("Running game without UI")
+
+        # Initialize game state
+        initial_state = self.state_manager.initialize()
+        logger.debug(f"Initial state type: {type(initial_state)}")
+
+        final_state = initial_state
+
+        try:
+            step_count = 0
+
+            # Use the stream method from the base Agent class
+            for state_update in self.stream(
+                initial_state, stream_mode="values", debug=True
+            ):
+                step_count += 1
+                logger.debug(f"Game step {step_count}: Received state update")
+
+                # Handle None state from stream
+                if state_update is None:
+                    logger.warning("Received None state from stream, skipping")
+                    continue
+
+                # Extract game state from the update
+                if isinstance(state_update, FoxAndGeeseState):
+                    game_state = state_update
+                elif isinstance(state_update, dict):
+                    try:
+                        game_state = FoxAndGeeseState.model_validate(state_update)
+                    except Exception as e:
+                        logger.warning(
+                            f"Could not convert state update to FoxAndGeeseState: {e}"
+                        )
+                        continue
+                else:
+                    logger.warning(
+                        f"Unexpected state update type: {type(state_update)}"
+                    )
+                    continue
+
+                # Update final state
+                final_state = game_state
+
+                # Visualize if requested
+                if visualize:
+                    self.visualize_state(game_state)
+
+                # Check if game is over
+                if game_state.game_status != "ongoing":
+                    logger.info(f"Game completed with status: {game_state.game_status}")
+                    break
+
+                # Add small delay for better visualization
+                time.sleep(0.5)
+
+            logger.info(f"Game completed after {step_count} steps")
+            return final_state
+
+        except Exception as e:
+            logger.error(f"Error during game execution: {e}", exc_info=True)
+            # Return the last valid state we had
+            return final_state if final_state else self.state_manager.initialize()

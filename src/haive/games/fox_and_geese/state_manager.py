@@ -22,15 +22,28 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     @classmethod
     def initialize(cls) -> FoxAndGeeseState:
         """Initialize a new Fox and Geese game."""
+        print("Attempting to initialize Fox and Geese game")
+
         # Fox starts at the center
         fox_position = FoxAndGeesePosition(row=3, col=3)
+        # print('created fox position')
 
-        # Geese start at the top
-        geese_positions = set()
-        for col in range(7):
-            if col % 2 == 0:  # Only on white squares
-                geese_positions.add(FoxAndGeesePosition(row=0, col=col))
-                geese_positions.add(FoxAndGeesePosition(row=1, col=col))
+        # Geese start at the top - create as list first, then convert to set
+        geese_list = []
+
+        # Place geese on the first two rows in a checkerboard pattern
+        for row in range(2):  # First two rows (0 and 1)
+            for col in range(7):
+                # Only place on "valid" squares (checkerboard pattern)
+                # For a 7x7 board, we typically use alternating squares
+                if (row + col) % 2 == 0:  # Checkerboard pattern
+                    geese_list.append(FoxAndGeesePosition(row=row, col=col))
+
+        # Convert to set after creating all positions
+        geese_positions = set(geese_list)
+
+        # Ensure FoxAndGeesePosition is hashable by adding __hash__ method if needed
+        # Or use frozenset if that's causing issues
 
         return FoxAndGeeseState(
             fox_position=fox_position,
@@ -38,7 +51,10 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
             turn="fox",  # Fox goes first
             game_status="ongoing",
             move_history=[],
+            winner=None,  # Explicitly set winner to None
             num_geese=len(geese_positions),
+            fox_analysis=[],  # Initialize empty analysis lists
+            geese_analysis=[],
         )
 
     @classmethod
