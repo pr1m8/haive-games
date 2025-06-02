@@ -1,237 +1,186 @@
+#!/usr/bin/env python3
+"""
+Example Word Connections game with interactive UI.
+Uses the May 22, 2025 puzzle (#711).
+"""
+
+import asyncio
+from typing import List, Optional
+
 from haive.games.single_player.wordle.agent import WordConnectionsAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
-from haive.games.single_player.wordle.state_manager import WordConnectionsStateManager
+from haive.games.single_player.wordle.models import WordConnectionsState
 
 
-def run_word_connections_game(source="internal", categories=None, auto_analyze=True):
-    """Run a Word Connections game with visualization.
+class WordConnectionsUI:
+    """Interactive UI for Word Connections game."""
 
-    Args:
-        source (str): Source of game data ('internal' or 'nyt')
-        categories (List[str], optional): Specific categories to use
-        auto_analyze (bool): Whether to automatically analyze before each move
-    """
-    # Create agent with appropriate config
-    config = WordConnectionsAgentConfig(
-        enable_analysis=auto_analyze, visualize=True, auto_submit=False, source=source
-    )
+    def __init__(self):
+        self.config = WordConnectionsAgentConfig(visualize=True)
+        self.agent = WordConnectionsAgent(self.config)
+        self.state: Optional[WordConnectionsState] = None
 
-    if categories:
-        config.categories = categories
-
-    agent = WordConnectionsAgent(config)
-
-    # Run the game
-    print("\n🎮 Starting Word Connections Game")
-    print("=" * 60)
-    print("Game Rules:")
-    print("1. Find groups of 4 words that form a category")
-    print("2. Each category has a difficulty level (yellow: easiest, purple: hardest)")
-    print("3. You have 4 incorrect attempts before the game ends")
-    print("4. The goal is to find all 4 categories")
-    print("=" * 60)
-
-    # Initialize the game
-    game_state = agent.initialize_game({})
-
-    # Stream through the game steps
-    for step in agent.app.stream(
-        game_state, config=agent.runnable_config, debug=True, stream_mode="values"
-    ):
-        # Visualize the game state
-        agent.visualize_state(step)
-
-        # Check for errors
-        if step.get("error_message"):
-            print(f"\n❌ Error: {step['error_message']}")
-
-        # Check for game over
-        if step.get("game_status") != "ongoing":
-            break
-
-    # Save game history
-    agent.save_state_history()
-    print("\n✅ Game Complete!")
-
-
-def run_interactive_word_connections_game(source="internal", categories=None):
-    """Run an interactive version of Word Connections where the user makes selections.
-
-    Args:
-        source (str): Source of game data ('internal' or 'nyt')
-        categories (List[str], optional): Specific categories to use
-    """
-    # Create agent with config
-    config = WordConnectionsAgentConfig(
-        enable_analysis=True, visualize=True, auto_submit=False, source=source
-    )
-
-    if categories:
-        config.categories = categories
-
-    agent = WordConnectionsAgent(config)
-
-    # Run the game
-    print("\n🎮 Starting Word Connections Game - Interactive Mode")
-    print("=" * 60)
-    print("Game Rules:")
-    print("1. Find groups of 4 words that form a category")
-    print("2. Each category has a difficulty level (yellow: easiest, purple: hardest)")
-    print("3. You have 4 incorrect attempts before the game ends")
-    print("4. The goal is to find all 4 categories")
-    print("\nInteractive Commands:")
-    print("- Enter a number (0-15) to select/deselect a word")
-    print("- Type 'submit' to submit your current selection")
-    print("- Type 'analyze' to get an analysis of the board")
-    print("- Type 'auto' to let the AI make the next move")
-    print("- Type 'quit' to exit the game")
-    print("=" * 60)
-
-    # Initialize the game state
-    state = WordConnectionsStateManager.initialize(source=source, categories=categories)
-
-    # Main game loop
-    game_over = False
-    while not game_over:
-        # Display the current state
+    def display_grid(self, state: WordConnectionsState):
+        """Display the game grid in a nice format."""
         print("\n" + "=" * 60)
-        print("🎮 Word Connections Game")
-        if state.game_source == "nyt":
-            print(f"📅 NYT Connections {state.game_date}")
-        print(f"📌 Status: {state.game_status.upper()}")
-        print(f"🏆 Categories found: {len(state.discovered_groups)}/4")
+        print("🎮 WORD CONNECTIONS - Puzzle #711 (May 22, 2025)")
         print("=" * 60)
 
-        # Print the board
-        print("\n" + state.board_string)
+        remaining = state.remaining_words
 
-        # Check for game over
-        if state.game_status != "ongoing":
-            if state.game_status == "victory":
-                print("\n🎉 Congratulations! You've solved all categories!")
-            elif state.game_status == "defeat":
-                print("\n❌ Game over! You've run out of attempts.")
+        if not remaining:
+            print("\n🎉 ALL CATEGORIES FOUND! 🎉\n")
+        else:
+            print("\nREMAINING WORDS:")
+            print("-" * 60)
 
-                # Show remaining categories
-                if len(state.discovered_groups) < len(state.categories):
-                    print("\nRemaining categories were:")
-                    for category, words in state.categories.items():
-                        if category not in state.discovered_groups:
-                            print(f"- {category}: {', '.join(words)}")
-            game_over = True
-            break
+            # Display in 4x4 grid
+            for i in range(0, len(remaining), 4):
+                row = remaining[i : i + 4]
+                # Pad if needed
+                while len(row) < 4:
+                    row.append("[SOLVED]")
 
-        # Get user input
-        command = (
-            input("\nEnter command (0-15, submit, analyze, auto, quit): ")
-            .strip()
-            .lower()
+                # Print row with nice spacing
+                for word in row:
+                    if word == "[SOLVED]":
+                        print(f"{word:15}", end="")
+                    else:
+                        print(f"{word:15}", end="")
+                print()  # New line after each row
+
+        # Show found categories
+        if state.found_categories:
+            print("\n" + "-" * 60)
+            print("FOUND CATEGORIES:")
+            print("-" * 60)
+
+            difficulty_order = ["yellow", "green", "blue", "purple"]
+            emoji_map = {"yellow": "🟨", "green": "🟩", "blue": "🟦", "purple": "🟪"}
+
+            # Sort by difficulty
+            sorted_categories = sorted(
+                state.found_categories.items(),
+                key=lambda x: difficulty_order.index(
+                    state.difficulty_map.get(x[0], "yellow")
+                ),
+            )
+
+            for category, words in sorted_categories:
+                difficulty = state.difficulty_map.get(category, "")
+                emoji = emoji_map.get(difficulty, "")
+                print(f"{emoji} {category.upper()}")
+                print(f"   {', '.join(words)}")
+
+        # Show mistakes
+        print("\n" + "-" * 60)
+        print(
+            f"Mistakes Remaining: {'❌' * state.mistakes_remaining}{'⭕' * (4 - state.mistakes_remaining)}"
         )
 
-        if command == "quit":
-            print("Exiting game...")
-            break
+        # Show incorrect guesses
+        if state.incorrect_guesses:
+            print("\nPrevious Incorrect Guesses:")
+            for i, guess in enumerate(state.incorrect_guesses, 1):
+                print(f"  {i}. {', '.join(guess)}")
 
-        if command == "submit":
-            # Submit current selection
-            state = WordConnectionsStateManager.submit_selection(state)
+    def display_solution(self, state: WordConnectionsState):
+        """Display the full solution."""
+        print("\n" + "=" * 60)
+        print("COMPLETE SOLUTION:")
+        print("=" * 60)
 
-        elif command == "analyze":
-            # Analyze the position
-            analyzer = agent.engines.get("game_analyzer")
-            if analyzer:
-                try:
-                    analysis_context = agent.prepare_analysis_context(state)
-                    analysis = analyzer.invoke(analysis_context)
-                    analysis_dict = (
-                        analysis.model_dump()
-                        if hasattr(analysis, "model_dump")
-                        else analysis.dict()
-                    )
+        difficulty_order = ["yellow", "green", "blue", "purple"]
+        emoji_map = {"yellow": "🟨", "green": "🟩", "blue": "🟦", "purple": "🟪"}
 
-                    print("\n🔍 Analysis:")
+        # Sort categories by difficulty
+        sorted_cats = sorted(
+            state.categories.items(),
+            key=lambda x: difficulty_order.index(
+                state.difficulty_map.get(x[0], "yellow")
+            ),
+        )
 
-                    # Print potential groups
-                    if (
-                        hasattr(analysis, "potential_groups")
-                        and analysis.potential_groups
-                    ):
-                        print("\nPotential Groups:")
-                        for i, group in enumerate(analysis.potential_groups[:3]):
-                            if "category" in group and "words" in group:
-                                print(
-                                    f"{i+1}. {group['category']}: {', '.join(group['words'])}"
-                                )
+        for category, words in sorted_cats:
+            difficulty = state.difficulty_map.get(category, "")
+            emoji = emoji_map.get(difficulty, "")
+            found = "✓" if category in state.found_categories else "✗"
 
-                    # Print difficult words
-                    if (
-                        hasattr(analysis, "difficult_words")
-                        and analysis.difficult_words
-                    ):
-                        print("\nAmbiguous Words:")
-                        print(", ".join(analysis.difficult_words[:8]))
+            print(f"\n{emoji} {category.upper()} {found}")
+            print(f"   {', '.join(words)}")
 
-                    # Print strategy
-                    if hasattr(analysis, "strategy") and analysis.strategy:
-                        print("\nStrategy:")
-                        strategy = analysis.strategy
-                        if len(strategy) > 150:
-                            print(f"{strategy[:150]}...")
-                        else:
-                            print(strategy)
+    async def play_game(self):
+        """Play the game with AI assistance."""
+        # Initialize with the May 22, 2025 puzzle
+        self.state = self.agent.initialize_game(
+            puzzle_data={
+                "categories": {
+                    "Fine print": ["ASTERISK", "CATCH", "CONDITION", "STRINGS"],
+                    "Characters with green skin": [
+                        "ELPHABA",
+                        "GRINCH",
+                        "HULK",
+                        "SHREK",
+                    ],
+                    "Features of the National Mall in D.C.": [
+                        "CAPITOL",
+                        "MALL",
+                        "OBELISK",
+                        "POOL",
+                    ],
+                    "Famous riddle-givers": [
+                        "BRIDGE TROLL",
+                        "MAD HATTER",
+                        "RIDDLER",
+                        "SPHINX",
+                    ],
+                },
+                "difficulties": {
+                    "Fine print": "yellow",
+                    "Characters with green skin": "green",
+                    "Features of the National Mall in D.C.": "blue",
+                    "Famous riddle-givers": "purple",
+                },
+            }
+        )
 
-                    # Update state with analysis
-                    state.analysis_history.append(analysis_dict)
+        print("\n" + "🎮" * 20)
+        print("\n  WELCOME TO WORD CONNECTIONS!")
+        print("\n  Find groups of 4 words that share something in common.")
+        print("  You have 4 mistakes allowed.")
+        print("\n" + "🎮" * 20)
 
-                except Exception as e:
-                    print(f"Error in analysis: {e}")
-            else:
-                print("Analysis engine not available.")
+        # Display initial state
+        self.display_grid(self.state)
 
-        elif command == "auto":
-            # Let the AI make a move
-            print(agent.engines)
-            engine = agent.engines.get("player_move")
-            if engine:
-                try:
-                    print(move_context)
-                    print(engine)
-                    move_context = agent.prepare_move_context(state)
-                    response = engine.invoke(move_context)
-                    move = agent.extract_move(response)
-                    print(move_context)
-                    print(response)
-                    print(f"\nAI suggests: {', '.join(move.words)}")
-                    print(f"Reasoning: {response.reasoning[:200]}...")
+        # The agent's app property is the compiled graph
+        # We invoke it directly
+        result = await self.agent.graph.ainvoke(
+            self.state.model_dump(), {"recursion_limit": 10}
+        )
 
-                    confirm = input("Apply this move? (y/n): ").strip().lower()
-                    if confirm == "y":
-                        state = WordConnectionsStateManager.apply_move(state, move)
-                except Exception as e:
-                    print(f"Error in AI move: {e}")
-            else:
-                print("Move engine not available.")
+        # Display final results
+        final_state = WordConnectionsState(**result)
+
+        print("\n" + "=" * 60)
+        if final_state.game_status == "won":
+            print("🎉 CONGRATULATIONS! YOU SOLVED ALL CATEGORIES! 🎉")
         else:
-            # Try to parse as a cell index
-            try:
-                cell_index = int(command)
-                if 0 <= cell_index < 16:
-                    state = WordConnectionsStateManager.select_cell(state, cell_index)
-                else:
-                    print("Invalid cell index. Must be between 0 and 15.")
-            except ValueError:
-                print("Invalid command.")
+            print("😔 GAME OVER - Better luck next time!")
 
-    print("\n✅ Game Complete!")
+        self.display_solution(final_state)
+
+        print("\n" + "=" * 60)
+        print(f"Final Score: {len(final_state.found_categories)}/4 categories found")
+        print("=" * 60)
+
+
+async def main():
+    """Run the example game."""
+    ui = WordConnectionsUI()
+    await ui.play_game()
 
 
 if __name__ == "__main__":
-    # Choose your game mode
-    # Mode 1: Fully automated with AI analysis and moves
-    # run_word_connections_game(source="internal")
-
-    # Mode 2: Interactive where you select the words
-    run_interactive_word_connections_game(source="internal")
-
-    # To play today's NYT Connections (requires selenium or playwright):
-    # run_interactive_word_connections_game(source="nyt")
+    # Run the async game
+    asyncio.run(main())

@@ -1,34 +1,9 @@
 from enum import Enum
-from typing import Literal
+from typing import Literal, Optional
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator
 
 from haive.games.framework.base import GameState
-
-
-class WordCell(BaseModel):
-    """Represents a cell in the Word Connections grid."""
-
-    word: str = Field(..., description="The word in this cell")
-    index: int = Field(..., description="Position index in the grid (0-15)")
-    selected: bool = Field(
-        default=False, description="Whether this cell is currently selected"
-    )
-    solved: bool = Field(
-        default=False,
-        description="Whether this cell has been solved (part of a found group)",
-    )
-    category: str | None = Field(
-        default=None, description="Category this word belongs to (once discovered)"
-    )
-
-    def __str__(self):
-        status = ""
-        if self.solved:
-            status = " (Solved)"
-        elif self.selected:
-            status = " (Selected)"
-        return f"{self.word}{status}"
 
 
 class WordConnectionsMove(BaseModel):
@@ -37,231 +12,86 @@ class WordConnectionsMove(BaseModel):
     words: list[str] = Field(
         ..., description="Set of 4 words that the player believes are connected"
     )
-    category_guess: str | None = Field(
-        default=None, description="Player's guess about what connects these words"
-    )
-    indices: list[int] | None = Field(
-        default=None, description="Indices of the selected cells"
-    )
-    result: str | None = Field(
-        default=None, description="Result of this move (correct, incorrect)"
+    category_guess: str = Field(
+        ..., description="Player's guess about what connects these words"
     )
 
-    @model_validator(mode="after")
-    def validate_length(self):
+    @field_validator("words")
+    @classmethod
+    def validate_words_length(cls, v):
         """Validate that exactly 4 words are provided."""
-        if len(self.words) != 4:
-            raise ValueError(f"Must select exactly 4 words, selected {len(self.words)}")
-        return self
-
-    def __str__(self):
-        """String representation of the move."""
-        result_str = ""
-        if self.result:
-            result_str = f" - {self.result.upper()}"
-
-        if self.category_guess:
-            return f"Group: {', '.join(self.words)} (Category guess: {self.category_guess}){result_str}"
-        return f"Group: {', '.join(self.words)}{result_str}"
-
-
-class WordConnectionsAnalysis(BaseModel):
-    """Analysis of a Word Connections position."""
-
-    potential_groups: list[dict[str, list[str]]] = Field(
-        default_factory=list,
-        description="Potential groupings with category names and word lists",
-    )
-    difficult_words: list[str] = Field(
-        default_factory=list, description="Words that are difficult to categorize"
-    )
-    patterns_observed: list[str] = Field(
-        default_factory=list,
-        description="Patterns or themes observed in the remaining words",
-    )
-    strategy: str = Field(
-        default="", description="Strategic recommendations for the next move"
-    )
-    previous_attempt_analysis: str = Field(
-        default="", description="Analysis of why previous attempts may have failed"
-    )
-
-
-class GameSource(str, Enum):
-    """Source of the game data."""
-
-    INTERNAL = "internal"
-    NYT = "nyt"
+        if len(v) != 4:
+            raise ValueError(f"Must select exactly 4 words, selected {len(v)}")
+        return v
 
 
 class WordConnectionsState(GameState):
     """State for a Word Connections game."""
 
-    # Grid and word tracking
-    cells: list[WordCell] = Field(
-        ..., description="Grid cells with words and their states"
-    )
-    remaining_words: list[str] = Field(
-        ..., description="Words still available on the grid"
-    )
-
-    # Game progress tracking
-    discovered_groups: dict[str, list[str]] = Field(
-        default_factory=dict,
-        description="Groups that have been correctly identified with their category",
-    )
-    incorrect_attempts: list[list[str]] = Field(
-        default_factory=list,
-        description="List of incorrect word groups that have been attempted",
-    )
-    attempts_remaining: int = Field(
-        default=4, description="Number of incorrect attempts allowed before game ends"
-    )
-    incorrect_submissions: int = Field(
-        default=0, description="Number of incorrect submissions made"
-    )
-
-    # Game definition (private to the game)
+    # Core game data
+    grid: list[str] = Field(..., description="16 words in the grid")
     categories: dict[str, list[str]] = Field(
-        ...,
-        description="The correct categories and word groupings (hidden from players during game)",
+        ..., description="The correct categories (hidden from player)"
     )
-    category_difficulty: dict[str, str] = Field(
-        default_factory=dict,
-        description="Difficulty level for each category (yellow, green, blue, purple from easiest to hardest)",
+    difficulty_map: dict[str, str] = Field(
+        ..., description="Difficulty level for each category"
     )
 
-    # Game metadata
-    game_source: GameSource = Field(
-        default=GameSource.INTERNAL,
-        description="Source of the game data (internal or NYT)",
+    # Game progress
+    found_categories: dict[str, list[str]] = Field(
+        default_factory=dict, description="Categories found so far"
     )
-    game_date: str | None = Field(
-        default=None, description="Date of the game if from NYT"
+    incorrect_guesses: list[list[str]] = Field(
+        default_factory=list, description="Previous incorrect guesses"
+    )
+    mistakes_remaining: int = Field(
+        default=4, description="Mistakes allowed before game over"
     )
 
     # Game state
-    turn: str = Field(
-        default="player",
-        description="Current player's turn (always 'player' in single-player mode)",
-    )
-    game_status: Literal["ongoing", "victory", "defeat"] = Field(
-        default="ongoing", description="Status of the game"
-    )
-    move_history: list[WordConnectionsMove] = Field(
-        default_factory=list, description="History of moves"
-    )
-    analysis_history: list[dict] = Field(
-        default_factory=list, description="History of analyses"
-    )
-    score: int = Field(default=0, description="Number of categories found")
-
-    # Current selection tracking
-    selected_indices: list[int] = Field(
-        default_factory=list, description="Currently selected cell indices"
-    )
+    game_status: Literal["playing", "won", "lost"] = Field(default="playing")
 
     @property
-    def board_string(self) -> str:
-        """Get a string representation of the board."""
-        if not self.remaining_words:
-            return "All words have been grouped successfully!"
+    def remaining_words(self) -> list[str]:
+        """Get words not yet correctly categorized."""
+        found_words = set()
+        for words in self.found_categories.values():
+            found_words.update(words)
+        return [w for w in self.grid if w not in found_words]
 
-        # Create a visual representation of the 4x4 grid
-        display = "Current Word Grid:\n\n"
+    @property
+    def display_grid(self) -> str:
+        """Display the current grid state."""
+        remaining = self.remaining_words
 
-        # Find the maximum length for formatting
-        max_len = max(len(cell.word) for cell in self.cells)
+        if not remaining:
+            return "All categories found!"
 
-        # Format in a 4x4 grid with cell states
-        for i in range(0, 16, 4):
-            row_cells = self.cells[i : i + 4]
-            row = []
-            for cell in row_cells:
-                word = cell.word
+        # Create 4x4 display
+        display = "WORD CONNECTIONS GRID:\n\n"
 
-                # Format based on cell state
-                if cell.solved:
-                    # Show solved words with their category color
-                    category = cell.category or ""
-                    difficulty = self.category_difficulty.get(category, "")
-                    color_code = {
-                        "yellow": "🟨",
-                        "green": "🟩",
-                        "blue": "🟦",
-                        "purple": "🟪",
-                    }.get(difficulty, "")
-                    formatted = f"{color_code} {word.ljust(max_len)}"
-                elif cell.selected or cell.index in self.selected_indices:
-                    # Show selected words with indicator
-                    formatted = f"✓ {word.ljust(max_len)}"
-                else:
-                    # Show normal words
-                    formatted = f"  {word.ljust(max_len)}"
+        # Show remaining words in a grid
+        for i in range(0, len(remaining), 4):
+            row = remaining[i : i + 4]
+            # Pad row if needed
+            while len(row) < 4:
+                row.append("[SOLVED]")
+            display += "  ".join(f"{word:12}" for word in row) + "\n"
 
-                row.append(formatted)
-
-            display += " | ".join(row) + "\n"
-            if i < 12:  # Don't add a separator after the last row
-                display += "-" * (max_len * 4 + 20) + "\n"
-
-        # Add cell indices for reference
-        display += "\nCell indices for reference:\n"
-        for i in range(0, 16, 4):
-            indices = [str(j).ljust(max_len) for j in range(i, i + 4)]
-            display += "  " + " | ".join(indices) + "\n"
-
-        # Add information about discovered groups
-        if self.discovered_groups:
-            display += "\nDiscovered Groups:\n"
-            for category, words in self.discovered_groups.items():
-                difficulty = self.category_difficulty.get(category, "")
-                color_code = {
+        # Show found categories
+        if self.found_categories:
+            display += "\nFOUND CATEGORIES:\n"
+            for category, words in self.found_categories.items():
+                difficulty = self.difficulty_map.get(category, "")
+                emoji = {
                     "yellow": "🟨",
                     "green": "🟩",
                     "blue": "🟦",
                     "purple": "🟪",
                 }.get(difficulty, "")
-                display += f"{color_code} {category}: {', '.join(words)}\n"
+                display += f"{emoji} {category}: {', '.join(words)}\n"
 
-        # Add information about incorrect attempts
-        if self.incorrect_attempts:
-            display += "\nIncorrect Attempts:\n"
-            for i, attempt in enumerate(self.incorrect_attempts):
-                display += f"{i+1}. {', '.join(attempt)}\n"
-
-        # Add attempts information
-        display += f"\nIncorrect submissions: {self.incorrect_submissions}/4"
-        display += f"\nAttempts remaining: {self.attempts_remaining}"
-
-        # Add currently selected words
-        if self.selected_indices:
-            selected_words = [self.cells[i].word for i in self.selected_indices]
-            display += f"\n\nCurrently selected: {', '.join(selected_words)}"
+        # Show mistakes
+        display += f"\nMistakes remaining: {self.mistakes_remaining}/4"
 
         return display
-
-
-class WordConnectionsPlayerDecision(BaseModel):
-    """Decision made by a player in Word Connections."""
-
-    move: WordConnectionsMove = Field(..., description="The move to make")
-    reasoning: str = Field(..., description="Reasoning behind the move")
-    confidence: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=1.0,
-        description="Confidence level in this grouping (0-1)",
-    )
-    alternative_groups: list[dict[str, list[str]]] = Field(
-        default_factory=list, description="Alternative groupings considered"
-    )
-
-    @model_validator(mode="after")
-    def validate_move(self):
-        """Ensure the move contains exactly 4 words."""
-        if len(self.move.words) != 4:
-            raise ValueError(
-                f"A move must contain exactly 4 words, got {len(self.move.words)}"
-            )
-        return self

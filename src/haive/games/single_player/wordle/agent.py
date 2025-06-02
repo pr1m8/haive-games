@@ -1,167 +1,270 @@
-import time
-from typing import Any
+from typing import Any, Dict
 
 from haive.core.engine.agent.agent import register_agent
-from langgraph.types import Command
+from langgraph.graph import END, START, StateGraph
 
 from haive.games.framework.base import GameAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
 from haive.games.single_player.wordle.models import (
     WordConnectionsMove,
-    WordConnectionsPlayerDecision,
     WordConnectionsState,
 )
-from haive.games.single_player.wordle.state_manager import WordConnectionsStateManager
 
 
 @register_agent(WordConnectionsAgentConfig)
 class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
     """Agent for playing the Word Connections game."""
 
-    def __init__(
-        self, config: WordConnectionsAgentConfig = WordConnectionsAgentConfig()
-    ):
-        """Initialize the Word Connections agent."""
-        super().__init__(config)
-        self.state_manager = WordConnectionsStateManager
+    def setup_workflow(self) -> None:
+        """Set up the game workflow using the graph_builder."""
+        # Add nodes to the existing graph_builder
+        self.graph_builder.add_node("play_turn", self.play_turn)
 
-    def prepare_move_context(
-        self, state: WordConnectionsState, player: str
-    ) -> dict[str, Any]:
-        """Prepare context for move generation."""
-        # Format recent moves for display
-        formatted_move_history = []
-        for move in state.move_history[-5:]:  # Last 5 moves
-            formatted_move_history.append(f"{move}")
-
-        # Initialize player analysis
-        player_analysis = {}
-
-        # Get analysis if available
-        if player == "player1" and state.player1_analysis:
-            player_analysis = state.player1_analysis[-1]
-        elif player == "player2" and state.player2_analysis:
-            player_analysis = state.player2_analysis[-1]
-
-        # Prepare the context
-        return Command(
-            update={
-                "board": state.board_string,
-                "turn": state.turn,
-                "player": player,
-                "move_history": formatted_move_history,
-                "player_analysis": player_analysis,
-                "player1_score": state.player1_score,
-                "player2_score": state.player2_score,
-            }
+        # Add edges
+        self.graph_builder.add_edge(START, "play_turn")
+        self.graph_builder.add_conditional_edges(
+            "play_turn", self.should_continue, {True: "play_turn", False: END}
         )
 
-    def extract_move(
-        self, response: WordConnectionsPlayerDecision
-    ) -> WordConnectionsMove:
-        """Extract move from engine response."""
-        return response.move
+        # Compile the graph (this sets self.graph internally)
+        self.compile()
 
-    def make_player1_move(self, state: WordConnectionsState) -> Command:
-        """Make a move for player1."""
-        return self.make_move(state, "player1")
-
-    def make_player2_move(self, state: WordConnectionsState) -> Command:
-        """Make a move for player2."""
-        return self.make_move(state, "player2")
-
-    def prepare_analysis_context(
-        self, state: WordConnectionsState, player: str
-    ) -> dict[str, Any]:
-        """Prepare context for position analysis."""
-        # Format recent moves for display
-        formatted_move_history = []
-        for move in state.move_history[-5:]:  # Last 5 moves
-            formatted_move_history.append(f"{move}")
-
-        return {
-            "board": state.board_string,
-            "turn": state.turn,
-            "player": player,
-            "move_history": formatted_move_history,
-            "player1_score": state.player1_score,
-            "player2_score": state.player2_score,
-        }
-
-    def analyze_player1(self, state: WordConnectionsState) -> Command:
-        """Analyze position for player1."""
-        return self.analyze_position(state, "player1")
-
-    def analyze_player2(self, state: WordConnectionsState) -> Command:
-        """Analyze position for player2."""
-        return self.analyze_position(state, "player2")
-
-    def should_continue_game(self, state: WordConnectionsState) -> bool:
-        """Check if the game should continue."""
-        return state.game_status == "ongoing"
-
-    def visualize_state(self, state: dict[str, Any]) -> None:
-        """Visualize the current game state."""
-        # Create a WordConnectionsState from the dict
+    def play_turn(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Play one turn of the game."""
         game_state = WordConnectionsState(**state)
 
-        print("\n" + "=" * 60)
-        print("🎮 Word Connections Game")
-        if game_state.game_source == "nyt":
-            print(f"📅 NYT Connections {game_state.game_date}")
-        print(f"📌 Status: {game_state.game_status.upper()}")
-        print(f"🏆 Categories found: {len(game_state.discovered_groups)}/4")
-        print("=" * 60)
+        if game_state.game_status != "playing":
+            return state
 
-        # Print the board
-        print("\n" + game_state.board_string)
+        # Display current state
+        if self.config.visualize:
+            print("\n" + "=" * 50)
+            print(game_state.display_grid)
+            print("=" * 50)
 
-        # Print last move if available
-        if game_state.move_history:
-            last_move = game_state.move_history[-1]
-            print(f"\n📝 Last Move: {last_move}")
+        # Format context for LLM
+        context = {
+            "display_grid": game_state.display_grid,
+            "incorrect_guesses": (
+                "\n".join(
+                    [f"- {', '.join(guess)}" for guess in game_state.incorrect_guesses]
+                )
+                if game_state.incorrect_guesses
+                else "None"
+            ),
+        }
 
-        # Print analysis if available
-        if game_state.analysis_history:
-            last_analysis = game_state.analysis_history[-1]
-            print("\n🔍 Analysis:")
+        # Get guess from LLM
+        response = self.config.game_engine.invoke(context)
 
-            # Print potential groups
-            if last_analysis.get("potential_groups"):
-                print("\nPotential Groups:")
-                for i, group in enumerate(last_analysis["potential_groups"][:3]):
-                    if "category" in group and "words" in group:
-                        print(
-                            f"{i+1}. {group['category']}: {', '.join(group['words'])}"
-                        )
+        # Extract the guess from the response
+        if hasattr(response, "words"):
+            guess_words = response.words
+            category = response.category
+            reasoning = response.reasoning
+        else:
+            # Handle tool response format
+            guess_words = response[0].words
+            category = response[0].category
+            reasoning = response[0].reasoning
 
-            # Print difficult words
-            if last_analysis.get("difficult_words"):
-                print("\nAmbiguous Words:")
-                print(", ".join(last_analysis["difficult_words"][:8]))
+        if self.config.visualize:
+            print(f"\n🤔 Guess: {', '.join(guess_words)}")
+            print(f"📝 Category: {category}")
+            print(f"💭 Reasoning: {reasoning}")
 
-            # Print strategy
-            if last_analysis.get("strategy"):
-                print("\nStrategy:")
-                strategy = last_analysis["strategy"]
-                if len(strategy) > 150:
-                    print(f"{strategy[:150]}...")
-                else:
-                    print(strategy)
+        # Check if guess is correct
+        guess_set = set(guess_words)
+        correct_category = None
 
-        # Game outcome
-        if game_state.game_status != "ongoing":
-            if game_state.game_status == "victory":
-                print("\n🎉 Congratulations! You've solved all categories!")
-            elif game_state.game_status == "defeat":
-                print("\n❌ Game over! You've run out of attempts.")
+        for cat, words in game_state.categories.items():
+            if set(words) == guess_set:
+                correct_category = cat
+                break
 
-                # Show remaining categories
-                if len(game_state.discovered_groups) < len(game_state.categories):
-                    print("\nRemaining categories were:")
-                    for category, words in game_state.categories.items():
-                        if category not in game_state.discovered_groups:
-                            print(f"- {category}: {', '.join(words)}")
+        if correct_category:
+            # Correct!
+            game_state.found_categories[correct_category] = guess_words
+            if self.config.visualize:
+                print("✅ CORRECT!")
 
-        # Add a short delay for readability
-        time.sleep(0.5)
+            # Check if won
+            if len(game_state.found_categories) == 4:
+                game_state.game_status = "won"
+                if self.config.visualize:
+                    print("\n🎉 YOU WIN! All categories found!")
+        else:
+            # Incorrect
+            game_state.incorrect_guesses.append(guess_words)
+            game_state.mistakes_remaining -= 1
+
+            if self.config.visualize:
+                print(
+                    f"❌ Incorrect! {game_state.mistakes_remaining} mistakes remaining"
+                )
+
+            # Check if lost
+            if game_state.mistakes_remaining == 0:
+                game_state.game_status = "lost"
+                if self.config.visualize:
+                    print("\n😔 GAME OVER!")
+                    print("\nThe categories were:")
+                    for cat, words in game_state.categories.items():
+                        if cat not in game_state.found_categories:
+                            difficulty = game_state.difficulty_map.get(cat, "")
+                            emoji = {
+                                "yellow": "🟨",
+                                "green": "🟩",
+                                "blue": "🟦",
+                                "purple": "🟪",
+                            }.get(difficulty, "")
+                            print(f"{emoji} {cat}: {', '.join(words)}")
+
+        return game_state.model_dump()
+
+    def should_continue(self, state: Dict[str, Any]) -> bool:
+        """Check if game should continue."""
+        return state["game_status"] == "playing"
+
+    def initialize_game(self, puzzle_data: dict = None) -> WordConnectionsState:
+        """Initialize a new game."""
+        # Example puzzle
+        if not puzzle_data:
+            puzzle_data = {
+                "categories": {
+                    "Fine print": ["ASTERISK", "CATCH", "CONDITION", "STRINGS"],
+                    "Characters with green skin": [
+                        "ELPHABA",
+                        "GRINCH",
+                        "HULK",
+                        "SHREK",
+                    ],
+                    "Features of the National Mall in D.C.": [
+                        "CAPITOL",
+                        "MALL",
+                        "OBELISK",
+                        "POOL",
+                    ],
+                    "Famous riddle-givers": [
+                        "BRIDGE TROLL",
+                        "MAD HATTER",
+                        "RIDDLER",
+                        "SPHINX",
+                    ],
+                },
+                "difficulties": {
+                    "Fine print": "yellow",
+                    "Characters with green skin": "green",
+                    "Features of the National Mall in D.C.": "blue",
+                    "Famous riddle-givers": "purple",
+                },
+            }
+
+        # Create grid (shuffle all words)
+        import random
+
+        all_words = []
+        for words in puzzle_data["categories"].values():
+            all_words.extend(words)
+        random.shuffle(all_words)
+
+        return WordConnectionsState(
+            grid=all_words,
+            categories=puzzle_data["categories"],
+            difficulty_map=puzzle_data["difficulties"],
+            found_categories={},
+            incorrect_guesses=[],
+            mistakes_remaining=4,
+            game_status="playing",
+        )
+
+    def setup_routing(self) -> None:
+        """Set up the routing for the game."""
+        # Build routing map - CRITICAL FIX: ValidationNodeConfig returns Send objects, not strings
+        console.print("\n[bold yellow]Building routing map...[/bold yellow]")
+
+        # IMPORTANT: ValidationNodeConfig primarily returns Send objects for routing
+        # The routing_map only handles edge cases where strings are returned
+        routing_map = {
+            "has_errors": "agent_node"  # Only for fallback error cases
+            # Removed 'tool_node' and 'parse_output' - these are handled via Send objects
+        }
+
+        console.print(f"  [cyan]Routing map (for string returns): {routing_map}[/cyan]")
+        console.print(
+            f"  [green]✓ Valid tools will be routed via Send objects (not routing map)[/green]"
+        )
+
+        # Show routing explanation
+        from rich.table import Table
+
+        routing_table = Table(
+            title="ValidationNodeConfig Routing Behavior",
+            show_header=True,
+            header_style="bold magenta",
+        )
+        routing_table.add_column("Scenario", style="cyan")
+        routing_table.add_column("Return Type", style="yellow")
+        routing_table.add_column("Destination", style="green")
+        routing_table.add_column("Description", style="dim")
+
+        routing_table.add_row(
+            "Valid LangChain tools",
+            "Send objects",
+            "tool_node",
+            "Direct routing via Send",
+        )
+        routing_table.add_row(
+            "Valid Pydantic tools",
+            "Send objects",
+            "parse_output",
+            "Direct routing via Send",
+        )
+        routing_table.add_row(
+            "All tools invalid", "Send objects", "agent_node", "Error routing via Send"
+        )
+        routing_table.add_row(
+            "Mixed valid/invalid",
+            "List[Send]",
+            "Multiple nodes",
+            "Multiple Send objects",
+        )
+        routing_table.add_row(
+            "Fallback errors", "String 'has_errors'", "agent_node", "Uses routing_map"
+        )
+
+        console.print(routing_table)
+
+        console.print(
+            "\n[bold green]KEY INSIGHT: ValidationNodeConfig handles routing internally via Send objects![/bold green]"
+        )
+        console.print(
+            "[yellow]The routing_map is only a fallback for edge cases[/yellow]"
+        )
+
+        # Create validation node config with proper tool routing information
+        validation_config = ValidationNodeConfig(
+            name="val_node",
+            schemas=schemas,
+            tools=self.engine.tools,  # Pass the tools for routing decisions
+            tool_routes=getattr(
+                self.engine, "tool_routes", {}
+            ),  # Pass tool_routes for proper routing
+            agent_node="agent_node",  # Where to send validation errors
+            tool_node=(
+                "tool_node" if self.has_tool_node else None
+            ),  # Where to send LangChain tools
+            parser_node=(
+                "parse_output" if self.has_parser_node else None
+            ),  # Where to send Pydantic tools
+        )
+
+        console.print(
+            f"\n[cyan]Created ValidationNodeConfig with proper routing:[/cyan]"
+        )
+        console.print(f"  schemas: {len(schemas)} items")
+        console.print(f"  tools: {len(validation_config.tools)} items")
+        console.print(f"  tool_routes: {validation_config.tool_routes}")
+        console.print(f"  agent_node: {validation_config.agent_node}")
+        console.print(f"  tool_node: {validation_config.tool_node}")
+        console.print(f"  parser_node: {validation_config.parser_node}")
