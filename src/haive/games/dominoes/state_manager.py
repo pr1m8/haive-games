@@ -1,19 +1,24 @@
 # src/haive/agents/agent_games/dominoes/state.py
 
 import copy
+import logging
 import random
-from typing import Literal
+from typing import Any, Literal
 
-from haive.games.dominoes.models import DominoMove, DominoTile
+from haive.games.dominoes.models import DominoesAnalysis, DominoMove, DominoTile
 from haive.games.dominoes.state import DominoesState
 from haive.games.framework.base import GameStateManager
+
+logger = logging.getLogger(__name__)
 
 
 class DominoesStateManager(GameStateManager[DominoesState]):
     """Manager for dominoes game state."""
 
     @classmethod
-    def initialize(cls, player_names: list[str] = ["player1", "player2"], tiles_per_hand: int = 7) -> DominoesState:
+    def initialize(
+        cls, player_names: list[str] = ["player1", "player2"], tiles_per_hand: int = 7
+    ) -> DominoesState:
         """Initialize a new dominoes game."""
         # Create all tiles from 0-0 to 6-6
         all_tiles = []
@@ -64,11 +69,13 @@ class DominoesStateManager(GameStateManager[DominoesState]):
             game_status="ongoing",
             move_history=[],
             last_passes=0,
-            scores=dict.fromkeys(player_names, 0)
+            scores=dict.fromkeys(player_names, 0),
         )
 
     @classmethod
-    def apply_move(cls, state: DominoesState, move: DominoMove | Literal["pass"]) -> DominoesState:
+    def apply_move(
+        cls, state: DominoesState, move: DominoMove | Literal["pass"]
+    ) -> DominoesState:
         """Apply a move to the dominoes state."""
         # Create a deep copy of the state to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -105,15 +112,20 @@ class DominoesStateManager(GameStateManager[DominoesState]):
 
         # Check if the player has the tile
         player_hand = new_state.hands[player]
-        matching_tiles = [t for t in player_hand if (t.left == tile.left and t.right == tile.right) or
-                                                  (t.left == tile.right and t.right == tile.left)]
+        matching_tiles = [
+            t
+            for t in player_hand
+            if (t.left == tile.left and t.right == tile.right)
+            or (t.left == tile.right and t.right == tile.left)
+        ]
         if not matching_tiles:
             raise ValueError(f"Player {player} doesn't have tile {tile}")
 
         # Remove the tile from the player's hand
         for i, hand_tile in enumerate(player_hand):
-            if (hand_tile.left == tile.left and hand_tile.right == tile.right) or \
-               (hand_tile.left == tile.right and hand_tile.right == tile.left):
+            if (hand_tile.left == tile.left and hand_tile.right == tile.right) or (
+                hand_tile.left == tile.right and hand_tile.right == tile.left
+            ):
                 new_state.hands[player].pop(i)
                 break
 
@@ -189,7 +201,9 @@ class DominoesStateManager(GameStateManager[DominoesState]):
             # Game is locked, count points
             player_pips = {}
             for player in state.players:
-                player_pips[player] = sum(tile.left + tile.right for tile in state.hands[player])
+                player_pips[player] = sum(
+                    tile.left + tile.right for tile in state.hands[player]
+                )
 
             # Player with least pips wins
             winner = min(player_pips.items(), key=lambda x: x[1])[0]
@@ -210,7 +224,9 @@ class DominoesStateManager(GameStateManager[DominoesState]):
         return state
 
     @classmethod
-    def get_legal_moves(cls, state: DominoesState) -> list[DominoMove | Literal["pass"]]:
+    def get_legal_moves(
+        cls, state: DominoesState
+    ) -> list[DominoMove | Literal["pass"]]:
         """Get all legal moves for the current player."""
         moves = []
         player = state.turn
@@ -218,7 +234,9 @@ class DominoesStateManager(GameStateManager[DominoesState]):
         # If the board is empty, any tile can be played
         if not state.board:
             for tile in state.hands[player]:
-                moves.append(DominoMove(tile=tile, location="right"))  # Direction doesn't matter for first move
+                moves.append(
+                    DominoMove(tile=tile, location="right")
+                )  # Direction doesn't matter for first move
             return moves if moves else ["pass"]
 
         # Check for moves that match the left end
@@ -238,3 +256,71 @@ class DominoesStateManager(GameStateManager[DominoesState]):
             return ["pass"]
 
         return moves
+
+    @classmethod
+    def update_analysis(
+        cls, state: DominoesState, analysis: Any, player: str
+    ) -> DominoesState:
+        """Update state with analysis.
+
+        Args:
+            state: Current game state
+            analysis: Analysis to add
+            player: Player who made the analysis
+
+        Returns:
+            Updated game state with analysis
+        """
+        # Create a deep copy to avoid modifying the original
+        new_state = copy.deepcopy(state)
+
+        # Convert analysis to proper type if needed
+        analysis_obj = analysis
+        if not isinstance(analysis, DominoesAnalysis):
+            try:
+                if isinstance(analysis, dict):
+                    analysis_obj = DominoesAnalysis.model_validate(analysis)
+                elif isinstance(analysis, str):
+                    # Create a minimal analysis object for string analysis
+                    analysis_obj = DominoesAnalysis(
+                        hand_strength=5,
+                        pip_count_assessment="Unknown",
+                        open_ends=["Unknown"],
+                        missing_values=[],
+                        suggested_strategy=analysis[
+                            :100
+                        ],  # Use the string content as strategy
+                        blocking_potential="Unknown",
+                        reasoning=analysis,
+                    )
+                else:
+                    # If we can't convert it, create a fallback analysis
+                    analysis_obj = DominoesAnalysis(
+                        hand_strength=5,
+                        pip_count_assessment="Unknown",
+                        open_ends=["Unknown"],
+                        missing_values=[],
+                        suggested_strategy="Play strategically",
+                        blocking_potential="Unknown",
+                        reasoning=f"Fallback analysis for {type(analysis)}",
+                    )
+            except Exception as e:
+                logger.warning(f"Failed to convert analysis to DominoesAnalysis: {e}")
+                # Create a fallback analysis
+                analysis_obj = DominoesAnalysis(
+                    hand_strength=5,
+                    pip_count_assessment="Unknown",
+                    open_ends=["Unknown"],
+                    missing_values=[],
+                    suggested_strategy="Play strategically",
+                    blocking_potential="Unknown",
+                    reasoning=f"Error converting analysis: {e}",
+                )
+
+        # Add analysis to appropriate player
+        if player == "player1":
+            new_state.player1_analysis.append(analysis_obj)
+        else:
+            new_state.player2_analysis.append(analysis_obj)
+
+        return new_state
