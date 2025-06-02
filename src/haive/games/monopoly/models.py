@@ -1,240 +1,310 @@
-"""Monopoly game data models.
+"""Monopoly game models module.
 
-This module provides data models for the Monopoly game, including:
-    - Property information
-    - Player information
-    - Decision models for LLM outputs
-    - Game state models
+This module provides data models for the monopoly game, including:
+    - Player actions and decisions
+    - Property management
+    - Game events and transactions
+    - Structured output models for LLMs
 """
 
-from typing import Literal
+from enum import Enum
+from typing import Any, Optional
 
-from pydantic import BaseModel, Field, model_validator
-
-# ==============================================================
-# Game State Models - Core data structures
-# ==============================================================
+from pydantic import BaseModel, Field, field_validator
 
 
-class PropertyInfo(BaseModel):
-    """Information about a property on the board."""
+class PropertyType(str, Enum):
+    """Types of properties in Monopoly."""
 
-    name: str = Field(description="The name of the property")
-    color: str | None = Field(None, description="The color group of the property")
-    position: int = Field(
-        description="The position of the property on the board (0-39)"
-    )
-    cost: int = Field(description="The purchase cost of the property")
-    rent_values: list[int] = Field(
-        description="The rent values based on number of houses/hotels"
-    )
-    rent: int = Field(description="Current rent value for this property")
-    mortgage_value: int = Field(description="The mortgage value of the property")
-    owner: int | None = Field(
-        None, description="The player index who owns this property, if any"
-    )
-    houses: int = Field(description="Number of houses on the property (5 = hotel)")
-    is_mortgaged: bool = Field(description="Whether the property is mortgaged")
-
-    @model_validator(mode="after")
-    def check_houses(self):
-        """Ensure houses is within valid range."""
-        if self.houses < 0:
-            self.houses = 0
-        elif self.houses > 5:
-            self.houses = 5
-        return self
+    STREET = "street"
+    RAILROAD = "railroad"
+    UTILITY = "utility"
+    SPECIAL = "special"  # GO, Jail, etc.
 
 
-class SpecialCardInfo(BaseModel):
-    """Information about special properties like railroads and utilities."""
+class PropertyColor(str, Enum):
+    """Property color groups."""
 
-    name: str = Field(description="The name of the card")
-    card_type: Literal["railroad", "utility"] = Field(
-        description="The type of the card"
-    )
-    position: int = Field(description="The board position")
-    cost: int = Field(description="The purchase cost")
-    rent: int = Field(description="Current rent value")
-    mortgage_value: int = Field(description="Mortgage value")
-    owner: int | None = Field(None, description="The player index who owns this")
-    is_mortgaged: bool = Field(
-        default=False, description="Whether the property is mortgaged"
-    )
+    BROWN = "brown"
+    LIGHT_BLUE = "light_blue"
+    PINK = "pink"
+    ORANGE = "orange"
+    RED = "red"
+    YELLOW = "yellow"
+    GREEN = "green"
+    DARK_BLUE = "dark_blue"
+    RAILROAD = "railroad"
+    UTILITY = "utility"
+    SPECIAL = "special"
 
 
-class PlayerInfo(BaseModel):
-    """Information about a player."""
+class CardType(str, Enum):
+    """Types of cards in Monopoly."""
 
-    name: str = Field(description="Player's name")
-    index: int = Field(description="Player index")
-    position: int = Field(description="Current board position (0-39)")
-    cash: int = Field(description="Current cash on hand")
-    total_wealth: int = Field(description="Net worth including cash and property value")
-    properties_owned: list[str] = Field(
-        default_factory=list, description="Names of properties owned"
-    )
-    is_in_jail: bool = Field(
-        default=False, description="Is the player currently in jail"
-    )
-    jail_cards: int = Field(
-        default=0, description="Number of Get Out of Jail Free cards"
-    )
-    railways_owned: int = Field(
-        default=0, description="How many railroads this player owns"
-    )
-    bankruptcy_status: bool = Field(
-        default=False, description="Whether the player is bankrupt"
+    CHANCE = "chance"
+    COMMUNITY_CHEST = "community_chest"
+
+
+class PlayerActionType(str, Enum):
+    """Types of actions a player can take."""
+
+    BUY_PROPERTY = "buy_property"
+    PASS_PROPERTY = "pass_property"
+    PAY_RENT = "pay_rent"
+    PAY_TAX = "pay_tax"
+    DRAW_CARD = "draw_card"
+    GO_TO_JAIL = "go_to_jail"
+    PAY_JAIL_FINE = "pay_jail_fine"
+    ROLL_FOR_JAIL = "roll_for_jail"
+    USE_JAIL_CARD = "use_jail_card"
+    BUILD_HOUSE = "build_house"
+    BUILD_HOTEL = "build_hotel"
+    MORTGAGE_PROPERTY = "mortgage_property"
+    UNMORTGAGE_PROPERTY = "unmortgage_property"
+    TRADE_OFFER = "trade_offer"
+    TRADE_ACCEPT = "trade_accept"
+    TRADE_DECLINE = "trade_decline"
+    DECLARE_BANKRUPTCY = "declare_bankruptcy"
+
+
+class PropertyDecision(BaseModel):
+    """Model for property purchase decisions."""
+
+    action: PlayerActionType = Field(
+        description="Whether to buy or pass on the property"
     )
 
+    reasoning: str = Field(description="Explanation for the decision")
 
-class DiceInfo(BaseModel):
-    """Information about a dice roll."""
-
-    values: tuple[int, int] = Field(description="Two dice values")
-    sum: int = Field(description="Sum of the dice roll")
-
-    @property
-    def is_double(self) -> bool:
-        """Check if the roll is a double."""
-        return self.values[0] == self.values[1]
-
-    @model_validator(mode="after")
-    def check_sum(self):
-        """Ensure sum matches the dice values."""
-        if self.sum != self.values[0] + self.values[1]:
-            self.sum = self.values[0] + self.values[1]
-        return self
-
-
-# ==============================================================
-# LLM Decision Models - For Agent Outputs
-# ==============================================================
-
-
-class PropertyAction(BaseModel):
-    """Model for property management actions."""
-
-    action_type: Literal["buy", "build", "sell", "mortgage", "unmortgage"] = Field(
-        description="Action to take with property"
-    )
-    property_name: str = Field(description="Name of the property to act on")
-    reasoning: str = Field(description="Reasoning behind this action")
-
-
-class MoveAction(BaseModel):
-    """Model for movement actions."""
-
-    action_type: Literal["roll", "pay_to_exit_jail", "roll_for_double"] = Field(
-        description="Type of move action"
-    )
-    reasoning: str = Field(description="Reasoning behind this move")
-
-
-class TurnDecision(BaseModel):
-    """Model for comprehensive turn decisions."""
-
-    move_action: MoveAction | None = Field(
-        default=None, description="Movement decision for this turn"
-    )
-    property_actions: list[PropertyAction] = Field(
-        default_factory=list, description="Property management actions for this turn"
-    )
-    end_turn: bool = Field(
-        default=False, description="Whether to end the turn after these actions"
-    )
-    reasoning: str = Field(description="Overall strategy or reasoning for decisions")
-
-    @model_validator(mode="after")
-    def validate_decision(self):
-        """Ensure decision is valid."""
-        # If not ending turn, should have at least one action
-        if not self.end_turn and not self.move_action and not self.property_actions:
-            raise ValueError("Turn must either end or have at least one action")
-        return self
-
-
-class StrategyAnalysis(BaseModel):
-    """Model for strategic game analysis."""
-
-    analysis: str = Field(
-        description="Comprehensive analysis of the current game state"
-    )
-    recommended_properties: list[str] = Field(
-        default_factory=list, description="Properties recommended to acquire next"
-    )
-    risk_assessment: str = Field(
-        description="Assessment of risks in the current situation"
-    )
-    opportunity_assessment: str = Field(
-        description="Assessment of opportunities in the current situation"
-    )
-    cash_recommendation: str | None = Field(
-        default=None, description="Recommendation for cash management"
+    max_bid: Optional[int] = Field(
+        default=None, description="Maximum bid if property goes to auction"
     )
 
+    @field_validator("action")
+    def validate_property_action(cls, v):
+        """Validate that action is appropriate for property decisions."""
+        valid_actions = {PlayerActionType.BUY_PROPERTY, PlayerActionType.PASS_PROPERTY}
+        if v not in valid_actions:
+            raise ValueError(f"Action must be one of {valid_actions}")
+        return v
 
-# ==============================================================
-# Composite Decision Models
-# ==============================================================
+
+class JailDecision(BaseModel):
+    """Model for jail-related decisions."""
+
+    action: PlayerActionType = Field(description="How to handle being in jail")
+
+    reasoning: str = Field(description="Explanation for the decision")
+
+    @field_validator("action")
+    def validate_jail_action(cls, v):
+        """Validate that action is appropriate for jail decisions."""
+        valid_actions = {
+            PlayerActionType.PAY_JAIL_FINE,
+            PlayerActionType.ROLL_FOR_JAIL,
+            PlayerActionType.USE_JAIL_CARD,
+        }
+        if v not in valid_actions:
+            raise ValueError(f"Action must be one of {valid_actions}")
+        return v
 
 
-class AgentDecision(BaseModel):
-    """Composite model for all agent decisions."""
+class BuildingDecision(BaseModel):
+    """Model for building houses/hotels decisions."""
 
-    turn_decision: TurnDecision | None = Field(
-        default=None, description="Main turn decision"
+    property_name: str = Field(description="Name of the property to build on")
+
+    action: PlayerActionType = Field(description="Type of building action")
+
+    quantity: int = Field(
+        default=1, description="Number of houses to build (1-4) or 1 hotel"
     )
-    strategy_analysis: StrategyAnalysis | None = Field(
-        default=None, description="Strategic analysis of the game"
+
+    reasoning: str = Field(description="Explanation for the building decision")
+
+    @field_validator("action")
+    def validate_building_action(cls, v):
+        """Validate that action is appropriate for building."""
+        valid_actions = {PlayerActionType.BUILD_HOUSE, PlayerActionType.BUILD_HOTEL}
+        if v not in valid_actions:
+            raise ValueError(f"Action must be one of {valid_actions}")
+        return v
+
+    @field_validator("quantity")
+    def validate_quantity(cls, v):
+        """Validate building quantity."""
+        if v < 1 or v > 4:
+            raise ValueError("Quantity must be between 1 and 4")
+        return v
+
+
+class TradeOffer(BaseModel):
+    """Model for trade offers between players."""
+
+    offering_player: str = Field(description="Name of player making the offer")
+
+    receiving_player: str = Field(description="Name of player receiving the offer")
+
+    offered_properties: list[str] = Field(
+        default_factory=list, description="Properties being offered"
     )
-    move_action: MoveAction | None = Field(
-        default=None, description="Specific move action"
+
+    offered_money: int = Field(default=0, description="Money being offered")
+
+    requested_properties: list[str] = Field(
+        default_factory=list, description="Properties being requested"
     )
-    property_actions: list[PropertyAction] = Field(
-        default_factory=list, description="Property actions to take"
+
+    requested_money: int = Field(default=0, description="Money being requested")
+
+    reasoning: str = Field(description="Explanation for the trade offer")
+
+
+class TradeResponse(BaseModel):
+    """Model for responding to trade offers."""
+
+    action: PlayerActionType = Field(description="Accept or decline the trade")
+
+    reasoning: str = Field(description="Explanation for the response")
+
+    counter_offer: Optional[TradeOffer] = Field(
+        default=None, description="Optional counter-offer if declining"
     )
-    error_message: str | None = Field(default=None, description="Error message if any")
 
-    def get_next_action(self) -> MoveAction | PropertyAction | None:
-        """Get the next action to take."""
-        # First try the turn decision
-        if self.turn_decision:
-            if self.turn_decision.move_action:
-                return self.turn_decision.move_action
-            if self.turn_decision.property_actions:
-                return self.turn_decision.property_actions[0]
-            if self.turn_decision.end_turn:
-                return None
-
-        # Then try individual actions
-        if self.move_action:
-            return self.move_action
-        if self.property_actions:
-            return self.property_actions[0]
-
-        # No actions available
-        return None
+    @field_validator("action")
+    def validate_trade_action(cls, v):
+        """Validate that action is appropriate for trade responses."""
+        valid_actions = {PlayerActionType.TRADE_ACCEPT, PlayerActionType.TRADE_DECLINE}
+        if v not in valid_actions:
+            raise ValueError(f"Action must be one of {valid_actions}")
+        return v
 
 
-# ==============================================================
-# Game Event Models
-# ==============================================================
+class PlayerAnalysis(BaseModel):
+    """Model for player analysis and strategy."""
+
+    financial_position: str = Field(
+        description="Assessment of current financial position"
+    )
+
+    property_strategy: str = Field(description="Current property acquisition strategy")
+
+    immediate_goals: list[str] = Field(description="Short-term goals and priorities")
+
+    threats: list[str] = Field(
+        default_factory=list, description="Threats from other players"
+    )
+
+    opportunities: list[str] = Field(
+        default_factory=list, description="Current opportunities to pursue"
+    )
 
 
 class GameEvent(BaseModel):
-    """Model for a game event."""
+    """Model for game events and transactions."""
 
-    event_type: str = Field(description="Type of event")
-    player_index: int | None = Field(default=None, description="Player involved")
-    description: str = Field(description="Event description")
-    timestamp: float = Field(
-        default_factory=lambda: __import__("time").time(), description="Event timestamp"
+    event_type: str = Field(description="Type of event that occurred")
+
+    player: str = Field(description="Player involved in the event")
+
+    description: str = Field(description="Description of what happened")
+
+    money_change: int = Field(
+        default=0, description="Money gained or lost (negative for losses)"
     )
 
+    property_involved: Optional[str] = Field(
+        default=None, description="Property involved in the event"
+    )
+
+    details: dict[str, Any] = Field(
+        default_factory=dict, description="Additional event details"
+    )
+
+
+class DiceRoll(BaseModel):
+    """Model for dice roll results."""
+
+    die1: int = Field(description="First die result", ge=1, le=6)
+
+    die2: int = Field(description="Second die result", ge=1, le=6)
+
     @property
-    def formatted_description(self) -> str:
-        """Get a formatted description for display."""
-        if self.player_index is not None:
-            return f"Player {self.player_index + 1}: {self.description}"
-        return self.description
+    def total(self) -> int:
+        """Total of both dice."""
+        return self.die1 + self.die2
+
+    @property
+    def is_doubles(self) -> bool:
+        """Whether the roll is doubles."""
+        return self.die1 == self.die2
+
+
+class Property(BaseModel):
+    """Model for a property on the board."""
+
+    name: str = Field(description="Property name")
+    position: int = Field(description="Position on board (0-39)")
+    property_type: PropertyType = Field(description="Type of property")
+    color: PropertyColor = Field(description="Property color group")
+    price: int = Field(description="Purchase price")
+    rent: list[int] = Field(
+        description="Rent amounts [base, 1 house, 2 house, 3 house, 4 house, hotel]"
+    )
+    house_cost: int = Field(default=0, description="Cost to build a house")
+    mortgage_value: int = Field(description="Mortgage value")
+    owner: Optional[str] = Field(default=None, description="Current owner")
+    houses: int = Field(default=0, description="Number of houses (0-4)")
+    hotel: bool = Field(default=False, description="Whether there's a hotel")
+    mortgaged: bool = Field(default=False, description="Whether property is mortgaged")
+
+    def current_rent(self) -> int:
+        """Calculate current rent based on development."""
+        if self.mortgaged or not self.owner:
+            return 0
+
+        if self.property_type == PropertyType.RAILROAD:
+            # Railroad rent depends on how many railroads owner has
+            return self.rent[0]  # Will be calculated by game logic
+
+        if self.property_type == PropertyType.UTILITY:
+            # Utility rent depends on dice roll and how many utilities owned
+            return self.rent[0]  # Will be calculated by game logic
+
+        if self.hotel:
+            return self.rent[5]
+        else:
+            return self.rent[self.houses]
+
+
+class Player(BaseModel):
+    """Model for a player in the game."""
+
+    name: str = Field(description="Player name")
+    money: int = Field(default=1500, description="Current money")
+    position: int = Field(default=0, description="Current board position")
+    properties: list[str] = Field(default_factory=list, description="Owned properties")
+    jail_cards: int = Field(default=0, description="Get out of jail free cards")
+    in_jail: bool = Field(default=False, description="Whether player is in jail")
+    jail_turns: int = Field(default=0, description="Turns spent in jail")
+    doubles_count: int = Field(
+        default=0, description="Consecutive doubles rolled this turn"
+    )
+    bankrupt: bool = Field(default=False, description="Whether player is bankrupt")
+
+    def can_afford(self, amount: int) -> bool:
+        """Check if player can afford a given amount."""
+        return self.money >= amount
+
+    def net_worth(self, properties_dict: dict[str, Property]) -> int:
+        """Calculate player's net worth including properties."""
+        total = self.money
+        for prop_name in self.properties:
+            if prop_name in properties_dict:
+                prop = properties_dict[prop_name]
+                # Add property value plus development
+                total += prop.mortgage_value
+                total += prop.houses * prop.house_cost
+                if prop.hotel:
+                    total += prop.house_cost  # Hotel value
+        return total
