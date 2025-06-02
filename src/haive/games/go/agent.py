@@ -401,8 +401,3 @@ def run_go_game(agent: GoAgent):
             print(f"   - White Captured: {step['captured_stones']['white']}")
 
         print("\n" + "-" * 60)  # Divider for clarity
-
-
-# Run the game
-if __name__ == "__main__":
-    run_go_game(agent=GoAgent(config=GoAgentConfig()))
