@@ -1,24 +1,27 @@
 import random
-from typing import Literal
+from typing import List, Literal
 
-from pydantic import Field
+from pydantic import Field, computed_field
 
 from haive.games.framework.base.state import GameState
-from haive.games.mastermind.models import MastermindFeedback, MastermindGuess
-
-from .models import ColorCode, MastermindFeedback, MastermindGuess
+from haive.games.mastermind.models import (
+    ColorCode,
+    MastermindAnalysis,
+    MastermindFeedback,
+    MastermindGuess,
+)
 
 
 class MastermindState(GameState):
     """State for a Mastermind game."""
 
-    secret_code: list[str] = Field(
+    secret_code: List[str] = Field(
         ..., min_items=4, max_items=4, description="Secret color code (4 colors)"
     )
-    guesses: list[MastermindGuess] = Field(
+    guesses: Annotated[List[MastermindGuess], operator.add] = Field(
         default_factory=list, description="History of guesses"
     )
-    feedback: list[MastermindFeedback] = Field(
+    feedback: Annotated[List[MastermindFeedback], operator.add] = Field(
         default_factory=list, description="Feedback for each guess"
     )
     turn: Literal["player1", "player2"] = Field(
@@ -32,10 +35,10 @@ class MastermindState(GameState):
         default="ongoing", description="Status of the game"
     )
     winner: str | None = Field(default=None, description="Winner of the game, if any")
-    player1_analysis: list[dict[str, any]] = Field(
+    player1_analysis: Annotated[List[MastermindAnalysis], operator.add] = Field(
         default_factory=list, description="Analyses by player1"
     )
-    player2_analysis: list[dict[str, any]] = Field(
+    player2_analysis: Annotated[List[MastermindAnalysis], operator.add] = Field(
         default_factory=list, description="Analyses by player2"
     )
 
@@ -70,31 +73,37 @@ class MastermindState(GameState):
         )
 
     @property
+    @computed_field
     def current_turn_number(self) -> int:
         """Get the current turn number."""
         return len(self.guesses) + 1
 
     @property
+    @computed_field
     def turns_remaining(self) -> int:
         """Get the number of turns remaining."""
         return max(0, self.max_turns - len(self.guesses))
 
     @property
+    @computed_field
     def is_game_over(self) -> bool:
         """Check if the game is over."""
         return self.game_status != "ongoing"
 
     @property
+    @computed_field
     def last_guess(self) -> MastermindGuess | None:
         """Get the last guess made."""
         return self.guesses[-1] if self.guesses else None
 
     @property
+    @computed_field
     def last_feedback(self) -> MastermindFeedback | None:
         """Get the feedback for the last guess."""
         return self.feedback[-1] if self.feedback else None
 
     @property
+    @computed_field
     def board_string(self) -> str:
         """Get a string representation of the board."""
         if not self.guesses:

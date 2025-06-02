@@ -4,7 +4,7 @@ This module defines the models for the Mastermind game,
 including the secret code, guess, feedback, and analysis.
 """
 
-from typing import Literal
+from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
@@ -19,7 +19,7 @@ class ColorCode(BaseModel):
     chosen from a predefined set of valid colors.
     """
 
-    code: list[ValidColor] = Field(
+    code: List[ValidColor] = Field(
         ...,
         min_items=4,
         max_items=4,
@@ -34,7 +34,7 @@ class MastermindGuess(BaseModel):
     chosen from a predefined set of valid colors.
     """
 
-    colors: list[ValidColor] = Field(
+    colors: List[ValidColor] = Field(
         ..., min_items=4, max_items=4, description="List of 4 colors"
     )
     player: Literal["player1", "player2"] = Field(
@@ -85,14 +85,14 @@ class MastermindAnalysis(BaseModel):
     possible_combinations: int = Field(
         ..., description="Estimated number of possible combinations left"
     )
-    high_probability_colors: list[ValidColor] = Field(
+    high_probability_colors: List[ValidColor] = Field(
         ..., description="Colors with high probability of being in the solution"
     )
-    eliminated_colors: list[ValidColor] = Field(
+    eliminated_colors: List[ValidColor] = Field(
         default_factory=list, description="Colors likely eliminated"
     )
 
-    fixed_positions: list[dict[str, ValidColor]] = Field(
+    fixed_positions: List[dict[str, ValidColor]] = Field(
         default_factory=list,
         description="List of fixed positions as dicts like {'index': 'color'}",
     )

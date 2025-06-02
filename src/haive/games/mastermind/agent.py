@@ -30,25 +30,6 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         # self.engines = config.aug_llm_configs
         super().__init__(config)
 
-        # Check for version updates
-        self.check_version_update()
-
-    def check_version_update(self) -> None:
-        """Check if the game version is up to date.
-
-        Compares the version in the config with the latest version in the config module.
-        Logs a warning if they don't match.
-        """
-        if self.config.version != VERSION:
-            print(
-                f"⚠️ Warning: Running Mastermind version {self.config.version}, but latest is {VERSION}"
-            )
-            print(
-                "   Consider updating to the latest version for bug fixes and improvements."
-            )
-            # Update the version in the config
-            self.config.version = VERSION
-
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize the Mastermind game.
 
@@ -421,6 +402,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         # Add nodes for the main game flow
         builder.add_node("initialize", self.initialize_game)
+        builder.set_entry_point("initialize")
         builder.add_node("player1_guess", self.make_player1_guess)
         builder.add_node("player2_guess", self.make_player2_guess)
         builder.add_node("analyze_player1", self.analyze_player1)
@@ -494,11 +476,20 @@ class MastermindAgent(GameAgent[MastermindConfig]):
             # Store the last seen state to prevent infinite loops
             last_state = None
             final_state = None
-
-            for step in self.stream(initial_state, stream_mode="values", debug=True):
-                self.visualize_state(step)
+  
+            try:
+              for step in self.stream(initial_state, stream_mode="values", debug=True):
+                
 
                 # Create a MastermindState to check for game completion
+                self.visualize_state(step)
+                    time.sleep(1)
+                return step
+            except Exception as e:
+                print(f"Error running game: {e}")
+                return {}
+        else:
+            return self.run({})
                 current_state = MastermindState(**step)
 
                 # Break the loop if the game is over
@@ -529,6 +520,3 @@ class MastermindAgent(GameAgent[MastermindConfig]):
             return final_state if final_state else step
         return super().run(initial_state)
 
-
-a = MastermindAgent()
-a.run_game(visualize=True)
