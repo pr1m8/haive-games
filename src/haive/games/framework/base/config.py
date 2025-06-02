@@ -16,8 +16,11 @@ Typical usage:
     - Use as configuration for game agents
 """
 
+from typing import Type
+
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
+from langchain_core.runnables import RunnableConfig
 from pydantic import Field
 
 from haive.games.framework.base.state import GameState
@@ -45,8 +48,8 @@ class GameConfig(AgentConfig):
         ...     enable_analysis: bool = True
     """
 
-    state_schema: type[GameState] = Field(
-        default_factory=GameState, description="State schema for the game"
+    state_schema: Type[GameState] = Field(
+        default=GameState, description="State schema for the game"
     )
 
     engines: dict[str, AugLLMConfig] = Field(
@@ -58,6 +61,9 @@ class GameConfig(AgentConfig):
     )
 
     visualize: bool = Field(default=True, description="Whether to visualize the game")
+    runnable_config: RunnableConfig = Field(
+        default={"configurable": {"recursion_limit": 100}}
+    )
 
     class Config:
         """Pydantic configuration."""
