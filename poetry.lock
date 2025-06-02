@@ -8285,6 +8285,18 @@ test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "ini2toml[lite] (>=
 type = ["importlib_metadata (>=7.0.2) ; python_version < \"3.10\"", "jaraco.develop (>=7.21) ; sys_platform != \"cygwin\"", "mypy (==1.14.*)", "pytest-mypy"]
 
 [[package]]
+name = "sgfmill"
+version = "1.1.1"
+description = "Library for reading and writing files using Smart Game Format (SGF)."
+optional = false
+python-versions = "*"
+groups = ["games"]
+files = [
+    {file = "sgfmill-1.1.1-py3-none-any.whl", hash = "sha256:759cd843eba647875931d3a10eb329362087b9832f6b49ee85cf8948b0608b3d"},
+    {file = "sgfmill-1.1.1.tar.gz", hash = "sha256:1f44fa6b613acfae23cf7f69985a4a911fc06f772f6c63c0bbfc89044d88f41d"},
+]
+
+[[package]]
 name = "shapely"
 version = "2.1.0"
 description = "Manipulation and analysis of geometric objects"
@@ -10922,4 +10934,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "cc572f283e91da7993effe29dc7c49e5d0635f5bfc5728cc21650d092eaa3cf3"
+content-hash = "99cf4a431d33bdfc8466d2ca6ccdd0cc8b5c90ca496e3e5a177faba25bbf6108"
