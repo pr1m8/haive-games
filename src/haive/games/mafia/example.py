@@ -24,18 +24,23 @@ Example:
 import logging
 import time
 import traceback
+import uuid
+from typing import Any, Dict, Optional
 
-from .agent import MafiaAgent
-from .config import MafiaAgentConfig, aug_llm_configs
-from .models import GamePhase
-from .state_manager import MafiaStateManager
+from haive.games.mafia.agent import MafiaAgent
+from haive.games.mafia.config import MafiaAgentConfig, aug_llm_configs
+from haive.games.mafia.models import GamePhase
+from haive.games.mafia.state import MafiaGameState
+from haive.games.mafia.state_manager import MafiaStateManager
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True):
+def run_mafia_game(
+    player_count: int = 5, max_days: int = 3, debug: bool = True
+) -> None:
     """Run a complete Mafia game simulation with visualization.
 
     This function sets up and executes a full Mafia game, handling:
@@ -46,26 +51,16 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
         - Game end conditions
 
     Args:
-        player_count (int, optional): Total number of players including narrator.
+        player_count: Total number of players including narrator.
             Must be at least 4 (3 players + narrator). Defaults to 5.
-        max_days (int, optional): Maximum number of in-game days before forcing
+        max_days: Maximum number of in-game days before forcing
             game end. Defaults to 3.
-        debug (bool, optional): Enable debug mode for detailed logging.
+        debug: Enable debug mode for detailed logging.
             Defaults to True.
 
     Raises:
         ValueError: If player_count is less than 4.
         Exception: If game setup or execution fails.
-
-    Example:
-        >>> run_mafia_game(player_count=7, max_days=3)
-        🎭 Setting up Mafia Game
-        ======================
-        Number of players: 7
-        Maximum days: 3
-        Debug mode: Enabled
-        ======================
-        ...
     """
     print("\n🎭 Setting up Mafia Game")
     print("=" * 60)
@@ -73,6 +68,8 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
     print(f"Maximum days: {max_days}")
     print(f"Debug mode: {'Enabled' if debug else 'Disabled'}")
     print("=" * 60)
+
+    agent: Optional[MafiaAgent] = None
 
     try:
         # Print available configs for debugging
@@ -101,7 +98,9 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
         if debug:
             print("\n🔧 Available Engines in Agent:")
             for key, value in agent.engines.items():
-                print(f"  {key}: {list(value.keys()) if value else 'None'}")
+                print(
+                    f"  {key}: {list(value.keys()) if isinstance(value, dict) else 'None'}"
+                )
 
             print("\n🔑 Role to Engine Mapping:")
             for role, engine_key in agent.role_enum_mapping.items():
@@ -125,84 +124,137 @@ def run_mafia_game(player_count: int = 5, max_days: int = 3, debug: bool = True)
         # Track day count to prevent infinite games
         current_day = 0
 
-        # Use a try-finally block to ensure proper cleanup
+        # Create a simple thread ID for the session
+        thread_id = str(uuid.uuid4())
+
+        # Convert initial state to dict for streaming
+        initial_state_dict = initial_state.model_dump()
+
+        # Stream the game execution
         try:
-            # Create a simple thread ID for the session
-            import uuid
-
-            thread_id = str(uuid.uuid4())
-
-            # Stream the game execution
             for step in agent.app.stream(
-                (
-                    initial_state.dict()
-                    if hasattr(initial_state, "dict")
-                    else initial_state
-                ),
+                initial_state_dict,
                 config={"configurable": {"thread_id": thread_id}},
                 debug=debug,
                 stream_mode="values",
             ):
-                # Visualize the game state
-                agent.visualize_state(step)
+                try:
+                    # Skip empty steps
+                    if not step:
+                        continue
 
-                # Check for game over
-                if (
-                    step.get("game_status") != "ongoing"
-                    or step.get("game_phase") == GamePhase.GAME_OVER.value
-                ):
-                    print(
-                        f"\n🏆 Game Status: {step.get('game_status', 'unknown').upper()}"
-                    )
-                    if step.get("winner"):
-                        print(f"🎖️ Winner: {step.get('winner').upper()}")
-                    break
+                    # Ensure step is a dictionary
+                    if not isinstance(step, dict):
+                        logger.warning(f"Unexpected step type: {type(step)}")
+                        continue
 
-                # Check for errors
-                if step.get("error_message"):
-                    print(f"\n❌ Error: {step.get('error_message')}")
-                    break
+                    # Convert dict to MafiaGameState for visualization
+                    try:
+                        if isinstance(step, dict) and "players" in step:
+                            # Create a MafiaGameState from the dict for visualization
+                            state_for_viz = MafiaGameState.model_validate(step)
+                            agent.visualize_state(state_for_viz)
+                        else:
+                            # If we can't create a proper state, print raw step
+                            print(f"\n📋 Raw step data: {step}")
+                    except Exception as viz_error:
+                        logger.debug(f"Visualization error: {viz_error}")
+                        # Continue even if visualization fails
 
-                # Check day limit to prevent endless games
-                if step.get("day_number", 0) > current_day:
-                    current_day = step.get("day_number", 0)
-                    if current_day > max_days:
-                        print(f"\n⏰ Maximum days ({max_days}) reached. Ending game.")
+                    # Check for game over using dict access
+                    game_status = step.get("game_status", "ongoing")
+                    game_phase = step.get("game_phase")
+
+                    if (
+                        game_status != "ongoing"
+                        or game_phase == GamePhase.GAME_OVER.value
+                    ):
+                        print(f"\n🏆 Game Status: {game_status.upper()}")
+                        winner = step.get("winner")
+                        if winner:
+                            print(f"🎖️ Winner: {winner.upper()}")
                         break
 
-                # Add a slight delay for better readability
-                time.sleep(0.3)
+                    # Check for errors
+                    error_message = step.get("error_message")
+                    if error_message:
+                        print(f"\n❌ Error: {error_message}")
+                        break
 
-        finally:
-            # Try to save game history
+                    # Check day limit to prevent endless games
+                    day_number = step.get("day_number", 0)
+                    if day_number > current_day:
+                        current_day = day_number
+                        if current_day > max_days:
+                            print(
+                                f"\n⏰ Maximum days ({max_days}) reached. Ending game."
+                            )
+                            break
+
+                    # Add a slight delay for better readability
+                    time.sleep(0.3)
+
+                except KeyboardInterrupt:
+                    print("\n⚠️ Game interrupted by user")
+                    break
+                except Exception as step_error:
+                    logger.error(f"Error processing step: {step_error}")
+                    if debug:
+                        traceback.print_exc()
+                    # Continue to next step even if this one fails
+                    continue
+
+        except Exception as stream_error:
+            print(f"\n❌ STREAMING ERROR: {stream_error}")
+            if debug:
+                traceback.print_exc()
+
+    except Exception as setup_error:
+        print(f"\n❌ SETUP ERROR: {setup_error}")
+        if debug:
+            traceback.print_exc()
+
+    finally:
+        # Try to save game history if agent exists
+        if agent is not None:
             try:
                 print("\n📊 Saving game history")
                 agent.save_state_history()
-            except Exception as e:
-                print(f"Could not save game history: {e}")
-
-    except Exception as e:
-        print(f"\n❌ SETUP ERROR: {e!s}")
-        traceback.print_exc()  # Print full error traceback
+                print("✅ Game history saved successfully")
+            except Exception as save_error:
+                print(f"⚠️ Could not save game history: {save_error}")
+                if debug:
+                    traceback.print_exc()
 
     print("\n✅ Game Complete!")
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for command-line execution."""
     import argparse
 
     parser = argparse.ArgumentParser(description="Run a Mafia game simulation")
     parser.add_argument(
-        "--players", type=int, default=9, help="Number of players (including narrator)"
+        "--players",
+        type=int,
+        default=7,
+        help="Number of players (including narrator, minimum 4)",
     )
-    parser.add_argument("--days", type=int, default=3, help="Maximum number of days")
+    parser.add_argument(
+        "--days",
+        type=int,
+        default=3,
+        help="Maximum number of days before forcing game end",
+    )
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 
     args = parser.parse_args()
 
     # Set logging level based on debug flag
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.getLogger().setLevel(logging.INFO)
 
     # Validate arguments
     if args.players < 4:
@@ -210,3 +262,7 @@ if __name__ == "__main__":
 
     # Run the game
     run_mafia_game(player_count=args.players, max_days=args.days, debug=args.debug)
+
+
+if __name__ == "__main__":
+    main()
