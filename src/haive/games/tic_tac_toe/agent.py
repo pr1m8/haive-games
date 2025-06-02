@@ -21,55 +21,45 @@ from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager
 
 @register_agent(TicTacToeConfig)
 class TicTacToeAgent(GameAgent[TicTacToeConfig]):
-    """Agent for playing Tic Tac Toe using structured game flow and LLM inference.
-
-    Responsibilities:
-    - Manage game initialization and state updates
-    - Coordinate X and O player engines to make moves
-    - Optionally analyze game states between turns
-    - Visualize board state and strategies
-    """
+    """Agent for playing Tic Tac Toe using structured game flow and LLM inference."""
 
     def __init__(self, config: TicTacToeConfig = TicTacToeConfig()):
-        """Initialize the Tic Tac Toe agent.
-
-        Args:
-            config (TicTacToeConfig): Configuration object for the agent.
-        """
+        """Initialize the Tic Tac Toe agent."""
         self.state_manager = TicTacToeStateManager
         super().__init__(config)
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
-        """Initialize a new Tic Tac Toe game.
+        """Initialize a new Tic Tac Toe game."""
+        print(f"[DEBUG] initialize_game called")
 
-        Args:
-            state (Dict[str, Any]): Initial state input (usually ignored).
-
-        Returns:
-            Command: Wrapped initial game state.
-        """
         game_state = self.state_manager.initialize(
             first_player=self.config.first_player,
             player_X=self.config.player_X,
             player_O=self.config.player_O,
         )
+
+        print(f"[DEBUG] Game state initialized:")
+        print(f"[DEBUG] Turn: {game_state.turn}")
+        print(f"[DEBUG] Status: {game_state.game_status}")
+        print(f"[DEBUG] Board: {game_state.board}")
+
+        # Return only the essential fields for initialization
         return Command(
-            update=(
-                game_state.model_dump()
-                if hasattr(game_state, "model_dump")
-                else game_state.dict()
-            )
+            update={
+                "board": game_state.board,
+                "turn": game_state.turn,
+                "game_status": game_state.game_status,
+                "player_X": game_state.player_X,
+                "player_O": game_state.player_O,
+                "winner": game_state.winner,
+                "error_message": game_state.error_message,
+                # Don't include lists that might cause issues
+            },
+            goto="make_move",
         )
 
     def prepare_move_context(self, state: TicTacToeState) -> dict[str, Any]:
-        """Prepare structured context for generating a move.
-
-        Args:
-            state (TicTacToeState): Current game state.
-
-        Returns:
-            Dict[str, Any]: Context dictionary with board info, legal moves, and last analysis.
-        """
+        """Prepare structured context for generating a move."""
         legal_moves = self.state_manager.get_legal_moves(state)
         formatted_legal_moves = ", ".join(
             [f"({move.row}, {move.col})" for move in legal_moves]
@@ -81,15 +71,12 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             or (state.turn == "O" and state.player_O == "player1")
             else "player2"
         )
-        player_analysis = None
 
+        player_analysis = "No previous analysis available."
         if current_player == "player1" and state.player1_analysis:
             player_analysis = state.player1_analysis[-1]
         elif current_player == "player2" and state.player2_analysis:
             player_analysis = state.player2_analysis[-1]
-
-        if not player_analysis:
-            player_analysis = "No previous analysis available."
 
         return {
             "board_string": state.board_string,
@@ -101,284 +88,223 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
     def prepare_analysis_context(
         self, state: TicTacToeState, symbol: str
     ) -> dict[str, Any]:
-        """Prepare structured context for analyzing the game board.
-
-        Args:
-            state (TicTacToeState): Current game state.
-            symbol (str): The player symbol ('X' or 'O').
-
-        Returns:
-            Dict[str, Any]: Context dictionary for analysis prompt.
-        """
+        """Prepare structured context for analyzing the game board."""
         return {
             "board_string": state.board_string,
             "player_symbol": symbol,
             "opponent_symbol": "O" if symbol == "X" else "X",
         }
 
-    def extract_move(self, response: Any) -> TicTacToeMove:
-        """Extract a TicTacToeMove object from the LLM engine's response.
+    def make_move(self, state) -> Command:
+        """Make a move for the current player."""
+        print(f"[DEBUG] make_move called with state type: {type(state)}")
 
-        Args:
-            response (Any): The raw response returned from the engine.
-
-        Returns:
-            TicTacToeMove: A move object representing the player's intended action.
-        """
-        return response
-
-    def make_X_move(self, state: TicTacToeState) -> Command:
-        """Perform a move as player X, invoking the configured LLM engine.
-
-        Args:
-            state (TicTacToeState): The current game state.
-
-        Returns:
-            Command: Updated game state after applying X's move.
-        """
-        if state.turn != "X" or state.game_status != "ongoing":
-            return Command(
-                update=(
-                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+        # Convert dict to TicTacToeState if needed
+        if isinstance(state, dict):
+            try:
+                game_state = TicTacToeState(**state)
+                print(f"[DEBUG] Converted dict to TicTacToeState successfully")
+                print(
+                    f"[DEBUG] Turn: {game_state.turn}, Status: {game_state.game_status}"
                 )
-            )
-
-        context = self.prepare_move_context(state)
-        engine = self.engines["X_player"]
-        move = engine.invoke(context)
-        new_state = self.state_manager.apply_move(state, move)
-        return Command(
-            update=(
-                new_state.model_dump()
-                if hasattr(new_state, "model_dump")
-                else new_state.dict()
-            )
-        )
-
-    def make_O_move(self, state: TicTacToeState) -> Command:
-        """Perform a move as player O, invoking the configured LLM engine.
-
-        Args:
-            state (TicTacToeState): The current game state.
-
-        Returns:
-            Command: Updated game state after applying O's move.
-        """
-        if state.turn != "O" or state.game_status != "ongoing":
-            return Command(
-                update=(
-                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                print(f"[DEBUG] Board: {game_state.board}")
+            except Exception as e:
+                print(f"[DEBUG] State conversion failed: {e}")
+                return Command(
+                    update={"error_message": f"State conversion failed: {str(e)}"},
+                    goto=END,
                 )
-            )
+        else:
+            game_state = state
+            print(f"[DEBUG] Using state directly")
 
-        context = self.prepare_move_context(state)
-        engine = self.engines["O_player"]
-        move = engine.invoke(context)
-        new_state = self.state_manager.apply_move(state, move)
-        return Command(
-            update=(
-                new_state.model_dump()
-                if hasattr(new_state, "model_dump")
-                else new_state.dict()
-            )
-        )
+        if game_state.game_status != "ongoing":
+            print(f"[DEBUG] Game not ongoing, status: {game_state.game_status}")
+            return Command(update={}, goto=END)
 
-    def analyze_X(self, state: TicTacToeState) -> Command:
-        """Perform board analysis for player X using the analysis engine.
+        # Determine which engine to use based on current player
+        if game_state.turn == "X":
+            engine = self.engines["X_player"]
+            engine_name = "X_player"
+        else:
+            engine = self.engines["O_player"]
+            engine_name = "O_player"
 
-        Args:
-            state (TicTacToeState): The current game state.
+        print(f"[DEBUG] Using engine: {engine_name} for turn: {game_state.turn}")
 
-        Returns:
-            Command: Updated state containing player X's analysis.
-        """
-        if not self.config.enable_analysis or state.game_status != "ongoing":
-            return Command(
-                update=(
-                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+        try:
+            context = self.prepare_move_context(game_state)
+            print(f"[DEBUG] Prepared context keys: {list(context.keys())}")
+
+            print(f"[DEBUG] Invoking engine...")
+            move = engine.invoke(context)
+            print(f"[DEBUG] Engine returned move: {move}")
+            print(f"[DEBUG] Move type: {type(move)}")
+
+            print(f"[DEBUG] Applying move...")
+            new_state = self.state_manager.apply_move(game_state, move)
+            print(f"[DEBUG] Move applied successfully")
+            print(f"[DEBUG] New board: {new_state.board}")
+            print(f"[DEBUG] New turn: {new_state.turn}")
+            print(f"[DEBUG] New status: {new_state.game_status}")
+
+            # Determine next node
+            if new_state.game_status != "ongoing":
+                next_node = END
+            elif self.config.enable_analysis:
+                next_node = "analyze"
+            else:
+                next_node = "make_move"
+
+            print(f"[DEBUG] Next node: {next_node}")
+
+            # Create targeted updates that work with our reducers
+            update = {
+                "board": new_state.board,  # Replace board
+                "turn": new_state.turn,  # Replace turn
+                "game_status": new_state.game_status,  # Replace status
+                "winner": new_state.winner,  # Replace winner
+                "move_history": [move],  # Add to move history
+            }
+
+            print(f"[DEBUG] Update dict: {update}")
+
+            return Command(update=update, goto=next_node)
+
+        except Exception as e:
+            print(f"[DEBUG] Error in make_move: {e}")
+            import traceback
+
+            traceback.print_exc()
+            return Command(update={"error_message": f"Move failed: {str(e)}"}, goto=END)
+
+    def analyze_position(self, state) -> Command:
+        """Analyze the current position for the player who just moved."""
+        print(f"[DEBUG] analyze_position called")
+
+        # Convert dict to TicTacToeState if needed
+        if isinstance(state, dict):
+            try:
+                game_state = TicTacToeState(**state)
+            except Exception as e:
+                return Command(
+                    update={"error_message": f"State conversion failed: {str(e)}"},
+                    goto=END,
                 )
-            )
+        else:
+            game_state = state
 
-        context = self.prepare_analysis_context(state, "X")
-        engine = self.engines["X_analyzer"]
-        analysis = engine.invoke(context)
-        player = state.player_X
-        new_state = self.state_manager.add_analysis(state, player, analysis)
-        return Command(
-            update=(
-                new_state.model_dump()
-                if hasattr(new_state, "model_dump")
-                else new_state.dict()
-            )
-        )
-
-    def analyze_O(self, state: TicTacToeState) -> Command:
-        """Perform board analysis for player O using the analysis engine.
-
-        Args:
-            state (TicTacToeState): The current game state.
-
-        Returns:
-            Command: Updated state containing player O's analysis.
-        """
-        if not self.config.enable_analysis or state.game_status != "ongoing":
+        if not self.config.enable_analysis or game_state.game_status != "ongoing":
             return Command(
-                update=(
-                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
-                )
+                update={},
+                goto="make_move" if game_state.game_status == "ongoing" else END,
             )
 
-        context = self.prepare_analysis_context(state, "O")
-        engine = self.engines["O_analyzer"]
-        analysis = engine.invoke(context)
-        player = state.player_O
-        new_state = self.state_manager.add_analysis(state, player, analysis)
-        return Command(
-            update=(
-                new_state.model_dump()
-                if hasattr(new_state, "model_dump")
-                else new_state.dict()
+        # Analyze for the player who just moved (opposite of current turn)
+        last_player = "O" if game_state.turn == "X" else "X"
+
+        try:
+            if last_player == "X":
+                engine = self.engines["X_analyzer"]
+                player_name = game_state.player_X
+            else:
+                engine = self.engines["O_analyzer"]
+                player_name = game_state.player_O
+
+            context = self.prepare_analysis_context(game_state, last_player)
+            analysis = engine.invoke(context)
+
+            print(f"[DEBUG] Analysis completed for {player_name}")
+
+            # Determine next step
+            next_node = "make_move" if game_state.game_status == "ongoing" else END
+
+            # Add analysis to appropriate player using the accumulating reducer
+            update = {}
+            if player_name == "player1":
+                update["player1_analysis"] = [analysis]
+            else:
+                update["player2_analysis"] = [analysis]
+
+            return Command(update=update, goto=next_node)
+
+        except Exception as e:
+            print(f"[DEBUG] Error in analyze_position: {e}")
+            return Command(
+                update={"error_message": f"Analysis failed: {str(e)}"},
+                goto="make_move" if game_state.game_status == "ongoing" else END,
             )
-        )
 
-    def visualize_state(self, state: dict[str, Any]) -> None:
-        """Visualize the current game state with board, status, and analysis highlights.
-
-        Args:
-            state (Dict[str, Any]): The latest state dictionary to visualize.
-        """
+    def visualize_state(self, state: TicTacToeState) -> None:
+        """Visualize the current game state (for fallback use)."""
         if not self.config.visualize:
             return
 
-        game_state = TicTacToeState(**state)
-
-        print("\n" + "=" * 50)
-        print(f"\U0001f3ae Game Status: {game_state.game_status}")
-        if game_state.game_status == "ongoing":
-            print(
-                f"Current Turn: {game_state.turn} ({game_state.player_X if game_state.turn == 'X' else game_state.player_O})"
-            )
-        elif game_state.game_status == "draw":
-            print("Game ended in a draw!")
-        elif game_state.game_status.endswith("_win"):
-            winner_symbol = game_state.game_status.split("_")[0]
-            winner_player = (
-                game_state.player_X if winner_symbol == "X" else game_state.player_O
-            )
-            print(f"\U0001f3c6 Winner: {winner_symbol} ({winner_player})")
-        print("=" * 50)
-
-        print("\n" + game_state.board_string)
-
-        if game_state.move_history:
-            last_move = game_state.move_history[-1]
-            print(f"\n\U0001f4dd Last Move: {last_move!s}")
-
-        current_player = (
-            game_state.player_X if game_state.turn == "X" else game_state.player_O
-        )
-
-        if current_player == "player1" and game_state.player2_analysis:
-            last_analysis = game_state.player2_analysis[-1]
-            print("\n\U0001f50d Previous Player's Analysis:")
-            print(f"Position evaluation: {last_analysis['position_evaluation']}")
-            if last_analysis["winning_moves"]:
-                print(
-                    f"Winning moves: {', '.join([str(m) for m in last_analysis['winning_moves']])}"
+        try:
+            game_state = TicTacToeState(**state)
+            print("\n" + "=" * 50)
+            print(f"🎮 Game Status: {game_state.game_status}")
+            if game_state.game_status == "ongoing":
+                current_player = (
+                    game_state.player_X
+                    if game_state.turn == "X"
+                    else game_state.player_O
                 )
-            if last_analysis["blocking_moves"]:
-                print(
-                    f"Blocking moves: {', '.join([str(m) for m in last_analysis['blocking_moves']])}"
-                )
-            if last_analysis["fork_opportunities"]:
-                print(
-                    f"Fork opportunities: {', '.join([str(m) for m in last_analysis['fork_opportunities']])}"
-                )
-            if last_analysis["recommended_move"]:
-                print(f"Recommended move: {last_analysis['recommended_move']}")
+                print(f"Current Turn: {game_state.turn} ({current_player})")
+            print("=" * 50)
+            print(game_state.board_string)
 
-        elif current_player == "player2" and game_state.player1_analysis:
-            last_analysis = game_state.player1_analysis[-1]
-            print("\n\U0001f50d Previous Player's Analysis:")
-            print(f"Position evaluation: {last_analysis['position_evaluation']}")
-            if last_analysis["winning_moves"]:
-                print(
-                    f"Winning moves: {', '.join([str(m) for m in last_analysis['winning_moves']])}"
-                )
-            if last_analysis["blocking_moves"]:
-                print(
-                    f"Blocking moves: {', '.join([str(m) for m in last_analysis['blocking_moves']])}"
-                )
-            if last_analysis["fork_opportunities"]:
-                print(
-                    f"Fork opportunities: {', '.join([str(m) for m in last_analysis['fork_opportunities']])}"
-                )
-            if last_analysis["recommended_move"]:
-                print(f"Recommended move: {last_analysis['recommended_move']}")
+            if game_state.move_history:
+                last_move = game_state.move_history[-1]
+                print(f"\n📝 Last Move: {last_move}")
 
-        time.sleep(0.5)
+            if game_state.error_message:
+                print(f"\n⚠️ Error: {game_state.error_message}")
+
+            time.sleep(0.5)
+
+        except Exception as e:
+            print(f"Error in visualize_state: {e}")
 
     def setup_workflow(self):
+        """Set up the game workflow graph."""
         builder = DynamicGraph(state_schema=self.state_schema)
 
+        # Add nodes
         builder.add_node("initialize", self.initialize_game)
+        builder.add_node("make_move", self.make_move)
+        builder.add_node("analyze", self.analyze_position)
+
+        # Set entry point
         builder.set_entry_point("initialize")
-        builder.add_node("make_X_move", self.make_X_move)
-        builder.add_node("analyze_X", self.analyze_X)
-        builder.add_node("make_O_move", self.make_O_move)
-        builder.add_node("analyze_O", self.analyze_O)
 
-        # Regular edges
-        builder.add_edge(
-            "initialize",
-            "make_X_move" if self.config.first_player == "X" else "make_O_move",
-        )
-
-        builder.add_conditional_edges(
-            "make_X_move",
-            self._check_continue_or_end,  # <- your new branching function
-            {
-                "analyze_X": "analyze_X",
-                "end": END,
-            },
-        )
-
-        builder.add_conditional_edges(
-            "make_O_move",
-            self._check_continue_or_end,
-            {
-                "analyze_X": "analyze_X",
-                "end": END,
-            },
-        )
-
-        # builder.add_edge("analyze_X", "make_O_move")
-        # builder.add_edge("analyze_O", "make_X_move")
+        # Add explicit edges
+        builder.add_edge("initialize", "make_move")
+        builder.add_edge("make_move", "make_move")  # Self-loop for continuous play
+        builder.add_edge("make_move", "analyze")  # For when analysis is enabled
+        builder.add_edge("analyze", "make_move")  # Back to move after analysis
 
         self.graph = builder.build()
 
-    def _check_continue_or_end(self, state: TicTacToeState) -> str:
-        if state.game_status in ("ongoing",):
-            return "analyze_O" if state.turn == "X" else "analyze_X"
-        return "end"
-
-    def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run the full Tic Tac Toe game loop.
-
-        Args:
-            visualize (bool): Whether to print out the game state after each move.
-
-        Returns:
-            Dict[str, Any]: Final game state at the end of the session.
-        """
+    def run_game(self, visualize: bool = True, debug: bool = False):
+        """Run the full Tic Tac Toe game loop."""
         initial_state = TicTacToeStateManager.initialize(
             first_player=self.config.first_player,
             player_X=self.config.player_X,
             player_O=self.config.player_O,
         )
 
+        # Run the game
         if visualize:
-            for step in self.stream(initial_state, stream_mode="values"):
+            for step in self.app.stream(
+                initial_state,
+                stream_mode="values",
+                debug=debug,
+                config=self.runnable_config,
+            ):
                 self.visualize_state(step)
-            return step
-        return super().run(initial_state)
+                time.sleep(1)
+            return step  # Final state
+
+        else:
+            return super().run(initial_state, debug=debug)

@@ -4,7 +4,8 @@ This module defines the `TicTacToeState` class used to represent the board, trac
 It includes helper properties to assess the board and enforce its structure.
 """
 
-from typing import Literal
+import operator
+from typing import Annotated, Any, Literal
 
 from pydantic import Field, field_validator
 
@@ -12,43 +13,79 @@ from ..framework.base.state import GameState
 from ..tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
 
 
+def replace_reducer(left: Any, right: Any) -> Any:
+    """Reducer that always takes the new value (right side)."""
+    return right
+
+
+def add_messages_reducer(left: list, right: list) -> list:
+    """Reducer for message-like lists that should be concatenated."""
+    if not isinstance(left, list):
+        left = []
+    if not isinstance(right, list):
+        right = []
+    return left + right
+
+
+def replace_board_reducer(left: Any, right: Any) -> Any:
+    """Special reducer for the board that always replaces with the new board."""
+    return right
+
+
 class TicTacToeState(GameState):
     """Represents the full game state of a Tic Tac Toe match.
 
-    Attributes:
-        board (List[List[Optional[str]]]): A 3x3 grid containing 'X', 'O', or None.
-        turn (Literal['X', 'O']): Current player's symbol.
-        game_status (Literal['ongoing', 'X_win', 'O_win', 'draw']): Status of the game.
-        move_history (List[TicTacToeMove]): List of moves made during the game.
-        winner (Optional[str]): 'X' or 'O' if someone won, else None.
-        player_X (Literal['player1', 'player2']): Which player controls X.
-        player_O (Literal['player1', 'player2']): Which player controls O.
-        player1_analysis (List[Dict[str, any]]): Analysis performed by player1.
-        player2_analysis (List[Dict[str, any]]): Analysis performed by player2.
+    All fields use explicit reducers to avoid LangGraph concurrent update issues.
     """
 
-    board: list[list[str | None]] = Field(
+    # Player management - this can accumulate
+    players: Annotated[list[str], add_messages_reducer] = Field(
+        default_factory=lambda: ["player1", "player2"],
+        description="List of players in the game",
+    )
+
+    # Game board - always replace with new board
+    board: Annotated[list[list[str | None]], replace_board_reducer] = Field(
         default_factory=lambda: [[None for _ in range(3)] for _ in range(3)],
         description="3x3 game board, each cell can be None, 'X', or 'O'",
     )
-    turn: Literal["X", "O"] = Field(default="X", description="Current player's turn")
-    game_status: Literal["ongoing", "X_win", "O_win", "draw"] = Field(
-        default="ongoing", description="Status of the game"
+
+    # Game state fields - always replace with new value
+    turn: Annotated[Literal["X", "O"], replace_reducer] = Field(
+        default="X", description="Current player's turn"
     )
-    move_history: list[TicTacToeMove] = Field(
+    game_status: Annotated[
+        Literal["ongoing", "X_win", "O_win", "draw"], replace_reducer
+    ] = Field(default="ongoing", description="Status of the game")
+
+    # Move history - accumulate moves
+    move_history: Annotated[list[TicTacToeMove], add_messages_reducer] = Field(
         default_factory=list, description="History of moves"
     )
-    winner: str | None = Field(default=None, description="Winner of the game, if any")
-    player_X: Literal["player1", "player2"] = Field(
+
+    # Error handling - replace with new error
+    error_message: Annotated[str | None, replace_reducer] = Field(
+        default=None, description="Error message if any"
+    )
+
+    # Winner - replace with new value
+    winner: Annotated[str | None, replace_reducer] = Field(
+        default=None, description="Winner of the game, if any"
+    )
+
+    # Player assignment - replace with new values
+    player_X: Annotated[Literal["player1", "player2"], replace_reducer] = Field(
         default="player1", description="Which player is X"
     )
-    player_O: Literal["player1", "player2"] = Field(
+    player_O: Annotated[Literal["player1", "player2"], replace_reducer] = Field(
         default="player2", description="Which player is O"
     )
-    player1_analysis: list[TicTacToeAnalysis] = Field(
+
+    # Analysis storage - accumulate analyses
+    player1_analysis: Annotated[list[TicTacToeAnalysis], add_messages_reducer] = Field(
         default_factory=list, description="Analyses by player1"
     )
-    player2_analysis: list[TicTacToeAnalysis] = Field(
+    player2_analysis: Annotated[list[TicTacToeAnalysis], add_messages_reducer] = Field(
         default_factory=list, description="Analyses by player2"
     )
 
@@ -125,10 +162,13 @@ class TicTacToeState(GameState):
         player_O = kwargs.get("player_O", "player2")
 
         return cls(
+            players=["player1", "player2"],
             board=[[None for _ in range(3)] for _ in range(3)],
             turn=first_player,
             game_status="ongoing",
             move_history=[],
+            error_message=None,
+            winner=None,
             player_X=player_X,
             player_O=player_O,
             player1_analysis=[],

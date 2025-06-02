@@ -33,12 +33,17 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
         board = [[None for _ in range(3)] for _ in range(3)]
 
         return TicTacToeState(
+            players=["player1", "player2"],
             board=board,
             turn=first_player,
             game_status="ongoing",
             move_history=[],
+            error_message=None,
+            winner=None,
             player_X=player_X,
             player_O=player_O,
+            player1_analysis=[],
+            player2_analysis=[],
         )
 
     @classmethod
