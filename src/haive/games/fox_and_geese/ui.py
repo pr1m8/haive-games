@@ -104,7 +104,9 @@ class FoxAndGeeseUI:
                             continue
 
                 # Try to create directly from the dict if it has the right structure
-                if self._is_valid_game_state_dict(state_data):
+                if isinstance(state_data, dict) and self._is_valid_game_state_dict(
+                    state_data
+                ):
                     logger.debug(
                         "Attempting to create FoxAndGeeseState directly from dict"
                     )

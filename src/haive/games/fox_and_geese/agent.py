@@ -159,6 +159,8 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         Returns:
             Dict[str, Any]: The context dictionary for position analysis
         """
+        if isinstance(state, dict):
+            state = FoxAndGeeseState.model_validate(state)
         return {
             "board_string": state.board_string,
             "turn": state.turn,
@@ -301,7 +303,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         )
         return legal_moves[0]
 
-    def make_player1_move(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+    def make_player1_move(self, state: FoxAndGeeseState) -> Command:
         """Make a move for player 1 (fox).
 
         Args:
@@ -324,7 +326,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             }
         )
 
-    def make_player2_move(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+    def make_player2_move(self, state: FoxAndGeeseState) -> Command:
         """Make a move for player 2 (geese).
 
         Args:
@@ -347,7 +349,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             }
         )
 
-    def analyze_player1(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+    def analyze_player1(self, state: FoxAndGeeseState) -> Command:
         """Analyze position for player 1 (fox).
 
         Args:
@@ -361,7 +363,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             update={"fox_analysis": new_state.fox_analysis, "error_message": None}
         )
 
-    def analyze_player2(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+    def analyze_player2(self, state: FoxAndGeeseState) -> Command:
         """Analyze position for player 2 (geese).
 
         Args:
@@ -541,7 +543,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             # Return original state to prevent crashes
             return ensure_game_state(state)
 
-    def analyze_fox_position(self, state: FoxAndGeeseState) -> FoxAndGeeseState:
+    def analyze_fox_position(self, state: FoxAndGeeseState) -> Command:
         """Analyze the current position from the Fox's perspective.
 
         Args:
@@ -552,7 +554,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
-            game_state = ensure_game_state(state)
+            game_state = state
 
             context = self.prepare_analysis_context(game_state, "fox")
 
@@ -564,11 +566,11 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 analysis = self._extract_analysis_data(analysis_response, "fox")
 
                 # Create new state with analysis
-                new_state = game_state.model_copy(deep=True)
-                new_state.fox_analysis.append(analysis)
+                # new_state = game_state.model_copy(deep=True)
+                # new_state.fox_analysis.append(analysis)
 
                 logger.debug("Added fox analysis to state")
-                return new_state
+                return Command(update={"fox_analysis": analysis})
 
             except Exception as e:
                 logger.error(f"Error in fox analysis: {e}")
@@ -592,7 +594,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
-            game_state = ensure_game_state(state)
+            game_state = state
 
             context = self.prepare_analysis_context(game_state, "geese")
 
@@ -608,7 +610,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 new_state.geese_analysis.append(analysis)
 
                 logger.debug("Added geese analysis to state")
-                return new_state
+                return Command(update={"geese_analysis": new_state.geese_analysis})
 
             except Exception as e:
                 logger.error(f"Error in geese analysis: {e}")

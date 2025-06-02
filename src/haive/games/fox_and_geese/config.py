@@ -5,6 +5,8 @@ which includes the game name, state schema, AugLLM configurations,
 enable_analysis, visualize, and max_turns.
 """
 
+from typing import Type
+
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
@@ -22,7 +24,8 @@ class FoxAndGeeseConfig(GameConfig):
     """
 
     name: str = Field(default="fox_and_geese", description="Name of the game")
-    state_schema: type[FoxAndGeeseState] = Field(default=FoxAndGeeseState)
+    input_schema: Type[FoxAndGeeseState] = Field(default=FoxAndGeeseState)
+    state_schema: Type[FoxAndGeeseState] = Field(default=FoxAndGeeseState)
     engines: dict[str, AugLLMConfig] = Field(
         default=fox_and_geese_engines,
         description="Configs for the Fox and Geese engines",

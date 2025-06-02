@@ -14,7 +14,7 @@ from haive.games.fox_and_geese.config import FoxAndGeeseConfig
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 
 # Set up logging - uncomment to see detailed debug logs
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.CRITICAL)
 
 
 def run_fox_and_geese_game(agent: FoxAndGeeseAgent, thread_id: Optional[str] = None):
