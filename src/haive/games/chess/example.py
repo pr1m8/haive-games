@@ -11,7 +11,7 @@ from haive.games.chess.config import ChessAgentConfig
 from haive.games.chess.state import ChessState
 
 
-def run_chess_game(agent: ChessAgent, thread_id: str = None):
+def run_chess_game(agent: ChessAgent, thread_id: str | None = None):
     """Run a chess game using agent.run() with persistent state tracking."""
     # ✅ Generate or use thread_id for persistence continuity
     thread_id = thread_id or f"chess_thread_{uuid.uuid4().hex[:8]}"

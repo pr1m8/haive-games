@@ -28,7 +28,7 @@ white_move_prompt = ChatPromptTemplate.from_messages(
             "\nSelect your move and explain your reasoning.",
         ),
     ]
-)
+).partial(legal_moves_section="")
 
 black_move_prompt = ChatPromptTemplate.from_messages(
     [
@@ -51,7 +51,7 @@ black_move_prompt = ChatPromptTemplate.from_messages(
             "\nSelect your move and explain your reasoning.",
         ),
     ]
-)
+).partial(legal_moves_section="Legal moves: {legal_moves}")
 
 # Create the analysis prompts
 white_analysis_prompt = ChatPromptTemplate.from_messages(

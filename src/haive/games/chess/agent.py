@@ -5,7 +5,7 @@ including the workflow graph, action handlers, and LLM integration.
 """
 
 import copy
-from typing import Any
+from typing import Any, Optional
 
 import chess
 from haive.core.engine.agent.agent import Agent, register_agent
