@@ -1,5 +1,6 @@
-# src/haive/agents/agent_games/checkers/agent.py
+# src/haive/games/checkers/agent.py
 
+import sys
 import time
 from typing import Any
 
@@ -12,16 +13,21 @@ from haive.games.checkers.config import CheckersAgentConfig
 from haive.games.checkers.models import CheckersMove, CheckersPlayerDecision
 from haive.games.checkers.state import CheckersState
 from haive.games.checkers.state_manager import CheckersStateManager
+from haive.games.checkers.ui import CheckersUI
 from haive.games.framework.base import GameAgent
 
 
 @register_agent(CheckersAgentConfig)
 class CheckersAgent(GameAgent[CheckersAgentConfig]):
-    """Agent for playing checkers."""
+    """Agent for playing checkers with beautiful UI."""
 
     def __init__(self, config: CheckersAgentConfig):
         self.state_manager = CheckersStateManager
+        self.ui = CheckersUI()
         super().__init__(config)
+
+        # Set higher recursion limit for complex games
+        sys.setrecursionlimit(10000)
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         game_state = self.state_manager.initialize()
@@ -60,7 +66,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             return Command(update=state_obj.model_dump(), goto=goto)
         return self.make_move(state_obj, "black")
 
-    # In agent.py - update the make_move method:
     def make_move(self, state: CheckersState, player: str) -> Command:
         """Make a move with error handling and retry logic."""
         if state.turn != player:
@@ -69,6 +74,9 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         engine = self.engines.get(f"{player}_player")
         if not engine:
             raise ValueError(f"Missing engine for {player}_player")
+
+        # Show thinking animation
+        self.ui.show_thinking(player)
 
         # Retry logic
         max_attempts = 3
@@ -103,12 +111,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                 context = self.prepare_move_context(state, player)
                 context["error_context"] = error_context
 
-                print(
-                    f"📋 Attempt {attempt}/{max_attempts}: {player.capitalize()} has {len(legal_moves)} legal moves"
-                )
-                if previous_error:
-                    print(f"⚠️ Retrying after error: {previous_error}")
-
                 # Get move decision
                 move_decision = engine.invoke(context)
                 move = self.extract_move(move_decision)
@@ -131,7 +133,9 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                     )
 
                 if valid_move:
-                    print(f"✅ {player.capitalize()} plays: {valid_move}")
+                    # Show the move
+                    self.ui.show_move(valid_move)
+
                     updated_state = self.state_manager.apply_move(state, valid_move)
 
                     # Check game status
@@ -166,7 +170,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                     legal_moves = self.state_manager.get_legal_moves(state)
                     if legal_moves:
                         fallback_move = legal_moves[0]
-                        print(f"⚠️ Using fallback move: {fallback_move}")
+                        self.ui.show_move(fallback_move)
                         updated_state = self.state_manager.apply_move(
                             state, fallback_move
                         )
@@ -252,50 +256,50 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return Command(update=updated_state.model_dump(), goto=f"{player}_move")
 
     def visualize_state(self, state: dict[str, Any]) -> None:
+        """Use the rich UI to visualize state."""
         checker_state = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
-        print("\n" + "=" * 50)
-        print(f"🎮 Current Player: {checker_state.turn.upper()}")
-        print(f"📌 Game Status: {checker_state.game_status}")
-        print("=" * 50)
-        print("\n" + checker_state.board_string)
-        print(f"\n🔴 Red Captures: {checker_state.captured_pieces.get('red', [])}")
-        print(f"⚫ Black Captures: {checker_state.captured_pieces.get('black', [])}")
-        if checker_state.move_history:
-            print(f"\n📝 Last Move: {checker_state.move_history[-1]}")
-        if checker_state.red_analysis and checker_state.turn == "black":
-            a = checker_state.red_analysis[-1]
-            print("\n🔍 Red's Analysis:")
-            print(f"   - Material Advantage: {a.get('material_advantage', 'N/A')}")
-            print(f"   - Center Control: {a.get('control_of_center', 'N/A')}")
-            print(f"   - Suggested Moves: {', '.join(a.get('suggested_moves', []))}")
-        if checker_state.black_analysis and checker_state.turn == "red":
-            a = checker_state.black_analysis[-1]
-            print("\n🔍 Black's Analysis:")
-            print(f"   - Material Advantage: {a.get('material_advantage', 'N/A')}")
-            print(f"   - Center Control: {a.get('control_of_center', 'N/A')}")
-            print(f"   - Suggested Moves: {', '.join(a.get('suggested_moves', []))}")
-        time.sleep(0.5)
+        self.ui.display_state(checker_state)
 
-    def run_game(self, visualize: bool = False) -> dict[str, Any]:
+        # Check for game over
+        if checker_state.game_status == "game_over":
+            self.ui.show_game_over(checker_state)
+
+    def run_game_with_ui(self) -> dict[str, Any]:
+        """Run game with beautiful UI visualization."""
+        initial_state = self.state_manager.initialize()
+
+        # Create runnable config with increased recursion limit
+        config = {
+            "configurable": {"recursion_limit": 1000, "thread_id": "checkers_game"}
+        }
+
+        try:
+            # Display initial state
+            self.ui.display_state(initial_state)
+            time.sleep(2)
+
+            for step in self.app.stream(
+                initial_state.model_dump(), stream_mode="values", config=config
+            ):
+                self.visualize_state(step)
+
+            return step
+        except Exception as e:
+            print(f"Error running game: {e}")
+            return {}
+
+    def run_game(self, visualize: bool = True) -> dict[str, Any]:
+        """Run the checkers game."""
         if visualize:
-            initial_state = self.state_manager.initialize()
-            try:
-                for step in self.app.stream(
-                    initial_state,
-                    stream_mode="values",
-                    debug=True,
-                    config=self.runnable_config,
-                ):
-                    self.visualize_state(step)
-                    time.sleep(1)
-                return step
-            except Exception as e:
-                print(f"Error running game: {e}")
-                return {}
+            return self.run_game_with_ui()
         else:
-            return self.run({})
+            # Create runnable config with increased recursion limit
+            config = {
+                "configurable": {"recursion_limit": 1000, "thread_id": "checkers_game"}
+            }
+            return self.run({}, config=config)
 
     def setup_workflow(self) -> None:
         gb = DynamicGraph(

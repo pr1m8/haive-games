@@ -36,6 +36,13 @@ class CheckersAgentConfig(AgentConfig):
         default_factory=build_checkers_aug_llms,
         description="Engines for the checkers game",
     )
+    runnable_config: RunnableConfig = Field(
+        default_factory=lambda: RunnableConfig(
+            verbose=True,
+            debug=True,
+        ),
+        description="Runnable configuration for the checkers game",
+    )
 
     @classmethod
     def default(cls):
