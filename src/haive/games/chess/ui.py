@@ -1,40 +1,42 @@
-# ✅ FIRST THIRD: RichChessUI class foundation (layout + static renderers, no stream yet)
+"""Chess game UI using Rich for beautiful terminal display."""
 
 import time
-from typing import Any
+from typing import Any, Dict, Optional
 
-import chess  # required for local usage
+import chess
 from rich.align import Align
-from rich.box import SIMPLE
+from rich.box import ROUNDED, SIMPLE
 from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
 from haive.games.chess.agent import ChessAgent
 from haive.games.chess.config import ChessAgentConfig
+from haive.games.chess.state import ChessState
 
 
 class ChessRichUI:
-    """Beautiful Rich UI for displaying a live chess agent game.
-    Inspired by PokerUI, structured with header, board, analysis, move history, and game info.
-    """
+    """Beautiful Rich UI for displaying a live chess agent game."""
 
     def __init__(self):
         self.console = Console()
         self.layout = Layout()
-        self.state: dict[str, Any] | None = None
-        self.last_move: str | None = None
+        self.state: Optional[ChessState] = None
+        self.last_move: Optional[str] = None
+        self.move_count = 0
+        self.start_time = time.time()
         self._setup_layout()
 
     def _setup_layout(self):
-        """Initialize the layout structure"""
+        """Initialize the layout structure."""
         self.layout.split(
             Layout(name="header", size=3),
             Layout(name="body", ratio=1),
-            Layout(name="footer", size=3),
+            Layout(name="footer", size=4),
         )
 
         self.layout["body"].split_row(
@@ -44,222 +46,377 @@ class ChessRichUI:
         )
 
         self.layout["body"]["left_panel"].split(
+            Layout(name="white_info", size=8),
             Layout(name="white_analysis", size=12),
             Layout(name="move_history"),
         )
 
         self.layout["body"]["main"].split(
             Layout(name="board", ratio=1),
+            Layout(name="current_move", size=3),
         )
 
         self.layout["body"]["right_panel"].split(
+            Layout(name="black_info", size=8),
             Layout(name="black_analysis", size=12),
-            Layout(name="captured"),
-            Layout(name="status"),
+            Layout(name="game_info"),
         )
 
     def render_header(self) -> Panel:
-        header_text = Text(
-            "♟️ AI Chess Arena", justify="center", style="bold white on blue"
-        )
-        return Panel(header_text, border_style="blue")
+        """Render the header with title and game time."""
+        elapsed = int(time.time() - self.start_time)
+        minutes, seconds = divmod(elapsed, 60)
+
+        header_text = Text()
+        header_text.append("♔ ", style="bold white")
+        header_text.append("AI Chess Arena", style="bold cyan")
+        header_text.append(" ♚", style="bold black")
+        header_text.append(f"\n⏱️  {minutes:02d}:{seconds:02d}", style="dim")
+
+        return Panel(Align.center(header_text), border_style="cyan", box=ROUNDED)
 
     def render_footer(self) -> Panel:
-        controls = [
-            ("Q", "Quit"),
-            ("← →", "Move Nav"),
-            ("A", "Toggle Analysis"),
-            ("R", "Restart"),
-        ]
-        footer = Text()
-        for key, desc in controls:
-            footer.append(f" {key} ", style="black on white")
-            footer.append(f" {desc}  ", style="white")
-        return Panel(Align.center(footer), border_style="blue")
+        """Render the footer with controls and status."""
+        if self.state and self.state.game_status != "ongoing":
+            # Game over message
+            result_text = Text()
+            if self.state.game_result == "white_win":
+                result_text.append("♔ WHITE WINS! ♔", style="bold green on black")
+            elif self.state.game_result == "black_win":
+                result_text.append("♚ BLACK WINS! ♚", style="bold red on black")
+            else:
+                result_text.append("🤝 DRAW! 🤝", style="bold yellow on black")
+
+            return Panel(Align.center(result_text), border_style="yellow", box=ROUNDED)
+
+        # Normal controls
+        controls = Text()
+        controls.append("Controls: ", style="dim")
+        controls.append("Q", style="bold cyan")
+        controls.append(" Quit  ", style="dim")
+        controls.append("R", style="bold cyan")
+        controls.append(" Restart  ", style="dim")
+        controls.append("S", style="bold cyan")
+        controls.append(" Save Game", style="dim")
+
+        return Panel(Align.center(controls), border_style="dim", box=ROUNDED)
 
     def render_board(self) -> Panel:
+        """Render the chess board with pieces."""
         if not self.state:
+            # Loading state
+            loading = Text()
+            loading.append("♟️  ", style="blink")
+            loading.append("Initializing board...", style="dim italic")
             return Panel(
-                "Waiting for game state...", title="Board", border_style="magenta"
+                Align.center(loading, vertical="middle"),
+                title="Chess Board",
+                border_style="magenta",
+                height=20,
             )
 
-        import chess  # Only import if you have it installed locally
+        try:
+            board = chess.Board(self.state.board_fen)
 
-        board = chess.Board(self.state["board_fens"][-1])
-        lines = str(board).splitlines()
+            # Create board display
+            board_text = Text()
 
-        board_text = Text()
-        for i, line in enumerate(reversed(lines)):
-            board_text.append(f"{8 - i} ", style="bold dim")
-            for c in line.split():
-                style = "white"
-                if c == ".":
-                    piece = "·"
-                    style = "dim"
-                elif c.isupper():
-                    piece = c
-                    style = "bold green"
-                else:
-                    piece = c
-                    style = "bold red"
-                board_text.append(f"{piece} ", style=style)
-            board_text.append("\n")
-        board_text.append("  a b c d e f g h", style="dim")
+            # Add rank numbers and pieces
+            for rank in range(7, -1, -1):
+                # Rank number
+                board_text.append(f" {rank + 1} ", style="bold blue")
 
-        return Panel(board_text, title="Chessboard", border_style="magenta")
+                # Squares
+                for file in range(8):
+                    square = chess.square(file, rank)
+                    piece = board.piece_at(square)
 
-    def render_move_history(self) -> Panel:
-        if not self.state or not self.state.get("move_history"):
-            return Panel("No moves yet", title="Moves", border_style="yellow")
+                    # Determine square color
+                    is_light = (rank + file) % 2 == 1
+                    bg_color = "on grey85" if is_light else "on grey42"
 
-        table = Table(box=SIMPLE, style="dim")
+                    # Check if this square is part of the last move
+                    is_last_move = False
+                    if self.last_move and len(self.last_move) >= 4:
+                        try:
+                            move = chess.Move.from_uci(self.last_move)
+                            if square in [move.from_square, move.to_square]:
+                                is_last_move = True
+                                bg_color = "on yellow4" if is_light else "on yellow3"
+                        except:
+                            pass
 
-        table.add_column("Color", style="dim", width=6)
-        table.add_column("Move", style="bold")
+                    if piece:
+                        # Unicode chess pieces
+                        piece_map = {
+                            "K": "♔",
+                            "Q": "♕",
+                            "R": "♖",
+                            "B": "♗",
+                            "N": "♘",
+                            "P": "♙",
+                            "k": "♚",
+                            "q": "♛",
+                            "r": "♜",
+                            "b": "♝",
+                            "n": "♞",
+                            "p": "♟",
+                        }
+                        piece_char = piece_map.get(piece.symbol(), piece.symbol())
 
-        for color, move in self.state["move_history"][-10:]:
-            move_style = "green" if color == "white" else "red"
-            table.add_row(color.capitalize(), Text(move, style=move_style))
+                        # Piece color
+                        if piece.color == chess.WHITE:
+                            style = f"bold white {bg_color}"
+                        else:
+                            style = f"bold black {bg_color}"
 
-        return Panel(table, title="Move History", border_style="yellow")
+                        board_text.append(f" {piece_char} ", style=style)
+                    else:
+                        # Empty square
+                        board_text.append("   ", style=bg_color)
+
+                board_text.append("\n")
+
+            # File letters
+            board_text.append("   ", style="")
+            for file in "abcdefgh":
+                board_text.append(f" {file} ", style="bold blue")
+
+            return Panel(
+                Align.center(board_text),
+                title="♟️ Board Position ♟️",
+                border_style="magenta",
+                box=ROUNDED,
+            )
+
+        except Exception as e:
+            return Panel(
+                f"Error rendering board: {e}", title="Board", border_style="red"
+            )
+
+    def render_current_move(self) -> Panel:
+        """Render the current move being made."""
+        if not self.state:
+            return Panel("", border_style="dim")
+
+        current = self.state.current_player.upper()
+        style = "bold green" if current == "WHITE" else "bold red"
+
+        move_text = Text()
+        move_text.append(f"{current} TO MOVE", style=style)
+
+        if self.state.game_status == "check":
+            move_text.append(" - CHECK!", style="bold yellow blink")
+
+        return Panel(Align.center(move_text), border_style="cyan", box=SIMPLE)
+
+    def render_player_info(self, color: str) -> Panel:
+        """Render player information panel."""
+        if not self.state:
+            return Panel("", title=f"{color.title()}", border_style="dim")
+
+        info = Table(show_header=False, box=None, padding=0)
+        info.add_column(style="dim")
+        info.add_column(style="bold")
+
+        # Captured pieces
+        captured = self.state.captured_pieces.get(color, [])
+        if captured:
+            piece_map = {
+                "Q": "♕",
+                "R": "♖",
+                "B": "♗",
+                "N": "♘",
+                "P": "♙",
+                "q": "♛",
+                "r": "♜",
+                "b": "♝",
+                "n": "♞",
+                "p": "♟",
+            }
+            captured_str = " ".join(piece_map.get(p, p) for p in captured)
+        else:
+            captured_str = "None"
+
+        info.add_row("Captured:", captured_str)
+
+        # Material count
+        material = len([p for p in captured if p.upper() in "QRBN"])
+        info.add_row("Material:", f"+{material}")
+
+        style = "green" if color == "white" else "red"
+        icon = "♔" if color == "white" else "♚"
+
+        return Panel(
+            info,
+            title=f"{icon} {color.title()} Player",
+            border_style=style,
+            box=ROUNDED,
+        )
 
     def render_analysis(self, color: str) -> Panel:
+        """Render position analysis for a player."""
         if not self.state:
             return Panel(
-                "No data", title=f"{color.capitalize()} Analysis", border_style="cyan"
+                "No analysis yet", title=f"{color.title()} Analysis", border_style="dim"
             )
 
-        analysis = self.state.get(f"{color}_analysis", [])
-        if not analysis:
+        analysis_list = getattr(self.state, f"{color}_analysis", [])
+        if not analysis_list:
             return Panel(
-                "No analysis yet",
-                title=f"{color.capitalize()} Analysis",
+                Text("Analyzing position...", style="dim italic"),
+                title=f"{color.title()} Analysis",
                 border_style="cyan",
             )
 
-        last = analysis[-1]
-        panel = Text()
-        panel.append(f"Score: {last.get('position_score', 'N/A')}\n", style="bold")
-        panel.append(
-            f"Attack: {last.get('attacking_chances', 'N/A')}\n", style="yellow"
-        )
-        panel.append(f"Defense: {last.get('defensive_needs', 'N/A')}\n", style="yellow")
+        # Get latest analysis
+        analysis = analysis_list[-1]
 
-        plans = last.get("suggested_plans", [])
+        panel = Text()
+
+        # Position score with visual bar
+        score = analysis.get("position_score", 0)
+        score_bar = self._create_score_bar(score)
+        panel.append("Position: ", style="dim")
+        panel.append(score_bar)
+        panel.append(f" ({score:+.1f})\n", style="bold")
+
+        # Attacking chances
+        attack = analysis.get("attacking_chances", "Unknown")
+        panel.append("Attack: ", style="dim")
+        panel.append(f"{attack}\n", style="yellow")
+
+        # Defensive needs
+        defense = analysis.get("defensive_needs", "None")
+        if defense and defense != "None":
+            panel.append("Defense: ", style="dim")
+            panel.append(f"{defense}\n", style="orange1")
+
+        # Plans
+        plans = analysis.get("suggested_plans", [])
         if plans:
             panel.append("\nPlans:\n", style="bold underline")
-            for plan in plans:
-                panel.append(f" - {plan}\n", style="dim")
+            for i, plan in enumerate(plans[:3], 1):
+                panel.append(f" {i}. {plan}\n", style="cyan")
 
         style = "green" if color == "white" else "red"
-        return Panel(panel, title=f"{color.capitalize()} Analysis", border_style=style)
-
-    def render_captured(self) -> Panel:
-        if not self.state:
-            return Panel("No captures", title="Captured", border_style="red")
-
-        captured = self.state.get("captured_pieces", {"white": [], "black": []})
-        text = Text()
-        text.append("White captured:\n", style="bold green")
-        text.append(", ".join(captured["white"]) or "None")
-        text.append("\n\nBlack captured:\n", style="bold red")
-        text.append(", ".join(captured["black"]) or "None")
-
-        return Panel(text, title="Captured Pieces", border_style="red")
-
-    def render_status(self) -> Panel:
-        if not self.state:
-            return Panel("Waiting...", title="Game Status", border_style="cyan")
-
-        status = self.state.get("game_status", "Unknown").capitalize()
-        player = self.state.get("current_player", "?").capitalize()
-
-        text = Text()
-        text.append(f"Status: {status}\n", style="bold")
-        text.append(
-            f"Current Player: {player}", style="green" if player == "White" else "red"
+        return Panel(
+            panel, title=f"🧠 {color.title()} Analysis", border_style=style, box=ROUNDED
         )
 
-        return Panel(text, title="Game Info", border_style="cyan")
-
-    def run(self, agent, delay: float = 1.0):
-        """Run the live UI using LangGraph agent streaming.
-
-        Args:
-            agent (ChessAgent): Your instantiated chess agent.
-            delay (float): Delay between frames for readability.
-        """
-        initial_state = {
-            "board_fens": [chess.Board().fen()],
-            "current_player": "white",
-            "turn": "white",
-            "move_history": [],
-            "game_status": "ongoing",
-            "white_analysis": [],
-            "black_analysis": [],
-            "captured_pieces": {"white": [], "black": []},
-            "error_message": None,
-        }
-
-        # Show initial state before streaming starts
-        self.state = initial_state
-        self._update_layout()
-
-        try:
-            with Live(self.layout, refresh_per_second=4) as live:
-                last_update_time = time.time()
-
-                for step in agent.app.stream(
-                    initial_state,
-                    config=agent.runnable_config,
-                    debug=True,  # Enable debug to see what's happening
-                    stream_mode="values",
-                ):
-                    # Update state
-                    self.state = step
-                    self.last_move = (
-                        step["move_history"][-1][1]
-                        if step.get("move_history")
-                        else None
-                    )
-
-                    # Only update the UI at most once per 'delay' seconds
-                    # This prevents UI freezing from too-frequent updates
-                    current_time = time.time()
-                    if current_time - last_update_time >= delay:
-                        self._update_layout()
-                        live.refresh()
-                        last_update_time = current_time
-
-                    # Check for game end or errors
-                    if step.get("error_message"):
-                        self.console.print(
-                            f"\n[bold red]Error: {step['error_message']}[/bold red]"
-                        )
-                        time.sleep(1)
-                        break
-
-                    if step.get("game_status") != "ongoing":
-                        self._update_layout()
-                        live.refresh()
-                        time.sleep(2)
-                        break
-        except Exception as e:
-            self.console.print(
-                f"\n[bold red]Error during game execution: {str(e)}[/bold red]"
+    def render_move_history(self) -> Panel:
+        """Render the move history."""
+        if not self.state or not self.state.move_history:
+            return Panel(
+                Text("No moves yet", style="dim italic"),
+                title="📜 Move History",
+                border_style="yellow",
             )
-            import traceback
 
-            self.console.print(traceback.format_exc())
+        table = Table(box=SIMPLE, show_header=True, header_style="bold")
+        table.add_column("#", style="dim", width=3)
+        table.add_column("White", style="green", width=6)
+        table.add_column("Black", style="red", width=6)
 
-        self.console.print("\n[bold magenta]🏁 Game Over[/bold magenta]")
-        agent.save_state_history()
+        # Group moves by pairs
+        moves = self.state.move_history
+        for i in range(0, len(moves), 2):
+            move_num = i // 2 + 1
+            white_move = moves[i][1] if i < len(moves) else ""
+            black_move = moves[i + 1][1] if i + 1 < len(moves) else ""
+
+            # Highlight last move
+            if i == len(moves) - 1 or i + 1 == len(moves) - 1:
+                table.add_row(
+                    str(move_num),
+                    Text(
+                        white_move,
+                        style="bold green" if i == len(moves) - 1 else "green",
+                    ),
+                    Text(
+                        black_move,
+                        style="bold red" if i + 1 == len(moves) - 1 else "red",
+                    ),
+                )
+            else:
+                table.add_row(str(move_num), white_move, black_move)
+
+        # Only show last 10 move pairs
+        if len(table.rows) > 10:
+            # Create a new table with just the last 10
+            recent_table = Table(box=SIMPLE, show_header=True, header_style="bold")
+            recent_table.add_column("#", style="dim", width=3)
+            recent_table.add_column("White", style="green", width=6)
+            recent_table.add_column("Black", style="red", width=6)
+
+            for row in table.rows[-10:]:
+                recent_table.add_row(*[str(cell) for cell in row])
+
+            table = recent_table
+
+        return Panel(table, title="📜 Recent Moves", border_style="yellow", box=ROUNDED)
+
+    def render_game_info(self) -> Panel:
+        """Render game information and statistics."""
+        if not self.state:
+            return Panel("", title="Game Info", border_style="dim")
+
+        info = Table(show_header=False, box=None)
+        info.add_column(style="dim")
+        info.add_column(style="bold")
+
+        # Game status
+        status = self.state.game_status.upper()
+        status_style = "green" if status == "ONGOING" else "yellow"
+        if status == "CHECKMATE":
+            status_style = "red bold"
+        info.add_row("Status:", Text(status, style=status_style))
+
+        # Move count
+        info.add_row("Moves:", str(len(self.state.move_history)))
+
+        # Current turn
+        turn = self.state.current_player.upper()
+        turn_style = "green" if turn == "WHITE" else "red"
+        info.add_row("Turn:", Text(turn, style=turn_style))
+
+        # Time elapsed
+        elapsed = int(time.time() - self.start_time)
+        minutes, seconds = divmod(elapsed, 60)
+        info.add_row("Time:", f"{minutes:02d}:{seconds:02d}")
+
+        return Panel(info, title="📊 Game Info", border_style="cyan", box=ROUNDED)
+
+    def _create_score_bar(self, score: float) -> Text:
+        """Create a visual score bar."""
+        # Clamp score between -10 and 10
+        score = max(-10, min(10, score))
+
+        # Create bar
+        bar_length = 20
+        center = bar_length // 2
+        position = int(center + (score / 10) * center)
+
+        bar = Text()
+        for i in range(bar_length):
+            if i == position:
+                bar.append("●", style="bold yellow")
+            elif i == center:
+                bar.append("|", style="dim")
+            else:
+                bar.append("─", style="dim")
+
+        return bar
 
     def _update_layout(self):
-        """Update all layout components with current state"""
+        """Update all layout components with current state."""
         self.layout["header"].update(self.render_header())
         self.layout["footer"].update(self.render_footer())
 
+        # Left panel
+        self.layout["body"]["left_panel"]["white_info"].update(
+            self.render_player_info("white")
+        )
         self.layout["body"]["left_panel"]["white_analysis"].update(
             self.render_analysis("white")
         )
@@ -267,19 +424,114 @@ class ChessRichUI:
             self.render_move_history()
         )
 
+        # Main panel
         self.layout["body"]["main"]["board"].update(self.render_board())
+        self.layout["body"]["main"]["current_move"].update(self.render_current_move())
 
+        # Right panel
+        self.layout["body"]["right_panel"]["black_info"].update(
+            self.render_player_info("black")
+        )
         self.layout["body"]["right_panel"]["black_analysis"].update(
             self.render_analysis("black")
         )
-        self.layout["body"]["right_panel"]["captured"].update(self.render_captured())
-        self.layout["body"]["right_panel"]["status"].update(self.render_status())
+        self.layout["body"]["right_panel"]["game_info"].update(self.render_game_info())
+
+    def run(self, agent: ChessAgent, delay: float = 0.5):
+        """Run the live UI with the chess agent.
+
+        Args:
+            agent: The chess agent to run
+            delay: Minimum delay between UI updates (seconds)
+        """
+        # Create initial state
+        initial_state = ChessState()
+
+        # Reset timing
+        self.start_time = time.time()
+
+        # Compile the agent
+        app = agent.app
+
+        # Show loading screen
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=self.console,
+        ) as progress:
+            task = progress.add_task("Initializing chess game...", total=None)
+            time.sleep(1)
+            progress.remove_task(task)
+
+        try:
+            with Live(self.layout, refresh_per_second=4, console=self.console) as live:
+                last_update_time = time.time()
+
+                # Stream the game
+                for step in app.stream(
+                    initial_state.model_dump(),
+                    config=agent.runnable_config,
+                    stream_mode="values",
+                ):
+                    # Update state - step is a dict, convert to ChessState
+                    self.state = ChessState(**step)
+
+                    # Track last move
+                    if self.state.move_history:
+                        self.last_move = self.state.move_history[-1][1]
+                        self.move_count = len(self.state.move_history)
+
+                    # Update UI with rate limiting
+                    current_time = time.time()
+                    if current_time - last_update_time >= delay:
+                        self._update_layout()
+                        live.refresh()
+                        last_update_time = current_time
+
+                    # Check for game end
+                    if self.state.game_status not in ["ongoing", "check"]:
+                        # Final update
+                        self._update_layout()
+                        live.refresh()
+                        time.sleep(3)  # Show final position
+                        break
+
+                    # Check for errors
+                    if self.state.error_message:
+                        self.console.print(
+                            f"\n[bold red]Error: {self.state.error_message}[/bold red]"
+                        )
+                        time.sleep(2)
+                        break
+
+        except KeyboardInterrupt:
+            self.console.print("\n[yellow]Game interrupted by user[/yellow]")
+        except Exception as e:
+            self.console.print(f"\n[bold red]Error during game: {e}[/bold red]")
+            import traceback
+
+            traceback.print_exc()
+
+        # Show final summary
+        if self.state:
+            self.console.print("\n[bold cyan]Game Summary:[/bold cyan]")
+            self.console.print(f"Total moves: {len(self.state.move_history)}")
+            self.console.print(f"Final status: {self.state.game_status}")
+            if self.state.game_result:
+                self.console.print(f"Result: {self.state.game_result}")
 
 
 def main():
+    """Run a chess game with the Rich UI."""
+    # Create configuration
+    config = ChessAgentConfig(name="Chess UI Game", enable_analysis=True, max_moves=200)
+
+    # Create agent
+    agent = ChessAgent(config)
+
+    # Create and run UI
     ui = ChessRichUI()
-    agent = ChessAgent(config=ChessAgentConfig())
-    ui.run(agent)
+    ui.run(agent, delay=0.5)
 
 
 if __name__ == "__main__":
