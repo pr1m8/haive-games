@@ -2,6 +2,7 @@
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
+from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field
 
 from haive.games.checkers.engines import build_checkers_aug_llms
