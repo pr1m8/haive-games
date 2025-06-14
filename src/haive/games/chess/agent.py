@@ -1,12 +1,12 @@
 """Chess agent implementation using LangGraph."""
 
 import copy
-from typing import Any
+from typing import Any, Dict, Optional
 
 import chess
 from haive.core.engine.agent.agent import Agent, register_agent
-from langgraph.graph import END
-from langgraph.types import Command, RetryPolicy
+from langgraph.graph import END, START, StateGraph
+from langgraph.types import Command
 
 from haive.games.chess.config import ChessAgentConfig
 from haive.games.chess.state import ChessState
@@ -24,58 +24,55 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
         # Ensure engines are properly set up
         for key, engine_config in config.engines.items():
-            self.engines[key] = engine_config.create_runnable()
-
-            if self.engines[key] is None:
-                raise ValueError(f"Failed to create engine for {key}")
+            self.engines[key] = engine_config
 
     def setup_workflow(self):
         """Set up the workflow graph for the chess game."""
+        # Build the graph using StateGraph
+        builder = StateGraph(ChessState)
+
         # Add core nodes
-        self.graph.add_node("white_move", self.make_white_move)
-        self.graph.add_node("black_move", self.make_black_move)
-        self.graph.add_node("check_game_status", self.check_game_status)
+        builder.add_node("white_move", self.make_white_move)
+        builder.add_node("black_move", self.make_black_move)
+        builder.add_node("check_game_status", self.check_game_status)
 
-        # Set up entry point
+        # Add analysis nodes if enabled
         if self.config.enable_analysis:
-            self.graph.add_node("analyze_for_white", self.analyze_white_position)
-            self.graph.add_node("analyze_for_black", self.analyze_black_position)
-            self.graph.set_entry_point("analyze_for_white")
+            builder.add_node("analyze_for_white", self.analyze_white_position)
+            builder.add_node("analyze_for_black", self.analyze_black_position)
 
-            # With analysis: analyze → move → check status → route
-            self.graph.add_edge("analyze_for_white", "white_move")
-            self.graph.add_edge("white_move", "check_game_status")
+            # Set entry point to white analysis
+            builder.set_entry_point("analyze_for_white")
 
-            self.graph.add_edge("analyze_for_black", "black_move")
-            self.graph.add_edge("black_move", "check_game_status")
-
-            # Routing from check_game_status
-            self.graph.add_conditional_edges(
-                "check_game_status",
-                self.route_next_step,
-                {
-                    "continue_white": "analyze_for_white",
-                    "continue_black": "analyze_for_black",
-                    "game_over": END,
-                },
-            )
+            # With analysis flow
+            builder.add_edge("analyze_for_white", "white_move")
+            builder.add_edge("white_move", "check_game_status")
+            builder.add_edge("analyze_for_black", "black_move")
+            builder.add_edge("black_move", "check_game_status")
         else:
-            self.graph.set_entry_point("white_move")
+            # Without analysis flow
+            builder.set_entry_point("white_move")
+            builder.add_edge("white_move", "check_game_status")
+            builder.add_edge("black_move", "check_game_status")
 
-            # Without analysis: move → check status → route
-            self.graph.add_edge("white_move", "check_game_status")
-            self.graph.add_edge("black_move", "check_game_status")
+        # Add conditional routing from check_game_status
+        builder.add_conditional_edges(
+            "check_game_status",
+            self.route_next_step,
+            {
+                "continue_white": (
+                    "analyze_for_white" if self.config.enable_analysis else "white_move"
+                ),
+                "continue_black": (
+                    "analyze_for_black" if self.config.enable_analysis else "black_move"
+                ),
+                "game_over": END,
+            },
+        )
 
-            # Routing from check_game_status
-            self.graph.add_conditional_edges(
-                "check_game_status",
-                self.route_next_step,
-                {
-                    "continue_white": "white_move",
-                    "continue_black": "black_move",
-                    "game_over": END,
-                },
-            )
+        # Compile the graph
+        self.graph = builder
+        # self.app = builder.compile()
 
     def make_move(self, state: ChessState, color: str) -> Command:
         """Make a move for the specified player with retry logic."""
@@ -102,7 +99,6 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
                 # Format legal moves for display
                 if len(legal_moves) > 30:
-                    # Show first 30 moves with count of remaining
                     legal_moves_display = legal_moves[:30]
                     legal_moves_str = (
                         ", ".join(legal_moves_display)
@@ -111,10 +107,9 @@ class ChessAgent(Agent[ChessAgentConfig]):
                 else:
                     legal_moves_str = ", ".join(legal_moves)
 
-                # Add examples of legal moves at the start
+                # Add examples of legal moves
                 example_moves = []
                 if legal_moves:
-                    # Pick a few example moves to show format
                     for move in legal_moves[:5]:
                         try:
                             chess_move = chess.Move.from_uci(move)

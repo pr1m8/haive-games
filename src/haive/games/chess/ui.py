@@ -450,7 +450,7 @@ class ChessRichUI:
         # Reset timing
         self.start_time = time.time()
 
-        # Compile the agent
+        # Compile the agent (this will build the graph using build_graph)
         app = agent.app
 
         # Show loading screen
@@ -470,11 +470,14 @@ class ChessRichUI:
                 # Stream the game
                 for step in app.stream(
                     initial_state.model_dump(),
-                    config=agent.runnable_config,
+                    config=agent.config.runnable_config,
                     stream_mode="values",
                 ):
-                    # Update state - step is a dict, convert to ChessState
-                    self.state = ChessState(**step)
+                    # Convert dict to ChessState
+                    if isinstance(step, dict):
+                        self.state = ChessState(**step)
+                    else:
+                        self.state = step
 
                     # Track last move
                     if self.state.move_history:

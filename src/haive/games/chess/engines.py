@@ -4,7 +4,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .models import ChessPlayerDecision, SegmentedAnalysis
+from haive.games.chess.models import ChessPlayerDecision, SegmentedAnalysis
 
 
 def create_white_player_engine() -> AugLLMConfig:
@@ -138,9 +138,7 @@ Be specific and focus on the current position's tactical and strategic elements.
 
 Recent moves: {recent_moves}
 
-Captured pieces:
-- White captured: {captured_pieces[white]}
-- Black captured: {captured_pieces[black]}
+Captured pieces: {captured_pieces}
 
 Analyze this position strategically from White's perspective.""",
             ),
@@ -180,9 +178,7 @@ Be specific and focus on the current position's tactical and strategic elements.
 
 Recent moves: {recent_moves}
 
-Captured pieces:
-- White captured: {captured_pieces[white]}
-- Black captured: {captured_pieces[black]}
+Captured pieces: {captured_pieces}
 
 Analyze this position strategically from Black's perspective.""",
             ),
@@ -197,3 +193,13 @@ Analyze this position strategically from Black's perspective.""",
         description="Black position analysis",
         structured_output_version="v1",
     )
+
+
+def build_chess_aug_llms() -> dict[str, AugLLMConfig]:
+    """Build AugLLMConfig dictionary for chess game engines."""
+    return {
+        "white_player": create_white_player_engine(),
+        "black_player": create_black_player_engine(),
+        "white_analyzer": create_white_analyzer_engine(),
+        "black_analyzer": create_black_analyzer_engine(),
+    }
