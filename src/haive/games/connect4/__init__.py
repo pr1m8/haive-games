@@ -4,15 +4,20 @@ This package provides a complete implementation of the Connect4 game, including:
     - Game agent with LLM-powered players
     - State management and move validation
     - Position analysis and evaluation
-    - Game visualization
+    - Rich UI visualization
     - Configuration and model definitions
 
 Example:
-    >>> from haive.games.connect4 import Connect4Agent, Connect4AgentConfig
+    >>> from haive.games.connect4 import Connect4Agent, Connect4AgentConfig, Connect4UI
     >>>
     >>> # Create and configure a Connect4 agent
     >>> config = Connect4AgentConfig(enable_analysis=True)
     >>> agent = Connect4Agent(config)
+    >>> ui = Connect4UI()
+    >>>
+    >>> # Initialize and display game state
+    >>> state = Connect4State.initialize()
+    >>> ui.display_state(state)
 """
 
 from .agent import Connect4Agent
@@ -24,6 +29,7 @@ from .models import (
 )
 from .state import Connect4State
 from .state_manager import Connect4StateManager
+from .ui import Connect4UI
 
 __all__ = [
     "Connect4Agent",
@@ -33,4 +39,5 @@ __all__ = [
     "Connect4PlayerDecision",
     "Connect4State",
     "Connect4StateManager",
+    "Connect4UI",
 ]
