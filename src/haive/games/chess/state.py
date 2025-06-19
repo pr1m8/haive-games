@@ -1,4 +1,15 @@
-"""Chess game state models."""
+"""Chess game state models.
+
+This module defines the state schema for chess games, including:
+    - Board state representation using FEN notation
+    - Move history tracking
+    - Game status management
+    - Position analysis storage
+    - Player turn tracking
+
+The state schema provides a complete representation of a chess game state
+that can be used by the agent and state manager.
+"""
 
 from typing import Any, Dict, List, Literal, Optional
 
@@ -8,7 +19,35 @@ from pydantic import BaseModel, Field, computed_field
 
 
 class ChessState(StateSchema):
-    """State schema for the chess game using StateSchema base."""
+    """State schema for the chess game.
+
+    This class extends StateSchema to provide a comprehensive representation
+    of a chess game, including board state, move history, game status, and
+    analysis information.
+
+    Attributes:
+        board_fens (List[str]): List of FEN board states, with the most recent at the end.
+        move_history (List[tuple[str, str]]): List of (player_color, UCI move) tuples.
+        current_player (Literal["white", "black"]): Color of the player making the current move.
+        turn (Literal["white", "black"]): Current turn color.
+        game_status (Literal["ongoing", "check", "checkmate", "stalemate", "draw"]): Current status of the game.
+        game_result (Optional[str]): Final game result (white_win, black_win, draw) if game is over.
+        white_analysis (List[Dict[str, Any]]): Position analysis from white's perspective.
+        black_analysis (List[Dict[str, Any]]): Position analysis from black's perspective.
+        captured_pieces (Dict[str, List[str]]): Pieces captured by each player.
+        error_message (Optional[str]): Error message if any error occurred.
+        legal_moves (Optional[str]): String representation of legal moves in current position.
+        recent_moves (Optional[str]): Recent moves formatted for LLM context.
+
+    Examples:
+        >>> from haive.games.chess import ChessState
+        >>> state = ChessState()
+        >>> state.board_fen
+        'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+        >>> board = state.get_board()
+        >>> board.is_check()
+        False
+    """
 
     # Board state
     board_fens: List[str] = Field(
@@ -69,15 +108,35 @@ class ChessState(StateSchema):
     @computed_field
     @property
     def board_fen(self) -> str:
-        """Get the current board state (latest FEN)."""
+        """Get the current board state as FEN notation.
+
+        Returns:
+            str: The FEN representation of the current board position.
+        """
         return self.board_fens[-1] if self.board_fens else chess.Board().fen()
 
     @computed_field
     @property
     def current_board_fen(self) -> str:
-        """Alias for board_fen for compatibility."""
+        """Alias for board_fen for backwards compatibility.
+
+        Returns:
+            str: The FEN representation of the current board position.
+        """
         return self.board_fen
 
     def get_board(self) -> chess.Board:
-        """Get a chess.Board object for the current position."""
+        """Get a chess.Board object for the current position.
+
+        Creates a Python-chess Board object initialized with the current FEN position.
+
+        Returns:
+            chess.Board: Board object representing the current position.
+
+        Example:
+            >>> state = ChessState()
+            >>> board = state.get_board()
+            >>> board.is_game_over()
+            False
+        """
         return chess.Board(self.board_fen)

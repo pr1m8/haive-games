@@ -1,4 +1,15 @@
-"""Chess agent configuration module."""
+"""Chess agent configuration module.
+
+This module provides configuration classes for chess agents, including:
+    - Core game parameters
+    - LLM engine settings
+    - Analysis options
+    - Visualization settings
+    - State schema definition
+
+The configuration system uses Pydantic for validation and default values,
+making it easy to create and customize chess agent instances.
+"""
 
 import uuid
 from typing import Any, Dict, Type
@@ -13,7 +24,35 @@ from haive.games.chess.state import ChessState
 
 
 class ChessAgentConfig(AgentConfig):
-    """Configuration class for chess game agents."""
+    """Configuration class for chess game agents.
+
+    This class defines all configuration parameters for a chess agent,
+    including state schema, LLM engines, game settings, and visualization
+    options.
+
+    Attributes:
+        state_schema (Type[ChessState]): The state schema for the game.
+        enable_analysis (bool): Whether to enable position analysis during gameplay.
+        should_visualize_graph (bool): Whether to visualize the game workflow graph.
+        max_moves (int): Maximum number of moves before forcing a draw.
+        engines (Dict[str, AugLLMConfig]): LLM configurations for players and analyzers.
+        runnable_config (Dict[str, Any]): Runtime configuration for the agent.
+
+    Examples:
+        >>> # Create a basic configuration
+        >>> config = ChessAgentConfig()
+        >>>
+        >>> # Create a configuration with analysis disabled
+        >>> config = ChessAgentConfig(enable_analysis=False)
+        >>>
+        >>> # Create a configuration with custom LLM engines
+        >>> from haive.core.engine.aug_llm import build_aug_llm
+        >>> engines = {
+        ...     "white_player": build_aug_llm("openai", "gpt-4"),
+        ...     "black_player": build_aug_llm("anthropic", "claude-3-opus-20240229"),
+        ... }
+        >>> config = ChessAgentConfig(engines=engines)
+    """
 
     # State schema
     state_schema: Type[ChessState] = Field(
@@ -54,6 +93,12 @@ class ChessAgentConfig(AgentConfig):
     )
 
     class Config:
-        """Pydantic configuration."""
+        """Pydantic configuration.
+
+        This inner class configures Pydantic behavior for the ChessAgentConfig.
+
+        Attributes:
+            arbitrary_types_allowed (bool): Whether to allow arbitrary types in the model.
+        """
 
         arbitrary_types_allowed = True

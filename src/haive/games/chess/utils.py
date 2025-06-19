@@ -4,6 +4,9 @@ This module provides helper functions for the chess game, including:
     - Game status determination
     - Board visualization
     - Move validation
+
+These utilities support the core functionality of the chess module
+by providing common operations used across different components.
 """
 
 import chess
@@ -12,11 +15,26 @@ import chess
 def determine_game_status(board: chess.Board) -> str:
     """Determine the current game status based on the board position.
 
+    Analyzes a chess board to determine its current status (checkmate,
+    stalemate, check, etc.) based on the rules of chess.
+
     Args:
-        board: Chess board to analyze
+        board (chess.Board): Chess board to analyze
 
     Returns:
-        String indicating the game status
+        str: Game status as one of: "checkmate", "stalemate", "draw",
+            "check", or "ongoing"
+
+    Examples:
+        >>> board = chess.Board()
+        >>> determine_game_status(board)
+        'ongoing'
+
+        >>> # Fool's mate position
+        >>> board = chess.Board("rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2")
+        >>> board.push_san("Qh4#")
+        >>> determine_game_status(board)
+        'checkmate'
     """
     if board.is_checkmate():
         return "checkmate"
@@ -32,12 +50,29 @@ def determine_game_status(board: chess.Board) -> str:
 def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
     """Generate an ASCII representation of the chess board.
 
+    Creates a text-based visualization of a chess board from its FEN
+    representation, optionally highlighting the last move made.
+
     Args:
-        fen: FEN string representation of the board
-        last_move: Last move in UCI notation (optional)
+        fen (str): FEN string representation of the board
+        last_move (str | None, optional): Last move in UCI notation (e.g., "e2e4")
+            to highlight on the board. Defaults to None.
 
     Returns:
-        ASCII representation of the board
+        str: ASCII representation of the board with coordinates and
+            optional move highlighting
+
+    Examples:
+        >>> # Starting position
+        >>> board_ascii = generate_ascii_board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+        >>> print(board_ascii.split("\\n")[0])
+        '8 r n b q k b n r'
+
+        >>> # With last move highlighted
+        >>> board_ascii = generate_ascii_board(
+        ...     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+        ...     "e2e4"
+        ... )
     """
     board = chess.Board(fen)
 
@@ -67,14 +102,45 @@ def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
 
 
 def validate_move(fen: str, move_uci: str) -> tuple[bool, str | None, str | None]:
-    """Validate a chess move.
+    """Validate a chess move and return the resulting position.
+
+    Checks if a move is valid in the given position and returns validation
+    results including error messages and the resulting position if valid.
 
     Args:
-        fen: FEN string of the current position
-        move_uci: Move in UCI notation
+        fen (str): FEN string of the current position
+        move_uci (str): Move in UCI notation (e.g., "e2e4")
 
     Returns:
-        Tuple of (is_valid, error_message, resulting_fen)
+        tuple[bool, str | None, str | None]: A tuple containing:
+            - is_valid (bool): Whether the move is legal
+            - error_message (str | None): Error message if move is invalid, None otherwise
+            - resulting_fen (str | None): FEN of the position after the move if valid, None otherwise
+
+    Examples:
+        >>> # Valid move
+        >>> is_valid, error, new_fen = validate_move(
+        ...     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        ...     "e2e4"
+        ... )
+        >>> is_valid
+        True
+        >>> error is None
+        True
+        >>> new_fen.startswith("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
+        True
+
+        >>> # Invalid move
+        >>> is_valid, error, new_fen = validate_move(
+        ...     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        ...     "e2e5"
+        ... )
+        >>> is_valid
+        False
+        >>> "not legal" in error
+        True
+        >>> new_fen is None
+        True
     """
     board = chess.Board(fen)
 

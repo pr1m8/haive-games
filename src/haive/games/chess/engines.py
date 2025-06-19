@@ -1,4 +1,14 @@
-"""Chess game engines using AugLLMConfig."""
+"""Chess game engines using AugLLMConfig.
+
+This module provides LLM engine configurations for chess game agents, including:
+    - Player engines for white and black
+    - Analyzer engines for position evaluation
+    - Prompt templates with chess-specific instructions
+    - Structured output models for moves and analysis
+
+The engines use different LLM configurations optimized for their specific roles,
+with prompt templates designed to generate high-quality chess moves and analysis.
+"""
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
@@ -8,7 +18,24 @@ from haive.games.chess.models import ChessPlayerDecision, SegmentedAnalysis
 
 
 def create_white_player_engine() -> AugLLMConfig:
-    """Create white player engine configuration."""
+    """Create white player engine configuration.
+
+    Configures an LLM engine for generating white's chess moves with:
+    - Specific instructions for UCI move format
+    - Examples of valid moves
+    - Structured output using ChessPlayerDecision model
+    - Appropriate temperature for strategic play
+
+    Returns:
+        AugLLMConfig: Configuration for the white player engine
+
+    Examples:
+        >>> engine = create_white_player_engine()
+        >>> engine.name
+        'white_player'
+        >>> engine.structured_output_model
+        <class 'haive.games.chess.models.ChessPlayerDecision'>
+    """
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -62,7 +89,24 @@ You MUST select one of the legal moves listed above. Analyze the position and ch
 
 
 def create_black_player_engine() -> AugLLMConfig:
-    """Create black player engine configuration."""
+    """Create black player engine configuration.
+
+    Configures an LLM engine for generating black's chess moves with:
+    - Specific instructions for UCI move format
+    - Examples of valid moves
+    - Structured output using ChessPlayerDecision model
+    - Appropriate temperature for strategic play
+
+    Returns:
+        AugLLMConfig: Configuration for the black player engine
+
+    Examples:
+        >>> engine = create_black_player_engine()
+        >>> engine.name
+        'black_player'
+        >>> engine.structured_output_model
+        <class 'haive.games.chess.models.ChessPlayerDecision'>
+    """
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -116,7 +160,25 @@ You MUST select one of the legal moves listed above. Analyze the position and ch
 
 
 def create_white_analyzer_engine() -> AugLLMConfig:
-    """Create white analyzer engine configuration."""
+    """Create white analyzer engine configuration.
+
+    Configures an LLM engine for analyzing chess positions from white's
+    perspective, providing structured analysis with:
+    - Position evaluation score
+    - Attacking opportunities
+    - Defensive needs
+    - Strategic plans
+
+    Returns:
+        AugLLMConfig: Configuration for the white analyzer engine
+
+    Examples:
+        >>> engine = create_white_analyzer_engine()
+        >>> engine.name
+        'white_analyzer'
+        >>> engine.structured_output_model
+        <class 'haive.games.chess.models.SegmentedAnalysis'>
+    """
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -156,7 +218,25 @@ Analyze this position strategically from White's perspective.""",
 
 
 def create_black_analyzer_engine() -> AugLLMConfig:
-    """Create black analyzer engine configuration."""
+    """Create black analyzer engine configuration.
+
+    Configures an LLM engine for analyzing chess positions from black's
+    perspective, providing structured analysis with:
+    - Position evaluation score
+    - Attacking opportunities
+    - Defensive needs
+    - Strategic plans
+
+    Returns:
+        AugLLMConfig: Configuration for the black analyzer engine
+
+    Examples:
+        >>> engine = create_black_analyzer_engine()
+        >>> engine.name
+        'black_analyzer'
+        >>> engine.structured_output_model
+        <class 'haive.games.chess.models.SegmentedAnalysis'>
+    """
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -196,7 +276,25 @@ Analyze this position strategically from Black's perspective.""",
 
 
 def build_chess_aug_llms() -> dict[str, AugLLMConfig]:
-    """Build AugLLMConfig dictionary for chess game engines."""
+    """Build AugLLMConfig dictionary for chess game engines.
+
+    Creates a complete set of engine configurations for a chess agent,
+    including players and analyzers for both white and black.
+
+    Returns:
+        dict[str, AugLLMConfig]: Dictionary of engine configurations with keys:
+            - "white_player": Engine for white's moves
+            - "black_player": Engine for black's moves
+            - "white_analyzer": Engine for analyzing positions from white's perspective
+            - "black_analyzer": Engine for analyzing positions from black's perspective
+
+    Examples:
+        >>> engines = build_chess_aug_llms()
+        >>> len(engines)
+        4
+        >>> sorted(list(engines.keys()))
+        ['black_analyzer', 'black_player', 'white_analyzer', 'white_player']
+    """
     return {
         "white_player": create_white_player_engine(),
         "black_player": create_black_player_engine(),

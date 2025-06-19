@@ -1,4 +1,16 @@
-"""Chess agent implementation using LangGraph."""
+"""Chess agent implementation using LangGraph.
+
+This module provides a chess agent implementation using LangGraph, featuring:
+    - LLM-powered chess players
+    - Position analysis
+    - Game state management
+    - Workflow graph for turn-based gameplay
+    - Error handling and retry logic
+
+The agent orchestrates the game flow between two LLM players and handles
+all game mechanics including move validation, position analysis, and
+game status tracking.
+"""
 
 import copy
 from typing import Any, Dict, Optional
@@ -15,10 +27,33 @@ from haive.games.chess.utils import determine_game_status
 
 @register_agent(ChessAgentConfig)
 class ChessAgent(Agent[ChessAgentConfig]):
-    """Chess agent implementation using LangGraph."""
+    """Chess agent implementation using LangGraph.
+
+    This agent implements a complete chess game using language models for
+    move generation and position analysis. It uses LangGraph to create a
+    workflow graph that manages the game flow between players.
+
+    Features:
+        - LLM-powered chess players with structured outputs
+        - Optional position analysis for enhanced play
+        - Move validation and retry logic
+        - Game status tracking and termination
+        - Error handling and fallback moves
+
+    Attributes:
+        config (ChessAgentConfig): Configuration for the chess agent
+        engines (Dict[str, Any]): LLM engines for players and analyzers
+        graph (StateGraph): LangGraph workflow for the chess game
+    """
 
     def __init__(self, config: ChessAgentConfig):
-        """Initialize the chess agent."""
+        """Initialize the chess agent.
+
+        Args:
+            config (ChessAgentConfig): Configuration for the chess agent,
+                including LLM engine settings, analysis options, and
+                game parameters.
+        """
         super().__init__(config)
         self.engines = {}
 
@@ -27,7 +62,17 @@ class ChessAgent(Agent[ChessAgentConfig]):
             self.engines[key] = engine_config
 
     def setup_workflow(self):
-        """Set up the workflow graph for the chess game."""
+        """Set up the workflow graph for the chess game.
+
+        Creates a LangGraph StateGraph with nodes for:
+            - White player's moves
+            - Black player's moves
+            - Game status checking
+            - Optional position analysis
+
+        The graph flow depends on the current player and game status,
+        with conditional edges for routing between nodes.
+        """
         # Build the graph using StateGraph
         builder = StateGraph(ChessState)
 
@@ -75,7 +120,29 @@ class ChessAgent(Agent[ChessAgentConfig]):
         # self.app = builder.compile()
 
     def make_move(self, state: ChessState, color: str) -> Command:
-        """Make a move for the specified player with retry logic."""
+        """Make a move for the specified player with retry logic.
+
+        This method handles the complete move generation process:
+            1. Gets legal moves from the current position
+            2. Sends context to the appropriate LLM engine
+            3. Validates the returned move
+            4. Updates the game state with the new move
+
+        Includes retry logic for invalid moves, with fallback to a safe
+        move if all attempts fail.
+
+        Args:
+            state (ChessState): Current game state
+            color (str): Player color ("white" or "black")
+
+        Returns:
+            Command: LangGraph command with state updates
+
+        Examples:
+            >>> command = agent.make_move(state, "white")
+            >>> command.update  # Contains the updated game state
+            {'board_fens': [...], 'move_history': [...], ...}
+        """
         print(f"\n🎲 {color.capitalize()}'s turn to move")
 
         # Get the engine for this player
@@ -292,15 +359,45 @@ class ChessAgent(Agent[ChessAgentConfig]):
                     return Command(update={"error_message": error_msg})
 
     def make_white_move(self, state: ChessState) -> Command:
-        """Make a move for the white player."""
+        """Make a move for the white player.
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            Command: LangGraph command with state updates
+        """
         return self.make_move(state, "white")
 
     def make_black_move(self, state: ChessState) -> Command:
-        """Make a move for the black player."""
+        """Make a move for the black player.
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            Command: LangGraph command with state updates
+        """
         return self.make_move(state, "black")
 
     def analyze_position(self, state: ChessState, color: str) -> Command:
-        """Analyze the board position for the specified player."""
+        """Analyze the board position for the specified player.
+
+        This method uses the configured analyzer engine to generate
+        a detailed position analysis from the perspective of the
+        given player color.
+
+        Args:
+            state (ChessState): Current game state
+            color (str): Player color ("white" or "black")
+
+        Returns:
+            Command: LangGraph command with analysis updates
+
+        Note:
+            Analysis results are stored in the state's white_analysis
+            or black_analysis fields, depending on the color.
+        """
         print(f"\n🧠 Analyzing position for {color}")
 
         # Get the engine for this analysis
@@ -345,15 +442,46 @@ class ChessAgent(Agent[ChessAgentConfig]):
             return Command(update={"error_message": error_msg})
 
     def analyze_white_position(self, state: ChessState) -> Command:
-        """Analyze the board position for the white player."""
+        """Analyze the board position for the white player.
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            Command: LangGraph command with white analysis updates
+        """
         return self.analyze_position(state, "white")
 
     def analyze_black_position(self, state: ChessState) -> Command:
-        """Analyze the board position for the black player."""
+        """Analyze the board position for the black player.
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            Command: LangGraph command with black analysis updates
+        """
         return self.analyze_position(state, "black")
 
     def check_game_status(self, state: ChessState) -> Command:
-        """Check and update the game status."""
+        """Check and update the game status.
+
+        This method evaluates the current board position to determine
+        if the game has ended (checkmate, stalemate, draw) or if it
+        should continue.
+
+        Game-ending conditions include:
+        - Checkmate
+        - Stalemate
+        - Insufficient material
+        - Maximum move limit reached
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            Command: LangGraph command with game status updates
+        """
         board = chess.Board(state.board_fen)
 
         # Check for game end conditions
@@ -384,7 +512,24 @@ class ChessAgent(Agent[ChessAgentConfig]):
         return Command(update={"game_status": game_status, "game_result": game_result})
 
     def route_next_step(self, state: ChessState) -> str:
-        """Determine the next step in the workflow."""
+        """Determine the next step in the workflow.
+
+        This conditional router decides where to direct the flow next
+        based on the current game state:
+        - If the game is over, route to the end
+        - Otherwise, route to the next player's turn
+
+        Args:
+            state (ChessState): Current game state
+
+        Returns:
+            str: The next step key for the workflow graph
+
+        Note:
+            Return values correspond to the keys in the conditional
+            edges of the graph: "game_over", "continue_white", or
+            "continue_black".
+        """
         # Check if game is over
         if state.game_status in ["checkmate", "stalemate", "draw"] or state.game_result:
             return "game_over"
