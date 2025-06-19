@@ -1,8 +1,35 @@
-"""Texas Hold'em Player Agent - Clean Version without Fallbacks.
+"""Texas Hold'em Player Agent module for LLM-powered poker players.
 
-This module provides the player agent that acts as a subgraph in the main game.
-Each player has their own decision-making workflow. This version removes all
-fallbacks to expose real issues and provide clear debugging.
+This module implements the player decision-making system for Texas Hold'em poker,
+providing a complete workflow for analyzing the game state and making strategic decisions.
+The player agent is implemented as a subgraph in the main game graph, with each player
+having their own autonomous decision-making process.
+
+Key components:
+    - PlayerSubgraphState: State model for player decision-making
+    - HoldemPlayerAgentConfig: Configuration for player agents
+    - HoldemPlayerAgent: The player agent implementation with decision workflow
+    - Decision pipeline: Situation analysis -> Hand analysis -> Opponent analysis -> Decision
+
+The agent uses a multi-step analysis process, with each step handled by a specialized
+LLM engine to generate the final poker decision. This design allows for detailed reasoning
+about poker strategy based on the current game state.
+
+Example:
+    >>> from haive.games.hold_em.player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
+    >>> from haive.games.hold_em.engines import build_player_engines
+    >>>
+    >>> # Create a player configuration
+    >>> player_engines = build_player_engines("Alice", "balanced")
+    >>> player_config = HoldemPlayerAgentConfig(
+    ...     name="player_alice",
+    ...     player_name="Alice",
+    ...     player_style="balanced",
+    ...     engines=player_engines
+    ... )
+    >>>
+    >>> # Create the player agent
+    >>> player_agent = HoldemPlayerAgent(player_config)
 """
 
 import json
@@ -34,7 +61,16 @@ logger = logging.getLogger(__name__)
 
 
 class PlayerSubgraphState(BaseModel):
-    """State for the player decision subgraph."""
+    """State model for the player decision subgraph.
+
+    This model represents the complete state for a player's decision-making process,
+    including the inputs from the main game, intermediate analysis results, and the
+    final decision output. It tracks the entire decision pipeline from situation
+    analysis through hand analysis and opponent modeling to the final betting decision.
+
+    The state is passed between nodes in the player's decision graph and accumulates
+    information at each step, ultimately producing a final poker action decision.
+    """
 
     # Input from main game
     game_state: HoldemState = Field(description="Current game state")
@@ -63,7 +99,16 @@ class PlayerSubgraphState(BaseModel):
 
 
 class HoldemPlayerAgentConfig(AgentConfig):
-    """Configuration for Hold'em player agent."""
+    """Configuration for Hold'em player agent.
+
+    This configuration class defines the parameters for a Texas Hold'em player agent,
+    including player identity, playing style, risk tolerance, and the LLM engines
+    used for different aspects of decision-making.
+
+    The configuration is used to initialize a player agent with specific characteristics
+    and behavior patterns. Different combinations of style and risk_tolerance create
+    varied player behaviors from conservative to aggressive play.
+    """
 
     state_schema: type = Field(default=PlayerSubgraphState)
     player_name: str = Field(description="Name of this player")
@@ -83,7 +128,23 @@ class HoldemPlayerAgentConfig(AgentConfig):
 
 
 class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
-    """Player agent for Texas Hold'em - Clean version without fallbacks."""
+    """Player agent for Texas Hold'em poker games.
+
+    This agent implements the complete decision-making pipeline for a poker player,
+    analyzing the game state and making betting decisions based on a multi-step process:
+
+    1. Situation analysis - Evaluate position, pot odds, betting action, etc.
+    2. Hand analysis - Assess hole cards and community cards strength
+    3. Opponent analysis - Model opponents' tendencies and likely holdings
+    4. Final decision - Synthesize analyses into a concrete betting action
+
+    Each step is handled by a specialized LLM engine configured with poker-specific prompts.
+    The agent supports different playing styles (tight, loose, aggressive, etc.) and can
+    adapt its risk tolerance and strategy based on configuration.
+
+    This agent does not include fallback mechanisms, allowing for clear error exposure
+    and debugging of decision-making issues.
+    """
 
     def __init__(self, config: HoldemPlayerAgentConfig):
         # Ensure the config uses the correct state schema
@@ -102,7 +163,22 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         self.error_log = []
 
     def _validate_required_engines(self):
-        """Validate that all required engines are present and configured."""
+        """Validate that all required LLM engines are present and properly configured.
+
+        This method checks that all the necessary engines for the player's decision
+        pipeline exist and have the required attributes (structured_output_model and
+        prompt_template). It raises ValueError with detailed messages if any engines
+        are missing or misconfigured.
+
+        Required engines:
+            - situation_analyzer: Analyzes game situation (position, pot, betting)
+            - hand_analyzer: Evaluates hand strength and potential
+            - opponent_analyzer: Models opponent behavior and tendencies
+            - decision_maker: Makes final betting decisions
+
+        Raises:
+            ValueError: If any required engines are missing or misconfigured
+        """
         required_engines = [
             "situation_analyzer",
             "hand_analyzer",
@@ -138,7 +214,20 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         logger.info(f"✅ All required engines validated for {self.config.player_name}")
 
     def setup_workflow(self):
-        """Setup the player decision workflow."""
+        """Setup the player decision workflow graph.
+
+        This method configures the LangGraph workflow for player decision-making,
+        establishing the sequence of analysis steps and their dependencies.
+
+        The workflow follows a linear sequence:
+        1. START → analyze_situation: Evaluate the current game situation
+        2. analyze_situation → analyze_hand: Assess the player's hand strength
+        3. analyze_hand → analyze_opponents: Analyze opponent tendencies
+        4. analyze_opponents → make_decision: Make the final betting decision
+        5. make_decision → END: Return the final decision
+
+        Each step must complete successfully in sequence for the decision to be made.
+        """
         logger.info(f"🔧 Setting up workflow for {self.config.player_name}")
 
         # Create state graph with PlayerSubgraphState
@@ -162,7 +251,25 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def analyze_situation(
         self, state: PlayerSubgraphState
     ) -> Command[Literal["analyze_hand"]]:
-        """Analyze the current game situation."""
+        """Analyze the current game situation and table dynamics.
+
+        This node in the decision graph evaluates the overall poker situation including
+        position, pot size, betting action, stack sizes, and game phase. It forms the
+        foundation for subsequent decision-making steps.
+
+        The analysis is performed by the 'situation_analyzer' LLM engine and the results
+        are added to the state for use in later decision steps.
+
+        Args:
+            state (PlayerSubgraphState): The current state containing game information
+                and player identity.
+
+        Returns:
+            Command: State update with situation analysis results
+
+        Raises:
+            RuntimeError: If player not found in game state or analysis fails
+        """
         logger.info(f"🔍 {self.config.player_name}: Analyzing situation...")
         if isinstance(state, dict):
             state = PlayerSubgraphState.model_validate(state)
@@ -259,7 +366,28 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def analyze_hand(
         self, state: PlayerSubgraphState
     ) -> Command[Literal["analyze_opponents"]]:
-        """Analyze the player's hand strength."""
+        """Analyze the player's hand strength and potential.
+
+        This node evaluates the strength of the player's hole cards in combination
+        with the community cards, calculating hand rankings, draw potential, and
+        relative strength against likely opponent ranges.
+
+        The analysis is performed by the 'hand_analyzer' LLM engine, which considers:
+        - Current made hand (pair, two pair, etc.)
+        - Drawing possibilities (flush draws, straight draws)
+        - Pot odds vs. hand equity
+        - Hand strength at current game phase
+
+        Args:
+            state (PlayerSubgraphState): The current state containing game information,
+                player identity, and situation analysis.
+
+        Returns:
+            Command: State update with hand analysis results
+
+        Raises:
+            RuntimeError: If player not found or analysis fails
+        """
         logger.info(f"🃏 {self.config.player_name}: Analyzing hand...")
         if isinstance(state, dict):
             print("--------------------------------")
@@ -351,8 +479,32 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             # Don't use fallbacks - let the error propagate
             raise RuntimeError(error_msg) from e
 
-    def analyze_opponents(self, state):
-        """Analyze opponent behavior and tendencies."""
+    def analyze_opponents(
+        self, state: PlayerSubgraphState
+    ) -> Command[Literal["make_decision"]]:
+        """Analyze opponent behavior, tendencies, and likely holdings.
+
+        This node models opponents' play styles, betting patterns, and probable
+        hand ranges based on their actions in the current hand and previous history.
+        It helps inform strategic decisions by understanding opponent tendencies.
+
+        The analysis is performed by the 'opponent_analyzer' LLM engine, which considers:
+        - Betting patterns and sizing tells
+        - Position-based tendencies
+        - Aggression levels
+        - Likely hand ranges based on actions
+        - Exploitable tendencies
+
+        Args:
+            state (PlayerSubgraphState): The current state containing game information,
+                player identity, situation analysis, and hand analysis.
+
+        Returns:
+            Command: State update with opponent analysis results
+
+        Raises:
+            RuntimeError: If analysis fails
+        """
         try:
             # Get the opponent analyzer engine
             analyzer = self.engines["opponent_analyzer"]
@@ -465,7 +617,32 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         }
 
     def make_decision(self, state: PlayerSubgraphState) -> Command[Literal[END]]:
-        """Make the final betting decision - FIXED to handle BettingDecision model."""
+        """Make the final betting decision based on all previous analyses.
+
+        This is the final node in the decision graph that synthesizes all previous
+        analyses (situation, hand, opponents) into a concrete poker action: fold,
+        check, call, bet, raise, or all-in. It handles validation and correction
+        of decisions to ensure they're legal within the game rules.
+
+        The decision is made by the 'decision_maker' LLM engine, which produces a
+        structured betting decision with:
+        - The primary action to take
+        - Bet/raise amount if applicable
+        - Detailed reasoning for the decision
+        - Confidence level
+
+        This method handles both PlayerDecisionModel and BettingDecision model formats
+        by normalizing them to a consistent structure.
+
+        Args:
+            state (PlayerSubgraphState): The complete state with all analysis results
+
+        Returns:
+            Command: Final state update with the betting decision
+
+        Raises:
+            RuntimeError: If player lookup fails or decision making fails
+        """
         if isinstance(state, dict):
             state = PlayerSubgraphState.model_validate(state)
 
@@ -573,12 +750,30 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
     def _normalize_decision(self, decision: Any) -> Dict[str, Any]:
         """
-        Normalize different decision model formats to a consistent dictionary.
+        Normalize different decision model formats to a consistent dictionary structure.
+
+        This method handles the conversion of various structured output formats into
+        a standardized decision dictionary that can be used by the game agent. It's
+        necessary because different LLM engines may return different structured output models.
 
         Handles:
         - BettingDecision model (primary_action, bet_size, etc.)
         - PlayerDecisionModel (action, amount, etc.)
-        - Raw dictionaries
+        - Raw dictionaries with various field names
+
+        Args:
+            decision (Any): The decision object from the LLM engine
+
+        Returns:
+            Dict[str, Any]: Normalized decision dictionary with standardized fields:
+                - action: The poker action (fold, check, call, bet, raise, all_in)
+                - amount: The bet/raise amount (if applicable)
+                - reasoning: Explanation for the decision
+                - confidence: Confidence level (0-1)
+                - Additional fields may be included depending on the source format
+
+        Raises:
+            RuntimeError: If the decision cannot be converted to a dictionary
         """
         # Convert to dict if it's a Pydantic model
         if hasattr(decision, "model_dump"):
@@ -654,7 +849,20 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _calculate_pot_odds(
         self, game_state: HoldemState, player: PlayerState
     ) -> float:
-        """Calculate pot odds for the player."""
+        """Calculate pot odds for the player's current decision.
+
+        Pot odds represent the ratio between the current call amount and the
+        potential pot after calling. This is a key factor in making mathematically
+        sound poker decisions, especially for drawing hands.
+
+        Args:
+            game_state (HoldemState): Current game state
+            player (PlayerState): Player to calculate odds for
+
+        Returns:
+            float: Pot odds as a ratio (0.0 to 1.0), where lower values are better.
+                  Returns 0.0 if no call is required.
+        """
         if game_state.current_bet <= player.current_bet:
             return 0.0  # No additional bet required
 
@@ -668,7 +876,26 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _get_available_actions(
         self, game_state: HoldemState, player: PlayerState
     ) -> List[str]:
-        """Get list of available actions for the player."""
+        """Get list of available legal actions for the player in the current game state.
+
+        This method determines which poker actions are legally available to the player
+        based on the current game state, betting situation, and player's chip stack.
+        It prevents the agent from attempting illegal actions like checking when there's
+        a bet to call.
+
+        Args:
+            game_state (HoldemState): Current game state
+            player (PlayerState): Player to determine actions for
+
+        Returns:
+            List[str]: List of available action strings that may include:
+                - "fold": Always available unless already all-in
+                - "check": Available if no current bet to call
+                - "call": Available if there's a bet and player has chips
+                - "bet": Available if no current bet and player has chips
+                - "raise": Available if there's a bet and player has enough chips
+                - "all_in": Always available if player has chips
+        """
         actions = []
 
         # Can always fold (unless all-in)
@@ -704,7 +931,30 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _validate_decision(
         self, decision: Dict[str, Any], game_state: HoldemState, player: PlayerState
     ) -> Dict[str, Any]:
-        """Validate and potentially correct a decision."""
+        """Validate and correct a decision to ensure it's legal in the current game state.
+
+        This method ensures that the LLM-generated decision is valid and legal according
+        to poker rules. It checks that the chosen action is available, and that bet
+        amounts are within allowed ranges. If issues are found, it corrects them to
+        maintain game integrity.
+
+        Corrections include:
+        - Ensuring the action is in the available actions list
+        - Adjusting bet/raise amounts to meet minimum requirements
+        - Adjusting call amounts to match the current bet
+        - Converting actions to all-in when the amount exceeds player chips
+
+        Args:
+            decision (Dict[str, Any]): The normalized decision dictionary
+            game_state (HoldemState): Current game state
+            player (PlayerState): Player making the decision
+
+        Returns:
+            Dict[str, Any]: Validated and potentially corrected decision dictionary
+
+        Raises:
+            RuntimeError: If the action is invalid and cannot be corrected
+        """
         action = decision.get("action", "fold")
         amount = decision.get("amount", 0)
 
@@ -766,7 +1016,24 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         return validated
 
     def save_debug_logs(self, timestamp: str = None):
-        """Save debug logs for this player agent."""
+        """Save debug logs for this player agent to JSON files.
+
+        This method saves three types of debug logs to help with debugging and
+        analyzing player agent behavior:
+        - Analysis log: Records details of situation, hand, and opponent analyses
+        - Decision log: Records betting decisions and their reasoning
+        - Error log: Records any errors encountered during decision-making
+
+        Args:
+            timestamp (str, optional): Timestamp string for log filenames.
+                If None, current datetime will be used.
+
+        Returns:
+            None: Files are saved to the current directory with names like:
+                player_analysis_{player_name}_{timestamp}.json
+                player_decisions_{player_name}_{timestamp}.json
+                player_errors_{player_name}_{timestamp}.json
+        """
         if timestamp is None:
             import datetime
 

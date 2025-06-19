@@ -1,10 +1,40 @@
-"""Texas Hold'em Game Agent - Fixed Debug Version.
+"""Texas Hold'em Game Agent module - Main game coordinator and manager.
 
-Key fixes:
-1. Better player ID handling and validation
-2. More robust error checking
-3. Improved logging for debugging
-4. Fixed player lookup issues
+This module implements the core game management system for Texas Hold'em poker,
+coordinating the game flow, player interactions, betting rounds, and showdowns.
+It serves as the central orchestrator that manages the complete lifecycle of a
+poker game from setup to completion.
+
+Key features:
+    - Complete poker game flow management with LangGraph
+    - Betting round coordination and hand progression
+    - Player action validation and processing
+    - Pot management and chip tracking
+    - Showdown evaluation and winner determination
+    - Game state persistence and history tracking
+
+The game agent creates and manages subgraph agents for each player, allowing them
+to make independent decisions within the overall game context. It handles all
+aspects of the game rules, ensuring proper sequencing of rounds and actions.
+
+Example:
+    >>> from haive.games.hold_em.game_agent import HoldemGameAgent
+    >>> from haive.games.hold_em.config import create_default_holdem_config
+    >>>
+    >>> # Create a game configuration
+    >>> config = create_default_holdem_config(num_players=4)
+    >>>
+    >>> # Initialize the game agent
+    >>> agent = HoldemGameAgent(config)
+    >>>
+    >>> # Run the game
+    >>> result = agent.app.invoke({}, debug=True)
+
+Implementation details:
+    - Enhanced player ID handling and validation
+    - Robust error checking and recovery
+    - Comprehensive logging for debugging
+    - Fixed player lookup and identification
 """
 
 import json
@@ -35,7 +65,17 @@ logger = logging.getLogger(__name__)
 
 
 class HoldemGameAgentConfig(AgentConfig):
-    """Configuration for the main Hold'em game agent."""
+    """Configuration for the main Hold'em game agent.
+
+    This configuration class defines the parameters for a Texas Hold'em game,
+    including the number of players, blinds, starting chips, game limits, and
+    player agent configurations. It encapsulates all the settings needed to
+    initialize and run a complete poker game.
+
+    The configuration serves as the blueprint for creating a HoldemGameAgent
+    instance with specific game rules and player characteristics. It can be
+    created directly or through helper functions in the config module.
+    """
 
     state_schema: type = Field(default=HoldemState)
 
@@ -62,7 +102,28 @@ class HoldemGameAgentConfig(AgentConfig):
 
 @register_agent(HoldemGameAgentConfig)
 class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
-    """Main Texas Hold'em game agent - Fixed debug version."""
+    """Main Texas Hold'em game agent that coordinates the complete poker game.
+
+    This agent manages the entire lifecycle of a Texas Hold'em poker game,
+    implementing all game rules, betting rounds, player actions, and hand evaluations.
+    It creates and coordinates player subgraphs, manages the central game state,
+    and ensures proper game flow from initial setup through the final showdown.
+
+    The game progresses through the standard Texas Hold'em phases:
+    1. Setup hand and post blinds
+    2. Deal hole cards and run preflop betting
+    3. Deal flop (3 community cards) and run flop betting
+    4. Deal turn (4th community card) and run turn betting
+    5. Deal river (5th community card) and run river betting
+    6. Showdown evaluation and pot distribution
+    7. Proceed to next hand or end game
+
+    Between betting rounds, the agent routes the game flow based on the current
+    state, handling special cases like all players folded or all-in situations.
+
+    This version includes enhanced debugging capabilities, robust player ID handling,
+    and comprehensive error recovery mechanisms.
+    """
 
     def __init__(self, config: HoldemGameAgentConfig):
         super().__init__(config)
@@ -77,7 +138,19 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         self.setup_player_agents()
 
     def setup_player_agents(self):
-        """Set up player subgraph agents with detailed logging."""
+        """Set up player subgraph agents with detailed logging.
+
+        This method initializes a HoldemPlayerAgent instance for each player in the game
+        based on the player configurations. It creates the independent decision-making
+        subgraphs that will be invoked during betting rounds. The method includes
+        comprehensive error handling and logging to ensure all agents are properly created.
+
+        The player agents are stored in a dictionary keyed by player name for later
+        retrieval during decision-making phases.
+
+        Raises:
+            RuntimeError: If any required player agent cannot be created successfully
+        """
         logger.info(f"🎭 Setting up {len(self.config.player_configs)} player agents...")
 
         for player_config in self.config.player_configs:
@@ -102,7 +175,18 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 )
 
     def log_agent_config(self, player_config: HoldemPlayerAgentConfig):
-        """Log detailed player agent configuration."""
+        """Log detailed player agent configuration for debugging purposes.
+
+        This method creates a structured representation of a player agent's configuration
+        and logs it for debugging. It includes information about the player's style,
+        risk tolerance, engines, and engine details such as models and output formats.
+
+        Args:
+            player_config (HoldemPlayerAgentConfig): The player configuration to log
+
+        Returns:
+            None: The configuration is logged to the logger
+        """
         config_info = {
             "player_name": player_config.player_name,
             "player_style": player_config.player_style,
@@ -126,7 +210,22 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         logger.info(f"Player config: {json.dumps(config_info, indent=2)}")
 
     def setup_workflow(self):
-        """Setup the main game workflow."""
+        """Setup the main game workflow graph with all nodes and transitions.
+
+        This method configures the complete LangGraph workflow for the poker game,
+        defining all game phases, decision points, and conditional routing logic.
+        It establishes the core game flow including:
+
+        1. Game setup nodes: setup_hand, post_blinds, deal_hole_cards
+        2. Betting round nodes: preflop_betting, flop_betting, turn_betting, river_betting
+        3. Card dealing nodes: deal_flop, deal_turn, deal_river
+        4. Game conclusion nodes: showdown, award_pot, check_game_end
+        5. Player decision node: Invokes player subgraphs for decisions
+
+        The graph includes conditional edges to route game flow based on the current
+        state, such as proceeding to the next betting round or directly to showdown
+        when appropriate. This creates a complete state machine for poker game flow.
+        """
         logger.info("🔧 Setting up game workflow...")
 
         # Create state graph
@@ -222,7 +321,22 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         logger.info("✅ Game workflow setup complete")
 
     def setup_hand(self, state: HoldemState) -> Command[Literal["post_blinds"]]:
-        """Setup a new hand."""
+        """Setup a new poker hand by initializing deck and player states.
+
+        This node initializes a new hand by creating and shuffling a deck,
+        resetting player states, advancing the dealer position, and setting up
+        player positions around the table. It prepares all the necessary state
+        for starting a new hand of poker.
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update with new deck, reset community cards, pot, etc.
+
+        Raises:
+            RuntimeError: If hand setup fails due to errors
+        """
         logger.info(f"\n🃏 Setting up hand #{state.hand_number}")
 
         try:
@@ -273,7 +387,22 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Hand setup failed: {str(e)}")
 
     def post_blinds(self, state: HoldemState) -> Command[Literal["deal_hole_cards"]]:
-        """Post small and big blinds."""
+        """Post small and big blinds to start the betting.
+
+        This node identifies the small blind and big blind players based on
+        their positions, collects the blind amounts from them, and adds these
+        amounts to the pot. If a player doesn't have enough chips for their blind,
+        they go all-in with their remaining chips.
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update with updated pot, player chips, and actions
+
+        Raises:
+            RuntimeError: If blind players cannot be found or posting fails
+        """
         logger.info("💰 Posting blinds...")
 
         try:
@@ -353,7 +482,22 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def deal_hole_cards(
         self, state: HoldemState
     ) -> Command[Literal["preflop_betting"]]:
-        """Deal hole cards to all players."""
+        """Deal two hole cards to each active player in the game.
+
+        This node deals two private cards to each active player from the deck,
+        and determines the first player to act in the preflop betting round.
+        For standard games, the first player to act is the one after the big blind.
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update with updated deck, player hole cards, and
+                     the index of the first player to act
+
+        Raises:
+            RuntimeError: If there aren't enough cards or dealing fails
+        """
         logger.info("🎴 Dealing hole cards...")
 
         try:
@@ -401,7 +545,33 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Dealing hole cards failed: {str(e)}")
 
     def get_player_decision(self, state: HoldemState) -> Command:
-        """Get decision from current player using their subgraph - ENHANCED DEBUG VERSION."""
+        """Get decision from current player using their subgraph agent.
+
+        This is a critical node that invokes the current player's subgraph agent
+        to get their poker decision (fold, check, call, bet, raise, or all-in).
+        The method performs extensive validation of player IDs and provides detailed
+        debugging information to track the decision process.
+
+        The workflow:
+        1. Identifies the current player and validates their player_id
+        2. Prepares input for the player's subgraph agent
+        3. Invokes the player agent with the game state and player ID
+        4. Receives the decision and applies it to the game state
+
+        Enhanced debug features include:
+        - Comprehensive player ID validation and repair
+        - Detailed logging of decision context and results
+        - Error tracking with comprehensive context
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update based on the player's action
+
+        Raises:
+            RuntimeError: If player lookup fails or decision-making fails
+        """
 
         # Ensure we have proper state object
         if isinstance(state, dict):
@@ -643,7 +813,29 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _apply_player_action(
         self, state: HoldemState, player: PlayerState, decision: Dict[str, Any]
     ) -> Command:
-        """Apply a player's action to the game state."""
+        """Apply a player's action to the game state and update chips and pot.
+
+        This method processes a player's poker decision, updating the game state
+        according to the chosen action (fold, check, call, bet, raise, or all-in).
+        It modifies player chips, current bets, pot size, and player status as needed.
+
+        The method also handles edge cases like:
+        - Forcing call when player tries to check but there's a bet
+        - Forcing fold when player can't meet the minimum call amount
+        - Converting raise to all-in when player has insufficient chips
+        - Treating unknown actions as fold for safety
+
+        Args:
+            state (HoldemState): The current game state
+            player (PlayerState): The player making the action
+            decision (Dict[str, Any]): The decision from the player agent
+
+        Returns:
+            Command: Game state update with the action applied and next player set
+
+        Raises:
+            RuntimeError: If action application fails due to errors
+        """
         action = decision.get("action", "fold")
         amount = decision.get("amount", 0)
 
@@ -913,7 +1105,26 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _deal_community_cards(
         self, state: HoldemState, num_cards: int, phase: GamePhase, next_node: str
     ) -> Command:
-        """Deal community cards."""
+        """Deal community cards to the board, with burn card.
+
+        This helper method handles dealing community cards for the flop, turn, or river.
+        It burns one card first (discards it face down), then deals the specified number
+        of cards to the board. It also resets betting for the new round and determines
+        the first player to act.
+
+        Args:
+            state (HoldemState): The current game state
+            num_cards (int): Number of cards to deal (3 for flop, 1 for turn/river)
+            phase (GamePhase): The new game phase to set
+            next_node (str): The next node to transition to
+
+        Returns:
+            Command: State update with new community cards, game phase, and
+                     reset betting information
+
+        Raises:
+            RuntimeError: If card dealing fails
+        """
         try:
             deck = state.deck.copy()
             community_cards = state.community_cards.copy()
@@ -971,7 +1182,26 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Dealing community cards failed: {str(e)}")
 
     def showdown(self, state: HoldemState) -> Command[Literal["award_pot"]]:
-        """Handle showdown - evaluate hands and determine winner."""
+        """Handle showdown - evaluate player hands and determine the winner.
+
+        This node evaluates the hand of each player still in the game (not folded)
+        and determines the winner based on hand strength. In case only one player
+        remains, that player automatically wins. Otherwise, all qualifying hands
+        are compared to find the strongest.
+
+        The current implementation uses a simplified hand evaluation algorithm,
+        which would be replaced by a more sophisticated poker hand evaluator
+        in a production version.
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update with the winner's player ID
+
+        Raises:
+            RuntimeError: If showdown evaluation fails
+        """
         logger.info("🏆 Showdown!")
 
         try:
@@ -1013,7 +1243,25 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Showdown failed: {str(e)}")
 
     def award_pot(self, state: HoldemState) -> Command[Literal["check_game_end"]]:
-        """Award the pot to the winner."""
+        """Award the pot to the winner and record hand history.
+
+        This node adds the pot to the winner's chip stack and records the completed
+        hand in the game history. If no winner is explicitly determined (e.g., from
+        showdown), it finds the last remaining player as the winner.
+
+        The hand history is recorded with details about the hand number, winner,
+        pot size, community cards, and betting actions for later analysis.
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            Command: State update with winner's updated chips and hand history,
+                     and incremented hand number
+
+        Raises:
+            RuntimeError: If pot awarding fails
+        """
         logger.info("💰 Awarding pot...")
 
         try:
@@ -1079,7 +1327,26 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Game end check failed: {str(e)}")
 
     def route_after_betting(self, state: HoldemState) -> str:
-        """Route after a betting round."""
+        """Route game flow after a betting round completes.
+
+        This conditional routing method determines where the game should proceed
+        after a betting round. The routing logic considers:
+
+        1. If only one player remains (others folded) -> award_pot
+        2. If betting is not complete -> player_decision (continue betting)
+        3. If only one active player (rest all-in) -> showdown
+        4. Otherwise, proceed to next game phase based on current phase:
+           - Preflop -> deal_flop
+           - Flop -> deal_turn
+           - Turn -> deal_river
+           - River -> showdown
+
+        Args:
+            state (HoldemState): The current game state
+
+        Returns:
+            str: The name of the next node to route to
+        """
         try:
             players_in_hand = [
                 p for p in state.players_in_hand if p.status != PlayerStatus.FOLDED
@@ -1129,7 +1396,20 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _evaluate_hand_simple(
         self, hole_cards: List[str], community_cards: List[str]
     ) -> float:
-        """Simple hand evaluation (placeholder)."""
+        """Simple hand evaluation method (placeholder for production evaluator).
+
+        This is a simplified poker hand evaluator that assigns a score based
+        primarily on high card values. In a production system, this would be
+        replaced with a proper poker hand evaluator that correctly ranks hands
+        according to standard poker rules.
+
+        Args:
+            hole_cards (List[str]): Player's private hole cards
+            community_cards (List[str]): Shared community cards
+
+        Returns:
+            float: A score representing hand strength (higher is better)
+        """
         all_cards = hole_cards + community_cards
         if not all_cards:
             return 0.0
