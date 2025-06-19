@@ -21,22 +21,30 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
     @classmethod
     def initialize(cls, **kwargs) -> MancalaState:
-        """Initialize a new Mancala game.
+        """Initialize a new Mancala game with a fresh board and default settings.
 
         Args:
             **kwargs: Keyword arguments for game initialization.
                 stones_per_pit: Number of stones per pit initially. Defaults to 4.
+                Other keyword arguments are passed to the MancalaState constructor.
 
         Returns:
-            MancalaState: A new Mancala game state.
+            MancalaState: A new Mancala game state ready to play.
+
+        Note:
+            The board is initialized with the following layout:
+            - Indices 0-5: Player 1's pits (bottom row, left to right)
+            - Index 6: Player 1's store (right)
+            - Indices 7-12: Player 2's pits (top row, right to left)
+            - Index 13: Player 2's store (left)
         """
         stones_per_pit = kwargs.get("stones_per_pit", 4)
 
-        # Create the initial board
-        # - Indices 0-5: Player 1's pits
-        # - Index 6: Player 1's store
-        # - Indices 7-12: Player 2's pits
-        # - Index 13: Player 2's store
+        # Create the initial board with the proper layout
+        # - Indices 0-5: Player 1's pits (bottom row)
+        # - Index 6: Player 1's store (right)
+        # - Indices 7-12: Player 2's pits (top row)
+        # - Index 13: Player 2's store (left)
         board = [stones_per_pit] * 14
         board[6] = 0  # Player 1's store
         board[13] = 0  # Player 2's store
@@ -51,48 +59,63 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
     @classmethod
     def get_legal_moves(cls, state: MancalaState) -> list[MancalaMove]:
-        """Get all legal moves for the current state.
+        """Get all legal moves for the current player in the given state.
 
         Args:
             state: The current game state.
 
         Returns:
-            List[MancalaMove]: A list of all legal moves.
+            List[MancalaMove]: A list of all legal moves for the current player.
+            Each move is represented as a MancalaMove object with pit_index (0-5)
+            and player fields.
+
+        Note:
+            Pit indices are always 0-5 for both players, representing the six pits
+            on their side of the board (not including their store).
         """
         legal_moves = []
         player = state.turn
 
         # Determine which pits to check based on the current player
-        start_pit = 0 if player == "player1" else 7
-        end_pit = 6 if player == "player1" else 13
-
-        # Check each pit
-        for i in range(start_pit, end_pit):
-            # Skip the store
-            if i == 6 or i == 13:
-                continue
-
-            # If the pit has stones, it's a legal move
-            if state.board[i] > 0:
-                # Calculate the pit index relative to the player (0-5)
-                pit_index = i if player == "player1" else i - 7
-                legal_moves.append(MancalaMove(pit_index=pit_index, player=player))
+        if player == "player1":
+            # Player 1's pits are indices 0-5
+            for i in range(6):
+                if state.board[i] > 0:
+                    legal_moves.append(MancalaMove(pit_index=i, player=player))
+        else:
+            # Player 2's pits are indices 7-12
+            for i in range(7, 13):
+                if state.board[i] > 0:
+                    # Convert to 0-5 for consistent interface
+                    pit_index = i - 7
+                    legal_moves.append(MancalaMove(pit_index=pit_index, player=player))
 
         return legal_moves
 
     @classmethod
     def apply_move(cls, state: MancalaState, move: MancalaMove) -> MancalaState:
-        """Apply a move to the current state and return the new state.
+        """Apply a move to the current state according to Mancala rules.
+
+        This method distributes stones from the selected pit, handles captures,
+        checks for free turns, and updates the game status.
 
         Args:
             state: The current game state.
-            move: The move to apply.
+            move: The move to apply, containing pit_index (0-5) and player.
 
         Returns:
             MancalaState: A new game state after applying the move.
 
         Raises:
-            ValueError: If the move is invalid.
+            ValueError: If the move is invalid (wrong player's turn, empty pit, etc.).
+
+        Game Rules Implemented:
+            1. Stones are distributed counterclockwise, one per pit.
+            2. Player's own store is included; opponent's store is skipped.
+            3. If the last stone lands in the player's store, they get another turn.
+            4. If the last stone lands in an empty pit on the player's side, they
+               capture that stone and all stones in the opposite pit.
+            5. Game ends when all pits on one side are empty.
         """
         # Validate player's turn
         if move.player != state.turn:
@@ -136,6 +159,11 @@ class MancalaStateManager(GameStateManager[MancalaState]):
             if (move.player == "player1" and 0 <= last_pit < 6) or (
                 move.player == "player2" and 7 <= last_pit < 13
             ):
+                # Calculate the opposite pit (12 - last_pit)
+                # This works because:
+                # - Pit 0 is opposite to pit 12
+                # - Pit 1 is opposite to pit 11
+                # ... and so on
                 opposite_pit = 12 - last_pit
 
                 # If the opposite pit has stones, capture them

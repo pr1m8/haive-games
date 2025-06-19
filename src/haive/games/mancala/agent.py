@@ -4,8 +4,9 @@ This module defines the Mancala game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+import logging
 import time
-from typing import Any
+from typing import Any, Dict, Union
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -16,6 +17,53 @@ from haive.games.mancala.config import MancalaConfig
 from haive.games.mancala.models import MancalaMove
 from haive.games.mancala.state import MancalaState
 from haive.games.mancala.state_manager import MancalaStateManager
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+
+def ensure_game_state(
+    state_input: Union[Dict[str, Any], MancalaState, Command],
+) -> MancalaState:
+    """Ensure input is converted to MancalaState.
+
+    Args:
+        state_input: State input as dict, MancalaState, or Command
+
+    Returns:
+        MancalaState instance
+    """
+    logger.info(f"ensure_game_state: received input of type {type(state_input)}")
+
+    if isinstance(state_input, MancalaState):
+        logger.info("ensure_game_state: Input is already MancalaState")
+        return state_input
+    elif isinstance(state_input, Command):
+        logger.info("ensure_game_state: Input is a Command, extracting state")
+        # Attempt to extract state from Command
+        if hasattr(state_input, "state") and state_input.state:
+            return ensure_game_state(state_input.state)
+        else:
+            logger.error("ensure_game_state: Command does not have state attribute")
+            # Initialize a new state as fallback
+            return MancalaState.initialize()
+    elif isinstance(state_input, dict):
+        try:
+            logger.info(
+                f"ensure_game_state: Converting dict to MancalaState, keys: {list(state_input.keys())}"
+            )
+            return MancalaState.model_validate(state_input)
+        except Exception as e:
+            logger.error(f"Failed to convert dict to MancalaState: {e}")
+            logger.debug(f"Dict contents: {state_input}")
+            # Initialize a new state as fallback rather than crashing
+            logger.info("ensure_game_state: Using default state as fallback")
+            return MancalaState.initialize()
+    else:
+        logger.error(f"Cannot convert {type(state_input)} to MancalaState")
+        # Initialize a new state as fallback rather than crashing
+        logger.info("ensure_game_state: Using default state as fallback")
+        return MancalaState.initialize()
 
 
 @register_agent(MancalaConfig)
@@ -73,39 +121,54 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Returns:
             Dict[str, Any]: Context dictionary for move generation.
         """
-        # Get legal moves
-        legal_moves = self.state_manager.get_legal_moves(state)
+        try:
+            # Ensure we have a proper MancalaState
+            game_state = ensure_game_state(state)
 
-        # Format legal moves for display
-        formatted_legal_moves = "\n".join(
-            [
-                f"Pit {move.pit_index}: {state.board[move.pit_index if player == 'player1' else move.pit_index + 7]} stones"
-                for move in legal_moves
-            ]
-        )
+            # Get legal moves
+            legal_moves = self.state_manager.get_legal_moves(game_state)
 
-        # Get recent move history
-        recent_moves = []
-        for move in state.move_history[-5:]:
-            recent_moves.append(str(move))
+            # Format legal moves for display
+            formatted_legal_moves = "\n".join(
+                [
+                    f"Pit {move.pit_index}: {game_state.board[move.pit_index if player == 'player1' else move.pit_index + 7]} stones"
+                    for move in legal_moves
+                ]
+            )
 
-        # Get player's analysis if available
-        player_analysis = None
-        if hasattr(state, f"{player}_analysis") and getattr(
-            state, f"{player}_analysis"
-        ):
-            player_analysis = getattr(state, f"{player}_analysis")[-1]
-        else:
-            player_analysis = "No previous analysis available."
+            # Get recent move history
+            recent_moves = []
+            for move in game_state.move_history[-5:]:
+                recent_moves.append(str(move))
 
-        # Prepare the context
-        return {
-            "board_string": state.board_string,
-            "turn": state.turn,
-            "legal_moves": formatted_legal_moves,
-            "move_history": "\n".join(recent_moves),
-            "player_analysis": player_analysis,
-        }
+            # Get player's analysis if available
+            player_analysis = None
+            if hasattr(game_state, f"{player}_analysis") and getattr(
+                game_state, f"{player}_analysis"
+            ):
+                player_analysis = getattr(game_state, f"{player}_analysis")[-1]
+            else:
+                player_analysis = "No previous analysis available."
+
+            # Prepare the context
+            return {
+                "board_string": game_state.board_string,
+                "turn": game_state.turn,
+                "legal_moves": formatted_legal_moves,
+                "move_history": "\n".join(recent_moves),
+                "player_analysis": player_analysis,
+            }
+
+        except Exception as e:
+            logger.error(f"Error preparing move context: {e}")
+            # Return a minimal context to avoid crashing
+            return {
+                "board_string": "Error preparing context",
+                "turn": player,
+                "legal_moves": "No legal moves available due to error",
+                "move_history": "",
+                "player_analysis": "No analysis available due to error",
+            }
 
     def prepare_analysis_context(
         self, state: MancalaState, player: str
@@ -119,25 +182,42 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Returns:
             Dict[str, Any]: Context dictionary for position analysis.
         """
-        # Get recent move history
-        recent_moves = []
-        for move in state.move_history[-5:]:
-            recent_moves.append(str(move))
+        try:
+            # Ensure we have a proper MancalaState
+            game_state = ensure_game_state(state)
 
-        # Get pit stones for each player
-        player1_pits = state.board[0:6]
-        player2_pits = state.board[7:13]
+            # Get recent move history
+            recent_moves = []
+            for move in game_state.move_history[-5:]:
+                recent_moves.append(str(move))
 
-        # Prepare the context
-        return {
-            "board_string": state.board_string,
-            "player": player,
-            "player1_score": state.player1_score,
-            "player2_score": state.player2_score,
-            "player1_pits": player1_pits,
-            "player2_pits": player2_pits,
-            "move_history": "\n".join(recent_moves),
-        }
+            # Get pit stones for each player
+            player1_pits = game_state.board[0:6]
+            player2_pits = game_state.board[7:13]
+
+            # Prepare the context
+            return {
+                "board_string": game_state.board_string,
+                "player": player,
+                "player1_score": game_state.player1_score,
+                "player2_score": game_state.player2_score,
+                "player1_pits": player1_pits,
+                "player2_pits": player2_pits,
+                "move_history": "\n".join(recent_moves),
+            }
+
+        except Exception as e:
+            logger.error(f"Error preparing analysis context: {e}")
+            # Return a minimal context to avoid crashing
+            return {
+                "board_string": "Error preparing context",
+                "player": player,
+                "player1_score": 0,
+                "player2_score": 0,
+                "player1_pits": [0, 0, 0, 0, 0, 0],
+                "player2_pits": [0, 0, 0, 0, 0, 0],
+                "move_history": "",
+            }
 
     def extract_move(self, response: Any) -> MancalaMove:
         """Extract move from engine response.
@@ -229,60 +309,75 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Returns:
             Command: Updated game state after the move.
         """
-        if isinstance(state, dict):
-            state = MancalaState.model_validate(state)
-        # Check if it's the correct player's turn
-        if state.turn != player:
-            return Command(update={})  # No changes needed
-
-        # Check if game is over
-        if state.game_status != "ongoing":
-            return Command(update={})  # No changes needed
-
         try:
-            # Prepare context for the move
-            context = self.prepare_move_context(state, player)
+            # Ensure we have a proper MancalaState
+            game_state = ensure_game_state(state)
 
-            # Select the appropriate engine
-            engine_key = f"{player}_player"
-            engine = self.engines[engine_key].create_runnable()
+            # Log state conversion
+            logger.info(f"make_move: state type before conversion: {type(state)}")
+            logger.info(f"make_move: state type after conversion: {type(game_state)}")
 
-            # Generate move
-            response = engine.invoke(context)
+            # Check if it's the correct player's turn
+            if game_state.turn != player:
+                return Command(
+                    update={"game_status": game_state.game_status}
+                )  # Pass through game status to help terminate recursion
 
-            # Extract the move from the response
+            # Check if game is over
+            if game_state.game_status != "ongoing":
+                return Command(stop=True)  # Stop the graph execution if game is over
+
             try:
-                move = self.extract_move(response)
-                # Ensure the move has the correct player
-                if not hasattr(move, "player") or not move.player:
-                    # Set the player attribute explicitly
-                    move.player = player
-            except Exception as extract_error:
+                # Prepare context for the move
+                context = self.prepare_move_context(game_state, player)
+
+                # Select the appropriate engine
+                engine_key = f"{player}_player"
+                engine = self.engines[engine_key].create_runnable()
+
+                # Generate move
+                response = engine.invoke(context)
+
+                # Extract the move from the response
+                try:
+                    move = self.extract_move(response)
+                    # Ensure the move has the correct player
+                    if not hasattr(move, "player") or not move.player:
+                        # Set the player attribute explicitly
+                        move.player = player
+                except Exception as extract_error:
+                    logger.error(f"Failed to extract move: {extract_error}")
+                    return Command(
+                        update={
+                            "error_message": f"Failed to extract move: {str(extract_error)}\nResponse: {response}"
+                        }
+                    )
+
+                # Apply the move
+                new_state = self.state_manager.apply_move(game_state, move)
+
+                # Return only the fields that changed
                 return Command(
                     update={
-                        "error_message": f"Failed to extract move: {str(extract_error)}\nResponse: {response}"
+                        "board": new_state.board,
+                        "turn": new_state.turn,
+                        "game_status": new_state.game_status,
+                        "move_history": new_state.move_history,
+                        "free_turn": new_state.free_turn,
+                        "winner": new_state.winner,
+                        "error_message": None,
                     }
                 )
 
-            # Apply the move
-            new_state = self.state_manager.apply_move(state, move)
-
-            # Return only the fields that changed
-            return Command(
-                update={
-                    "board": new_state.board,
-                    "turn": new_state.turn,
-                    "game_status": new_state.game_status,
-                    "move_history": new_state.move_history,
-                    "free_turn": new_state.free_turn,
-                    "winner": new_state.winner,
-                    "error_message": None,
-                }
-            )
+            except Exception as e:
+                logger.error(f"Error generating move: {e}")
+                # Return error without changing other state
+                return Command(update={"error_message": str(e)})
 
         except Exception as e:
+            logger.error(f"Critical error in make_move: {e}", exc_info=True)
             # Return error without changing other state
-            return Command(update={"error_message": str(e)})
+            return Command(update={"error_message": f"Critical error: {str(e)}"})
 
     def extract_analysis(self, response: Any) -> Any:
         """Extract analysis from engine response.
@@ -376,47 +471,67 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Returns:
             Command: Updated game state after the analysis.
         """
-
-        if isinstance(state, dict):
-            state = MancalaState.model_validate(state)
-        # Skip analysis if disabled
-        if not self.config.enable_analysis:
-            return Command(update={})  # No changes
-
-        # Skip analysis if game is over
-        if state.game_status != "ongoing":
-            return Command(update={})  # No changes
-
         try:
-            # Prepare context for analysis
-            context = self.prepare_analysis_context(state, player)
+            # Ensure we have a proper MancalaState
+            game_state = ensure_game_state(state)
 
-            # Select the appropriate engine
-            engine_key = f"{player}_analyzer"
-            engine = self.engines[engine_key].create_runnable()
+            # Log state conversion
+            logger.info(
+                f"analyze_position: state type before conversion: {type(state)}"
+            )
+            logger.info(
+                f"analyze_position: state type after conversion: {type(game_state)}"
+            )
 
-            # Generate analysis
+            # Skip analysis if disabled
+            if not self.config.enable_analysis:
+                return Command(update={})  # No changes
+
+            # Stop graph execution if game is over
+            if game_state.game_status != "ongoing":
+                return Command(stop=True)  # Stop the graph execution if game is over
+
             try:
-                response = engine.invoke(context)
-                analysis = self.extract_analysis(response)
-            except Exception as extract_error:
+                # Prepare context for analysis
+                context = self.prepare_analysis_context(game_state, player)
+
+                # Select the appropriate engine
+                engine_key = f"{player}_analyzer"
+                engine = self.engines[engine_key].create_runnable()
+
+                # Generate analysis
+                try:
+                    response = engine.invoke(context)
+                    analysis = self.extract_analysis(response)
+                except Exception as extract_error:
+                    logger.error(f"Failed to extract analysis: {extract_error}")
+                    return Command(
+                        update={
+                            "error_message": f"Failed to extract analysis: {str(extract_error)}\nResponse: {response}"
+                        }
+                    )
+
+                # Update state with analysis
+                new_state = self.state_manager.add_analysis(
+                    game_state, player, analysis
+                )
+
+                # Return only the analysis field that changed
                 return Command(
                     update={
-                        "error_message": f"Failed to extract analysis: {str(extract_error)}\nResponse: {response}"
+                        f"{player}_analysis": getattr(new_state, f"{player}_analysis")
                     }
                 )
 
-            # Update state with analysis
-            new_state = self.state_manager.add_analysis(state, player, analysis)
-
-            # Return only the analysis field that changed
-            return Command(
-                update={f"{player}_analysis": getattr(new_state, f"{player}_analysis")}
-            )
+            except Exception as e:
+                logger.error(f"Error generating analysis: {e}")
+                # Return error without changing other state
+                return Command(update={"error_message": str(e)})
 
         except Exception as e:
-            # Return error without changing other state
-            return Command(update={"error_message": str(e)})
+            logger.error(f"Critical error in analyze_position: {e}", exc_info=True)
+            # Return empty Command to avoid errors
+            return Command(update={"error_message": f"Critical error: {str(e)}"})
 
     def visualize_state(self, state):
         """Visualize the current game state.
@@ -424,43 +539,43 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         Args:
             state: Either a MancalaState object or a dictionary with state data
         """
-        # Convert dictionary to MancalaState if needed
-        if isinstance(state, dict):
-            # Create MancalaState from dictionary
-            game_state = MancalaState.model_validate(state)
-        else:
-            # Already a MancalaState object
-            game_state = state
+        try:
+            # Use our helper function to ensure we have a proper MancalaState
+            game_state = ensure_game_state(state)
 
-        print("\n" + "=" * 50)
-        print(f"🎮 Current Player: {game_state.turn}")
-        print(f"📌 Game Status: {game_state.game_status}")
-        if game_state.free_turn:
-            print("🎲 Free Turn: Yes")
-        print("=" * 50)
-        print()
-
-        # Display the board using the board_string property
-        print(game_state.board_string)
-        print()
-
-        # Show move history if available
-        if game_state.move_history:
-            print("📜 Recent moves:")
-            for i, move in enumerate(
-                game_state.move_history[-3:], 1
-            ):  # Show last 3 moves
-                print(f"  {i}. {move}")
+            print("\n" + "=" * 50)
+            print(f"🎮 Current Player: {game_state.turn}")
+            print(f"📌 Game Status: {game_state.game_status}")
+            if game_state.free_turn:
+                print("🎲 Free Turn: Yes")
+            print("=" * 50)
             print()
 
-        # Show game over information
-        if game_state.is_game_over():
-            winner = game_state.get_winner()
-            if winner == "draw":
-                print("🤝 Game ended in a draw!")
-            elif winner:
-                print(f"🏆 {winner.title()} wins!")
+            # Display the board using the board_string property
+            print(game_state.board_string)
             print()
+
+            # Show move history if available
+            if game_state.move_history:
+                print("📜 Recent moves:")
+                for i, move in enumerate(
+                    game_state.move_history[-3:], 1
+                ):  # Show last 3 moves
+                    print(f"  {i}. {move}")
+                print()
+
+            # Show game over information
+            if game_state.is_game_over():
+                winner = game_state.get_winner()
+                if winner == "draw":
+                    print("🤝 Game ended in a draw!")
+                elif winner:
+                    print(f"🏆 {winner.title()} wins!")
+                print()
+
+        except Exception as e:
+            logger.error(f"Error visualizing state: {e}")
+            print(f"\nError visualizing state: {e}")
 
     def setup_workflow(self) -> None:
         """Set up the game workflow.
