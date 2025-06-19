@@ -1,3 +1,13 @@
+"""Battleship game agent implementation.
+
+This module implements the main agent for the Battleship game, including:
+    - LangGraph workflow for game logic
+    - Turn-based gameplay management
+    - LLM-powered player actions
+    - Game state transitions
+    - Ship placement and move execution
+"""
+
 import time
 from typing import Any
 
@@ -19,19 +29,77 @@ from haive.games.battleship.state_manager import BattleshipStateManager
 
 @register_agent(BattleshipAgentConfig)
 class BattleshipAgent(Agent[BattleshipAgentConfig]):
+    """Battleship game agent with LLM-powered players.
+
+    This agent implements a complete Battleship game with:
+    - LLM-powered ship placement strategy
+    - Turn-based gameplay with move validation
+    - Strategic analysis of board state
+    - Game state tracking and persistence
+    - Visualization options
+
+    The agent uses LangGraph for workflow management and supports
+    configurable LLM engines for different game actions.
+
+    Attributes:
+        state_manager (BattleshipStateManager): Manager for game state transitions
+        engines (dict): LLM engine configurations for different game actions
+        config (BattleshipAgentConfig): Agent configuration
+        graph (Graph): LangGraph workflow
+
+    Examples:
+        >>> config = BattleshipAgentConfig()
+        >>> agent = BattleshipAgent(config)
+        >>> result = agent.run_game(visualize=True)
+    """
+
     def __init__(self, config: BattleshipAgentConfig):
+        """Initialize the Battleship agent.
+
+        Args:
+            config: Configuration for the agent
+        """
         self.state_manager = BattleshipStateManager()
         self.engines = config.engines  # Store reference to engines
         super().__init__(config)
 
     def ensure_state(self, state: Any) -> BattleshipState:
-        """Ensure that state is a proper BattleshipState instance."""
+        """Ensure that state is a proper BattleshipState instance.
+
+        Converts dictionary representations to BattleshipState objects
+        to ensure type safety throughout the agent.
+
+        Args:
+            state: State object or dictionary
+
+        Returns:
+            BattleshipState: Properly typed state object
+
+        Examples:
+            >>> agent = BattleshipAgent(BattleshipAgentConfig())
+            >>> state_dict = {"game_phase": "setup", "current_player": "player1"}
+            >>> state_obj = agent.ensure_state(state_dict)
+            >>> isinstance(state_obj, BattleshipState)
+            True
+        """
         if isinstance(state, dict):
             return BattleshipState(**state)
         return state if isinstance(state, BattleshipState) else BattleshipState(**state)
 
     def setup_workflow(self):
-        """Set up the workflow for the Battleship game."""
+        """Set up the workflow for the Battleship game.
+
+        Creates a LangGraph workflow with nodes for:
+        - Game initialization
+        - Ship placement for both players
+        - Move selection
+        - Strategic analysis (if enabled)
+        - Turn switching
+        - Game over checking
+
+        The workflow includes conditional routing based on game state
+        and supports different paths depending on whether analysis is enabled.
+        """
 
         gb = DynamicGraph(
             name="battleship_game",
@@ -124,7 +192,18 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         self.graph = gb.build()
 
     def check_game_over(self, state: dict[str, Any]) -> Command:
-        """Check if the game is over."""
+        """Check if the game is over and update game state accordingly.
+
+        This node checks for game-ending conditions (all ships of a player
+        being sunk) and updates the game state with the winner if the game
+        is over.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = self.ensure_state(state)
 
         # Check if the game is over
@@ -143,7 +222,17 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto="switch_to_player2")
 
     def switch_to_player1(self, state: dict[str, Any]) -> Command:
-        """Switch to player 1's turn."""
+        """Switch to player 1's turn.
+
+        Updates the current player to player1 and routes to the appropriate
+        next node based on configuration (analysis or move).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = self.ensure_state(state)
 
         # Check if the game is over (double-check)
@@ -169,7 +258,17 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto=next_node)
 
     def switch_to_player2(self, state: dict[str, Any]) -> Command:
-        """Switch to player 2's turn."""
+        """Switch to player 2's turn.
+
+        Updates the current player to player2 and routes to the appropriate
+        next node based on configuration (analysis or move).
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = self.ensure_state(state)
 
         # Check if the game is over (double-check)
@@ -195,7 +294,22 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto=next_node)
 
     def analyze_position(self, state: dict[str, Any], player: str) -> Command:
-        """Common method for analyzing positions."""
+        """Analyze game state and generate strategic insights.
+
+        Uses the player's analyzer engine to generate strategic analysis
+        of the current game state, which helps inform move decisions.
+
+        Args:
+            state: Current game state
+            player: Player for whom to generate analysis
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+
+        Note:
+            If an error occurs during analysis, it's logged but doesn't
+            stop the game - control flows to the player's move node.
+        """
         try:
             state_obj = self.ensure_state(state)
 
@@ -241,20 +355,65 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=state_obj.model_dump(), goto=f"{player}_move")
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
-        """Initialize a new game."""
+        """Initialize a new Battleship game.
+
+        Creates a fresh game state and starts the setup phase
+        for ship placement.
+
+        Args:
+            state: Initial state (usually empty)
+
+        Returns:
+            Command: LangGraph command with initialized state
+        """
         new_state = self.state_manager.initialize()
         return Command(update=new_state.model_dump(), goto="place_ships_player1")
 
     def place_ships_player1(self, state: dict[str, Any]) -> Command:
-        """Place ships for player 1."""
+        """Place ships for player 1.
+
+        Delegates to the common place_ships method for player1.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.place_ships(state, "player1")
 
     def place_ships_player2(self, state: dict[str, Any]) -> Command:
-        """Place ships for player 2."""
+        """Place ships for player 2.
+
+        Delegates to the common place_ships method for player2.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.place_ships(state, "player2")
 
     def place_ships(self, state: dict[str, Any], player: str) -> Command:
-        """Common method for ship placement."""
+        """Generate strategic ship placements for a player.
+
+        Uses the player's ship placement engine to generate optimal placements
+        for all ships, validates them, and updates the game state.
+
+        Args:
+            state: Current game state
+            player: Player for whom to place ships
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+
+        Raises:
+            ValueError: If the required engine is missing
+
+        Note:
+            If an error occurs during placement, the game is reinitialized.
+        """
         state_obj = self.ensure_state(state)
         state_obj.get_player_state(player)
         occupied_positions = []  # Start with empty list for first player
@@ -333,17 +492,54 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=state_obj.model_dump(), goto="initialize_game")
 
     def player1_move(self, state: dict[str, Any]) -> Command:
-        """Make a move for player 1."""
+        """Make a move for player 1.
+
+        Delegates to the common make_move method for player1.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.make_move(state, "player1", "check_game_over")
 
     def player2_move(self, state: dict[str, Any]) -> Command:
-        """Make a move for player 2."""
+        """Make a move for player 2.
+
+        Delegates to the common make_move method for player2.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.make_move(state, "player2", "check_game_over")
 
     def make_move(
         self, state: dict[str, Any], player: str, next_node: str = "check_game_over"
     ) -> Command:
-        """Common method for making moves."""
+        """Make an attack move for a player.
+
+        Uses the player's move engine to generate an attack coordinate,
+        validates it, and updates the game state with the result.
+
+        Args:
+            state: Current game state
+            player: Player making the move
+            next_node: Next node to route to after the move
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+
+        Raises:
+            ValueError: If the required engine is missing
+
+        Note:
+            If the LLM fails to generate a valid move, a fallback move is
+            generated using a deterministic strategy.
+        """
         state_obj = self.ensure_state(state)
 
         # Check if it's the player's turn and game is in playing phase
@@ -392,7 +588,21 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=state_obj.model_dump(), goto=next_node)
 
     def _find_valid_move(self, state: BattleshipState, player: str) -> MoveCommand:
-        """Find a valid move when the LLM fails to provide one."""
+        """Find a valid move when the LLM fails to provide one.
+
+        Implements a deterministic fallback strategy for selecting a move
+        when the LLM fails to generate a valid one, prioritizing:
+        1. Cells adjacent to known hits (to finish sinking partially hit ships)
+        2. Unexplored cells in a systematic scan
+        3. Random selection as a last resort
+
+        Args:
+            state: Current game state
+            player: Player for whom to find a move
+
+        Returns:
+            MoveCommand: A valid move command
+        """
         opponent = state.get_opponent(player)
         state.get_player_state(opponent)
         player_state = state.get_player_state(player)
@@ -425,17 +635,47 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return MoveCommand(row=random.randint(0, 9), col=random.randint(0, 9))
 
     def player1_analysis(self, state: dict[str, Any]) -> Command:
-        """Analyze position for player 1."""
+        """Analyze position for player 1.
+
+        Delegates to the common analyze_position method for player1.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.analyze_position(state, "player1", "player1_move")
 
     def player2_analysis(self, state: dict[str, Any]) -> Command:
-        """Analyze position for player 2."""
+        """Analyze position for player 2.
+
+        Delegates to the common analyze_position method for player2.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state
+        """
         return self.analyze_position(state, "player2", "player2_move")
 
     def analyze_position(
         self, state: dict[str, Any], player: str, next_node: str
     ) -> Command:
-        """Common method for analyzing positions."""
+        """Analyze position for strategic insights.
+
+        Common method for analyzing the game state for a specific player
+        and routing to the specified next node.
+
+        Args:
+            state: Current game state
+            player: Player for whom to generate analysis
+            next_node: Next node to route to after analysis
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         try:
             state_obj = self.ensure_state(state)
 
@@ -481,7 +721,17 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=state_obj.model_dump(), goto=next_node)
 
     def check_game_status(self, state: dict[str, Any]) -> Command:
-        """Check the game status after a move."""
+        """Check the game status after a move.
+
+        Assesses whether the game is over, updates the winner if needed,
+        and determines the next player's turn.
+
+        Args:
+            state: Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = self.ensure_state(state)
 
         # Check if the game is over
@@ -509,7 +759,26 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto=next_step)
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run the game with optional visualization."""
+        """Run a complete Battleship game.
+
+        Executes the full game workflow, from initialization through ship
+        placement and gameplay to completion. Optionally provides
+        console-based visualization of the game progress.
+
+        Args:
+            visualize: Whether to display game progress in the console
+
+        Returns:
+            dict[str, Any]: Final game state after completion
+
+        Examples:
+            >>> agent = BattleshipAgent(BattleshipAgentConfig())
+            >>> # Run with visualization
+            >>> result = agent.run_game(visualize=True)
+            >>> # Run silently
+            >>> result = agent.run_game(visualize=False)
+            >>> winner = result.get("winner")
+        """
         if not self.app:
             self.compile()
 

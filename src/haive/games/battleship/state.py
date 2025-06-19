@@ -1,3 +1,12 @@
+"""Battleship game state representation module.
+
+This module defines the state models for the Battleship game, including:
+    - Player state with board and analysis tracking
+    - Complete game state with turn management
+    - Game phase transitions
+    - Public and private state views
+"""
+
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field
@@ -11,7 +20,22 @@ from haive.games.battleship.models import (
 
 
 class PlayerState(BaseModel):
-    """Complete state for a player including board and analysis."""
+    """Complete state for a player including board and analysis.
+
+    This class maintains the state for a single player, tracking their board,
+    ship placements, and strategic analysis history.
+
+    Attributes:
+        board (PlayerBoard): The player's game board with ships and attack history
+        strategic_analysis (list[str]): History of strategic analyses for the player
+        has_placed_ships (bool): Flag indicating if the player has completed ship placement
+        ship_placements (list[ShipPlacement]): Record of all ship placement commands
+
+    Examples:
+        >>> player_state = PlayerState()
+        >>> player_state.has_placed_ships = True
+        >>> player_state.strategic_analysis.append("Focus attacks on the center")
+    """
 
     board: PlayerBoard = Field(default_factory=PlayerBoard)
     strategic_analysis: list[str] = Field(default_factory=list)
@@ -21,7 +45,27 @@ class PlayerState(BaseModel):
 
 
 class BattleshipState(BaseModel):
-    """Complete game state for Battleship."""
+    """Complete game state for Battleship.
+
+    Represents the entire game state, including both players' boards,
+    turn management, game phase, and move history.
+
+    Attributes:
+        player1_state (PlayerState): Complete state for player 1
+        player2_state (PlayerState): Complete state for player 2
+        current_player (str): Which player's turn it is ("player1" or "player2")
+        game_phase (GamePhase): Current phase of the game (setup, playing, ended)
+        winner (str, optional): Which player won the game, if any
+        move_history (list): History of all moves made in the game
+        error_message (str, optional): Any error message from the last operation
+
+    Examples:
+        >>> state = BattleshipState()
+        >>> state.current_player = "player1"
+        >>> state.game_phase = GamePhase.PLAYING
+        >>> state.is_game_over()
+        False
+    """
 
     # Player states - using Annotated for accumulation
     player1_state: Annotated[PlayerState, "accumulate"] = Field(
@@ -43,7 +87,22 @@ class BattleshipState(BaseModel):
     error_message: str | None = Field(default=None)
 
     def get_player_state(self, player: str) -> PlayerState:
-        """Get a player's state by name."""
+        """Get a player's state by name.
+
+        Args:
+            player: Player identifier ("player1" or "player2")
+
+        Returns:
+            PlayerState: The requested player's state
+
+        Raises:
+            ValueError: If an invalid player identifier is provided
+
+        Examples:
+            >>> state = BattleshipState()
+            >>> player1 = state.get_player_state("player1")
+            >>> player1.has_placed_ships = True
+        """
         if player == "player1":
             return self.player1_state
         if player == "player2":
@@ -51,17 +110,54 @@ class BattleshipState(BaseModel):
         raise ValueError(f"Invalid player: {player}")
 
     def get_opponent(self, player: str) -> str:
-        """Get the name of a player's opponent."""
+        """Get the name of a player's opponent.
+
+        Args:
+            player: Player identifier ("player1" or "player2")
+
+        Returns:
+            str: The opponent's identifier
+
+        Examples:
+            >>> state = BattleshipState()
+            >>> state.get_opponent("player1")
+            'player2'
+        """
         return "player2" if player == "player1" else "player1"
 
     def is_setup_complete(self) -> bool:
-        """Check if setup phase is complete."""
+        """Check if setup phase is complete.
+
+        Returns:
+            bool: True if both players have placed their ships
+
+        Examples:
+            >>> state = BattleshipState()
+            >>> state.player1_state.has_placed_ships = True
+            >>> state.player2_state.has_placed_ships = True
+            >>> state.is_setup_complete()
+            True
+        """
         return (
             self.player1_state.has_placed_ships and self.player2_state.has_placed_ships
         )
 
     def is_game_over(self) -> bool:
-        """Check if the game is over."""
+        """Check if the game is over.
+
+        The game is over if either:
+        1. The game phase is explicitly set to ENDED
+        2. All ships of either player are sunk
+
+        Returns:
+            bool: True if the game is over
+
+        Examples:
+            >>> state = BattleshipState()
+            >>> state.game_phase = GamePhase.ENDED
+            >>> state.is_game_over()
+            True
+        """
         return (
             self.game_phase == GamePhase.ENDED
             or self.player1_state.board.all_ships_sunk()
@@ -70,7 +166,22 @@ class BattleshipState(BaseModel):
 
     def get_public_state_for_player(self, player: str) -> dict[str, Any]:
         """Get a public view of the game state for a player.
-        This hides the opponent's ship positions.
+
+        Creates a sanitized view of the game state that hides the opponent's
+        ship positions and other private information, showing only what the
+        specified player should know.
+
+        Args:
+            player: Player identifier ("player1" or "player2")
+
+        Returns:
+            dict[str, Any]: Dictionary containing the public game state
+
+        Examples:
+            >>> state = BattleshipState()
+            >>> public_state = state.get_public_state_for_player("player1")
+            >>> public_state["is_your_turn"]
+            True
         """
         opponent = self.get_opponent(player)
         player_state = self.get_player_state(player)

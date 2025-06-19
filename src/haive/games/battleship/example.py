@@ -1,5 +1,22 @@
 #!/usr/bin/env python
-"""Main script to run the Battleship game."""
+"""Main script to run the Battleship game.
+
+This module provides a standalone command-line interface for running
+the Battleship game with LLM-powered agents. It features:
+    - Rich text-based visualization of game boards and states
+    - Command-line options for customizing game behavior
+    - Progress tracking and game statistics
+    - Error handling and graceful termination
+
+Run this script directly to start a Battleship game:
+    python -m haive.games.battleship.example
+
+Command-line options:
+    --no-visual: Disable board visualization
+    --no-analysis: Disable strategic analysis
+    --debug: Enable debug mode with detailed logs
+    --delay: Set delay between game steps (default: 0.5s)
+"""
 import argparse
 import time
 
@@ -19,13 +36,31 @@ console = Console()
 
 
 def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
-    """Run a Battleship game.
+    """Run a Battleship game with rich visualization.
+
+    Creates and runs a complete Battleship game with the specified configuration
+    options. Displays game progress, board states, and strategic analysis in
+    the terminal using rich text formatting.
 
     Args:
-        visualize: Whether to visualize the game
-        debug: Whether to enable debug mode
-        analysis: Whether to enable strategic analysis
-        delay: Delay between steps (seconds)
+        visualize: Whether to visualize the game boards
+        debug: Whether to enable debug mode with verbose logging
+        analysis: Whether to enable strategic analysis by LLM agents
+        delay: Delay between steps in seconds (controls game speed)
+
+    Returns:
+        None
+
+    Raises:
+        KeyboardInterrupt: If the game is interrupted by the user
+        Exception: For any unexpected errors during gameplay
+
+    Examples:
+        >>> run_game(visualize=True, debug=False, analysis=True, delay=0.5)
+        # Displays an interactive game in the terminal
+
+        >>> run_game(visualize=False, debug=True, analysis=False)
+        # Runs a game with debug logging but no visualization or analysis
     """
     console.print(
         Panel.fit(
@@ -185,6 +220,20 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
 
 
 def main():
+    """Parse command-line arguments and run the Battleship game.
+
+    This function handles command-line argument parsing and launches
+    the Battleship game with the specified configuration options.
+
+    Command-line arguments:
+        --no-visual: Disable board visualization
+        --no-analysis: Disable strategic analysis
+        --debug: Enable debug mode with detailed logs
+        --delay: Set delay between game steps (default: 0.5s)
+
+    Returns:
+        None
+    """
     parser = argparse.ArgumentParser(description="Run a Battleship LLM agent match.")
     parser.add_argument(
         "--no-visual", action="store_true", help="Disable board visualization."
