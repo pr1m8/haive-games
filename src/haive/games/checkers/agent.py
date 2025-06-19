@@ -1,4 +1,16 @@
-# src/haive/games/checkers/agent.py
+"""Checkers agent implementation module.
+
+This module provides the main checkers agent implementation using LangGraph, including:
+    - Dynamic graph-based workflow for turn management
+    - LLM-powered player engines for move generation
+    - Position analysis and evaluation
+    - Error handling and retry logic
+    - Rich UI visualization
+    - Game flow orchestration
+
+The agent uses a state-based approach with LangGraph for managing the game workflow
+and supports both automated play and human interaction through a beautiful UI.
+"""
 
 import sys
 import time
@@ -19,9 +31,45 @@ from haive.games.framework.base import GameAgent
 
 @register_agent(CheckersAgentConfig)
 class CheckersAgent(GameAgent[CheckersAgentConfig]):
-    """Agent for playing checkers with beautiful UI."""
+    """Agent for playing checkers with LLM-based players and rich UI.
+
+    This agent implements a complete checkers game using language models for
+    move generation and position analysis. It uses LangGraph to create a
+    workflow graph that manages the game flow between players.
+
+    Features:
+        - LLM-powered checkers players with structured outputs
+        - Position analysis for better decision making
+        - Beautiful rich-text UI visualization
+        - Move validation and retry logic
+        - Game status tracking and termination
+        - Error handling and fallback moves
+
+    Attributes:
+        config (CheckersAgentConfig): Configuration for the checkers agent
+        state_manager (CheckersStateManager): Manager for game state operations
+        ui (CheckersUI): Rich UI for game visualization
+        engines (dict): LLM engines for players and analyzers
+        graph (DynamicGraph): LangGraph workflow for the checkers game
+
+    Examples:
+        >>> # Create and run a checkers game
+        >>> agent = CheckersAgent(CheckersAgentConfig())
+        >>> final_state = agent.run_game(visualize=True)
+        >>>
+        >>> # Check the final game state
+        >>> print(f"Game winner: {final_state.get('winner')}")
+    """
 
     def __init__(self, config: CheckersAgentConfig):
+        """Initialize the checkers agent.
+
+        Sets up the state manager, UI, and other components needed for
+        the checkers game.
+
+        Args:
+            config (CheckersAgentConfig): Configuration for the checkers agent
+        """
         self.state_manager = CheckersStateManager
         self.ui = CheckersUI()
         super().__init__(config)
@@ -30,12 +78,34 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         sys.setrecursionlimit(10000)
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
+        """Initialize a new checkers game.
+
+        Creates a fresh checkers game state and routes to the first player's move.
+
+        Args:
+            state (dict[str, Any]): Initial state data (usually empty)
+
+        Returns:
+            Command: LangGraph command with initialized game state
+        """
         game_state = self.state_manager.initialize()
         return Command(update=game_state, goto="player1_move")
 
     def prepare_analysis_context(
         self, state: CheckersState, player: str
     ) -> dict[str, Any]:
+        """Prepare context for position analysis.
+
+        Creates a context dictionary with all necessary information for
+        the analyzer engines to evaluate a position.
+
+        Args:
+            state (CheckersState): Current game state
+            player (str): Player to analyze for ("red" or "black")
+
+        Returns:
+            dict[str, Any]: Context dictionary for analysis
+        """
         return {
             "board": state.board_string,
             "turn": state.turn,
@@ -46,9 +116,30 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         }
 
     def extract_move(self, response: CheckersPlayerDecision) -> CheckersMove:
+        """Extract a move from a player decision.
+
+        Gets the selected move from a player's decision object.
+
+        Args:
+            response (CheckersPlayerDecision): Player's move decision
+
+        Returns:
+            CheckersMove: The selected move
+        """
         return response.move
 
     def make_player1_move(self, state: dict[str, Any]) -> Command:
+        """Make a move for player 1 (red).
+
+        Handles the red player's turn, routing appropriately based on the
+        current game state.
+
+        Args:
+            state (dict[str, Any]): Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
@@ -58,6 +149,17 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return self.make_move(state_obj, "red")
 
     def make_player2_move(self, state: dict[str, Any]) -> Command:
+        """Make a move for player 2 (black).
+
+        Handles the black player's turn, routing appropriately based on the
+        current game state.
+
+        Args:
+            state (dict[str, Any]): Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
@@ -67,7 +169,29 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return self.make_move(state_obj, "black")
 
     def make_move(self, state: CheckersState, player: str) -> Command:
-        """Make a move with error handling and retry logic."""
+        """Make a move with error handling and retry logic.
+
+        Core method for generating and applying moves, with robust error handling
+        and visualization.
+
+        The method:
+        1. Shows a thinking animation
+        2. Gets legal moves
+        3. Prepares context for the LLM
+        4. Gets a move decision from the appropriate engine
+        5. Validates and applies the move
+        6. Updates the game state
+
+        Includes retry logic for invalid moves and fallback to the first legal
+        move if all attempts fail.
+
+        Args:
+            state (CheckersState): Current game state
+            player (str): Player to make the move ("red" or "black")
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         if state.turn != player:
             return Command(update=state.model_dump(), goto=f"analyze_{player}")
 
@@ -189,7 +313,18 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                         return Command(update={"game_status": "game_over"}, goto=END)
 
     def prepare_move_context(self, state: CheckersState, player: str) -> dict[str, Any]:
-        """Prepare context for move generation."""
+        """Prepare context for move generation.
+
+        Creates a context dictionary with all necessary information for
+        the player engines to make a move decision.
+
+        Args:
+            state (CheckersState): Current game state
+            player (str): Player to make the move ("red" or "black")
+
+        Returns:
+            dict[str, Any]: Context dictionary for move generation
+        """
         legal_moves = self.state_manager.get_legal_moves(state)
         formatted_legal_moves = [str(move) for move in legal_moves]
 
@@ -222,6 +357,16 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         }
 
     def analyze_player1(self, state: dict[str, Any]) -> Command:
+        """Analyze the position for player 1 (red).
+
+        Handles position analysis for the red player.
+
+        Args:
+            state (dict[str, Any]): Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
@@ -230,6 +375,16 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return self.analyze_position(state_obj, "red")
 
     def analyze_player2(self, state: dict[str, Any]) -> Command:
+        """Analyze the position for player 2 (black).
+
+        Handles position analysis for the black player.
+
+        Args:
+            state (dict[str, Any]): Current game state
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
@@ -238,6 +393,18 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return self.analyze_position(state_obj, "black")
 
     def analyze_position(self, state: CheckersState, player: str) -> Command:
+        """Analyze the position for a player.
+
+        Gets a detailed position analysis from the appropriate analyzer engine
+        and updates the game state with the analysis.
+
+        Args:
+            state (CheckersState): Current game state
+            player (str): Player to analyze for ("red" or "black")
+
+        Returns:
+            Command: LangGraph command with updated state and next node
+        """
         if state.turn != player:
             return Command(update=state.model_dump(), goto=f"{player}_move")
 
@@ -256,7 +423,14 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         return Command(update=updated_state.model_dump(), goto=f"{player}_move")
 
     def visualize_state(self, state: dict[str, Any]) -> None:
-        """Use the rich UI to visualize state."""
+        """Use the rich UI to visualize the current game state.
+
+        Displays the current board, game info, move history, and other
+        visual elements using the rich UI.
+
+        Args:
+            state (dict[str, Any]): Current game state
+        """
         checker_state = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
         )
@@ -267,7 +441,19 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             self.ui.show_game_over(checker_state)
 
     def run_game_with_ui(self) -> dict[str, Any]:
-        """Run game with beautiful UI visualization."""
+        """Run game with beautiful UI visualization.
+
+        Runs a complete checkers game with rich UI visualization,
+        streaming the state updates and displaying them in real-time.
+
+        Returns:
+            dict[str, Any]: Final game state
+
+        Examples:
+            >>> agent = CheckersAgent(CheckersAgentConfig())
+            >>> final_state = agent.run_game_with_ui()
+            >>> print(f"Winner: {final_state.get('winner')}")
+        """
         initial_state = self.state_manager.initialize()
 
         # Create runnable config with increased recursion limit
@@ -291,7 +477,23 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             return {}
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run the checkers game."""
+        """Run the checkers game.
+
+        Runs a complete checkers game with optional visualization.
+
+        Args:
+            visualize (bool, optional): Whether to show the UI. Defaults to True.
+
+        Returns:
+            dict[str, Any]: Final game state
+
+        Examples:
+            >>> agent = CheckersAgent(CheckersAgentConfig())
+            >>> # Run with visualization
+            >>> final_state = agent.run_game(visualize=True)
+            >>> # Run without visualization
+            >>> final_state = agent.run_game(visualize=False)
+        """
         if visualize:
             return self.run_game_with_ui()
         else:
@@ -302,6 +504,14 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             return self.run({}, config=config)
 
     def setup_workflow(self) -> None:
+        """Set up the workflow graph for the checkers game.
+
+        Creates a LangGraph workflow with nodes for initialization, moves,
+        and analysis, with appropriate edges between them.
+
+        The graph flow follows this pattern:
+        initialize → player1_move → analyze_player2 → player2_move → analyze_player1 → loop
+        """
         gb = DynamicGraph(
             components=[self.config], state_schema=self.config.state_schema
         )

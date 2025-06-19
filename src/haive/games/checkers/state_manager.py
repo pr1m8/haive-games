@@ -1,4 +1,17 @@
-# src/haive/games/checkers/state.py
+"""Checkers game state manager module.
+
+This module provides state management functionality for checkers games, including:
+    - Game state initialization
+    - Legal move generation for regular moves and jumps
+    - Move application with validation
+    - Game status tracking and winner determination
+    - King promotion handling
+    - Position analysis updates
+    - Coordinate conversion between algebraic notation and indices
+
+The state manager offers a clean, functional interface for manipulating
+checkers game states without directly modifying them.
+"""
 
 import copy
 from typing import Any
@@ -12,10 +25,17 @@ class CheckersStateManager:
 
     This class provides static methods for managing checkers game states:
         - Game initialization with default settings
-        - Legal move generation
+        - Legal move generation (including mandatory jumps)
         - Move application with validation
         - Analysis updates
         - Game status checks
+        - King promotion handling
+
+    The manager implements a functional approach where methods take the current
+    state and return a new state, rather than modifying the state in place.
+
+    Attributes:
+        BOARD_SIZE (int): Size of the checkers board (8x8)
     """
 
     BOARD_SIZE = 8
@@ -24,8 +44,20 @@ class CheckersStateManager:
     def initialize(cls) -> CheckersState:
         """Initialize a new checkers game.
 
+        Creates a fresh checkers game state with the standard starting board
+        configuration, red to move first, and initial values for all tracking fields.
+
         Returns:
             CheckersState: A new game state with the initial board setup.
+
+        Examples:
+            >>> state = CheckersStateManager.initialize()
+            >>> state.turn
+            'red'
+            >>> state.game_status
+            'ongoing'
+            >>> len(state.move_history)
+            0
         """
         # Create initial board
         # 0 = empty, 1 = red piece, 2 = red king, 3 = black piece, 4 = black king
@@ -60,11 +92,26 @@ class CheckersStateManager:
     def _create_board_string(cls, board: list[list[int]]) -> str:
         """Create a string representation of the board.
 
+        Converts the 2D grid board representation to a human-readable string
+        with row and column coordinates for display and debugging.
+
         Args:
-            board: 2D list representing the checkers board
+            board (list[list[int]]): 2D list representing the checkers board
 
         Returns:
-            str: String representation of the board
+            str: String representation of the board with coordinates
+
+        Examples:
+            >>> board = [[0, 3, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [0, 0, 0, 0, 0, 0, 0, 0],
+            ...          [1, 0, 0, 0, 0, 0, 0, 0]]
+            >>> print(CheckersStateManager._create_board_string(board).split('\\n')[0])
+            '8 | . b . . . . . .'
         """
         symbols = {
             0: ".",  # Empty square
@@ -89,11 +136,25 @@ class CheckersStateManager:
     def get_legal_moves(cls, state: CheckersState) -> list[CheckersMove]:
         """Get all legal moves for the current player.
 
+        Checks for all legal moves in the current position, following checkers rules:
+        - If jump moves are available, only jump moves are returned (mandatory jumps)
+        - Otherwise, regular moves are returned
+        - Kings can move in all diagonal directions
+        - Regular pieces can only move forward (down for black, up for red)
+
         Args:
-            state: Current game state
+            state (CheckersState): Current game state
 
         Returns:
-            List[CheckersMove]: List of legal moves
+            list[CheckersMove]: List of legal moves for the current player
+
+        Examples:
+            >>> state = CheckersStateManager.initialize()
+            >>> moves = CheckersStateManager.get_legal_moves(state)
+            >>> len(moves) > 0
+            True
+            >>> all(move.player == "red" for move in moves)
+            True
         """
         board = state.board
         current_player = state.turn
@@ -120,13 +181,16 @@ class CheckersStateManager:
     ) -> list[CheckersMove]:
         """Get all possible jump moves for a player.
 
+        Finds all possible jump (capture) moves for the specified player by
+        checking each piece of that player on the board.
+
         Args:
-            board: The current board
-            player: The current player ("red" or "black")
-            piece_values: Values representing the player's pieces
+            board (list[list[int]]): The current board
+            player (str): The current player ("red" or "black")
+            piece_values (list[int]): Values representing the player's pieces
 
         Returns:
-            List[CheckersMove]: List of jump moves
+            list[CheckersMove]: List of jump moves
         """
         jumps = []
 
@@ -145,14 +209,17 @@ class CheckersStateManager:
     ) -> list[CheckersMove]:
         """Get all possible jumps for a single piece.
 
+        Checks all possible jump directions for a specific piece based on
+        its type (regular or king) and finds valid jumps.
+
         Args:
-            board: The current board
-            row: Row of the piece
-            col: Column of the piece
-            player: The current player
+            board (list[list[int]]): The current board
+            row (int): Row of the piece
+            col (int): Column of the piece
+            player (str): The current player
 
         Returns:
-            List[CheckersMove]: List of jump moves for this piece
+            list[CheckersMove]: List of jump moves for this piece
         """
         jumps = []
         piece = board[row][col]
@@ -211,13 +278,16 @@ class CheckersStateManager:
     ) -> list[CheckersMove]:
         """Get all possible regular moves for a player.
 
+        Finds all possible non-jump moves for the specified player by
+        checking each piece of that player on the board.
+
         Args:
-            board: The current board
-            player: The current player
-            piece_values: Values representing the player's pieces
+            board (list[list[int]]): The current board
+            player (str): The current player
+            piece_values (list[int]): Values representing the player's pieces
 
         Returns:
-            List[CheckersMove]: List of regular moves
+            list[CheckersMove]: List of regular moves
         """
         moves = []
 
@@ -236,14 +306,17 @@ class CheckersStateManager:
     ) -> list[CheckersMove]:
         """Get all possible regular moves for a single piece.
 
+        Checks all possible move directions for a specific piece based on
+        its type (regular or king) and finds valid moves.
+
         Args:
-            board: The current board
-            row: Row of the piece
-            col: Column of the piece
-            player: The current player
+            board (list[list[int]]): The current board
+            row (int): Row of the piece
+            col (int): Column of the piece
+            player (str): The current player
 
         Returns:
-            List[CheckersMove]: List of regular moves for this piece
+            list[CheckersMove]: List of regular moves for this piece
         """
         moves = []
         piece = board[row][col]
@@ -290,12 +363,21 @@ class CheckersStateManager:
     def _index_to_notation(cls, row: int, col: int) -> str:
         """Convert board indices to algebraic notation.
 
+        Converts the zero-based row and column indices to algebraic notation
+        where columns are a-h and rows are 1-8 (bottom to top).
+
         Args:
-            row: Row index (0-7)
-            col: Column index (0-7)
+            row (int): Row index (0-7)
+            col (int): Column index (0-7)
 
         Returns:
             str: Position in algebraic notation (e.g., "a3")
+
+        Examples:
+            >>> CheckersStateManager._index_to_notation(0, 0)
+            'a8'
+            >>> CheckersStateManager._index_to_notation(7, 7)
+            'h1'
         """
         return f"{chr(97 + col)}{8 - row}"
 
@@ -303,11 +385,19 @@ class CheckersStateManager:
     def _notation_to_index(cls, notation: str) -> tuple[int, int]:
         """Convert algebraic notation to board indices.
 
+        Converts algebraic notation (e.g., "a3") to zero-based row and column indices.
+
         Args:
-            notation: Position in algebraic notation (e.g., "a3")
+            notation (str): Position in algebraic notation (e.g., "a3")
 
         Returns:
-            Tuple[int, int]: (row, col) indices
+            tuple[int, int]: (row, col) indices
+
+        Examples:
+            >>> CheckersStateManager._notation_to_index("a8")
+            (0, 0)
+            >>> CheckersStateManager._notation_to_index("h1")
+            (7, 7)
         """
         col = ord(notation[0]) - 97
         row = 8 - int(notation[1])
@@ -317,12 +407,24 @@ class CheckersStateManager:
     def apply_move(cls, state: CheckersState, move: CheckersMove) -> CheckersState:
         """Apply a move to the current game state.
 
+        Takes a move and applies it to the current state, returning a new state.
+        Handles piece movement, captures, king promotion, and game status updates.
+
         Args:
-            state: Current game state
-            move: Move to apply
+            state (CheckersState): Current game state
+            move (CheckersMove): Move to apply
 
         Returns:
             CheckersState: New game state after the move
+
+        Examples:
+            >>> state = CheckersStateManager.initialize()
+            >>> moves = CheckersStateManager.get_legal_moves(state)
+            >>> new_state = CheckersStateManager.apply_move(state, moves[0])
+            >>> new_state.turn
+            'black'
+            >>> len(new_state.move_history)
+            1
         """
         # Create a deep copy of the state to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -382,8 +484,15 @@ class CheckersStateManager:
     def check_game_status(cls, state: CheckersState) -> CheckersState:
         """Check and update the game status.
 
+        Evaluates the current game state to determine if the game is over
+        and who the winner is, if any.
+
+        Game-ending conditions include:
+        - A player has no pieces left
+        - A player has no legal moves
+
         Args:
-            state: Current game state
+            state (CheckersState): Current game state
 
         Returns:
             CheckersState: Updated game state with correct status
@@ -422,10 +531,13 @@ class CheckersStateManager:
     ) -> CheckersState:
         """Update the state with new analysis.
 
+        Adds new position analysis data to the state for the specified player,
+        keeping only the most recent analyses.
+
         Args:
-            state: Current game state
-            analysis: Analysis data to add
-            player: Player the analysis is for
+            state (CheckersState): Current game state
+            analysis (dict[str, Any]): Analysis data to add
+            player (str): Player the analysis is for ("red" or "black")
 
         Returns:
             CheckersState: Updated game state with new analysis
