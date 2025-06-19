@@ -20,7 +20,7 @@ class FoxAndGeeseConfig(GameConfig):
 
     This class defines the configuration for the Fox and Geese game agent,
     which includes the game name, state schema, AugLLM configurations,
-    enable_analysis, visualize, and max_turns.
+    enable_analysis, visualize, recursion_limit and max_turns.
     """
 
     name: str = Field(default="fox_and_geese", description="Name of the game")
@@ -37,6 +37,9 @@ class FoxAndGeeseConfig(GameConfig):
     max_turns: int = Field(
         default=100, description="Maximum number of turns before declaring a draw"
     )
+    recursion_limit: int = Field(
+        default=200, description="Maximum recursion depth for the game graph"
+    )
 
     @classmethod
     def default_config(cls):
@@ -48,4 +51,5 @@ class FoxAndGeeseConfig(GameConfig):
             enable_analysis=True,
             visualize=True,
             max_turns=100,
+            recursion_limit=200,
         )
