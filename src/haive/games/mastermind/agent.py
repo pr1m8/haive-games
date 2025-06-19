@@ -1,15 +1,72 @@
+import logging
 import time
-from typing import Any
+from typing import Any, Dict, Union
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.types import Command
+from rich.console import Console
 
 from haive.games.framework.base.agent import GameAgent
 from haive.games.mastermind.config import MastermindConfig
 from haive.games.mastermind.models import ColorCode, MastermindGuess
 from haive.games.mastermind.state import MastermindState
 from haive.games.mastermind.state_manager import MastermindStateManager
+
+# Import the UI module
+try:
+    from haive.games.mastermind.ui import MastermindUI
+
+    UI_AVAILABLE = True
+except ImportError:
+    UI_AVAILABLE = False
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+
+def ensure_game_state(
+    state_input: Union[Dict[str, Any], MastermindState, Command],
+) -> MastermindState:
+    """Ensure input is converted to MastermindState.
+
+    Args:
+        state_input: State input as dict, MastermindState, or Command
+
+    Returns:
+        MastermindState instance
+    """
+    logger.info(f"ensure_game_state: received input of type {type(state_input)}")
+
+    if isinstance(state_input, MastermindState):
+        logger.info("ensure_game_state: Input is already MastermindState")
+        return state_input
+    elif isinstance(state_input, Command):
+        logger.info("ensure_game_state: Input is a Command, extracting state")
+        # Attempt to extract state from Command
+        if hasattr(state_input, "state") and state_input.state:
+            return ensure_game_state(state_input.state)
+        else:
+            logger.error("ensure_game_state: Command does not have state attribute")
+            # Initialize a new state as fallback
+            return MastermindState.initialize()
+    elif isinstance(state_input, dict):
+        try:
+            logger.info(
+                f"ensure_game_state: Converting dict to MastermindState, keys: {list(state_input.keys())}"
+            )
+            return MastermindState.model_validate(state_input)
+        except Exception as e:
+            logger.error(f"Failed to convert dict to MastermindState: {e}")
+            logger.debug(f"Dict contents: {state_input}")
+            # Initialize a new state as fallback rather than crashing
+            logger.info("ensure_game_state: Using default state as fallback")
+            return MastermindState.initialize()
+    else:
+        logger.error(f"Cannot convert {type(state_input)} to MastermindState")
+        # Initialize a new state as fallback rather than crashing
+        logger.info("ensure_game_state: Using default state as fallback")
+        return MastermindState.initialize()
 
 
 @register_agent(MastermindConfig)
@@ -29,6 +86,12 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         self.state_manager = MastermindStateManager
         # self.engines = config.aug_llm_configs
         super().__init__(config)
+
+        # Initialize console and UI
+        self.console = Console()
+        self.ui = MastermindUI(self.console) if UI_AVAILABLE else None
+        if not UI_AVAILABLE:
+            logger.warning("Rich UI not available - falling back to text output")
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize the Mastermind game.
@@ -339,54 +402,92 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         if not self.config.visualize:
             return
 
-        # Create a MastermindState from the dict
-        game_state = MastermindState(**state)
+        try:
+            # Create a MastermindState from the dict
+            game_state = ensure_game_state(state)
 
-        print("\n" + "=" * 50)
-        print(f"🎮 Game: Mastermind v{self.config.version}")
-        print(f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}")
-        print(
-            f"🎭 Codemaker: {game_state.codemaker}, Codebreaker: {'player2' if game_state.codemaker == 'player1' else 'player1'}"
-        )
-        print(f"📝 Status: {game_state.game_status}")
+            # Use Rich UI if available
+            if self.ui and UI_AVAILABLE:
+                self.ui.display_game_state(game_state)
+            else:
+                # Fallback to simple text display
+                print("\n" + "=" * 50)
+                print(f"🎮 Game: Mastermind v{self.config.version}")
+                print(
+                    f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}"
+                )
+                print(
+                    f"🎭 Codemaker: {game_state.codemaker}, Codebreaker: {'player2' if game_state.codemaker == 'player1' else 'player1'}"
+                )
+                print(f"📝 Status: {game_state.game_status}")
 
-        # Only show secret code if game is over
-        if game_state.game_status != "ongoing":
-            print(f"🔑 Secret Code: {', '.join(game_state.secret_code)}")
+                # Only show secret code if game is over
+                if game_state.game_status != "ongoing":
+                    print(f"🔑 Secret Code: {', '.join(game_state.secret_code)}")
 
-        print("=" * 50)
+                print("=" * 50)
 
-        # Print the board with all guesses and feedback
-        if game_state.guesses:
-            print("\n" + game_state.board_string)
-        else:
-            print("\nNo guesses yet.")
+                # Print the board with all guesses and feedback
+                if game_state.guesses:
+                    print("\n" + game_state.board_string)
+                else:
+                    print("\nNo guesses yet.")
 
-        # Print analysis if available
-        codebreaker = "player2" if game_state.codemaker == "player1" else "player1"
-        if codebreaker == "player1" and game_state.player1_analysis:
-            last_analysis = game_state.player1_analysis[-1]
-            print("\n🔍 Codebreaker's Analysis:")
-            print(f"Possible combinations: {last_analysis['possible_combinations']}")
-            print(
-                f"High probability colors: {', '.join(last_analysis['high_probability_colors'])}"
-            )
-            print(f"Strategy: {last_analysis['strategy']}")
-            # print(f"Recommended next guess: {', '.join(last_analysis['recommended_guess'])}")
-            print(f"Confidence: {last_analysis['confidence']}/10")
+                # Print analysis if available
+                codebreaker = (
+                    "player2" if game_state.codemaker == "player1" else "player1"
+                )
+                if codebreaker == "player1" and game_state.player1_analysis:
+                    last_analysis = game_state.player1_analysis[-1]
+                    print("\n🔍 Codebreaker's Analysis:")
 
-        elif codebreaker == "player2" and game_state.player2_analysis:
-            last_analysis = game_state.player2_analysis[-1]
-            print("\n🔍 Codebreaker's Analysis:")
-            print(f"Possible combinations: {last_analysis['possible_combinations']}")
-            print(
-                f"High probability colors: {', '.join(last_analysis['high_probability_colors'])}"
-            )
-            # Only print the full analysis dictionary for debugging if needed
-            # print(last_analysis)
-            print(f"Strategy: {last_analysis['strategy']}")
-            # print(f"Recommended next guess: {', '.join(last_analysis['recommended_guess'])}")
-            print(f"Confidence: {last_analysis['confidence']}/10")
+                    if isinstance(last_analysis, dict):
+                        print(
+                            f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
+                        )
+                        print(
+                            f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
+                        )
+                        print(f"Strategy: {last_analysis.get('strategy', 'Unknown')}")
+                        print(f"Confidence: {last_analysis.get('confidence', '?')}/10")
+                    else:
+                        print(
+                            f"Possible combinations: {last_analysis.possible_combinations}"
+                        )
+                        print(
+                            f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
+                        )
+                        print(f"Strategy: {last_analysis.strategy}")
+                        print(f"Confidence: {last_analysis.confidence}/10")
+
+                elif codebreaker == "player2" and game_state.player2_analysis:
+                    last_analysis = game_state.player2_analysis[-1]
+                    print("\n🔍 Codebreaker's Analysis:")
+
+                    if isinstance(last_analysis, dict):
+                        print(
+                            f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
+                        )
+                        print(
+                            f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
+                        )
+                        print(f"Strategy: {last_analysis.get('strategy', 'Unknown')}")
+                        print(f"Confidence: {last_analysis.get('confidence', '?')}/10")
+                    else:
+                        print(
+                            f"Possible combinations: {last_analysis.possible_combinations}"
+                        )
+                        print(
+                            f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
+                        )
+                        print(f"Strategy: {last_analysis.strategy}")
+                        print(f"Confidence: {last_analysis.confidence}/10")
+        except Exception as e:
+            logger.error(f"Error visualizing state: {e}")
+            if self.console:
+                self.console.print(f"[bold red]Error visualizing state: {e}[/bold red]")
+            else:
+                print(f"Error visualizing state: {e}")
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -427,6 +528,103 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         # Build the graph
         self.graph = builder.build()
 
+    def run_game_with_ui(self, delay: float = 1.0) -> dict[str, Any]:
+        """Run the Mastermind game with Rich UI visualization.
+
+        Args:
+            delay: Delay between game state updates in seconds.
+
+        Returns:
+            Dict[str, Any]: Final game state after completion.
+        """
+        if not self.ui or not UI_AVAILABLE:
+            logger.warning("UI not available - falling back to regular run")
+            return self.run_game(visualize=True)
+
+        logger.info("Starting Mastermind game with Rich UI")
+
+        # Display welcome
+        self.ui.display_welcome()
+        time.sleep(2)
+
+        # Initialize game state with secret code
+        secret_code = self.config.secret_code
+        if not secret_code:
+            # Use random code for this example
+            secret_code = ["red", "blue", "green", "yellow"]
+
+        initial_state = self.state_manager.initialize(
+            codemaker=self.config.codemaker,
+            colors=self.config.colors,
+            code_length=self.config.code_length,
+            max_turns=self.config.max_turns,
+            secret_code=secret_code,
+        )
+
+        # Store the last seen state to prevent infinite loops
+        last_state = None
+        final_state = None
+
+        try:
+            # Run the game using agent.stream()
+            step_count = 0
+            for step in self.stream(initial_state, stream_mode="values", debug=True):
+                step_count += 1
+                logger.debug(f"Stream step {step_count}: Received state update")
+
+                # Display the game state
+                self.ui.display_game_state(ensure_game_state(step))
+
+                try:
+                    current_state = ensure_game_state(step)
+
+                    # Break the loop if the game is over
+                    if current_state.game_status != "ongoing":
+                        final_state = step
+                        break
+
+                    # Detect if we're stuck in an infinite loop
+                    if last_state:
+                        if (
+                            len(current_state.guesses) == len(last_state.guesses)
+                            and len(current_state.guesses) > 0
+                        ):
+                            # Check if max turns reached
+                            if len(current_state.guesses) >= current_state.max_turns:
+                                self.console.print(
+                                    "\n[bold yellow]⚠️ Maximum turns reached. Ending game.[/bold yellow]"
+                                )
+
+                                # Force game to end with codemaker win
+                                current_state.game_status = (
+                                    f"{current_state.codemaker}_win"
+                                )
+                                current_state.winner = current_state.codemaker
+                                final_state = current_state.model_dump()
+                                break
+
+                    # Update last state
+                    last_state = current_state
+                except Exception as e:
+                    self.console.print(
+                        f"[bold red]Error processing state: {e}[/bold red]"
+                    )
+
+                # Delay between states
+                time.sleep(delay)
+
+            # Display final results
+            if final_state:
+                final_game_state = ensure_game_state(final_state)
+                time.sleep(1)  # Pause to show final board state
+                self.ui.display_final_results(final_game_state)
+
+            return final_state if final_state else step
+
+        except Exception as e:
+            self.console.print(f"[bold red]Error running game: {e}[/bold red]")
+            return {}
+
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run the full Mastermind game, optionally visualizing each step.
 
@@ -436,31 +634,40 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         Returns:
             Dict[str, Any]: Final game state after completion.
         """
+        # Use Rich UI if available and visualize is True
+        if visualize and self.config.visualize and self.ui and UI_AVAILABLE:
+            return self.run_game_with_ui()
         # Determine or generate the secret code
         if self.config.secret_code:
             secret_code = self.config.secret_code
         else:
-            response = self.engines["codemaker"].invoke({})
-            print(f"[DEBUG] Codemaker engine response: {response!r}")
+            try:
+                response = self.engines["codemaker"].invoke({})
+                print(f"[DEBUG] Codemaker engine response: {response!r}")
 
-            if isinstance(response, dict) and "code" in response:
-                secret_code = response["code"]
-            elif isinstance(response, ColorCode) or (
-                hasattr(response, "code") and isinstance(response.code, list)
-            ):
-                secret_code = response.code
-            elif (
-                isinstance(response, tuple)
-                and len(response) == 2
-                and isinstance(response[1], list)
-            ):
-                secret_code = response[1]
-            elif isinstance(response, list) and all(
-                isinstance(c, str) for c in response
-            ):
-                secret_code = response
-            else:
-                raise ValueError(f"Invalid codemaker response: {response}")
+                if isinstance(response, dict) and "code" in response:
+                    secret_code = response["code"]
+                elif isinstance(response, ColorCode) or (
+                    hasattr(response, "code") and isinstance(response.code, list)
+                ):
+                    secret_code = response.code
+                elif (
+                    isinstance(response, tuple)
+                    and len(response) == 2
+                    and isinstance(response[1], list)
+                ):
+                    secret_code = response[1]
+                elif isinstance(response, list) and all(
+                    isinstance(c, str) for c in response
+                ):
+                    secret_code = response
+                else:
+                    # Fallback to random code if LLM response is invalid
+                    print(f"Invalid codemaker response: {response}. Using random code.")
+                    secret_code = None
+            except Exception as e:
+                print(f"Error getting secret code from LLM: {e}. Using random code.")
+                secret_code = None
 
         # Initialize game state
         initial_state = MastermindStateManager.initialize(
@@ -476,47 +683,75 @@ class MastermindAgent(GameAgent[MastermindConfig]):
             # Store the last seen state to prevent infinite loops
             last_state = None
             final_state = None
-  
-            try:
-              for step in self.stream(initial_state, stream_mode="values", debug=True):
-                
 
-                # Create a MastermindState to check for game completion
-                self.visualize_state(step)
+            try:
+                for step in self.stream(
+                    initial_state, stream_mode="values", debug=True
+                ):
+                    # Create a MastermindState to check for game completion
+                    self.visualize_state(step)
+
+                    try:
+                        current_state = ensure_game_state(step)
+
+                        # Break the loop if the game is over
+                        if current_state.game_status != "ongoing":
+                            final_state = step
+                            break
+
+                        # Detect if we're stuck in an infinite loop by comparing with last state
+                        if last_state:
+                            # If we've seen the same guesses twice, we might be in a loop
+                            if (
+                                len(current_state.guesses) == len(last_state.guesses)
+                                and len(current_state.guesses) > 0
+                                and len(last_state.guesses) > 0
+                            ):
+                                # Check if max turns reached
+                                if (
+                                    len(current_state.guesses)
+                                    >= current_state.max_turns
+                                ):
+                                    logger.warning(
+                                        "Maximum turns reached. Ending game."
+                                    )
+                                    if self.console:
+                                        self.console.print(
+                                            "\n[bold yellow]⚠️ Maximum turns reached. Ending game.[/bold yellow]"
+                                        )
+                                    else:
+                                        print("\n⚠️ Maximum turns reached. Ending game.")
+
+                                    # Force game to end with codemaker win
+                                    current_state.game_status = (
+                                        f"{current_state.codemaker}_win"
+                                    )
+                                    current_state.winner = current_state.codemaker
+                                    final_state = current_state.model_dump()
+                                    break
+
+                        # Update last state
+                        last_state = current_state
+                    except Exception as e:
+                        logger.error(f"Error processing state: {e}")
+                        if self.console:
+                            self.console.print(
+                                f"[bold red]Error processing state: {e}[/bold red]"
+                            )
+                        else:
+                            print(f"Error processing state: {e}")
+
                     time.sleep(1)
-                return step
+
+                # Display final results if we have a UI
+                if final_state and self.ui and UI_AVAILABLE:
+                    final_game_state = ensure_game_state(final_state)
+                    self.ui.display_final_results(final_game_state)
+
+                return final_state if final_state else step
             except Exception as e:
                 print(f"Error running game: {e}")
                 return {}
         else:
-            return self.run({})
-                current_state = MastermindState(**step)
-
-                # Break the loop if the game is over
-                if current_state.game_status != "ongoing":
-                    final_state = step
-                    break
-
-                # Detect if we're stuck in an infinite loop by comparing with last state
-                if last_state:
-                    # If we've seen the same guesses twice, we might be in a loop
-                    if (
-                        len(current_state.guesses) == len(last_state.guesses)
-                        and len(current_state.guesses) > 0
-                        and len(last_state.guesses) > 0
-                    ):
-                        # Check if max turns reached
-                        if len(current_state.guesses) >= current_state.max_turns:
-                            print("\n⚠️ Maximum turns reached. Ending game.")
-                            # Force game to end with codemaker win
-                            current_state.game_status = f"{current_state.codemaker}_win"
-                            current_state.winner = current_state.codemaker
-                            final_state = current_state.model_dump()
-                            break
-
-                # Update last state
-                last_state = current_state
-
-            return final_state if final_state else step
-        return super().run(initial_state)
-
+            # Non-visualized mode
+            return super().run(initial_state)

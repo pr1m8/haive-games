@@ -1,5 +1,6 @@
+import operator
 import random
-from typing import List, Literal
+from typing import Annotated, List, Literal
 
 from pydantic import Field, computed_field
 
