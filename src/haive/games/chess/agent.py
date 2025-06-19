@@ -117,7 +117,8 @@ class ChessAgent(Agent[ChessAgentConfig]):
 
         # Compile the graph
         self.graph = builder
-        # self.app = builder.compile()
+        # Compile the graph without recursion_limit, which will be applied in the runtime config
+        self._app = builder.compile()
 
     def make_move(self, state: ChessState, color: str) -> Command:
         """Make a move for the specified player with retry logic.

@@ -168,7 +168,7 @@ class ChessRichUI:
                         if piece.color == chess.WHITE:
                             style = f"bold white {bg_color}"
                         else:
-                            style = f"bold black {bg_color}"
+                            style = f"bold red {bg_color}"
 
                         board_text.append(f" {piece_char} ", style=style)
                     else:
@@ -350,7 +350,11 @@ class ChessRichUI:
             recent_table.add_column("Black", style="red", width=6)
 
             for row in table.rows[-10:]:
-                recent_table.add_row(*[str(cell) for cell in row])
+                # Row objects aren't directly iterable in newer Rich versions
+                cells = []
+                for idx in range(len(table.columns)):
+                    cells.append(str(row[idx]))
+                recent_table.add_row(*cells)
 
             table = recent_table
 
@@ -451,7 +455,7 @@ class ChessRichUI:
         self.start_time = time.time()
 
         # Compile the agent (this will build the graph using build_graph)
-        app = agent.app
+        app = agent._app
 
         # Show loading screen
         with Progress(
@@ -468,9 +472,16 @@ class ChessRichUI:
                 last_update_time = time.time()
 
                 # Stream the game
+                # Prepare config with recursion_limit explicitly set
+                stream_config = agent.config.runnable_config.copy()
+                recursion_limit = stream_config.get("configurable", {}).get(
+                    "recursion_limit", 200
+                )
+                stream_config["recursion_limit"] = recursion_limit
+
                 for step in app.stream(
                     initial_state.model_dump(),
-                    config=agent.config.runnable_config,
+                    config=stream_config,
                     stream_mode="values",
                 ):
                     # Convert dict to ChessState
