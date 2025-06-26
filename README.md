@@ -44,6 +44,21 @@ Games provide:
 - Corner and edge strategy
 - Mobility analysis
 
+**Fox and Geese**
+
+- Traditional asymmetric hunt game with rich terminal UI
+- Fox (🦊) tries to capture geese while geese (🪿) try to trap the fox
+- State management, move validation, and win condition detection
+- Fixed implementation that works reliably
+
+```bash
+# Run with fixed state handling (recommended)
+python src/haive/games/fox_and_geese/fixed_runner.py --delay 0.5 --debug
+
+# Run with original implementation (requires LLM API access)
+python src/haive/games/fox_and_geese/example.py
+```
+
 ### 2. Strategy Games
 
 **Risk**
@@ -110,10 +125,18 @@ Games provide:
 
 **Mafia**
 
-- Role-based gameplay
-- Day/night cycles
-- Deduction reasoning
-- Social dynamics
+- Role-based gameplay with villagers, mafia, detective and doctor roles
+- Day/night cycles with phase transitions
+- Social deduction mechanics
+- LLM-powered decision making
+
+```bash
+# Run with fixed state handling (recommended)
+python src/haive/games/mafia/fixed_runner.py --players 5 --days 1 --debug
+
+# Run with original implementation (requires LLM API access)
+python src/haive/games/mafia/example.py --players 5 --days 1 --debug
+```
 
 **Clue**
 
