@@ -14,7 +14,6 @@ making it easy to create and customize chess agent instances.
 import uuid
 from typing import Any, Dict, Type
 
-from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field

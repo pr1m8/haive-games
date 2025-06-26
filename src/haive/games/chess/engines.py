@@ -267,7 +267,7 @@ Analyze this position strategically from Black's perspective.""",
 
     return AugLLMConfig(
         name="black_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.7),
+        llm_config=AnthropicLLMConfig(model="claude-3-5-sonnet-20240620"),
         prompt_template=prompt,
         structured_output_model=SegmentedAnalysis,
         description="Black position analysis",

@@ -21,7 +21,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig, DeepSeekLLMConfig, LLMConfig
 from langchain.prompts import ChatPromptTemplate
 
-from .models import ChessAnalysis, ChessPlayerDecision
+from haive.games.chess.models import ChessAnalysis, ChessPlayerDecision
 
 
 def generate_move_prompt(color: str) -> ChatPromptTemplate:

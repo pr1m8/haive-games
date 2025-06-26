@@ -13,8 +13,6 @@ and can be used as a starting point for more complex implementations.
 
 import uuid
 
-import chess
-
 from haive.games.chess.agent import ChessAgent
 from haive.games.chess.config import ChessAgentConfig
 from haive.games.chess.state import ChessState

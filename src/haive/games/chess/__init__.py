@@ -15,15 +15,15 @@ Example:
     >>> agent = ChessAgent(config)
 """
 
-from .agent import ChessAgent
-from .config import ChessAgentConfig
-from .models import (
+from haive.games.chess.agent import ChessAgent
+from haive.games.chess.config import ChessAgentConfig
+from haive.games.chess.models import (
     ChessAnalysis,
     ChessMoveModel,
     ChessPlayerDecision,
 )
-from .state import ChessState
-from .state_manager import ChessGameStateManager
+from haive.games.chess.state import ChessState
+from haive.games.chess.state_manager import ChessGameStateManager
 
 __all__ = [
     "ChessAgent",

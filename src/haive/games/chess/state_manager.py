@@ -19,7 +19,7 @@ Example:
     >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
 """
 
-from .state import ChessState
+from haive.games.chess.state import ChessState
 
 
 class ChessGameStateManager:

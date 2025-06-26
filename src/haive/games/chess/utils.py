@@ -48,7 +48,7 @@ def determine_game_status(board: chess.Board) -> str:
 
 
 def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
-    """Generate an ASCII representation of the chess board.
+    r"""Generate an ASCII representation of the chess board.
 
     Creates a text-based visualization of a chess board from its FEN
     representation, optionally highlighting the last move made.

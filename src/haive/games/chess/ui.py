@@ -1,7 +1,7 @@
 """Chess game UI using Rich for beautiful terminal display."""
 
 import time
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import chess
 from rich.align import Align
@@ -136,12 +136,10 @@ class ChessRichUI:
                     bg_color = "on grey85" if is_light else "on grey42"
 
                     # Check if this square is part of the last move
-                    is_last_move = False
                     if self.last_move and len(self.last_move) >= 4:
                         try:
                             move = chess.Move.from_uci(self.last_move)
                             if square in [move.from_square, move.to_square]:
-                                is_last_move = True
                                 bg_color = "on yellow4" if is_light else "on yellow3"
                         except:
                             pass
@@ -313,6 +311,7 @@ class ChessRichUI:
                 border_style="yellow",
             )
 
+        # Create a new table
         table = Table(box=SIMPLE, show_header=True, header_style="bold")
         table.add_column("#", style="dim", width=3)
         table.add_column("White", style="green", width=6)
@@ -320,43 +319,25 @@ class ChessRichUI:
 
         # Group moves by pairs
         moves = self.state.move_history
-        for i in range(0, len(moves), 2):
+
+        # Only use the last 10 move pairs (20 moves) for display
+        start_idx = max(0, len(moves) - 20)
+        start_idx = start_idx - (start_idx % 2)  # Ensure we start with a white move
+
+        for i in range(start_idx, len(moves), 2):
             move_num = i // 2 + 1
             white_move = moves[i][1] if i < len(moves) else ""
             black_move = moves[i + 1][1] if i + 1 < len(moves) else ""
 
             # Highlight last move
-            if i == len(moves) - 1 or i + 1 == len(moves) - 1:
-                table.add_row(
-                    str(move_num),
-                    Text(
-                        white_move,
-                        style="bold green" if i == len(moves) - 1 else "green",
-                    ),
-                    Text(
-                        black_move,
-                        style="bold red" if i + 1 == len(moves) - 1 else "red",
-                    ),
-                )
-            else:
-                table.add_row(str(move_num), white_move, black_move)
+            white_style = "bold green" if i == len(moves) - 1 else "green"
+            black_style = "bold red" if i + 1 == len(moves) - 1 else "red"
 
-        # Only show last 10 move pairs
-        if len(table.rows) > 10:
-            # Create a new table with just the last 10
-            recent_table = Table(box=SIMPLE, show_header=True, header_style="bold")
-            recent_table.add_column("#", style="dim", width=3)
-            recent_table.add_column("White", style="green", width=6)
-            recent_table.add_column("Black", style="red", width=6)
-
-            for row in table.rows[-10:]:
-                # Row objects aren't directly iterable in newer Rich versions
-                cells = []
-                for idx in range(len(table.columns)):
-                    cells.append(str(row[idx]))
-                recent_table.add_row(*cells)
-
-            table = recent_table
+            table.add_row(
+                str(move_num),
+                Text(white_move, style=white_style),
+                Text(black_move, style=black_style),
+            )
 
         return Panel(table, title="📜 Recent Moves", border_style="yellow", box=ROUNDED)
 
@@ -498,16 +479,37 @@ class ChessRichUI:
                     # Update UI with rate limiting
                     current_time = time.time()
                     if current_time - last_update_time >= delay:
-                        self._update_layout()
-                        live.refresh()
-                        last_update_time = current_time
+                        try:
+                            self._update_layout()
+                            live.refresh()
+                            last_update_time = current_time
+                        except (AttributeError, TypeError) as e:
+                            if "Row" in str(e):
+                                # We already fixed the render_move_history, but in case there are other issues
+                                self.console.print(
+                                    f"\n[yellow]Row rendering issue: {e}[/yellow]"
+                                )
+                                # Continue anyway
+                                pass
+                            else:
+                                # Re-raise other errors
+                                raise
 
                     # Check for game end
                     if self.state.game_status not in ["ongoing", "check"]:
                         # Final update
-                        self._update_layout()
-                        live.refresh()
-                        time.sleep(3)  # Show final position
+                        try:
+                            self._update_layout()
+                            live.refresh()
+                            time.sleep(3)  # Show final position
+                        except (AttributeError, TypeError) as e:
+                            if "Row" in str(e):
+                                self.console.print(
+                                    f"\n[yellow]Row rendering issue in final update: {e}[/yellow]"
+                                )
+                            else:
+                                # Re-raise other errors
+                                raise
                         break
 
                     # Check for errors

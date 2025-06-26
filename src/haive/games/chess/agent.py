@@ -13,11 +13,10 @@ game status tracking.
 """
 
 import copy
-from typing import Any, Dict, Optional
 
 import chess
 from haive.core.engine.agent.agent import Agent, register_agent
-from langgraph.graph import END, START, StateGraph
+from langgraph.graph import END, StateGraph
 from langgraph.types import Command
 
 from haive.games.chess.config import ChessAgentConfig
@@ -202,7 +201,7 @@ class ChessAgent(Agent[ChessAgentConfig]):
                 # Build error context for retry attempts
                 error_context = ""
                 if previous_errors and attempt > 1:
-                    error_context = f"\n⚠️ PREVIOUS ATTEMPT ERRORS:\n"
+                    error_context = "\n⚠️ PREVIOUS ATTEMPT ERRORS:\n"
                     for i, err in enumerate(previous_errors, 1):
                         error_context += f"Attempt {i}: {err}\n"
                     error_context += f"\nThis is attempt {attempt} of {max_attempts}. Please select a DIFFERENT legal move from the list below.\n"

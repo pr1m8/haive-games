@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Literal, Optional
 
 import chess
 from haive.core.schema.state_schema import StateSchema
-from pydantic import BaseModel, Field, computed_field
+from pydantic import Field, computed_field
 
 
 class ChessState(StateSchema):
