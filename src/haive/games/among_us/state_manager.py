@@ -5,8 +5,12 @@ from typing import Any
 
 from haive.games.among_us.models import (
     AmongUsGamePhase,
+    PlayerMemory,
     PlayerRole,
+    PlayerState,
     SabotageEvent,
+    SabotageResolutionPoint,
+    SabotageType,
     Task,
     TaskStatus,
     TaskType,
@@ -25,22 +29,42 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def initialize(cls, player_names: list[str], **kwargs) -> AmongUsState:
         """Initialize a new Among Us game state."""
-        # Default map locations if not provided
-        map_locations = kwargs.get(
-            "map_locations",
-            [
-                "cafeteria",
-                "admin",
-                "electrical",
-                "storage",
-                "medbay",
-                "navigation",
-                "shields",
-                "weapons",
-                "o2",
-                "security",
-            ],
+        # Default map name
+        map_name = kwargs.get("map_name", "skeld")
+
+        # Create initial state with empty rooms and vents
+        state = AmongUsState(
+            players=player_names,
+            current_player_idx=0,
+            game_phase=AmongUsGamePhase.TASKS,
+            game_status="ongoing",
+            move_history=[],
+            round_number=0,
+            player_data={},  # Will use player_states instead
+            public_state={},
+            map_name=map_name,
+            map_locations=[],  # Will be populated by initialize_map
+            player_states={},
+            tasks={},
+            sabotages=[],
+            eliminated_players=[],
+            meeting_active=False,
+            meeting_caller=None,
+            reported_body=None,
+            votes={},
+            impostor_count=0,
+            crewmate_count=0,
+            discussion_history=[],
+            rooms={},
+            vents={},
+            kill_cooldowns={},
         )
+
+        # Initialize map rooms and vents
+        state.initialize_map()
+
+        # Get updated map locations
+        map_locations = state.map_locations
 
         # Determine number of impostors based on player count
         num_players = len(player_names)
@@ -69,6 +93,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                     task_id = f"{player_name}_task_{j}"
                     location = random.choice(map_locations)
                     task_type = random.choice(list(TaskType))
+                    visual = task_type == TaskType.VISUAL
 
                     task = Task(
                         id=task_id,
@@ -76,6 +101,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                         location=location,
                         description=cls._generate_task_description(task_type, location),
                         status=TaskStatus.NOT_STARTED,
+                        visual_indicator=visual,
                     )
                     player_tasks.append(task)
                     all_tasks[task_id] = task
@@ -95,46 +121,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                     )
                     player_tasks.append(task)
 
+            # Create player memory
+            memory = PlayerMemory(
+                observations=[],
+                player_suspicions={},
+                player_alibis={},
+                location_history=["cafeteria"],  # Starting location
+            )
+
             # Create player state
-            player_states[player_name] = {
-                "id": player_name,
-                "role": role,
-                "location": "cafeteria",  # Everyone starts in cafeteria
-                "tasks": player_tasks,
-                "is_alive": True,
-                "observations": [],
-            }
+            player_states[player_name] = PlayerState(
+                id=player_name,
+                role=role,
+                location="cafeteria",  # Everyone starts in cafeteria
+                tasks=player_tasks,
+                is_alive=True,
+                observations=[],
+                memory=memory,
+                in_vent=False,
+                current_vent=None,
+            )
 
-        # Initialize roles dictionary
-        roles = {
-            player_id: player_data["role"]
-            for player_id, player_data in player_states.items()
-        }
+            # Set kill cooldown for impostors
+            if role == PlayerRole.IMPOSTOR:
+                state.kill_cooldowns[player_name] = kwargs.get("kill_cooldown", 45)
 
-        # Initialize state
-        state = AmongUsState(
-            players=player_names,
-            current_player_idx=0,
-            game_phase=AmongUsGamePhase.TASKS,
-            game_status="ongoing",
-            move_history=[],
-            round_number=0,
-            player_data={},  # Will use player_states instead
-            public_state={},
-            map_locations=map_locations,
-            player_states=player_states,
-            tasks=all_tasks,
-            sabotages=[],
-            eliminated_players=[],
-            meeting_active=False,
-            meeting_caller=None,
-            reported_body=None,
-            votes={},
-            impostor_count=num_impostors,
-            crewmate_count=num_players - num_impostors,
-            roles=roles,
-            discussion_history=[],
-        )
+        # Update state with player states and tasks
+        state.player_states = player_states
+        state.tasks = all_tasks
+        state.impostor_count = num_impostors
+        state.crewmate_count = num_players - num_impostors
 
         return state
 
@@ -204,8 +220,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         state.move_history.append(action)
 
         # Update player's last action
-        if "last_action" in state.player_states[player_id]:
-            state.player_states[player_id]["last_action"] = move.get("action")
+        state.player_states[player_id].last_action = move.get("action")
 
         # Handle different action types based on game phase
         action_type = move.get("action")
@@ -224,6 +239,12 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 return cls._handle_emergency_meeting_action(state, player_id, move)
             if action_type == "sabotage":
                 return cls._handle_sabotage_action(state, player_id, move)
+            if action_type == "resolve_sabotage":
+                return cls._handle_resolve_sabotage_action(state, player_id, move)
+            if action_type == "vent":
+                return cls._handle_vent_action(state, player_id, move)
+            if action_type == "exit_vent":
+                return cls._handle_exit_vent_action(state, player_id, move)
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             if action_type == "discuss":
@@ -245,7 +266,13 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle a player moving to a new location."""
+        player_state = state.player_states[player_id]
         target_location = move.get("location")
+
+        # Cannot move while in a vent
+        if player_state.in_vent:
+            state.error_message = "Cannot move to a new room while in a vent"
+            return state
 
         # Validate location
         if target_location not in state.map_locations:
@@ -253,23 +280,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             return state
 
         # Get current location for observation
-        current_location = state.player_states[player_id]["location"]
+        current_location = player_state.location
+
+        # Check if rooms are connected
+        current_room = state.get_room(current_location)
+        if current_room and not current_room.is_connected_to(target_location):
+            state.error_message = f"Cannot move directly from {current_location} to {target_location} - rooms are not connected"
+            return state
+
+        # Check if doors are locked between rooms (due to sabotage)
+        if current_room:
+            connection = current_room.get_connection(target_location)
+            if connection and connection.is_blocked:
+                state.error_message = (
+                    f"The door to {target_location} is currently locked"
+                )
+                return state
 
         # Update player location
-        state.player_states[player_id]["location"] = target_location
+        player_state.location = target_location
+
+        # Update player's memory location history
+        player_state.memory.location_history.append(target_location)
+        if len(player_state.memory.location_history) > 10:  # Keep only recent locations
+            player_state.memory.location_history.pop(0)
 
         # Add observation about their movement for other players in source/target
         observation = f"{player_id} moved from {current_location} to {target_location}"
 
         # Players in the target location observe the arrival
-        for pid, pstate in state.player_states.items():
-            if (
-                pid != player_id
-                and pstate["is_alive"]
-                and pstate["location"] == target_location
-            ):
-
-                pstate["observations"].append(observation)
+        state.add_observation_to_all_in_room(target_location, observation, [player_id])
 
         return state
 
@@ -282,12 +322,17 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         task_id = move.get("task_id")
 
         # Validate player is a crewmate (impostors can't complete real tasks)
-        if player_state["role"] != PlayerRole.CREWMATE:
+        if player_state.role != PlayerRole.CREWMATE:
             # Impostors pretend to do tasks but don't actually complete them
+            # Add fake observation for impostor pretending to do task
+            observation = f"{player_id} appears to be working on a task in {player_state.location}"
+            state.add_observation_to_all_in_room(
+                player_state.location, observation, [player_id]
+            )
             return state
 
         # Find the task
-        player_tasks = [t for t in player_state["tasks"] if t.id == task_id]
+        player_tasks = [t for t in player_state.tasks if t.id == task_id]
         if not player_tasks:
             state.error_message = f"Task {task_id} not found for player {player_id}"
             return state
@@ -295,30 +340,31 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         task = player_tasks[0]
 
         # Validate task is in the player's current location
-        if task.location != player_state["location"]:
+        if task.location != player_state.location:
             state.error_message = f"Task {task_id} is not in this location"
             return state
 
         # Update task status
-        for i, t in enumerate(player_state["tasks"]):
+        for i, t in enumerate(player_state.tasks):
             if t.id == task_id:
-                player_state["tasks"][i].status = TaskStatus.COMPLETED
+                player_state.tasks[i].status = TaskStatus.COMPLETED
                 break
 
         if task_id in state.tasks:
             state.tasks[task_id].status = TaskStatus.COMPLETED
 
         # Add observation for other players in the same location
-        if task.type == TaskType.VISUAL:
-            observation = f"{player_id} completed a visual task ({task.description}) in {task.location}"
-            for pid, pstate in state.player_states.items():
-                if (
-                    pid != player_id
-                    and pstate["is_alive"]
-                    and pstate["location"] == player_state["location"]
-                ):
+        observation = (
+            f"{player_id} completed a task ({task.description}) in {task.location}"
+        )
 
-                    pstate["observations"].append(observation)
+        # For visual tasks, make it clearer that it was a visual task
+        if task.visual_indicator or task.type == TaskType.VISUAL:
+            observation = f"{player_id} completed a visual task ({task.description}) in {task.location} [CONFIRMED CREWMATE]"
+
+        state.add_observation_to_all_in_room(
+            player_state.location, observation, [player_id]
+        )
 
         return state
 
@@ -331,8 +377,21 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         target_id = move.get("target_id")
 
         # Validate player is an impostor
-        if player_state["role"] != PlayerRole.IMPOSTOR:
+        if not player_state.is_impostor():
             state.error_message = "Only impostors can perform kills"
+            return state
+
+        # Check if impostor is in a vent
+        if player_state.in_vent:
+            state.error_message = "Cannot kill while in a vent"
+            return state
+
+        # Check kill cooldown
+        kill_cooldown = state.get_player_cooldown(player_id)
+        if kill_cooldown > 0:
+            state.error_message = (
+                f"Kill is on cooldown for {kill_cooldown} more seconds"
+            )
             return state
 
         # Validate target exists and is alive
@@ -341,12 +400,12 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             return state
 
         target_state = state.player_states[target_id]
-        if not target_state["is_alive"]:
+        if not target_state.is_alive:
             state.error_message = f"Target {target_id} is already dead"
             return state
 
         # Validate target is in the same location
-        if target_state["location"] != player_state["location"]:
+        if target_state.location != player_state.location:
             state.error_message = f"Target {target_id} is not in the same location"
             return state
 
@@ -357,9 +416,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             if (
                 pid != player_id
                 and pid != target_id
-                and pstate["is_alive"]
-                and pstate["location"] == player_state["location"]
-                and pstate["role"] != PlayerRole.IMPOSTOR
+                and pstate.is_alive
+                and pstate.location == player_state.location
+                and pstate.role != PlayerRole.IMPOSTOR
             )  # Other impostors don't count as witnesses
         ]
 
@@ -368,12 +427,15 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             return state
 
         # Perform the kill
-        target_state["is_alive"] = False
+        target_state.is_alive = False
         state.eliminated_players.append(target_id)
 
         # Update counts
-        if target_state["role"] == PlayerRole.CREWMATE:
+        if target_state.role == PlayerRole.CREWMATE:
             state.crewmate_count -= 1
+
+        # Set kill cooldown
+        state.set_player_cooldown(player_id, 45)  # Default 45 second cooldown
 
         return state
 
@@ -384,12 +446,17 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         """Handle a player reporting a dead body."""
         player_state = state.player_states[player_id]
 
+        # Cannot report while in a vent
+        if player_state.in_vent:
+            state.error_message = "Cannot report a body while in a vent"
+            return state
+
         # Check if there's a dead body in the current location
-        location = player_state["location"]
+        location = player_state.location
         dead_bodies = [
             pid
             for pid, pstate in state.player_states.items()
-            if not pstate["is_alive"] and pstate["location"] == location
+            if not pstate.is_alive and pstate.location == location
         ]
 
         if not dead_bodies:
@@ -401,6 +468,20 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         state.meeting_active = True
         state.meeting_caller = player_id
         state.reported_body = dead_bodies[0]
+
+        # Add observation for all alive players
+        observation = (
+            f"{player_id} reported the dead body of {dead_bodies[0]} in {location}"
+        )
+        for pid, pstate in state.player_states.items():
+            if pstate.is_alive:
+                state.add_observation(pid, observation)
+
+        # Force all impostors out of vents when a meeting is called
+        for pid, pstate in state.player_states.items():
+            if pstate.in_vent:
+                pstate.in_vent = False
+                pstate.current_vent = None
 
         return state
 
@@ -416,10 +497,27 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             state.error_message = "Emergency meetings can only be called in cafeteria"
             return state
 
+        # Cannot call meeting while in a vent
+        if player_state.in_vent:
+            state.error_message = "Cannot call a meeting while in a vent"
+            return state
+
         # Transition to meeting phase
         state.game_phase = AmongUsGamePhase.MEETING
         state.meeting_active = True
         state.meeting_caller = player_id
+
+        # Add observation for all alive players
+        observation = f"{player_id} called an emergency meeting"
+        for pid, pstate in state.player_states.items():
+            if pstate.is_alive:
+                state.add_observation(pid, observation)
+
+        # Force all impostors out of vents when a meeting is called
+        for pid, pstate in state.player_states.items():
+            if pstate.in_vent:
+                pstate.in_vent = False
+                pstate.current_vent = None
 
         return state
 
@@ -431,9 +529,6 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         message = move.get("message", "")
 
         # Record the message in the discussion history
-        if not hasattr(state, "discussion_history"):
-            state.discussion_history = []
-
         state.discussion_history.append(
             {
                 "player_id": player_id,
@@ -506,14 +601,22 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
                 if not tied_players:  # No tie
                     # Eject the player
-                    state.player_states[player_to_eject]["is_alive"] = False
+                    state.player_states[player_to_eject].is_alive = False
                     state.eliminated_players.append(player_to_eject)
 
+                    # Add observation for all players
+                    ejected_role = state.player_states[player_to_eject].role
+                    role_text = (
+                        "an Impostor"
+                        if ejected_role == PlayerRole.IMPOSTOR
+                        else "a Crewmate"
+                    )
+                    observation = f"{player_to_eject} was ejected and was {role_text}"
+                    for pid, _pstate in state.player_states.items():
+                        state.add_observation(pid, observation)
+
                     # Update counts
-                    if (
-                        state.player_states[player_to_eject]["role"]
-                        == PlayerRole.IMPOSTOR
-                    ):
+                    if ejected_role == PlayerRole.IMPOSTOR:
                         state.impostor_count -= 1
                     else:
                         state.crewmate_count -= 1
@@ -528,6 +631,9 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             state.game_phase = AmongUsGamePhase.TASKS
             state.round_number += 1
 
+            # Decrement cooldowns
+            state.decrement_cooldowns()
+
         return state
 
     @classmethod
@@ -538,22 +644,301 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         player_state = state.player_states[player_id]
 
         # Validate player is an impostor
-        if player_state["role"] != PlayerRole.IMPOSTOR:
+        if not player_state.is_impostor():
             state.error_message = "Only impostors can sabotage"
             return state
 
-        sabotage_type = move.get("sabotage_type")
-        location = move.get("location")
+        sabotage_type_str = move.get("sabotage_type")
+        location = move.get("location", sabotage_type_str)
 
-        # Create the sabotage event
+        # Validate sabotage type
+        try:
+            sabotage_type = SabotageType(sabotage_type_str)
+        except ValueError:
+            state.error_message = f"Invalid sabotage type: {sabotage_type_str}"
+            return state
+
+        # Check if a critical sabotage is already active
+        active_sabotage = state.get_active_sabotage()
+        if (
+            active_sabotage
+            and active_sabotage.is_critical()
+            and sabotage_type in [SabotageType.OXYGEN, SabotageType.REACTOR]
+        ):
+            state.error_message = (
+                "Cannot start a critical sabotage while another is active"
+            )
+            return state
+
+        # Create resolution points based on sabotage type
+        resolution_points = []
+        timer = 60  # Default timer
+
+        if sabotage_type == SabotageType.OXYGEN:
+            # O2 requires two points to be resolved
+            resolution_points = [
+                SabotageResolutionPoint(
+                    id="o2_panel_1",
+                    location="o2",
+                    description="Reset O2 panel in O2 room",
+                    resolved=False,
+                ),
+                SabotageResolutionPoint(
+                    id="o2_panel_2",
+                    location="admin",
+                    description="Reset O2 panel in Admin room",
+                    resolved=False,
+                ),
+            ]
+            timer = 45  # 45 seconds to resolve O2
+
+        elif sabotage_type == SabotageType.REACTOR:
+            # Reactor requires two points to be resolved
+            resolution_points = [
+                SabotageResolutionPoint(
+                    id="reactor_panel_1",
+                    location="reactor",
+                    description="Stabilize reactor (left panel)",
+                    resolved=False,
+                ),
+                SabotageResolutionPoint(
+                    id="reactor_panel_2",
+                    location="reactor",
+                    description="Stabilize reactor (right panel)",
+                    resolved=False,
+                ),
+            ]
+            timer = 45  # 45 seconds to resolve reactor
+
+        elif sabotage_type == SabotageType.LIGHTS:
+            # Lights can be resolved at one point
+            resolution_points = [
+                SabotageResolutionPoint(
+                    id="light_panel",
+                    location="electrical",
+                    description="Reset light panel in Electrical",
+                    resolved=False,
+                ),
+            ]
+            timer = 120  # Lights can stay out longer
+
+        elif sabotage_type == SabotageType.COMMS:
+            # Comms can be resolved at one point
+            resolution_points = [
+                SabotageResolutionPoint(
+                    id="comms_panel",
+                    location="communications",
+                    description="Reset communications panel",
+                    resolved=False,
+                ),
+            ]
+            timer = 90  # Comms disruption
+
+        elif sabotage_type == SabotageType.DOORS:
+            # Door locks require no resolution - they time out automatically
+            if location not in state.rooms:
+                state.error_message = f"Invalid door lock location: {location}"
+                return state
+
+            # Block connections to and from this room
+            room = state.rooms[location]
+            for connection in room.connections:
+                connection.is_blocked = True
+
+            # Add blocked connections from other rooms to this room
+            for room_id, other_room in state.rooms.items():
+                if room_id != location:
+                    for connection in other_room.connections:
+                        if connection.target_room == location:
+                            connection.is_blocked = True
+
+            timer = 10  # Doors unlock after 10 seconds
+
+            # Add observation for players in the room
+            observation = f"The doors to {location} have been locked"
+            state.add_observation_to_all_in_room(location, observation, [])
+
+            # Create door sabotage event
+            sabotage = SabotageEvent(
+                type=sabotage_type_str,
+                location=location,
+                timer=timer,
+                resolved=False,
+            )
+
+            state.sabotages.append(sabotage)
+
+            # Schedule automatic resolution after timer
+            # In a real implementation, this would be handled by a timer
+            # For now, we'll just mark it as resolved immediately
+            # TODO: Implement proper timer mechanism
+
+            return state
+
+        # Create the sabotage event for non-door sabotages
         sabotage = SabotageEvent(
-            type=sabotage_type,
+            type=sabotage_type_str,
             location=location,
-            timer=60,  # Default 60 second timer
+            timer=timer,
             resolved=False,
+            resolution_points=resolution_points,
         )
 
         state.sabotages.append(sabotage)
+
+        # Add observation for all players
+        observation = f"ALERT: {sabotage_type_str.upper()} SYSTEM SABOTAGED!"
+        for pid, pstate in state.player_states.items():
+            if pstate.is_alive:
+                state.add_observation(pid, observation)
+
+        return state
+
+    @classmethod
+    def _handle_resolve_sabotage_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
+        """Handle a player resolving a sabotage."""
+        player_state = state.player_states[player_id]
+        sabotage_id = move.get("sabotage_id")
+        resolution_point_id = move.get("resolution_point_id")
+
+        # Find the active sabotage
+        active_sabotage = None
+        for sabotage in state.sabotages:
+            if not sabotage.is_resolved() and (
+                not sabotage_id or sabotage.type == sabotage_id
+            ):
+                active_sabotage = sabotage
+                break
+
+        if not active_sabotage:
+            state.error_message = "No active sabotage to resolve"
+            return state
+
+        # Check if player is in the correct location for resolution
+        found_point = False
+        for point in active_sabotage.resolution_points:
+            if (
+                point.id == resolution_point_id
+                and point.location == player_state.location
+            ):
+                found_point = True
+                point.resolved = True
+                point.resolver_id = player_id
+                break
+
+        if not found_point:
+            state.error_message = "No resolution point found at this location"
+            return state
+
+        # Check if all resolution points are resolved
+        if all(point.resolved for point in active_sabotage.resolution_points):
+            active_sabotage.resolved = True
+
+            # For door sabotages, unblock connections
+            if active_sabotage.type == SabotageType.DOORS.value:
+                location = active_sabotage.location
+                room = state.rooms.get(location)
+                if room:
+                    for connection in room.connections:
+                        connection.is_blocked = False
+
+                    # Unblock connections from other rooms to this room
+                    for room_id, other_room in state.rooms.items():
+                        if room_id != location:
+                            for connection in other_room.connections:
+                                if connection.target_room == location:
+                                    connection.is_blocked = False
+
+            # Add observation for all players
+            observation = f"{active_sabotage.type.upper()} sabotage has been resolved!"
+            for pid, pstate in state.player_states.items():
+                if pstate.is_alive:
+                    state.add_observation(pid, observation)
+        else:
+            # Add observation for players in the same room
+            observation = (
+                f"{player_id} resolved part of the {active_sabotage.type} sabotage"
+            )
+            state.add_observation_to_all_in_room(player_state.location, observation, [])
+
+        return state
+
+    @classmethod
+    def _handle_vent_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
+        """Handle an impostor entering or traveling through vents."""
+        player_state = state.player_states[player_id]
+        vent_id = move.get("vent_id")
+
+        # Validate player is an impostor
+        if not player_state.is_impostor():
+            state.error_message = "Only impostors can use vents"
+            return state
+
+        # If player is already in a vent, this is a travel action
+        if player_state.in_vent:
+            current_vent = state.get_vent(player_state.current_vent)
+            if not current_vent:
+                state.error_message = "Current vent not found"
+                return state
+
+            # Check if target vent is connected
+            connected_vents = state.get_connected_vents(current_vent.id)
+            if vent_id not in connected_vents:
+                state.error_message = f"Cannot travel from {current_vent.id} to {vent_id} - vents are not connected"
+                return state
+
+            # Update player's current vent
+            player_state.current_vent = vent_id
+
+            # Update player's location to the vent's room
+            target_vent = state.get_vent(vent_id)
+            if target_vent:
+                player_state.location = target_vent.location
+
+            return state
+
+        # Otherwise, this is an enter vent action
+        # Check if there is a vent in the current room
+        room_vents = state.get_vents_in_room(player_state.location)
+        vent_ids = [vent.id for vent in room_vents]
+
+        if not vent_ids or vent_id not in vent_ids:
+            state.error_message = (
+                f"No vent with ID {vent_id} found in {player_state.location}"
+            )
+            return state
+
+        # Enter the vent
+        player_state.in_vent = True
+        player_state.current_vent = vent_id
+
+        return state
+
+    @classmethod
+    def _handle_exit_vent_action(
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+    ) -> AmongUsState:
+        """Handle an impostor exiting a vent."""
+        player_state = state.player_states[player_id]
+
+        # Check if player is actually in a vent
+        if not player_state.in_vent or not player_state.current_vent:
+            state.error_message = "Not currently in a vent"
+            return state
+
+        # Exit the vent
+        player_state.in_vent = False
+        current_vent = state.get_vent(player_state.current_vent)
+        player_state.current_vent = None
+
+        # Location should already be set to the vent's room
+        # But make sure it is correct
+        if current_vent:
+            player_state.location = current_vent.location
 
         return state
 
@@ -575,10 +960,32 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Handle different game phases
         if state.game_phase == AmongUsGamePhase.TASKS:
-            # Movement
-            for location in state.map_locations:
-                if location != player_state.location:
+            # If player is in a vent, only allow vent travel or exit
+            if player_state.in_vent:
+                # Exit vent
+                legal_moves.append({"action": "exit_vent"})
+
+                # Travel to connected vents
+                if player_state.current_vent:
+                    connected_vents = state.get_connected_vents(
+                        player_state.current_vent
+                    )
+                    for vent_id in connected_vents:
+                        legal_moves.append({"action": "vent", "vent_id": vent_id})
+
+                return legal_moves
+
+            # Normal movement (only to connected rooms)
+            current_room = state.get_room(player_state.location)
+            if current_room:
+                connected_rooms = state.get_connected_rooms(player_state.location)
+                for location in connected_rooms:
                     legal_moves.append({"action": "move", "location": location})
+            else:
+                # Fallback if room data is not available
+                for location in state.map_locations:
+                    if location != player_state.location:
+                        legal_moves.append({"action": "move", "location": location})
 
             # Task completion (for crewmates)
             if player_state.role == PlayerRole.CREWMATE:
@@ -591,8 +998,17 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                             {"action": "complete_task", "task_id": task.id}
                         )
 
-            # Kill action (for impostors)
+            # Vent usage (for impostors)
             if player_state.role == PlayerRole.IMPOSTOR:
+                room_vents = state.get_vents_in_room(player_state.location)
+                for vent in room_vents:
+                    legal_moves.append({"action": "vent", "vent_id": vent.id})
+
+            # Kill action (for impostors)
+            if (
+                player_state.role == PlayerRole.IMPOSTOR
+                and state.get_player_cooldown(player_id) <= 0
+            ):
                 targets = cls._get_potential_targets(state, player_id)
                 for target_id in targets:
                     legal_moves.append({"action": "kill", "target_id": target_id})
@@ -612,15 +1028,38 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
             # Sabotage (for impostors)
             if player_state.role == PlayerRole.IMPOSTOR:
-                sabotage_types = ["lights", "o2", "reactor", "comms"]
+                sabotage_types = [st.value for st in SabotageType]
                 for sabotage_type in sabotage_types:
-                    legal_moves.append(
-                        {
-                            "action": "sabotage",
-                            "sabotage_type": sabotage_type,
-                            "location": sabotage_type,
-                        }
-                    )
+                    if sabotage_type == SabotageType.DOORS.value:
+                        # Door locks can be applied to any room
+                        for room_id in state.rooms:
+                            legal_moves.append(
+                                {
+                                    "action": "sabotage",
+                                    "sabotage_type": sabotage_type,
+                                    "location": room_id,
+                                }
+                            )
+                    else:
+                        legal_moves.append(
+                            {
+                                "action": "sabotage",
+                                "sabotage_type": sabotage_type,
+                            }
+                        )
+
+            # Resolve sabotage
+            active_sabotage = state.get_active_sabotage()
+            if active_sabotage:
+                for point in active_sabotage.resolution_points:
+                    if point.location == player_state.location and not point.resolved:
+                        legal_moves.append(
+                            {
+                                "action": "resolve_sabotage",
+                                "sabotage_id": active_sabotage.type,
+                                "resolution_point_id": point.id,
+                            }
+                        )
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             # Discussion
@@ -644,7 +1083,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             return []
 
         player_state = state.player_states[player_id]
-        if player_state.role != PlayerRole.IMPOSTOR:
+        if not player_state.is_impostor() or player_state.in_vent:
             return []
 
         # Find alive crewmates in the same location
@@ -679,7 +1118,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def check_game_status(cls, state: AmongUsState) -> AmongUsState:
         """Check and update game status."""
-        winner = cls._check_win_condition(state)
+        winner = state.check_win_condition()
 
         if winner:
             state.game_phase = AmongUsGamePhase.GAME_OVER
@@ -687,53 +1126,6 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             state.winner = winner
 
         return state
-
-    @classmethod
-    def _check_win_condition(cls, state: AmongUsState) -> str | None:
-        """Check if either side has won."""
-        # Calculate task completion
-        task_completion = cls._get_task_completion_percentage(state)
-
-        if task_completion >= 100:
-            return "crewmates"
-
-        alive_impostors = sum(
-            1
-            for pid, pstate in state.player_states.items()
-            if pstate.is_alive and pstate.role == PlayerRole.IMPOSTOR
-        )
-
-        alive_crewmates = sum(
-            1
-            for pid, pstate in state.player_states.items()
-            if pstate.is_alive and pstate.role == PlayerRole.CREWMATE
-        )
-
-        if alive_impostors == 0:
-            return "crewmates"
-
-        if alive_impostors >= alive_crewmates:
-            return "impostors"
-
-        return None
-
-    @classmethod
-    def _get_task_completion_percentage(cls, state: AmongUsState) -> float:
-        """Calculate task completion percentage."""
-        # Only count real tasks (not impostor fake tasks)
-        crewmate_tasks = []
-        for _pid, pstate in state.player_states.items():
-            if pstate.role == PlayerRole.CREWMATE:
-                crewmate_tasks.extend(pstate.tasks)
-
-        total = len(crewmate_tasks)
-        if total == 0:
-            return 100.0
-
-        completed = sum(
-            1 for task in crewmate_tasks if task.status == TaskStatus.COMPLETED
-        )
-        return (completed / total) * 100
 
     @classmethod
     def advance_phase(cls, state: AmongUsState) -> AmongUsState:
@@ -756,11 +1148,10 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         return state
 
-    # Patched version of the filter_state_for_player method to handle discussion_history
-
+    # Enhanced filtered state for players
     @classmethod
     def filter_state_for_player(
-        cls, state: "AmongUsState", player_id: str
+        cls, state: AmongUsState, player_id: str
     ) -> dict[str, Any]:
         """Filter the state to include only information visible to a specific player."""
         if player_id not in state.player_states:
@@ -785,7 +1176,33 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 for task in player_state.tasks
             ],
             "observations": player_state.observations,
+            "in_vent": player_state.in_vent,
+            "current_vent": player_state.current_vent,
         }
+
+        # Add memory if available
+        if hasattr(player_state, "memory"):
+            filtered_state["memory"] = player_state.memory
+
+        # Add connected rooms
+        filtered_state["connected_rooms"] = state.get_connected_rooms(
+            player_state.location
+        )
+
+        # Add vents in current room
+        if player_state.role == PlayerRole.IMPOSTOR:
+            filtered_state["room_vents"] = [
+                vent.id for vent in state.get_vents_in_room(player_state.location)
+            ]
+
+            # Add connected vents if in a vent
+            if player_state.in_vent and player_state.current_vent:
+                filtered_state["connected_vents"] = state.get_connected_vents(
+                    player_state.current_vent
+                )
+
+            # Add kill cooldown
+            filtered_state["kill_cooldown"] = state.get_player_cooldown(player_id)
 
         # If player is impostor, add info about other impostors
         if player_state.role == PlayerRole.IMPOSTOR:
@@ -794,6 +1211,24 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                 for pid, pstate in state.player_states.items()
                 if pstate.role == PlayerRole.IMPOSTOR and pid != player_id
             ]
+
+        # Add active sabotage info
+        active_sabotage = state.get_active_sabotage()
+        if active_sabotage:
+            filtered_state["active_sabotage"] = {
+                "type": active_sabotage.type,
+                "location": active_sabotage.location,
+                "timer": active_sabotage.timer,
+                "resolution_points": [
+                    {
+                        "id": point.id,
+                        "location": point.location,
+                        "description": point.description,
+                        "resolved": point.resolved,
+                    }
+                    for point in active_sabotage.resolution_points
+                ],
+            }
 
         # Info about other players
         visible_players = []
@@ -826,13 +1261,18 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Meeting and voting info
         if state.game_phase in [AmongUsGamePhase.MEETING, AmongUsGamePhase.VOTING]:
-            # Only add discussion_history if it exists in the state
-            if hasattr(state, "discussion_history"):
-                filtered_state["discussion_history"] = getattr(
-                    state, "discussion_history", []
+            # Add discussion history
+            filtered_state["discussion_history"] = state.discussion_history
+
+            # Add reported body info
+            if state.reported_body:
+                filtered_state["reported_body"] = state.reported_body
+                reported_location = (
+                    state.player_states[state.reported_body].location
+                    if state.reported_body in state.player_states
+                    else None
                 )
-            else:
-                filtered_state["discussion_history"] = []
+                filtered_state["reported_body_location"] = reported_location
 
             if state.game_phase == AmongUsGamePhase.VOTING:
                 # Show who has voted but not who they voted for

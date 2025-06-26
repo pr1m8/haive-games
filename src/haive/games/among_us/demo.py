@@ -9,6 +9,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from haive.games.among_us.enhanced_ui import EnhancedAmongUsUI
 from haive.games.among_us.factory import create_among_us_game
 from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
 
@@ -22,6 +23,7 @@ def run_among_us_demo(
     interactive: bool = True,
     max_rounds: int = 15,
     speed: float = 1.0,
+    use_enhanced_ui: bool = True,
 ):
     """Run a demo of the Among Us game with AI agents and enhanced visibility.
 
@@ -34,16 +36,22 @@ def run_among_us_demo(
         interactive: Whether to run in interactive mode
         max_rounds: Maximum number of rounds
         speed: Simulation speed multiplier
+        use_enhanced_ui: Whether to use the enhanced UI (recommended)
     """
     console = Console()
 
-    console.print(
-        Panel.fit(
-            "[bold magenta]Among Us AI Game Demo[/bold magenta]\n\n"
-            "This demo simulates an Among Us game with AI agents and enhanced visibility.",
-            title="Welcome",
+    # Use enhanced UI if specified
+    if use_enhanced_ui:
+        ui = EnhancedAmongUsUI(console)
+        ui.display_welcome()
+    else:
+        console.print(
+            Panel.fit(
+                "[bold magenta]Among Us AI Game Demo[/bold magenta]\n\n"
+                "This demo simulates an Among Us game with AI agents and enhanced visibility.",
+                title="Welcome",
+            )
         )
-    )
 
     # Load game if specified
     if load_path and os.path.exists(load_path):
@@ -124,10 +132,20 @@ def run_among_us_demo(
             ]
 
     # Create the game agent
-    console.print(
-        f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
-    )
+    if use_enhanced_ui:
+        ui.console.print(
+            f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
+        )
+    else:
+        console.print(
+            f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
+        )
+
     agent = create_among_us_game(player_names=player_names, game_config=game_config)
+
+    # Set the enhanced UI on the agent if using it
+    if use_enhanced_ui:
+        agent.ui = ui
 
     # Initialize the game or load saved state
     if load_path and os.path.exists(load_path):
@@ -138,37 +156,52 @@ def run_among_us_demo(
 
         state = AmongUsState(**state)
     else:
-        console.print("Initializing new game...")
+        if use_enhanced_ui:
+            ui.console.print("Initializing new game...")
+        else:
+            console.print("Initializing new game...")
+
         state = agent.initialize(player_names)
 
     # Display initial game state
-    agent.visualize_state(state)
+    if use_enhanced_ui:
+        ui.display_state(state)
+    else:
+        agent.visualize_state(state)
 
     # Main game loop
     round_number = state.round_number
 
     # Display roles for player information (normally hidden in game)
-    console.print("\n[bold]Player Roles (For Demo Purposes):[/bold]")
-    role_table = Table()
-    role_table.add_column("Player", style="cyan")
-    role_table.add_column("Role", style="yellow")
+    if not use_enhanced_ui:  # Enhanced UI already shows roles
+        console.print("\n[bold]Player Roles (For Demo Purposes):[/bold]")
+        role_table = Table()
+        role_table.add_column("Player", style="cyan")
+        role_table.add_column("Role", style="yellow")
 
-    for player_id, player_state in state.player_states.items():
-        role = player_state.role
-        role_text = "CREWMATE" if role == PlayerRole.CREWMATE else "IMPOSTOR"
-        role_style = "green" if role == PlayerRole.CREWMATE else "red"
-        role_table.add_row(player_id, f"[{role_style}]{role_text}[/{role_style}]")
+        for player_id, player_state in state.player_states.items():
+            role = player_state.role
+            role_text = "CREWMATE" if role == PlayerRole.CREWMATE else "IMPOSTOR"
+            role_style = "green" if role == PlayerRole.CREWMATE else "red"
+            role_table.add_row(player_id, f"[{role_style}]{role_text}[/{role_style}]")
 
-    console.print(role_table)
+        console.print(role_table)
 
     # Wait for user to press enter to continue in interactive mode
     if interactive:
-        console.print("[bold cyan]Press Enter to start the game...[/bold cyan]")
+        if use_enhanced_ui:
+            ui.console.print("[bold cyan]Press Enter to start the game...[/bold cyan]")
+        else:
+            console.print("[bold cyan]Press Enter to start the game...[/bold cyan]")
         input()
 
     while state.game_phase != AmongUsGamePhase.GAME_OVER and round_number < max_rounds:
         round_number += 1
-        console.print(f"\n[bold cyan]--- Round {round_number} ---[/bold cyan]")
+
+        if use_enhanced_ui:
+            ui.console.print(f"\n[bold cyan]--- Round {round_number} ---[/bold cyan]")
+        else:
+            console.print(f"\n[bold cyan]--- Round {round_number} ---[/bold cyan]")
 
         # Process based on game phase
         if state.game_phase == AmongUsGamePhase.TASKS:
@@ -179,27 +212,51 @@ def run_among_us_demo(
                     break
 
                 # Process player turn with enhanced visibility
-                state = process_player_turn(
-                    agent, state, player_id, console, interactive, speed
-                )
+                if use_enhanced_ui:
+                    state = process_player_turn_enhanced(
+                        agent, state, player_id, ui, interactive, speed
+                    )
+                else:
+                    state = process_player_turn(
+                        agent, state, player_id, console, interactive, speed
+                    )
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             # Process meeting discussion phase
-            state = process_meeting_discussion(
-                agent, state, console, interactive, speed
-            )
+            if use_enhanced_ui:
+                state = process_meeting_discussion_enhanced(
+                    agent, state, ui, interactive, speed
+                )
+            else:
+                state = process_meeting_discussion(
+                    agent, state, console, interactive, speed
+                )
 
         elif state.game_phase == AmongUsGamePhase.VOTING:
             # Process voting phase
-            state = process_voting_phase(agent, state, console, interactive, speed)
+            if use_enhanced_ui:
+                state = process_voting_phase_enhanced(
+                    agent, state, ui, interactive, speed
+                )
+            else:
+                state = process_voting_phase(agent, state, console, interactive, speed)
 
         # Check for random events at end of round when in task phase
         if state.game_phase == AmongUsGamePhase.TASKS:
-            state = process_random_events(agent, state, console, interactive, speed)
+            if use_enhanced_ui:
+                state = process_random_events_enhanced(
+                    agent, state, ui, interactive, speed
+                )
+            else:
+                state = process_random_events(agent, state, console, interactive, speed)
 
     # Game over
-    console.print("[bold green]Game Over![/bold green]")
-    agent.visualize_state(state)
+    if use_enhanced_ui:
+        ui.console.print("[bold green]Game Over![/bold green]")
+        ui.display_game_over_panel(state)
+    else:
+        console.print("[bold green]Game Over![/bold green]")
+        agent.visualize_state(state)
 
     if hasattr(state, "winner"):
         if state.winner == "crewmates":
@@ -450,6 +507,102 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
     return new_state
 
 
+def process_player_turn_enhanced(agent, state, player_id, ui, interactive, speed):
+    """Process a single player's turn with enhanced UI."""
+    # Skip dead players during task phase
+    player_state = state.player_states.get(player_id)
+    if (
+        state.game_phase == AmongUsGamePhase.TASKS
+        and player_state
+        and not player_state.is_alive
+    ):
+        return state
+
+    # Display player's perspective
+    ui.console.print(f"\n[bold]Processing {player_id}'s turn...[/bold]")
+    ui.display_state(state, player_id)
+
+    # Get player's move
+    move_context = agent.prepare_move_context(state, player_id)
+    agent.get_legal_moves(state, player_id)
+
+    # Get the appropriate engine for this player and phase
+    player_role = state.player_states[player_id].role
+    engine_key = "player"
+
+    if state.game_phase == AmongUsGamePhase.MEETING:
+        engine_key = "meeting"
+    elif state.game_phase == AmongUsGamePhase.VOTING:
+        engine_key = "voting"
+
+    # Get the engine
+    engine = agent.get_engine_for_player(player_role, engine_key)
+    if not engine:
+        ui.console.print(
+            f"[bold red]No engine found for {player_id} (role={player_role}, key={engine_key})[/bold red]"
+        )
+        return state
+
+    # Show thinking animation
+    ui.show_thinking(player_id, "considering actions...")
+
+    # Invoke the engine
+    response = engine.invoke(move_context)
+
+    # Extract structured move
+    move = agent.extract_move(response, player_role)
+
+    # Format and display the move
+    move_description = ui._format_move_description(move, player_id, state)
+    ui.console.print(
+        Panel(
+            Text(move_description, justify="center"),
+            title=f"[bold]{player_id}'s Action[/bold]",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )
+
+    # Apply the move
+    state_before = state
+    new_state = agent.apply_move(state, player_id, move)
+
+    # Check for phase transitions
+    if (
+        new_state.game_phase == AmongUsGamePhase.MEETING
+        and player_id == new_state.players[-1]
+    ):  # Last player in discussion
+        # Transition to voting
+        new_state = agent.advance_phase(new_state)
+
+    elif new_state.game_phase == AmongUsGamePhase.VOTING and len(
+        new_state.votes
+    ) >= len(
+        [pid for pid, pstate in new_state.player_states.items() if pstate.is_alive]
+    ):
+        # Transition back to tasks
+        new_state = agent.advance_phase(new_state)
+
+    # Check for game over
+    new_state = agent.check_game_status(new_state)
+
+    # Display updated game state with animation
+    ui.animate_move(move, state_before, new_state, player_id)
+
+    # Add a delay for readability, scaled by speed setting
+    delay = 1.0 / speed
+    if interactive:
+        if delay > 0.5:
+            time.sleep(delay)
+        else:
+            ui.console.print("[bold cyan]Press Enter to continue...[/bold cyan]")
+            input()
+    else:
+        time.sleep(min(0.5, delay))  # Cap at 0.5 seconds for non-interactive mode
+
+    return new_state
+
+
 def process_meeting_discussion(agent, state, console, interactive, speed):
     """Process a meeting's discussion phase with enhanced visibility.
 
@@ -553,6 +706,273 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
     console.print(
         "\n[bold yellow]Discussion complete. Moving to voting phase...[/bold yellow]"
     )
+    state = agent.advance_phase(state)
+
+    return state
+
+
+def process_meeting_discussion_enhanced(agent, state, ui, interactive, speed):
+    """Process a meeting's discussion phase with enhanced UI.
+
+    Args:
+        agent: The AmongUsAgent instance
+        state: Current game state
+        ui: Enhanced UI instance
+        interactive: Whether in interactive mode
+        speed: Simulation speed multiplier
+
+    Returns:
+        Updated state
+    """
+    # Display meeting phase
+    ui.console.print("\n[bold]MEETING PHASE[/bold]")
+
+    # Display meeting panel
+    ui.display_state(state)
+
+    # Process each player's discussion contribution
+    alive_players = [
+        pid for pid, pstate in state.player_states.items() if pstate.is_alive
+    ]
+
+    for player_id in alive_players:
+        player_state = state.player_states[player_id]
+        role = player_state.role
+
+        # Create context for the player
+        move_context = agent.prepare_move_context(state, player_id)
+
+        # Get the discussion engine
+        engine = agent.get_engine_for_player(role, "meeting")
+        if not engine:
+            ui.console.print(
+                f"[bold red]No discussion engine found for {player_id}[/bold red]"
+            )
+            continue
+
+        # Show thinking animation
+        ui.show_thinking(player_id, "thinking about the meeting...")
+
+        # Generate the player's statement
+        response = engine.invoke(move_context)
+
+        # Create a structured move
+        if isinstance(response, str):
+            move = {"action": "discuss", "message": response}
+        elif hasattr(response, "content"):
+            move = {"action": "discuss", "message": response.content}
+        else:
+            move = agent.extract_move(response, role)
+
+        # Get the player's message
+        message = move.get("message", "No comment.")
+
+        # Display the message
+        role_color = (
+            ui.colors["impostor"]
+            if role == PlayerRole.IMPOSTOR
+            else ui.colors["crewmate"]
+        )
+        ui.console.print(
+            Panel(
+                Text(f'"{message}"', style="italic"),
+                title=f"[{role_color}]{player_id}'s Statement[/{role_color}]",
+                border_style=role_color,
+                padding=(1, 2),
+            )
+        )
+
+        # Update the state with the discussion
+        state = agent.apply_move(state, player_id, move)
+
+        # Display updated state
+        ui.display_state(state)
+
+        # Add delay for readability
+        if interactive:
+            ui.console.print("[cyan]Press Enter to continue...[/cyan]")
+            input()
+        else:
+            time.sleep(1.0 / speed)
+
+    # Transition to voting phase
+    ui.console.print(
+        "\n[bold yellow]Discussion complete. Moving to voting phase...[/bold yellow]"
+    )
+    state = agent.advance_phase(state)
+
+    return state
+
+
+def process_voting_phase_enhanced(agent, state, ui, interactive, speed):
+    """Process a meeting's voting phase with enhanced UI.
+
+    Args:
+        agent: The AmongUsAgent instance
+        state: Current game state
+        ui: Enhanced UI instance
+        interactive: Whether in interactive mode
+        speed: Simulation speed multiplier
+
+    Returns:
+        Updated state
+    """
+    # Display voting phase
+    ui.console.print("\n[bold]VOTING PHASE[/bold]")
+
+    # Display voting UI
+    ui.display_state(state)
+
+    # Process each player's vote
+    alive_players = [
+        pid for pid, pstate in state.player_states.items() if pstate.is_alive
+    ]
+
+    for player_id in alive_players:
+        # Skip players who already voted
+        if player_id in state.votes:
+            vote_target = state.votes[player_id]
+            ui.console.print(f"[dim]{player_id} already voted for {vote_target}[/dim]")
+            continue
+
+        player_state = state.player_states[player_id]
+        role = player_state.role
+
+        # Create context for the player
+        move_context = agent.prepare_move_context(state, player_id)
+
+        # Get the voting engine
+        engine = agent.get_engine_for_player(role, "voting")
+        if not engine:
+            ui.console.print(
+                f"[bold red]No voting engine found for {player_id}[/bold red]"
+            )
+            continue
+
+        # Show thinking animation
+        ui.show_thinking(player_id, "deciding vote...")
+
+        # Generate the player's vote
+        response = engine.invoke(move_context)
+
+        # Extract the vote
+        move = agent.extract_move(response, role)
+        vote_target = move.get("vote_for", "skip")
+
+        # Display the vote
+        role_color = (
+            ui.colors["impostor"]
+            if role == PlayerRole.IMPOSTOR
+            else ui.colors["crewmate"]
+        )
+        vote_style = (
+            ui.colors["warning"] if vote_target == "skip" else ui.colors["info"]
+        )
+
+        ui.console.print(
+            Panel(
+                Text(
+                    f"Vote: [{vote_style}]{vote_target}[/{vote_style}]",
+                    justify="center",
+                ),
+                title=f"[{role_color}]{player_id}'s Vote[/{role_color}]",
+                border_style=role_color,
+                padding=(1, 2),
+            )
+        )
+
+        # Update the state with the vote
+        state = agent.apply_move(state, player_id, move)
+
+        # Display updated state
+        ui.display_state(state)
+
+        # Add delay for readability
+        if interactive:
+            ui.console.print("[cyan]Press Enter to continue...[/cyan]")
+            input()
+        else:
+            time.sleep(0.5 / speed)
+
+    # Count and display votes
+    vote_counts = {}
+    for target in state.votes.values():
+        vote_counts[target] = vote_counts.get(target, 0) + 1
+
+    # Create vote results table
+    from rich.table import Table
+
+    vote_table = Table(title="Vote Results")
+    vote_table.add_column("Player", style="cyan")
+    vote_table.add_column("Votes", style="yellow")
+
+    for target, count in sorted(vote_counts.items(), key=lambda x: x[1], reverse=True):
+        style = ui.colors["warning"] if target == "skip" else ui.colors["info"]
+        vote_table.add_row(f"[{style}]{target}[/{style}]", str(count))
+
+    ui.console.print(vote_table)
+
+    # Determine ejection
+    max_votes = 0
+    ejected_player = None
+
+    for player, count in vote_counts.items():
+        if player != "skip" and count > max_votes:
+            max_votes = count
+            ejected_player = player
+
+    skip_votes = vote_counts.get("skip", 0)
+    if ejected_player and skip_votes < max_votes:
+        # Check for ties
+        tied_players = [
+            p
+            for p, c in vote_counts.items()
+            if p != "skip" and p != ejected_player and c == max_votes
+        ]
+
+        if not tied_players:  # No tie
+            player_role = "unknown"
+            if ejected_player in state.player_states:
+                role = state.player_states[ejected_player].role
+                player_role = "CREWMATE" if role == PlayerRole.CREWMATE else "IMPOSTOR"
+                role_color = (
+                    ui.colors["crewmate"]
+                    if role == PlayerRole.CREWMATE
+                    else ui.colors["impostor"]
+                )
+
+            ui.console.print(
+                Panel(
+                    Text(f"{ejected_player} was ejected", justify="center"),
+                    title=f"[{role_color}]EJECTION: {player_role}[/{role_color}]",
+                    border_style=ui.colors["danger"],
+                    padding=(1, 2),
+                )
+            )
+        else:
+            ui.console.print(
+                Panel(
+                    Text(
+                        f"Tied between: {ejected_player} and {', '.join(tied_players)}",
+                        justify="center",
+                    ),
+                    title="[bold yellow]TIE VOTE[/bold yellow]",
+                    border_style=ui.colors["warning"],
+                    padding=(1, 2),
+                )
+            )
+    else:
+        ui.console.print(
+            Panel(
+                Text("No one was ejected", justify="center"),
+                title="[bold yellow]SKIPPED[/bold yellow]",
+                border_style=ui.colors["warning"],
+                padding=(1, 2),
+            )
+        )
+
+    # Transition back to task phase
+    ui.console.print("\n[bold cyan]Returning to tasks...[/bold cyan]")
     state = agent.advance_phase(state)
 
     return state
@@ -695,6 +1115,105 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
     # Return to task phase
     state = agent.advance_phase(state)
+
+    return state
+
+
+def process_random_events_enhanced(agent, state, ui, interactive, speed):
+    """Process random events that might occur during the task phase with enhanced UI.
+
+    Args:
+        agent: The AmongUsAgent instance
+        state: Current game state
+        ui: Enhanced UI instance
+        interactive: Whether in interactive mode
+        speed: Simulation speed multiplier
+
+    Returns:
+        Updated state
+    """
+    # Check if a random event should occur
+    if random.random() < 0.3 and not state.meeting_active:
+        # Random player calls meeting or reports body
+        alive_players = [
+            pid for pid, pstate in state.player_states.items() if pstate.is_alive
+        ]
+        if alive_players:
+            caller = random.choice(alive_players)
+
+            # Create a progress animation for discovery
+            with Progress(
+                SpinnerColumn(),
+                TextColumn(f"[cyan]{caller}[/cyan] searching..."),
+                console=ui.console,
+                transient=True,
+            ) as progress:
+                progress.add_task("searching", total=None)
+                time.sleep(1.5 / speed)
+
+            ui.console.print(
+                Panel(
+                    Text(
+                        f"{caller} discovered something suspicious!", justify="center"
+                    ),
+                    title="[bold yellow]Alert[/bold yellow]",
+                    border_style=ui.colors["warning"],
+                    padding=(1, 2),
+                )
+            )
+
+            # Check for dead bodies in caller's location
+            caller_location = state.player_states[caller].location
+            dead_bodies = [
+                pid
+                for pid, pstate in state.player_states.items()
+                if not pstate.is_alive and pstate.location == caller_location
+            ]
+
+            if dead_bodies:
+                # Report body
+                move = {"action": "report_body"}
+                body_name = random.choice(dead_bodies)
+                ui.console.print(
+                    Panel(
+                        Text(
+                            f"{caller} found {body_name}'s body in {caller_location.capitalize()}!",
+                            justify="center",
+                        ),
+                        title="[bold red]BODY REPORTED[/bold red]",
+                        border_style=ui.colors["danger"],
+                        padding=(1, 2),
+                    )
+                )
+            else:
+                # Call emergency meeting
+                move = {"action": "call_emergency_meeting"}
+                ui.console.print(
+                    Panel(
+                        Text(
+                            f"{caller} called an emergency meeting!", justify="center"
+                        ),
+                        title="[bold yellow]EMERGENCY MEETING[/bold yellow]",
+                        border_style=ui.colors["warning"],
+                        padding=(1, 2),
+                    )
+                )
+
+            # Apply the move
+            state = agent.apply_move(state, caller, move)
+
+            # Check phase transition
+            if state.game_phase == AmongUsGamePhase.MEETING:
+                # Display the transition
+                ui.display_state(state)
+
+                if interactive:
+                    ui.console.print(
+                        "[bold cyan]Press Enter to continue to meeting...[/bold cyan]"
+                    )
+                    input()
+                else:
+                    time.sleep(2.0 / speed)
 
     return state
 

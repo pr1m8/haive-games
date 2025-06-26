@@ -1,124 +1,137 @@
-# among_us_prompts.py
+# among_us_engines.py
 
-CREWMATE_PROMPT = """You are playing a social deduction game called 'Among Us' as a CREWMATE.
+from typing import Any, Dict, Optional
 
-Your Goals:
-1. Complete all your assigned tasks
-2. Identify and vote out the impostors who are secretly trying to eliminate crewmates
-3. Share useful information during meetings
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-Game Context:
-- You are on a spaceship with {player_count} crew members
-- {impostor_count} of these crew members are secretly impostors trying to sabotage the mission
-- The map has these locations: {map_locations}
+from haive.games.among_us.prompts import (
+    CREWMATE_PROMPT,
+    IMPOSTOR_PROMPT,
+    MEETING_PROMPT,
+    VOTING_PROMPT,
+)
 
-Your Current Status:
-- You are in the {location} area
-- Your tasks are: {tasks}
-- Overall task completion: {task_completion}%
-- Your recent observations: {observations}
 
-Available Actions:
-{available_actions}
+class AmongUsEngines:
+    """Engines for the Among Us game.
 
-Guidelines:
-- Be strategic about your movements and task completion
-- During meetings, share what you've observed and who you find suspicious
-- Pay attention to who was where and with whom
-- Remember that impostors will lie to avoid detection
-- Be honest about your activities (as a crewmate, you have nothing to hide)
-- Express suspicion when you see something unusual
+    This class creates and manages the LLM engines used for different
+    player roles and game phases.
+    """
 
-Respond with your next action in a clear, structured format. For example:
-- "I'll move to electrical to complete my wiring task"
-- "I vote for Red because they were near the body and acting suspiciously"
-- "I saw Blue complete a visual task in Medbay, so they're confirmed crew"
-"""
+    @classmethod
+    def create_engines(
+        cls, llm_config: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Dict[str, AugLLMConfig]]:
+        """Create the engines for the Among Us game.
 
-IMPOSTOR_PROMPT = """You are playing a social deduction game called 'Among Us' as an IMPOSTOR.
+        Args:
+            llm_config: Optional configuration for the language model
 
-Your Goals:
-1. Eliminate crewmates without getting caught
-2. Sabotage the ship to create chaos and opportunities
-3. Blend in by pretending to do tasks
-4. Avoid suspicion during meetings and deflect blame
+        Returns:
+            A dictionary of engines organized by role and game phase
+        """
+        # Default LLM config
+        default_llm_config = {
+            "model": "gpt-4o",
+            "parameters": {"temperature": 0.8, "top_p": 0.9},
+        }
 
-Game Context:
-- You are on a spaceship with {player_count} crew members
-- You are one of {impostor_count} impostors
-- Your fellow impostors are: {fellow_impostors}
-- The map has these locations: {map_locations}
+        # Merge with provided LLM config if any
+        llm_config = {**default_llm_config, **(llm_config or {})}
 
-Your Current Status:
-- You are in the {location} area
-- Your fake tasks (only for cover): {tasks}
-- Potential targets in your area: {potential_targets}
-- Kill cooldown: {kill_cooldown} seconds
+        # Create Azure LLM config
+        azure_llm_config = AzureLLMConfig(**llm_config)
 
-Available Actions:
-{available_actions}
+        # Create prompt templates
+        crewmate_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=CREWMATE_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-Guidelines:
-- Blend in by pretending to do tasks and acting like a crewmate
-- Eliminate crewmates when no one else is around to witness
-- Create alibis for yourself
-- During meetings, lie convincingly about your activities
-- Cast suspicion on others, especially those who suspect you
-- Coordinate with fellow impostors when possible
-- Use sabotage strategically to separate crewmates
+        impostor_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=IMPOSTOR_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-Respond with your next action in a clear, structured format. For example:
-- "I'll move to electrical to pretend to do tasks"
-- "I kill Red since we're alone in Navigation"
-- "I vote for Blue because they're accusing me without evidence"
-- "I'll sabotage oxygen to draw crewmates away from my location"
+        meeting_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=MEETING_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-Remember to maintain your cover! You aren't evil - you're just playing your role in the game.
-"""
+        voting_template = ChatPromptTemplate.from_messages(
+            [
+                SystemMessage(content=VOTING_PROMPT),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
 
-MEETING_PROMPT = """A meeting has been called in the Among Us game!
+        # Create AugLLM configs
+        crewmate_config = AugLLMConfig(
+            name="crewmate_player",
+            llm_config=azure_llm_config,
+            prompt_template=crewmate_template,
+        )
 
-Meeting Information:
-- Called by: {meeting_caller}
-- Reason: {reason}
-- Body reported: {reported_body}
-- Discussion time: {discussion_time} seconds
+        impostor_config = AugLLMConfig(
+            name="impostor_player",
+            llm_config=azure_llm_config,
+            prompt_template=impostor_template,
+        )
 
-Current Players Status:
-- Alive players: {alive_players}
-- You are: {player_id} ({role})
+        meeting_config = AugLLMConfig(
+            name="meeting_discussion",
+            llm_config=azure_llm_config,
+            prompt_template=meeting_template,
+        )
 
-Previous Discussion:
-{discussion_history}
+        voting_config = AugLLMConfig(
+            name="voting_decision",
+            llm_config=azure_llm_config,
+            prompt_template=voting_template,
+        )
 
-Your Task:
-Share your information, suspicions, or defense during this meeting.
+        # Return engines configuration
+        return {
+            "CREWMATE": {
+                "player": crewmate_config,
+                "meeting": meeting_config,
+                "voting": voting_config,
+            },
+            "IMPOSTOR": {
+                "player": impostor_config,
+                "meeting": meeting_config,
+                "voting": voting_config,
+            },
+        }
 
-Guidelines:
-- If you're a crewmate: Share your observations honestly and help identify impostors
-- If you're an impostor: Deflect suspicion and blend in with the crew
+    @classmethod
+    def create_runnable_engines(
+        cls, llm_config: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Dict[str, Any]]:
+        """Create runnable engines for the Among Us game.
 
-Respond with what you want to say to the group. Be strategic, but stay in character!
-"""
+        Args:
+            llm_config: Optional configuration for the language model
 
-VOTING_PROMPT = """It's time to vote in the Among Us game!
+        Returns:
+            A dictionary of runnable engines organized by role and game phase
+        """
+        engines_config = cls.create_engines(llm_config)
+        runnable_engines = {}
 
-Voting Information:
-- Players who have voted: {voted_players}
-- Alive players: {alive_players}
-- You are: {player_id} ({role})
+        for role, role_engines in engines_config.items():
+            runnable_engines[role] = {}
+            for phase, engine_config in role_engines.items():
+                runnable_engines[role][phase] = engine_config.create_runnable()
 
-Meeting Discussion Summary:
-{discussion_summary}
-
-Your Task:
-Vote for who you believe is an impostor, or skip your vote.
-
-Guidelines:
-- If you're a crewmate: Vote based on evidence and discussion
-- If you're an impostor: Vote strategically to eliminate threats or avoid suspicion
-
-Respond with your vote in a clear format. For example:
-- "I vote for Red because they were acting suspicious"
-- "I skip my vote because there's not enough evidence"
-"""
+        return runnable_engines
