@@ -9,8 +9,8 @@ This module provides engine configurations for the Battleship game, including:
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 
-from .models import Analysis, MoveCommand, ShipPlacementWrapper
-from .prompts import (
+from haive.games.battleship.models import Analysis, MoveCommand, ShipPlacementWrapper
+from haive.games.battleship.prompts import (
     generate_analysis_prompt,
     generate_move_prompt,
     generate_ship_placement_prompt,

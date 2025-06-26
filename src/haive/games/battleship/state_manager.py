@@ -10,7 +10,7 @@ This module provides state transition logic for the Battleship game, including:
 
 import copy
 
-from .models import (
+from haive.games.battleship.models import (
     Coordinates,
     GamePhase,
     MoveCommand,
@@ -18,7 +18,7 @@ from .models import (
     ShipPlacement,
     ShipType,
 )
-from .state import BattleshipState, PlayerState
+from haive.games.battleship.state import BattleshipState, PlayerState
 
 
 class BattleshipStateManager:

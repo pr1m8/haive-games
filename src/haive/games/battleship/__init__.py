@@ -51,10 +51,10 @@ Example:
     >>> result = agent.run()
 """
 
-from .agent import BattleshipAgent
-from .config import BattleshipAgentConfig
-from .engines import build_battleship_engines
-from .models import (
+from haive.games.battleship.agent import BattleshipAgent
+from haive.games.battleship.config import BattleshipAgentConfig
+from haive.games.battleship.engines import build_battleship_engines
+from haive.games.battleship.models import (
     Analysis,
     Coordinates,
     GamePhase,
@@ -65,13 +65,13 @@ from .models import (
     ShipPlacement,
     ShipPlacementWrapper,
 )
-from .prompts import (
+from haive.games.battleship.prompts import (
     generate_analysis_prompt,
     generate_move_prompt,
     generate_ship_placement_prompt,
 )
-from .state import BattleshipState
-from .state_manager import BattleshipStateManager
+from haive.games.battleship.state import BattleshipState
+from haive.games.battleship.state_manager import BattleshipStateManager
 
 __all__ = [
     # Core components

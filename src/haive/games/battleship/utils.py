@@ -8,7 +8,7 @@ This module provides helper functions for the Battleship game, including:
 
 from typing import Any
 
-from .models import ShipType
+from haive.games.battleship.models import ShipType
 
 
 def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:

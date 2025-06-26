@@ -10,8 +10,8 @@ from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from .engines import build_battleship_engines
-from .state import BattleshipState
+from haive.games.battleship.engines import build_battleship_engines
+from haive.games.battleship.state import BattleshipState
 
 
 class BattleshipAgentConfig(AgentConfig):
