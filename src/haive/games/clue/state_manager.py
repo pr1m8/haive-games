@@ -6,10 +6,9 @@ providing methods for game logic and state transitions.
 
 from typing import Any
 
+from haive.games.clue.models import ClueGuess
+from haive.games.clue.state import ClueState
 from haive.games.framework.base.state_manager import GameStateManager
-
-from .models import ClueGuess
-from .state import ClueState
 
 
 class ClueStateManager(GameStateManager[ClueState]):

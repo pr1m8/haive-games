@@ -75,9 +75,9 @@ def run_clue_game(debug: bool = False, max_turns: int = 10, delay: float = 1.0):
         # ClueStateManager.initialize which expects a different format
 
         # Create a basic board setup
-        all_suspects = [suspect.value for suspect in ValidSuspect]
-        all_weapons = [weapon.value for weapon in ValidWeapon]
-        all_rooms = [room.value for room in ValidRoom]
+        [suspect.value for suspect in ValidSuspect]
+        [weapon.value for weapon in ValidWeapon]
+        [room.value for room in ValidRoom]
 
         # Define a predetermined solution for testing
         solution = ClueSolution(

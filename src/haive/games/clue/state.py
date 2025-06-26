@@ -9,9 +9,8 @@ from typing import Any, Literal
 
 from pydantic import Field
 
+from haive.games.clue.models import ClueGuess, ClueResponse, ClueSolution
 from haive.games.framework.base.state import GameState
-
-from .models import ClueGuess, ClueResponse, ClueSolution
 
 
 class ClueState(GameState):

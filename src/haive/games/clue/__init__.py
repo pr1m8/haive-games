@@ -22,12 +22,17 @@ Example:
     >>> ui.display_state(state)
 """
 
-from .agent import ClueAgent
-from .config import ClueConfig
-from .models import ClueGuess, ClueHypothesis, ClueResponse, ClueSolution
-from .state import ClueState
-from .state_manager import ClueStateManager
-from .ui import ClueUI
+from haive.games.clue.agent import ClueAgent
+from haive.games.clue.config import ClueConfig
+from haive.games.clue.models import (
+    ClueGuess,
+    ClueHypothesis,
+    ClueResponse,
+    ClueSolution,
+)
+from haive.games.clue.state import ClueState
+from haive.games.clue.state_manager import ClueStateManager
+from haive.games.clue.ui import ClueUI
 
 __all__ = [
     "ClueAgent",

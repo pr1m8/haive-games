@@ -32,7 +32,7 @@ Example:
 """
 
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Union
 
 from rich.align import Align
 from rich.box import DOUBLE, ROUNDED
@@ -44,11 +44,8 @@ from rich.table import Table
 from rich.text import Text
 
 from haive.games.clue.models import (
-    CardType,
-    ClueCard,
     ClueGuess,
     ClueResponse,
-    ClueSolution,
     ValidRoom,
     ValidSuspect,
     ValidWeapon,
@@ -160,7 +157,7 @@ class ClueUI:
             )
             turn_text = f"Current Player: [bold {self.colors[state.current_player]}]{state.current_player.upper()}[/]"
         else:
-            status_text = f"Status: GAME OVER"
+            status_text = "Status: GAME OVER"
             turn_text = (
                 f"Winner: [bold {self.colors[state.winner]}]{state.winner.upper()}[/]"
                 if state.winner

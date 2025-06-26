@@ -1,6 +1,41 @@
-"""Models for the Clue game.
+"""Data models and enumerations for the Clue (Cluedo) mystery game implementation.
 
-This module contains all the data classes and enums for the Clue game.
+This module defines the core data structures, enumerations, and models used
+throughout the Clue game implementation. It includes the traditional game
+elements (suspects, weapons, rooms) as well as game state representations,
+player data structures, and action models.
+
+The models follow the classic Clue game rules and include:
+- Six suspects (Colonel Mustard, Professor Plum, etc.)
+- Six weapons (Knife, Candlestick, Revolver, etc.)
+- Nine rooms (Kitchen, Ballroom, Conservatory, etc.)
+- Card types and game state tracking
+- Player actions and game moves
+
+Key Classes:
+    ValidSuspect: Enumeration of all possible suspect characters
+    ValidWeapon: Enumeration of all possible murder weapons
+    ValidRoom: Enumeration of all possible locations
+    CardType: Types of cards in the game (Suspect, Weapon, Room)
+    GameState: Current state of the game including player positions and cards
+    Player: Individual player data and card holdings
+    Move: Represents a player's action (suggestion, accusation, etc.)
+
+Usage:
+    ```python
+    from haive.games.clue.models import ValidSuspect, ValidWeapon, ValidRoom
+
+    # Create a suggestion
+    suspect = ValidSuspect.COLONEL_MUSTARD
+    weapon = ValidWeapon.KNIFE
+    room = ValidRoom.KITCHEN
+
+    # Use in game logic
+    suggestion = (suspect, weapon, room)
+    ```
+
+The models are designed to be immutable where possible and include comprehensive
+validation to ensure game rules are properly enforced throughout the implementation.
 """
 
 from dataclasses import dataclass
