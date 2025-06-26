@@ -4,11 +4,8 @@ This script directly tests the core functionality we fixed in agent.py without
 requiring the full environment to be properly set up.
 """
 
-import json
-
 # Import what we can without dependencies
 import sys
-from typing import Any, Dict
 
 
 # Create a dummy Command class
@@ -26,13 +23,6 @@ def test_fox_analysis():
     print("Testing Fox and Geese analysis fixes...")
 
     # Mock dictionary input (what was causing the problem)
-    dict_input = {
-        "fox_position": {"row": 3, "col": 3},
-        "geese_positions": [{"row": 0, "col": 0}, {"row": 0, "col": 2}],
-        "turn": "fox",
-        "game_status": "ongoing",
-        "fox_analysis": [],
-    }
 
     # This mimics our fixed ensure_game_state implementation
     print("Received dict input, would convert to FoxAndGeeseState")

@@ -8,7 +8,7 @@ the winner, and the number of geese remaining.
 
 from typing import Any, Dict, List, Literal, Optional, Set
 
-from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
+from pydantic import ConfigDict, Field, field_serializer, field_validator
 
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
 from haive.games.framework.base.state import GameState

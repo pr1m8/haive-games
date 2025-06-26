@@ -228,7 +228,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             elif isinstance(response.content, str):
                 # String content - try to parse structured data from it
                 logger.debug(
-                    f"Received string content, trying to extract structured data"
+                    "Received string content, trying to extract structured data"
                 )
 
                 # Try to extract a JSON object from the string
@@ -586,7 +586,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 f"Fox analysis: state type after conversion: {type(game_state)}"
             )
 
-            context = self.prepare_analysis_context(game_state, "fox")
+            self.prepare_analysis_context(game_state, "fox")
 
             try:
                 # Safe approach for testing without running the full engine
@@ -630,7 +630,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 f"Geese analysis: state type after conversion: {type(game_state)}"
             )
 
-            context = self.prepare_analysis_context(game_state, "geese")
+            self.prepare_analysis_context(game_state, "geese")
 
             try:
                 # Safe approach for testing without running the full engine
@@ -731,9 +731,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             logger.warning(f"Failed to extract structured analysis data: {e}")
             # Return a simple analysis string as fallback
             if perspective == "fox":
-                return f"Fox analysis: The fox should aim to capture geese while maintaining mobility."
+                return "Fox analysis: The fox should aim to capture geese while maintaining mobility."
             else:
-                return f"Geese analysis: The geese should coordinate to restrict the fox's movement."
+                return "Geese analysis: The geese should coordinate to restrict the fox's movement."
 
     def should_continue_game(self, state: FoxAndGeeseState) -> bool:
         """Determine if the game should continue.

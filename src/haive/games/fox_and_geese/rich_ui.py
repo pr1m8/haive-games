@@ -6,14 +6,12 @@ with better styling, animated piece movements, and improved game information dis
 
 import logging
 import time
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, List, Optional, Set
 
 from rich.align import Align
 from rich.box import DOUBLE, ROUNDED
 from rich.console import Console, Group
 from rich.layout import Layout
-from rich.live import Live
-from rich.padding import Padding
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table

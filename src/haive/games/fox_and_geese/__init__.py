@@ -12,13 +12,17 @@ Components:
     - FoxAndGeeseMove: Model for a move in the game
 """
 
-from .agent import FoxAndGeeseAgent
-from .config import FoxAndGeeseConfig
-from .models import FoxAndGeeseAnalysis, FoxAndGeeseMove, FoxAndGeesePosition
-from .rich_ui import FoxAndGeeseRichUI
-from .state import FoxAndGeeseState
-from .state_manager import FoxAndGeeseStateManager
-from .ui import FoxAndGeeseUI
+from haive.games.fox_and_geese.agent import FoxAndGeeseAgent
+from haive.games.fox_and_geese.config import FoxAndGeeseConfig
+from haive.games.fox_and_geese.models import (
+    FoxAndGeeseAnalysis,
+    FoxAndGeeseMove,
+    FoxAndGeesePosition,
+)
+from haive.games.fox_and_geese.rich_ui import FoxAndGeeseRichUI
+from haive.games.fox_and_geese.state import FoxAndGeeseState
+from haive.games.fox_and_geese.state_manager import FoxAndGeeseStateManager
+from haive.games.fox_and_geese.ui import FoxAndGeeseUI
 
 __all__ = [
     "FoxAndGeeseAgent",

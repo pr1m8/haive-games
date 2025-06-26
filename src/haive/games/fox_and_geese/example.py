@@ -2,7 +2,6 @@
 """Simple runner for Fox and Geese game."""
 
 import logging
-import time
 import uuid
 from typing import Optional
 
@@ -11,7 +10,6 @@ from rich.panel import Panel
 
 from haive.games.fox_and_geese.agent import FoxAndGeeseAgent
 from haive.games.fox_and_geese.config import FoxAndGeeseConfig
-from haive.games.fox_and_geese.state import FoxAndGeeseState
 
 # Set up logging - uncomment to see detailed debug logs
 logging.basicConfig(level=logging.CRITICAL)

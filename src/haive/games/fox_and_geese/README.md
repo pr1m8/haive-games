@@ -24,6 +24,36 @@ The game is played on a 7x7 board where pieces move along the lines. The fox can
 - Automatic detection of legal moves and captures
 - End-game detection and winner determination
 - Game state analysis capabilities
+- Fixed implementation that handles state transitions reliably
+
+## Running the Game
+
+### Fixed Runner (Works with or without API Keys)
+
+Run the game with our fixed state handling that avoids LangGraph streaming issues:
+
+```bash
+# Run with default settings
+python src/haive/games/fox_and_geese/fixed_runner.py
+
+# Enable debug logging
+python src/haive/games/fox_and_geese/fixed_runner.py --debug
+
+# Disable position analysis
+python src/haive/games/fox_and_geese/fixed_runner.py --no-analysis
+
+# Adjust speed of moves
+python src/haive/games/fox_and_geese/fixed_runner.py --delay 0.5
+```
+
+### Standard Runner (Requires LLM API Access)
+
+Run the original game implementation with LangGraph streaming:
+
+```bash
+# Run with default settings
+python src/haive/games/fox_and_geese/example.py
+```
 
 ## Components
 
@@ -46,30 +76,27 @@ The game is played on a 7x7 board where pieces move along the lines. The fox can
 ### Game Control
 
 - `FoxAndGeeseAgent`: Manages game flow and player interactions using LLM-based agents
+- `FixedFoxAndGeeseAgent`: Improved agent implementation that handles state transitions reliably
 
 ## Usage
 
 ### Running the Example Game
 
 ```python
-from haive.games.fox_and_geese.agent import FoxAndGeeseAgent
+from haive.games.fox_and_geese.fixed_runner import FixedFoxAndGeeseAgent
 from haive.games.fox_and_geese.config import FoxAndGeeseConfig
-from haive.games.fox_and_geese.rich_ui import FoxAndGeeseRichUI
 
 # Create agent config
 config = FoxAndGeeseConfig(
-    name="fox_and_geese_game",
+    name="fox_and_geese_fixed",
     enable_analysis=True
 )
 
-# Create agent
-agent = FoxAndGeeseAgent(config)
-
-# Create enhanced UI
-ui = FoxAndGeeseRichUI()
+# Create fixed agent
+agent = FixedFoxAndGeeseAgent(config)
 
 # Run the game
-ui.run_game_with_ui(agent, delay=1.2)
+final_state = agent.run_fixed_game(delay=1.0)
 ```
 
 ### Enhanced Example with UI Options

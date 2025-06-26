@@ -4,7 +4,7 @@ This module provides rich console UI components for visualizing the Fox and Gees
 """
 
 import logging
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional
 
 from rich.align import Align
 from rich.box import ROUNDED
@@ -396,7 +396,6 @@ The game will be played by AI agents with real-time visualization!
             self.console.print("[bold green]🎮 Game Complete! 🎮[/bold green]")
 
             status = game_state.game_status
-            winner = game_state.winner
             moves = len(game_state.move_history)
             geese_remaining = game_state.num_geese
 

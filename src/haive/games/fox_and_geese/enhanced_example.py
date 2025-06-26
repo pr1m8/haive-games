@@ -2,10 +2,8 @@
 """Enhanced example runner for Fox and Geese game with Rich UI visualization."""
 
 import argparse
-import logging
 import time
 import uuid
-from typing import List, Optional, Set
 
 from rich.console import Console
 from rich.panel import Panel
