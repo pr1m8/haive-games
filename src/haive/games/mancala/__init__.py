@@ -13,20 +13,19 @@ The implementation follows the standard Kalah rules:
 - Stones are distributed counterclockwise, one per pit
 - Players' own stores are included; opponent's stores are skipped
 - If the last stone lands in the player's store, they get another turn
-- If the last stone lands in an empty pit on the player's side, they capture
-  that stone and all stones in the opposite pit
+- If the last stone lands in an empty pit on the player's side, they capture that stone and all stones in the opposite pit
 - Game ends when all pits on one side are empty
 
 For a quick demonstration without dependencies, run the minimal_test.py script.
 For a full game with LLM agents, run the example.py script.
 """
 
-from .agent import MancalaAgent
-from .config import MancalaConfig
-from .engines import mancala_engines
-from .models import MancalaAnalysis, MancalaMove
-from .state import MancalaState
-from .state_manager import MancalaStateManager
+from haive.games.mancala.agent import MancalaAgent
+from haive.games.mancala.config import MancalaConfig
+from haive.games.mancala.engines import mancala_engines
+from haive.games.mancala.models import MancalaAnalysis, MancalaMove
+from haive.games.mancala.state import MancalaState
+from haive.games.mancala.state_manager import MancalaStateManager
 
 __all__ = [
     "MancalaAgent",

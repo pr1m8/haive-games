@@ -2,11 +2,12 @@
 
 This package provides a complete implementation of a multi-agent Texas Hold'em
 poker game, including:
-    - Game state management and progression
-    - LLM-based player decision making
-    - Hand evaluation and showdown logic
-    - Configurable game parameters
-    - Detailed game history and statistics
+
+- Game state management and progression
+- LLM-based player decision making
+- Hand evaluation and showdown logic
+- Configurable game parameters
+- Detailed game history and statistics
 
 The implementation uses LangGraph for workflow management and supports
 multiple LLM providers (Azure, OpenAI, Anthropic) for agent decisions.
