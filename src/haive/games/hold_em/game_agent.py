@@ -41,13 +41,12 @@ import json
 import logging
 import random
 import traceback
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal
 
 from haive.core.engine.agent.agent import Agent, AgentConfig, register_agent
 from haive.core.engine.aug_llm import AugLLMConfig
-from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
-from langgraph.types import Command, Send
+from langgraph.types import Command
 from pydantic import Field
 
 from haive.games.hold_em.player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
@@ -56,7 +55,6 @@ from haive.games.hold_em.state import (
     HoldemState,
     PlayerState,
     PlayerStatus,
-    PokerAction,
 )
 
 # Setup detailed logging
@@ -578,13 +576,13 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             state = HoldemState.model_validate(state)
 
         # Enhanced logging for state debugging
-        logger.info(f"\n🔍 DEBUGGING PLAYER DECISION:")
+        logger.info("\n🔍 DEBUGGING PLAYER DECISION:")
         logger.info(f"   State type: {type(state)}")
         logger.info(f"   Current player index: {state.current_player_index}")
         logger.info(f"   Total players: {len(state.players)}")
 
         # Log all players and their IDs
-        logger.info(f"   All players:")
+        logger.info("   All players:")
         for i, player in enumerate(state.players):
             logger.info(
                 f"     [{i}] Name: '{player.name}', ID: '{player.player_id}', Status: {player.status}"
@@ -610,7 +608,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 return self._advance_or_complete_betting(state)
 
         # ENHANCED: Validate player_id and fix if necessary
-        logger.info(f"🎯 Current player details:")
+        logger.info("🎯 Current player details:")
         logger.info(f"   Name: '{current_player.name}'")
         logger.info(f"   Original ID: '{current_player.player_id}'")
         logger.info(f"   Position: {current_player.position}")
@@ -729,9 +727,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             self.invocation_log.append(invocation_details)
 
             # Invoke with enhanced error handling
-            logger.info(f"🔄 About to invoke player agent...")
+            logger.info("🔄 About to invoke player agent..."..")
             player_result = player_agent.app.invoke(player_input, debug=True)
-            logger.info(f"✅ Player agent returned successfully")
+            logger.info("✅ Player agent returned successfully"y")
 
             # Rest of the method remains the same...
             # [Continue with existing result processing logic]
@@ -946,7 +944,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             player.actions_this_hand.append(action_record)
 
             # Log current game state after action
-            logger.info(f"   📊 Game state after action:")
+            logger.info("   📊 Game state after action:"n:")
             logger.info(f"      Pot: {state.total_pot}")
             logger.info(f"      Current bet: {state.current_bet}")
             logger.info(f"      Players in hand: {len(state.players_in_hand)}")
