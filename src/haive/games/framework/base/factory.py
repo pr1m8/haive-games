@@ -36,10 +36,10 @@ from langgraph.graph import StateGraph
 from pydantic import BaseModel
 
 # Import directly from individual modules to avoid circular imports
-from .agent import GameAgent
-from .config import GameConfig
-from .state import GameState
-from .state_manager import GameStateManager
+from haive.games.framework.base.agent import GameAgent
+from haive.games.framework.base.config import GameConfig
+from haive.games.framework.base.state import GameState
+from haive.games.framework.base.state_manager import GameStateManager
 
 # Type variable for generic state
 T = TypeVar("T", bound=BaseModel)

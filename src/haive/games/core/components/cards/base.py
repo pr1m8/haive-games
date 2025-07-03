@@ -4,14 +4,10 @@ from __future__ import annotations
 
 import random
 import uuid
+from collections.abc import Sequence
 from typing import (
-    Dict,
     Generic,
-    List,
-    Optional,
     Protocol,
-    Sequence,
-    Type,
     TypeVar,
 )
 
@@ -31,7 +27,7 @@ class Card(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     face_up: bool = False
-    owner_id: Optional[str] = None
+    owner_id: str | None = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -54,7 +50,7 @@ class CardContainer(BaseModel, Generic[TCard]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    cards: List[TCard] = Field(default_factory=list)
+    cards: list[TCard] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
@@ -71,7 +67,7 @@ class CardContainer(BaseModel, Generic[TCard]):
         else:
             raise ValueError(f"Unknown position: {position}")
 
-    def remove(self, card_id: str) -> Optional[TCard]:
+    def remove(self, card_id: str) -> TCard | None:
         """Remove a card by ID."""
         for i, card in enumerate(self.cards):
             if card.id == card_id:
@@ -91,7 +87,7 @@ class CardContainer(BaseModel, Generic[TCard]):
         random.shuffle(self.cards)
 
     @classmethod
-    def of_type(cls, card_type: Type[TCard]) -> Type[CardContainer[TCard]]:
+    def of_type(cls, card_type: type[TCard]) -> type[CardContainer[TCard]]:
         """Create a type-specific card container."""
         return cls[card_type]  # Leverage Generic type specialization
 
@@ -101,7 +97,7 @@ class Deck(CardContainer[TCard]):
 
     face_down: bool = True  # Whether cards are hidden by default
 
-    def draw(self) -> Optional[TCard]:
+    def draw(self) -> TCard | None:
         """Draw the top card."""
         if not self.cards:
             return None
@@ -109,11 +105,11 @@ class Deck(CardContainer[TCard]):
         card.face_up = not self.face_down
         return card
 
-    def draw_many(self, count: int) -> List[TCard]:
+    def draw_many(self, count: int) -> list[TCard]:
         """Draw multiple cards."""
         return [self.draw() for _ in range(min(count, len(self.cards)))]
 
-    def peek_top(self, count: int = 1) -> List[TCard]:
+    def peek_top(self, count: int = 1) -> list[TCard]:
         """Look at top cards without drawing."""
         return self.cards[: min(count, len(self.cards))]
 
@@ -128,7 +124,7 @@ class Hand(CardContainer[TCard]):
         card.owner_id = self.player_id
         self.cards.append(card)
 
-    def play_card(self, card_id: str) -> Optional[TCard]:
+    def play_card(self, card_id: str) -> TCard | None:
         """Play a card (remove and mark as face up)."""
         card = self.remove(card_id)
         if card:
@@ -140,11 +136,11 @@ class CardComparator(Protocol, Generic[TCard]):
     """Protocol for card comparison strategies."""
 
     @classmethod
-    def compare(cls, card1: TCard, card2: TCard, context: Dict = None) -> int:
+    def compare(cls, card1: TCard, card2: TCard, context: dict = None) -> int:
         """Compare two cards."""
         ...
 
     @classmethod
-    def sort_cards(cls, cards: Sequence[TCard], context: Dict = None) -> List[TCard]:
+    def sort_cards(cls, cards: Sequence[TCard], context: dict = None) -> list[TCard]:
         """Sort a list of cards."""
         ...

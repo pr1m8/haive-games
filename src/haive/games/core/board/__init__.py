@@ -1,23 +1,41 @@
+"""Board - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+Key Components:
+    * Classes: Space, GridSpace, HexSpace
+    * Functions: is_occupied, place_piece, remove_piece
+
+
+Example:
+    Basic usage::
+
+        from haive.board import Space
+
+        instance = Space()
+        # TODO: Complete example
+
+
+"""
+
 from __future__ import annotations
 
 import random
 import uuid
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from enum import Enum
 from functools import cached_property
 from typing import (
     Any,
-    Callable,
     Dict,
     FrozenSet,
     Generic,
-    Iterable,
     List,
-    Mapping,
     Optional,
     Protocol,
-    Sequence,
     Set,
     Tuple,
     TypeVar,
@@ -49,9 +67,9 @@ class Space(BaseModel, Generic[P, T]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     position: P
-    piece: Optional[T] = None
-    properties: Dict[str, Any] = Field(default_factory=dict)
-    connections: Set[str] = Field(default_factory=set)  # IDs of connected spaces
+    piece: T | None = None
+    properties: dict[str, Any] = Field(default_factory=dict)
+    connections: set[str] = Field(default_factory=set)  # IDs of connected spaces
 
     def is_occupied(self) -> bool:
         """Check if this space is occupied."""
@@ -66,7 +84,7 @@ class Space(BaseModel, Generic[P, T]):
             return True
         return False
 
-    def remove_piece(self) -> Optional[T]:
+    def remove_piece(self) -> T | None:
         """Remove and return the piece from this space."""
         piece = self.piece
         self.piece = None
@@ -88,7 +106,7 @@ class GridSpace(Space[GridPosition, T]):
 
     @computed_field
     @property
-    def coordinates(self) -> Tuple[int, int]:
+    def coordinates(self) -> tuple[int, int]:
         """Get the row and column as a tuple."""
         return (self.position.row, self.position.col)
 
@@ -100,13 +118,13 @@ class HexSpace(Space[HexPosition, T]):
 
     @computed_field
     @property
-    def coordinates(self) -> Tuple[int, int]:
+    def coordinates(self) -> tuple[int, int]:
         """Get the hex coordinates as a tuple (q, r)."""
         return (self.position.q, self.position.r)
 
     @computed_field
     @property
-    def cube_coords(self) -> Tuple[int, int, int]:
+    def cube_coords(self) -> tuple[int, int, int]:
         """Get cube coordinates as a tuple (q, r, s)."""
         return (self.position.q, self.position.r, self.position.s)
 
@@ -115,7 +133,7 @@ class NodeSpace(Space[NodePosition, T]):
     """A space on a graph-based board (e.g., Ticket to Ride)."""
 
     position: NodePosition
-    name: Optional[str] = None  # Descriptive name (e.g., city name)
+    name: str | None = None  # Descriptive name (e.g., city name)
 
 
 # ======================================================
@@ -128,8 +146,8 @@ class Board(BaseModel, Generic[S, P, T]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    spaces: Dict[str, S] = Field(default_factory=dict)  # space_id -> Space
-    properties: Dict[str, Any] = Field(default_factory=dict)
+    spaces: dict[str, S] = Field(default_factory=dict)  # space_id -> Space
+    properties: dict[str, Any] = Field(default_factory=dict)
 
     def add_space(self, space: S) -> str:
         """Add a space to the board."""
@@ -144,7 +162,7 @@ class Board(BaseModel, Generic[S, P, T]):
         self.spaces[space1_id].connections.add(space2_id)
         self.spaces[space2_id].connections.add(space1_id)
 
-    def get_connected_spaces(self, space_id: str) -> List[S]:
+    def get_connected_spaces(self, space_id: str) -> list[S]:
         """Get all spaces connected to the given space."""
         if space_id not in self.spaces:
             raise ValueError(f"Space {space_id} not found")
@@ -157,9 +175,8 @@ class Board(BaseModel, Generic[S, P, T]):
         ]
 
     @abstractmethod
-    def get_space_at_position(self, position: P) -> Optional[S]:
+    def get_space_at_position(self, position: P) -> S | None:
         """Get the space at the specified position."""
-        pass
 
     def place_piece(self, piece: T, position: P) -> bool:
         """Place a piece at the specified position."""
@@ -173,7 +190,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         return space.place_piece(piece)
 
-    def remove_piece(self, position: P) -> Optional[T]:
+    def remove_piece(self, position: P) -> T | None:
         """Remove a piece from the specified position."""
         space = self.get_space_at_position(position)
         if not space:
@@ -185,15 +202,15 @@ class Board(BaseModel, Generic[S, P, T]):
         """Check if a position is valid on this board."""
         return self.get_space_at_position(position) is not None
 
-    def get_all_pieces(self) -> Dict[str, T]:
+    def get_all_pieces(self) -> dict[str, T]:
         """Get all pieces currently on the board."""
-        pieces: Dict[str, T] = {}
+        pieces: dict[str, T] = {}
         for space in self.spaces.values():
             if space.piece is not None and hasattr(space.piece, "id"):
                 pieces[space.piece.id] = space.piece
         return pieces
 
-    def get_player_pieces(self, player_id: str) -> List[T]:
+    def get_player_pieces(self, player_id: str) -> list[T]:
         """Get all pieces belonging to a specific player."""
         return [
             space.piece
@@ -217,7 +234,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
             raise ValueError("Board dimensions must be positive")
         return v
 
-    def get_space_at_position(self, position: GridPosition) -> Optional[GridSpace[T]]:
+    def get_space_at_position(self, position: GridPosition) -> GridSpace[T] | None:
         """Get the space at the specified grid coordinates."""
         for space in self.spaces.values():
             if (
@@ -228,7 +245,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
                 return space
         return None
 
-    def get_space_at(self, row: int, col: int) -> Optional[GridSpace[T]]:
+    def get_space_at(self, row: int, col: int) -> GridSpace[T] | None:
         """Get the space at the specified grid coordinates."""
         return self.get_space_at_position(GridPosition(row=row, col=col))
 
@@ -272,7 +289,7 @@ class HexBoard(Board[HexSpace[T], HexPosition, T]):
             raise ValueError("Radius must be positive")
         return v
 
-    def get_space_at_position(self, position: HexPosition) -> Optional[HexSpace[T]]:
+    def get_space_at_position(self, position: HexPosition) -> HexSpace[T] | None:
         """Get the space at the specified hex coordinates."""
         for space in self.spaces.values():
             if (
@@ -283,7 +300,7 @@ class HexBoard(Board[HexSpace[T], HexPosition, T]):
                 return space
         return None
 
-    def get_space_at(self, q: int, r: int) -> Optional[HexSpace[T]]:
+    def get_space_at(self, q: int, r: int) -> HexSpace[T] | None:
         """Get the space at the specified hex coordinates."""
         return self.get_space_at_position(HexPosition(q=q, r=r))
 
@@ -323,7 +340,7 @@ class HexBoard(Board[HexSpace[T], HexPosition, T]):
 class GraphBoard(Board[NodeSpace[T], NodePosition, T]):
     """A graph-based board (Ticket to Ride, Pandemic)."""
 
-    def get_space_at_position(self, position: NodePosition) -> Optional[NodeSpace[T]]:
+    def get_space_at_position(self, position: NodePosition) -> NodeSpace[T] | None:
         """Get the space at the specified node."""
         for space in self.spaces.values():
             if (
@@ -333,7 +350,7 @@ class GraphBoard(Board[NodeSpace[T], NodePosition, T]):
                 return space
         return None
 
-    def get_space_by_name(self, name: str) -> Optional[NodeSpace[T]]:
+    def get_space_by_name(self, name: str) -> NodeSpace[T] | None:
         """Get a space by its name."""
         for space in self.spaces.values():
             if space.name == name:
@@ -341,7 +358,7 @@ class GraphBoard(Board[NodeSpace[T], NodePosition, T]):
         return None
 
     def add_edge(
-        self, node1_id: str, node2_id: str, properties: Optional[Dict[str, Any]] = None
+        self, node1_id: str, node2_id: str, properties: dict[str, Any] | None = None
     ) -> None:
         """Connect two nodes with optional edge properties."""
         self.connect_spaces(node1_id, node2_id)
@@ -355,7 +372,7 @@ class GraphBoard(Board[NodeSpace[T], NodePosition, T]):
             reverse_key = f"{node2_id}:{node1_id}"
             self.properties[reverse_key] = properties
 
-    def get_edge_properties(self, node1_id: str, node2_id: str) -> Dict[str, Any]:
+    def get_edge_properties(self, node1_id: str, node2_id: str) -> dict[str, Any]:
         """Get properties of an edge between two nodes."""
         edge_key = f"{node1_id}:{node2_id}"
         return self.properties.get(edge_key, {})

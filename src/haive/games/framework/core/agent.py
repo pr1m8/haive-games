@@ -1,5 +1,3 @@
-from typing import Optional
-
 from haive.core.engine.agent.config import AgentConfig
 from haive.core.engine.aug_llm.config import AugLLMConfig
 from haive.core.graph.state_graph.base_graph2 import BaseGraph
@@ -7,7 +5,7 @@ from haive.core.graph.state_graph.base_graph2 import BaseGraph
 
 class BasePlayerAgent(AgentConfig):
     engines: dict[str, AugLLMConfig]
-    graph: Optional[BaseGraph] = None
+    graph: BaseGraph | None = None
 
     # input_schema:
     # output_schema:

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from collections import defaultdict
-from enum import Enum, auto
-from typing import ClassVar, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Union
+from enum import Enum
 
 # Import from our base framework
 from game_framework_base import Board, Game, GamePiece, Position, Space
@@ -122,11 +120,11 @@ class LogicGridClue(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     clue_type: ClueType
     text: str
-    categories: List[str]
-    items: List[List[int]]  # Indices of items involved in the clue
+    categories: list[str]
+    items: list[list[int]]  # Indices of items involved in the clue
 
     @model_validator(mode="after")
-    def validate_clue(self) -> "LogicGridClue":
+    def validate_clue(self) -> LogicGridClue:
         """Validate the clue based on its type."""
         if (
             self.clue_type == ClueType.DIRECT_MATCH
@@ -150,7 +148,7 @@ class LogicGridClue(BaseModel):
 
         return self
 
-    def apply_to_grid(self, grid: "LogicGrid") -> bool:
+    def apply_to_grid(self, grid: LogicGrid) -> bool:
         """Apply this clue to the grid."""
         if self.clue_type == ClueType.DIRECT_MATCH:
             # Mark a direct match between two items
@@ -181,7 +179,7 @@ class LogicGridClue(BaseModel):
 
             return True
 
-        elif self.clue_type == ClueType.DIRECT_NONMATCH:
+        if self.clue_type == ClueType.DIRECT_NONMATCH:
             # Mark that two items don't match
             cat1, cat2 = self.categories
             item1, item2 = self.items[0][0], self.items[1][0]
@@ -212,16 +210,16 @@ class LogicGridClue(BaseModel):
 class LogicGrid(Board[LogicGridSpace[LogicGridMark], LogicGridPosition, LogicGridMark]):
     """A logic grid board."""
 
-    categories: List[str]
-    category_items: List[List[str]]
-    category_sizes: List[int]
-    relations: Dict[str, Dict[str, List[LogicGridSpace[LogicGridMark]]]] = Field(
+    categories: list[str]
+    category_items: list[list[str]]
+    category_sizes: list[int]
+    relations: dict[str, dict[str, list[LogicGridSpace[LogicGridMark]]]] = Field(
         default_factory=dict
     )
 
     def get_space_at_position(
         self, position: LogicGridPosition
-    ) -> Optional[LogicGridSpace[LogicGridMark]]:
+    ) -> LogicGridSpace[LogicGridMark] | None:
         """Get the space at the specified position."""
         for space in self.spaces.values():
             if (
@@ -279,7 +277,7 @@ class LogicGrid(Board[LogicGridSpace[LogicGridMark], LogicGridPosition, LogicGri
 
     def get_grid_for_categories(
         self, category1: str, category2: str
-    ) -> List[List[MarkType]]:
+    ) -> list[list[MarkType]]:
         """Get the grid of marks for a pair of categories."""
         if (
             category1 not in self.relations
@@ -350,7 +348,7 @@ class LogicGridPuzzle(Game[LogicGridPosition, LogicGridMark]):
     """Logic Grid puzzle game controller."""
 
     board: LogicGrid
-    clues: List[LogicGridClue] = Field(default_factory=list)
+    clues: list[LogicGridClue] = Field(default_factory=list)
 
     def start_game(self) -> None:
         """Start the game."""
@@ -454,9 +452,9 @@ class LogicGridPuzzleDefinition(BaseModel):
     """Definition of a logic grid puzzle."""
 
     name: str
-    categories: List[str]
-    category_items: List[List[str]]
-    clues: List[Dict[str, any]]
+    categories: list[str]
+    category_items: list[list[str]]
+    clues: list[dict[str, any]]
 
     def create_game(self) -> LogicGridPuzzle:
         """Create a game from this definition."""

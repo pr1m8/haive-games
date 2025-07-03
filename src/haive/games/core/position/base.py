@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import uuid
-from typing import List, Optional
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -67,7 +66,7 @@ class HexPosition(Position):
         """Compute third coordinate for cube representation."""
         return -self.q - self.r
 
-    def neighbors(self) -> List["HexPosition"]:
+    def neighbors(self) -> list[HexPosition]:
         """Get all adjacent hex positions."""
         # Six directions in hexagonal grid
         directions = [(1, 0), (1, -1), (0, -1), (-1, 0), (-1, 1), (0, 1)]
@@ -87,20 +86,19 @@ class PointPosition(Position):
 
     x: float
     y: float
-    z: Optional[float] = None  # For 3D games
+    z: float | None = None  # For 3D games
 
-    def distance_to(self, other: "PointPosition") -> float:
+    def distance_to(self, other: PointPosition) -> float:
         """Calculate Euclidean distance to another point."""
         if self.z is None and other.z is None:
             return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5
-        elif self.z is not None and other.z is not None:
+        if self.z is not None and other.z is not None:
             return (
                 (self.x - other.x) ** 2
                 + (self.y - other.y) ** 2
                 + (self.z - other.z) ** 2
             ) ** 0.5
-        else:
-            raise ValueError("Cannot calculate distance between 2D and 3D points")
+        raise ValueError("Cannot calculate distance between 2D and 3D points")
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, PointPosition):

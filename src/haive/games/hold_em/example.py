@@ -12,8 +12,6 @@ Run this script directly to see a Hold'em game in action.
 
 import argparse
 import logging
-import sys
-from typing import List, Optional
 
 from haive.games.hold_em import HoldemGameAgent, HoldemGameAgentConfig
 from haive.games.hold_em.aug_llms import get_complete_llm_suite
@@ -24,7 +22,7 @@ from haive.games.hold_em.config import (
     create_tournament_config,
 )
 from haive.games.hold_em.player_agent import HoldemPlayerAgentConfig
-from haive.games.hold_em.state import HoldemState, PlayerState
+from haive.games.hold_em.state import HoldemState
 from haive.games.hold_em.ui import HoldemRichUI
 
 # Set up logging
@@ -33,8 +31,8 @@ logger = logging.getLogger("holdem_example")
 
 
 def create_custom_game(
-    player_names: List[str],
-    player_styles: Optional[List[str]] = None,
+    player_names: list[str],
+    player_styles: list[str] | None = None,
     starting_chips: int = 1000,
     small_blind: int = 10,
     big_blind: int = 20,
@@ -68,7 +66,7 @@ def create_custom_game(
 
     # Create player configurations
     player_configs = []
-    for i, (name, style) in enumerate(zip(player_names, player_styles)):
+    for i, (name, style) in enumerate(zip(player_names, player_styles, strict=False)):
         logger.info(f"Setting up {name} ({style} style)")
 
         # Create specialized LLMs for this player
@@ -203,7 +201,7 @@ def analyze_game_results(agent: HoldemGameAgent):
     # Hand history
     if final_state.hand_history:
         logger.info("\n=== HAND HISTORY ===")
-        for i, hand in enumerate(final_state.hand_history[-5:]):  # Last 5 hands
+        for _i, hand in enumerate(final_state.hand_history[-5:]):  # Last 5 hands
             winner_name = "Unknown"
             for player in final_state.players:
                 if player.player_id == hand.get("winner"):

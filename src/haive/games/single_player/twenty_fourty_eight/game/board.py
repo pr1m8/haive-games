@@ -43,8 +43,7 @@ class TwentyFortyEightBoard(
         return None
 
     def move_tiles(self, direction: Direction) -> bool:
-        """
-        Move all tiles in the specified direction, merging where possible.
+        """Move all tiles in the specified direction, merging where possible.
 
         Returns:
             True if any tiles moved, False otherwise
@@ -85,8 +84,7 @@ class TwentyFortyEightBoard(
         return moved
 
     def _move_tile(self, row: int, col: int, dr: int, dc: int) -> bool:
-        """
-        Try to move a tile from (row, col) in direction (dr, dc).
+        """Try to move a tile from (row, col) in direction (dr, dc).
 
         Returns:
             True if the tile moved, False otherwise

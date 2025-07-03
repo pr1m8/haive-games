@@ -4,13 +4,12 @@ This module defines the `TicTacToeState` class used to represent the board, trac
 It includes helper properties to assess the board and enforce its structure.
 """
 
-import operator
 from typing import Annotated, Any, Literal
 
 from pydantic import Field, field_validator
 
-from ..framework.base.state import GameState
-from ..tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
+from haive.games.framework.base.state import GameState
+from haive.games.tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
 
 
 def replace_reducer(left: Any, right: Any) -> Any:
@@ -102,6 +101,10 @@ class TicTacToeState(GameState):
         Returns:
             List[List[Optional[str]]]: Validated board.
         """
+        # If board is empty, initialize a proper 3x3 board
+        if not board or len(board) == 0:
+            return [[None for _ in range(3)] for _ in range(3)]
+
         if len(board) != 3:
             raise ValueError("Board must have 3 rows")
         for row in board:

@@ -6,7 +6,7 @@ with better styling, animated piece movements, and improved game information dis
 
 import logging
 import time
-from typing import Any, List, Optional, Set
+from typing import Any
 
 from rich.align import Align
 from rich.box import DOUBLE, ROUNDED
@@ -42,7 +42,7 @@ class FoxAndGeeseRichUI:
         colors (dict): Color schemes for different UI elements
     """
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI.
 
         Args:
@@ -77,7 +77,7 @@ class FoxAndGeeseRichUI:
             "capture": "🟥",
         }
 
-    def extract_game_state(self, state_data: Any) -> Optional[FoxAndGeeseState]:
+    def extract_game_state(self, state_data: Any) -> FoxAndGeeseState | None:
         """Extract FoxAndGeeseState from various input formats.
 
         Args:
@@ -105,7 +105,7 @@ class FoxAndGeeseRichUI:
                     return command_update
 
                 # Handle Command objects where update is a dict
-                elif isinstance(command_update, dict):
+                if isinstance(command_update, dict):
                     if self._is_valid_game_state_dict(command_update):
                         try:
                             return FoxAndGeeseState.model_validate(command_update)
@@ -179,8 +179,8 @@ class FoxAndGeeseRichUI:
     def create_board_table(
         self,
         game_state: FoxAndGeeseState,
-        highlight_positions: Optional[Set[FoxAndGeesePosition]] = None,
-        capture_position: Optional[FoxAndGeesePosition] = None,
+        highlight_positions: set[FoxAndGeesePosition] | None = None,
+        capture_position: FoxAndGeesePosition | None = None,
     ) -> Table:
         """Create an enhanced visual representation of the board.
 
@@ -271,8 +271,7 @@ class FoxAndGeeseRichUI:
         # Create a checkered pattern for better visibility
         if (row + col) % 2 == 0:
             return f"[{self.colors['board_dark']}]{self.board_symbols['empty_dark']}[/{self.colors['board_dark']}]"
-        else:
-            return f"[{self.colors['board_light']}]{self.board_symbols['empty_light']}[/{self.colors['board_light']}]"
+        return f"[{self.colors['board_light']}]{self.board_symbols['empty_light']}[/{self.colors['board_light']}]"
 
     def create_game_info_panel(self, game_state: FoxAndGeeseState) -> Panel:
         """Create an enhanced panel with game information.
@@ -494,7 +493,7 @@ class FoxAndGeeseRichUI:
     def create_legal_moves_panel(
         self,
         game_state: FoxAndGeeseState,
-        legal_moves: Optional[List[FoxAndGeeseMove]] = None,
+        legal_moves: list[FoxAndGeeseMove] | None = None,
     ) -> Panel:
         """Create a panel showing legal moves for the current player.
 
@@ -581,9 +580,9 @@ class FoxAndGeeseRichUI:
     def create_layout(
         self,
         game_state: FoxAndGeeseState,
-        highlight_positions: Optional[Set[FoxAndGeesePosition]] = None,
-        capture_position: Optional[FoxAndGeesePosition] = None,
-        legal_moves: Optional[List[FoxAndGeeseMove]] = None,
+        highlight_positions: set[FoxAndGeesePosition] | None = None,
+        capture_position: FoxAndGeesePosition | None = None,
+        legal_moves: list[FoxAndGeeseMove] | None = None,
     ) -> Layout:
         """Create the enhanced complete rich UI layout.
 
@@ -669,9 +668,9 @@ class FoxAndGeeseRichUI:
     def display_state(
         self,
         state_data: Any,
-        highlight_positions: Optional[Set[FoxAndGeesePosition]] = None,
-        capture_position: Optional[FoxAndGeesePosition] = None,
-        legal_moves: Optional[List[FoxAndGeeseMove]] = None,
+        highlight_positions: set[FoxAndGeesePosition] | None = None,
+        capture_position: FoxAndGeesePosition | None = None,
+        legal_moves: list[FoxAndGeeseMove] | None = None,
     ) -> bool:
         """Display the game state using enhanced rich UI.
 
@@ -918,7 +917,7 @@ The game will be played by AI agents with real-time visualization!
         self.display_state(state_after)
 
     def display_game_with_animation(
-        self, state_sequence: List[FoxAndGeeseState], delay: float = 1.0
+        self, state_sequence: list[FoxAndGeeseState], delay: float = 1.0
     ) -> None:
         """Display a sequence of game states with smooth transitions.
 

@@ -9,13 +9,13 @@ player decisions in Monopoly, including:
 """
 
 import operator
-from typing import Annotated, Any, Dict, List, Union
+from typing import Annotated, Any
 
 from haive.core.engine.agent.agent import Agent, register_agent
 from haive.core.engine.agent.config import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.schema.prebuilt.messages_state import MessagesState
-from langgraph.graph import END, START
+from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field, computed_field
 
@@ -35,9 +35,7 @@ class PlayerDecisionState(MessagesState):
     # Input context
     player_name: str = Field(description="Name of the player making the decision")
     # WAS STR BEFORE
-    decision_type: Union[PlayerActionType, Any] = Field(
-        description="Type of decision needed"
-    )
+    decision_type: PlayerActionType | Any = Field(description="Type of decision needed")
     game_state: MonopolyState = Field(description="Current game state")
 
     # Decision context
@@ -49,19 +47,17 @@ class PlayerDecisionState(MessagesState):
     # Output
     # Was deciscion before as as dict, aand reasonoing was just a str.
     decisions: Annotated[
-        List[
-            Union[
-                PropertyDecision,
-                JailDecision,
-                BuildingDecision,
-                TradeResponse,
-                str,
-                Any,
-            ]
+        list[
+            PropertyDecision
+            | JailDecision
+            | BuildingDecision
+            | TradeResponse
+            | str
+            | Any
         ],
         operator.add,
     ] = Field(default_factory=list, description="Player's decision")
-    reasoning: Annotated[List[str], operator.add] = Field(
+    reasoning: Annotated[list[str], operator.add] = Field(
         default_factory=list, description="Reasoning for the decision"
     )
     error_message: str = Field(default="", description="Error message if any")
@@ -70,14 +66,11 @@ class PlayerDecisionState(MessagesState):
     @property
     def decision(
         self,
-    ) -> Union[
-        PropertyDecision, JailDecision, BuildingDecision, TradeResponse, str, Any
-    ]:
+    ) -> PropertyDecision | JailDecision | BuildingDecision | TradeResponse | str | Any:
         """Get the decision."""
         if self.decisions:
             return self.decisions[-1]
-        else:
-            return None
+        return None
 
 
 """Fixed Monopoly agent configuration module.
@@ -90,13 +83,11 @@ This module provides corrected configuration classes for the monopoly game agent
 """
 
 import uuid
-from typing import Any, Dict, List, Optional, Type
+from typing import Any
 
 from haive.core.config.runnable import RunnableConfigManager
-from haive.core.engine.agent.config import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.games.monopoly.state import MonopolyState
 from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
@@ -107,13 +98,13 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
     # Override base fields
     name: str = Field(default="monopoly_player", description="Agent name")
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=PlayerDecisionState,
         description="State schema (will be set dynamically)",
     )
 
     # Player agent specific engines
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="LLM engines for different decision types"
     )
 
@@ -139,12 +130,12 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     # Override base agent config fields
     name: str = Field(default="monopoly_game", description="Agent name")
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=MonopolyState, description="The state schema for the game"
     )
 
     # Game settings
-    player_names: List[str] = Field(
+    player_names: list[str] = Field(
         default=["Alice", "Bob", "Charlie", "Diana"],
         description="Names of players in the game",
     )
@@ -223,7 +214,7 @@ class MonopolyGameAgentConfig(AgentConfig):
             print(f"WARNING: Initial state has issues: {issues}")
             raise ValueError(f"Initial state validation failed: {issues}")
 
-        print(f"DEBUG: Initial state created successfully")
+        print("DEBUG: Initial state created successfully")
         print(f"DEBUG: Current player: {initial_state.current_player.name}")
 
         return initial_state
@@ -421,7 +412,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             )
 
         except Exception as e:
-            error_msg = f"Error making property decision: {str(e)}"
+            error_msg = f"Error making property decision: {e!s}"
             print(f"❌ {error_msg}")
             return Command(
                 update={
@@ -473,7 +464,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             )
 
         except Exception as e:
-            error_msg = f"Error making jail decision: {str(e)}"
+            error_msg = f"Error making jail decision: {e!s}"
             print(f"❌ {error_msg}")
             return Command(
                 update={
@@ -518,7 +509,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
     def _prepare_property_context(
         self, decision_state: PlayerDecisionState
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare context for property decision."""
         if isinstance(decision_state.game_state, dict):
             game_state = MonopolyState.model_validate(decision_state.game_state)
@@ -569,7 +560,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
     def _prepare_jail_context(
         self, decision_state: PlayerDecisionState
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare context for jail decision."""
         game_state = MonopolyState(**decision_state.game_state)
         player = game_state.get_player_by_name(decision_state.player_name)

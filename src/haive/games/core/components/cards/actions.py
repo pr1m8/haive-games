@@ -3,9 +3,7 @@
 from abc import abstractmethod
 from typing import (
     Any,
-    Dict,
     Generic,
-    Optional,
 )
 
 from pydantic import BaseModel, Field, model_validator
@@ -21,7 +19,7 @@ class ActionResult(BaseModel):
 
     success: bool
     message: str = ""
-    state_updates: Dict[str, Any] = Field(default_factory=dict)
+    state_updates: dict[str, Any] = Field(default_factory=dict)
 
 
 class CardAction(BaseModel, Generic[TCard, TState]):
@@ -45,7 +43,6 @@ class CardAction(BaseModel, Generic[TCard, TState]):
     @abstractmethod
     def execute(self, state: TState) -> ActionResult:
         """Execute this action on the game state."""
-        pass
 
 
 class DrawCardAction(CardAction[TCard, TState]):
@@ -100,7 +97,7 @@ class PlayCardAction(CardAction[TCard, TState]):
 
     action_type: str = "play_card"
     card_id: str
-    target_id: Optional[str] = None  # For games with targeting
+    target_id: str | None = None  # For games with targeting
 
     def can_execute(self, state: TState) -> bool:
         """Check if player can play the card."""

@@ -1,6 +1,5 @@
 # among_us_models.py
 from enum import Enum
-from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -46,7 +45,7 @@ class Vent(BaseModel):
 
     id: str
     location: str
-    connections: List[VentConnection] = Field(default_factory=list)
+    connections: list[VentConnection] = Field(default_factory=list)
 
 
 class RoomConnection(BaseModel):
@@ -62,14 +61,14 @@ class Room(BaseModel):
 
     id: str
     name: str
-    connections: List[RoomConnection] = Field(default_factory=list)
-    vents: List[str] = Field(default_factory=list)  # Vent IDs in this room
+    connections: list[RoomConnection] = Field(default_factory=list)
+    vents: list[str] = Field(default_factory=list)  # Vent IDs in this room
 
     def is_connected_to(self, room_id: str) -> bool:
         """Check if this room is connected to another room."""
         return any(conn.target_room == room_id for conn in self.connections)
 
-    def get_connection(self, room_id: str) -> Optional[RoomConnection]:
+    def get_connection(self, room_id: str) -> RoomConnection | None:
         """Get the connection to another room if it exists."""
         for conn in self.connections:
             if conn.target_room == room_id:
@@ -80,12 +79,12 @@ class Room(BaseModel):
 class PlayerMemory(BaseModel):
     """Player's memory of observations and suspicions."""
 
-    observations: List[str] = Field(default_factory=list)
-    player_suspicions: Dict[str, float] = Field(
+    observations: list[str] = Field(default_factory=list)
+    player_suspicions: dict[str, float] = Field(
         default_factory=dict
     )  # Player ID -> suspicion level (0-1)
-    player_alibis: Dict[str, str] = Field(default_factory=dict)  # Player ID -> location
-    location_history: List[str] = Field(
+    player_alibis: dict[str, str] = Field(default_factory=dict)  # Player ID -> location
+    location_history: list[str] = Field(
         default_factory=list
     )  # Recent locations visited
 
@@ -94,12 +93,12 @@ class PlayerState(BaseModel):
     id: str
     role: PlayerRole
     location: str
-    tasks: List[Task]
+    tasks: list[Task]
     is_alive: bool = True
-    last_action: Optional[str] = None
-    observations: List[str] = Field(default_factory=list)
+    last_action: str | None = None
+    observations: list[str] = Field(default_factory=list)
     in_vent: bool = False
-    current_vent: Optional[str] = None
+    current_vent: str | None = None
     memory: PlayerMemory = Field(default_factory=PlayerMemory)
 
     def is_impostor(self) -> bool:
@@ -145,7 +144,7 @@ class SabotageResolutionPoint(BaseModel):
     location: str  # Room ID
     description: str
     resolved: bool = False
-    resolver_id: Optional[str] = None  # Player ID who resolved this point
+    resolver_id: str | None = None  # Player ID who resolved this point
 
 
 class SabotageEvent(BaseModel):
@@ -155,7 +154,7 @@ class SabotageEvent(BaseModel):
     location: str
     timer: int
     resolved: bool = False
-    resolution_points: List[SabotageResolutionPoint] = Field(default_factory=list)
+    resolution_points: list[SabotageResolutionPoint] = Field(default_factory=list)
 
     def is_critical(self) -> bool:
         """Check if this is a critical sabotage."""
@@ -171,3 +170,64 @@ class AmongUsGamePhase(str, Enum):
     MEETING = "meeting"
     VOTING = "voting"
     GAME_OVER = "game_over"
+
+
+class AmongUsActionType(str, Enum):
+    """Available actions in Among Us."""
+
+    MOVE = "move"
+    DO_TASK = "do_task"
+    KILL = "kill"
+    SABOTAGE = "sabotage"
+    USE_VENT = "use_vent"
+    REPORT_BODY = "report_body"
+    CALL_MEETING = "call_meeting"
+    VOTE = "vote"
+    SKIP_VOTE = "skip_vote"
+
+
+class AmongUsPlayerDecision(BaseModel):
+    """Decision model for Among Us player actions."""
+
+    action_type: AmongUsActionType = Field(description="Type of action to take")
+    target_location: str | None = Field(
+        default=None, description="Target location for movement or action"
+    )
+    target_player: str | None = Field(
+        default=None, description="Target player for actions like kill or vote"
+    )
+    target_task: str | None = Field(default=None, description="Target task to perform")
+    reasoning: str = Field(description="Explanation for the chosen action")
+    confidence: float = Field(
+        default=0.5, ge=0.0, le=1.0, description="Confidence in this decision (0-1)"
+    )
+
+
+class AmongUsAnalysis(BaseModel):
+    """Analysis model for Among Us game state evaluation."""
+
+    game_phase: AmongUsGamePhase = Field(description="Current phase of the game")
+    crew_advantage: float = Field(
+        ge=-1.0,
+        le=1.0,
+        description="Current advantage (-1 = impostor wins, +1 = crew wins)",
+    )
+    task_completion_percentage: float = Field(
+        ge=0.0, le=100.0, description="Percentage of tasks completed"
+    )
+    suspected_impostors: list[str] = Field(
+        default_factory=list, description="List of player IDs suspected to be impostors"
+    )
+    trusted_players: list[str] = Field(
+        default_factory=list, description="List of player IDs trusted to be crewmates"
+    )
+    active_sabotages: list[str] = Field(
+        default_factory=list, description="List of currently active sabotages"
+    )
+    recommended_strategy: str = Field(
+        description="Recommended strategy for current situation"
+    )
+    risk_assessment: str = Field(description="Assessment of current risks and threats")
+    priority_actions: list[str] = Field(
+        default_factory=list, description="List of priority actions to focus on"
+    )

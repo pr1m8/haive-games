@@ -1,6 +1,6 @@
 # Updated AmongUsState model
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import Field
 
@@ -20,27 +20,27 @@ from haive.games.framework.multi_player.state import MultiPlayerGameState
 
 
 class AmongUsState(MultiPlayerGameState):
-    map_locations: List[str] = Field(default_factory=list)
+    map_locations: list[str] = Field(default_factory=list)
     map_name: str = Field(default="skeld")
-    rooms: Dict[str, Room] = Field(default_factory=dict)
-    vents: Dict[str, Vent] = Field(default_factory=dict)
-    player_states: Dict[str, PlayerState] = Field(default_factory=dict)
-    tasks: Dict[str, Task] = Field(default_factory=dict)
-    sabotages: List[SabotageEvent] = Field(default_factory=list)
-    eliminated_players: List[str] = Field(default_factory=list)
+    rooms: dict[str, Room] = Field(default_factory=dict)
+    vents: dict[str, Vent] = Field(default_factory=dict)
+    player_states: dict[str, PlayerState] = Field(default_factory=dict)
+    tasks: dict[str, Task] = Field(default_factory=dict)
+    sabotages: list[SabotageEvent] = Field(default_factory=list)
+    eliminated_players: list[str] = Field(default_factory=list)
     meeting_active: bool = Field(default=False)
-    meeting_caller: Optional[str] = Field(default=None)
-    reported_body: Optional[str] = Field(default=None)
-    votes: Dict[str, str] = Field(default_factory=dict)
+    meeting_caller: str | None = Field(default=None)
+    reported_body: str | None = Field(default=None)
+    votes: dict[str, str] = Field(default_factory=dict)
     game_phase: AmongUsGamePhase = Field(default=AmongUsGamePhase.TASKS)
     impostor_count: int = Field(default=0)
     crewmate_count: int = Field(default=0)
-    discussion_history: List[Dict[str, Any]] = Field(default_factory=list)
-    kill_cooldowns: Dict[str, int] = Field(
+    discussion_history: list[dict[str, Any]] = Field(default_factory=list)
+    kill_cooldowns: dict[str, int] = Field(
         default_factory=dict
     )  # Player ID -> cooldown in seconds
 
-    def get_alive_players(self) -> List[str]:
+    def get_alive_players(self) -> list[str]:
         """Get list of alive player IDs."""
         return [pid for pid, pstate in self.player_states.items() if pstate.is_alive]
 
@@ -87,28 +87,28 @@ class AmongUsState(MultiPlayerGameState):
 
         return None
 
-    def get_room(self, room_id: str) -> Optional[Room]:
+    def get_room(self, room_id: str) -> Room | None:
         """Get a room by ID."""
         return self.rooms.get(room_id)
 
-    def get_vent(self, vent_id: str) -> Optional[Vent]:
+    def get_vent(self, vent_id: str) -> Vent | None:
         """Get a vent by ID."""
         return self.vents.get(vent_id)
 
-    def get_vents_in_room(self, room_id: str) -> List[Vent]:
+    def get_vents_in_room(self, room_id: str) -> list[Vent]:
         """Get all vents in a room."""
         return [
             vent for vent_id, vent in self.vents.items() if vent.location == room_id
         ]
 
-    def get_connected_rooms(self, room_id: str) -> List[str]:
+    def get_connected_rooms(self, room_id: str) -> list[str]:
         """Get all rooms connected to the given room."""
         room = self.get_room(room_id)
         if not room:
             return []
         return [conn.target_room for conn in room.connections if not conn.is_blocked]
 
-    def get_connected_vents(self, vent_id: str) -> List[str]:
+    def get_connected_vents(self, vent_id: str) -> list[str]:
         """Get all vents connected to the given vent."""
         vent = self.get_vent(vent_id)
         if not vent:
@@ -124,7 +124,7 @@ class AmongUsState(MultiPlayerGameState):
                 self.player_states[player_id].memory.observations.append(observation)
 
     def add_observation_to_all_in_room(
-        self, room_id: str, observation: str, exclude_players: List[str] = None
+        self, room_id: str, observation: str, exclude_players: list[str] = None
     ):
         """Add an observation to all players in a room."""
         exclude_players = exclude_players or []
@@ -136,7 +136,7 @@ class AmongUsState(MultiPlayerGameState):
             ):
                 self.add_observation(pid, observation)
 
-    def get_active_sabotage(self) -> Optional[SabotageEvent]:
+    def get_active_sabotage(self) -> SabotageEvent | None:
         """Get the currently active sabotage, if any."""
         for sabotage in self.sabotages:
             if not sabotage.is_resolved():

@@ -17,8 +17,6 @@ Options:
 
 import argparse
 import logging
-import sys
-import time
 import traceback
 
 from rich.console import Console
@@ -57,7 +55,7 @@ try:
     from haive.games.mancala.config import MancalaConfig
 
     # Display configuration
-    console.print(f"[bold]Game Configuration:[/bold]")
+    console.print("[bold]Game Configuration:[/bold]")
     console.print(f"• Stones per pit: {args.stones}")
     console.print(
         f"• Position analysis: {'disabled' if args.no_analysis else 'enabled'}"
@@ -116,7 +114,7 @@ except ModuleNotFoundError as e:
     console.print(
         Panel.fit(
             "[bold red]Error: Required module not found[/bold red]\n"
-            f"{str(e)}\n\n"
+            f"{e!s}\n\n"
             "This example requires the Haive framework and its dependencies.\n"
             "If you want to test the core Mancala logic without these dependencies,\n"
             "try running 'minimal_test.py' instead.",
@@ -127,7 +125,7 @@ except ModuleNotFoundError as e:
 except Exception as e:
     console.print(
         Panel.fit(
-            f"[bold red]Error running game:[/bold red]\n{str(e)}",
+            f"[bold red]Error running game:[/bold red]\n{e!s}",
             border_style="red",
         )
     )

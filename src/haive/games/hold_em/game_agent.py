@@ -727,9 +727,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             self.invocation_log.append(invocation_details)
 
             # Invoke with enhanced error handling
-            logger.info("🔄 About to invoke player agent..."..")
+            logger.info("🔄 About to invoke player agent...")
             player_result = player_agent.app.invoke(player_input, debug=True)
-            logger.info("✅ Player agent returned successfully"y")
+            logger.info("✅ Player agent returned successfully")
 
             # Rest of the method remains the same...
             # [Continue with existing result processing logic]
@@ -944,7 +944,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             player.actions_this_hand.append(action_record)
 
             # Log current game state after action
-            logger.info("   📊 Game state after action:"n:")
+            logger.info("   📊 Game state after action:")
             logger.info(f"      Pot: {state.total_pot}")
             logger.info(f"      Current bet: {state.current_bet}")
             logger.info(f"      Players in hand: {len(state.players_in_hand)}")

@@ -1,5 +1,4 @@
-"""
-Card game utilities and implementations.
+"""Card game utilities and implementations.
 
 This package provides comprehensive utilities for implementing card games
 within the Haive framework. It includes card, deck, and hand representations,

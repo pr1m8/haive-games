@@ -4,7 +4,7 @@ This module provides rich console UI components for visualizing the Fox and Gees
 """
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from rich.align import Align
 from rich.box import ROUNDED
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class FoxAndGeeseUI:
     """Rich UI for Fox and Geese game visualization."""
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI.
 
         Args:
@@ -30,7 +30,7 @@ class FoxAndGeeseUI:
         """
         self.console = console or Console()
 
-    def extract_game_state(self, state_data: Any) -> Optional[FoxAndGeeseState]:
+    def extract_game_state(self, state_data: Any) -> FoxAndGeeseState | None:
         """Extract FoxAndGeeseState from various input formats.
 
         Args:

@@ -9,7 +9,6 @@ This module provides the corrected main agent implementation that:
 from typing import Any, Dict, Optional
 
 from haive.core.engine.agent.agent import Agent, register_agent
-from langgraph.graph import END
 
 from haive.games.monopoly.config import MonopolyGameAgentConfig
 from haive.games.monopoly.state import MonopolyState
@@ -159,7 +158,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
                 print(f"  ❌ {player.name}")
 
         # Display some game statistics
-        print(f"\n📈 Game Statistics:")
+        print("\n📈 Game Statistics:"s:")
         print(f"  • Total events: {len(final_state.game_events)}")
 
         # Count different event types

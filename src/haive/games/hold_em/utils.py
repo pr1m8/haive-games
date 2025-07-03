@@ -7,27 +7,26 @@ This module provides utility functions for the Hold'em game, including:
 """
 
 import random
-from typing import Dict, List, Optional, Tuple
 
 from haive.games.hold_em.models import HandRank
-from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
+from haive.games.hold_em.state import HoldemState, PlayerState, PlayerStatus
 
 
-def create_standard_deck() -> List[str]:
+def create_standard_deck() -> list[str]:
     """Create a standard 52-card deck."""
     ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
     suits = ["h", "d", "c", "s"]  # hearts, diamonds, clubs, spades
     return [f"{rank}{suit}" for rank in ranks for suit in suits]
 
 
-def shuffle_deck(deck: List[str]) -> List[str]:
+def shuffle_deck(deck: list[str]) -> list[str]:
     """Shuffle a deck of cards."""
     shuffled = deck.copy()
     random.shuffle(shuffled)
     return shuffled
 
 
-def deal_cards(deck: List[str], num_cards: int) -> Tuple[List[str], List[str]]:
+def deal_cards(deck: list[str], num_cards: int) -> tuple[list[str], list[str]]:
     """Deal cards from deck, returning (dealt_cards, remaining_deck)."""
     if len(deck) < num_cards:
         raise ValueError(
@@ -65,7 +64,7 @@ def card_to_suit(card: str) -> str:
     return card[1] if len(card) >= 2 else ""
 
 
-def format_cards(cards: List[str]) -> str:
+def format_cards(cards: list[str]) -> str:
     """Format cards for display with suit symbols."""
     suit_symbols = {"h": "♥", "d": "♦", "c": "♣", "s": "♠"}
 
@@ -82,10 +81,9 @@ def format_cards(cards: List[str]) -> str:
 
 
 def evaluate_hand_simple(
-    hole_cards: List[str], community_cards: List[str]
-) -> Dict[str, any]:
-    """
-    Simple hand evaluation (placeholder for production poker evaluator).
+    hole_cards: list[str], community_cards: list[str]
+) -> dict[str, any]:
+    """Simple hand evaluation (placeholder for production poker evaluator).
     Returns hand rank, strength score, and description.
     """
     all_cards = hole_cards + community_cards
@@ -156,16 +154,15 @@ def evaluate_hand_simple(
                 "made_hand": all_cards[:5],
                 "kickers": [],
             }
-        else:
-            return {
-                "rank": HandRank.STRAIGHT_FLUSH,
-                "strength": 0.95,
-                "description": f"Straight Flush, {straight_high} high",
-                "made_hand": all_cards[:5],
-                "kickers": [],
-            }
+        return {
+            "rank": HandRank.STRAIGHT_FLUSH,
+            "strength": 0.95,
+            "description": f"Straight Flush, {straight_high} high",
+            "made_hand": all_cards[:5],
+            "kickers": [],
+        }
 
-    elif counts[0] == 4:
+    if counts[0] == 4:
         return {
             "rank": HandRank.FOUR_OF_A_KIND,
             "strength": 0.9,
@@ -174,7 +171,7 @@ def evaluate_hand_simple(
             "kickers": [sorted_ranks[1][0]],
         }
 
-    elif counts[0] == 3 and counts[1] == 2:
+    if counts[0] == 3 and counts[1] == 2:
         return {
             "rank": HandRank.FULL_HOUSE,
             "strength": 0.85,
@@ -183,7 +180,7 @@ def evaluate_hand_simple(
             "kickers": [],
         }
 
-    elif has_flush:
+    if has_flush:
         return {
             "rank": HandRank.FLUSH,
             "strength": 0.75,
@@ -192,7 +189,7 @@ def evaluate_hand_simple(
             "kickers": [],
         }
 
-    elif has_straight:
+    if has_straight:
         return {
             "rank": HandRank.STRAIGHT,
             "strength": 0.65,
@@ -201,7 +198,7 @@ def evaluate_hand_simple(
             "kickers": [],
         }
 
-    elif counts[0] == 3:
+    if counts[0] == 3:
         return {
             "rank": HandRank.THREE_OF_A_KIND,
             "strength": 0.55,
@@ -210,7 +207,7 @@ def evaluate_hand_simple(
             "kickers": [rank for rank, count in sorted_ranks[1:3]],
         }
 
-    elif counts[0] == 2 and counts[1] == 2:
+    if counts[0] == 2 and counts[1] == 2:
         return {
             "rank": HandRank.TWO_PAIR,
             "strength": 0.35,
@@ -223,7 +220,7 @@ def evaluate_hand_simple(
             "kickers": [sorted_ranks[2][0]],
         }
 
-    elif counts[0] == 2:
+    if counts[0] == 2:
         return {
             "rank": HandRank.PAIR,
             "strength": 0.25,
@@ -232,15 +229,14 @@ def evaluate_hand_simple(
             "kickers": [rank for rank, count in sorted_ranks[1:4]],
         }
 
-    else:
-        high_card = sorted_ranks[0][0]
-        return {
-            "rank": HandRank.HIGH_CARD,
-            "strength": 0.1 + (card_to_rank_value(high_card) / 100),
-            "description": f"High Card, {high_card}",
-            "made_hand": [card for card in all_cards if card[0] == high_card][:1],
-            "kickers": [rank for rank, count in sorted_ranks[1:5]],
-        }
+    high_card = sorted_ranks[0][0]
+    return {
+        "rank": HandRank.HIGH_CARD,
+        "strength": 0.1 + (card_to_rank_value(high_card) / 100),
+        "description": f"High Card, {high_card}",
+        "made_hand": [card for card in all_cards if card[0] == high_card][:1],
+        "kickers": [rank for rank, count in sorted_ranks[1:5]],
+    }
 
 
 def calculate_pot_odds(pot_size: int, bet_to_call: int) -> float:
@@ -265,18 +261,17 @@ def get_position_name(position: int, num_players: int, dealer_pos: int) -> str:
 
     if relative_pos == 0:
         return "Dealer"
-    elif relative_pos == 1:
+    if relative_pos == 1:
         return "Small Blind"
-    elif relative_pos == 2:
+    if relative_pos == 2:
         return "Big Blind"
-    elif relative_pos == 3:
+    if relative_pos == 3:
         return "Under the Gun"
-    elif relative_pos == num_players - 1:
+    if relative_pos == num_players - 1:
         return "Cutoff"
-    elif relative_pos == num_players - 2:
+    if relative_pos == num_players - 2:
         return "Hijack"
-    else:
-        return f"Middle Position {relative_pos - 2}"
+    return f"Middle Position {relative_pos - 2}"
 
 
 def is_position_early(position: int, num_players: int, dealer_pos: int) -> bool:
@@ -291,9 +286,7 @@ def is_position_late(position: int, num_players: int, dealer_pos: int) -> bool:
     return relative_pos >= num_players - 2
 
 
-def get_next_active_player(
-    game_state: HoldemState, start_position: int
-) -> Optional[int]:
+def get_next_active_player(game_state: HoldemState, start_position: int) -> int | None:
     """Get the next active player starting from a position."""
     for i in range(len(game_state.players)):
         next_pos = (start_position + i) % len(game_state.players)
@@ -304,13 +297,13 @@ def get_next_active_player(
 
 
 def count_players_in_phase(
-    game_state: HoldemState, statuses: List[PlayerStatus]
+    game_state: HoldemState, statuses: list[PlayerStatus]
 ) -> int:
     """Count players with specific statuses."""
     return len([p for p in game_state.players if p.status in statuses])
 
 
-def get_board_texture_description(community_cards: List[str]) -> str:
+def get_board_texture_description(community_cards: list[str]) -> str:
     """Describe the board texture."""
     if len(community_cards) < 3:
         return "Preflop"
@@ -385,7 +378,7 @@ def format_game_summary(game_state: HoldemState) -> str:
     return summary
 
 
-def validate_game_state(game_state: HoldemState) -> List[str]:
+def validate_game_state(game_state: HoldemState) -> list[str]:
     """Validate game state and return list of issues."""
     issues = []
 

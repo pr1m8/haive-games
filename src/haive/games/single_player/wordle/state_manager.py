@@ -1,9 +1,10 @@
 import random
-from typing import Optional
 
 from haive.games.framework.base import GameStateManager
-
-from .models import WordConnectionsMove, WordConnectionsState
+from haive.games.single_player.wordle.models import (
+    WordConnectionsMove,
+    WordConnectionsState,
+)
 
 
 class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
@@ -115,7 +116,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
     @classmethod
     def initialize(
-        cls, puzzle_index: Optional[int] = None, **kwargs
+        cls, puzzle_index: int | None = None, **kwargs
     ) -> WordConnectionsState:
         """Initialize a new Word Connections game.
 
@@ -226,12 +227,11 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
                 if diff == difficulty and category not in state.found_categories:
                     # Give a vague hint about this category
                     if difficulty == "yellow":
-                        return f"Look for the most straightforward connection among the remaining words."
-                    elif difficulty == "green":
-                        return f"Try finding a moderately obvious grouping."
-                    elif difficulty == "blue":
-                        return f"Consider less obvious connections or wordplay."
-                    else:
-                        return f"Think about obscure connections, puns, or very specific references."
+                        return "Look for the most straightforward connection among the remaining words."
+                    if difficulty == "green":
+                        return "Try finding a moderately obvious grouping."
+                    if difficulty == "blue":
+                        return "Consider less obvious connections or wordplay."
+                    return "Think about obscure connections, puns, or very specific references."
 
         return "No hints available."

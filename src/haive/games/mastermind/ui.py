@@ -4,8 +4,7 @@ This module provides a rich terminal UI for the Mastermind game using the Rich l
 It displays the game board, guesses, feedback, and analysis in a visually appealing way.
 """
 
-import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from rich.console import Console
 from rich.layout import Layout
@@ -13,7 +12,6 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.mastermind.models import MastermindFeedback, MastermindGuess
 from haive.games.mastermind.state import MastermindState
 
 
@@ -48,7 +46,7 @@ class MastermindUI:
         "black": "black",
     }
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI with a Rich console.
 
         Args:
@@ -155,7 +153,7 @@ class MastermindUI:
 
         return Panel(info_text, title="Game Info", border_style="cyan")
 
-    def create_analysis_panel(self, state: MastermindState) -> Optional[Panel]:
+    def create_analysis_panel(self, state: MastermindState) -> Panel | None:
         """Create a panel with the most recent analysis if available.
 
         Args:
@@ -308,9 +306,7 @@ class MastermindUI:
         panel = Panel(result_text, title="🎮 Game Over", border_style="yellow")
         self.console.print(panel)
 
-    def extract_game_state(
-        self, state_dict: Dict[str, Any]
-    ) -> Optional[MastermindState]:
+    def extract_game_state(self, state_dict: dict[str, Any]) -> MastermindState | None:
         """Extract a MastermindState from a state dictionary.
 
         Args:

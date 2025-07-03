@@ -31,9 +31,8 @@ from typing import Any
 from haive.core.engine.agent.agent import register_agent
 
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
-
-from .config import MafiaAgentConfig
-from .models import (
+from haive.games.mafia.config import MafiaAgentConfig
+from haive.games.mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -42,8 +41,8 @@ from .models import (
     NarratorDecision,
     PlayerRole,
 )
-from .state import MafiaGameState
-from .state_manager import MafiaStateManager
+from haive.games.mafia.state import MafiaGameState
+from haive.games.mafia.state_manager import MafiaStateManager
 
 # Set up logging
 logger = logging.getLogger(__name__)

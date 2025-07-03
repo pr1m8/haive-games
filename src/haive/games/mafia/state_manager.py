@@ -11,16 +11,13 @@ The state manager is responsible for:
     - Win condition checking
 """
 
-import copy
 import random
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from loguru import logger
-from pydantic import BaseModel
 
 from haive.games.framework.multi_player.state_manager import MultiPlayerGameStateManager
-
-from .models import (
+from haive.games.mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -28,7 +25,7 @@ from .models import (
     PlayerRole,
     PlayerState,
 )
-from .state import MafiaGameState
+from haive.games.mafia.state import MafiaGameState
 
 
 class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
@@ -130,7 +127,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             # Process votes first
             if new_state.votes:
                 # Count votes
-                vote_count: Dict[str, int] = {}
+                vote_count: dict[str, int] = {}
                 for _, voted_for in new_state.votes.items():
                     vote_count[voted_for] = vote_count.get(voted_for, 0) + 1
 
@@ -304,7 +301,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             return new_state
 
         except Exception as e:
-            error_msg = f"Error in phase transition: {str(e)}"
+            error_msg = f"Error in phase transition: {e!s}"
             logger.error(error_msg, exc_info=True)
 
             # Try to set error on state
@@ -332,7 +329,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         cls,
         state: MafiaGameState,
         player_id: str,
-        move: Union[MafiaAction, NarratorAction],
+        move: MafiaAction | NarratorAction,
     ) -> MafiaGameState:
         """Apply a move to the game state.
 
@@ -424,7 +421,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         return new_state
 
     @classmethod
-    def initialize(cls, player_names: List[str], **kwargs) -> MafiaGameState:
+    def initialize(cls, player_names: list[str], **kwargs) -> MafiaGameState:
         """Initialize a new Mafia game with the given players.
 
         This method sets up a new game state with:
@@ -444,9 +441,34 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         Raises:
             ValueError: If there aren't enough players (minimum 4)
         """
+        # Ensure player_names is a non-None iterable
+        if player_names is None:
+            logger.warning("Received None for player_names, using default list")
+            player_names = ["Player_1", "Player_2", "Player_3", "Narrator"]
+
+        # Ensure player_names is a list
+        if not isinstance(player_names, list):
+            try:
+                player_names = list(player_names)
+            except TypeError:
+                logger.warning("Could not convert player_names to list, using default")
+                player_names = ["Player_1", "Player_2", "Player_3", "Narrator"]
+
+        # Ensure player_names is not empty
+        if not player_names:
+            logger.warning("Received empty player_names list, using default")
+            player_names = ["Player_1", "Player_2", "Player_3", "Narrator"]
+
         # Ensure we have enough players (at least 3 plus narrator)
         if len(player_names) < 4:
-            raise ValueError("Mafia requires at least 4 players (including narrator)")
+            logger.warning("Not enough players provided, using minimum 4 players")
+            # Add default players to reach minimum count
+            current_count = len(player_names)
+            for i in range(current_count, 4):
+                player_names.append(f"Player_{i+1}")
+            # Ensure the last player is the narrator
+            if "Narrator" not in player_names:
+                player_names[-1] = "Narrator"
 
         # Separate regular players from narrator
         narrator_id = player_names[-1]
@@ -465,7 +487,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             num_doctors = min(1, num_regular_players - num_mafia - num_detectives - 1)
 
         # Initialize roles dictionary
-        roles: Dict[str, PlayerRole] = {narrator_id: PlayerRole.NARRATOR}
+        roles: dict[str, PlayerRole] = {narrator_id: PlayerRole.NARRATOR}
 
         # Shuffle players for random role assignment
         shuffled_players = list(regular_players)
@@ -498,7 +520,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             role_idx += 1
 
         # Initialize player states
-        player_states: Dict[str, PlayerState] = {}
+        player_states: dict[str, PlayerState] = {}
         for player_id in player_names:
             role = roles.get(player_id, PlayerRole.VILLAGER)
 
@@ -561,7 +583,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def get_legal_moves(
         cls, state: MafiaGameState, player_id: str
-    ) -> List[Union[MafiaAction, NarratorAction]]:
+    ) -> list[MafiaAction | NarratorAction]:
         """Get legal moves for a specific player.
 
         This method determines what moves are legal for a player based on:
@@ -577,7 +599,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
         Returns:
             List of legal moves (MafiaAction or NarratorAction)
         """
-        legal_moves: List[Union[MafiaAction, NarratorAction]] = []
+        legal_moves: list[MafiaAction | NarratorAction] = []
 
         # Check if player exists
         if player_id not in state.player_states:
@@ -752,7 +774,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     @classmethod
     def filter_state_for_player(
         cls, state: MafiaGameState, player_id: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Filter the state to include only information visible to a specific player.
 
         This method implements information hiding, ensuring players only see
@@ -767,7 +789,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             Filtered state containing only visible information
         """
         # Create a filtered copy of the state
-        filtered_state: Dict[str, Any] = {}
+        filtered_state: dict[str, Any] = {}
 
         # Basic game information visible to all
         filtered_state["players"] = state.players

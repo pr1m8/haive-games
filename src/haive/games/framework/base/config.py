@@ -16,8 +16,6 @@ Typical usage:
     - Use as configuration for game agents
 """
 
-from typing import Type
-
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
@@ -48,7 +46,7 @@ class GameConfig(AgentConfig):
         ...     enable_analysis: bool = True
     """
 
-    state_schema: Type[GameState] = Field(
+    state_schema: type[GameState] = Field(
         default=GameState, description="State schema for the game"
     )
 
@@ -62,7 +60,7 @@ class GameConfig(AgentConfig):
 
     visualize: bool = Field(default=True, description="Whether to visualize the game")
     runnable_config: RunnableConfig = Field(
-        default={"configurable": {"recursion_limit": 100}}
+        default={"configurable": {"recursion_limit": 10000}}
     )
 
     class Config:

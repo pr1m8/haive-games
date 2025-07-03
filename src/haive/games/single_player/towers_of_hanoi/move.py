@@ -1,6 +1,4 @@
-"""
-Tower of Hanoi move model
-"""
+"""Tower of Hanoi move model"""
 
 from typing import Any
 

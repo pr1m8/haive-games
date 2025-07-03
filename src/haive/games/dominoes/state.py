@@ -9,10 +9,17 @@ from haive.games.framework.base.state import GameState
 
 class DominoesState(GameState):
     """State for a dominoes game."""
+
     players: list[str] = Field(..., description="List of player names")
-    hands: dict[str, list[DominoTile]] = Field(..., description="Tiles in each player's hand")
-    board: list[DominoTile] = Field(default_factory=list, description="Tiles on the board")
-    boneyard: list[DominoTile] = Field(default_factory=list, description="Tiles in the boneyard (draw pile)")
+    hands: dict[str, list[DominoTile]] = Field(
+        ..., description="Tiles in each player's hand"
+    )
+    board: list[DominoTile] = Field(
+        default_factory=list, description="Tiles on the board"
+    )
+    boneyard: list[DominoTile] = Field(
+        default_factory=list, description="Tiles in the boneyard (draw pile)"
+    )
     turn: str = Field(..., description="Current player's turn")
     game_status: Literal["ongoing", "player1_win", "player2_win", "draw"] = Field(
         default="ongoing", description="Status of the game"
@@ -21,7 +28,9 @@ class DominoesState(GameState):
         default_factory=list, description="History of moves"
     )
     last_passes: int = Field(default=0, description="Number of consecutive passes")
-    scores: dict[str, int] = Field(default_factory=dict, description="Scores for each player")
+    scores: dict[str, int] = Field(
+        default_factory=dict, description="Scores for each player"
+    )
     winner: str | None = Field(default=None, description="Winner of the game, if any")
     player1_analysis: list[DominoesAnalysis] = Field(
         default_factory=list, description="Analyses by player1"
@@ -60,7 +69,7 @@ class DominoesState(GameState):
         return board_str
 
     @classmethod
-    def initialize(cls, player_names: list[str] = ["player1", "player2"], tiles_per_hand: int = 7):
+    def initialize(cls, player_names: list[str] = None, tiles_per_hand: int = 7):
         """Initialize a new dominoes game."""
         # Create all tiles from 0-0 to 6-6
         all_tiles = []
@@ -111,5 +120,5 @@ class DominoesState(GameState):
             game_status="ongoing",
             move_history=[],
             last_passes=0,
-            scores=dict.fromkeys(player_names, 0)
+            scores=dict.fromkeys(player_names, 0),
         )

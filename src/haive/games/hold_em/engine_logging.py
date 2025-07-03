@@ -2,16 +2,14 @@
 
 import json
 import time
-import traceback
+from collections.abc import Callable
 from contextlib import contextmanager
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
-from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
@@ -20,14 +18,14 @@ from rich.tree import Tree
 class EngineInvocationLogger:
     """Rich logging for engine invocations with debugging capabilities."""
 
-    def __init__(self, console: Optional[Console] = None, debug_mode: bool = True):
+    def __init__(self, console: Console | None = None, debug_mode: bool = True):
         self.console = console or Console()
         self.debug_mode = debug_mode
-        self.invocation_history: List[Dict[str, Any]] = []
+        self.invocation_history: list[dict[str, Any]] = []
         self.current_depth = 0
-        self.timing_stats: Dict[str, List[float]] = {}
+        self.timing_stats: dict[str, list[float]] = {}
 
-    def log_invocation_start(self, engine_name: str, input_data: Any) -> Dict[str, Any]:
+    def log_invocation_start(self, engine_name: str, input_data: Any) -> dict[str, Any]:
         """Log the start of an engine invocation."""
         invocation_id = f"{engine_name}_{int(time.time() * 1000)}"
         start_time = time.time()
@@ -62,9 +60,9 @@ class EngineInvocationLogger:
 
     def log_invocation_end(
         self,
-        invocation_info: Dict[str, Any],
+        invocation_info: dict[str, Any],
         result: Any,
-        error: Optional[Exception] = None,
+        error: Exception | None = None,
     ):
         """Log the end of an engine invocation."""
         end_time = time.time()
@@ -95,7 +93,7 @@ class EngineInvocationLogger:
                     f"{indent}❌ [bold red]{engine_name} failed[/bold red] ({duration:.2f}s)"
                 )
                 error_panel = Panel(
-                    f"[red]{str(error)}[/red]",
+                    f"[red]{error!s}[/red]",
                     title="Error",
                     border_style="red",
                     expand=False,
@@ -134,9 +132,7 @@ class EngineInvocationLogger:
         original_invoke = engine.invoke
 
         @wraps(original_invoke)
-        def logged_invoke(
-            input_data: Any, runnable_config: Optional[Any] = None
-        ) -> Any:
+        def logged_invoke(input_data: Any, runnable_config: Any | None = None) -> Any:
             with self.invocation_context(engine.name, input_data) as invocation_info:
                 try:
                     result = original_invoke(input_data, runnable_config)
@@ -155,10 +151,10 @@ class EngineInvocationLogger:
         return engine
 
     def enhance_engines_dict(
-        self, engines: Dict[str, AugLLMConfig]
-    ) -> Dict[str, AugLLMConfig]:
+        self, engines: dict[str, AugLLMConfig]
+    ) -> dict[str, AugLLMConfig]:
         """Enhance all engines in a dictionary."""
-        for engine_name, engine in engines.items():
+        for _engine_name, engine in engines.items():
             self.enhance_engine(engine)
         return engines
 
@@ -166,16 +162,15 @@ class EngineInvocationLogger:
         """Create a preview string for data."""
         if data is None:
             return "None"
-        elif isinstance(data, str):
+        if isinstance(data, str):
             return data[:100] + "..." if len(data) > 100 else data
-        elif isinstance(data, dict):
+        if isinstance(data, dict):
             key_count = len(data)
             preview_keys = list(data.keys())[:3]
             return f"Dict with {key_count} keys: {preview_keys}"
-        elif isinstance(data, list):
+        if isinstance(data, list):
             return f"List with {len(data)} items"
-        else:
-            return str(type(data).__name__)
+        return str(type(data).__name__)
 
     def _format_data_preview(self, data: Any) -> Text:
         """Format data for Rich display."""
@@ -272,9 +267,7 @@ class EngineInvocationLogger:
 class LoggedAugLLMConfig(AugLLMConfig):
     """AugLLMConfig with enhanced logging capabilities."""
 
-    def __init__(
-        self, *args, logger: Optional[EngineInvocationLogger] = None, **kwargs
-    ):
+    def __init__(self, *args, logger: EngineInvocationLogger | None = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.logger = logger or EngineInvocationLogger()
 
@@ -304,8 +297,8 @@ class LoggedAugLLMConfig(AugLLMConfig):
 
 # Utility functions for engine enhancement
 def enhance_player_engines(
-    engines: Dict[str, AugLLMConfig], logger: Optional[EngineInvocationLogger] = None
-) -> Dict[str, AugLLMConfig]:
+    engines: dict[str, AugLLMConfig], logger: EngineInvocationLogger | None = None
+) -> dict[str, AugLLMConfig]:
     """Enhance player engines with logging."""
     if logger is None:
         logger = EngineInvocationLogger()
@@ -331,7 +324,7 @@ def enhance_player_engines(
 
 
 def enhance_game_engines(
-    engines: Dict[str, AugLLMConfig], logger: Optional[EngineInvocationLogger] = None
-) -> Dict[str, AugLLMConfig]:
+    engines: dict[str, AugLLMConfig], logger: EngineInvocationLogger | None = None
+) -> dict[str, AugLLMConfig]:
     """Enhance game engines with logging."""
     return enhance_player_engines(engines, logger)  # Same enhancement logic

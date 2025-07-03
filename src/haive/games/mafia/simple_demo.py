@@ -7,7 +7,6 @@ It shows the basic game flow and state transitions.
 
 import random
 import time
-from typing import List
 
 from haive.games.mafia.models import ActionType, GamePhase, MafiaAction, PlayerRole
 from haive.games.mafia.state import MafiaGameState

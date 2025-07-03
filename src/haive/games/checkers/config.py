@@ -69,10 +69,8 @@ class CheckersAgentConfig(AgentConfig):
         description="Engines for the checkers game",
     )
     runnable_config: RunnableConfig = Field(
-        default_factory=lambda: RunnableConfig(
-            verbose=True,
-            debug=True,
-        ),
+        default={"configurable": {"recursion_limit": 2000}},
+        # ),
         description="Runnable configuration for the checkers game",
     )
 

@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """Example runner for Dominoes game with rich UI visualization."""
 
-import logging
-import time
 import uuid
-from typing import Optional
 
 from rich.console import Console
 from rich.panel import Panel
@@ -72,7 +69,7 @@ if __name__ == "__main__":
             runnable_config={
                 "configurable": {
                     "thread_id": uuid.uuid4().hex[:8],
-                    "recursion_limit": 100,
+                    "recursion_limit": 400,
                 }
             },
         )

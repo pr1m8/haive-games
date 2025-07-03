@@ -1,6 +1,6 @@
 import uuid
-from abc import ABC, abstractmethod
-from typing import Generic, Optional, Protocol
+from abc import abstractmethod
+from typing import Generic, Protocol
 
 from pydantic import BaseModel, Field
 
@@ -13,13 +13,12 @@ class GamePiece(BaseModel, Generic[P]):
     """Base class for any game piece that can be placed on a board."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    owner_id: Optional[str] = None
-    position: Optional[P] = None
+    owner_id: str | None = None
+    position: P | None = None
 
     @abstractmethod
     def can_move_to(self, position: P, board: "Board") -> bool:
         """Check if this piece can move to the specified position."""
-        pass
 
     def assign_to_player(self, player_id: str) -> None:
         """Assign this piece to a player."""
@@ -34,8 +33,8 @@ class GamePieceProtocol(Protocol):
     """Protocol defining the required interface for game pieces."""
 
     id: str
-    owner_id: Optional[str]
-    position: Optional[Position]
+    owner_id: str | None
+    position: Position | None
 
     def can_move_to(self, position: Position, board: "Board") -> bool: ...
     def assign_to_player(self, player_id: str) -> None: ...

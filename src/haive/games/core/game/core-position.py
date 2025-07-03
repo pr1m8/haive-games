@@ -1,5 +1,4 @@
-"""
-Position models for the game framework.
+"""Position models for the game framework.
 
 This module defines the base Position class and its specific implementations
 for different coordinate systems used in games.
@@ -8,14 +7,13 @@ for different coordinate systems used in games.
 from __future__ import annotations
 
 import uuid
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class Position(BaseModel):
-    """
-    Base class for all position types in games.
+    """Base class for all position types in games.
 
     A Position represents a location in a game. Different games use different
     coordinate systems, so this base class is extended for specific needs.
@@ -27,8 +25,7 @@ class Position(BaseModel):
         frozen = True  # Positions should be immutable
 
     def __eq__(self, other: object) -> bool:
-        """
-        Check if positions are equal.
+        """Check if positions are equal.
         Base implementation compares IDs; subclasses should override.
         """
         if not isinstance(other, Position):
@@ -39,14 +36,13 @@ class Position(BaseModel):
         """Hash implementation for dictionary keys and sets."""
         return hash(self.id)
 
-    def serialize(self) -> Dict[str, Any]:
+    def serialize(self) -> dict[str, Any]:
         """Convert the position to a serializable dictionary."""
         return self.model_dump()
 
 
 class GridPosition(Position):
-    """
-    Position on a grid-based board with row and column coordinates.
+    """Position on a grid-based board with row and column coordinates.
 
     Used in games like Chess, Checkers, Scrabble, etc. where the board
     is organized as a rectangular grid of cells.
@@ -75,15 +71,14 @@ class GridPosition(Position):
 
     @computed_field
     @property
-    def coordinates(self) -> Tuple[int, int]:
+    def coordinates(self) -> tuple[int, int]:
         """Get the row and column as a tuple."""
         return (self.row, self.col)
 
     @computed_field
     @property
     def display_coords(self) -> str:
-        """
-        Return human-readable coordinates.
+        """Return human-readable coordinates.
 
         For chess-style notation, this returns coordinates like 'A1', 'B2', etc.
         where the column is a letter (A-Z) and the row is a number (1-based).
@@ -95,9 +90,8 @@ class GridPosition(Position):
         """Create a new position that is offset from this one."""
         return GridPosition(row=self.row + row_offset, col=self.col + col_offset)
 
-    def neighbors(self) -> Dict[str, GridPosition]:
-        """
-        Get all adjacent grid positions (orthogonal).
+    def neighbors(self) -> dict[str, GridPosition]:
+        """Get all adjacent grid positions (orthogonal).
 
         Returns:
             Dictionary mapping direction names to positions.
@@ -109,9 +103,8 @@ class GridPosition(Position):
             "west": self.offset(0, -1),
         }
 
-    def neighbors_with_diagonals(self) -> Dict[str, GridPosition]:
-        """
-        Get all adjacent grid positions including diagonals.
+    def neighbors_with_diagonals(self) -> dict[str, GridPosition]:
+        """Get all adjacent grid positions including diagonals.
 
         Returns:
             Dictionary mapping direction names to positions.
@@ -132,8 +125,7 @@ class GridPosition(Position):
         return abs(self.row - other.row) + abs(self.col - other.col)
 
     def chebyshev_distance(self, other: GridPosition) -> int:
-        """
-        Calculate the Chebyshev distance to another grid position.
+        """Calculate the Chebyshev distance to another grid position.
 
         This is the maximum of the horizontal and vertical distances,
         which corresponds to the number of moves a king in chess would need.
@@ -142,8 +134,7 @@ class GridPosition(Position):
 
 
 class PointPosition(Position):
-    """
-    Position using floating point coordinates in a 2D space.
+    """Position using floating point coordinates in a 2D space.
 
     Used in games with continuous coordinates like territory maps or
     physics-based games.
@@ -164,7 +155,7 @@ class PointPosition(Position):
 
     @computed_field
     @property
-    def coordinates(self) -> Tuple[float, float]:
+    def coordinates(self) -> tuple[float, float]:
         """Get the x and y as a tuple."""
         return (self.x, self.y)
 
@@ -178,8 +169,7 @@ class PointPosition(Position):
 
 
 class HexPosition(Position):
-    """
-    Position on a hexagonal grid using cube coordinates.
+    """Position on a hexagonal grid using cube coordinates.
 
     Used in games like Catan, hex-based war games, etc.
 
@@ -192,7 +182,7 @@ class HexPosition(Position):
 
     @field_validator("s")
     @classmethod
-    def validate_cube_coords(cls, v: int, values: Dict) -> int:
+    def validate_cube_coords(cls, v: int, values: dict) -> int:
         """Ensure cube coordinates are valid (q + r + s = 0)."""
         q = values.data.get("q")
         r = values.data.get("r")
@@ -219,13 +209,12 @@ class HexPosition(Position):
 
     @computed_field
     @property
-    def axial_coords(self) -> Tuple[int, int]:
+    def axial_coords(self) -> tuple[int, int]:
         """Get the axial coordinates (q, r) as a tuple."""
         return (self.q, self.r)
 
-    def neighbors(self) -> Dict[str, HexPosition]:
-        """
-        Get all adjacent hex positions.
+    def neighbors(self) -> dict[str, HexPosition]:
+        """Get all adjacent hex positions.
 
         Returns:
             Dictionary mapping direction names to positions.

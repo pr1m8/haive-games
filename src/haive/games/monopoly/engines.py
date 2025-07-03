@@ -12,7 +12,12 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .models import BuildingDecision, JailDecision, PropertyDecision, TradeResponse
+from haive.games.monopoly.models import (
+    BuildingDecision,
+    JailDecision,
+    PropertyDecision,
+    TradeResponse,
+)
 
 # Property decision prompts
 property_decision_prompt = ChatPromptTemplate.from_messages(
@@ -143,7 +148,6 @@ trade_decision_prompt = ChatPromptTemplate.from_messages(
 
 def build_monopoly_player_aug_llms() -> dict[str, AugLLMConfig]:
     """Build LLM configs for monopoly player decisions."""
-
     # Default LLM configuration - using Azure GPT-4
     default_llm_config = AzureLLMConfig(model="gpt-4o", temperature=0.7)
 

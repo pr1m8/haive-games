@@ -35,25 +35,18 @@ Example:
 import json
 import logging
 import traceback
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 from haive.core.engine.agent.agent import Agent, AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.games.hold_em.models import (
-    BettingDecision,
-    PlayerDecisionModel,
-    PokerAnalysis,
-)
 from haive.games.hold_em.state import (
     HoldemState,
     PlayerState,
     PlayerStatus,
-    PokerAction,
 )
 
 # Setup detailed logging for player agents
@@ -77,23 +70,23 @@ class PlayerSubgraphState(BaseModel):
     player_id: str = Field(description="ID of the player making decision")
 
     # Analysis intermediate results
-    situation_analysis: Optional[Dict[str, Any]] = Field(
+    situation_analysis: dict[str, Any] | None = Field(
         default=None, description="Analysis of current situation"
     )
-    hand_analysis: Optional[Dict[str, Any]] = Field(
+    hand_analysis: dict[str, Any] | None = Field(
         default=None, description="Analysis of player's hand"
     )
-    opponent_analysis: Optional[Dict[str, Any]] = Field(
+    opponent_analysis: dict[str, Any] | None = Field(
         default=None, description="Analysis of opponents"
     )
 
     # Final decision
-    decision: Optional[Dict[str, Any]] = Field(
+    decision: dict[str, Any] | None = Field(
         default=None, description="Final betting decision"
     )
 
     # Debug information
-    debug_info: Dict[str, Any] = Field(
+    debug_info: dict[str, Any] = Field(
         default_factory=dict, description="Debug information for troubleshooting"
     )
 
@@ -119,7 +112,7 @@ class HoldemPlayerAgentConfig(AgentConfig):
     risk_tolerance: float = Field(default=0.5, description="Risk tolerance (0-1)")
 
     # Engines for different analysis phases
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="LLM engines for different decision phases"
     )
 
@@ -307,7 +300,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
             # Get analysis - no fallbacks, let it fail if it will
-            logger.debug(f"   Invoking situation analyzer...")
+            logger.debug("   Invoking situation analyzer...")
             analysis = analyzer.invoke(context)
             logger.debug(f"   Analysis received, type: {type(analysis)}")
 
@@ -347,7 +340,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         except Exception as e:
             error_msg = (
-                f"Situation analysis failed for {self.config.player_name}: {str(e)}"
+                f"Situation analysis failed for {self.config.player_name}: {e!s}"
             )
             logger.error(f"❌ {error_msg}")
             logger.error(f"   Stack trace: {traceback.format_exc()}")
@@ -426,7 +419,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
             # Get analysis - no fallbacks
-            logger.debug(f"   Invoking hand analyzer...")
+            logger.debug("   Invoking hand analyzer...")
             analysis = analyzer.invoke(context)
             logger.debug(f"   Hand analysis received, type: {type(analysis)}")
 
@@ -464,7 +457,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
         except Exception as e:
-            error_msg = f"Hand analysis failed for {self.config.player_name}: {str(e)}"
+            error_msg = f"Hand analysis failed for {self.config.player_name}: {e!s}"
             logger.error(f"❌ {error_msg}")
             logger.error(f"   Stack trace: {traceback.format_exc()}")
 
@@ -524,10 +517,10 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             return analysis
 
         except Exception as e:
-            error_msg = f"Opponent analysis failed for {self.player_name}: {str(e)}"
+            error_msg = f"Opponent analysis failed for {self.player_name}: {e!s}"
             raise RuntimeError(error_msg) from e
 
-    def _prepare_opponent_context(self, game_state, opponents) -> Dict[str, str]:
+    def _prepare_opponent_context(self, game_state, opponents) -> dict[str, str]:
         """Prepare context dictionary for opponent analysis with error handling."""
 
         # Helper to safely get position info
@@ -702,7 +695,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
             # Get decision from LLM
-            logger.debug(f"   Invoking decision maker...")
+            logger.debug("   Invoking decision maker...")
             decision = decision_maker.invoke(context)
             logger.debug(f"   Decision received, type: {type(decision)}")
 
@@ -741,16 +734,13 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
         except Exception as e:
-            error_msg = (
-                f"Decision making failed for {self.config.player_name}: {str(e)}"
-            )
+            error_msg = f"Decision making failed for {self.config.player_name}: {e!s}"
             logger.error(f"❌ {error_msg}")
             logger.error(f"   Stack trace: {traceback.format_exc()}")
             raise RuntimeError(error_msg) from e
 
-    def _normalize_decision(self, decision: Any) -> Dict[str, Any]:
-        """
-        Normalize different decision model formats to a consistent dictionary structure.
+    def _normalize_decision(self, decision: Any) -> dict[str, Any]:
+        """Normalize different decision model formats to a consistent dictionary structure.
 
         This method handles the conversion of various structured output formats into
         a standardized decision dictionary that can be used by the game agent. It's
@@ -811,40 +801,39 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             return normalized
 
         # Check if it's already in the expected format
-        elif "action" in decision_dict:
+        if "action" in decision_dict:
             logger.debug("   Already in expected format")
             return decision_dict
 
         # Handle other potential formats
-        else:
-            logger.warning(f"   Unknown decision format: {list(decision_dict.keys())}")
+        logger.warning(f"   Unknown decision format: {list(decision_dict.keys())}")
 
-            # Try to extract any action-like field
-            action = "fold"  # Safe default
-            amount = 0
-            reasoning = decision_dict.get("reasoning", "Unknown decision format")
+        # Try to extract any action-like field
+        action = "fold"  # Safe default
+        amount = 0
+        reasoning = decision_dict.get("reasoning", "Unknown decision format")
 
-            # Look for action in various field names
-            for field_name in ["action", "primary_action", "decision", "move"]:
-                if field_name in decision_dict:
-                    action = decision_dict[field_name]
-                    break
+        # Look for action in various field names
+        for field_name in ["action", "primary_action", "decision", "move"]:
+            if field_name in decision_dict:
+                action = decision_dict[field_name]
+                break
 
-            # Look for amount in various field names
-            for field_name in ["amount", "bet_size", "size", "bet_amount"]:
-                if field_name in decision_dict:
-                    amount = decision_dict[field_name]
-                    break
+        # Look for amount in various field names
+        for field_name in ["amount", "bet_size", "size", "bet_amount"]:
+            if field_name in decision_dict:
+                amount = decision_dict[field_name]
+                break
 
-            normalized = {
-                "action": action,
-                "amount": amount,
-                "reasoning": reasoning,
-                "confidence": 0.5,
-            }
+        normalized = {
+            "action": action,
+            "amount": amount,
+            "reasoning": reasoning,
+            "confidence": 0.5,
+        }
 
-            logger.warning(f"   Normalized unknown format to: {normalized}")
-            return normalized
+        logger.warning(f"   Normalized unknown format to: {normalized}")
+        return normalized
 
     def _calculate_pot_odds(
         self, game_state: HoldemState, player: PlayerState
@@ -875,7 +864,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
     def _get_available_actions(
         self, game_state: HoldemState, player: PlayerState
-    ) -> List[str]:
+    ) -> list[str]:
         """Get list of available legal actions for the player in the current game state.
 
         This method determines which poker actions are legally available to the player
@@ -929,8 +918,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         return actions
 
     def _validate_decision(
-        self, decision: Dict[str, Any], game_state: HoldemState, player: PlayerState
-    ) -> Dict[str, Any]:
+        self, decision: dict[str, Any], game_state: HoldemState, player: PlayerState
+    ) -> dict[str, Any]:
         """Validate and correct a decision to ensure it's legal in the current game state.
 
         This method ensures that the LLM-generated decision is valid and legal according

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from enum import Enum
-from typing import Dict, List, Literal, Optional, Set, Tuple
+from typing import Literal
 
 # Import from our base framework
 from game_framework_base import (
@@ -78,9 +78,9 @@ class FlowPipe(FlowPiece):
 
     connection_type: Literal[ConnectionType] = "pipe"
     direction: PipeDirection
-    connected_directions: Set[PipeDirection] = Field(default_factory=set)
+    connected_directions: set[PipeDirection] = Field(default_factory=set)
 
-    def can_move_to(self, position: GridPosition, board: "FlowBoard") -> bool:
+    def can_move_to(self, position: GridPosition, board: FlowBoard) -> bool:
         """Check if this pipe segment can be placed at the specified position."""
         # Get the target space
         space = board.get_space_at_position(position)
@@ -149,7 +149,7 @@ class FlowGridSpace(GridSpace[FlowPiece]):
 
     @computed_field
     @property
-    def color(self) -> Optional[str]:
+    def color(self) -> str | None:
         """Get the color of the piece in this space."""
         if self.piece is None or not isinstance(self.piece, FlowPiece):
             return None
@@ -164,7 +164,7 @@ class FlowGridSpace(GridSpace[FlowPiece]):
 class FlowBoard(GridBoard[FlowGridSpace[FlowPiece], GridPosition, FlowPiece]):
     """A Flow Free game board."""
 
-    flows: Dict[str, Dict[str, any]] = Field(default_factory=dict)
+    flows: dict[str, dict[str, any]] = Field(default_factory=dict)
 
     def initialize_grid(self) -> None:
         """Initialize an empty grid."""
@@ -349,7 +349,7 @@ class FlowBoard(GridBoard[FlowGridSpace[FlowPiece], GridPosition, FlowPiece]):
         flow["completed"] = False
         return False
 
-    def get_adjacent_positions(self, position: GridPosition) -> List[GridPosition]:
+    def get_adjacent_positions(self, position: GridPosition) -> list[GridPosition]:
         """Get all valid adjacent positions."""
         adjacent = []
         for dr, dc in [(0, 1), (1, 0), (0, -1), (-1, 0)]:  # right, down, left, up
@@ -390,7 +390,7 @@ class FlowFreeGame(Game[GridPosition, FlowPiece]):
     """Flow Free game controller."""
 
     board: FlowBoard
-    current_flow_id: Optional[str] = None
+    current_flow_id: str | None = None
 
     def start_game(self) -> None:
         """Start the game."""
@@ -499,11 +499,11 @@ class FlowFreeGame(Game[GridPosition, FlowPiece]):
 
             if adj_pos.row < position.row:
                 return PipeDirection.UP
-            elif adj_pos.row > position.row:
+            if adj_pos.row > position.row:
                 return PipeDirection.DOWN
-            elif adj_pos.col < position.col:
+            if adj_pos.col < position.col:
                 return PipeDirection.LEFT
-            elif adj_pos.col > position.col:
+            if adj_pos.col > position.col:
                 return PipeDirection.RIGHT
 
         # For multiple connections or no connections, we'll just use NONE
@@ -528,7 +528,7 @@ class FlowFreeLevel(BaseModel):
 
     rows: int
     cols: int
-    flows: List[Tuple[str, Tuple[int, int], Tuple[int, int]]]  # color, start, end
+    flows: list[tuple[str, tuple[int, int], tuple[int, int]]]  # color, start, end
 
     def create_game(self) -> FlowFreeGame:
         """Create a game from this level."""

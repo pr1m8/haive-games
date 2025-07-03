@@ -14,7 +14,6 @@ from langgraph.types import Command
 
 from haive.games.framework.base.agent import GameAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
-from haive.games.tic_tac_toe.models import TicTacToeMove
 from haive.games.tic_tac_toe.state import TicTacToeState
 from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager
 
@@ -30,7 +29,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Tic Tac Toe game."""
-        print(f"[DEBUG] initialize_game called")
+        print("[DEBUG] initialize_game called")
 
         game_state = self.state_manager.initialize(
             first_player=self.config.first_player,
@@ -38,7 +37,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             player_O=self.config.player_O,
         )
 
-        print(f"[DEBUG] Game state initialized:")
+        print("[DEBUG] Game state initialized:")
         print(f"[DEBUG] Turn: {game_state.turn}")
         print(f"[DEBUG] Status: {game_state.game_status}")
         print(f"[DEBUG] Board: {game_state.board}")
@@ -103,7 +102,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
         if isinstance(state, dict):
             try:
                 game_state = TicTacToeState(**state)
-                print(f"[DEBUG] Converted dict to TicTacToeState successfully")
+                print("[DEBUG] Converted dict to TicTacToeState successfully")
                 print(
                     f"[DEBUG] Turn: {game_state.turn}, Status: {game_state.game_status}"
                 )
@@ -111,12 +110,12 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             except Exception as e:
                 print(f"[DEBUG] State conversion failed: {e}")
                 return Command(
-                    update={"error_message": f"State conversion failed: {str(e)}"},
+                    update={"error_message": f"State conversion failed: {e!s}"},
                     goto=END,
                 )
         else:
             game_state = state
-            print(f"[DEBUG] Using state directly")
+            print("[DEBUG] Using state directly")
 
         if game_state.game_status != "ongoing":
             print(f"[DEBUG] Game not ongoing, status: {game_state.game_status}")
@@ -136,14 +135,14 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             context = self.prepare_move_context(game_state)
             print(f"[DEBUG] Prepared context keys: {list(context.keys())}")
 
-            print(f"[DEBUG] Invoking engine...")
+            print("[DEBUG] Invoking engine...")
             move = engine.invoke(context)
             print(f"[DEBUG] Engine returned move: {move}")
             print(f"[DEBUG] Move type: {type(move)}")
 
-            print(f"[DEBUG] Applying move...")
+            print("[DEBUG] Applying move...")
             new_state = self.state_manager.apply_move(game_state, move)
-            print(f"[DEBUG] Move applied successfully")
+            print("[DEBUG] Move applied successfully")
             print(f"[DEBUG] New board: {new_state.board}")
             print(f"[DEBUG] New turn: {new_state.turn}")
             print(f"[DEBUG] New status: {new_state.game_status}")
@@ -176,11 +175,11 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             import traceback
 
             traceback.print_exc()
-            return Command(update={"error_message": f"Move failed: {str(e)}"}, goto=END)
+            return Command(update={"error_message": f"Move failed: {e!s}"}, goto=END)
 
     def analyze_position(self, state) -> Command:
         """Analyze the current position for the player who just moved."""
-        print(f"[DEBUG] analyze_position called")
+        print("[DEBUG] analyze_position called")
 
         # Convert dict to TicTacToeState if needed
         if isinstance(state, dict):
@@ -188,7 +187,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 game_state = TicTacToeState(**state)
             except Exception as e:
                 return Command(
-                    update={"error_message": f"State conversion failed: {str(e)}"},
+                    update={"error_message": f"State conversion failed: {e!s}"},
                     goto=END,
                 )
         else:
@@ -231,7 +230,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
         except Exception as e:
             print(f"[DEBUG] Error in analyze_position: {e}")
             return Command(
-                update={"error_message": f"Analysis failed: {str(e)}"},
+                update={"error_message": f"Analysis failed: {e!s}"},
                 goto="make_move" if game_state.game_status == "ongoing" else END,
             )
 
@@ -306,5 +305,4 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 time.sleep(1)
             return step  # Final state
 
-        else:
-            return super().run(initial_state, debug=debug)
+        return super().run(initial_state, debug=debug)

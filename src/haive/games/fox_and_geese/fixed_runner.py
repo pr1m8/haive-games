@@ -163,7 +163,7 @@ def main():
             runnable_config={
                 "configurable": {
                     "thread_id": uuid.uuid4().hex[:8],
-                    "recursion_limit": 100,
+                    "recursion_limit": 400,
                 }
             },
         )

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""
-Example Word Connections game with interactive UI.
+"""Example Word Connections game with interactive UI.
 Uses the May 22, 2025 puzzle (#711).
 """
 
 import asyncio
-from typing import List, Optional
 
 from haive.games.single_player.wordle.agent import WordConnectionsAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
@@ -18,7 +16,7 @@ class WordConnectionsUI:
     def __init__(self):
         self.config = WordConnectionsAgentConfig(visualize=True)
         self.agent = WordConnectionsAgent(self.config)
-        self.state: Optional[WordConnectionsState] = None
+        self.state: WordConnectionsState | None = None
 
     def display_grid(self, state: WordConnectionsState):
         """Display the game grid in a nice format."""

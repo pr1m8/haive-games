@@ -2,7 +2,6 @@
 
 from collections import Counter
 from enum import IntEnum
-from typing import Dict, List, Optional
 
 from haive.games.cards.card.components.scoring import HandEvaluator, HandRank
 from haive.games.cards.card.components.standard import StandardCard, StandardRank
@@ -27,8 +26,8 @@ class PokerHandRank(HandRank[StandardCard]):
     """Detailed poker hand ranking."""
 
     hand_type: PokerHandType
-    hand_cards: List[StandardCard] = []
-    kicker_cards: List[StandardCard] = []
+    hand_cards: list[StandardCard] = []
+    kicker_cards: list[StandardCard] = []
 
     def __str__(self) -> str:
         """Human-readable description of the hand."""
@@ -68,7 +67,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
 
     @classmethod
     def evaluate(
-        cls, cards: List[StandardCard], context: Optional[Dict] = None
+        cls, cards: list[StandardCard], context: dict | None = None
     ) -> PokerHandRank:
         """Evaluate a poker hand to determine its rank."""
         context = context or {}
@@ -128,8 +127,8 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
 
     @classmethod
     def _check_royal_flush(
-        cls, cards: List[StandardCard], aces_high: bool
-    ) -> Optional[PokerHandRank]:
+        cls, cards: list[StandardCard], aces_high: bool
+    ) -> PokerHandRank | None:
         """Check for a royal flush (A-K-Q-J-10 of same suit)."""
         # First check if there's a straight flush
         straight_flush = cls._check_straight_flush(cards, aces_high)
@@ -155,8 +154,8 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
 
     @classmethod
     def _check_straight_flush(
-        cls, cards: List[StandardCard], aces_high: bool
-    ) -> Optional[PokerHandRank]:
+        cls, cards: list[StandardCard], aces_high: bool
+    ) -> PokerHandRank | None:
         """Check for a straight flush."""
         # Group by suit
         by_suit = {}
@@ -194,9 +193,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         return None
 
     @classmethod
-    def _check_four_of_a_kind(
-        cls, cards: List[StandardCard]
-    ) -> Optional[PokerHandRank]:
+    def _check_four_of_a_kind(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for four of a kind."""
         # Count cards by rank
         rank_counts = Counter(card.rank for card in cards)
@@ -226,7 +223,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         )
 
     @classmethod
-    def _check_full_house(cls, cards: List[StandardCard]) -> Optional[PokerHandRank]:
+    def _check_full_house(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for a full house (three of a kind + pair)."""
         # Count cards by rank
         rank_counts = Counter(card.rank for card in cards)
@@ -266,7 +263,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         )
 
     @classmethod
-    def _check_flush(cls, cards: List[StandardCard]) -> Optional[PokerHandRank]:
+    def _check_flush(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for a flush (5+ cards of same suit)."""
         # Group by suit
         by_suit = {}
@@ -297,8 +294,8 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
 
     @classmethod
     def _find_straight(
-        cls, sorted_cards: List[StandardCard], aces_high: bool
-    ) -> Optional[List[StandardCard]]:
+        cls, sorted_cards: list[StandardCard], aces_high: bool
+    ) -> list[StandardCard] | None:
         """Find a straight in a sorted list of cards."""
         if len(sorted_cards) < 5:
             return None
@@ -347,8 +344,8 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
 
     @classmethod
     def _check_straight(
-        cls, cards: List[StandardCard], aces_high: bool
-    ) -> Optional[PokerHandRank]:
+        cls, cards: list[StandardCard], aces_high: bool
+    ) -> PokerHandRank | None:
         """Check for a straight (5 consecutive ranked cards)."""
         straight_cards = cls._find_straight(cards, aces_high)
 
@@ -365,9 +362,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         return None
 
     @classmethod
-    def _check_three_of_a_kind(
-        cls, cards: List[StandardCard]
-    ) -> Optional[PokerHandRank]:
+    def _check_three_of_a_kind(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for three of a kind."""
         # Count cards by rank
         rank_counts = Counter(card.rank for card in cards)
@@ -397,7 +392,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         )
 
     @classmethod
-    def _check_two_pair(cls, cards: List[StandardCard]) -> Optional[PokerHandRank]:
+    def _check_two_pair(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for two pair."""
         # Count cards by rank
         rank_counts = Counter(card.rank for card in cards)
@@ -428,7 +423,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         )
 
     @classmethod
-    def _check_pair(cls, cards: List[StandardCard]) -> Optional[PokerHandRank]:
+    def _check_pair(cls, cards: list[StandardCard]) -> PokerHandRank | None:
         """Check for a pair."""
         # Count cards by rank
         rank_counts = Counter(card.rank for card in cards)
@@ -458,7 +453,7 @@ class PokerHandEvaluator(HandEvaluator[StandardCard]):
         )
 
     @classmethod
-    def _check_high_card(cls, cards: List[StandardCard]) -> PokerHandRank:
+    def _check_high_card(cls, cards: list[StandardCard]) -> PokerHandRank:
         """Return high card evaluation."""
         high_card = [cards[0]]
         kickers = cards[1:5]

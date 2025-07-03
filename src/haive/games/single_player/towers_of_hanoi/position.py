@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import computed_field, field_validator
 
 from haive.games.framework.core.position import Position
 

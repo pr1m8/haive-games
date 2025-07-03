@@ -14,7 +14,7 @@ and can be used as a starting point for more complex implementations.
 import uuid
 
 from haive.games.chess.agent import ChessAgent
-from haive.games.chess.config import ChessAgentConfig
+from haive.games.chess.config import ChessConfig
 from haive.games.chess.state import ChessState
 
 
@@ -47,13 +47,12 @@ def run_chess_game(thread_id: str = None):
 
     The function handles errors gracefully and reports the final game result.
     """
-
     # Create thread ID
     thread_id = thread_id or f"chess_{uuid.uuid4().hex[:8]}"
     print(f"🧵 Starting chess game with thread_id: {thread_id}")
 
     # Create configuration
-    config = ChessAgentConfig(name="Chess Game", enable_analysis=True, max_moves=200)
+    config = ChessConfig(name="Chess Game", enable_analysis=True, max_moves=200)
 
     # Create agent
     agent = ChessAgent(config)

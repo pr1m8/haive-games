@@ -8,7 +8,7 @@ This module provides data models for the Texas Hold'em game, including:
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -94,8 +94,8 @@ class HandEvaluation(BaseModel):
     hand_rank: HandRank = Field(description="Rank of the hand")
     strength: float = Field(description="Hand strength (0-1)")
     description: str = Field(description="Human-readable description")
-    kickers: List[str] = Field(default_factory=list, description="Kicker cards")
-    made_hand: List[str] = Field(
+    kickers: list[str] = Field(default_factory=list, description="Kicker cards")
+    made_hand: list[str] = Field(
         default_factory=list, description="Cards that make the hand"
     )
 
@@ -107,7 +107,7 @@ class PlayerDecisionModel(BaseModel):
     amount: int = Field(default=0, description="Amount for bet/raise")
     reasoning: str = Field(description="Reasoning for the decision")
     confidence: float = Field(default=0.5, description="Confidence in decision (0-1)")
-    hand_strength_estimate: Optional[str] = Field(
+    hand_strength_estimate: str | None = Field(
         default=None, description="Estimated hand strength"
     )
 
@@ -132,10 +132,10 @@ class PokerAnalysis(BaseModel):
     hand_strength: float = Field(description="Estimated hand strength (0-1)")
     pot_odds: float = Field(description="Current pot odds")
     position_advantage: str = Field(description="Position assessment")
-    opponent_analysis: List[str] = Field(
+    opponent_analysis: list[str] = Field(
         default_factory=list, description="Analysis of opponents"
     )
-    recommended_actions: List[str] = Field(
+    recommended_actions: list[str] = Field(
         default_factory=list, description="Recommended actions in order of preference"
     )
     bluff_potential: float = Field(default=0.0, description="Bluff potential (0-1)")
@@ -145,7 +145,7 @@ class PokerAnalysis(BaseModel):
 class GameSituationAnalysis(BaseModel):
     """Analysis of the current game situation."""
 
-    stack_sizes: Dict[str, int] = Field(
+    stack_sizes: dict[str, int] = Field(
         default_factory=dict, description="Stack sizes of all players"
     )
     pot_size: int = Field(description="Current pot size")
@@ -160,7 +160,7 @@ class BettingDecision(BaseModel):
 
     primary_action: PokerAction = Field(description="Primary action to take")
     bet_size: int = Field(default=0, description="Bet/raise size if applicable")
-    alternative_action: Optional[PokerAction] = Field(
+    alternative_action: PokerAction | None = Field(
         default=None, description="Alternative action if primary fails"
     )
     reasoning: str = Field(description="Detailed reasoning for the decision")
@@ -187,7 +187,7 @@ class OpponentModel(BaseModel):
     fold_to_aggression: float = Field(
         default=0.5, description="Likelihood to fold to aggression (0-1)"
     )
-    notes: List[str] = Field(default_factory=list, description="Observational notes")
+    notes: list[str] = Field(default_factory=list, description="Observational notes")
 
 
 class PokerHandHistory(BaseModel):
@@ -197,10 +197,10 @@ class PokerHandHistory(BaseModel):
     winner: str = Field(description="Winner of the hand")
     winning_hand: HandEvaluation = Field(description="Winning hand details")
     final_pot: int = Field(description="Final pot size")
-    actions: List[Dict[str, Any]] = Field(
+    actions: list[dict[str, Any]] = Field(
         default_factory=list, description="All actions taken during the hand"
     )
-    showdown_cards: Dict[str, List[str]] = Field(
+    showdown_cards: dict[str, list[str]] = Field(
         default_factory=dict, description="Cards shown at showdown"
     )
 
@@ -215,9 +215,9 @@ class TableDynamics(BaseModel):
         description="Description of stack size distribution"
     )
     recent_action: str = Field(description="Summary of recent action/trends")
-    player_types: Dict[str, str] = Field(
+    player_types: dict[str, str] = Field(
         default_factory=dict, description="Categorization of each player type"
     )
-    opportunities: List[str] = Field(
+    opportunities: list[str] = Field(
         default_factory=list, description="Identified opportunities for exploitation"
     )

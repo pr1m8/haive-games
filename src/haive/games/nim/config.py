@@ -9,7 +9,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
 from haive.games.framework.base.config import GameConfig
-from haive.games.nim.engines import default_nim_engines
+from haive.games.nim.engines import nim_engines
 from haive.games.nim.state import NimState
 
 
@@ -25,7 +25,7 @@ class NimConfig(GameConfig):
 
     state_schema: type[NimState] = Field(default=NimState)
     engines: dict[str, AugLLMConfig] = Field(
-        default=default_nim_engines, description="Config for the Nim agent."
+        default=nim_engines, description="Config for the Nim agent."
     )
     enable_analysis: bool = Field(
         default=True, description="Whether to enable analysis."
@@ -45,7 +45,7 @@ class NimConfig(GameConfig):
         """
         return cls(
             state_schema=NimState,
-            engines=default_nim_engines,
+            engines=nim_engines,
             enable_analysis=True,
             visualize=True,
             pile_sizes=[3, 5, 7],

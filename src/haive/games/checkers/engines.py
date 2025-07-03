@@ -60,18 +60,21 @@ def generate_move_prompt(color: str) -> ChatPromptTemplate:
                 "- 'b' = black piece\n"
                 "- 'B' = black king\n\n"
                 "OUTPUT FORMAT (CheckersPlayerDecision):\n"
-                "{\n"
-                '  "move": {\n'
+                "```\n"
+                "{{\n"
+                '  "move": {{\n'
                 '    "from_position": "EXACT_FROM_POSITION",\n'
                 '    "to_position": "EXACT_TO_POSITION",\n'
                 f'    "player": "{color}",\n'
                 '    "is_jump": true/false,\n'
                 '    "captured_position": "position_if_jump_else_null"\n'
-                "  },\n"
+                "  }},\n"
                 '  "reasoning": "Your strategic reasoning",\n'
                 '  "evaluation": "Position evaluation",\n'
                 '  "alternatives": ["other moves considered"]\n'
-                "}",
+                "}}\n"
+                "```\n\n"
+                "NOTE: You MUST only use this exact format above for your response.",
             ),
             (
                 "human",
@@ -128,12 +131,15 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
                 "3. Immediate threats and opportunities\n"
                 "4. Long-term strategic plans\n\n"
                 "OUTPUT FORMAT (CheckersAnalysis):\n"
-                "{\n"
+                "```\n"
+                "{{\n"
                 '  "material_advantage": "description of material balance",\n'
                 '  "control_of_center": "assessment of center control",\n'
                 '  "suggested_moves": ["move1", "move2", "move3"],\n'
                 '  "positional_evaluation": "overall position assessment"\n'
-                "}",
+                "}}\n"
+                "```\n\n"
+                "NOTE: You MUST only use this exact format above for your response.",
             ),
             (
                 "human",
@@ -142,6 +148,7 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
                 "{board}\n\n"
                 "Game State:\n"
                 "- Turn: {turn}\n"
+                "- Color: {color}\n"
                 "- Captured - Red: {captured_red}, Black: {captured_black}\n"
                 "- Recent moves: {move_history}\n\n"
                 "Provide strategic analysis.",

@@ -11,7 +11,6 @@ import sys
 
 from haive.games.mastermind.agent import MastermindAgent
 from haive.games.mastermind.config import MastermindConfig
-from haive.games.mastermind.models import ColorCode
 
 
 def parse_args():

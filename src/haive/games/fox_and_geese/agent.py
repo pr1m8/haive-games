@@ -6,7 +6,7 @@ to generate moves and analyze positions in the game.
 
 import logging
 import time
-from typing import Any, Dict, Union
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_game_state(
-    state_input: Union[Dict[str, Any], FoxAndGeeseState],
+    state_input: dict[str, Any] | FoxAndGeeseState,
 ) -> FoxAndGeeseState:
     """Ensure input is converted to FoxAndGeeseState.
 
@@ -52,16 +52,15 @@ def ensure_game_state(
     if isinstance(state_input, FoxAndGeeseState):
         logger.info("ensure_game_state: Input is already FoxAndGeeseState")
         return state_input
-    elif isinstance(state_input, Command):
+    if isinstance(state_input, Command):
         logger.info("ensure_game_state: Input is a Command, extracting state")
         # Attempt to extract state from Command
         if hasattr(state_input, "state") and state_input.state:
             return ensure_game_state(state_input.state)
-        else:
-            logger.error("ensure_game_state: Command does not have state attribute")
-            # Initialize a new state as fallback
-            return FoxAndGeeseState.initialize()
-    elif isinstance(state_input, dict):
+        logger.error("ensure_game_state: Command does not have state attribute")
+        # Initialize a new state as fallback
+        return FoxAndGeeseState.initialize()
+    if isinstance(state_input, dict):
 
         try:
             logger.info(
@@ -113,7 +112,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         if not UI_AVAILABLE:
             logger.warning("Rich UI not available - falling back to text output")
 
-    def initialize_game(self, state: FoxAndGeeseState) -> Dict[str, Any]:
+    def initialize_game(self, state: FoxAndGeeseState) -> dict[str, Any]:
         """Initialize a new Fox and Geese game.
 
         Args:
@@ -146,7 +145,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
     def prepare_move_context(
         self, state: FoxAndGeeseState, player: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare context for move generation.
 
         Args:
@@ -177,7 +176,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
     def prepare_analysis_context(
         self, state: FoxAndGeeseState, player: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare context for position analysis.
 
         Args:
@@ -215,17 +214,17 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             # Already the right type
             logger.debug("Response is already FoxAndGeeseMove")
             return response
-        elif hasattr(response, "content"):
+        if hasattr(response, "content"):
             # AIMessage with content
             if isinstance(response.content, FoxAndGeeseMove):
                 # Content is already the structured object
                 logger.debug("Response content is FoxAndGeeseMove")
                 return response.content
-            elif isinstance(response.content, dict):
+            if isinstance(response.content, dict):
                 # Content is a dict, convert to FoxAndGeeseMove
                 logger.debug("Converting response content dict to FoxAndGeeseMove")
                 return FoxAndGeeseMove.model_validate(response.content)
-            elif isinstance(response.content, str):
+            if isinstance(response.content, str):
                 # String content - try to parse structured data from it
                 logger.debug(
                     "Received string content, trying to extract structured data"
@@ -280,7 +279,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             tool_call = response.tool_calls[0]
             if hasattr(tool_call, "args") and isinstance(tool_call.args, dict):
                 return FoxAndGeeseMove.model_validate(tool_call.args)
-            elif hasattr(tool_call, "function") and "arguments" in tool_call.function:
+            if hasattr(tool_call, "function") and "arguments" in tool_call.function:
                 try:
                     args = json.loads(tool_call.function["arguments"])
                     return FoxAndGeeseMove.model_validate(args)
@@ -451,16 +450,15 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                         logger.info(f"Applying fox move: {move}")
                         new_state = self.state_manager.apply_move(game_state, move)
                         return new_state
-                    else:
-                        logger.warning(
-                            f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
-                        )
-                        if attempt == max_attempts - 1:
-                            # Last attempt, use fallback
-                            move = self._get_legal_move_fallback(game_state, "fox")
-                            logger.info(f"Using fallback move: {move}")
-                            new_state = self.state_manager.apply_move(game_state, move)
-                            return new_state
+                    logger.warning(
+                        f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                    )
+                    if attempt == max_attempts - 1:
+                        # Last attempt, use fallback
+                        move = self._get_legal_move_fallback(game_state, "fox")
+                        logger.info(f"Using fallback move: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
 
                 except Exception as e:
                     logger.error(
@@ -534,16 +532,15 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                         logger.info(f"Applying geese move: {move}")
                         new_state = self.state_manager.apply_move(game_state, move)
                         return new_state
-                    else:
-                        logger.warning(
-                            f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
-                        )
-                        if attempt == max_attempts - 1:
-                            # Last attempt, use fallback
-                            move = self._get_legal_move_fallback(game_state, "goose")
-                            logger.info(f"Using fallback move: {move}")
-                            new_state = self.state_manager.apply_move(game_state, move)
-                            return new_state
+                    logger.warning(
+                        f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                    )
+                    if attempt == max_attempts - 1:
+                        # Last attempt, use fallback
+                        move = self._get_legal_move_fallback(game_state, "goose")
+                        logger.info(f"Using fallback move: {move}")
+                        new_state = self.state_manager.apply_move(game_state, move)
+                        return new_state
 
                 except Exception as e:
                     logger.error(
@@ -680,9 +677,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 if hasattr(tool_call, "args") and isinstance(tool_call.args, dict):
                     analysis = FoxAndGeeseAnalysis.model_validate(tool_call.args)
                     return str(analysis)
-                elif (
-                    hasattr(tool_call, "function") and "arguments" in tool_call.function
-                ):
+                if hasattr(tool_call, "function") and "arguments" in tool_call.function:
                     args = json.loads(tool_call.function["arguments"])
                     analysis = FoxAndGeeseAnalysis.model_validate(args)
                     return str(analysis)
@@ -704,10 +699,10 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             if hasattr(response, "content"):
                 if isinstance(response.content, FoxAndGeeseAnalysis):
                     return str(response.content)
-                elif isinstance(response.content, dict):
+                if isinstance(response.content, dict):
                     analysis = FoxAndGeeseAnalysis.model_validate(response.content)
                     return str(analysis)
-                elif isinstance(response.content, str):
+                if isinstance(response.content, str):
                     # Try to extract JSON from the string
                     json_match = re.search(r"\{.*\}", response.content, re.DOTALL)
                     if json_match:
@@ -732,8 +727,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             # Return a simple analysis string as fallback
             if perspective == "fox":
                 return "Fox analysis: The fox should aim to capture geese while maintaining mobility."
-            else:
-                return "Geese analysis: The geese should coordinate to restrict the fox's movement."
+            return "Geese analysis: The geese should coordinate to restrict the fox's movement."
 
     def should_continue_game(self, state: FoxAndGeeseState) -> bool:
         """Determine if the game should continue.

@@ -238,72 +238,71 @@ def run_clue_game(debug: bool = False, max_turns: int = 10, delay: float = 1.0):
                 ui.display_state(state)
                 ui.show_game_over(state)
                 break
-            else:
-                # Find any refuting cards
-                other_player = "player2" if player == "player1" else "player1"
-                other_player_cards = (
-                    state.player2_cards if player == "player1" else state.player1_cards
+            # Find any refuting cards
+            other_player = "player2" if player == "player1" else "player1"
+            other_player_cards = (
+                state.player2_cards if player == "player1" else state.player1_cards
+            )
+
+            refuting_cards = []
+
+            # Check if other player has any matching cards
+            if guess.suspect.value in other_player_cards:
+                refuting_cards.append(
+                    ClueCard(name=guess.suspect.value, card_type=CardType.SUSPECT)
+                )
+            if guess.weapon.value in other_player_cards:
+                refuting_cards.append(
+                    ClueCard(name=guess.weapon.value, card_type=CardType.WEAPON)
+                )
+            if guess.room.value in other_player_cards:
+                refuting_cards.append(
+                    ClueCard(name=guess.room.value, card_type=CardType.ROOM)
                 )
 
-                refuting_cards = []
+            if refuting_cards:
+                # Other player refutes with a random card
+                refuting_card = random.choice(refuting_cards)
+                response = ClueResponse(
+                    is_correct=False,
+                    responding_player=other_player,
+                    refuting_card=refuting_card,
+                )
+            else:
+                # No one can refute
+                response = ClueResponse(
+                    is_correct=False,
+                    responding_player=None,
+                    refuting_card=None,
+                )
 
-                # Check if other player has any matching cards
-                if guess.suspect.value in other_player_cards:
-                    refuting_cards.append(
-                        ClueCard(name=guess.suspect.value, card_type=CardType.SUSPECT)
-                    )
-                if guess.weapon.value in other_player_cards:
-                    refuting_cards.append(
-                        ClueCard(name=guess.weapon.value, card_type=CardType.WEAPON)
-                    )
-                if guess.room.value in other_player_cards:
-                    refuting_cards.append(
-                        ClueCard(name=guess.room.value, card_type=CardType.ROOM)
-                    )
+            # Show the response
+            ui.show_response(response, player)
 
-                if refuting_cards:
-                    # Other player refutes with a random card
-                    refuting_card = random.choice(refuting_cards)
-                    response = ClueResponse(
-                        is_correct=False,
-                        responding_player=other_player,
-                        refuting_card=refuting_card,
-                    )
-                else:
-                    # No one can refute
-                    response = ClueResponse(
-                        is_correct=False,
-                        responding_player=None,
-                        refuting_card=None,
-                    )
+            # Update state
+            state.guesses.append(guess)
+            state.responses.append(response)
+            state.current_player = "player2" if player == "player1" else "player1"
 
-                # Show the response
-                ui.show_response(response, player)
+            # Display updated state
+            ui.display_state(state)
+            time.sleep(delay)
 
-                # Update state
-                state.guesses.append(guess)
-                state.responses.append(response)
-                state.current_player = "player2" if player == "player1" else "player1"
-
-                # Display updated state
-                ui.display_state(state)
-                time.sleep(delay)
-
-                # Add new hypotheses
-                if player == "player1":
-                    # Update hypothesis based on new information
-                    player1_hypothesis.confidence += 0.1
-                    player1_hypothesis.reasoning += " Updated with new information."
-                    state = ClueStateManager.add_analysis(
-                        state, "player1", player1_hypothesis.to_dict()
-                    )
-                else:
-                    # Update hypothesis based on new information
-                    player2_hypothesis.confidence += 0.15
-                    player2_hypothesis.reasoning += " Getting closer to the solution."
-                    state = ClueStateManager.add_analysis(
-                        state, "player2", player2_hypothesis.to_dict()
-                    )
+            # Add new hypotheses
+            if player == "player1":
+                # Update hypothesis based on new information
+                player1_hypothesis.confidence += 0.1
+                player1_hypothesis.reasoning += " Updated with new information."
+                state = ClueStateManager.add_analysis(
+                    state, "player1", player1_hypothesis.to_dict()
+                )
+            else:
+                # Update hypothesis based on new information
+                player2_hypothesis.confidence += 0.15
+                player2_hypothesis.reasoning += " Getting closer to the solution."
+                state = ClueStateManager.add_analysis(
+                    state, "player2", player2_hypothesis.to_dict()
+                )
 
             # Check if max turns reached
             if len(state.guesses) >= max_turns:

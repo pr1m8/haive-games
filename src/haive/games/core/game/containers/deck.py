@@ -1,5 +1,4 @@
-"""
-Deck classes for card games in the game framework.
+"""Deck classes for card games in the game framework.
 
 This module defines the Deck container type and related classes for card games.
 """
@@ -7,7 +6,7 @@ This module defines the Deck container type and related classes for card games.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from typing import TypeVar
 
 from game_framework.containers.base import GamePieceContainer
 from game_framework.pieces.base import GamePiece
@@ -32,18 +31,16 @@ C = TypeVar("C", bound=Card)
 
 
 class Deck(GamePieceContainer[C]):
-    """
-    A deck of cards.
+    """A deck of cards.
 
     This represents a collection of cards that can be drawn, shuffled, and dealt.
     """
 
     face_down: bool = True  # Whether cards are hidden by default
-    discard_pile: List[C] = Field(default_factory=list)
+    discard_pile: list[C] = Field(default_factory=list)
 
-    def draw(self) -> Optional[C]:
-        """
-        Draw the top card and set its face up/down based on deck configuration.
+    def draw(self) -> C | None:
+        """Draw the top card and set its face up/down based on deck configuration.
 
         Returns:
             The drawn card, or None if deck is empty
@@ -54,9 +51,8 @@ class Deck(GamePieceContainer[C]):
         card.face_up = not self.face_down
         return card
 
-    def deal(self, num_players: int, cards_per_player: int) -> List[List[C]]:
-        """
-        Deal cards to multiple players.
+    def deal(self, num_players: int, cards_per_player: int) -> list[list[C]]:
+        """Deal cards to multiple players.
 
         Args:
             num_players: Number of players to deal to
@@ -66,7 +62,7 @@ class Deck(GamePieceContainer[C]):
             List of lists, where each inner list contains a player's cards
         """
         hands = [[] for _ in range(num_players)]
-        for i in range(cards_per_player):
+        for _i in range(cards_per_player):
             for player in range(num_players):
                 if self.pieces:
                     card = self.draw()
@@ -75,8 +71,7 @@ class Deck(GamePieceContainer[C]):
         return hands
 
     def discard(self, card: C) -> None:
-        """
-        Add a card to the discard pile.
+        """Add a card to the discard pile.
 
         Args:
             card: Card to discard
@@ -84,8 +79,7 @@ class Deck(GamePieceContainer[C]):
         self.discard_pile.append(card)
 
     def recycle_discards(self, shuffle: bool = True) -> None:
-        """
-        Move all cards from discard pile back into the deck.
+        """Move all cards from discard pile back into the deck.
 
         Args:
             shuffle: Whether to shuffle the deck after recycling
@@ -95,9 +89,8 @@ class Deck(GamePieceContainer[C]):
         if shuffle:
             self.shuffle()
 
-    def peek_top(self, count: int = 1) -> List[C]:
-        """
-        Look at top cards without drawing.
+    def peek_top(self, count: int = 1) -> list[C]:
+        """Look at top cards without drawing.
 
         Args:
             count: Number of cards to peek at
@@ -107,9 +100,8 @@ class Deck(GamePieceContainer[C]):
         """
         return self.peek(count)
 
-    def peek_bottom(self, count: int = 1) -> List[C]:
-        """
-        Look at bottom cards without drawing.
+    def peek_bottom(self, count: int = 1) -> list[C]:
+        """Look at bottom cards without drawing.
 
         Args:
             count: Number of cards to peek at
@@ -119,9 +111,8 @@ class Deck(GamePieceContainer[C]):
         """
         return self.pieces[-count:] if count <= len(self.pieces) else self.pieces.copy()
 
-    def draw_bottom(self) -> Optional[C]:
-        """
-        Draw the bottom card.
+    def draw_bottom(self) -> C | None:
+        """Draw the bottom card.
 
         Returns:
             The bottom card, or None if deck is empty
@@ -133,8 +124,7 @@ class Deck(GamePieceContainer[C]):
         return card
 
     def insert(self, card: C, position: int) -> None:
-        """
-        Insert a card at a specific position.
+        """Insert a card at a specific position.
 
         Args:
             card: Card to insert
@@ -148,8 +138,7 @@ class Deck(GamePieceContainer[C]):
         self.pieces.insert(position, card)
 
     def place_on_bottom(self, card: C) -> None:
-        """
-        Place a card on the bottom of the deck.
+        """Place a card on the bottom of the deck.
 
         Args:
             card: Card to place
@@ -188,9 +177,8 @@ class StandardPlayingCardDeck(Deck):
     @classmethod
     def create_standard_deck(
         cls, include_jokers: bool = False
-    ) -> "StandardPlayingCardDeck":
-        """
-        Create a standard 52-card deck.
+    ) -> StandardPlayingCardDeck:
+        """Create a standard 52-card deck.
 
         Args:
             include_jokers: Whether to include jokers in the deck

@@ -6,7 +6,7 @@ to generate moves and analyze positions in the game.
 
 import logging
 import time
-from typing import Any, Dict, Union
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_game_state(
-    state_input: Union[Dict[str, Any], MancalaState, Command],
+    state_input: dict[str, Any] | MancalaState | Command,
 ) -> MancalaState:
     """Ensure input is converted to MancalaState.
 
@@ -38,16 +38,15 @@ def ensure_game_state(
     if isinstance(state_input, MancalaState):
         logger.info("ensure_game_state: Input is already MancalaState")
         return state_input
-    elif isinstance(state_input, Command):
+    if isinstance(state_input, Command):
         logger.info("ensure_game_state: Input is a Command, extracting state")
         # Attempt to extract state from Command
         if hasattr(state_input, "state") and state_input.state:
             return ensure_game_state(state_input.state)
-        else:
-            logger.error("ensure_game_state: Command does not have state attribute")
-            # Initialize a new state as fallback
-            return MancalaState.initialize()
-    elif isinstance(state_input, dict):
+        logger.error("ensure_game_state: Command does not have state attribute")
+        # Initialize a new state as fallback
+        return MancalaState.initialize()
+    if isinstance(state_input, dict):
         try:
             logger.info(
                 f"ensure_game_state: Converting dict to MancalaState, keys: {list(state_input.keys())}"
@@ -349,7 +348,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     logger.error(f"Failed to extract move: {extract_error}")
                     return Command(
                         update={
-                            "error_message": f"Failed to extract move: {str(extract_error)}\nResponse: {response}"
+                            "error_message": f"Failed to extract move: {extract_error!s}\nResponse: {response}"
                         }
                     )
 
@@ -377,7 +376,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         except Exception as e:
             logger.error(f"Critical error in make_move: {e}", exc_info=True)
             # Return error without changing other state
-            return Command(update={"error_message": f"Critical error: {str(e)}"})
+            return Command(update={"error_message": f"Critical error: {e!s}"})
 
     def extract_analysis(self, response: Any) -> Any:
         """Extract analysis from engine response.
@@ -507,7 +506,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     logger.error(f"Failed to extract analysis: {extract_error}")
                     return Command(
                         update={
-                            "error_message": f"Failed to extract analysis: {str(extract_error)}\nResponse: {response}"
+                            "error_message": f"Failed to extract analysis: {extract_error!s}\nResponse: {response}"
                         }
                     )
 
@@ -531,7 +530,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         except Exception as e:
             logger.error(f"Critical error in analyze_position: {e}", exc_info=True)
             # Return empty Command to avoid errors
-            return Command(update={"error_message": f"Critical error: {str(e)}"})
+            return Command(update={"error_message": f"Critical error: {e!s}"})
 
     def visualize_state(self, state):
         """Visualize the current game state.
@@ -641,7 +640,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             except Exception as e:
                 import traceback
 
-                print(f"Error during game execution: {str(e)}")
+                print(f"Error during game execution: {e!s}")
                 traceback.print_exc()
 
                 # Try to run without streaming as a fallback
@@ -649,7 +648,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     print("Attempting to run game without streaming...")
                     return super().run(initial_state, debug=debug)
                 except Exception as fallback_error:
-                    print(f"Fallback also failed: {str(fallback_error)}")
+                    print(f"Fallback also failed: {fallback_error!s}")
                     return initial_state  # Return initial state as fallback
         else:
             # Run without visualization
@@ -658,6 +657,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             except Exception as e:
                 import traceback
 
-                print(f"Error running game: {str(e)}")
+                print(f"Error running game: {e!s}")
                 traceback.print_exc()
                 return initial_state  # Return initial state as fallback

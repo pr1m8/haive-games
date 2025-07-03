@@ -61,7 +61,7 @@ class MastermindConfig(GameConfig):
         return cls(
             name="mastermind",
             state_schema=MastermindState,
-            aug_llm_configs=mastermind_engines,
+            engines=mastermind_engines,
             enable_analysis=True,
             visualize=True,
             max_turns=10,

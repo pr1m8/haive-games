@@ -19,13 +19,13 @@ from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.graph import END, StateGraph
 from langgraph.types import Command
 
-from haive.games.chess.config import ChessAgentConfig
+from haive.games.chess.config import ChessConfig
 from haive.games.chess.state import ChessState
 from haive.games.chess.utils import determine_game_status
 
 
-@register_agent(ChessAgentConfig)
-class ChessAgent(Agent[ChessAgentConfig]):
+@register_agent(ChessConfig)
+class ChessAgent(Agent[ChessConfig]):
     """Chess agent implementation using LangGraph.
 
     This agent implements a complete chess game using language models for
@@ -40,16 +40,16 @@ class ChessAgent(Agent[ChessAgentConfig]):
         - Error handling and fallback moves
 
     Attributes:
-        config (ChessAgentConfig): Configuration for the chess agent
+        config (ChessConfig): Configuration for the chess agent
         engines (Dict[str, Any]): LLM engines for players and analyzers
         graph (StateGraph): LangGraph workflow for the chess game
     """
 
-    def __init__(self, config: ChessAgentConfig):
+    def __init__(self, config: ChessConfig):
         """Initialize the chess agent.
 
         Args:
-            config (ChessAgentConfig): Configuration for the chess agent,
+            config (ChessConfig): Configuration for the chess agent,
                 including LLM engine settings, analysis options, and
                 game parameters.
         """
@@ -277,13 +277,12 @@ class ChessAgent(Agent[ChessAgentConfig]):
                     if attempt < max_attempts:
                         print(f"❌ Invalid move: {move_uci}")
                         continue
-                    else:
-                        # Last attempt failed, use first legal move
-                        print(
-                            f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
-                        )
-                        move_uci = legal_moves[0]
-                        print(f"🔄 Auto-selected: {move_uci}")
+                    # Last attempt failed, use first legal move
+                    print(
+                        f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
+                    )
+                    move_uci = legal_moves[0]
+                    print(f"🔄 Auto-selected: {move_uci}")
 
                 # Apply the move
                 move = chess.Move.from_uci(move_uci)
@@ -324,7 +323,7 @@ class ChessAgent(Agent[ChessAgentConfig]):
                 )
 
             except Exception as e:
-                error_msg = f"Error making move for {color}: {str(e)}"
+                error_msg = f"Error making move for {color}: {e!s}"
                 previous_errors.append(str(e))
                 print(f"❌ Attempt {attempt} failed: {e}")
 
@@ -432,12 +431,11 @@ class ChessAgent(Agent[ChessAgentConfig]):
             if color == "white":
                 white_analysis = state.white_analysis + [analysis_dict]
                 return Command(update={"white_analysis": white_analysis[-5:]})
-            else:
-                black_analysis = state.black_analysis + [analysis_dict]
-                return Command(update={"black_analysis": black_analysis[-5:]})
+            black_analysis = state.black_analysis + [analysis_dict]
+            return Command(update={"black_analysis": black_analysis[-5:]})
 
         except Exception as e:
-            error_msg = f"Error analyzing position for {color}: {str(e)}"
+            error_msg = f"Error analyzing position for {color}: {e!s}"
             print(f"❌ {error_msg}")
             return Command(update={"error_message": error_msg})
 

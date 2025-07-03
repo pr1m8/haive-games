@@ -1,5 +1,4 @@
-"""
-Game engine for the game framework.
+"""Game engine for the game framework.
 
 This module defines the base Game class that serves as the central point
 for game logic, integrating all framework components.
@@ -7,21 +6,13 @@ for game logic, integrating all framework components.
 
 from __future__ import annotations
 
-import random
 import uuid
-from abc import ABC, abstractmethod
-from enum import Enum, auto
+from abc import abstractmethod
+from collections.abc import Callable
+from enum import Enum
 from typing import (
     Any,
-    Callable,
-    Dict,
     Generic,
-    List,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
 )
 
@@ -32,7 +23,7 @@ from game.core.piece import GamePiece
 from game.core.player import Player, PlayerType
 from game.core.position import Position
 from game.core.space import Space
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 # Type variables for generics
 P = TypeVar("P", bound=Position)
@@ -70,7 +61,7 @@ class GameConfiguration(BaseModel):
     allow_ai_players: bool = True
     allow_network_players: bool = True
     enable_observers: bool = True
-    options: Dict[str, Any] = Field(default_factory=dict)
+    options: dict[str, Any] = Field(default_factory=dict)
 
     @field_validator("min_players", "max_players")
     @classmethod
@@ -86,8 +77,7 @@ class GameConfiguration(BaseModel):
 
 
 class Game(BaseModel, Generic[P, T, S, C, M, PL]):
-    """
-    Base class for all games.
+    """Base class for all games.
 
     The Game class ties together all game components and implements the core game loop.
     It manages the game state, players, turns, and rules.
@@ -96,35 +86,34 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     config: GameConfiguration
-    players: List[PL] = Field(default_factory=list)
-    board: Optional[Board[S, P, T]] = None
-    containers: Dict[str, C] = Field(default_factory=dict)
-    pieces: Dict[str, T] = Field(default_factory=dict)
+    players: list[PL] = Field(default_factory=list)
+    board: Board[S, P, T] | None = None
+    containers: dict[str, C] = Field(default_factory=dict)
+    pieces: dict[str, T] = Field(default_factory=dict)
 
     # Game state tracking
     status: GameStatus = GameStatus.NOT_STARTED
     current_player_index: int = 0
     turn_number: int = 0
     round_number: int = 0
-    move_history: List[MoveResult[M]] = Field(default_factory=list)
+    move_history: list[MoveResult[M]] = Field(default_factory=list)
 
     # Result tracking
     result: GameResult = GameResult.UNDETERMINED
-    winners: List[str] = Field(default_factory=list)  # Player IDs
-    scores: Dict[str, int] = Field(default_factory=dict)  # Player ID -> Score
+    winners: list[str] = Field(default_factory=list)  # Player IDs
+    scores: dict[str, int] = Field(default_factory=dict)  # Player ID -> Score
 
     # Event callbacks
-    callbacks: Dict[str, List[Callable]] = Field(default_factory=dict)
+    callbacks: dict[str, list[Callable]] = Field(default_factory=dict)
 
     # Game-specific properties
-    properties: Dict[str, Any] = Field(default_factory=dict)
+    properties: dict[str, Any] = Field(default_factory=dict)
 
     class Config:
         arbitrary_types_allowed = True
 
     def initialize(self) -> None:
-        """
-        Initialize the game.
+        """Initialize the game.
 
         This should be called after adding players and before starting the game.
         """
@@ -154,13 +143,11 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
     @abstractmethod
     def setup_game(self) -> None:
-        """
-        Set up the game-specific components.
+        """Set up the game-specific components.
 
         This should be implemented by subclasses to create the board,
         pieces, and other game elements.
         """
-        pass
 
     def start(self) -> None:
         """Start the game."""
@@ -205,7 +192,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         # Start the next turn
         self.start_turn()
 
-    def get_current_player(self) -> Optional[PL]:
+    def get_current_player(self) -> PL | None:
         """Get the current player."""
         if not self.players:
             return None
@@ -215,9 +202,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         """Check if the game is finished."""
         return self.status == GameStatus.FINISHED
 
-    def finish(self, result: GameResult, winners: List[str] = None) -> None:
-        """
-        Finish the game with a result.
+    def finish(self, result: GameResult, winners: list[str] = None) -> None:
+        """Finish the game with a result.
 
         Args:
             result: Result of the game
@@ -254,8 +240,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
             self._trigger_event("on_resume")
 
     def add_player(self, player: PL) -> None:
-        """
-        Add a player to the game.
+        """Add a player to the game.
 
         Args:
             player: Player to add
@@ -287,9 +272,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         self._trigger_event("on_player_added", player=player)
 
     @abstractmethod
-    def get_valid_moves(self, player_id: str) -> List[M]:
-        """
-        Get all valid moves for a player.
+    def get_valid_moves(self, player_id: str) -> list[M]:
+        """Get all valid moves for a player.
 
         Args:
             player_id: ID of the player
@@ -297,11 +281,9 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Returns:
             List of valid moves
         """
-        pass
 
     def process_move(self, move: M) -> MoveResult[M]:
-        """
-        Process a move from a player.
+        """Process a move from a player.
 
         Args:
             move: Move to process
@@ -343,17 +325,15 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         if self.check_end_condition():
             # Game has ended
             self.determine_winner()
-        else:
-            # Continue to next turn if move was successful
-            if result.status == MoveStatus.SUCCESS:
-                self.end_turn()
+        # Continue to next turn if move was successful
+        elif result.status == MoveStatus.SUCCESS:
+            self.end_turn()
 
         return result
 
     @abstractmethod
     def check_end_condition(self) -> bool:
-        """
-        Check if the game has reached an end condition.
+        """Check if the game has reached an end condition.
 
         Returns:
             True if the game should end, False otherwise
@@ -362,16 +342,13 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
     @abstractmethod
     def determine_winner(self) -> None:
-        """
-        Determine the winner(s) of the game.
+        """Determine the winner(s) of the game.
 
         This should set the result and winners properties.
         """
-        pass
 
-    def get_state_for_player(self, player_id: str) -> Dict[str, Any]:
-        """
-        Get a representation of the game state for a specific player.
+    def get_state_for_player(self, player_id: str) -> dict[str, Any]:
+        """Get a representation of the game state for a specific player.
 
         This should include only information visible to that player.
 
@@ -401,9 +378,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
             "winners": self.winners,
         }
 
-    def get_piece(self, piece_id: str) -> Optional[T]:
-        """
-        Get a piece by ID.
+    def get_piece(self, piece_id: str) -> T | None:
+        """Get a piece by ID.
 
         Args:
             piece_id: ID of the piece
@@ -413,9 +389,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         """
         return self.pieces.get(piece_id)
 
-    def get_container(self, container_id: str) -> Optional[C]:
-        """
-        Get a container by ID.
+    def get_container(self, container_id: str) -> C | None:
+        """Get a container by ID.
 
         Args:
             container_id: ID of the container
@@ -425,9 +400,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         """
         return self.containers.get(container_id)
 
-    def create_position(self, position_data: Dict[str, Any]) -> Optional[P]:
-        """
-        Create a Position object from a dictionary representation.
+    def create_position(self, position_data: dict[str, Any]) -> P | None:
+        """Create a Position object from a dictionary representation.
 
         Args:
             position_data: Dictionary with position data
@@ -439,8 +413,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         raise NotImplementedError
 
     def register_callback(self, event: str, callback: Callable) -> None:
-        """
-        Register a callback for a game event.
+        """Register a callback for a game event.
 
         Args:
             event: Event name
@@ -451,8 +424,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         self.callbacks[event].append(callback)
 
     def unregister_callback(self, event: str, callback: Callable) -> None:
-        """
-        Unregister a callback for a game event.
+        """Unregister a callback for a game event.
 
         Args:
             event: Event name
@@ -462,8 +434,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
             self.callbacks[event].remove(callback)
 
     def _trigger_event(self, event: str, **kwargs) -> None:
-        """
-        Trigger an event, calling all registered callbacks.
+        """Trigger an event, calling all registered callbacks.
 
         Args:
             event: Event name
@@ -477,8 +448,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
                     print(f"Error in {event} callback: {e}")
 
     def set_property(self, key: str, value: Any) -> None:
-        """
-        Set a game property.
+        """Set a game property.
 
         Args:
             key: Property name
@@ -487,8 +457,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         self.properties[key] = value
 
     def get_property(self, key: str, default: Any = None) -> Any:
-        """
-        Get a game property.
+        """Get a game property.
 
         Args:
             key: Property name
@@ -501,14 +470,13 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
 
 class TurnBasedGame(Game[P, T, S, C, M, PL]):
-    """
-    Base class for turn-based games.
+    """Base class for turn-based games.
 
     This adds additional turn management functionality.
     """
 
-    turn_timeout: Optional[int] = None  # Timeout in seconds, None for no timeout
-    turn_actions: Dict[str, int] = Field(
+    turn_timeout: int | None = None  # Timeout in seconds, None for no timeout
+    turn_actions: dict[str, int] = Field(
         default_factory=dict
     )  # Player ID -> Actions taken this turn
     max_actions_per_turn: int = 1
@@ -553,8 +521,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
         self.end_turn()
 
     def record_action(self, player_id: str) -> None:
-        """
-        Record an action taken by a player this turn.
+        """Record an action taken by a player this turn.
 
         Args:
             player_id: ID of the player
@@ -565,8 +532,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
         self.turn_actions[player_id] += 1
 
     def can_take_action(self, player_id: str) -> bool:
-        """
-        Check if a player can take another action this turn.
+        """Check if a player can take another action this turn.
 
         Args:
             player_id: ID of the player
@@ -580,8 +546,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
         return self.turn_actions[player_id] < self.max_actions_per_turn
 
     def process_move(self, move: M) -> MoveResult[M]:
-        """
-        Process a move from a player, tracking actions per turn.
+        """Process a move from a player, tracking actions per turn.
 
         Args:
             move: Move to process
@@ -630,21 +595,19 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
 
 
 class RealTimeGame(Game[P, T, S, C, M, PL]):
-    """
-    Base class for real-time games.
+    """Base class for real-time games.
 
     This adds functionality for games that don't use strict turns.
     """
 
     tick_rate: float = 60.0  # Ticks per second
     current_tick: int = 0
-    action_cooldowns: Dict[str, Dict[str, int]] = Field(
+    action_cooldowns: dict[str, dict[str, int]] = Field(
         default_factory=dict
     )  # Player ID -> Action Type -> Ticks until available
 
     def update(self, delta_time: float) -> None:
-        """
-        Update the game state for a time step.
+        """Update the game state for a time step.
 
         Args:
             delta_time: Time in seconds since last update
@@ -653,7 +616,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
         self.current_tick += 1
 
         # Update cooldowns
-        for player_id, cooldowns in self.action_cooldowns.items():
+        for _player_id, cooldowns in self.action_cooldowns.items():
             for action_type in list(cooldowns.keys()):
                 cooldowns[action_type] -= 1
                 if cooldowns[action_type] <= 0:
@@ -667,17 +630,14 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
     @abstractmethod
     def update_game_state(self, delta_time: float) -> None:
-        """
-        Update the game state for a time step.
+        """Update the game state for a time step.
 
         Args:
             delta_time: Time in seconds since last update
         """
-        pass
 
     def set_cooldown(self, player_id: str, action_type: str, ticks: int) -> None:
-        """
-        Set a cooldown for an action.
+        """Set a cooldown for an action.
 
         Args:
             player_id: ID of the player
@@ -690,8 +650,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
         self.action_cooldowns[player_id][action_type] = ticks
 
     def is_action_on_cooldown(self, player_id: str, action_type: str) -> bool:
-        """
-        Check if an action is on cooldown.
+        """Check if an action is on cooldown.
 
         Args:
             player_id: ID of the player
@@ -707,8 +666,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
         )
 
     def process_move(self, move: M) -> MoveResult[M]:
-        """
-        Process a move from a player, checking cooldowns.
+        """Process a move from a player, checking cooldowns.
 
         Args:
             move: Move to process
@@ -749,9 +707,8 @@ class GameFactory:
     """Factory for creating game instances."""
 
     @staticmethod
-    def create_game(game_type: Type[Game], config: GameConfiguration, **kwargs) -> Game:
-        """
-        Create a game instance.
+    def create_game(game_type: type[Game], config: GameConfiguration, **kwargs) -> Game:
+        """Create a game instance.
 
         Args:
             game_type: Type of game to create

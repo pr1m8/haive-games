@@ -4,7 +4,7 @@ This module provides rich console UI components for visualizing the Dominoes gam
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from rich.align import Align
 from rich.box import ROUNDED
@@ -14,7 +14,6 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.dominoes.models import DominoMove, DominoTile
 from haive.games.dominoes.state import DominoesState
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ logger = logging.getLogger(__name__)
 class DominoesUI:
     """Rich UI for Dominoes game visualization."""
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI.
 
         Args:
@@ -31,7 +30,7 @@ class DominoesUI:
         """
         self.console = console or Console()
 
-    def extract_game_state(self, state_data: Any) -> Optional[DominoesState]:
+    def extract_game_state(self, state_data: Any) -> DominoesState | None:
         """Extract DominoesState from various input formats.
 
         Args:
@@ -62,7 +61,7 @@ class DominoesUI:
                     return command_update
 
                 # Handle Command objects where update is a dict
-                elif isinstance(command_update, dict):
+                if isinstance(command_update, dict):
                     if self._is_valid_game_state_dict(command_update):
                         try:
                             logger.debug(
@@ -553,7 +552,7 @@ The game will be played by AI agents with real-time visualization!
                 )
                 result_text += f"Final Score: {game_state.scores.get(winner, 0)}\n"
             else:
-                result_text = f"[bold yellow]Game ended in a draw![/bold yellow]\n"
+                result_text = "[bold yellow]Game ended in a draw![/bold yellow]\n"
 
             result_text += "\nFinal Pip Counts:"
             for player, count in pip_counts.items():

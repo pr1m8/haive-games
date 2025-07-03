@@ -11,7 +11,6 @@ try:
         ActionType,
         GamePhase,
         MafiaAction,
-        MafiaPlayerDecision,
         PlayerRole,
     )
 
@@ -38,13 +37,6 @@ except Exception as e:
 print("\nVerifying imports from the aug_llms module...")
 
 try:
-    from aug_llms import (
-        get_mafia_analyzer,
-        psychology_analyzer,
-        strategy_analyzer,
-        suspicion_analyzer,
-        voting_analyzer,
-    )
 
     print("✅ Successfully imported aug_llms module functions and objects")
 

@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Any, Dict, Union
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_game_state(
-    state_input: Union[Dict[str, Any], MastermindState, Command],
+    state_input: dict[str, Any] | MastermindState | Command,
 ) -> MastermindState:
     """Ensure input is converted to MastermindState.
 
@@ -41,16 +41,15 @@ def ensure_game_state(
     if isinstance(state_input, MastermindState):
         logger.info("ensure_game_state: Input is already MastermindState")
         return state_input
-    elif isinstance(state_input, Command):
+    if isinstance(state_input, Command):
         logger.info("ensure_game_state: Input is a Command, extracting state")
         # Attempt to extract state from Command
         if hasattr(state_input, "state") and state_input.state:
             return ensure_game_state(state_input.state)
-        else:
-            logger.error("ensure_game_state: Command does not have state attribute")
-            # Initialize a new state as fallback
-            return MastermindState.initialize()
-    elif isinstance(state_input, dict):
+        logger.error("ensure_game_state: Command does not have state attribute")
+        # Initialize a new state as fallback
+        return MastermindState.initialize()
+    if isinstance(state_input, dict):
         try:
             logger.info(
                 f"ensure_game_state: Converting dict to MastermindState, keys: {list(state_input.keys())}"

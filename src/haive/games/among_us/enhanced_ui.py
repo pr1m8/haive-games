@@ -6,7 +6,7 @@ with better styling, animated visualizations, and improved game information disp
 
 import logging
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from rich.box import DOUBLE, ROUNDED
 from rich.console import Console
@@ -41,7 +41,7 @@ class EnhancedAmongUsUI:
         - Game over screens with detailed statistics
     """
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI.
 
         Args:
@@ -115,7 +115,7 @@ class EnhancedAmongUsUI:
             "cross": "┼",
         }
 
-    def extract_game_state(self, state_data: Any) -> Optional[AmongUsState]:
+    def extract_game_state(self, state_data: Any) -> AmongUsState | None:
         """Extract AmongUsState from various input formats.
 
         Args:
@@ -143,7 +143,7 @@ class EnhancedAmongUsUI:
                     return command_update
 
                 # Handle Command objects where update is a dict
-                elif isinstance(command_update, dict):
+                if isinstance(command_update, dict):
                     if self._is_valid_game_state_dict(command_update):
                         try:
                             return AmongUsState.model_validate(command_update)
@@ -215,7 +215,7 @@ class EnhancedAmongUsUI:
         return all(field in data for field in required_fields)
 
     def create_map_visualization(
-        self, state: AmongUsState, player_id: Optional[str] = None
+        self, state: AmongUsState, player_id: str | None = None
     ) -> Panel:
         """Create a visual representation of the map with rooms, vents, and players.
 
@@ -945,8 +945,8 @@ class EnhancedAmongUsUI:
         )
 
     def create_sabotage_panel(
-        self, state: AmongUsState, player_id: Optional[str] = None
-    ) -> Optional[Panel]:
+        self, state: AmongUsState, player_id: str | None = None
+    ) -> Panel | None:
         """Create a panel showing active sabotage information if any.
 
         Args:
@@ -1069,7 +1069,7 @@ class EnhancedAmongUsUI:
             padding=(1, 1),
         )
 
-    def create_legal_moves_panel(self, legal_moves: List[Dict[str, Any]]) -> Panel:
+    def create_legal_moves_panel(self, legal_moves: list[dict[str, Any]]) -> Panel:
         """Create a panel showing legal moves.
 
         Args:
@@ -1177,8 +1177,8 @@ class EnhancedAmongUsUI:
     def create_layout(
         self,
         state: AmongUsState,
-        player_id: Optional[str] = None,
-        legal_moves: Optional[List[Dict[str, Any]]] = None,
+        player_id: str | None = None,
+        legal_moves: list[dict[str, Any]] | None = None,
     ) -> Layout:
         """Create the complete layout for the game UI.
 
@@ -1322,8 +1322,8 @@ class EnhancedAmongUsUI:
     def display_state(
         self,
         state_data: Any,
-        player_id: Optional[str] = None,
-        legal_moves: Optional[List[Dict[str, Any]]] = None,
+        player_id: str | None = None,
+        legal_moves: list[dict[str, Any]] | None = None,
     ) -> bool:
         """Display the game state using enhanced rich UI.
 
@@ -1424,7 +1424,7 @@ The game will be played by AI agents with enhanced visualization!
 
     def animate_move(
         self,
-        move: Dict[str, Any],
+        move: dict[str, Any],
         state_before: AmongUsState,
         state_after: AmongUsState,
         player_id: str,
@@ -1465,7 +1465,7 @@ The game will be played by AI agents with enhanced visualization!
         self.display_state(state_after, player_id)
 
     def _format_move_description(
-        self, move: Dict[str, Any], player_id: str, state: AmongUsState
+        self, move: dict[str, Any], player_id: str, state: AmongUsState
     ) -> str:
         """Format a move description for display.
 

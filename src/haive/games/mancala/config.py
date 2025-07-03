@@ -1,7 +1,7 @@
 """Configuration for the Mancala game agent.
 
 This module defines the configuration for the Mancala game agent,
-which includes the game name, state schema, AugLLM configurations,
+which includes the game name, state schema, engine configurations,
 enable_analysis, visualize, and stones_per_pit.
 """
 
@@ -17,13 +17,13 @@ class MancalaConfig(GameConfig):
     """Configuration for the Mancala game agent.
 
     This class defines the configuration for the Mancala game agent,
-    which includes the game name, state schema, AugLLM configurations,
+    which includes the game name, state schema, engine configurations,
     enable_analysis, visualize, and stones_per_pit.
     """
 
     name: str = Field(default="mancala", description="Name of the game")
     state_schema: type[MancalaState] = Field(default=MancalaState)
-    aug_llm_configs: dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default=mancala_engines, description="Configs for the Mancala engines"
     )
     enable_analysis: bool = Field(
@@ -44,7 +44,7 @@ class MancalaConfig(GameConfig):
         return cls(
             name="mancala",
             state_schema=MancalaState,
-            aug_llm_configs=mancala_engines,
+            engines=mancala_engines,
             enable_analysis=True,
             visualize=True,
             stones_per_pit=4,

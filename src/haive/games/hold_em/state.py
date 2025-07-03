@@ -8,7 +8,7 @@ Key fixes:
 
 import operator
 from enum import Enum
-from typing import Annotated, Any, Dict, List, Literal, Optional
+from typing import Annotated, Any
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -55,7 +55,7 @@ class PlayerState(BaseModel):
     player_id: str = Field(description="Unique player identifier")
     name: str = Field(description="Player name")
     chips: int = Field(description="Current chip count")
-    hole_cards: List[str] = Field(
+    hole_cards: list[str] = Field(
         default_factory=list, description="Player's hole cards"
     )
     status: PlayerStatus = Field(
@@ -69,7 +69,7 @@ class PlayerState(BaseModel):
     is_big_blind: bool = Field(default=False, description="Is big blind this hand")
 
     # Action history for this hand - using Annotated for multiple updates
-    actions_this_hand: Annotated[List[Dict[str, Any]], operator.add] = Field(
+    actions_this_hand: Annotated[list[dict[str, Any]], operator.add] = Field(
         default_factory=list, description="Actions taken this hand"
     )
 
@@ -87,7 +87,7 @@ class HoldemState(BaseModel):
 
     # Game setup
     game_id: str = Field(description="Unique game identifier")
-    players: List[PlayerState] = Field(description="All players in the game")
+    players: list[PlayerState] = Field(description="All players in the game")
     max_players: int = Field(default=6, description="Maximum players at table")
 
     # Current hand state
@@ -96,11 +96,11 @@ class HoldemState(BaseModel):
     big_blind: int = Field(default=20, description="Big blind amount")
 
     # Cards
-    community_cards: List[str] = Field(
+    community_cards: list[str] = Field(
         default_factory=list, description="Community cards"
     )
-    deck: List[str] = Field(default_factory=list, description="Remaining deck")
-    burned_cards: List[str] = Field(default_factory=list, description="Burned cards")
+    deck: list[str] = Field(default_factory=list, description="Remaining deck")
+    burned_cards: list[str] = Field(default_factory=list, description="Burned cards")
 
     # Game flow - FIXED: Use Annotated with reducer for concurrent updates
     current_phase: GamePhase = Field(
@@ -115,7 +115,7 @@ class HoldemState(BaseModel):
 
     # Betting state
     pot: int = Field(default=0, description="Main pot amount")
-    side_pots: List[Dict[str, Any]] = Field(
+    side_pots: list[dict[str, Any]] = Field(
         default_factory=list, description="Side pots"
     )
     current_bet: Annotated[int, last_value_reducer] = Field(
@@ -124,35 +124,33 @@ class HoldemState(BaseModel):
     min_raise: int = Field(default=0, description="Minimum raise amount")
 
     # Action tracking - using Annotated for multiple updates
-    actions_this_round: Annotated[List[Dict[str, Any]], operator.add] = Field(
+    actions_this_round: Annotated[list[dict[str, Any]], operator.add] = Field(
         default_factory=list, description="Actions taken this betting round"
     )
-    last_action: Annotated[Optional[Dict[str, Any]], last_value_reducer] = Field(
+    last_action: Annotated[dict[str, Any] | None, last_value_reducer] = Field(
         default=None, description="Last action taken"
     )
 
     # Hand history - using Annotated for multiple updates
     hand_number: int = Field(default=1, description="Current hand number")
-    hand_history: Annotated[List[Dict[str, Any]], operator.add] = Field(
+    hand_history: Annotated[list[dict[str, Any]], operator.add] = Field(
         default_factory=list, description="History of completed hands"
     )
 
     # Game status
-    winner: Optional[str] = Field(default=None, description="Winner of current hand")
+    winner: str | None = Field(default=None, description="Winner of current hand")
     game_over: bool = Field(default=False, description="Is game finished")
-    error_message: Optional[str] = Field(
-        default=None, description="Error message if any"
-    )
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     @computed_field
     @property
-    def active_players(self) -> List[PlayerState]:
+    def active_players(self) -> list[PlayerState]:
         """Get list of active players."""
         return [p for p in self.players if p.status == PlayerStatus.ACTIVE]
 
     @computed_field
     @property
-    def players_in_hand(self) -> List[PlayerState]:
+    def players_in_hand(self) -> list[PlayerState]:
         """Get players still in the current hand (not folded)."""
         return [
             p
@@ -169,7 +167,7 @@ class HoldemState(BaseModel):
 
     @computed_field
     @property
-    def players_to_act(self) -> List[PlayerState]:
+    def players_to_act(self) -> list[PlayerState]:
         """Get players who still need to act this round."""
         players_in_hand = self.players_in_hand
         if not players_in_hand:
@@ -180,7 +178,7 @@ class HoldemState(BaseModel):
 
     @computed_field
     @property
-    def current_player(self) -> Optional[PlayerState]:
+    def current_player(self) -> PlayerState | None:
         """Get the current player to act."""
         if self.current_player_index >= len(self.players):
             return None
@@ -191,11 +189,11 @@ class HoldemState(BaseModel):
             return player
         return None
 
-    def get_player_by_id(self, player_id: str) -> Optional[PlayerState]:
+    def get_player_by_id(self, player_id: str) -> PlayerState | None:
         """Get player by ID."""
         return next((p for p in self.players if p.player_id == player_id), None)
 
-    def get_player_by_index(self, index: int) -> Optional[PlayerState]:
+    def get_player_by_index(self, index: int) -> PlayerState | None:
         """Get player by index."""
         if 0 <= index < len(self.players):
             return self.players[index]
@@ -217,7 +215,7 @@ class HoldemState(BaseModel):
 
         return True
 
-    def advance_to_next_player(self) -> Optional[int]:
+    def advance_to_next_player(self) -> int | None:
         """Advance to the next player who can act."""
         players_to_act = self.players_to_act
         if not players_to_act:
@@ -246,7 +244,7 @@ class PlayerAction(BaseModel):
     player_id: str = Field(description="Player making the action")
     action: PokerAction = Field(description="Type of action")
     amount: int = Field(default=0, description="Amount for bet/raise")
-    timestamp: Optional[str] = Field(default=None, description="When action was taken")
+    timestamp: str | None = Field(default=None, description="When action was taken")
     phase: GamePhase = Field(description="Game phase when action was taken")
 
 
@@ -257,6 +255,6 @@ class PlayerDecision(BaseModel):
     amount: int = Field(default=0, description="Amount for bet/raise")
     reasoning: str = Field(description="Reasoning for the decision")
     confidence: float = Field(default=0.5, description="Confidence in decision (0-1)")
-    hand_strength_estimate: Optional[str] = Field(
+    hand_strength_estimate: str | None = Field(
         default=None, description="Estimated hand strength"
     )

@@ -22,10 +22,9 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
 from haive.games.framework.multi_player.config import MultiPlayerGameConfig
-
-from .engines import aug_llm_configs
-from .models import PlayerRole
-from .state import MafiaGameState
+from haive.games.mafia.engines import aug_llm_configs
+from haive.games.mafia.models import PlayerRole
+from haive.games.mafia.state import MafiaGameState
 
 
 class MafiaAgentConfig(MultiPlayerGameConfig):

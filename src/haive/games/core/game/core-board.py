@@ -1,5 +1,4 @@
-"""
-Board models for the game framework.
+"""Board models for the game framework.
 
 This module defines the base Board class and specific implementations
 for different types of game boards.
@@ -9,7 +8,8 @@ from __future__ import annotations
 
 import uuid
 from abc import abstractmethod
-from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar
+from collections.abc import Callable
+from typing import Any, Generic, TypeVar
 
 from game.core.piece import GamePiece
 from game.core.position import GridPosition, Position
@@ -23,8 +23,7 @@ T = TypeVar("T", bound=GamePiece)
 
 
 class Board(BaseModel, Generic[S, P, T]):
-    """
-    Base class for all game boards.
+    """Base class for all game boards.
 
     A Board represents the playing surface in a game, containing spaces
     where pieces can be placed. It manages the spatial relationships between
@@ -33,15 +32,14 @@ class Board(BaseModel, Generic[S, P, T]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    spaces: Dict[str, S] = Field(default_factory=dict)  # space_id -> Space
-    properties: Dict[str, Any] = Field(default_factory=dict)
+    spaces: dict[str, S] = Field(default_factory=dict)  # space_id -> Space
+    properties: dict[str, Any] = Field(default_factory=dict)
 
     class Config:
         arbitrary_types_allowed = True
 
     def add_space(self, space: S) -> str:
-        """
-        Add a space to the board.
+        """Add a space to the board.
 
         Args:
             space: The space to add
@@ -53,8 +51,7 @@ class Board(BaseModel, Generic[S, P, T]):
         return space.id
 
     def connect_spaces(self, space1_id: str, space2_id: str) -> None:
-        """
-        Connect two spaces bidirectionally.
+        """Connect two spaces bidirectionally.
 
         Args:
             space1_id: ID of the first space
@@ -69,9 +66,8 @@ class Board(BaseModel, Generic[S, P, T]):
         self.spaces[space1_id].connections.add(space2_id)
         self.spaces[space2_id].connections.add(space1_id)
 
-    def get_connected_spaces(self, space_id: str) -> List[S]:
-        """
-        Get all spaces connected to the given space.
+    def get_connected_spaces(self, space_id: str) -> list[S]:
+        """Get all spaces connected to the given space.
 
         Args:
             space_id: ID of the space to get connections for
@@ -93,9 +89,8 @@ class Board(BaseModel, Generic[S, P, T]):
         ]
 
     @abstractmethod
-    def get_space_at_position(self, position: P) -> Optional[S]:
-        """
-        Get the space at the specified position.
+    def get_space_at_position(self, position: P) -> S | None:
+        """Get the space at the specified position.
 
         This is an abstract method that must be implemented by subclasses
         to provide position-based lookup.
@@ -106,11 +101,9 @@ class Board(BaseModel, Generic[S, P, T]):
         Returns:
             The space at the position, or None if no space exists there
         """
-        pass
 
     def place_piece(self, piece: T, position: P) -> bool:
-        """
-        Place a piece at the specified position.
+        """Place a piece at the specified position.
 
         Args:
             piece: The piece to place
@@ -129,9 +122,8 @@ class Board(BaseModel, Generic[S, P, T]):
 
         return space.place_piece(piece)
 
-    def remove_piece(self, position: P) -> Optional[T]:
-        """
-        Remove a piece from the specified position.
+    def remove_piece(self, position: P) -> T | None:
+        """Remove a piece from the specified position.
 
         Args:
             position: Position to remove the piece from
@@ -146,8 +138,7 @@ class Board(BaseModel, Generic[S, P, T]):
         return space.remove_piece()
 
     def is_position_valid(self, position: P) -> bool:
-        """
-        Check if a position is valid on this board.
+        """Check if a position is valid on this board.
 
         Args:
             position: Position to check
@@ -157,22 +148,20 @@ class Board(BaseModel, Generic[S, P, T]):
         """
         return self.get_space_at_position(position) is not None
 
-    def get_all_pieces(self) -> Dict[str, T]:
-        """
-        Get all pieces currently on the board.
+    def get_all_pieces(self) -> dict[str, T]:
+        """Get all pieces currently on the board.
 
         Returns:
             Dictionary mapping piece IDs to pieces
         """
-        pieces: Dict[str, T] = {}
+        pieces: dict[str, T] = {}
         for space in self.spaces.values():
             if space.piece is not None and hasattr(space.piece, "id"):
                 pieces[space.piece.id] = space.piece
         return pieces
 
-    def get_player_pieces(self, player_id: str) -> List[T]:
-        """
-        Get all pieces belonging to a specific player.
+    def get_player_pieces(self, player_id: str) -> list[T]:
+        """Get all pieces belonging to a specific player.
 
         Args:
             player_id: ID of the player
@@ -189,8 +178,7 @@ class Board(BaseModel, Generic[S, P, T]):
         ]
 
     def set_property(self, key: str, value: Any) -> None:
-        """
-        Set a board property.
+        """Set a board property.
 
         Args:
             key: Property name
@@ -199,8 +187,7 @@ class Board(BaseModel, Generic[S, P, T]):
         self.properties[key] = value
 
     def get_property(self, key: str, default: Any = None) -> Any:
-        """
-        Get a board property.
+        """Get a board property.
 
         Args:
             key: Property name
@@ -213,8 +200,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
 
 class GridBoard(Board[GridSpace[P, T], P, T]):
-    """
-    A grid-based board (Chess, Checkers, Scrabble).
+    """A grid-based board (Chess, Checkers, Scrabble).
 
     This represents a rectangular grid of spaces.
     """
@@ -230,9 +216,8 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
             raise ValueError("Board dimensions must be positive")
         return v
 
-    def get_space_at_position(self, position: P) -> Optional[GridSpace[P, T]]:
-        """
-        Get the space at the specified grid coordinates.
+    def get_space_at_position(self, position: P) -> GridSpace[P, T] | None:
+        """Get the space at the specified grid coordinates.
 
         Args:
             position: Grid position to look up
@@ -253,9 +238,8 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
                 return space
         return None
 
-    def get_space_at(self, row: int, col: int) -> Optional[GridSpace[P, T]]:
-        """
-        Get the space at the specified grid coordinates.
+    def get_space_at(self, row: int, col: int) -> GridSpace[P, T] | None:
+        """Get the space at the specified grid coordinates.
 
         Args:
             row: Row index
@@ -270,10 +254,9 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
         return self.get_space_at_position(position)
 
     def initialize_grid(
-        self, space_factory: Optional[Callable[[int, int], GridSpace[P, T]]] = None
+        self, space_factory: Callable[[int, int], GridSpace[P, T]] | None = None
     ) -> None:
-        """
-        Initialize a standard grid with the specified dimensions.
+        """Initialize a standard grid with the specified dimensions.
 
         Args:
             space_factory: Optional factory function to create spaces
@@ -302,8 +285,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
                             self.connect_spaces(space.id, adj_space.id)
 
     def is_position_valid(self, position: P) -> bool:
-        """
-        Check if a position is within the grid bounds.
+        """Check if a position is within the grid bounds.
 
         Args:
             position: Position to check
@@ -321,17 +303,15 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
     @computed_field
     @property
     def size(self) -> int:
-        """
-        Get the total number of spaces on the board.
+        """Get the total number of spaces on the board.
 
         Returns:
             Total number of spaces
         """
         return self.rows * self.cols
 
-    def get_row(self, row: int) -> List[GridSpace[P, T]]:
-        """
-        Get all spaces in a row.
+    def get_row(self, row: int) -> list[GridSpace[P, T]]:
+        """Get all spaces in a row.
 
         Args:
             row: Row index
@@ -349,9 +329,8 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
                 row_spaces.append(space)
         return row_spaces
 
-    def get_column(self, col: int) -> List[GridSpace[P, T]]:
-        """
-        Get all spaces in a column.
+    def get_column(self, col: int) -> list[GridSpace[P, T]]:
+        """Get all spaces in a column.
 
         Args:
             col: Column index

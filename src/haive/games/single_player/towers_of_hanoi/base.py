@@ -4,16 +4,9 @@ import uuid
 from enum import Enum
 from typing import (
     Any,
-    ClassVar,
-    Dict,
     Generic,
-    List,
     Literal,
-    Optional,
-    Set,
-    Tuple,
     TypeVar,
-    Union,
     cast,
 )
 
@@ -40,19 +33,19 @@ class Game(BaseModel, Generic[P, T]):
     name: str
     board: Board
     status: str = "not_started"
-    current_player_id: Optional[str] = None
-    players: List[str] = Field(default_factory=list)
-    moves: List[Dict[str, any]] = Field(default_factory=list)
+    current_player_id: str | None = None
+    players: list[str] = Field(default_factory=list)
+    moves: list[dict[str, any]] = Field(default_factory=list)
 
     def start_game(self) -> None:
         """Start the game."""
         self.status = "in_progress"
 
-    def is_valid_move(self, move: Dict[str, any]) -> bool:
+    def is_valid_move(self, move: dict[str, any]) -> bool:
         """Check if a move is valid."""
         return True
 
-    def make_move(self, move: Dict[str, any]) -> bool:
+    def make_move(self, move: dict[str, any]) -> bool:
         """Make a move in the game."""
         if self.is_valid_move(move):
             self.moves.append(move)
@@ -139,7 +132,7 @@ class Disk(GamePiece[PegPosition]):
     """A disk in the Tower of Hanoi game."""
 
     size: int  # Disk size (1 = smallest)
-    color: Optional[str] = None
+    color: str | None = None
 
     @field_validator("size")
     @classmethod
@@ -149,7 +142,7 @@ class Disk(GamePiece[PegPosition]):
             raise ValueError("Disk size must be positive")
         return v
 
-    def can_move_to(self, position: PegPosition, board: "HanoiBoard") -> bool:
+    def can_move_to(self, position: PegPosition, board: HanoiBoard) -> bool:
         """Check if this disk can be moved to the specified position."""
         # Get the current position
         if self.position is None:
@@ -175,7 +168,7 @@ class Disk(GamePiece[PegPosition]):
 
         return True
 
-    def _is_top_disk(self, board: "HanoiBoard") -> bool:
+    def _is_top_disk(self, board: HanoiBoard) -> bool:
         """Check if this disk is the top disk on its peg."""
         if self.position is None:
             return False
@@ -238,7 +231,7 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
             raise ValueError("Number of disks must be positive")
         return v
 
-    def get_space_at_position(self, position: PegPosition) -> Optional[PegSpace[Disk]]:
+    def get_space_at_position(self, position: PegPosition) -> PegSpace[Disk] | None:
         """Get the space at the specified peg position."""
         for space in self.spaces.values():
             if (
@@ -249,7 +242,7 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
                 return space
         return None
 
-    def get_peg_spaces(self, peg: PegNumber) -> List[PegSpace[Disk]]:
+    def get_peg_spaces(self, peg: PegNumber) -> list[PegSpace[Disk]]:
         """Get all spaces on a specific peg."""
         return [
             space
@@ -257,14 +250,14 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
             if isinstance(space.position, PegPosition) and space.position.peg == peg
         ]
 
-    def get_peg_disks(self, peg: PegNumber) -> List[Disk]:
+    def get_peg_disks(self, peg: PegNumber) -> list[Disk]:
         """Get all disks on a specific peg, from bottom to top."""
         spaces = self.get_peg_spaces(peg)
         # Sort by level, bottom (0) to top
         spaces.sort(key=lambda s: s.position.level)
         return [s.piece for s in spaces if s.piece is not None]
 
-    def get_top_disk(self, peg: PegNumber) -> Optional[Disk]:
+    def get_top_disk(self, peg: PegNumber) -> Disk | None:
         """Get the top disk on a specific peg."""
         disks = self.get_peg_disks(peg)
         return disks[-1] if disks else None
@@ -282,7 +275,7 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
     def initialize_board(self) -> None:
         """Initialize the Tower of Hanoi board with all disks on the first peg."""
         # Create spaces for each peg and level
-        max_level = self.num_disks - 1
+        self.num_disks - 1
         for peg in range(1, self.num_pegs + 1):
             peg_num = cast(PegNumber, peg)  # Cast to satisfy the type checker
             for level in range(self.num_disks):
@@ -353,7 +346,7 @@ class HanoiGame(Game[PegPosition, Disk]):
     min_moves: int = 0
 
     @model_validator(mode="after")
-    def calculate_min_moves(self) -> "HanoiGame":
+    def calculate_min_moves(self) -> HanoiGame:
         """Calculate the minimum number of moves to solve the puzzle."""
         # Formula: 2^n - 1 where n is the number of disks
         self.min_moves = (2**self.board.num_disks) - 1
@@ -366,7 +359,7 @@ class HanoiGame(Game[PegPosition, Disk]):
         self.status = GameStatus.IN_PROGRESS
         self.moves = []
 
-    def is_valid_move(self, move: Dict[str, any]) -> bool:
+    def is_valid_move(self, move: dict[str, any]) -> bool:
         """Check if a move is valid according to Tower of Hanoi rules."""
         if "from_peg" not in move or "to_peg" not in move:
             return False
@@ -386,7 +379,7 @@ class HanoiGame(Game[PegPosition, Disk]):
         # Use the disk's can_move_to method to validate
         return source_disk.can_move_to(dest_position, self.board)
 
-    def make_move(self, move: Dict[str, any]) -> bool:
+    def make_move(self, move: dict[str, any]) -> bool:
         """Make a move in the Tower of Hanoi game."""
         if self.status != GameStatus.IN_PROGRESS:
             return False
@@ -461,7 +454,7 @@ class Peg(GamePieceContainer[Disk]):
 
         return True
 
-    def remove_top_disk(self) -> Optional[Disk]:
+    def remove_top_disk(self) -> Disk | None:
         """Remove and return the top disk."""
         if not self.pieces:
             return None
@@ -469,7 +462,7 @@ class Peg(GamePieceContainer[Disk]):
 
     @computed_field
     @property
-    def top_disk(self) -> Optional[Disk]:
+    def top_disk(self) -> Disk | None:
         """Get the top disk without removing it."""
         if not self.pieces:
             return None
@@ -505,9 +498,9 @@ class HanoiSolver(BaseModel):
     """Solver for Tower of Hanoi puzzles."""
 
     @staticmethod
-    def solve(num_disks: int) -> List[HanoiMove]:
+    def solve(num_disks: int) -> list[HanoiMove]:
         """Generate the optimal solution sequence."""
-        moves: List[HanoiMove] = []
+        moves: list[HanoiMove] = []
 
         def move_tower(
             n: int, source: PegNumber, target: PegNumber, auxiliary: PegNumber

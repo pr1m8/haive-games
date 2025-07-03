@@ -5,11 +5,10 @@ which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
-import json
-from typing import Any, List
+from typing import Any
 
 from haive.games.framework.base.state_manager import GameStateManager
-from haive.games.mancala.models import MancalaAnalysis, MancalaMove
+from haive.games.mancala.models import MancalaMove
 from haive.games.mancala.state import MancalaState
 
 
@@ -259,8 +258,6 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         Returns:
             MancalaState: Updated state with the analysis added.
         """
-        from haive.games.mancala.models import MancalaAnalysis
-
         # Create a copy of the state
         new_state = state.model_copy()
 

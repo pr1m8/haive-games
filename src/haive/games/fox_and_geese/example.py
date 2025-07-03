@@ -3,7 +3,6 @@
 
 import logging
 import uuid
-from typing import Optional
 
 from rich.console import Console
 from rich.panel import Panel
@@ -15,7 +14,7 @@ from haive.games.fox_and_geese.config import FoxAndGeeseConfig
 logging.basicConfig(level=logging.CRITICAL)
 
 
-def run_fox_and_geese_game(agent: FoxAndGeeseAgent, thread_id: Optional[str] = None):
+def run_fox_and_geese_game(agent: FoxAndGeeseAgent, thread_id: str | None = None):
     """Run a Fox and Geese game using agent.run()."""
     console = Console()
 
@@ -125,7 +124,7 @@ if __name__ == "__main__":
             runnable_config={
                 "configurable": {
                     "thread_id": uuid.uuid4().hex[:8],
-                    "recursion_limit": 100,
+                    "recursion_limit": 400,
                 }
             },
         )
@@ -136,7 +135,7 @@ if __name__ == "__main__":
         # Choose run mode
         console.print(
             Panel(
-                "1. Run with Rich UI (recommended)\n" "2. Run in console mode",
+                "1. Run with Rich UI (recommended)\n2. Run in console mode",
                 title="🎮 Fox and Geese Game Options",
                 border_style="cyan",
             )

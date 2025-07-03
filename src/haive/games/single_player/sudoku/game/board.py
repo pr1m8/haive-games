@@ -1,7 +1,6 @@
 # ======================================================
 # SUDOKU BOARD
 # ======================================================
-from typing import Dict, List, Set, Tuple
 
 from haive.games.core.board.base import GridBoard
 from haive.games.core.position.base import GridPosition
@@ -46,9 +45,8 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                             if adj_cell:
                                 self.connect_spaces(cell.id, adj_cell.id)
 
-    def load_puzzle(self, puzzle: List[List[int]]) -> None:
-        """
-        Load a puzzle into the board.
+    def load_puzzle(self, puzzle: list[list[int]]) -> None:
+        """Load a puzzle into the board.
 
         Args:
             puzzle: 9x9 grid with digits (0 for empty cells)
@@ -75,7 +73,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
         # Update candidates for all cells
         self.update_all_candidates()
 
-    def get_row_values(self, row: int) -> List[int]:
+    def get_row_values(self, row: int) -> list[int]:
         """Get all values in a row."""
         values = []
         for col in range(self.cols):
@@ -84,7 +82,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                 values.append(cell.value)
         return values
 
-    def get_column_values(self, col: int) -> List[int]:
+    def get_column_values(self, col: int) -> list[int]:
         """Get all values in a column."""
         values = []
         for row in range(self.rows):
@@ -93,7 +91,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                 values.append(cell.value)
         return values
 
-    def get_box_values(self, box_row: int, box_col: int) -> List[int]:
+    def get_box_values(self, box_row: int, box_col: int) -> list[int]:
         """Get all values in a 3x3 box."""
         values = []
         start_row = box_row * self.box_size
@@ -239,7 +237,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
         """Check if the puzzle is correctly solved."""
         return self.is_complete() and self.is_valid()
 
-    def get_puzzle_state(self) -> List[List[int]]:
+    def get_puzzle_state(self) -> list[list[int]]:
         """Get the current puzzle state as a 2D array."""
         state = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
         for row in range(self.rows):
@@ -249,7 +247,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                     state[row][col] = cell.value
         return state
 
-    def get_candidates_state(self) -> Dict[Tuple[int, int], Set[int]]:
+    def get_candidates_state(self) -> dict[tuple[int, int], set[int]]:
         """Get the current candidates state."""
         state = {}
         for row in range(self.rows):
@@ -260,8 +258,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
         return state
 
     def autosolve_step(self) -> bool:
-        """
-        Perform one step of automatic solving using basic strategies.
+        """Perform one step of automatic solving using basic strategies.
 
         Returns:
             True if a cell was filled, False otherwise

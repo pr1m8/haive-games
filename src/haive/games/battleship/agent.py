@@ -100,7 +100,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         The workflow includes conditional routing based on game state
         and supports different paths depending on whether analysis is enabled.
         """
-
         gb = DynamicGraph(
             name="battleship_game",
             components=[self.config.engines],

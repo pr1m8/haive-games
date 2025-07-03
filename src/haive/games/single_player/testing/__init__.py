@@ -1,23 +1,20 @@
 from __future__ import annotations
 
 import uuid
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from datetime import timedelta
 from enum import Enum
 from functools import cached_property
 from typing import (
     Any,
-    Callable,
     ClassVar,
     Dict,
     FrozenSet,
     Generic,
-    Iterable,
     List,
     Literal,
-    Mapping,
     Optional,
     Protocol,
-    Sequence,
     Set,
     Tuple,
     TypeVar,
@@ -99,11 +96,11 @@ class Question(BaseModel, Generic[A]):
     text: str
     type: QuestionType
     points: float = 1.0
-    time_limit: Optional[timedelta] = None
+    time_limit: timedelta | None = None
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM
-    tags: Set[str] = Field(default_factory=set)
-    explanation: Optional[str] = None
-    answer: Optional[A] = None
+    tags: set[str] = Field(default_factory=set)
+    explanation: str | None = None
+    answer: A | None = None
     correct_answer: A
 
     model_config = ConfigDict(arbitrary_types_allowed=True, frozen=False)
@@ -124,13 +121,13 @@ class Question(BaseModel, Generic[A]):
 
     @field_validator("time_limit")
     @classmethod
-    def validate_time_limit(cls, v: Optional[timedelta]) -> Optional[timedelta]:
+    def validate_time_limit(cls, v: timedelta | None) -> timedelta | None:
         """Ensure time limit is positive if set."""
         if v is not None and v.total_seconds() <= 0:
             raise ValueError("Time limit must be positive")
         return v
 
-    def check_answer(self, provided_answer: Optional[A] = None) -> bool:
+    def check_answer(self, provided_answer: A | None = None) -> bool:
         """Check if the provided answer is correct."""
         answer_to_check = (
             provided_answer if provided_answer is not None else self.answer
@@ -158,11 +155,11 @@ class MultipleChoiceQuestion(Question[str]):
     """A multiple choice question with one correct answer."""
 
     type: Literal[QuestionType.MULTIPLE_CHOICE] = QuestionType.MULTIPLE_CHOICE
-    choices: List[str]
+    choices: list[str]
     correct_answer: str
 
     @model_validator(mode="after")
-    def validate_choices(self) -> "MultipleChoiceQuestion":
+    def validate_choices(self) -> MultipleChoiceQuestion:
         """Validate that the correct answer is in the choices."""
         if self.correct_answer not in self.choices:
             raise ValueError("Correct answer must be one of the choices")
@@ -170,7 +167,7 @@ class MultipleChoiceQuestion(Question[str]):
 
     @field_validator("answer")
     @classmethod
-    def validate_answer(cls, v: Optional[str], info: Any) -> Optional[str]:
+    def validate_answer(cls, v: str | None, info: Any) -> str | None:
         """Validate that the answer is in the choices."""
         if (
             v is not None
@@ -214,43 +211,43 @@ class NumericQuestion(Question[float]):
         return abs(answer - self.correct_answer) <= self.tolerance
 
 
-class MatchingQuestion(Question[Dict[str, str]]):
+class MatchingQuestion(Question[dict[str, str]]):
     """A matching question where items must be paired correctly."""
 
     type: Literal[QuestionType.MATCHING] = QuestionType.MATCHING
-    items: Dict[str, str]  # key -> value pairs to match
-    correct_answer: Dict[str, str]
+    items: dict[str, str]  # key -> value pairs to match
+    correct_answer: dict[str, str]
 
     @model_validator(mode="after")
-    def validate_matching(self) -> "MatchingQuestion":
+    def validate_matching(self) -> MatchingQuestion:
         """Validate that the correct answer contains all items to match."""
         if set(self.correct_answer.keys()) != set(self.items.keys()):
             raise ValueError("Correct answer must contain all keys from items")
         return self
 
-    def _is_correct(self, answer: Dict[str, str]) -> bool:
+    def _is_correct(self, answer: dict[str, str]) -> bool:
         """Check if all matches are correct."""
         if set(answer.keys()) != set(self.correct_answer.keys()):
             return False
-        return all(answer[k] == self.correct_answer[k] for k in answer.keys())
+        return all(answer[k] == self.correct_answer[k] for k in answer)
 
 
-class FillInBlankQuestion(Question[List[str]]):
+class FillInBlankQuestion(Question[list[str]]):
     """A fill-in-the-blank question with multiple blanks."""
 
     type: Literal[QuestionType.FILL_IN_BLANK] = QuestionType.FILL_IN_BLANK
-    correct_answer: List[str]
+    correct_answer: list[str]
     blank_count: int
     case_sensitive: bool = False
 
     @model_validator(mode="after")
-    def validate_blanks(self) -> "FillInBlankQuestion":
+    def validate_blanks(self) -> FillInBlankQuestion:
         """Validate that the correct answer has the right number of blanks."""
         if len(self.correct_answer) != self.blank_count:
             raise ValueError("Number of answers must match number of blanks")
         return self
 
-    def _is_correct(self, answer: List[str]) -> bool:
+    def _is_correct(self, answer: list[str]) -> bool:
         """Check if all blanks are filled correctly."""
         if len(answer) != len(self.correct_answer):
             return False
@@ -260,9 +257,8 @@ class FillInBlankQuestion(Question[List[str]]):
             if self.case_sensitive:
                 if ans != correct:
                     return False
-            else:
-                if ans.lower() != correct.lower():
-                    return False
+            elif ans.lower() != correct.lower():
+                return False
         return True
 
 
@@ -276,10 +272,10 @@ class Section(BaseModel, Generic[Q]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
-    instructions: Optional[str] = None
+    instructions: str | None = None
     questions: Sequence[Q] = Field(default_factory=list)
-    time_limit: Optional[timedelta] = None
-    context: Optional[str] = None  # Reading passage, code snippet, etc.
+    time_limit: timedelta | None = None
+    context: str | None = None  # Reading passage, code snippet, etc.
 
     @computed_field
     @property
@@ -295,7 +291,7 @@ class Section(BaseModel, Generic[Q]):
 
     @computed_field
     @property
-    def total_time(self) -> Optional[timedelta]:
+    def total_time(self) -> timedelta | None:
         """Get the total time limit for this section."""
         if self.time_limit is not None:
             return self.time_limit
@@ -320,7 +316,7 @@ class Section(BaseModel, Generic[Q]):
         answered = sum(1 for q in self.questions if q.is_answered)
         return (answered / self.question_count) * 100
 
-    def get_questions_by_type(self, question_type: QuestionType) -> List[Q]:
+    def get_questions_by_type(self, question_type: QuestionType) -> list[Q]:
         """Get all questions of a specific type."""
         return [q for q in self.questions if q.type == question_type]
 
@@ -352,10 +348,10 @@ class Test(BaseModel, Generic[S]):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     sections: Sequence[S]
-    time_limit: Optional[timedelta] = None
-    passing_score: Optional[float] = None
+    time_limit: timedelta | None = None
+    passing_score: float | None = None
     mode: TestMode = TestMode.GRADED
     randomize_questions: bool = False
     randomize_sections: bool = False
@@ -376,7 +372,7 @@ class Test(BaseModel, Generic[S]):
 
     @computed_field
     @property
-    def total_time(self) -> Optional[timedelta]:
+    def total_time(self) -> timedelta | None:
         """Get the total time limit for the test."""
         if self.time_limit is not None:
             return self.time_limit
@@ -420,7 +416,7 @@ class Test(BaseModel, Generic[S]):
 
         return self.calculate_score() >= self.passing_score
 
-    def get_remaining_time(self, elapsed: timedelta) -> Optional[timedelta]:
+    def get_remaining_time(self, elapsed: timedelta) -> timedelta | None:
         """Calculate remaining time based on elapsed time."""
         if self.total_time is None:
             return None  # No time limit
@@ -428,7 +424,7 @@ class Test(BaseModel, Generic[S]):
         remaining = self.total_time - elapsed
         return max(remaining, timedelta())  # Don't return negative time
 
-    def grade(self) -> Dict[str, Any]:
+    def grade(self) -> dict[str, Any]:
         """Grade the test and return detailed results."""
         score = self.calculate_score()
         percentage = (score / self.max_points * 100) if self.max_points > 0 else 0
@@ -472,14 +468,14 @@ class TestSession(BaseModel):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     test_id: str
-    user_id: Optional[str] = None
+    user_id: str | None = None
     status: TestSessionStatus = TestSessionStatus.NOT_STARTED
-    start_time: Optional[str] = None
-    end_time: Optional[str] = None
+    start_time: str | None = None
+    end_time: str | None = None
     current_section_index: int = 0
     current_question_index: int = 0
     elapsed_time: timedelta = Field(default_factory=lambda: timedelta())
-    answers: Dict[str, Any] = Field(default_factory=dict)  # question_id -> answer
+    answers: dict[str, Any] = Field(default_factory=dict)  # question_id -> answer
 
     def record_answer(self, question_id: str, answer: Any) -> None:
         """Record an answer for a question."""

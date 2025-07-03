@@ -5,9 +5,9 @@ which includes the board, turn, game status, move history,
 free turn, winner, and player analyses.
 """
 
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from haive.games.framework.base.state import GameState
 from haive.games.mancala.models import MancalaAnalysis, MancalaMove
@@ -26,7 +26,7 @@ class MancalaState(GameState):
     # - Index 6: Player 1's store (right)
     # - Indices 7-12: Player 2's pits (top row, right to left)
     # - Index 13: Player 2's store (left)
-    board: List[int] = Field(
+    board: list[int] = Field(
         default_factory=lambda: [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0],
         min_length=14,
         max_length=14,
@@ -38,19 +38,17 @@ class MancalaState(GameState):
     game_status: Literal["ongoing", "player1_win", "player2_win", "draw"] = Field(
         default="ongoing", description="Status of the game"
     )
-    move_history: List[MancalaMove] = Field(
+    move_history: list[MancalaMove] = Field(
         default_factory=list, description="History of moves"
     )
     free_turn: bool = Field(
         default=False, description="Whether player gets an extra turn"
     )
-    winner: Optional[str] = Field(
-        default=None, description="Winner of the game, if any"
-    )
-    player1_analysis: List[MancalaAnalysis] = Field(
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
+    player1_analysis: list[MancalaAnalysis] = Field(
         default_factory=list, description="Analyses by player1"
     )
-    player2_analysis: List[MancalaAnalysis] = Field(
+    player2_analysis: list[MancalaAnalysis] = Field(
         default_factory=list, description="Analyses by player2"
     )
 
@@ -99,7 +97,7 @@ class MancalaState(GameState):
                 }
 
             # Handle case where data has fields but no proper structure
-            elif "board" not in data or "turn" not in data:
+            if "board" not in data or "turn" not in data:
                 # This might be incomplete data, provide defaults
                 stones_per_pit = data.get("stones_per_pit", 4)
 
@@ -148,7 +146,7 @@ class MancalaState(GameState):
         """Handle conversion of analysis data to proper types."""
         if isinstance(data, dict):
             # Convert player1_analysis items if needed
-            if "player1_analysis" in data and data["player1_analysis"]:
+            if data.get("player1_analysis"):
                 converted_analyses = []
                 for analysis in data["player1_analysis"]:
                     # If it's a dict with required fields, use it
@@ -183,7 +181,7 @@ class MancalaState(GameState):
                     data["player1_analysis"] = converted_analyses
 
             # Convert player2_analysis items if needed
-            if "player2_analysis" in data and data["player2_analysis"]:
+            if data.get("player2_analysis"):
                 converted_analyses = []
                 for analysis in data["player2_analysis"]:
                     # If it's a dict with required fields, use it
@@ -301,7 +299,7 @@ class MancalaState(GameState):
 
         return player1_stones == 0 or player2_stones == 0
 
-    def get_winner(self) -> Optional[str]:
+    def get_winner(self) -> str | None:
         """Determine the winner of the game.
 
         Returns:
@@ -312,12 +310,11 @@ class MancalaState(GameState):
 
         if self.player1_score > self.player2_score:
             return "player1"
-        elif self.player2_score > self.player1_score:
+        if self.player2_score > self.player1_score:
             return "player2"
-        else:
-            return "draw"
+        return "draw"
 
-    def get_valid_moves(self, player: Optional[str] = None) -> List[int]:
+    def get_valid_moves(self, player: str | None = None) -> list[int]:
         """Get valid moves for the current or specified player.
 
         Args:
@@ -333,9 +330,8 @@ class MancalaState(GameState):
         if player == "player1":
             # Player 1 can move from pits 0-5 if they contain stones
             return [i for i in range(6) if self.board[i] > 0]
-        else:
-            # Player 2 can move from pits 7-12 if they contain stones
-            return [i for i in range(7, 13) if self.board[i] > 0]
+        # Player 2 can move from pits 7-12 if they contain stones
+        return [i for i in range(7, 13) if self.board[i] > 0]
 
     def copy(self) -> "MancalaState":
         """Create a deep copy of the current state.
@@ -354,7 +350,7 @@ class MancalaState(GameState):
             player2_analysis=self.player2_analysis.copy(),
         )
 
-    def model_dump(self, **kwargs) -> Dict[str, Any]:
+    def model_dump(self, **kwargs) -> dict[str, Any]:
         """Override model_dump to ensure proper serialization."""
         data = super().model_dump(**kwargs)
         # Ensure board is always a list of 14 integers

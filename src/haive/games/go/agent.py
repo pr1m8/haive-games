@@ -20,13 +20,15 @@ Example:
 
 from typing import Any
 
-import sente
 from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.constants import END, START
 from langgraph.types import Command
 
 from haive.games.go.config import GoAgentConfig
-from haive.games.go.state import GoGameState, GoGameStateManager
+from haive.games.go.state import GoGameState
+from haive.games.go.state_manager import GoGameStateManager
+
+from . import go_engine as sente
 
 
 @register_agent(GoAgentConfig)

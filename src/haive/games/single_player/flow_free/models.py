@@ -5,7 +5,6 @@ including move representation and strategic analysis.
 """
 
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -79,25 +78,25 @@ class FlowFreeAnalysis(BaseModel):
         reasoning: Detailed explanation of the analysis.
     """
 
-    completed_flows: List[str] = Field(
+    completed_flows: list[str] = Field(
         default_factory=list, description="Flow IDs that have been completed"
     )
-    incomplete_flows: List[str] = Field(
+    incomplete_flows: list[str] = Field(
         default_factory=list, description="Flow IDs that need completion"
     )
-    critical_flows: List[str] = Field(
+    critical_flows: list[str] = Field(
         default_factory=list,
         description="Flows that are most constrained and should be prioritized",
     )
-    blocked_flows: List[str] = Field(
+    blocked_flows: list[str] = Field(
         default_factory=list,
         description="Flows that might be blocked or have limited space",
     )
-    recommended_move: Optional[FlowFreeMove] = Field(
+    recommended_move: FlowFreeMove | None = Field(
         default=None, description="Suggested next move based on analysis"
     )
     reasoning: str = Field(..., description="Detailed explanation of the analysis")
-    hint: Optional[str] = Field(
+    hint: str | None = Field(
         default=None, description="Hint text that can be shown to the player"
     )
 

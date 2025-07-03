@@ -9,21 +9,19 @@ Texas Hold'em games in real-time, showing:
 """
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from rich.align import Align
-from rich.box import DOUBLE, ROUNDED, SIMPLE
+from rich.box import ROUNDED, SIMPLE
 from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
-from rich.progress import BarColumn, Progress, TextColumn
 from rich.table import Table
 from rich.text import Text
 
 from haive.games.hold_em.game_agent import HoldemGameAgent
 from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
-from haive.games.hold_em.utils import format_cards, get_position_name
 
 
 class HoldemRichUI:
@@ -213,11 +211,11 @@ class HoldemRichUI:
         game_state = self.state
 
         pot_text = Text()
-        pot_text.append(f"💰 Main Pot: ", style="bold")
+        pot_text.append("💰 Main Pot: ", style="bold")
         pot_text.append(f"{game_state.total_pot:,} chips\n", style="bold green")
 
         if game_state.current_bet > 0:
-            pot_text.append(f"Current Bet: ", style="bold")
+            pot_text.append("Current Bet: ", style="bold")
             pot_text.append(f"{game_state.current_bet} chips\n", style="bold yellow")
 
         if game_state.side_pots:
@@ -225,7 +223,7 @@ class HoldemRichUI:
 
         # Add current player to act
         if game_state.current_player:
-            pot_text.append(f"\n🎯 Action on: ", style="bold")
+            pot_text.append("\n🎯 Action on: ", style="bold")
             pot_text.append(f"{game_state.current_player.name}", style="bold cyan")
 
         return Panel(pot_text, title="Pot Information", border_style="red", box=SIMPLE)
@@ -531,7 +529,7 @@ class HoldemRichUI:
     def _format_player_short(self, player: PlayerState, game_state: HoldemState) -> str:
         """Format player for table display."""
         name = player.name[:5]  # Truncate long names
-        chips = f"{player.chips//1000}k" if player.chips >= 1000 else str(player.chips)
+        f"{player.chips//1000}k" if player.chips >= 1000 else str(player.chips)
 
         if player.status == PlayerStatus.FOLDED:
             return f"[dim]{name}[/dim]"

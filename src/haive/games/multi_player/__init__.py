@@ -32,12 +32,12 @@ Typical usage:
     - Implement role-specific behaviors
 """
 
-from .agent import MultiPlayerGameAgent
-from .config import MultiPlayerGameConfig
-from .factory import MultiPlayerGameFactory
-from .models import GamePhase
-from .state import MultiPlayerGameState
-from .state_manager import MultiPlayerGameStateManager
+from haive.games.multi_player.agent import MultiPlayerGameAgent
+from haive.games.multi_player.config import MultiPlayerGameConfig
+from haive.games.multi_player.factory import MultiPlayerGameFactory
+from haive.games.multi_player.models import GamePhase
+from haive.games.multi_player.state import MultiPlayerGameState
+from haive.games.multi_player.state_manager import MultiPlayerGameStateManager
 
 __all__ = [
     "GamePhase",

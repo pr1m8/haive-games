@@ -6,7 +6,7 @@ the current player's turn, the game status, the move history,
 the winner, and the number of geese remaining.
 """
 
-from typing import Any, Dict, List, Literal, Optional, Set
+from typing import Any, Literal
 
 from pydantic import ConfigDict, Field, field_serializer, field_validator
 
@@ -24,32 +24,30 @@ class FoxAndGeeseState(GameState):
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
-    players: List[str] = Field(["fox", "geese"], description="Players in the game")
+    players: list[str] = Field(["fox", "geese"], description="Players in the game")
     fox_position: FoxAndGeesePosition = Field(..., description="Position of the fox")
-    geese_positions: Set[FoxAndGeesePosition] = Field(
+    geese_positions: set[FoxAndGeesePosition] = Field(
         ..., description="Positions of geese"
     )
     turn: Literal["fox", "geese"] = Field(..., description="Current player's turn")
     game_status: Literal["ongoing", "fox_win", "geese_win"] = Field(
         default="ongoing", description="Status of the game"
     )
-    move_history: List[FoxAndGeeseMove] = Field(
+    move_history: list[FoxAndGeeseMove] = Field(
         default_factory=list, description="History of moves"
     )
-    winner: Optional[str] = Field(
-        default=None, description="Winner of the game, if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
     num_geese: int = Field(default=0, description="Number of geese remaining")
-    fox_analysis: List[str] = Field(
+    fox_analysis: list[str] = Field(
         default_factory=list, description="List of fox position analyses"
     )
-    geese_analysis: List[str] = Field(
+    geese_analysis: list[str] = Field(
         default_factory=list, description="List of geese position analyses"
     )
 
     @field_validator("geese_positions", mode="before")
     @classmethod
-    def validate_geese_positions(cls, v: Any) -> Set[FoxAndGeesePosition]:
+    def validate_geese_positions(cls, v: Any) -> set[FoxAndGeesePosition]:
         """Validate and convert geese positions to a set."""
         if v is None:
             return set()
@@ -105,7 +103,7 @@ class FoxAndGeeseState(GameState):
 
     @field_validator("move_history", mode="before")
     @classmethod
-    def validate_move_history(cls, v: Any) -> List[FoxAndGeeseMove]:
+    def validate_move_history(cls, v: Any) -> list[FoxAndGeeseMove]:
         """Validate and convert move history."""
         if v is None:
             return []
@@ -120,22 +118,22 @@ class FoxAndGeeseState(GameState):
 
     @field_serializer("geese_positions")
     def serialize_geese_positions(
-        self, geese_positions: Set[FoxAndGeesePosition]
-    ) -> List[Dict[str, Any]]:
+        self, geese_positions: set[FoxAndGeesePosition]
+    ) -> list[dict[str, Any]]:
         """Serialize geese positions as a list of dictionaries."""
         return [pos.model_dump() for pos in geese_positions]
 
     @field_serializer("fox_position")
     def serialize_fox_position(
         self, fox_position: FoxAndGeesePosition
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Serialize fox position as a dictionary."""
         return fox_position.model_dump()
 
     @field_serializer("move_history")
     def serialize_move_history(
-        self, move_history: List[FoxAndGeeseMove]
-    ) -> List[Dict[str, Any]]:
+        self, move_history: list[FoxAndGeeseMove]
+    ) -> list[dict[str, Any]]:
         """Serialize move history as a list of dictionaries."""
         return [move.model_dump() for move in move_history]
 
@@ -184,7 +182,7 @@ class FoxAndGeeseState(GameState):
 
         return result
 
-    def model_dump(self, **kwargs) -> Dict[str, Any]:
+    def model_dump(self, **kwargs) -> dict[str, Any]:
         """Override model_dump to ensure proper serialization."""
         # Get the base dump
         data = super().model_dump(**kwargs)

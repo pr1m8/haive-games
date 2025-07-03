@@ -6,22 +6,18 @@ with better styling, clearer representation of dominoes, and improved game anima
 
 import logging
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from rich.align import Align
 from rich.box import DOUBLE, ROUNDED
 from rich.console import Console, Group
 from rich.layout import Layout
-from rich.live import Live
-from rich.padding import Padding
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
 from haive.games.dominoes.models import (
-    DominoesAnalysis,
-    DominoesPlayerDecision,
     DominoMove,
     DominoTile,
 )
@@ -55,7 +51,7 @@ class DominoesRichUI:
         >>> ui.display_state(state)  # Display the initial game state
     """
 
-    def __init__(self, console: Optional[Console] = None):
+    def __init__(self, console: Console | None = None):
         """Initialize the UI.
 
         Args:
@@ -80,7 +76,7 @@ class DominoesRichUI:
             "panel_border": "bright_cyan",
         }
 
-    def extract_game_state(self, state_data: Any) -> Optional[DominoesState]:
+    def extract_game_state(self, state_data: Any) -> DominoesState | None:
         """Extract DominoesState from various input formats.
 
         Args:
@@ -108,7 +104,7 @@ class DominoesRichUI:
                     return command_update
 
                 # Handle Command objects where update is a dict
-                elif isinstance(command_update, dict):
+                if isinstance(command_update, dict):
                     if self._is_valid_game_state_dict(command_update):
                         try:
                             return DominoesState.model_validate(command_update)
@@ -253,7 +249,7 @@ class DominoesRichUI:
             )
 
         # Create a table for the board
-        board_table = Table(
+        Table(
             show_header=False,
             box=None,
             padding=(0, 1),
@@ -269,9 +265,7 @@ class DominoesRichUI:
             is_right_end = i == len(game_state.board) - 1
 
             # Create the tile art
-            if is_left_end:
-                tile_art = self.create_domino_tile_art(tile, open_end=True)
-            elif is_right_end:
+            if is_left_end or is_right_end:
                 tile_art = self.create_domino_tile_art(tile, open_end=True)
             else:
                 tile_art = self.create_domino_tile_art(tile)
@@ -750,7 +744,7 @@ class DominoesRichUI:
             progress.add_task("thinking", total=None)
             time.sleep(1.0)  # Show thinking animation for 1 second
 
-    def show_move(self, move: Union[DominoMove, str], player: str) -> None:
+    def show_move(self, move: DominoMove | str, player: str) -> None:
         """Display a move being made.
 
         Shows a formatted message indicating which player made which move,
@@ -931,7 +925,7 @@ The game will be played by AI agents with real-time visualization!
         self.console.print(self.create_layout(state_after))
 
     def display_game_with_animation(
-        self, state_sequence: List[DominoesState], delay: float = 1.0
+        self, state_sequence: list[DominoesState], delay: float = 1.0
     ) -> None:
         """Display a sequence of game states with smooth transitions.
 

@@ -11,7 +11,6 @@ from typing import Dict, List, Optional, Tuple
 
 from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.aug_llm import AugLLMConfig
-from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field
 
 from haive.games.hold_em.engines import build_holdem_game_engines, build_player_engines
@@ -28,7 +27,7 @@ def create_default_holdem_config(
 ) -> HoldemGameAgentConfig:
     """Create a default Hold'em game configuration."""
 
-    print(f"🎮 Creating default Hold'em configuration...")
+    print("🎮 Creating default Hold'em configuration...")
     print(f"   Players: {num_players}")
     print(f"   Starting chips: {starting_chips}")
     print(f"   Blinds: {small_blind}/{big_blind}")
@@ -103,7 +102,7 @@ def create_default_holdem_config(
             print(f"     ❌ Error creating config for {name}: {e}")
             raise ValueError(f"Failed to create player config for {name}: {e}")
 
-    print(f"🎯 Building game engines...")
+    print("🎯 Building game engines...")
 
     # Build game engines with error handling
     try:
@@ -112,7 +111,7 @@ def create_default_holdem_config(
     except Exception as e:
         print(f"   ❌ Error building game engines: {e}")
         game_engines = create_fallback_game_engines()
-        print(f"   🔄 Using fallback game engines")
+        print("   🔄 Using fallback game engines")
 
     # Create main game configuration
     try:
@@ -131,7 +130,7 @@ def create_default_holdem_config(
             ),
         )
 
-        print(f"✅ Created game configuration successfully")
+        print("✅ Created game configuration successfully")
         print(f"   {len(player_configs)} players configured")
         print(f"   {len(game_engines)} game engines")
 
@@ -149,7 +148,7 @@ def create_tournament_config(
 ) -> HoldemGameAgentConfig:
     """Create a tournament-style configuration with escalating blinds."""
 
-    print(f"🏆 Creating tournament configuration...")
+    print("🏆 Creating tournament configuration...")
 
     if blind_levels is None:
         blind_levels = [
@@ -194,7 +193,7 @@ def create_cash_game_config(
 ) -> HoldemGameAgentConfig:
     """Create a cash game configuration."""
 
-    print(f"💰 Creating cash game configuration...")
+    print("💰 Creating cash game configuration...")
 
     small_blind = big_blind // 2
     starting_chips = max_buy_in
@@ -287,7 +286,7 @@ def create_heads_up_config(
     except Exception as e:
         print(f"   ❌ Error building game engines: {e}")
         game_engines = create_fallback_game_engines()
-        print(f"   🔄 Using fallback game engines")
+        print("   🔄 Using fallback game engines")
 
     # Create heads-up specific configuration
     try:
@@ -312,7 +311,7 @@ def create_heads_up_config(
             "aggressive_play": True,
         }
 
-        print(f"✅ Created heads-up configuration")
+        print("✅ Created heads-up configuration")
         return config
 
     except Exception as e:
@@ -489,7 +488,7 @@ def create_fallback_game_engines() -> Dict[str, AugLLMConfig]:
     from haive.core.models.llm.base import AzureLLMConfig
     from langchain_core.prompts import ChatPromptTemplate
 
-    print(f"🔄 Creating fallback game engines")
+    print("🔄 Creating fallback game engines")
 
     fallback_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)
 

@@ -16,7 +16,7 @@ Example:
     >>> agent = HoldemGameAgent(config)
 """
 
-from .aug_llms import (
+from haive.games.hold_em.aug_llms import (
     get_betting_strategist,
     get_bluff_detector,
     get_complete_llm_suite,
@@ -25,7 +25,7 @@ from .aug_llms import (
     get_situation_analyzer,
     get_table_dynamics_analyzer,
 )
-from .config import (
+from haive.games.hold_em.config import (
     HoldemGameSettings,
     create_cash_game_config,
     create_custom_holdem_config,
@@ -33,8 +33,8 @@ from .config import (
     create_heads_up_config,
     create_tournament_config,
 )
-from .game_agent import HoldemGameAgent, HoldemGameAgentConfig
-from .models import (
+from haive.games.hold_em.game_agent import HoldemGameAgent, HoldemGameAgentConfig
+from haive.games.hold_em.models import (
     BettingDecision,
     GameSituationAnalysis,
     HandEvaluation,
@@ -47,8 +47,8 @@ from .models import (
     PokerHandHistory,
     TableDynamics,
 )
-from .player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
-from .state import (
+from haive.games.hold_em.player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
+from haive.games.hold_em.state import (
     GamePhase,
     HoldemState,
     PlayerAction,
@@ -56,8 +56,8 @@ from .state import (
     PlayerState,
     PlayerStatus,
 )
-from .state_manager import HoldemGameStateManager
-from .ui import HoldemRichUI
+from haive.games.hold_em.state_manager import HoldemGameStateManager
+from haive.games.hold_em.ui import HoldemRichUI
 
 __all__ = [
     # Game agent and configuration

@@ -19,7 +19,7 @@ Example:
 """
 
 import copy
-from typing import Any, Dict, Union
+from typing import Any
 
 from haive.games.connect4.models import Connect4Move
 from haive.games.connect4.state import Connect4State
@@ -155,7 +155,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
         return state.game_status in ["red_win", "yellow_win", "draw"]
 
     @classmethod
-    def ensure_state(cls, state: Union[Dict[str, Any], Connect4State]) -> Connect4State:
+    def ensure_state(cls, state: dict[str, Any] | Connect4State) -> Connect4State:
         """Ensure the input is a proper Connect4State object.
 
         Args:

@@ -4,7 +4,6 @@ This module defines the game state for Flow Free, tracking the board,
 flows, and game progress.
 """
 
-from typing import Dict, List, Optional
 from uuid import uuid4
 
 from pydantic import BaseModel, Field, computed_field
@@ -44,7 +43,7 @@ class Flow(BaseModel):
     color: str
     start: FlowEndpoint
     end: FlowEndpoint
-    path: List[Position] = Field(default_factory=list)
+    path: list[Position] = Field(default_factory=list)
     completed: bool = False
 
 
@@ -59,9 +58,9 @@ class Cell(BaseModel):
     """
 
     position: Position
-    flow_id: Optional[str] = None
+    flow_id: str | None = None
     is_endpoint: bool = False
-    pipe_direction: Optional[PipeDirection] = None
+    pipe_direction: PipeDirection | None = None
 
 
 class FlowFreeState(SinglePlayerGameState):
@@ -79,11 +78,11 @@ class FlowFreeState(SinglePlayerGameState):
 
     rows: int = Field(default=5, description="Number of rows in the grid")
     cols: int = Field(default=5, description="Number of columns in the grid")
-    grid: List[List[Cell]] = Field(default_factory=list, description="2D grid of cells")
-    flows: Dict[str, Flow] = Field(
+    grid: list[list[Cell]] = Field(default_factory=list, description="2D grid of cells")
+    flows: dict[str, Flow] = Field(
         default_factory=dict, description="Dictionary of flows by ID"
     )
-    current_flow_id: Optional[str] = Field(
+    current_flow_id: str | None = Field(
         default=None, description="ID of the currently selected flow"
     )
     puzzle_id: str = Field(
@@ -142,7 +141,7 @@ class FlowFreeState(SinglePlayerGameState):
             return 0.0
         return self.filled_cells / self.total_cells * 100.0
 
-    def get_cell(self, position: Position) -> Optional[Cell]:
+    def get_cell(self, position: Position) -> Cell | None:
         """Get the cell at the specified position.
 
         Args:
@@ -179,7 +178,7 @@ class FlowFreeState(SinglePlayerGameState):
         cell = self.get_cell(position)
         return cell is not None and cell.is_endpoint
 
-    def get_adjacent_positions(self, position: Position) -> List[Position]:
+    def get_adjacent_positions(self, position: Position) -> list[Position]:
         """Get all valid adjacent positions.
 
         Args:

@@ -15,17 +15,15 @@ that makes the game more engaging and easier to follow.
 
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from rich import box
 from rich.align import Align
 from rich.box import DOUBLE, HEAVY, ROUNDED
 from rich.console import Console
 from rich.layout import Layout
-from rich.live import Live
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 
@@ -84,26 +82,28 @@ class CheckersUI:
 
         # Color schemes
         self.colors = {
-            "red_piece": "bold red",
-            "red_king": "bold red on yellow",
-            "black_piece": "bold black on white",
-            "black_king": "bold black on yellow",
-            "dark_square": "on grey23",
-            "light_square": "on grey35",
+            "red_piece": "bold bright_red",
+            "red_king": "bold bright_red on yellow3",
+            "black_piece": "bold bright_white on grey39",
+            "black_king": "bold bright_white on yellow3",
+            "dark_square": "on grey19",
+            "light_square": "on grey27",
             "highlight": "bold green",
-            "last_move": "bold cyan",
+            "last_move": "on bright_blue",
+            "last_move_red": "bold bright_red on bright_blue",
+            "last_move_black": "bold bright_white on bright_blue",
             "captured": "dim red",
-            "board_border": "bold blue",
-            "player_red": "bold red",
-            "player_black": "bold white",
+            "board_border": "bold cyan",
+            "player_red": "bold bright_red",
+            "player_black": "bold bright_white",
         }
 
         # Unicode pieces
         self.pieces = {
             "red": "●",
-            "red_king": "♔",
+            "red_king": "◆",  # Diamond for red king
             "black": "○",
-            "black_king": "♚",
+            "black_king": "◇",  # Diamond outline for black king
             "empty": " ",
         }
 
@@ -186,13 +186,21 @@ class CheckersUI:
                 )
 
                 # Check if this square was part of the last move
-                is_last_move = (row, col) == last_from or (row, col) == last_to
-                if is_last_move:
-                    square_style = "on blue"
+                is_last_move = False
+                is_last_move_highlight = ""
+
+                if (row, col) == last_from or (row, col) == last_to:
+                    square_style = self.colors["last_move"]
+
+                    # We'll set a flag to apply special styling to the piece later
+                    if last_move and (row, col) == last_to:
+                        is_last_move_highlight = last_move.player
 
                 # Get piece at this position
                 piece_value = state.board[row][col]
-                piece_display = self._get_piece_display(piece_value)
+                piece_display = self._get_piece_display(
+                    piece_value, is_last_move_highlight
+                )
 
                 # Add spacing and style
                 cell = f" {piece_display} "
@@ -217,13 +225,15 @@ class CheckersUI:
             padding=(1, 2),
         )
 
-    def _get_piece_display(self, piece_value: int) -> str:
+    def _get_piece_display(self, piece_value: int, last_move_player: str = "") -> str:
         """Get styled piece display.
 
         Converts a numeric piece value to a styled Unicode symbol.
 
         Args:
             piece_value (int): Piece value (0-4)
+            last_move_player (str, optional): Player color for last move highlighting.
+                Defaults to "".
 
         Returns:
             str: Styled Unicode representation of the piece
@@ -238,6 +248,22 @@ class CheckersUI:
         """
         if piece_value == 0:
             return self.pieces["empty"]
+
+        # Special highlight for pieces that were just moved
+        if last_move_player == "red" and piece_value in [1, 2]:
+            # Red piece that was just moved
+            if piece_value == 1:  # Regular piece
+                return f"[{self.colors['last_move_red']}]{self.pieces['red']}[/{self.colors['last_move_red']}]"
+            else:  # King
+                return f"[{self.colors['last_move_red']}]{self.pieces['red_king']}[/{self.colors['last_move_red']}]"
+        elif last_move_player == "black" and piece_value in [3, 4]:
+            # Black piece that was just moved
+            if piece_value == 3:  # Regular piece
+                return f"[{self.colors['last_move_black']}]{self.pieces['black']}[/{self.colors['last_move_black']}]"
+            else:  # King
+                return f"[{self.colors['last_move_black']}]{self.pieces['black_king']}[/{self.colors['last_move_black']}]"
+
+        # Normal piece styling
         elif piece_value == 1:  # Red piece
             return f"[{self.colors['red_piece']}]{self.pieces['red']}[/{self.colors['red_piece']}]"
         elif piece_value == 2:  # Red king
@@ -246,6 +272,7 @@ class CheckersUI:
             return f"[{self.colors['black_piece']}]{self.pieces['black']}[/{self.colors['black_piece']}]"
         elif piece_value == 4:  # Black king
             return f"[{self.colors['black_king']}]{self.pieces['black_king']}[/{self.colors['black_king']}]"
+
         return " "
 
     def _notation_to_index(self, notation: str) -> tuple[int, int]:
@@ -288,11 +315,27 @@ class CheckersUI:
         elapsed_str = f"{elapsed.seconds // 60:02d}:{elapsed.seconds % 60:02d}"
 
         header_text = Text()
-        header_text.append("♔ ", style="bold red")
-        header_text.append("ROYAL CHECKERS", style="bold yellow")
-        header_text.append(" ♚", style="bold white")
-        header_text.append(f"\n🎮 Current Turn: ", style="dim")
-        header_text.append(f"{current_player}", style=player_color)
+        header_text.append("♔ ", style="bold bright_red")
+        header_text.append("ROYAL CHECKERS", style="bold bright_yellow")
+        header_text.append(" ♚", style="bold bright_white")
+
+        # More prominent current turn display
+        turn_indicator = "\n🎮 CURRENT TURN: "
+        if current_player == "RED":
+            piece_symbol = self.pieces["red"]
+            header_text.append(turn_indicator, style="dim")
+            header_text.append(
+                f"{piece_symbol} {current_player} {piece_symbol}",
+                style=f"bold {player_color}",
+            )
+        else:
+            piece_symbol = self.pieces["black"]
+            header_text.append(turn_indicator, style="dim")
+            header_text.append(
+                f"{piece_symbol} {current_player} {piece_symbol}",
+                style=f"bold {player_color}",
+            )
+
         header_text.append(f"  ⏱️  Time: {elapsed_str}", style="dim cyan")
 
         return Panel(Align.center(header_text), border_style="bright_blue", box=HEAVY)
@@ -322,13 +365,34 @@ class CheckersUI:
                 "🏆 Winner:", f"[{winner_color}]{state.winner.upper()}[/{winner_color}]"
             )
 
-        # Piece count
-        red_pieces = sum(1 for row in state.board for cell in row if cell in [1, 2])
-        black_pieces = sum(1 for row in state.board for cell in row if cell in [3, 4])
+        # Piece count with detailed breakdown
+        red_regular = sum(1 for row in state.board for cell in row if cell == 1)
+        red_kings = sum(1 for row in state.board for cell in row if cell == 2)
+        red_pieces = red_regular + red_kings
+
+        black_regular = sum(1 for row in state.board for cell in row if cell == 3)
+        black_kings = sum(1 for row in state.board for cell in row if cell == 4)
+        black_pieces = black_regular + black_kings
 
         table.add_row("", "")
-        table.add_row("🔴 Red:", f"{red_pieces} pieces")
-        table.add_row("⚫ Black:", f"{black_pieces} pieces")
+
+        # Show pieces with their actual symbols
+        red_info = f"{red_pieces} pieces"
+        if red_kings > 0:
+            red_info += f" ({red_kings} {self.pieces['red_king']})"
+
+        black_info = f"{black_pieces} pieces"
+        if black_kings > 0:
+            black_info += f" ({black_kings} {self.pieces['black_king']})"
+
+        table.add_row(
+            f"🔴 Red [{self.pieces['red']}]:", red_info, style=self.colors["player_red"]
+        )
+        table.add_row(
+            f"⚫ Black [{self.pieces['black']}]:",
+            black_info,
+            style=self.colors["player_black"],
+        )
 
         return Panel(
             table,
@@ -351,15 +415,37 @@ class CheckersUI:
         """
         captured_text = Text()
 
-        # Red captures
-        captured_text.append("🔴 Red captured: ", style="bold red")
+        # Red captures with visual representation
+        captured_text.append("🔴 Red captured: ", style=self.colors["player_red"])
         red_caps = len(state.captured_pieces.get("red", []))
-        captured_text.append(f"{red_caps} pieces\n", style="red")
+        captured_text.append(f"{red_caps} pieces", style=self.colors["player_red"])
+
+        # Add visual representation of captured pieces
+        if red_caps > 0:
+            captured_text.append("\n")
+            for _ in range(min(red_caps, 8)):  # Show up to 8 pieces visually
+                captured_text.append(
+                    f"{self.pieces['black']} ", style=self.colors["player_black"]
+                )
+            if red_caps > 8:
+                captured_text.append(f"+{red_caps - 8} more", style="dim")
+
+        captured_text.append("\n\n")
 
         # Black captures
-        captured_text.append("⚫ Black captured: ", style="bold white")
+        captured_text.append("⚫ Black captured: ", style=self.colors["player_black"])
         black_caps = len(state.captured_pieces.get("black", []))
-        captured_text.append(f"{black_caps} pieces", style="white")
+        captured_text.append(f"{black_caps} pieces", style=self.colors["player_black"])
+
+        # Add visual representation of captured pieces
+        if black_caps > 0:
+            captured_text.append("\n")
+            for _ in range(min(black_caps, 8)):  # Show up to 8 pieces visually
+                captured_text.append(
+                    f"{self.pieces['red']} ", style=self.colors["player_red"]
+                )
+            if black_caps > 8:
+                captured_text.append(f"+{black_caps - 8} more", style="dim")
 
         return Panel(
             captured_text,
@@ -435,22 +521,48 @@ class CheckersUI:
         Returns:
             Panel: A styled panel with move history
         """
-        history_text = Text()
-
+        # Use a table for better formatting
         if not state.move_history:
-            history_text.append("No moves yet", style="dim")
+            history_text = Text("No moves yet", style="dim")
         else:
-            # Show last 10 moves
-            recent_moves = state.move_history[-10:]
-            for i, move in enumerate(recent_moves, 1):
-                move_num = len(state.move_history) - len(recent_moves) + i
-                player_style = self.colors[f"player_{move.player}"]
+            # Create a table for better formatting
+            history_table = Table(show_header=True, box=box.SIMPLE)
+            history_table.add_column("Move", style="dim", width=4)
+            history_table.add_column("Red", style=self.colors["player_red"], width=8)
+            history_table.add_column(
+                "Black", style=self.colors["player_black"], width=8
+            )
 
-                history_text.append(f"{move_num:3d}. ", style="dim")
-                history_text.append(
-                    f"{move.player.capitalize():5s} ", style=player_style
+            # Process moves in pairs (Red & Black)
+            moves = state.move_history
+            total_pairs = (len(moves) + 1) // 2  # Round up to include incomplete pairs
+
+            # Show last 8 move pairs (16 moves) at most
+            start_pair = max(0, total_pairs - 8)
+            for pair_idx in range(start_pair, total_pairs):
+                move_num = pair_idx + 1
+                red_idx = pair_idx * 2
+                black_idx = red_idx + 1
+
+                red_move = str(moves[red_idx]) if red_idx < len(moves) else ""
+                black_move = str(moves[black_idx]) if black_idx < len(moves) else ""
+
+                # Style the most recent moves differently
+                red_style = "bold bright_red" if red_idx == len(moves) - 1 else ""
+                black_style = "bold bright_white" if black_idx == len(moves) - 1 else ""
+
+                # Add the row
+                history_table.add_row(
+                    str(move_num),
+                    f"[{red_style}]{red_move}[/{red_style}]" if red_style else red_move,
+                    (
+                        f"[{black_style}]{black_move}[/{black_style}]"
+                        if black_style
+                        else black_move
+                    ),
                 )
-                history_text.append(f"{str(move)}\n", style="bold")
+
+            history_text = history_table
 
         return Panel(
             history_text,
@@ -541,7 +653,7 @@ class CheckersUI:
             console=self.console,
             transient=True,
         ) as progress:
-            task = progress.add_task(
+            progress.add_task(
                 f"[{self.colors[f'player_{player}']}]{player.capitalize()} is thinking...",
                 total=None,
             )
@@ -587,18 +699,63 @@ class CheckersUI:
             >>> ui.show_game_over(state)  # Shows "RED WINS!" message
         """
         if state.winner:
+            # Create a much more impressive game over screen
             winner_text = Text()
-            winner_text.append("🏆 GAME OVER! 🏆\n\n", style="bold yellow")
+
+            # Trophy decorations
+            trophy_line = "🏆 " * 7
+            winner_text.append(f"{trophy_line}\n\n", style="bold bright_yellow")
+
+            # Game over text
             winner_text.append(
-                f"{state.winner.upper()} ", style=self.colors[f"player_{state.winner}"]
+                "G A M E   O V E R !\n\n", style="bold bright_cyan underline"
             )
-            winner_text.append("WINS!", style="bold yellow")
+
+            # Winner announcement with piece symbol
+            if state.winner == "red":
+                piece_symbol = self.pieces["red"]
+                crown_symbol = self.pieces["red_king"]
+                winner_text.append(
+                    f"{crown_symbol} {piece_symbol} ",
+                    style=self.colors[f"player_{state.winner}"],
+                )
+                winner_text.append(
+                    f"{state.winner.upper()} WINS!",
+                    style=f"bold {self.colors[f'player_{state.winner}']}",
+                )
+                winner_text.append(
+                    f" {piece_symbol} {crown_symbol}",
+                    style=self.colors[f"player_{state.winner}"],
+                )
+            else:
+                piece_symbol = self.pieces["black"]
+                crown_symbol = self.pieces["black_king"]
+                winner_text.append(
+                    f"{crown_symbol} {piece_symbol} ",
+                    style=self.colors[f"player_{state.winner}"],
+                )
+                winner_text.append(
+                    f"{state.winner.upper()} WINS!",
+                    style=f"bold {self.colors[f'player_{state.winner}']}",
+                )
+                winner_text.append(
+                    f" {piece_symbol} {crown_symbol}",
+                    style=self.colors[f"player_{state.winner}"],
+                )
+
+            # Move stats
+            winner_text.append(
+                f"\n\nTotal Moves: {len(state.move_history)}", style="bright_green"
+            )
+
+            # Trophy line at bottom
+            winner_text.append(f"\n\n{trophy_line}", style="bold bright_yellow")
 
             panel = Panel(
                 Align.center(winner_text),
-                border_style="yellow",
+                border_style="bright_yellow",
                 box=DOUBLE,
-                padding=(2, 4),
+                padding=(2, 8),
             )
 
             self.console.print("\n")

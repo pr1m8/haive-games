@@ -107,9 +107,9 @@ except ImportError:
     games_logger.warning("Some game modules not available")
 
 __all__ = [
-    "games_logger",
     "__version__",
+    "games_logger",
 ]
 
 if GAMES_AVAILABLE:
-    __all__.extend(["ClueGame", "CheckersGame"])
+    __all__.extend(["CheckersGame", "ClueGame"])

@@ -1,5 +1,3 @@
-from typing import Optional, Set
-
 from pydantic import Field, computed_field
 
 from haive.games.core.position.base import GridSpace
@@ -10,11 +8,11 @@ class SudokuCell(GridSpace[SudokuDigit]):
     """A cell in the Sudoku grid."""
 
     # Track candidate digits for solving assistance
-    candidates: Set[int] = Field(default_factory=lambda: set(range(1, 10)))
+    candidates: set[int] = Field(default_factory=lambda: set(range(1, 10)))
 
     @computed_field
     @property
-    def value(self) -> Optional[int]:
+    def value(self) -> int | None:
         """Get the current value of this cell."""
         return self.piece.value if self.is_occupied() else None
 
@@ -61,7 +59,7 @@ class SudokuCell(GridSpace[SudokuDigit]):
             return True
         return False
 
-    def update_candidates(self, invalid_values: Set[int]) -> None:
+    def update_candidates(self, invalid_values: set[int]) -> None:
         """Update candidate values by removing invalid options."""
         if self.is_occupied():
             self.candidates = set()  # No candidates for filled cells

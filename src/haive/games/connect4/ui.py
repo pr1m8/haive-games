@@ -28,20 +28,17 @@ Example:
 """
 
 import time
-from typing import Any, List, Optional, Union
 
 from rich.align import Align
 from rich.box import ROUNDED
 from rich.console import Console
 from rich.layout import Layout
-from rich.live import Live
-from rich.padding import Padding
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.connect4.models import Connect4Analysis, Connect4Move
+from haive.games.connect4.models import Connect4Move
 from haive.games.connect4.state import Connect4State
 
 
@@ -90,7 +87,7 @@ class Connect4UI:
         self._setup_layout()
 
         # Move history
-        self.move_history: List[str] = []
+        self.move_history: list[str] = []
         self.move_count = 0
 
     def _setup_layout(self):
@@ -171,9 +168,9 @@ class Connect4UI:
             )
 
         # Add board rows
-        for row_idx, row in enumerate(state.board):
+        for _row_idx, row in enumerate(state.board):
             row_cells = []
-            for col_idx, cell in enumerate(row):
+            for _col_idx, cell in enumerate(row):
                 if cell is None:
                     row_cells.append("⚪")  # Empty cell
                 elif cell == "red":
@@ -388,7 +385,7 @@ class Connect4UI:
             padding=(1, 1),
         )
 
-    def display_state(self, state: Union[Connect4State, dict]) -> None:
+    def display_state(self, state: Connect4State | dict) -> None:
         """Display the current game state with rich formatting.
 
         Renders the complete game state including board, game info,
@@ -474,7 +471,7 @@ class Connect4UI:
         )
         time.sleep(0.5)  # Brief pause after showing the move
 
-    def show_game_over(self, winner: Optional[str] = None) -> None:
+    def show_game_over(self, winner: str | None = None) -> None:
         """Display game over message with result.
 
         Shows a game over panel with the winner highlighted in their color,

@@ -1,7 +1,6 @@
 """Chess game UI using Rich for beautiful terminal display."""
 
 import time
-from typing import Optional
 
 import chess
 from rich.align import Align
@@ -25,8 +24,8 @@ class ChessRichUI:
     def __init__(self):
         self.console = Console()
         self.layout = Layout()
-        self.state: Optional[ChessState] = None
-        self.last_move: Optional[str] = None
+        self.state: ChessState | None = None
+        self.last_move: str | None = None
         self.move_count = 0
         self.start_time = time.time()
         self._setup_layout()
@@ -490,7 +489,6 @@ class ChessRichUI:
                                     f"\n[yellow]Row rendering issue: {e}[/yellow]"
                                 )
                                 # Continue anyway
-                                pass
                             else:
                                 # Re-raise other errors
                                 raise

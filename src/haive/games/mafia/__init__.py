@@ -32,53 +32,50 @@ Example:
     >>> # Run the game
     >>> for state in agent.app.stream(initial_state.model_dump()):
     ...     agent.visualize_state(state)
+"""
 
-
-from .agent import MafiaAgent
-from .config import MafiaAgentConfig
-from .models import (
-    MafiaPlayerState,
-    MafiaAction,
-    MafiaAnalysis,
-    PlayerRole,
-    GamePhase,
-    ActionType,
-)
-from .state import MafiaGameState
-from .state_manager import MafiaStateManager
-from .engines import (
-    generate_villager_prompt,
-    generate_mafia_prompt,
+from haive.games.mafia.agent import MafiaAgent
+from haive.games.mafia.config import MafiaAgentConfig
+from haive.games.mafia.engines import (
+    aug_llm_configs,
     generate_detective_prompt,
     generate_doctor_prompt,
+    generate_mafia_prompt,
     generate_narrator_prompt,
-    aug_llm_configs,
+    generate_villager_prompt,
 )
-from .aug_llms import (
-    get_mafia_analyzer,
-    suspicion_analyzer,
-    psychology_analyzer,
-    strategy_analyzer,
-    voting_analyzer,
+from haive.games.mafia.models import (
+    ActionType,
+    GamePhase,
+    MafiaAction,
+    PlayerRole,
+    PlayerState,
 )
+from haive.games.mafia.state import MafiaGameState
+from haive.games.mafia.state_manager import MafiaStateManager
+
+# Temporarily disabled due to import issues
+# from haive.games.mafia.aug_llms import (
+#     get_mafia_analyzer,
+#     suspicion_analyzer,
+#     psychology_analyzer,
+#     strategy_analyzer,
+#     voting_analyzer,
+# )
 
 __all__ = [
     # Agent and configuration
     "MafiaAgent",
     "MafiaAgentConfig",
-
     # Core models
     "MafiaGameState",
-    "MafiaPlayerState",
+    "PlayerState",
     "MafiaAction",
-    "MafiaAnalysis",
     "PlayerRole",
     "GamePhase",
     "ActionType",
-
     # State management
     "MafiaStateManager",
-
     # Engine prompts
     "generate_villager_prompt",
     "generate_mafia_prompt",
@@ -86,12 +83,10 @@ __all__ = [
     "generate_doctor_prompt",
     "generate_narrator_prompt",
     "aug_llm_configs",
-
-    # Advanced analyzers
-    "get_mafia_analyzer",
-    "suspicion_analyzer",
-    "psychology_analyzer",
-    "strategy_analyzer",
-    "voting_analyzer",
+    # Advanced analyzers (temporarily disabled)
+    # "get_mafia_analyzer",
+    # "suspicion_analyzer",
+    # "psychology_analyzer",
+    # "strategy_analyzer",
+    # "voting_analyzer",
 ]
-"""

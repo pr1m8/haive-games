@@ -90,7 +90,7 @@ class CheckersStateManager:
 
     @classmethod
     def _create_board_string(cls, board: list[list[int]]) -> str:
-        """Create a string representation of the board.
+        r"""Create a string representation of the board.
 
         Converts the 2D grid board representation to a human-readable string
         with row and column coordinates for display and debugging.

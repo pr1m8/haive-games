@@ -33,9 +33,7 @@ Example:
     >>> updated_state = HoldemGameStateManager.advance_phase(state)
 """
 
-import random
 import uuid
-from typing import Dict, List, Optional, Tuple
 
 from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
 from haive.games.hold_em.utils import (
@@ -59,11 +57,11 @@ class HoldemGameStateManager:
 
     @staticmethod
     def create_initial_state(
-        players: List[PlayerState],
+        players: list[PlayerState],
         small_blind: int = 10,
         big_blind: int = 20,
         starting_chips: int = 1000,
-        game_id: Optional[str] = None,
+        game_id: str | None = None,
     ) -> HoldemState:
         """Create an initial game state for a new poker game.
 
@@ -530,7 +528,7 @@ class HoldemGameStateManager:
         return updated_state
 
     @staticmethod
-    def check_game_end(state: HoldemState) -> Tuple[HoldemState, bool]:
+    def check_game_end(state: HoldemState) -> tuple[HoldemState, bool]:
         """Check if the game should end.
 
         Args:
@@ -580,19 +578,18 @@ class HoldemGameStateManager:
         # Advance based on current phase
         if state.current_phase == GamePhase.PREFLOP:
             return HoldemGameStateManager.deal_community_cards(state, 3, GamePhase.FLOP)
-        elif state.current_phase == GamePhase.FLOP:
+        if state.current_phase == GamePhase.FLOP:
             return HoldemGameStateManager.deal_community_cards(state, 1, GamePhase.TURN)
-        elif state.current_phase == GamePhase.TURN:
+        if state.current_phase == GamePhase.TURN:
             return HoldemGameStateManager.deal_community_cards(
                 state, 1, GamePhase.RIVER
             )
-        elif state.current_phase == GamePhase.RIVER:
+        if state.current_phase == GamePhase.RIVER:
             updated_state = state.model_copy(deep=True)
             updated_state.current_phase = GamePhase.SHOWDOWN
             return updated_state
-        else:
-            # Already at showdown or game over, no advancement
-            return state
+        # Already at showdown or game over, no advancement
+        return state
 
     # Helper methods
 
@@ -641,7 +638,7 @@ class HoldemGameStateManager:
         state.min_raise = bet_amount
 
     @staticmethod
-    def _get_next_player_index(state: HoldemState) -> Optional[int]:
+    def _get_next_player_index(state: HoldemState) -> int | None:
         """Get the index of the next player to act."""
         start_index = state.current_player_index
 

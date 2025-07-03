@@ -5,7 +5,7 @@ handling move generation, analysis, and game flow.
 """
 
 import time
-from typing import Any, Dict
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from langgraph.types import Command
@@ -34,7 +34,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
         self.state_manager = FlowFreeStateManager
         super().__init__(config)
 
-    def initialize_game(self, state: Dict[str, Any]) -> Command:
+    def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Flow Free game.
 
         Args:
@@ -59,7 +59,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
         )
         return Command(update=state_dict)
 
-    def prepare_move_context(self, state: FlowFreeState) -> Dict[str, Any]:
+    def prepare_move_context(self, state: FlowFreeState) -> dict[str, Any]:
         """Prepare context for move generation.
 
         Args:
@@ -107,7 +107,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
             ),
         }
 
-    def prepare_analysis_context(self, state: FlowFreeState) -> Dict[str, Any]:
+    def prepare_analysis_context(self, state: FlowFreeState) -> dict[str, Any]:
         """Prepare context for position analysis.
 
         Args:
@@ -170,7 +170,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
         # If we can't extract, raise an error
         raise ValueError(f"Could not extract move from response: {response}")
 
-    def visualize_state(self, state: Dict[str, Any]) -> None:
+    def visualize_state(self, state: dict[str, Any]) -> None:
         """Visualize the current game state.
 
         Args:
@@ -221,18 +221,17 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
                             if cell.is_endpoint:
                                 cell_text = "●"  # Endpoint
+                            # Pipe segment
+                            elif cell.pipe_direction == "up":
+                                cell_text = "↑"
+                            elif cell.pipe_direction == "down":
+                                cell_text = "↓"
+                            elif cell.pipe_direction == "left":
+                                cell_text = "←"
+                            elif cell.pipe_direction == "right":
+                                cell_text = "→"
                             else:
-                                # Pipe segment
-                                if cell.pipe_direction == "up":
-                                    cell_text = "↑"
-                                elif cell.pipe_direction == "down":
-                                    cell_text = "↓"
-                                elif cell.pipe_direction == "left":
-                                    cell_text = "←"
-                                elif cell.pipe_direction == "right":
-                                    cell_text = "→"
-                                else:
-                                    cell_text = "■"  # Generic pipe segment
+                                cell_text = "■"  # Generic pipe segment
 
                             row_cells.append(
                                 f"[bold {style}]{cell_text}[/bold {style}]"
@@ -308,7 +307,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
         except Exception as e:
             self.console.print(f"[bold red]Error in visualization: {e}[/bold red]")
 
-    def run_game(self, debug: bool = False) -> Dict[str, Any]:
+    def run_game(self, debug: bool = False) -> dict[str, Any]:
         """Run a complete Flow Free game.
 
         Args:

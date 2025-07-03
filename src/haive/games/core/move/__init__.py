@@ -1,3 +1,19 @@
+"""Move - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+
+Example:
+    Basic usage::
+
+        from haive.move import module_function
+        
+        # TODO: Add example
+
+
+"""
+
 from __future__ import annotations
 
 import time

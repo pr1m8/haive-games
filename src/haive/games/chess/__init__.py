@@ -8,15 +8,15 @@ This package provides a complete implementation of the Chess game, including:
     - Game visualization
 
 Example:
-    >>> from haive.games.chess import ChessAgent, ChessAgentConfig
+    >>> from haive.games.chess import ChessAgent, ChessConfig
     >>>
     >>> # Create and configure a Chess agent
-    >>> config = ChessAgentConfig(enable_analysis=True)
+    >>> config = ChessConfig(enable_analysis=True)
     >>> agent = ChessAgent(config)
 """
 
 from haive.games.chess.agent import ChessAgent
-from haive.games.chess.config import ChessAgentConfig
+from haive.games.chess.config import ChessConfig
 from haive.games.chess.models import (
     ChessAnalysis,
     ChessMoveModel,
@@ -27,7 +27,7 @@ from haive.games.chess.state_manager import ChessGameStateManager
 
 __all__ = [
     "ChessAgent",
-    "ChessAgentConfig",
+    "ChessConfig",
     "ChessAnalysis",
     "ChessGameStateManager",
     "ChessMoveModel",

@@ -5,7 +5,6 @@ for the Flow Free puzzle game.
 """
 
 import random
-from typing import List, Optional, Tuple
 
 from haive.games.single_player.base import (
     GameDifficulty,
@@ -68,7 +67,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
         player_type: PlayerType = PlayerType.LLM,
         rows: int = 5,
         cols: int = 5,
-        num_flows: Optional[int] = None,
+        num_flows: int | None = None,
         **kwargs,
     ) -> FlowFreeState:
         """Initialize a new Flow Free game state.
@@ -151,7 +150,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
         return state
 
     @classmethod
-    def get_legal_moves(cls, state: FlowFreeState) -> List[FlowFreeMove]:
+    def get_legal_moves(cls, state: FlowFreeState) -> list[FlowFreeMove]:
         """Get all legal moves for the current state.
 
         Args:
@@ -183,7 +182,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
     @classmethod
     def _get_potential_positions(
         cls, state: FlowFreeState, flow_id: str
-    ) -> List[Position]:
+    ) -> list[Position]:
         """Get potential positions for the next segment of a flow.
 
         Args:
@@ -349,14 +348,13 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
         """
         if prev_pos.row < curr_pos.row:
             return PipeDirection.DOWN
-        elif prev_pos.row > curr_pos.row:
+        if prev_pos.row > curr_pos.row:
             return PipeDirection.UP
-        elif prev_pos.col < curr_pos.col:
+        if prev_pos.col < curr_pos.col:
             return PipeDirection.RIGHT
-        elif prev_pos.col > curr_pos.col:
+        if prev_pos.col > curr_pos.col:
             return PipeDirection.LEFT
-        else:
-            return PipeDirection.NONE
+        return PipeDirection.NONE
 
     @classmethod
     def _is_flow_completed(cls, state: FlowFreeState, flow: Flow) -> bool:
@@ -433,7 +431,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
         return new_state
 
     @classmethod
-    def generate_hint(cls, state: FlowFreeState) -> Tuple[FlowFreeState, str]:
+    def generate_hint(cls, state: FlowFreeState) -> tuple[FlowFreeState, str]:
         """Generate a hint for the current game state.
 
         Args:

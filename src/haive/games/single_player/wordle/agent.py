@@ -1,12 +1,11 @@
 from typing import Any, Dict
 
 from haive.core.engine.agent.agent import register_agent
-from langgraph.graph import END, START, StateGraph
+from langgraph.graph import END, START
 
 from haive.games.framework.base import GameAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
 from haive.games.single_player.wordle.models import (
-    WordConnectionsMove,
     WordConnectionsState,
 )
 
@@ -192,7 +191,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
 
         console.print(f"  [cyan]Routing map (for string returns): {routing_map}[/cyan]")
         console.print(
-            f"  [green]✓ Valid tools will be routed via Send objects (not routing map)[/green]"
+            "  [green]✓ Valid tools will be routed via Send objects (not routing map)[/green]"]"
         )
 
         # Show routing explanation
@@ -260,7 +259,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
         )
 
         console.print(
-            f"\n[cyan]Created ValidationNodeConfig with proper routing:[/cyan]"
+            "\n[cyan]Created ValidationNodeConfig with proper routing:[/cyan]"
         )
         console.print(f"  schemas: {len(schemas)} items")
         console.print(f"  tools: {len(validation_config.tools)} items")

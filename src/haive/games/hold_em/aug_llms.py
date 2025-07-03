@@ -24,8 +24,6 @@ Example:
     >>> })
 """
 
-from typing import Dict, List, Optional
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -33,9 +31,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from haive.games.hold_em.models import (
     BettingDecision,
     GameSituationAnalysis,
-    HandEvaluation,
     OpponentModel,
-    PlayerDecisionModel,
     PokerAnalysis,
     TableDynamics,
 )
@@ -476,7 +472,7 @@ def get_bluff_detector(sensitivity: str = "balanced") -> AugLLMConfig:
     class BluffDetectionResult(OpponentModel):
         bluff_probability: float
         confidence: float
-        key_indicators: List[str]
+        key_indicators: list[str]
         recommended_action: str
 
     return AugLLMConfig(
@@ -552,7 +548,7 @@ def get_table_dynamics_analyzer() -> AugLLMConfig:
 # ============================================================================
 
 
-def get_complete_llm_suite(player_style: str = "balanced") -> Dict[str, AugLLMConfig]:
+def get_complete_llm_suite(player_style: str = "balanced") -> dict[str, AugLLMConfig]:
     """Get a complete suite of specialized LLMs for a poker player.
 
     This function creates a coordinated set of specialized LLM configurations

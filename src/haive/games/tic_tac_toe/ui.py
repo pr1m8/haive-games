@@ -5,11 +5,10 @@ using the Rich library for enhanced terminal displays.
 """
 
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from rich import box
 from rich.align import Align
-from rich.columns import Columns
 from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
@@ -19,7 +18,6 @@ from rich.table import Table
 from rich.text import Text
 
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
-from haive.games.tic_tac_toe.models import TicTacToeAnalysis
 from haive.games.tic_tac_toe.state import TicTacToeState
 
 
@@ -34,7 +32,7 @@ class RichTicTacToeRunner:
         """
         self.agent = agent
         self.console = Console()
-        self.current_state: Optional[TicTacToeState] = None
+        self.current_state: TicTacToeState | None = None
 
     def create_board_panel(self, state: TicTacToeState) -> Panel:
         """Create a rich panel displaying the game board.
@@ -132,7 +130,7 @@ class RichTicTacToeRunner:
             info_table, title="📊 Game Information", border_style="blue", padding=(1, 1)
         )
 
-    def create_analysis_panel(self, state: TicTacToeState) -> Optional[Panel]:
+    def create_analysis_panel(self, state: TicTacToeState) -> Panel | None:
         """Create a panel showing the latest analysis.
 
         Args:
@@ -287,7 +285,7 @@ class RichTicTacToeRunner:
 
     def run_game(
         self, show_thinking: bool = True, step_delay: float = 1.0, debug: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Run the Tic Tac Toe game with Rich UI.
 
         Args:
@@ -321,7 +319,7 @@ class RichTicTacToeRunner:
             current_state = TicTacToeState(**initial_dict)
 
             if debug:
-                self.console.print(f"[cyan]DEBUG: Initial state created[/cyan]")
+                self.console.print("[cyan]DEBUG: Initial state created[/cyan]")
                 self.console.print(f"[dim]Board: {current_state.board}[/dim]")
                 self.console.print(f"[dim]Turn: {current_state.turn}[/dim]")
                 self.console.print(f"[dim]Status: {current_state.game_status}[/dim]")
@@ -357,7 +355,7 @@ class RichTicTacToeRunner:
                             self.current_state = TicTacToeState(**step)
                             if debug:
                                 self.console.print(
-                                    f"[green]DEBUG: State created successfully[/green]"
+                                    "[green]DEBUG: State created successfully[/green]"
                                 )
                         except Exception as e:
                             self.console.print(
@@ -369,7 +367,7 @@ class RichTicTacToeRunner:
                         self.current_state = step
                         if debug:
                             self.console.print(
-                                f"[green]DEBUG: Using step as state directly[/green]"
+                                "[green]DEBUG: Using step as state directly[/green]"
                             )
 
                     # Update display
@@ -399,7 +397,7 @@ class RichTicTacToeRunner:
 
         return final_state
 
-    def show_game_summary(self, final_state: Dict[str, Any]):
+    def show_game_summary(self, final_state: dict[str, Any]):
         """Show a summary of the completed game.
 
         Args:

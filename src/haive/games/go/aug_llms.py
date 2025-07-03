@@ -24,7 +24,7 @@ Example:
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain.prompts import ChatPromptTemplate
 
-from .models import GoAnalysis, GoPlayerDecision
+from haive.games.go.models import GoAnalysis, GoPlayerDecision
 
 
 # 🔄 **Reusable Prompt Structure**

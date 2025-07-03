@@ -25,7 +25,6 @@ import logging
 import time
 import traceback
 import uuid
-from typing import Any, Dict, Optional
 
 from haive.games.mafia.agent import MafiaAgent
 from haive.games.mafia.config import MafiaAgentConfig, aug_llm_configs
@@ -69,7 +68,7 @@ def run_mafia_game(
     print(f"Debug mode: {'Enabled' if debug else 'Disabled'}")
     print("=" * 60)
 
-    agent: Optional[MafiaAgent] = None
+    agent: MafiaAgent | None = None
 
     try:
         # Print available configs for debugging
@@ -132,12 +131,42 @@ def run_mafia_game(
 
         # Stream the game execution
         try:
-            for step in agent.app.stream(
+            # Use invoke instead of stream to bypass the streaming error
+            try:
+                print("\n🎲 Running game using direct invoke instead of stream")
+                final_state = agent.app.invoke(
+                    initial_state_dict,
+                    config={"configurable": {"thread_id": thread_id}},
+                )
+
+                # Visualize the final state
+                if isinstance(final_state, dict):
+                    agent.visualize_state(final_state)
+
+                # Skip the streaming section
+                print(
+                    "\n⚠️ Game run in non-streaming mode due to LangGraph compatibility issue"
+                )
+                return
+            except Exception as invoke_error:
+                print(
+                    f"\n❌ Direct invoke failed, falling back to stream: {invoke_error}"
+                )
+
+            # The stream method can return None values which need to be handled
+            steps = agent.app.stream(
                 initial_state_dict,
                 config={"configurable": {"thread_id": thread_id}},
                 debug=debug,
                 stream_mode="values",
-            ):
+            )
+
+            # Safely handle potentially None iterator
+            if steps is None:
+                print("\n❌ Stream returned None instead of an iterator")
+                steps = []
+
+            for step in steps:
                 try:
                     # Skip empty steps
                     if not step:

@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import random
 import uuid
-from collections import defaultdict, deque
+from collections import deque
 from enum import Enum
-from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 
 # Import base framework classes
 from game_framework_base import GamePiece, GridBoard, GridPosition, GridSpace
-from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 # ======================================================
 # MINESWEEPER COMPONENTS
@@ -27,7 +26,7 @@ class CellState(str, Enum):
 class MinePiece(GamePiece[GridPosition]):
     """Represents a mine in Minesweeper."""
 
-    def can_move_to(self, position: GridPosition, board: "Board") -> bool:
+    def can_move_to(self, position: GridPosition, board: Board) -> bool:
         """Mines can't move in Minesweeper."""
         return False
 
@@ -66,8 +65,7 @@ class MinesweeperCell(GridSpace[MinePiece]):
         return self.state == CellState.QUESTIONED
 
     def reveal(self) -> bool:
-        """
-        Reveal this cell.
+        """Reveal this cell.
 
         Returns:
             True if it's a mine (game over), False otherwise
@@ -79,8 +77,7 @@ class MinesweeperCell(GridSpace[MinePiece]):
         return self.has_mine
 
     def toggle_flag(self) -> CellState:
-        """
-        Toggle flag state: hidden -> flagged -> questioned -> hidden.
+        """Toggle flag state: hidden -> flagged -> questioned -> hidden.
 
         Returns:
             The new state
@@ -106,16 +103,15 @@ class MinesweeperCell(GridSpace[MinePiece]):
         """Get the display value for this cell based on its state."""
         if self.state == CellState.HIDDEN:
             return "·"  # Hidden cell
-        elif self.state == CellState.FLAGGED:
+        if self.state == CellState.FLAGGED:
             return "F"  # Flagged cell
-        elif self.state == CellState.QUESTIONED:
+        if self.state == CellState.QUESTIONED:
             return "?"  # Questioned cell
-        elif self.has_mine:
+        if self.has_mine:
             return "*"  # Mine
-        elif self.adjacent_mines == 0:
+        if self.adjacent_mines == 0:
             return " "  # Empty cell
-        else:
-            return str(self.adjacent_mines)  # Number of adjacent mines
+        return str(self.adjacent_mines)  # Number of adjacent mines
 
 
 class Difficulty(str, Enum):
@@ -145,9 +141,9 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
     def initialize_board(
         self,
         difficulty: Difficulty = Difficulty.BEGINNER,
-        custom_rows: Optional[int] = None,
-        custom_cols: Optional[int] = None,
-        custom_mines: Optional[int] = None,
+        custom_rows: int | None = None,
+        custom_cols: int | None = None,
+        custom_mines: int | None = None,
     ) -> None:
         """Initialize the Minesweeper board based on difficulty."""
         # Set dimensions and mine count based on difficulty
@@ -195,8 +191,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         self.first_move_made = False
 
     def place_mines(self, first_click_row: int, first_click_col: int) -> None:
-        """
-        Place mines randomly, ensuring the first click is safe.
+        """Place mines randomly, ensuring the first click is safe.
 
         Args:
             first_click_row: Row of first click
@@ -252,9 +247,8 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
                     cell.set_adjacent_mines(adjacent_mines)
 
-    def reveal_cell(self, row: int, col: int) -> Tuple[bool, int]:
-        """
-        Reveal a cell at the specified position.
+    def reveal_cell(self, row: int, col: int) -> tuple[bool, int]:
+        """Reveal a cell at the specified position.
 
         Args:
             row: Row to reveal
@@ -318,8 +312,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         return hit_mine, revealed_count
 
     def toggle_flag(self, row: int, col: int) -> bool:
-        """
-        Toggle the flag state of a cell.
+        """Toggle the flag state of a cell.
 
         Args:
             row: Row to toggle
@@ -343,9 +336,8 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
         return new_state == CellState.FLAGGED
 
-    def chord(self, row: int, col: int) -> Tuple[bool, int]:
-        """
-        Perform a chord (middle-click) to reveal all unflagged neighbors.
+    def chord(self, row: int, col: int) -> tuple[bool, int]:
+        """Perform a chord (middle-click) to reveal all unflagged neighbors.
         Only works if the number of flagged neighbors equals the cell's value.
 
         Args:
@@ -398,7 +390,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         total_cells = self.rows * self.cols
         return self.revealed_count == total_cells - self.total_mines
 
-    def get_board_state(self) -> List[List[str]]:
+    def get_board_state(self) -> list[list[str]]:
         """Get the current visible board state as a 2D array."""
         state = [["" for _ in range(self.cols)] for _ in range(self.rows)]
         for row in range(self.rows):
@@ -408,7 +400,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
                     state[row][col] = cell.get_display_value()
         return state
 
-    def get_mine_locations(self) -> List[Tuple[int, int]]:
+    def get_mine_locations(self) -> list[tuple[int, int]]:
         """Get the locations of all mines."""
         mines = []
         for row in range(self.rows):
@@ -439,11 +431,11 @@ class MinesweeperGame(BaseModel):
     difficulty: Difficulty = Difficulty.BEGINNER
     game_over: bool = False
     win: bool = False
-    start_time: Optional[float] = None
-    end_time: Optional[float] = None
+    start_time: float | None = None
+    end_time: float | None = None
 
     @model_validator(mode="after")
-    def validate_game(self) -> "MinesweeperGame":
+    def validate_game(self) -> MinesweeperGame:
         """Ensure game has valid components."""
         return self
 
@@ -451,10 +443,10 @@ class MinesweeperGame(BaseModel):
     def new_game(
         cls,
         difficulty: Difficulty = Difficulty.BEGINNER,
-        custom_rows: Optional[int] = None,
-        custom_cols: Optional[int] = None,
-        custom_mines: Optional[int] = None,
-    ) -> "MinesweeperGame":
+        custom_rows: int | None = None,
+        custom_cols: int | None = None,
+        custom_mines: int | None = None,
+    ) -> MinesweeperGame:
         """Create a new Minesweeper game with the specified difficulty."""
         # Create board
         board = MinesweeperBoard(name="Minesweeper Board")
@@ -475,9 +467,8 @@ class MinesweeperGame(BaseModel):
 
         return game
 
-    def make_move(self, row: int, col: int) -> Tuple[bool, bool, int]:
-        """
-        Make a move by revealing a cell.
+    def make_move(self, row: int, col: int) -> tuple[bool, bool, int]:
+        """Make a move by revealing a cell.
 
         Args:
             row: Row to reveal
@@ -517,8 +508,7 @@ class MinesweeperGame(BaseModel):
         return True, False, cells_revealed
 
     def toggle_flag(self, row: int, col: int) -> bool:
-        """
-        Toggle flag on a cell.
+        """Toggle flag on a cell.
 
         Args:
             row: Row to toggle
@@ -532,9 +522,8 @@ class MinesweeperGame(BaseModel):
 
         return self.board.toggle_flag(row, col)
 
-    def chord(self, row: int, col: int) -> Tuple[bool, bool, int]:
-        """
-        Perform a chord action.
+    def chord(self, row: int, col: int) -> tuple[bool, bool, int]:
+        """Perform a chord action.
 
         Args:
             row: Row to chord
@@ -608,7 +597,7 @@ class MinesweeperGame(BaseModel):
         end = self.end_time if self.end_time is not None else time.time()
         return int(end - self.start_time)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get the current game status."""
         return {
             "difficulty": self.difficulty,

@@ -17,7 +17,6 @@ import ast
 import os
 import re
 import sys
-from typing import Dict
 
 
 class DocstringVisitor(ast.NodeVisitor):
@@ -302,7 +301,7 @@ Example:
     >>> agent = {display_name.replace(' ', '')}Agent(config)
 """
 
-    elif class_name.endswith("State"):
+    if class_name.endswith("State"):
         return f"""Represents the complete state of a {display_name} game.
 
 This class manages the game state including board position, player information,
@@ -316,7 +315,7 @@ Example:
     >>> print(state.board)
 """
 
-    elif class_name.endswith("StateManager"):
+    if class_name.endswith("StateManager"):
         return f"""Manages game logic and state transitions for {display_name}.
 
 This class handles core game mechanics including move validation, state updates,
@@ -331,7 +330,7 @@ Example:
     >>> new_state = manager.apply_move(state, move)
 """
 
-    elif class_name.endswith("Agent"):
+    if class_name.endswith("Agent"):
         return f"""{display_name} playing agent with strategic reasoning capabilities.
 
 This agent can play {display_name} using LLM-based reasoning, analyzing positions,
@@ -345,7 +344,7 @@ Example:
     >>> final_state = agent.run_game()
 """
 
-    elif class_name.endswith("Move"):
+    if class_name.endswith("Move"):
         return f"""Represents a single move in {display_name}.
 
 This class defines the structure and validation for game moves, capturing
@@ -358,7 +357,7 @@ Example:
     >>> move = {class_name}(player="player1", position=(0, 0))
 """
 
-    elif class_name.endswith("Analysis"):
+    if class_name.endswith("Analysis"):
         return f"""Strategic analysis for {display_name} positions.
 
 This class provides structured analysis of game positions, including
@@ -374,7 +373,7 @@ Example:
     ... )
 """
 
-    elif class_name.endswith("Board"):
+    if class_name.endswith("Board"):
         return f"""Represents the game board for {display_name}.
 
 This class provides the structure and operations for the {display_name} board,
@@ -388,7 +387,7 @@ Example:
     >>> board.place_piece(position=(0, 0), piece="X")
 """
 
-    elif class_name.endswith("Player"):
+    if class_name.endswith("Player"):
         return f"""Represents a player in {display_name}.
 
 This class holds player information for {display_name} games, including
@@ -401,7 +400,7 @@ Example:
     >>> player = {class_name}(id="p1", name="Player 1")
 """
 
-    elif class_name.endswith("UI") or class_name.endswith("Renderer"):
+    if class_name.endswith("UI") or class_name.endswith("Renderer"):
         return f"""User interface component for {display_name}.
 
 This class provides visualization and interaction capabilities for
@@ -415,7 +414,7 @@ Example:
     >>> ui.render(game_state)
 """
 
-    elif class_name.endswith("Runner"):
+    if class_name.endswith("Runner"):
         return f"""Game runner for {display_name}.
 
 This class manages the execution of {display_name} games, coordinating
@@ -429,9 +428,8 @@ Example:
     >>> result = runner.run_game(players=[player1, player2])
 """
 
-    else:
-        # Generic class docstring for other types
-        return f"""{class_name} for {display_name} game implementation.
+    # Generic class docstring for other types
+    return f"""{class_name} for {display_name} game implementation.
 
 This class provides functionality for the {display_name} game module.
 
@@ -601,23 +599,23 @@ def generate_param_description(
     # Check for common parameter prefixes/suffixes
     if param_name.endswith("_state"):
         return f"State information for {param_name[:-6]}."
-    elif param_name.endswith("_config"):
+    if param_name.endswith("_config"):
         return f"Configuration for {param_name[:-7]}."
-    elif param_name.endswith("_id"):
+    if param_name.endswith("_id"):
         return f"Identifier for {param_name[:-3]}."
-    elif param_name.endswith("_name"):
+    if param_name.endswith("_name"):
         return f"Name of the {param_name[:-5]}."
-    elif param_name.endswith("_path"):
+    if param_name.endswith("_path"):
         return f"Path to the {param_name[:-5]}."
-    elif param_name.endswith("_file"):
+    if param_name.endswith("_file"):
         return f"File containing {param_name[:-5]} data."
-    elif param_name.endswith("_dir"):
+    if param_name.endswith("_dir"):
         return f"Directory containing {param_name[:-4]} data."
-    elif param_name.startswith("max_"):
+    if param_name.startswith("max_"):
         return f"Maximum value for {param_name[4:]}."
-    elif param_name.startswith("min_"):
+    if param_name.startswith("min_"):
         return f"Minimum value for {param_name[4:]}."
-    elif param_name.startswith("num_"):
+    if param_name.startswith("num_"):
         return f"Number of {param_name[4:]}."
 
     # Return from common parameter descriptions or a generic description
@@ -626,7 +624,7 @@ def generate_param_description(
     )
 
 
-def add_docstrings_to_file(file_path: str, dry_run: bool = False) -> Dict[str, int]:
+def add_docstrings_to_file(file_path: str, dry_run: bool = False) -> dict[str, int]:
     """Add docstrings to a Python file where needed.
 
     Args:
@@ -646,7 +644,7 @@ def add_docstrings_to_file(file_path: str, dry_run: bool = False) -> Dict[str, i
     }
 
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             file_content = f.read()
     except Exception as e:
         print(f"Error reading file {file_path}: {e}")
@@ -827,7 +825,7 @@ def create_module_readme(module_path: str, dry_run: bool = False) -> bool:
                 if base_name == "models":
                     # Try to identify model classes in the file
                     try:
-                        with open(os.path.join(module_path, filename), "r") as f:
+                        with open(os.path.join(module_path, filename)) as f:
                             content = f.read()
                             model_classes = re.findall(
                                 r"class\s+(\w+)\(BaseModel", content
@@ -947,7 +945,7 @@ This module is designed to work seamlessly with the Haive agent framework, provi
         return True
 
 
-def process_directory(dir_path: str, dry_run: bool = False) -> Dict[str, int]:
+def process_directory(dir_path: str, dry_run: bool = False) -> dict[str, int]:
     """Process all Python files in a directory to add documentation.
 
     Args:

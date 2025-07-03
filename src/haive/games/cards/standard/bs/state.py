@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from .models import Card, PlayerState
+from haive.games.cards.standard.bs.models import Card, PlayerState
 
 
 class BullshitGameState(BaseModel):

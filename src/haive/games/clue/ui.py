@@ -32,7 +32,7 @@ Example:
 """
 
 import time
-from typing import Any, Dict, Union
+from typing import Any
 
 from rich.align import Align
 from rich.box import DOUBLE, ROUNDED
@@ -582,7 +582,7 @@ class ClueUI:
             padding=(0, 1),
         )
 
-    def display_state(self, state: Union[ClueState, Dict[str, Any]]) -> None:
+    def display_state(self, state: ClueState | dict[str, Any]) -> None:
         """Display the current game state with rich formatting.
 
         Renders the complete game state including suspects, weapons, rooms,

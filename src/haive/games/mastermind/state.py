@@ -1,6 +1,6 @@
 import operator
 import random
-from typing import Annotated, List, Literal
+from typing import Annotated, Literal
 
 from pydantic import Field, computed_field
 
@@ -16,13 +16,13 @@ from haive.games.mastermind.models import (
 class MastermindState(GameState):
     """State for a Mastermind game."""
 
-    secret_code: List[str] = Field(
+    secret_code: list[str] = Field(
         ..., min_items=4, max_items=4, description="Secret color code (4 colors)"
     )
-    guesses: Annotated[List[MastermindGuess], operator.add] = Field(
+    guesses: Annotated[list[MastermindGuess], operator.add] = Field(
         default_factory=list, description="History of guesses"
     )
-    feedback: Annotated[List[MastermindFeedback], operator.add] = Field(
+    feedback: Annotated[list[MastermindFeedback], operator.add] = Field(
         default_factory=list, description="Feedback for each guess"
     )
     turn: Literal["player1", "player2"] = Field(
@@ -36,10 +36,10 @@ class MastermindState(GameState):
         default="ongoing", description="Status of the game"
     )
     winner: str | None = Field(default=None, description="Winner of the game, if any")
-    player1_analysis: Annotated[List[MastermindAnalysis], operator.add] = Field(
+    player1_analysis: Annotated[list[MastermindAnalysis], operator.add] = Field(
         default_factory=list, description="Analyses by player1"
     )
-    player2_analysis: Annotated[List[MastermindAnalysis], operator.add] = Field(
+    player2_analysis: Annotated[list[MastermindAnalysis], operator.add] = Field(
         default_factory=list, description="Analyses by player2"
     )
 

@@ -1,7 +1,6 @@
 # haive/packages/haive-games/src/haive/games/card/poker/state.py
 
 from enum import Enum
-from typing import Dict, List, Optional
 
 from pydantic import Field, model_validator
 
@@ -48,17 +47,17 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
     variant: PokerVariant = PokerVariant.TEXAS_HOLDEM
 
     # Poker-specific state
-    community_cards: List[StandardCard] = Field(default_factory=list)
+    community_cards: list[StandardCard] = Field(default_factory=list)
     phase: PokerPhase = PokerPhase.DEAL
-    betting_round: Optional[PokerBettingRound] = None
-    active_players: List[str] = Field(default_factory=list)
-    folded_players: List[str] = Field(default_factory=list)
-    all_in_players: List[str] = Field(default_factory=list)
+    betting_round: PokerBettingRound | None = None
+    active_players: list[str] = Field(default_factory=list)
+    folded_players: list[str] = Field(default_factory=list)
+    all_in_players: list[str] = Field(default_factory=list)
 
     # Table positions
     dealer_position: int = 0
-    small_blind_position: Optional[int] = None
-    big_blind_position: Optional[int] = None
+    small_blind_position: int | None = None
+    big_blind_position: int | None = None
 
     # Blind amounts
     small_blind: int = 1
@@ -66,10 +65,10 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
 
     # Current betting state
     current_bet: int = 0
-    last_raiser: Optional[str] = None
+    last_raiser: str | None = None
 
     # Hand rankings (during showdown)
-    hand_rankings: Dict[str, PokerHandRank] = Field(default_factory=dict)
+    hand_rankings: dict[str, PokerHandRank] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def setup_active_players(self) -> "PokerGameState":
@@ -131,7 +130,7 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
             self.current_bets[big_blind_player] = self.big_blind
             self.current_bet = self.big_blind
 
-    def _get_position_order(self) -> List[int]:
+    def _get_position_order(self) -> list[int]:
         """Get the order of positions for the current betting round."""
         num_players = len(self.players)
 
@@ -185,7 +184,7 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
                 if card:
                     self.hands[player_id].add_card(card)
 
-    def deal_community_cards(self, count: int = 1) -> List[StandardCard]:
+    def deal_community_cards(self, count: int = 1) -> list[StandardCard]:
         """Deal community cards."""
         cards = []
         for _ in range(count):
@@ -281,7 +280,7 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
         if len(winners) == 1:
             self.winner_id = winners[0]
 
-    def get_player_view(self, player_id: str) -> Dict[str, Any]:
+    def get_player_view(self, player_id: str) -> dict[str, Any]:
         """Get the game state from a specific player's perspective."""
         # Create a filtered copy of the state
         view = {

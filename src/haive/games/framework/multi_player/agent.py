@@ -430,17 +430,23 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         """
         if not self.state_manager:
             raise ValueError("State manager must be set by subclass")
+
+        # Handle different state input types carefully
+        player_list = []
+
         if isinstance(state, dict):
-            player_list = state.get(
-                "players",
-                [f"player_{i}" for i in range(self.config.initial_player_count)],
-            )
-        elif state.players is None:
+            # Dictionary case
+            player_list = state.get("players", [])
+        elif hasattr(state, "players") and state.players is not None:
+            # BaseModel with players attribute case
+            player_list = state.players
+
+        # If no players were found or the list is empty, generate default player names
+        if not player_list:
             player_list = [
                 f"player_{i}" for i in range(self.config.initial_player_count)
             ]
-        else:
-            player_list = state.players
+
         # Create initial game state with player list
         game_state = self.state_manager.initialize(player_list)
 
@@ -458,14 +464,53 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         Returns:
             Dict[str, Any]: Updated game state after setup.
         """
-        # Implement game-specific setup logic
-        # Default implementation just advances to main phase
-        state = self.state_manager.advance_phase(state)
+        try:
+            # Implement game-specific setup logic
+            # Default implementation just advances to main phase
+            new_state = self.state_manager.advance_phase(state)
 
-        # Convert to dict for the graph
-        if hasattr(state, "model_dump"):
-            return state.model_dump()
-        return state.dict()
+            # Convert to dict for the graph
+            if hasattr(new_state, "model_dump"):
+                return new_state.model_dump()
+            if hasattr(new_state, "dict"):
+                return new_state.dict()
+            if isinstance(new_state, dict):
+                return new_state
+            # Handle unexpected state type
+            import logging
+
+            logging.warning(
+                f"Unexpected state type in handle_setup_phase: {type(new_state)}"
+            )
+
+            # Create a minimal valid state as fallback
+            return {
+                "players": getattr(state, "players", []),
+                "current_player_idx": 0,
+                "game_status": "ongoing",
+                "game_phase": "day_discussion",  # Move to a valid gameplay phase
+                "round_number": 1,
+                "day_number": 1,
+                "error_message": f"Error in setup phase: unexpected state type {type(new_state)}",
+            }
+        except Exception as e:
+            # Handle any exceptions during setup
+            import logging
+            import traceback
+
+            logging.exception(f"Error in handle_setup_phase: {e}")
+            logging.exception(traceback.format_exc())
+
+            # Create a minimal valid state for error recovery
+            return {
+                "players": getattr(state, "players", []),
+                "current_player_idx": 0,
+                "game_status": "ongoing",
+                "game_phase": "day_discussion",  # Move to a valid gameplay phase
+                "round_number": 1,
+                "day_number": 1,
+                "error_message": f"Error in setup phase: {e!s}",
+            }
 
     def handle_player_turn(self, state: T) -> dict[str, Any]:
         """Handle a player's turn.

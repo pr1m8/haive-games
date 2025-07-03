@@ -21,7 +21,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .models import MafiaAnalysis
+from haive.games.mafia.models import MafiaAnalysis
 
 
 def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
@@ -75,7 +75,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
             structured_output_model=MafiaAnalysis,
         )
 
-    elif analyzer_type == "psychology":
+    if analyzer_type == "psychology":
         return AugLLMConfig(
             name="mafia_psychology_analyzer",
             llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -104,7 +104,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
             structured_output_model=MafiaAnalysis,
         )
 
-    elif analyzer_type == "strategy":
+    if analyzer_type == "strategy":
         return AugLLMConfig(
             name="mafia_strategy_analyzer",
             llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -135,7 +135,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
             structured_output_model=MafiaAnalysis,
         )
 
-    elif analyzer_type == "voting":
+    if analyzer_type == "voting":
         return AugLLMConfig(
             name="mafia_voting_analyzer",
             llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -163,8 +163,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
             structured_output_model=MafiaAnalysis,
         )
 
-    else:
-        raise ValueError(f"Unknown analyzer type: {analyzer_type}")
+    raise ValueError(f"Unknown analyzer type: {analyzer_type}")
 
 
 # Pre-configured analyzers
@@ -177,8 +176,8 @@ voting_analyzer = get_mafia_analyzer("voting")
 # Export all analyzers
 __all__ = [
     "get_mafia_analyzer",
-    "suspicion_analyzer",
     "psychology_analyzer",
     "strategy_analyzer",
+    "suspicion_analyzer",
     "voting_analyzer",
 ]

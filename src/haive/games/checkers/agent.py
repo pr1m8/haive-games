@@ -269,21 +269,27 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                     # Determine next step
                     goto = "analyze_player2" if player == "red" else "analyze_player1"
                     return Command(update=updated_state.model_dump(), goto=goto)
-                else:
-                    # Invalid move
-                    previous_error = (
-                        f"Move '{move}' is not in legal moves. "
-                        f"Legal moves are: {', '.join(formatted_legal_moves[:10])}"
-                        f"{' ...' if len(formatted_legal_moves) > 10 else ''}"
-                    )
+                # Invalid move
+                previous_error = (
+                    f"Move '{move}' is not in legal moves. "
+                    f"Legal moves are: {', '.join(formatted_legal_moves[:10])}"
+                    f"{' ...' if len(formatted_legal_moves) > 10 else ''}"
+                )
 
-                    if attempt < max_attempts:
-                        continue
-                    else:
-                        # Use fallback after max attempts
-                        print(
-                            f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
-                        )
+                if attempt < max_attempts:
+                    continue
+                # Use fallback after max attempts
+                print(
+                    f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
+                )
+                # Apply first legal move as fallback
+                legal_moves = self.state_manager.get_legal_moves(state)
+                if legal_moves:
+                    fallback_move = legal_moves[0]
+                    self.ui.show_move(fallback_move)
+                    updated_state = self.state_manager.apply_move(state, fallback_move)
+                    goto = "analyze_player2" if player == "red" else "analyze_player1"
+                    return Command(update=updated_state.model_dump(), goto=goto)
 
             except Exception as e:
                 print(f"❌ Error in attempt {attempt}: {e}")
@@ -309,8 +315,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                             "analyze_player2" if player == "red" else "analyze_player1"
                         )
                         return Command(update=updated_state.model_dump(), goto=goto)
-                    else:
-                        return Command(update={"game_status": "game_over"}, goto=END)
+                    return Command(update={"game_status": "game_over"}, goto=END)
 
     def prepare_move_context(self, state: CheckersState, player: str) -> dict[str, Any]:
         """Prepare context for move generation.
@@ -418,7 +423,18 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             updated_state = self.state_manager.update_analysis(state, analysis, player)
         except Exception as e:
             print(f"Error during analysis: {e}")
-            updated_state = state
+            # Create a default analysis to keep the game going
+            from haive.games.checkers.models import CheckersAnalysis
+
+            default_analysis = CheckersAnalysis(
+                material_advantage="Error occurred during analysis",
+                control_of_center="Game continues with default analysis",
+                suggested_moves=["Continue play"],
+                positional_evaluation="Position unclear due to analysis error",
+            )
+            updated_state = self.state_manager.update_analysis(
+                state, default_analysis, player
+            )
 
         return Command(update=updated_state.model_dump(), goto=f"{player}_move")
 
@@ -456,9 +472,9 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         """
         initial_state = self.state_manager.initialize()
 
-        # Create runnable config with increased recursion limit
+        # Create runnable config with significantly increased recursion limit
         config = {
-            "configurable": {"recursion_limit": 1000, "thread_id": "checkers_game"}
+            "configurable": {"recursion_limit": 10000, "thread_id": "checkers_game"}
         }
 
         try:
@@ -496,12 +512,11 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         """
         if visualize:
             return self.run_game_with_ui()
-        else:
-            # Create runnable config with increased recursion limit
-            config = {
-                "configurable": {"recursion_limit": 1000, "thread_id": "checkers_game"}
-            }
-            return self.run({}, config=config)
+        # Create runnable config with significantly increased recursion limit
+        config = {
+            "configurable": {"recursion_limit": 10000, "thread_id": "checkers_game"}
+        }
+        return self.run({}, config=config)
 
     def setup_workflow(self) -> None:
         """Set up the workflow graph for the checkers game.

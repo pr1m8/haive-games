@@ -7,7 +7,6 @@ This module provides corrected configuration classes for the monopoly game agent
 """
 
 import uuid
-from typing import Any, Dict, List, Optional, Type
 
 from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.config import AgentConfig
@@ -25,20 +24,20 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
     # Override base fields
     name: str = Field(default="monopoly_player", description="Agent name")
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=PlayerDecisionState,
         description="State schema (will be set dynamically)",
     )
-    input_schema: Type[BaseModel] = Field(
+    input_schema: type[BaseModel] = Field(
         default=PlayerDecisionState,
         description="Input schema (will be set dynamically)",
     )
-    output_schema: Type[BaseModel] = Field(
+    output_schema: type[BaseModel] = Field(
         default=PlayerDecisionState,
         description="Output schema (will be set dynamically)",
     )
     # Player agent specific engines
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="LLM engines for different decision types"
     )
 
@@ -69,7 +68,7 @@ class MonopolyGameAgentConfig(AgentConfig):
     )
 
     # Game settings
-    player_names: List[str] = Field(
+    player_names: list[str] = Field(
         default=["Alice", "Bob", "Charlie", "Diana"],
         description="Names of players in the game",
     )
@@ -96,7 +95,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         default=True, description="Whether to visualize the game workflow graph"
     )
 
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=MonopolyState, description="The state schema for the game"
     )
 
@@ -152,7 +151,7 @@ class MonopolyGameAgentConfig(AgentConfig):
             print(f"WARNING: Initial state has issues: {issues}")
             raise ValueError(f"Initial state validation failed: {issues}")
 
-        print(f"DEBUG: Initial state created successfully")
+        print("DEBUG: Initial state created successfully")
         print(f"DEBUG: Current player: {initial_state.current_player.name}")
 
         return initial_state

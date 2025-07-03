@@ -13,7 +13,8 @@ The state schema provides a complete representation of a checkers game state
 that can be used by the agent and state manager.
 """
 
-from typing import ClassVar, Dict, List, Literal, Sequence
+from collections.abc import Sequence
+from typing import ClassVar, Literal
 
 from pydantic import BaseModel, Field
 
@@ -60,7 +61,7 @@ class CheckersState(BaseModel):
         >>> new_game = CheckersState.initialize()
     """
 
-    board: List[List[Literal[0, 1, 2, 3, 4]]] = Field(
+    board: list[list[Literal[0, 1, 2, 3, 4]]] = Field(
         default_factory=lambda: CheckersState._default_board(),
         description="2D grid representation of the board",
     )
@@ -89,13 +90,13 @@ class CheckersState(BaseModel):
     black_analysis: Sequence[CheckersAnalysis] = Field(
         default_factory=list, description="Position analysis from black's perspective"
     )
-    captured_pieces: Dict[str, List[str]] = Field(
+    captured_pieces: dict[str, list[str]] = Field(
         default_factory=lambda: {"red": [], "black": []},
         description="Pieces captured by each player",
     )
 
     __board_size: ClassVar[int] = 8
-    __symbols: ClassVar[Dict[int, str]] = {0: ".", 1: "r", 2: "R", 3: "b", 4: "B"}
+    __symbols: ClassVar[dict[int, str]] = {0: ".", 1: "r", 2: "R", 3: "b", 4: "B"}
 
     @classmethod
     def _default_board(cls) -> list[list[int]]:

@@ -36,7 +36,6 @@ def create_white_player_engine() -> AugLLMConfig:
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.ChessPlayerDecision'>
     """
-
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -107,7 +106,6 @@ def create_black_player_engine() -> AugLLMConfig:
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.ChessPlayerDecision'>
     """
-
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -179,7 +177,6 @@ def create_white_analyzer_engine() -> AugLLMConfig:
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.SegmentedAnalysis'>
     """
-
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -237,7 +234,6 @@ def create_black_analyzer_engine() -> AugLLMConfig:
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.SegmentedAnalysis'>
     """
-
     prompt = ChatPromptTemplate.from_messages(
         [
             (

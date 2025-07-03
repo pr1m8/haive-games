@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Any, Dict, Literal, Optional, Union
+from typing import Any, Literal
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -257,7 +257,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                 if response.content.pass_turn:
                     return "pass"
                 return response.content.move
-            elif isinstance(response.content, dict):
+            if isinstance(response.content, dict):
                 try:
                     decision = DominoesPlayerDecision.model_validate(response.content)
                     if decision.pass_turn:
@@ -459,7 +459,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         if hasattr(response, "content"):
             if isinstance(response.content, DominoesAnalysis):
                 return response.content
-            elif isinstance(response.content, dict):
+            if isinstance(response.content, dict):
                 try:
                     return DominoesAnalysis.model_validate(response.content)
                 except Exception as e:

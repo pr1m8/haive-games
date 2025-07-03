@@ -1,11 +1,37 @@
+"""Sudoku - TODO: Add brief description
+
+TODO: Add detailed description of module functionality
+
+
+Key Components:
+    * Classes: Difficulty, SudokuGame
+    * Functions: validate_game, new_game, make_move
+    * Submodules: game
+
+
+Example:
+    Basic usage::
+
+        from haive.sudoku import Difficulty
+
+        instance = Difficulty()
+        # TODO: Complete example
+
+
+See Also:
+    :mod:`haive.sudoku.game`: TODO: Add description
+
+"""
+
 from __future__ import annotations
 
 import math
 import random
 import uuid
 from collections import Counter, defaultdict
+from collections.abc import Sequence
 from enum import Enum
-from typing import Dict, FrozenSet, List, Optional, Sequence, Set, Tuple, Union
+from typing import Dict, FrozenSet, List, Optional, Set, Tuple, Union
 
 # Import base framework classes
 from game_framework_base import GamePiece, GridBoard, GridPosition, GridSpace
@@ -27,18 +53,18 @@ class SudokuGame(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     board: SudokuBoard
     difficulty: Difficulty = Difficulty.EASY
-    original_puzzle: List[List[int]] = Field(
+    original_puzzle: list[list[int]] = Field(
         default_factory=lambda: [[0 for _ in range(9)] for _ in range(9)]
     )
-    moves: List[Dict[str, Any]] = Field(default_factory=list)
+    moves: list[dict[str, Any]] = Field(default_factory=list)
     hint_count: int = 0
     show_candidates: bool = True
-    start_time: Optional[float] = None
-    end_time: Optional[float] = None
+    start_time: float | None = None
+    end_time: float | None = None
     solved: bool = False
 
     @model_validator(mode="after")
-    def validate_game(self) -> "SudokuGame":
+    def validate_game(self) -> SudokuGame:
         """Ensure game has valid components."""
         # Initialize board if not done already
         if self.board and not self.board.spaces:
@@ -49,8 +75,8 @@ class SudokuGame(BaseModel):
     def new_game(
         cls,
         difficulty: Difficulty = Difficulty.EASY,
-        puzzle: Optional[List[List[int]]] = None,
-    ) -> "SudokuGame":
+        puzzle: list[list[int]] | None = None,
+    ) -> SudokuGame:
         """Create a new Sudoku game with the specified difficulty."""
         # Create board
         board = SudokuBoard(name="Sudoku Board")
@@ -76,7 +102,7 @@ class SudokuGame(BaseModel):
 
         return game
 
-    def _get_sample_puzzle(self, difficulty: Difficulty) -> List[List[int]]:
+    def _get_sample_puzzle(self, difficulty: Difficulty) -> list[list[int]]:
         """Get a sample puzzle for the specified difficulty."""
         # These are just examples; a real implementation would have many puzzles
         # or generate them dynamically
@@ -130,8 +156,7 @@ class SudokuGame(BaseModel):
         return puzzles.get(difficulty, puzzles[Difficulty.EASY])
 
     def make_move(self, row: int, col: int, value: int) -> bool:
-        """
-        Make a move by placing a value in a cell.
+        """Make a move by placing a value in a cell.
 
         Args:
             row: Row to place value
@@ -173,9 +198,8 @@ class SudokuGame(BaseModel):
 
         return success
 
-    def get_hint(self) -> Optional[Tuple[int, int, int]]:
-        """
-        Get a hint for the next move.
+    def get_hint(self) -> tuple[int, int, int] | None:
+        """Get a hint for the next move.
 
         Returns:
             Tuple of (row, col, value) if a hint is available, None otherwise
@@ -250,7 +274,7 @@ class SudokuGame(BaseModel):
         end = self.end_time if self.end_time is not None else time.time()
         return int(end - self.start_time)
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get the current game status."""
         candidates = {}
         if self.show_candidates:
@@ -268,8 +292,7 @@ class SudokuGame(BaseModel):
         }
 
     def undo_move(self) -> bool:
-        """
-        Undo the last move.
+        """Undo the last move.
 
         Returns:
             True if successful, False if no moves to undo

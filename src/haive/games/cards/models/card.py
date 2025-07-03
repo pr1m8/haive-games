@@ -1,5 +1,4 @@
-"""
-Card representation and operations for card games.
+"""Card representation and operations for card games.
 
 This module provides classes for representing playing cards, including ranks,
 suits, and card values. It's designed to be used in various card game implementations
@@ -242,10 +241,9 @@ class Card:
         """
         if self.rank == Rank.ACE:
             return 11
-        elif self.rank in [Rank.JACK, Rank.QUEEN, Rank.KING]:
+        if self.rank in [Rank.JACK, Rank.QUEEN, Rank.KING]:
             return 10
-        else:
-            return self.rank.value
+        return self.rank.value
 
     def is_face_card(self) -> bool:
         """Check if the card is a face card (Jack, Queen, or King).

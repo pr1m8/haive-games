@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import random
 import uuid
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Import base framework classes
-from game_framework_base import GamePiece, GridBoard, GridPosition, GridSpace
+from game_framework_base import GamePiece, GridPosition, GridSpace
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 # ======================================================
@@ -38,7 +37,7 @@ class NumberTile(GamePiece[GridPosition]):
             raise ValueError("Value must be a positive power of 2")
         return v
 
-    def can_move_to(self, position: GridPosition, board: "Board") -> bool:
+    def can_move_to(self, position: GridPosition, board: Board) -> bool:
         """Check if this tile can be placed at the specified position."""
         space = board.get_space_at_position(position)
         if not space:
@@ -113,7 +112,7 @@ class TwentyFortyEightGame(BaseModel):
     moves: int = 0
 
     @model_validator(mode="after")
-    def validate_game(self) -> "TwentyFortyEightGame":
+    def validate_game(self) -> TwentyFortyEightGame:
         """Ensure game has valid components."""
         # Initialize board if not done already
         if self.board and not self.board.spaces:
@@ -121,7 +120,7 @@ class TwentyFortyEightGame(BaseModel):
         return self
 
     @classmethod
-    def new_game(cls) -> "TwentyFortyEightGame":
+    def new_game(cls) -> TwentyFortyEightGame:
         """Create a new 2048 game."""
         # Create board
         board = TwentyFortyEightBoard(name="2048 Board", rows=4, cols=4)
@@ -136,9 +135,8 @@ class TwentyFortyEightGame(BaseModel):
 
         return game
 
-    def make_move(self, direction: Direction) -> Tuple[bool, int]:
-        """
-        Make a move in the specified direction.
+    def make_move(self, direction: Direction) -> tuple[bool, int]:
+        """Make a move in the specified direction.
 
         Args:
             direction: Direction to move tiles
@@ -189,7 +187,7 @@ class TwentyFortyEightGame(BaseModel):
         self.board.spawn_random_tile()
         self.board.spawn_random_tile()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get the current game status."""
         return {
             "score": self.board.score,

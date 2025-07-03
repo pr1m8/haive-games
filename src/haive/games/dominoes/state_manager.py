@@ -17,7 +17,7 @@ class DominoesStateManager(GameStateManager[DominoesState]):
 
     @classmethod
     def initialize(
-        cls, player_names: list[str] = ["player1", "player2"], tiles_per_hand: int = 7
+        cls, player_names: list[str] = None, tiles_per_hand: int = 7
     ) -> DominoesState:
         """Initialize a new dominoes game."""
         # Create all tiles from 0-0 to 6-6

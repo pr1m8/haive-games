@@ -25,17 +25,12 @@ Example:
 
 import argparse
 import logging
-import random
 import time
 import traceback
-import uuid
 
-from haive.games.connect4.agent import Connect4Agent
-from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import (
     Connect4Analysis,
     Connect4Move,
-    Connect4PlayerDecision,
 )
 from haive.games.connect4.state_manager import Connect4StateManager
 from haive.games.connect4.ui import Connect4UI

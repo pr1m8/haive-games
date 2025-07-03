@@ -1,5 +1,4 @@
-"""
-Card game models and data structures.
+"""Card game models and data structures.
 
 This package provides fundamental models for card game components including
 cards, decks, and hands. These models form the foundation for implementing

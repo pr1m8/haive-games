@@ -8,10 +8,16 @@ This module provides utility functions for the monopoly game, including:
 """
 
 import random
-from typing import Any, Optional
+from typing import Any
 
-from .models import DiceRoll, Player, Property, PropertyColor, PropertyType
-from .state import MonopolyState
+from haive.games.monopoly.models import (
+    DiceRoll,
+    Player,
+    Property,
+    PropertyColor,
+    PropertyType,
+)
+from haive.games.monopoly.state import MonopolyState
 
 # Board positions and property definitions
 BOARD_PROPERTIES = {
@@ -384,17 +390,38 @@ def create_board() -> dict[str, Property]:
     properties = {}
 
     for position, prop_data in BOARD_PROPERTIES.items():
-        if prop_data["type"] != PropertyType.SPECIAL:
+        # Create ALL properties, including special ones
+        # This ensures positions like Vermont Avenue are properly mapped
+        property_type = PropertyType(prop_data["type"])
+
+        # For regular properties, include all details
+        if property_type != PropertyType.SPECIAL:
             properties[prop_data["name"]] = Property(
                 name=prop_data["name"],
                 position=position,
-                property_type=prop_data["type"],
-                color=prop_data["color"],
+                property_type=property_type,
+                color=PropertyColor(prop_data["color"]),
                 price=prop_data.get("price", 0),
                 rent=prop_data.get("rent", [0]),
                 house_cost=prop_data.get("house_cost", 0),
                 mortgage_value=prop_data.get("mortgage_value", 0),
             )
+        # For special properties, create minimal Property objects
+        else:
+            properties[prop_data["name"]] = Property(
+                name=prop_data["name"],
+                position=position,
+                property_type=property_type,
+                color=PropertyColor(prop_data["color"]),
+                price=0,
+                rent=[0],
+                house_cost=0,
+                mortgage_value=0,
+            )
+
+    # Debug print to verify all properties were created
+    print(f"Created {len(properties)} properties")
+    print(f"Properties include 'Vermont Avenue': {'Vermont Avenue' in properties}")
 
     return properties
 
@@ -425,7 +452,7 @@ def get_properties_by_color(color: PropertyColor) -> list[str]:
 
 
 def calculate_rent(
-    property: Property, state: MonopolyState, dice_roll: Optional[int] = None
+    property: Property, state: MonopolyState, dice_roll: int | None = None
 ) -> int:
     """Calculate rent for a property."""
     if not property.owner or property.mortgaged:
@@ -444,7 +471,7 @@ def calculate_rent(
         )
         return property.rent[min(railroads_owned - 1, 3)]
 
-    elif property.property_type == PropertyType.UTILITY:
+    if property.property_type == PropertyType.UTILITY:
         if dice_roll is None:
             return 0
 
@@ -462,24 +489,23 @@ def calculate_rent(
         multiplier = property.rent[0] if utilities_owned == 1 else property.rent[1]
         return dice_roll * multiplier
 
-    elif property.property_type == PropertyType.STREET:
+    if property.property_type == PropertyType.STREET:
         # Check if owner has monopoly
         has_monopoly = state.player_owns_monopoly(property.owner, property.color.value)
 
         if property.hotel:
             return property.rent[5]
-        elif property.houses > 0:
+        if property.houses > 0:
             return property.rent[property.houses]
-        elif has_monopoly:
+        if has_monopoly:
             # Double rent if monopoly but no houses
             return property.rent[0] * 2
-        else:
-            return property.rent[0]
+        return property.rent[0]
 
     return 0
 
 
-def get_property_at_position(position: int) -> Optional[dict[str, Any]]:
+def get_property_at_position(position: int) -> dict[str, Any] | None:
     """Get property information at a board position."""
     return BOARD_PROPERTIES.get(position)
 
@@ -503,25 +529,25 @@ def handle_special_position(position: int, player: Player, state: MonopolyState)
 
     if position_name == "GO":
         return "collect_go_money"
-    elif position_name == "Jail":
+    if position_name == "Jail":
         return "visiting_jail"
-    elif position_name == "Go To Jail":
+    if position_name == "Go To Jail":
         return "go_to_jail"
-    elif position_name == "Free Parking":
+    if position_name == "Free Parking":
         return "free_parking"
-    elif position_name == "Income Tax":
+    if position_name == "Income Tax":
         return "pay_income_tax"
-    elif position_name == "Luxury Tax":
+    if position_name == "Luxury Tax":
         return "pay_luxury_tax"
-    elif position_name == "Chance":
+    if position_name == "Chance":
         return "draw_chance"
-    elif position_name == "Community Chest":
+    if position_name == "Community Chest":
         return "draw_community_chest"
 
     return "no_action"
 
 
-def check_game_end(state: MonopolyState) -> tuple[bool, Optional[str]]:
+def check_game_end(state: MonopolyState) -> tuple[bool, str | None]:
     """Check if the game should end."""
     active_players = state.active_players
 

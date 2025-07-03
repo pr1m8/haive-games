@@ -4,8 +4,8 @@ from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from .aug_llms import aug_llm_configs
-from .models import GoGameState
+from haive.games.go.aug_llms import aug_llm_configs
+from haive.games.go.state import GoGameState
 
 
 class GoAgentConfig(AgentConfig):
@@ -17,7 +17,7 @@ class GoAgentConfig(AgentConfig):
 
     Attributes:
         state_schema (type): Schema class for game state (default: GoGameState).
-        aug_llm_configs (Dict[str, AugLLMConfig]): LLM configurations for
+        engines (Dict[str, AugLLMConfig]): LLM configurations for
             players and analysis.
         should_visualize_graph (bool): Whether to generate a visualization
             of the game graph (default: True).
@@ -29,7 +29,7 @@ class GoAgentConfig(AgentConfig):
     Example:
         >>> config = GoAgentConfig(
         ...     include_analysis=True,
-        ...     aug_llm_configs={
+        ...     engines={
         ...         "black_player": AugLLMConfig(...),
         ...         "white_player": AugLLMConfig(...),
         ...         "analyzer": AugLLMConfig(...)
@@ -41,7 +41,7 @@ class GoAgentConfig(AgentConfig):
         default=GoGameState, description="Schema class for the Go game state."
     )
 
-    aug_llm_configs: dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default=aug_llm_configs,
         description="LLM configurations for players and analysis.",
     )

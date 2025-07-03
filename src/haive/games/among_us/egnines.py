@@ -1,6 +1,6 @@
 # among_us_engines.py
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -24,8 +24,8 @@ class AmongUsEngines:
 
     @classmethod
     def create_engines(
-        cls, llm_config: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Dict[str, AugLLMConfig]]:
+        cls, llm_config: dict[str, Any] | None = None
+    ) -> dict[str, dict[str, AugLLMConfig]]:
         """Create the engines for the Among Us game.
 
         Args:
@@ -116,8 +116,8 @@ class AmongUsEngines:
 
     @classmethod
     def create_runnable_engines(
-        cls, llm_config: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Dict[str, Any]]:
+        cls, llm_config: dict[str, Any] | None = None
+    ) -> dict[str, dict[str, Any]]:
         """Create runnable engines for the Among Us game.
 
         Args:

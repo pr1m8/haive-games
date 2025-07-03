@@ -32,7 +32,7 @@ def run_connect4_game():
         enable_analysis=True,
         runnable_config={
             "configurable": {"thread_id": thread_id},
-            "recursion_limit": 100,
+            "recursion_limit": 400,
         },
     )
 

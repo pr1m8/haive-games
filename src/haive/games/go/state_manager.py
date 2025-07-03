@@ -17,9 +17,9 @@ Example:
     >>> new_state = GoGameStateManager.apply_move(state, (3, 4))
 """
 
-import sente
+from haive.games.go.state import GoGameState
 
-from .state import GoGameState
+from . import go_engine as sente
 
 
 class GoGameStateManager:
@@ -87,7 +87,7 @@ class GoGameStateManager:
             >>> pass_state = GoGameStateManager.apply_move(new_state, None)
             >>> print(pass_state.passes)  # 1
         """
-        game = sente.sgf.loads(state.board_sgf)[0]
+        game = sente.sgf.loads(state.board_sgf)
         player = state.turn  # Current player
 
         # Handle pass move
@@ -104,12 +104,13 @@ class GoGameStateManager:
         new_passes = 0  # Reset pass count
 
         try:
-            game.play(*move)
+            color = "b" if player == "black" else "w"
+            game.play_move(color, move)
         except Exception as e:
             return GoGameState(**state.dict(), error_message=f"Invalid move: {e!s}")
 
-        # Capture tracking
-        captured_count = game.get_captures(player)
+        # Capture tracking (simplified for now)
+        captured_count = 0
 
         return GoGameState(
             board_sgf=sente.sgf.dumps(game),
@@ -122,6 +123,6 @@ class GoGameStateManager:
             },
             turn="white" if player == "black" else "black",
             passes=new_passes,
-            game_status="ended" if game.is_over() else "ongoing",
-            game_result=game.get_winner() if game.is_over() else None,
+            game_status="ongoing",
+            game_result=None,
         )

@@ -7,10 +7,7 @@ This module provides the corrected MonopolyState class that ensures:
     - Fixed update_player method to avoid IndexError
 """
 
-import operator
-from datetime import datetime
-from enum import Enum
-from typing import Annotated, Any, Dict, List, Optional, Union
+from typing import Annotated, Any, Union
 
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, computed_field
@@ -19,12 +16,11 @@ from haive.games.monopoly.models import (
     DiceRoll,
     GameEvent,
     Player,
-    PlayerActionType,
     Property,
 )
 
 
-def add_events(left: List[GameEvent], right: List[GameEvent]) -> List[GameEvent]:
+def add_events(left: list[GameEvent], right: list[GameEvent]) -> list[GameEvent]:
     """Custom reducer for game events - always append new events."""
     if not left:
         return right
@@ -33,7 +29,7 @@ def add_events(left: List[GameEvent], right: List[GameEvent]) -> List[GameEvent]
     return left + right
 
 
-def add_strings(left: List[str], right: List[str]) -> List[str]:
+def add_strings(left: list[str], right: list[str]) -> list[str]:
     """Custom reducer for string lists."""
     if not left:
         return right
@@ -54,10 +50,10 @@ class MonopolyState(BaseModel):
     """
 
     # Core game data
-    players: List[Player] = Field(
+    players: list[Player] = Field(
         default_factory=list, description="All players in the game"
     )
-    properties: Dict[str, Property] = Field(
+    properties: dict[str, Property] = Field(
         default_factory=dict, description="All properties on the board"
     )
 
@@ -68,32 +64,30 @@ class MonopolyState(BaseModel):
     game_status: str = Field(default="waiting", description="Current game status")
 
     # Dice and movement
-    last_roll: Optional[DiceRoll] = Field(default=None, description="Last dice roll")
+    last_roll: DiceRoll | None = Field(default=None, description="Last dice roll")
     doubles_rolled: bool = Field(
         default=False, description="Whether doubles were rolled this turn"
     )
 
     # Cards
-    chance_cards: List[str] = Field(
+    chance_cards: list[str] = Field(
         default_factory=list, description="Shuffled chance cards"
     )
-    community_chest_cards: List[str] = Field(
+    community_chest_cards: list[str] = Field(
         default_factory=list, description="Shuffled community chest cards"
     )
 
     # Game events with proper reducer for Command updates
-    game_events: Annotated[List[GameEvent], add_events] = Field(
+    game_events: Annotated[list[GameEvent], add_events] = Field(
         default_factory=list, description="History of game events"
     )
 
     # Game end state
-    winner: Optional[str] = Field(default=None, description="Winner of the game")
-    error_message: Optional[str] = Field(
-        default=None, description="Error message if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game")
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     # Optional messages field for LLM compatibility - but not required
-    messages: Optional[List[BaseMessage]] = Field(
+    messages: list[BaseMessage] | None = Field(
         default_factory=list,
         description="Optional conversation messages for LLM compatibility",
     )
@@ -120,32 +114,32 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def active_players(self) -> List[Player]:
+    def active_players(self) -> list[Player]:
         """Get list of active (non-bankrupt) players."""
         return [p for p in self.players if not p.bankrupt]
 
     @computed_field
     @property
-    def bankrupt_players(self) -> List[Player]:
+    def bankrupt_players(self) -> list[Player]:
         """Get list of bankrupt players."""
         return [p for p in self.players if p.bankrupt]
 
-    def get_player_by_name(self, name: str) -> Optional[Player]:
+    def get_player_by_name(self, name: str) -> Player | None:
         """Get player by name."""
         return next((p for p in self.players if p.name == name), None)
 
-    def get_property_by_name(self, name: str) -> Optional[Property]:
+    def get_property_by_name(self, name: str) -> Property | None:
         """Get property by name."""
         return self.properties.get(name)
 
-    def get_property_by_position(self, position: int) -> Optional[Property]:
+    def get_property_by_position(self, position: int) -> Property | None:
         """Get property at a specific board position."""
         return next(
             (prop for prop in self.properties.values() if prop.position == position),
             None,
         )
 
-    def get_properties_owned_by_player(self, player_name: str) -> List[Property]:
+    def get_properties_owned_by_player(self, player_name: str) -> list[Property]:
         """Get all properties owned by a player."""
         return [prop for prop in self.properties.values() if prop.owner == player_name]
 
@@ -195,7 +189,7 @@ class MonopolyState(BaseModel):
 
         self.turn_number += 1
 
-    def get_recent_events(self, count: int = 10) -> List[GameEvent]:
+    def get_recent_events(self, count: int = 10) -> list[GameEvent]:
         """Get the most recent game events."""
         return self.game_events[-count:] if self.game_events else []
 
@@ -206,7 +200,7 @@ class MonopolyState(BaseModel):
 
     @classmethod
     def from_state_object(
-        cls, state: Union["MonopolyState", BaseModel, Dict[str, Any]]
+        cls, state: Union["MonopolyState", BaseModel, dict[str, Any]]
     ) -> "MonopolyState":
         """Convert any state object to MonopolyState.
 
@@ -214,16 +208,15 @@ class MonopolyState(BaseModel):
         """
         if isinstance(state, cls):
             return state
-        elif isinstance(state, dict):
+        if isinstance(state, dict):
             return cls.from_dict(state)
-        elif isinstance(state, BaseModel):
+        if isinstance(state, BaseModel):
             # Convert BaseModel to dict then to MonopolyState
             return cls.from_dict(state.model_dump())
-        else:
-            raise ValueError(f"Cannot convert {type(state)} to MonopolyState")
+        raise ValueError(f"Cannot convert {type(state)} to MonopolyState")
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "MonopolyState":
+    def from_dict(cls, data: dict[str, Any]) -> "MonopolyState":
         """Create state from dictionary with proper nested object handling."""
         # Create a copy to avoid modifying the original
         data = data.copy()
@@ -250,7 +243,7 @@ class MonopolyState(BaseModel):
             ]
 
         # Handle DiceRoll object
-        if "last_roll" in data and data["last_roll"]:
+        if data.get("last_roll"):
             if isinstance(data["last_roll"], dict):
                 data["last_roll"] = DiceRoll.model_validate(data["last_roll"])
 
@@ -270,7 +263,7 @@ class MonopolyState(BaseModel):
 
         return cls.model_validate(data)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert state to dictionary for serialization."""
         # Use model_dump for Pydantic v2 compliance
         result = self.model_dump()
@@ -309,14 +302,14 @@ class MonopolyState(BaseModel):
         return self.model_copy(update={"properties": new_properties})
 
     def add_events_and_update(
-        self, events: List[GameEvent], **updates
-    ) -> Dict[str, Any]:
+        self, events: list[GameEvent], **updates
+    ) -> dict[str, Any]:
         """Add events and other updates for Command usage."""
         update_dict = {"game_events": events}
         update_dict.update(updates)
         return update_dict
 
-    def validate_state_consistency(self) -> List[str]:
+    def validate_state_consistency(self) -> list[str]:
         """Validate the state for consistency and return any issues found."""
         issues = []
 
@@ -328,9 +321,8 @@ class MonopolyState(BaseModel):
                 issues.append(
                     f"current_player_index {self.current_player_index} out of bounds (0-{len(self.players)-1})"
                 )
-        else:
-            if self.current_player_index != 0:
-                issues.append(f"current_player_index should be 0 when no players exist")
+        elif self.current_player_index != 0:
+            issues.append("current_player_index should be 0 when no players exist")
 
         # Check for duplicate player names
         player_names = [p.name for p in self.players]

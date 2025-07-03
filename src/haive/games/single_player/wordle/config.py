@@ -1,5 +1,3 @@
-from typing import Any
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -7,7 +5,6 @@ from pydantic import BaseModel, Field
 
 from haive.games.framework.base import GameConfig
 from haive.games.single_player.wordle.models import (
-    WordConnectionsMove,
     WordConnectionsState,
 )
 

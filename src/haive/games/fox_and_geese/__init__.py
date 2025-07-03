@@ -30,8 +30,8 @@ __all__ = [
     "FoxAndGeeseConfig",
     "FoxAndGeeseMove",
     "FoxAndGeesePosition",
+    "FoxAndGeeseRichUI",
     "FoxAndGeeseState",
     "FoxAndGeeseStateManager",
     "FoxAndGeeseUI",
-    "FoxAndGeeseRichUI",
 ]

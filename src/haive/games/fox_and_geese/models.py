@@ -4,7 +4,7 @@ This module defines the models for the Fox and Geese game,
 including the move and analysis models.
 """
 
-from typing import List, Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -48,7 +48,7 @@ class FoxAndGeeseMove(BaseModel):
     from_pos: FoxAndGeesePosition = Field(description="Starting position")
     to_pos: FoxAndGeesePosition = Field(description="Ending position")
     piece_type: Literal["fox", "goose"] = Field(description="Type of piece moved")
-    capture: Optional[FoxAndGeesePosition] = Field(
+    capture: FoxAndGeesePosition | None = Field(
         default=None, description="Position of captured goose, if any"
     )
 
@@ -86,12 +86,12 @@ class FoxAndGeeseAnalysis(BaseModel):
         description="Which side has the advantage"
     )
     advantage_level: int = Field(ge=0, le=10, description="Level of advantage (0-10)")
-    key_features: List[str] = Field(
+    key_features: list[str] = Field(
         default_factory=list, description="Key strategic features of the position"
     )
     fox_strategy: str = Field(description="Recommended strategy for the fox")
     geese_strategy: str = Field(description="Recommended strategy for the geese")
-    critical_squares: List[str] = Field(
+    critical_squares: list[str] = Field(
         default_factory=list,
         description="Critical squares or formations in the position",
     )

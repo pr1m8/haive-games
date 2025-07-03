@@ -24,8 +24,9 @@ Example:
 
 from typing import Literal
 
-import sente
 from pydantic import BaseModel, Field, field_validator
+
+from . import go_engine as sente
 
 
 class GoGameState(BaseModel):

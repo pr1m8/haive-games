@@ -18,7 +18,6 @@ Example Output:
 """
 
 from haive.games.checkers.agent import CheckersAgent, CheckersAgentConfig
-from haive.games.checkers.state import CheckersState
 
 
 def run_example_game():
@@ -35,8 +34,15 @@ def run_example_game():
         >>> run_example_game()
         # Game visualization and progress will display in terminal
     """
-    # Initialize a checkers agent with default configuration
-    agent = CheckersAgent(CheckersAgentConfig())
+    # Initialize a checkers agent with custom configuration
+    config = CheckersAgentConfig()
+
+    # Increase recursion limit to avoid the recursion error
+    config.runnable_config = {
+        "configurable": {"recursion_limit": 10000, "thread_id": "checkers_game"}
+    }
+
+    agent = CheckersAgent(config)
 
     # Run a complete game with default parameters
     agent.run_game()

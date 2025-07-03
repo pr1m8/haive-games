@@ -1,7 +1,7 @@
 # haive/games/core/components/cards/standard.py
 
 from enum import Enum
-from typing import ClassVar, Dict, List
+from typing import ClassVar
 
 from pydantic import validator
 
@@ -46,7 +46,7 @@ class StandardCard(Card):
     is_face_card: bool = False
     color: str = "black"
 
-    _rank_values: ClassVar[Dict[StandardRank, int]] = {
+    _rank_values: ClassVar[dict[StandardRank, int]] = {
         StandardRank.ACE: 1,  # Default low ace
         StandardRank.TWO: 2,
         StandardRank.THREE: 3,
@@ -194,7 +194,7 @@ class StandardCardComparator:
 
     @classmethod
     def compare(
-        cls, card1: StandardCard, card2: StandardCard, context: Dict = None
+        cls, card1: StandardCard, card2: StandardCard, context: dict = None
     ) -> int:
         """Compare two standard cards."""
         context = context or {}
@@ -213,7 +213,7 @@ class StandardCardComparator:
         # Compare by rank first
         if value1 < value2:
             return -1
-        elif value1 > value2:
+        if value1 > value2:
             return 1
 
         # If ranks match, compare by suit if needed
@@ -230,7 +230,7 @@ class StandardCardComparator:
 
             if suit1 < suit2:
                 return -1
-            elif suit1 > suit2:
+            if suit1 > suit2:
                 return 1
 
         # Cards are equal
@@ -238,8 +238,8 @@ class StandardCardComparator:
 
     @classmethod
     def sort_cards(
-        cls, cards: List[StandardCard], context: Dict = None
-    ) -> List[StandardCard]:
+        cls, cards: list[StandardCard], context: dict = None
+    ) -> list[StandardCard]:
         """Sort standard cards by rank and optionally suit."""
         return sorted(
             cards, key=functools.cmp_to_key(lambda a, b: cls.compare(a, b, context))

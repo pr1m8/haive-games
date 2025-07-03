@@ -15,15 +15,15 @@ Example:
     >>> agent = GoAgent(config)
 """
 
-from .agent import GoAgent
-from .config import GoAgentConfig
-from .models import (
+from haive.games.go.agent import GoAgent
+from haive.games.go.config import GoAgentConfig
+from haive.games.go.models import (
     GoAnalysis,
-    GoMove,
+    GoMoveModel,
     GoPlayerDecision,
 )
-from .state import GoGameState
-from .state_manager import GoGameStateManager
+from haive.games.go.state import GoGameState
+from haive.games.go.state_manager import GoGameStateManager
 
 __all__ = [
     "GoAgent",
@@ -31,6 +31,6 @@ __all__ = [
     "GoAnalysis",
     "GoGameState",
     "GoGameStateManager",
-    "GoMove",
+    "GoMoveModel",
     "GoPlayerDecision",
 ]

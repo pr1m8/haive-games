@@ -12,6 +12,7 @@ Components:
 """
 
 from haive.games.dominoes.agent import DominoesAgent
+from haive.games.dominoes.config import DominoesAgentConfig
 from haive.games.dominoes.models import (
     DominoesAnalysis,
     DominoesPlayerDecision,
@@ -24,13 +25,14 @@ from haive.games.dominoes.state_manager import DominoesStateManager
 from haive.games.dominoes.ui import DominoesUI
 
 __all__ = [
+    "DominoMove",
+    "DominoTile",
     "DominoesAgent",
+    "DominoesAgentConfig",
+    "DominoesAnalysis",
+    "DominoesPlayerDecision",
+    "DominoesRichUI",
     "DominoesState",
     "DominoesStateManager",
     "DominoesUI",
-    "DominoesRichUI",
-    "DominoTile",
-    "DominoMove",
-    "DominoesAnalysis",
-    "DominoesPlayerDecision",
 ]

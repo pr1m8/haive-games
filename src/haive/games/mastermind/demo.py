@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Standalone demo for the Mastermind game with Rich UI.
+"""Standalone demo for the Mastermind game with Rich UI.
 This script demonstrates the Mastermind game without requiring the full Haive framework.
 """
 
@@ -8,8 +7,6 @@ import argparse
 import logging
 import random
 import sys
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -22,7 +19,7 @@ logger = logging.getLogger(__name__)
 class ColorCode(BaseModel):
     """Color code for Mastermind game."""
 
-    colors: List[str] = Field(default_factory=list)
+    colors: list[str] = Field(default_factory=list)
 
     def __str__(self) -> str:
         return str(self.colors)
@@ -44,14 +41,14 @@ class MastermindState(BaseModel):
     secret_code: ColorCode
     turn: int = 1
     codemaker: str = "player1"
-    guesses: List[ColorCode] = Field(default_factory=list)
-    feedback: List[Feedback] = Field(default_factory=list)
+    guesses: list[ColorCode] = Field(default_factory=list)
+    feedback: list[Feedback] = Field(default_factory=list)
     game_status: str = "in_progress"
     max_turns: int = 10
 
     @classmethod
     def initialize(
-        cls, secret_code: Optional[List[str]] = None, max_turns: int = 10
+        cls, secret_code: list[str] | None = None, max_turns: int = 10
     ) -> "MastermindState":
         """Initialize a new game state."""
         if secret_code is None:
@@ -65,7 +62,7 @@ class MastermindState(BaseModel):
         """Check if the game is over."""
         return self.game_status != "in_progress"
 
-    def make_guess(self, guess: List[str]) -> Feedback:
+    def make_guess(self, guess: list[str]) -> Feedback:
         """Make a guess and get feedback."""
         guess_obj = ColorCode(colors=guess)
         self.guesses.append(guess_obj)
@@ -90,7 +87,7 @@ class MastermindState(BaseModel):
 
 
 # Helper functions
-def calculate_feedback(secret_code: List[str], guess: List[str]) -> Dict[str, int]:
+def calculate_feedback(secret_code: list[str], guess: list[str]) -> dict[str, int]:
     """Calculate feedback for a guess."""
     if len(secret_code) != len(guess):
         raise ValueError("Secret code and guess must be the same length")
@@ -100,7 +97,9 @@ def calculate_feedback(secret_code: List[str], guess: List[str]) -> Dict[str, in
     guess_copy = guess.copy()
 
     # Count correct positions
-    correct_position = sum(1 for s, g in zip(secret, guess_copy) if s == g)
+    correct_position = sum(
+        1 for s, g in zip(secret, guess_copy, strict=False) if s == g
+    )
 
     # Remove correct positions for counting correct colors
     for i in range(len(secret) - 1, -1, -1):
@@ -178,9 +177,8 @@ try:
                     self.color_to_emoji(color) for color in state.secret_code.colors
                 )
                 return Panel(code, title="Secret Code", border_style="red")
-            else:
-                hidden = " ".join("❓" for _ in range(len(state.secret_code.colors)))
-                return Panel(hidden, title="Secret Code (Hidden)", border_style="red")
+            hidden = " ".join("❓" for _ in range(len(state.secret_code.colors)))
+            return Panel(hidden, title="Secret Code (Hidden)", border_style="red")
 
         def create_guesses_table(self, state: MastermindState) -> Table:
             """Create table of guesses and feedback."""
@@ -189,7 +187,9 @@ try:
             table.add_column("Guess", justify="center")
             table.add_column("Feedback", justify="center")
 
-            for i, (guess, feedback) in enumerate(zip(state.guesses, state.feedback)):
+            for i, (guess, feedback) in enumerate(
+                zip(state.guesses, state.feedback, strict=False)
+            ):
                 # Format guess as emojis
                 guess_str = " ".join(
                     self.color_to_emoji(color) for color in guess.colors
@@ -234,7 +234,7 @@ try:
             self.console.clear()
             self.console.print(self.create_layout(state, show_secret))
 
-        def input_guess(self, available_colors: List[str]) -> List[str]:
+        def input_guess(self, available_colors: list[str]) -> list[str]:
             """Get guess input from user."""
             self.console.print("\nAvailable colors:")
             color_display = " ".join(
@@ -294,7 +294,9 @@ except ImportError:
                 print(f"Secret code: {'? ' * len(state.secret_code.colors)}")
 
             print("\nGuesses:")
-            for i, (guess, feedback) in enumerate(zip(state.guesses, state.feedback)):
+            for i, (guess, feedback) in enumerate(
+                zip(state.guesses, state.feedback, strict=False)
+            ):
                 print(f"  {i+1}. {guess} -> {feedback}")
 
             if state.is_game_over():
@@ -303,7 +305,7 @@ except ImportError:
                 else:
                     print("\nGame over! You didn't crack the code in time.")
 
-        def input_guess(self, available_colors: List[str]) -> List[str]:
+        def input_guess(self, available_colors: list[str]) -> list[str]:
             """Get guess input from user."""
             print("\nAvailable colors:", ", ".join(available_colors))
 

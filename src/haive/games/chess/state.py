@@ -11,7 +11,7 @@ The state schema provides a complete representation of a chess game state
 that can be used by the agent and state manager.
 """
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 import chess
 from haive.core.schema.state_schema import StateSchema
@@ -50,13 +50,13 @@ class ChessState(StateSchema):
     """
 
     # Board state
-    board_fens: List[str] = Field(
+    board_fens: list[str] = Field(
         default_factory=lambda: [chess.Board().fen()],
         description="List of FEN board states, latest at the end",
     )
 
     # Move tracking
-    move_history: List[tuple[str, str]] = Field(
+    move_history: list[tuple[str, str]] = Field(
         default_factory=list, description="List of (player_color, UCI move) tuples"
     )
 
@@ -72,36 +72,34 @@ class ChessState(StateSchema):
         default="ongoing", description="Status of the game"
     )
 
-    game_result: Optional[str] = Field(
+    game_result: str | None = Field(
         default=None, description="Final game result (white_win, black_win, draw)"
     )
 
     # Analysis
-    white_analysis: List[Dict[str, Any]] = Field(
+    white_analysis: list[dict[str, Any]] = Field(
         default_factory=list, description="White's position analysis"
     )
 
-    black_analysis: List[Dict[str, Any]] = Field(
+    black_analysis: list[dict[str, Any]] = Field(
         default_factory=list, description="Black's position analysis"
     )
 
     # Captured pieces
-    captured_pieces: Dict[str, List[str]] = Field(
+    captured_pieces: dict[str, list[str]] = Field(
         default_factory=lambda: {"white": [], "black": []},
         description="Captured pieces by each player",
     )
 
     # Error handling
-    error_message: Optional[str] = Field(
-        default=None, description="Error message if any"
-    )
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     # Additional fields for LLM context
-    legal_moves: Optional[str] = Field(
+    legal_moves: str | None = Field(
         default=None, description="Legal moves in current position"
     )
 
-    recent_moves: Optional[str] = Field(
+    recent_moves: str | None = Field(
         default=None, description="Recent moves formatted for LLM"
     )
 

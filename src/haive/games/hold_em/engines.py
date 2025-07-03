@@ -4,8 +4,6 @@ This module provides LLM configurations and prompts for Hold'em agents.
 Fixed variable naming consistency issues.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -14,7 +12,6 @@ from haive.games.hold_em.models import (
     BettingDecision,
     GameSituationAnalysis,
     OpponentModel,
-    PlayerDecisionModel,
     PokerAnalysis,
 )
 
@@ -25,7 +22,6 @@ from haive.games.hold_em.models import (
 
 def create_player_decision_prompt(player_style: str = "balanced") -> ChatPromptTemplate:
     """Create a decision-making prompt based on player style."""
-
     style_instructions = {
         "tight": "You are a TIGHT player. You play few hands but play them aggressively. "
         "Only enter pots with strong hands (top 15% of hands). Fold weak hands quickly.",
@@ -180,9 +176,8 @@ opponent_analysis_prompt = ChatPromptTemplate.from_messages(
 
 def build_player_engines(
     player_name: str, player_style: str, heads_up: bool = False
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Build LLM engines for a player agent."""
-
     # Adjust model selection based on complexity needs
     if heads_up:
         # Use more powerful models for heads-up play
@@ -232,9 +227,8 @@ def build_player_engines(
     }
 
 
-def build_holdem_game_engines() -> Dict[str, AugLLMConfig]:
+def build_holdem_game_engines() -> dict[str, AugLLMConfig]:
     """Build engines for the main game agent."""
-
     # Game management engines (if needed for complex decisions)
     base_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)
 
@@ -363,9 +357,8 @@ tournament_decision_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-def create_style_specific_engines(player_style: str) -> Dict[str, AugLLMConfig]:
+def create_style_specific_engines(player_style: str) -> dict[str, AugLLMConfig]:
     """Create engines optimized for specific playing styles."""
-
     if player_style == "aggressive":
         temp = 0.8  # Higher variance for aggressive play
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=temp)
@@ -406,7 +399,7 @@ def create_style_specific_engines(player_style: str) -> Dict[str, AugLLMConfig]:
 # ============================================================================
 
 
-def prepare_situation_context(game_state, player) -> Dict[str, str]:
+def prepare_situation_context(game_state, player) -> dict[str, str]:
     """Prepare context dictionary for situation analysis with correct variable names."""
     return {
         "player_position": player.position,
@@ -421,7 +414,7 @@ def prepare_situation_context(game_state, player) -> Dict[str, str]:
     }
 
 
-def prepare_hand_context(game_state, player) -> Dict[str, str]:
+def prepare_hand_context(game_state, player) -> dict[str, str]:
     """Prepare context dictionary for hand analysis."""
     return {
         "hole_cards": str(player.hole_cards),
@@ -434,7 +427,7 @@ def prepare_hand_context(game_state, player) -> Dict[str, str]:
     }
 
 
-def prepare_opponent_context(game_state, opponents) -> Dict[str, str]:
+def prepare_opponent_context(game_state, opponents) -> dict[str, str]:
     """Prepare context dictionary for opponent analysis."""
     return {
         "opponents": str([opp.name for opp in opponents]),
@@ -446,7 +439,7 @@ def prepare_opponent_context(game_state, opponents) -> Dict[str, str]:
     }
 
 
-def prepare_decision_context(game_state, player, analyses) -> Dict[str, str]:
+def prepare_decision_context(game_state, player, analyses) -> dict[str, str]:
     """Prepare context dictionary for final decision making."""
     return {
         "hole_cards": str(player.hole_cards),

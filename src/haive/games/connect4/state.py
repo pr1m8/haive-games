@@ -16,7 +16,7 @@ Example:
     >>> state.get_next_row(3)    # Get next available row in column
 """
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import Field, field_validator
 
@@ -73,12 +73,8 @@ class Connect4State(GameState):
     yellow_analysis: list[dict] = Field(
         default_factory=list, description="Analysis history for yellow player"
     )
-    winner: Optional[str] = Field(
-        default=None, description="Winner of the game, if any"
-    )
-    error_message: Optional[str] = Field(
-        default=None, description="Error message if any"
-    )
+    winner: str | None = Field(default=None, description="Winner of the game, if any")
+    error_message: str | None = Field(default=None, description="Error message if any")
 
     @property
     def board_string(self) -> str:
@@ -143,7 +139,7 @@ class Connect4State(GameState):
         """
         return self.board[0][column] is not None
 
-    def get_next_row(self, column: int) -> Optional[int]:
+    def get_next_row(self, column: int) -> int | None:
         """Get the next available row in a column.
 
         Returns the row index where a piece would land if dropped in the

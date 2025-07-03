@@ -8,7 +8,7 @@ This module provides data models for the monopoly game, including:
 """
 
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -76,7 +76,7 @@ class PropertyDecision(BaseModel):
 
     reasoning: str = Field(description="Explanation for the decision")
 
-    max_bid: Optional[int] = Field(
+    max_bid: int | None = Field(
         default=None, description="Maximum bid if property goes to auction"
     )
 
@@ -167,7 +167,7 @@ class TradeResponse(BaseModel):
 
     reasoning: str = Field(description="Explanation for the response")
 
-    counter_offer: Optional[TradeOffer] = Field(
+    counter_offer: TradeOffer | None = Field(
         default=None, description="Optional counter-offer if declining"
     )
 
@@ -213,7 +213,7 @@ class GameEvent(BaseModel):
         default=0, description="Money gained or lost (negative for losses)"
     )
 
-    property_involved: Optional[str] = Field(
+    property_involved: str | None = Field(
         default=None, description="Property involved in the event"
     )
 
@@ -253,7 +253,7 @@ class Property(BaseModel):
     )
     house_cost: int = Field(default=0, description="Cost to build a house")
     mortgage_value: int = Field(description="Mortgage value")
-    owner: Optional[str] = Field(default=None, description="Current owner")
+    owner: str | None = Field(default=None, description="Current owner")
     houses: int = Field(default=0, description="Number of houses (0-4)")
     hotel: bool = Field(default=False, description="Whether there's a hotel")
     mortgaged: bool = Field(default=False, description="Whether property is mortgaged")
@@ -273,8 +273,7 @@ class Property(BaseModel):
 
         if self.hotel:
             return self.rent[5]
-        else:
-            return self.rent[self.houses]
+        return self.rent[self.houses]
 
 
 class Player(BaseModel):

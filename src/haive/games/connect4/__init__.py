@@ -20,16 +20,16 @@ Example:
     >>> ui.display_state(state)
 """
 
-from .agent import Connect4Agent
-from .config import Connect4AgentConfig
-from .models import (
+from haive.games.connect4.agent import Connect4Agent
+from haive.games.connect4.config import Connect4AgentConfig
+from haive.games.connect4.models import (
     Connect4Analysis,
     Connect4Move,
     Connect4PlayerDecision,
 )
-from .state import Connect4State
-from .state_manager import Connect4StateManager
-from .ui import Connect4UI
+from haive.games.connect4.state import Connect4State
+from haive.games.connect4.state_manager import Connect4StateManager
+from haive.games.connect4.ui import Connect4UI
 
 __all__ = [
     "Connect4Agent",

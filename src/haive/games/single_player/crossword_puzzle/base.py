@@ -1,33 +1,16 @@
 from __future__ import annotations
 
-import random
-import re
 import uuid
-from collections import defaultdict
-from enum import Enum, auto
+from enum import Enum
 from typing import (
-    Annotated,
-    ClassVar,
-    Dict,
-    FrozenSet,
-    List,
     Literal,
-    Optional,
-    Set,
-    Tuple,
-    Union,
 )
 
 # Import from our base framework
 from game_framework_base import (
-    Board,
     Game,
-    GamePiece,
-    GridBoard,
     GridPosition,
     GridSpace,
-    Position,
-    Space,
 )
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
@@ -59,7 +42,7 @@ class CrosswordCell(GridSpace[CrosswordLetter]):
     """A cell in a crossword puzzle."""
 
     cell_type: CellType = "empty"
-    number: Optional[int] = None  # Clue number, if any
+    number: int | None = None  # Clue number, if any
 
     @computed_field
     @property
@@ -75,7 +58,7 @@ class CrosswordCell(GridSpace[CrosswordLetter]):
 
     @computed_field
     @property
-    def current_letter(self) -> Optional[str]:
+    def current_letter(self) -> str | None:
         """Get the current letter in this cell, if any."""
         if self.is_occupied() and isinstance(self.piece, CrosswordLetter):
             return self.piece.letter
@@ -123,22 +106,22 @@ class CrosswordClue(BaseModel):
                 row=self.start_position.row,
                 col=self.start_position.col + self.length - 1,
             )
-        else:  # DOWN
-            return GridPosition(
-                row=self.start_position.row + self.length - 1,
-                col=self.start_position.col,
-            )
+        # DOWN
+        return GridPosition(
+            row=self.start_position.row + self.length - 1,
+            col=self.start_position.col,
+        )
 
 
 class CrosswordWord(BaseModel):
     """A word placement in a crossword puzzle."""
 
     clue: CrosswordClue
-    positions: List[GridPosition]  # Positions of each letter
-    letters: List[str]  # Letters of the word
+    positions: list[GridPosition]  # Positions of each letter
+    letters: list[str]  # Letters of the word
 
     @model_validator(mode="after")
-    def validate_word(self) -> "CrosswordWord":
+    def validate_word(self) -> CrosswordWord:
         """Ensure the word's length matches positions and letters."""
         if (
             len(self.positions) != len(self.letters)
@@ -168,7 +151,7 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
     """Crossword puzzle game controller."""
 
     board: CrosswordBoard
-    selected_position: Optional[GridPosition] = None
+    selected_position: GridPosition | None = None
     check_as_you_type: bool = False
 
     def start_game(self) -> None:
@@ -176,7 +159,7 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
         super().start_game()
         self.board.initialize_grid()
 
-    def is_valid_move(self, move: Union[CrosswordMove, Dict[str, any]]) -> bool:
+    def is_valid_move(self, move: CrosswordMove | dict[str, any]) -> bool:
         """Check if a move is valid."""
         # Convert dict to CrosswordMove if needed
         if isinstance(move, dict):
@@ -201,7 +184,7 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
 
         return True
 
-    def make_move(self, move: Union[CrosswordMove, Dict[str, any]]) -> bool:
+    def make_move(self, move: CrosswordMove | dict[str, any]) -> bool:
         """Make a move in the game."""
         if self.status != "in_progress":
             return False
@@ -269,17 +252,17 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
         word = self.board.words[clue_id]
 
         # Check each letter
-        for i, pos in enumerate(word.positions):
+        for _i, pos in enumerate(word.positions):
             if not self.board.check_letter(pos):
                 return False
 
         return True
 
-    def check_all(self) -> Dict[str, bool]:
+    def check_all(self) -> dict[str, bool]:
         """Check all filled letters against the solution."""
         results = {}
 
-        for clue_id, word in self.board.words.items():
+        for clue_id, _word in self.board.words.items():
             results[clue_id] = self.check_word(clue_id)
 
         return results
@@ -346,8 +329,8 @@ class CrosswordTemplate(BaseModel):
     name: str
     rows: int
     cols: int
-    block_positions: List[Tuple[int, int]]  # (row, col) for each black cell
-    clues: List[Dict[str, any]]  # Clue definitions
+    block_positions: list[tuple[int, int]]  # (row, col) for each black cell
+    clues: list[dict[str, any]]  # Clue definitions
 
     def create_game(self) -> CrosswordGame:
         """Create a game from this template."""

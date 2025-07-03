@@ -2,7 +2,7 @@ from abc import ABC
 
 from haive.agents.simple.config import SimpleAgentConfig
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from haive.games.core.agent.game_config import GameConfig
 

@@ -1,7 +1,7 @@
 # haive/games/core/components/cards/turns.py
 
 from enum import Enum
-from typing import Generic, List, Optional
+from typing import Generic
 
 from pydantic import BaseModel, Field
 
@@ -24,8 +24,8 @@ class CardGameTurn(BaseModel, Generic[TCard, TAction, TState]):
     player_id: str
     turn_number: int
     phase: TurnPhase = TurnPhase.DRAW
-    actions: List[TAction] = Field(default_factory=list)
-    available_actions: List[str] = Field(default_factory=list)
+    actions: list[TAction] = Field(default_factory=list)
+    available_actions: list[str] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
@@ -39,7 +39,7 @@ class CardGameTurn(BaseModel, Generic[TCard, TAction, TState]):
         # Basic implementation - subclasses should override
         return False
 
-    def get_next_phase(self) -> Optional[TurnPhase]:
+    def get_next_phase(self) -> TurnPhase | None:
         """Get the next phase of the turn."""
         phases = list(TurnPhase)
         try:
@@ -54,16 +54,16 @@ class CardGameTurn(BaseModel, Generic[TCard, TAction, TState]):
 class TurnManager(BaseModel, Generic[TCard, TAction, TState]):
     """Manages turn progression in a card game."""
 
-    current_turn: Optional[CardGameTurn[TCard, TAction, TState]] = None
+    current_turn: CardGameTurn[TCard, TAction, TState] | None = None
     turn_number: int = 0
-    player_order: List[str] = Field(default_factory=list)
+    player_order: list[str] = Field(default_factory=list)
     current_player_idx: int = 0
     turn_direction: int = 1  # 1 for clockwise, -1 for counterclockwise
 
     class Config:
         arbitrary_types_allowed = True
 
-    def start_game(self, players: List[str]) -> None:
+    def start_game(self, players: list[str]) -> None:
         """Initialize the turn manager with players."""
         self.player_order = players.copy()
         self.current_player_idx = 0

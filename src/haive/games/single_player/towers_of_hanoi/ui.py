@@ -1,5 +1,4 @@
 import time
-from typing import Optional
 
 from rich.console import Console
 from rich.layout import Layout
@@ -9,10 +8,9 @@ from rich.prompt import IntPrompt, Prompt
 from rich.table import Table
 from rich.text import Text
 
-from .agent import HanoiAgent
-from .config import HanoiAgentConfig
-from .game import HanoiGame
-from .models import HanoiMoveModel
+from haive.games.single_player.towers_of_hanoi.agent import HanoiAgent
+from haive.games.single_player.towers_of_hanoi.config import HanoiAgentConfig
+from haive.games.single_player.towers_of_hanoi.game import HanoiGame
 
 console = Console()
 
@@ -21,8 +19,8 @@ class HanoiUI:
     """Rich UI for Tower of Hanoi game."""
 
     def __init__(self):
-        self.game: Optional[HanoiGame] = None
-        self.agent: Optional[HanoiAgent] = None
+        self.game: HanoiGame | None = None
+        self.agent: HanoiAgent | None = None
         self.state = {}
 
     def run(self):
@@ -178,7 +176,7 @@ class HanoiUI:
 
         while not self.game.is_solved:
             # AI move
-            result = self.agent.invoke(self.state)
+            self.agent.invoke(self.state)
 
             # Update display
             live.update(self.create_display())

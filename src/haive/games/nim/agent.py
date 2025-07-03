@@ -4,6 +4,7 @@ This module defines the Nim agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+import logging
 import time
 from typing import Any
 
@@ -14,6 +15,61 @@ from haive.games.framework.base.agent import GameAgent
 from haive.games.nim.config import NimConfig
 from haive.games.nim.state import NimState
 from haive.games.nim.state_manager import NimStateManager
+
+try:
+    from haive.games.nim.ui import RICH_AVAILABLE, NimUI
+except ImportError:
+    RICH_AVAILABLE = False
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
+logger = logging.getLogger(__name__)
+
+
+def ensure_game_state(
+    state_input: dict[str, Any] | NimState | Command,
+) -> NimState:
+    """Ensure input is converted to NimState.
+
+    This helper function ensures that the input state is properly converted to a NimState
+    object, handling various input types (dict, NimState, Command).
+
+    Args:
+        state_input: The state to convert, which can be a dictionary, NimState, or Command.
+
+    Returns:
+        NimState: The converted state.
+    """
+    logger.info(f"ensure_game_state: received input of type {type(state_input)}")
+
+    if isinstance(state_input, NimState):
+        logger.info("ensure_game_state: Input is already NimState")
+        return state_input
+    if isinstance(state_input, Command):
+        logger.info("ensure_game_state: Input is a Command, extracting state")
+        # Attempt to extract state from Command
+        if hasattr(state_input, "state") and state_input.state:
+            return ensure_game_state(state_input.state)
+        logger.error("ensure_game_state: Command does not have state attribute")
+        # Initialize a new state as fallback
+        return NimStateManager.initialize()
+    if isinstance(state_input, dict):
+        try:
+            logger.info(
+                f"ensure_game_state: Converting dict to NimState, keys: {list(state_input.keys())}"
+            )
+            return NimState.model_validate(state_input)
+        except Exception as e:
+            logger.error(f"Failed to convert dict to NimState: {e}")
+            logger.debug(f"Dict contents: {state_input}")
+            # Initialize a new state as fallback rather than crashing
+            logger.info("ensure_game_state: Using default state as fallback")
+            return NimStateManager.initialize()
+    else:
+        logger.error(f"Cannot convert {type(state_input)} to NimState")
+        # Initialize a new state as fallback rather than crashing
+        logger.info("ensure_game_state: Using default state as fallback")
+        return NimStateManager.initialize()
 
 
 class NimAgent(GameAgent[NimConfig]):
@@ -26,20 +82,29 @@ class NimAgent(GameAgent[NimConfig]):
             config (NimConfig): The configuration for the game.
         """
         self.state_manager = NimStateManager
+        self.ui = NimUI() if RICH_AVAILABLE else None
         super().__init__(config)
 
-    def initialize_game(self, state: dict[str, Any]) -> Command:
+    def initialize_game(self, state: dict[str, Any] | NimState | Command) -> Command:
         """Initialize a new Nim game with configured pile sizes.
 
         Args:
-            state (Dict[str, Any]): The initial state of the game.
+            state: The initial state of the game.
 
         Returns:
             Command: The command to initialize the game.
         """
-        game_state = self.state_manager.initialize(pile_sizes=self.config.pile_sizes)
-        # Set misere mode from src.config
-        game_state.misere_mode = self.config.misere_mode
+        logger.info("Initializing new Nim game")
+
+        # Initialize with configured pile sizes and misere mode
+        game_state = self.state_manager.initialize(
+            pile_sizes=self.config.pile_sizes, misere_mode=self.config.misere_mode
+        )
+
+        logger.info(
+            f"Initialized game with pile sizes {game_state.piles} and misere_mode={game_state.misere_mode}"
+        )
+
         return Command(
             update=(
                 game_state.model_dump()
@@ -114,20 +179,27 @@ class NimAgent(GameAgent[NimConfig]):
         """
         return self.make_move(state, "player2")
 
-    def make_move(self, state: NimState, player: str) -> Command:
+    def make_move(
+        self, state: NimState | dict[str, Any] | Command, player: str
+    ) -> Command:
         """Make a move for the specified player.
 
         Args:
-            state (NimState): The current game state.
-            player (str): The player to make the move for.
+            state: The current game state.
+            player: The player to make the move for.
 
         Returns:
             Command: The command to make the move.
         """
+        # Ensure state is a NimState
+        game_state = ensure_game_state(state)
+
         # Check if it's the player's turn
+        if game_state.turn != player:
+            logger.warning(f"Not {player}'s turn, but was asked to make a move")
 
         # Prepare context for the move
-        context = self.prepare_move_context(state, player)
+        context = self.prepare_move_context(game_state, player)
 
         # Select the appropriate engine
         engine_key = f"{player}_player"
@@ -137,7 +209,7 @@ class NimAgent(GameAgent[NimConfig]):
         move = engine.invoke(context)
 
         # Apply the move
-        new_state = self.state_manager.apply_move(state, move)
+        new_state = self.state_manager.apply_move(game_state, move)
 
         # Return the updated state
         return Command(
@@ -188,24 +260,32 @@ class NimAgent(GameAgent[NimConfig]):
         """
         return self.analyze_position(state, "player2")
 
-    def analyze_position(self, state: NimState, player: str) -> Command:
+    def analyze_position(
+        self, state: NimState | dict[str, Any] | Command, player: str
+    ) -> Command:
         """Analyze the current position for the specified player.
 
         Args:
-            state (NimState): The current game state.
-            player (str): The player to analyze the position for.
+            state: The current game state.
+            player: The player to analyze the position for.
 
         Returns:
             Command: The command to analyze the position.
         """
+        # Ensure state is a NimState
+        game_state = ensure_game_state(state)
+
         if not self.config.enable_analysis:
             return Command(
                 update=(
-                    state.model_dump() if hasattr(state, "model_dump") else state.dict()
+                    game_state.model_dump()
+                    if hasattr(game_state, "model_dump")
+                    else game_state.dict()
                 )
             )
+
         # Prepare context for analysis
-        context = self.prepare_analysis_context(state, player)
+        context = self.prepare_analysis_context(game_state, player)
 
         # Select the appropriate engine
         engine_key = f"{player}_analyzer"
@@ -215,7 +295,7 @@ class NimAgent(GameAgent[NimConfig]):
         analysis = engine.invoke(context)
 
         # Update state with analysis
-        new_state = self.state_manager.add_analysis(state, player, analysis)
+        new_state = self.state_manager.add_analysis(game_state, player, analysis)
 
         # Return the updated state
         return Command(
@@ -253,48 +333,93 @@ class NimAgent(GameAgent[NimConfig]):
         Args:
             state (Dict[str, Any]): The current game state.
         """
-        # Create a NimState from the dict
-        game_state = NimState(**state)
+        # Use Rich UI if available
+        if RICH_AVAILABLE and self.ui:
+            self.ui.display_game_state(state)
+        else:
+            # Fallback to basic text UI
+            # Create a NimState from the dict
+            game_state = ensure_game_state(state)
 
-        print("\n" + "=" * 50)
-        print(f"🎮 Current Player: {game_state.turn}")
-        print(f"📌 Game Status: {game_state.game_status}")
-        print(
-            f"🎲 Game Mode: {'Misere (last takes loses)' if game_state.misere_mode else 'Standard (last takes wins)'}"
+            print("\n" + "=" * 50)
+            print(f"🎮 Current Player: {game_state.turn}")
+            print(f"📌 Game Status: {game_state.game_status}")
+            print(
+                f"🎲 Game Mode: {'Misere (last takes loses)' if game_state.misere_mode else 'Standard (last takes wins)'}"
+            )
+            print("=" * 50)
+
+            # Print the board
+            print("\n" + game_state.board_string)
+
+            # Print last move if available
+            if game_state.move_history:
+                last_move = game_state.move_history[-1]
+                print(f"\n📝 Last Move: {last_move!s}")
+
+            # Print analyses if available
+            if (
+                hasattr(game_state, "player1_analysis")
+                and game_state.player1_analysis
+                and game_state.turn == "player2"
+            ):
+                last_analysis = game_state.player1_analysis[-1]
+                print("\n🔍 Player 1's Analysis:")
+                print(f"Position Evaluation: {last_analysis.position_evaluation}")
+                print(f"Explanation: {last_analysis.explanation}")
+
+            if (
+                hasattr(game_state, "player2_analysis")
+                and game_state.player2_analysis
+                and game_state.turn == "player1"
+            ):
+                last_analysis = game_state.player2_analysis[-1]
+                print("\n🔍 Player 2's Analysis:")
+                print(f"Position Evaluation: {last_analysis.position_evaluation}")
+                print(f"Explanation: {last_analysis.explanation}")
+
+        # Add a delay for readability (use the UI's delay if available)
+        delay = self.ui.delay if hasattr(self, "ui") and self.ui else 0.5
+        time.sleep(delay)
+
+    def run_game_with_ui(self, show_analysis: bool = True) -> dict[str, Any]:
+        """Run a complete Nim game with Rich UI.
+
+        This method runs a Nim game with Rich UI visualization, showing
+        the game state after each move. It optionally includes analysis.
+
+        Args:
+            show_analysis: Whether to include analysis in the game.
+
+        Returns:
+            Dict[str, Any]: The final game state.
+        """
+        # Check if Rich UI is available
+        if not RICH_AVAILABLE:
+            logger.warning("Rich UI not available. Using standard visualization.")
+            return self.run_game(visualize=True)
+
+        logger.info("Starting Nim game with Rich UI")
+
+        # Initialize the game state
+        initial_state = self.state_manager.initialize(
+            pile_sizes=self.config.pile_sizes, misere_mode=self.config.misere_mode
         )
-        print("=" * 50)
 
-        # Print the board
-        print("\n" + game_state.board_string)
+        # Set enable_analysis based on parameter
+        old_enable_analysis = self.config.enable_analysis
+        self.config.enable_analysis = show_analysis
 
-        # Print last move if available
-        if game_state.move_history:
-            last_move = game_state.move_history[-1]
-            print(f"\n📝 Last Move: {last_move!s}")
+        try:
+            # Run the game with visualization
+            for step in self.stream(initial_state, stream_mode="values"):
+                self.visualize_state(step)
 
-        # Print analyses if available
-        if (
-            hasattr(game_state, "player1_analysis")
-            and game_state.player1_analysis
-            and game_state.turn == "player2"
-        ):
-            last_analysis = game_state.player1_analysis[-1]
-            print("\n🔍 Player 1's Analysis:")
-            print(f"Position Evaluation: {last_analysis.position_evaluation}")
-            print(f"Explanation: {last_analysis.explanation}")
-
-        if (
-            hasattr(game_state, "player2_analysis")
-            and game_state.player2_analysis
-            and game_state.turn == "player1"
-        ):
-            last_analysis = game_state.player2_analysis[-1]
-            print("\n🔍 Player 2's Analysis:")
-            print(f"Position Evaluation: {last_analysis.position_evaluation}")
-            print(f"Explanation: {last_analysis.explanation}")
-
-        # Add a short delay for readability
-        time.sleep(0.5)
+            # Return final state
+            return step
+        finally:
+            # Restore original analysis setting
+            self.config.enable_analysis = old_enable_analysis
 
     def setup_workflow(self) -> None:
         """Set up the game workflow.
@@ -313,6 +438,12 @@ class NimAgent(GameAgent[NimConfig]):
         builder.add_node("analyze_player2", self.analyze_player2)
 
         # Set up the game flow
+        from langgraph.constants import START  # Import the START constant
+
+        # Add START edge to initialize
+        builder.add_edge(START, "initialize")
+
+        # Set up the main game flow
         builder.add_edge("initialize", "player1_move")  # Start with player1
         builder.add_edge("player1_move", "analyze_player1")
         builder.add_edge("analyze_player1", "player2_move")
