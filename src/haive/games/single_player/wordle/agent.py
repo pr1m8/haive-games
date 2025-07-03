@@ -191,7 +191,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
 
         console.print(f"  [cyan]Routing map (for string returns): {routing_map}[/cyan]")
         console.print(
-            "  [green]✓ Valid tools will be routed via Send objects (not routing map)[/green]"]"
+            "  [green]✓ Valid tools will be routed via Send objects (not routing map)[/green]"
         )
 
         # Show routing explanation
