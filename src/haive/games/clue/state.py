@@ -9,7 +9,14 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from haive.games.clue.models import ClueGuess, ClueResponse, ClueSolution
+from haive.games.clue.models import (
+    ClueGuess,
+    ClueResponse,
+    ClueSolution,
+    ValidRoom,
+    ValidSuspect,
+    ValidWeapon,
+)
 from haive.games.framework.base.state import GameState
 
 
@@ -63,7 +70,7 @@ class ClueState(GameState):
         for i, (guess, response) in enumerate(
             zip(self.guesses, self.responses, strict=False)
         ):
-            turn_str = f"Turn {i+1}: {guess.player} - {guess.suspect}, {guess.weapon}, {guess.room}"
+            turn_str = f"Turn {i+1}: {guess.suspect}, {guess.weapon}, {guess.room}"
             response_str = f"Response: {response.card_shown if response.card_shown else 'No card shown'}"
             lines.append(f"{turn_str} | {response_str}")
 
@@ -79,34 +86,10 @@ class ClueState(GameState):
         Returns:
             ClueState: A new game state
         """
-        # Define all cards
-        all_suspects = [
-            "Miss Scarlet",
-            "Colonel Mustard",
-            "Mrs. White",
-            "Mr. Green",
-            "Mrs. Peacock",
-            "Professor Plum",
-        ]
-        all_weapons = [
-            "Candlestick",
-            "Knife",
-            "Lead Pipe",
-            "Revolver",
-            "Rope",
-            "Wrench",
-        ]
-        all_rooms = [
-            "Hall",
-            "Lounge",
-            "Dining Room",
-            "Kitchen",
-            "Ballroom",
-            "Conservatory",
-            "Billiard Room",
-            "Library",
-            "Study",
-        ]
+        # Define all cards using enums
+        all_suspects = list(ValidSuspect)
+        all_weapons = list(ValidWeapon)
+        all_rooms = list(ValidRoom)
 
         # Create the solution (random or predefined)
         if "solution" in kwargs:

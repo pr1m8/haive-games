@@ -24,10 +24,12 @@ Example:
     ...     agent.visualize_state(state)
 """
 
+# Standard library imports
 import copy
 import logging
 from typing import Any
 
+# Local imports
 from haive.core.engine.agent.agent import register_agent
 
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
@@ -43,6 +45,9 @@ from haive.games.mafia.models import (
 )
 from haive.games.mafia.state import MafiaGameState
 from haive.games.mafia.state_manager import MafiaStateManager
+
+# Third-party imports
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -103,7 +108,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         self.role_mapping = {
             value: key for key, value in self.role_enum_mapping.items()
         }
-        print(self.role_mapping)
+        logger.debug(
+            "Role mapping initialized", extra={"role_mapping": self.role_mapping}
+        )
 
     def get_player_role(self, state: MafiaGameState, player_id: str) -> PlayerRole:
         """Get the role of a player.
@@ -123,7 +130,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             >>> print(role)  # Shows PlayerRole.VILLAGER
         """
         # Handle narrator case specially
-        print(player_id)
+        logger.debug("Getting player role", extra={"player_id": player_id})
         if player_id.lower() == "narrator":
             return PlayerRole.NARRATOR
         if player_id.lower() == "doctor":
@@ -136,7 +143,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         if player_id in state.roles:
             return state.roles[player_id]
 
-        return Exception(f"Player {player_id} not found in state")
+        raise ValueError(f"Player {player_id} not found in state")
         # Default to VILLAGER if role not found
         # return PlayerRole.VILLAGER
 

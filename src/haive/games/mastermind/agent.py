@@ -409,28 +409,28 @@ class MastermindAgent(GameAgent[MastermindConfig]):
             if self.ui and UI_AVAILABLE:
                 self.ui.display_game_state(game_state)
             else:
-                # Fallback to simple text display
-                print("\n" + "=" * 50)
-                print(f"🎮 Game: Mastermind v{self.config.version}")
-                print(
+                # Fallback to simple text display using logging
+                logger.info("\n" + "=" * 50)
+                logger.info(f"🎮 Game: Mastermind v{self.config.version}")
+                logger.info(
                     f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}"
                 )
-                print(
+                logger.info(
                     f"🎭 Codemaker: {game_state.codemaker}, Codebreaker: {'player2' if game_state.codemaker == 'player1' else 'player1'}"
                 )
-                print(f"📝 Status: {game_state.game_status}")
+                logger.info(f"📝 Status: {game_state.game_status}")
 
                 # Only show secret code if game is over
                 if game_state.game_status != "ongoing":
-                    print(f"🔑 Secret Code: {', '.join(game_state.secret_code)}")
+                    logger.info(f"🔑 Secret Code: {', '.join(game_state.secret_code)}")
 
-                print("=" * 50)
+                logger.info("=" * 50)
 
-                # Print the board with all guesses and feedback
+                # Log the board with all guesses and feedback
                 if game_state.guesses:
-                    print("\n" + game_state.board_string)
+                    logger.info("\n" + game_state.board_string)
                 else:
-                    print("\nNo guesses yet.")
+                    logger.info("\nNo guesses yet.")
 
                 # Print analysis if available
                 codebreaker = (
@@ -438,55 +438,63 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                 )
                 if codebreaker == "player1" and game_state.player1_analysis:
                     last_analysis = game_state.player1_analysis[-1]
-                    print("\n🔍 Codebreaker's Analysis:")
+                    logger.info("\n🔍 Codebreaker's Analysis:")
 
                     if isinstance(last_analysis, dict):
-                        print(
+                        logger.info(
                             f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
                         )
-                        print(
+                        logger.info(
                             f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
                         )
-                        print(f"Strategy: {last_analysis.get('strategy', 'Unknown')}")
-                        print(f"Confidence: {last_analysis.get('confidence', '?')}/10")
+                        logger.info(
+                            f"Strategy: {last_analysis.get('strategy', 'Unknown')}"
+                        )
+                        logger.info(
+                            f"Confidence: {last_analysis.get('confidence', '?')}/10"
+                        )
                     else:
-                        print(
+                        logger.info(
                             f"Possible combinations: {last_analysis.possible_combinations}"
                         )
-                        print(
+                        logger.info(
                             f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
                         )
-                        print(f"Strategy: {last_analysis.strategy}")
-                        print(f"Confidence: {last_analysis.confidence}/10")
+                        logger.info(f"Strategy: {last_analysis.strategy}")
+                        logger.info(f"Confidence: {last_analysis.confidence}/10")
 
                 elif codebreaker == "player2" and game_state.player2_analysis:
                     last_analysis = game_state.player2_analysis[-1]
-                    print("\n🔍 Codebreaker's Analysis:")
+                    logger.info("\n🔍 Codebreaker's Analysis:")
 
                     if isinstance(last_analysis, dict):
-                        print(
+                        logger.info(
                             f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
                         )
-                        print(
+                        logger.info(
                             f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
                         )
-                        print(f"Strategy: {last_analysis.get('strategy', 'Unknown')}")
-                        print(f"Confidence: {last_analysis.get('confidence', '?')}/10")
+                        logger.info(
+                            f"Strategy: {last_analysis.get('strategy', 'Unknown')}"
+                        )
+                        logger.info(
+                            f"Confidence: {last_analysis.get('confidence', '?')}/10"
+                        )
                     else:
-                        print(
+                        logger.info(
                             f"Possible combinations: {last_analysis.possible_combinations}"
                         )
-                        print(
+                        logger.info(
                             f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
                         )
-                        print(f"Strategy: {last_analysis.strategy}")
-                        print(f"Confidence: {last_analysis.confidence}/10")
+                        logger.info(f"Strategy: {last_analysis.strategy}")
+                        logger.info(f"Confidence: {last_analysis.confidence}/10")
         except Exception as e:
             logger.error(f"Error visualizing state: {e}")
             if self.console:
                 self.console.print(f"[bold red]Error visualizing state: {e}[/bold red]")
             else:
-                print(f"Error visualizing state: {e}")
+                logger.error(f"Error visualizing state: {e}")
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -642,7 +650,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         else:
             try:
                 response = self.engines["codemaker"].invoke({})
-                print(f"[DEBUG] Codemaker engine response: {response!r}")
+                logger.debug(f"Codemaker engine response: {response!r}")
 
                 if isinstance(response, dict) and "code" in response:
                     secret_code = response["code"]
@@ -662,10 +670,14 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                     secret_code = response
                 else:
                     # Fallback to random code if LLM response is invalid
-                    print(f"Invalid codemaker response: {response}. Using random code.")
+                    logger.warning(
+                        f"Invalid codemaker response: {response}. Using random code."
+                    )
                     secret_code = None
             except Exception as e:
-                print(f"Error getting secret code from LLM: {e}. Using random code.")
+                logger.error(
+                    f"Error getting secret code from LLM: {e}. Using random code."
+                )
                 secret_code = None
 
         # Initialize game state
@@ -719,7 +731,9 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                                             "\n[bold yellow]⚠️ Maximum turns reached. Ending game.[/bold yellow]"
                                         )
                                     else:
-                                        print("\n⚠️ Maximum turns reached. Ending game.")
+                                        logger.warning(
+                                            "\n⚠️ Maximum turns reached. Ending game."
+                                        )
 
                                     # Force game to end with codemaker win
                                     current_state.game_status = (
@@ -738,7 +752,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                                 f"[bold red]Error processing state: {e}[/bold red]"
                             )
                         else:
-                            print(f"Error processing state: {e}")
+                            logger.error(f"Error processing state: {e}")
 
                     time.sleep(1)
 
@@ -749,7 +763,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
                 return final_state if final_state else step
             except Exception as e:
-                print(f"Error running game: {e}")
+                logger.error(f"Error running game: {e}")
                 return {}
         else:
             # Non-visualized mode

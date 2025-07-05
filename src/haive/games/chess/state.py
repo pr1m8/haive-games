@@ -131,10 +131,16 @@ class ChessState(StateSchema):
         Returns:
             chess.Board: Board object representing the current position.
 
+        Raises:
+            ValueError: If the FEN string is invalid or cannot be parsed.
+
         Example:
             >>> state = ChessState()
             >>> board = state.get_board()
             >>> board.is_game_over()
             False
         """
-        return chess.Board(self.board_fen)
+        try:
+            return chess.Board(self.board_fen)
+        except (ValueError, TypeError) as e:
+            raise ValueError(f"Invalid FEN string '{self.board_fen}': {e}") from e

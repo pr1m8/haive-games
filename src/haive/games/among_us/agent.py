@@ -58,7 +58,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
     # Add this method to the AmongUsAgent class
 
-    def get_engine_for_player(self, role: str, engine_key: str):
+    def get_engine_for_player(self, role: str, engine_key: str) -> Optional[Any]:
         """Get the appropriate engine for a player based on their role and the current phase.
 
         Args:
@@ -76,24 +76,26 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
         # Check if role is valid
         if role_str not in ["CREWMATE", "IMPOSTOR"]:
-            print(f"Invalid role: {role}")
+            logger.warning("Invalid role", extra={"role": role})
             return None
 
         # Get engines from src.config
         if not hasattr(self.config, "engines") or not self.config.engines:
-            print("No engines found in config")
+            logger.debug("No engines found in config")
             return None
 
         # Get engine for role
         role_engines = self.config.engines.get(role_str)
         if not role_engines:
-            print(f"No engines for role: {role_str}")
+            logger.warning("No engines for role", extra={"role": role_str})
             return None
 
         # Get specific engine
         engine = role_engines.get(engine_key)
         if not engine:
-            print(f"No {engine_key} engine found for {role_str}")
+            logger.warning(
+                "Engine not found", extra={"engine_key": engine_key, "role": role_str}
+            )
             return None
 
         # Create runnable if needed

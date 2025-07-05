@@ -4,7 +4,7 @@ Defines board layout, current game status, turn tracking, move history,
 analysis storage, and rendering utilities for the Reversi agent system.
 """
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field, field_validator
 
@@ -47,10 +47,10 @@ class ReversiState(GameState):
     player_W: Literal["player1", "player2"] = Field(
         default="player2", description="Which player is White"
     )
-    player1_analysis: list[dict[str, any]] = Field(
+    player1_analysis: list[dict[str, Any]] = Field(
         default_factory=list, description="Analyses by player1"
     )
-    player2_analysis: list[dict[str, any]] = Field(
+    player2_analysis: list[dict[str, Any]] = Field(
         default_factory=list, description="Analyses by player2"
     )
     skip_count: int = Field(
@@ -58,7 +58,8 @@ class ReversiState(GameState):
     )
 
     @field_validator("board")
-    def validate_board(cls, board):
+    @classmethod
+    def validate_board(cls, board: list[list[str | None]]) -> list[list[str | None]]:
         """Validate that the board is an 8x8 grid with only valid values.
 
         Args:

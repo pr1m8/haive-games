@@ -21,16 +21,21 @@ Example:
     ```
 """
 
+# Standard library imports
 import logging
 import time
 import traceback
 import uuid
 
+# Local imports
 from haive.games.mafia.agent import MafiaAgent
 from haive.games.mafia.config import MafiaAgentConfig, aug_llm_configs
 from haive.games.mafia.models import GamePhase
 from haive.games.mafia.state import MafiaGameState
 from haive.games.mafia.state_manager import MafiaStateManager
+
+# Third-party imports
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -61,21 +66,21 @@ def run_mafia_game(
         ValueError: If player_count is less than 4.
         Exception: If game setup or execution fails.
     """
-    print("\n🎭 Setting up Mafia Game")
-    print("=" * 60)
-    print(f"Number of players: {player_count}")
-    print(f"Maximum days: {max_days}")
-    print(f"Debug mode: {'Enabled' if debug else 'Disabled'}")
-    print("=" * 60)
+    logger.info("🎭 Setting up Mafia Game")
+    logger.info("=" * 60)
+    logger.info(f"Number of players: {player_count}")
+    logger.info(f"Maximum days: {max_days}")
+    logger.info(f"Debug mode: {'Enabled' if debug else 'Disabled'}")
+    logger.info("=" * 60)
 
     agent: MafiaAgent | None = None
 
     try:
-        # Print available configs for debugging
+        # Log available configs for debugging
         if debug:
-            print("\n🔧 Available Engine Configs:")
+            logger.debug("🔧 Available Engine Configs:")
             for role, engines in aug_llm_configs.items():
-                print(f"  {role}: {list(engines.keys())}")
+                logger.debug(f"  {role}: {list(engines.keys())}")
 
         # Create agent config
         config = MafiaAgentConfig.default_config(
@@ -86,7 +91,7 @@ def run_mafia_game(
         config.debug = debug
 
         # Create the agent
-        print("\n🎮 Creating Mafia agent")
+        logger.info("🎮 Creating Mafia agent")
         agent = MafiaAgent(config)
 
         # Generate player names
@@ -95,30 +100,30 @@ def run_mafia_game(
 
         # Dump engine keys for debugging
         if debug:
-            print("\n🔧 Available Engines in Agent:")
+            logger.debug("🔧 Available Engines in Agent:")
             for key, value in agent.engines.items():
-                print(
+                logger.debug(
                     f"  {key}: {list(value.keys()) if isinstance(value, dict) else 'None'}"
                 )
 
-            print("\n🔑 Role to Engine Mapping:")
+            logger.debug("🔑 Role to Engine Mapping:")
             for role, engine_key in agent.role_enum_mapping.items():
-                print(f"  {role}: {engine_key}")
+                logger.debug(f"  {role}: {engine_key}")
 
         # Initialize game state
-        print("\n🎲 Initializing game state")
+        logger.info("🎲 Initializing game state")
         initial_state = MafiaStateManager.initialize(player_names)
 
         if debug:
-            print("\n🎲 Game Role Assignment:")
+            logger.debug("🎲 Game Role Assignment:")
             for player_id, role in initial_state.roles.items():
-                print(f"  {player_id}: {role.value}")
+                logger.debug(f"  {player_id}: {role.value}")
 
         # Run the game
-        print("\n🎭 Starting Mafia Game")
-        print("=" * 60)
-        print(f"Players: {', '.join(player_names[:-1])} + Narrator")
-        print("=" * 60)
+        logger.info("🎭 Starting Mafia Game")
+        logger.info("=" * 60)
+        logger.info(f"Players: {', '.join(player_names[:-1])} + Narrator")
+        logger.info("=" * 60)
 
         # Track day count to prevent infinite games
         current_day = 0
@@ -133,7 +138,7 @@ def run_mafia_game(
         try:
             # Use invoke instead of stream to bypass the streaming error
             try:
-                print("\n🎲 Running game using direct invoke instead of stream")
+                logger.info("🎲 Running game using direct invoke instead of stream")
                 final_state = agent.app.invoke(
                     initial_state_dict,
                     config={"configurable": {"thread_id": thread_id}},
@@ -144,13 +149,13 @@ def run_mafia_game(
                     agent.visualize_state(final_state)
 
                 # Skip the streaming section
-                print(
-                    "\n⚠️ Game run in non-streaming mode due to LangGraph compatibility issue"
+                logger.warning(
+                    "⚠️ Game run in non-streaming mode due to LangGraph compatibility issue"
                 )
                 return
             except Exception as invoke_error:
-                print(
-                    f"\n❌ Direct invoke failed, falling back to stream: {invoke_error}"
+                logger.error(
+                    f"❌ Direct invoke failed, falling back to stream: {invoke_error}"
                 )
 
             # The stream method can return None values which need to be handled
@@ -163,7 +168,7 @@ def run_mafia_game(
 
             # Safely handle potentially None iterator
             if steps is None:
-                print("\n❌ Stream returned None instead of an iterator")
+                logger.error("❌ Stream returned None instead of an iterator")
                 steps = []
 
             for step in steps:
@@ -184,8 +189,8 @@ def run_mafia_game(
                             state_for_viz = MafiaGameState.model_validate(step)
                             agent.visualize_state(state_for_viz)
                         else:
-                            # If we can't create a proper state, print raw step
-                            print(f"\n📋 Raw step data: {step}")
+                            # If we can't create a proper state, log raw step
+                            logger.debug(f"📋 Raw step data: {step}")
                     except Exception as viz_error:
                         logger.debug(f"Visualization error: {viz_error}")
                         # Continue even if visualization fails
@@ -198,16 +203,16 @@ def run_mafia_game(
                         game_status != "ongoing"
                         or game_phase == GamePhase.GAME_OVER.value
                     ):
-                        print(f"\n🏆 Game Status: {game_status.upper()}")
+                        logger.info(f"🏆 Game Status: {game_status.upper()}")
                         winner = step.get("winner")
                         if winner:
-                            print(f"🎖️ Winner: {winner.upper()}")
+                            logger.info(f"🎖️ Winner: {winner.upper()}")
                         break
 
                     # Check for errors
                     error_message = step.get("error_message")
                     if error_message:
-                        print(f"\n❌ Error: {error_message}")
+                        logger.error(f"❌ Error: {error_message}")
                         break
 
                     # Check day limit to prevent endless games
@@ -215,8 +220,8 @@ def run_mafia_game(
                     if day_number > current_day:
                         current_day = day_number
                         if current_day > max_days:
-                            print(
-                                f"\n⏰ Maximum days ({max_days}) reached. Ending game."
+                            logger.warning(
+                                f"⏰ Maximum days ({max_days}) reached. Ending game."
                             )
                             break
 
@@ -224,7 +229,7 @@ def run_mafia_game(
                     time.sleep(0.3)
 
                 except KeyboardInterrupt:
-                    print("\n⚠️ Game interrupted by user")
+                    logger.warning("⚠️ Game interrupted by user")
                     break
                 except Exception as step_error:
                     logger.error(f"Error processing step: {step_error}")
@@ -234,12 +239,12 @@ def run_mafia_game(
                     continue
 
         except Exception as stream_error:
-            print(f"\n❌ STREAMING ERROR: {stream_error}")
+            logger.error(f"❌ STREAMING ERROR: {stream_error}")
             if debug:
                 traceback.print_exc()
 
     except Exception as setup_error:
-        print(f"\n❌ SETUP ERROR: {setup_error}")
+        logger.error(f"❌ SETUP ERROR: {setup_error}")
         if debug:
             traceback.print_exc()
 
@@ -247,15 +252,15 @@ def run_mafia_game(
         # Try to save game history if agent exists
         if agent is not None:
             try:
-                print("\n📊 Saving game history")
+                logger.info("📊 Saving game history")
                 agent.save_state_history()
-                print("✅ Game history saved successfully")
+                logger.info("✅ Game history saved successfully")
             except Exception as save_error:
-                print(f"⚠️ Could not save game history: {save_error}")
+                logger.warning(f"⚠️ Could not save game history: {save_error}")
                 if debug:
                     traceback.print_exc()
 
-    print("\n✅ Game Complete!")
+    logger.info("✅ Game Complete!")
 
 
 def main():

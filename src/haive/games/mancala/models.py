@@ -6,7 +6,7 @@ including the move and analysis models.
 
 from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
 class MancalaMove(BaseModel):
@@ -24,25 +24,29 @@ class MancalaMove(BaseModel):
     )
 
     @field_validator("pit_index")
-    def validate_pit_index(cls, v, values):
+    def validate_pit_index(cls, v: int, info: ValidationInfo) -> int:
         """Validate that the pit index is valid for the player.
 
         Args:
             v: The pit index to validate.
-            values: The values of the other fields.
+            info: Validation info containing other field values.
 
         Returns:
             The validated pit index.
+
+        Raises:
+            ValueError: If pit index is out of valid range.
         """
-        if "player" in values.data:
+        if "player" in info.data:
             # Adjust validation based on player
-            if values.data["player"] == "player1" and not (0 <= v < 6):
+            if info.data["player"] == "player1" and not (0 <= v < 6):
                 raise ValueError(f"Player 1 pit index must be 0-5, got {v}")
-            if values.data["player"] == "player2" and not (0 <= v < 6):
+            if info.data["player"] == "player2" and not (0 <= v < 6):
                 raise ValueError(f"Player 2 pit index must be 0-5, got {v}")
         return v
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Return string representation of the move."""
         return f"{self.player} sows from pit {self.pit_index}"
 
 

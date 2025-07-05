@@ -68,7 +68,12 @@ class Connect4Move(BaseModel):
             raise ValueError("Column must be an integer between 0 and 6")
         return v
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """String representation of the move.
+
+        Returns:
+            str: Human-readable move description.
+        """
         return f"Drop in column {self.column}"
 
 
@@ -140,6 +145,15 @@ class Connect4Analysis(BaseModel):
         ... )
     """
 
+    @staticmethod
+    def _default_threats() -> dict[str, list[int]]:
+        """Create default threats dictionary.
+
+        Returns:
+            dict[str, list[int]]: Dictionary with empty lists for winning and blocking moves.
+        """
+        return {"winning_moves": [], "blocking_moves": []}
+
     position_score: float = Field(
         default=0.0,
         description="Position evaluation (-1.0 to 1.0, positive favors current player).",
@@ -150,7 +164,7 @@ class Connect4Analysis(BaseModel):
     )
 
     threats: dict[str, list[int]] = Field(
-        default_factory=lambda: {"winning_moves": [], "blocking_moves": []},
+        default_factory=_default_threats,
         description="Detected threats and opportunities.",
     )
 

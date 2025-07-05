@@ -6,7 +6,7 @@ using LLM-based decision making.
 
 from pydantic import BaseModel, Field
 
-from haive.games.risk.models import RiskAnalysis, RiskMove
+from haive.games.risk.models import MoveType, RiskAnalysis, RiskMove
 from haive.games.risk.state import RiskState
 
 
@@ -58,7 +58,7 @@ class RiskAgent(BaseModel):
                 c.name for c in self.state.get_controlled_continents(self.name)
             ],
             recommended_move=RiskMove(
-                move_type="place_armies",
+                move_type=MoveType.PLACE_ARMIES,
                 player=self.name,
                 to_territory=(
                     self.state.get_controlled_territories(self.name)[0].name

@@ -56,7 +56,7 @@ class GoMoveModel(BaseModel):
     board_size: int = Field(default=19, description="Size of the game board (NxN).")
 
     @field_validator("move")
-    def validate_move(cls, move: tuple[int, int], values):
+    def validate_move(cls, move: tuple[int, int], values) -> tuple[int, int]:
         """Validate that a move is within board bounds.
 
         Args:

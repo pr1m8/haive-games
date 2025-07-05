@@ -18,6 +18,7 @@ Example:
     >>> run_go_game(agent)
 """
 
+import logging
 from typing import Any
 
 from haive.core.engine.agent.agent import Agent, register_agent
@@ -27,6 +28,8 @@ from langgraph.types import Command
 from haive.games.go.config import GoAgentConfig
 from haive.games.go.state import GoGameState
 from haive.games.go.state_manager import GoGameStateManager
+
+logger = logging.getLogger(__name__)
 
 from . import go_engine as sente
 
@@ -63,7 +66,7 @@ class GoAgent(Agent[GoAgentConfig]):
         """
         super().__init__(config)
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Define the Go game workflow.
 
         Sets up the game flow graph with nodes for:
@@ -290,7 +293,7 @@ class GoAgent(Agent[GoAgentConfig]):
         return self.analyze_position(state, "white")
 
 
-def run_go_game(agent: GoAgent):
+def run_go_game(agent: GoAgent) -> None:
     """Run a Go game with visualization and structured output.
 
     This function manages the game loop and provides rich visualization
@@ -341,39 +344,40 @@ def run_go_game(agent: GoAgent):
     for step in agent.app.stream(
         initial_state, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
-        print(sente.sgf.loads(step["board_sgf"]))
         game = sente.sgf.loads(step["board_sgf"])
 
         # 🎯 **Game Board Visualization**
-        print("\n🔷 Current Board Position:")
-        print(game)
+        logger.info("\n🔷 Current Board Position:")
+        logger.info(str(game))
 
         # 🎯 **Game State Information**
-        print(f"\n🎮 Current Player: {step['turn'].capitalize()}")
-        print(f"📌 Game Status: {step['game_status']}")
-        print("-" * 50)
+        logger.info(f"\n🎮 Current Player: {step['turn'].capitalize()}")
+        logger.info(f"📌 Game Status: {step['game_status']}")
+        logger.info("-" * 50)
 
         # ✅ **Display Last Move**
         if step.get("move_history"):
             last_move = step["move_history"][-1]
-            print(f"📝 Last Move: {last_move[0].capitalize()} played at {last_move[1]}")
+            logger.info(
+                f"📝 Last Move: {last_move[0].capitalize()} played at {last_move[1]}"
+            )
 
         # ✅ **Handle Black's Analysis Safely**
         if step.get("black_analysis"):
             last_black_analysis: dict[str, Any] = step["black_analysis"][
                 -1
             ]  # Extract last analysis dictionary
-            print("\n🔍 Black's Analysis:")
-            print(
+            logger.info("\n🔍 Black's Analysis:")
+            logger.info(
                 f"   - Territory Estimate: {last_black_analysis.get('territory_evaluation', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Strong Positions: {last_black_analysis.get('strong_positions', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Weak Positions: {last_black_analysis.get('weak_positions', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Strategic Advice: {', '.join(last_black_analysis.get('strategic_advice', []))}"
             )
 
@@ -382,24 +386,24 @@ def run_go_game(agent: GoAgent):
             last_white_analysis: dict[str, Any] = step["white_analysis"][
                 -1
             ]  # Extract last analysis dictionary
-            print("\n🔍 White's Analysis:")
-            print(
+            logger.info("\n🔍 White's Analysis:")
+            logger.info(
                 f"   - Territory Estimate: {last_white_analysis.get('territory_evaluation', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Strong Positions: {last_white_analysis.get('strong_positions', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Weak Positions: {last_white_analysis.get('weak_positions', 'N/A')}"
             )
-            print(
+            logger.info(
                 f"   - Strategic Advice: {', '.join(last_white_analysis.get('strategic_advice', []))}"
             )
 
         # ✅ **Captured Stones**
         if step.get("captured_stones"):
-            print("\n🔻 Captured Stones:")
-            print(f"   - Black Captured: {step['captured_stones']['black']}")
-            print(f"   - White Captured: {step['captured_stones']['white']}")
+            logger.info("\n🔻 Captured Stones:")
+            logger.info(f"   - Black Captured: {step['captured_stones']['black']}")
+            logger.info(f"   - White Captured: {step['captured_stones']['white']}")
 
-        print("\n" + "-" * 60)  # Divider for clarity
+        logger.info("\n" + "-" * 60)  # Divider for clarity

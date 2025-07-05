@@ -9,6 +9,7 @@ This module provides state transition logic for the Battleship game, including:
 """
 
 import copy
+import logging
 
 from haive.games.battleship.models import (
     Coordinates,
@@ -19,6 +20,8 @@ from haive.games.battleship.models import (
     ShipType,
 )
 from haive.games.battleship.state import BattleshipState, PlayerState
+
+logger = logging.getLogger(__name__)
 
 
 class BattleshipStateManager:
@@ -148,11 +151,11 @@ class BattleshipStateManager:
         player_state.has_placed_ships = True
 
         # Debug logging
-        print(f"[DEBUG] {player} successfully placed ships.")
+        logger.debug("Player successfully placed ships", extra={"player": player})
 
         # Check if both players have finished setup
         if new_state.is_setup_complete():
-            print("[DEBUG] Both players placed ships. Game starting!")
+            logger.debug("Both players placed ships, starting game")
             new_state.game_phase = GamePhase.PLAYING
 
         return new_state

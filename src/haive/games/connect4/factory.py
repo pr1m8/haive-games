@@ -1,6 +1,9 @@
+# Standard library imports
+import logging
 import time
 import uuid
 
+# Local imports
 from haive.core.engine.agent.persistence.postgres_config import (
     PostgresCheckpointerConfig,
 )
@@ -8,11 +11,16 @@ from haive.core.engine.agent.persistence.postgres_config import (
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
 
+# Third-party imports
+
+
+logger = logging.getLogger(__name__)
+
 
 def run_connect4_game():
     """Run a Connect 4 game using agent.run() with Postgres persistence."""
     thread_id = f"connect4_match_{uuid.uuid4().hex[:8]}"
-    print(f"🧵 Thread ID: {thread_id}")
+    logger.info("Thread ID created", extra={"thread_id": thread_id})
 
     # ✅ Set up persistence
     postgres_config = PostgresCheckpointerConfig(
@@ -62,8 +70,8 @@ def run_connect4_game():
         agent.visualize_state(state)
         time.sleep(1)
 
-    print("🏁 Game Over!")
-    print(f"🎉 Winner: {state.get('winner', 'None')}")
+    logger.info("Game Over!")
+    logger.info("Winner announced", extra={"winner": state.get("winner", "None")})
 
 
 # Run game

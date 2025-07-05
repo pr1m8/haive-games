@@ -37,15 +37,25 @@ class TicTacToeState(GameState):
     All fields use explicit reducers to avoid LangGraph concurrent update issues.
     """
 
+    @staticmethod
+    def _default_players() -> list[str]:
+        """Create default player list."""
+        return ["player1", "player2"]
+
+    @staticmethod
+    def _default_board() -> list[list[str | None]]:
+        """Create default 3x3 board."""
+        return [[None for _ in range(3)] for _ in range(3)]
+
     # Player management - this can accumulate
     players: Annotated[list[str], add_messages_reducer] = Field(
-        default_factory=lambda: ["player1", "player2"],
+        default_factory=_default_players,
         description="List of players in the game",
     )
 
     # Game board - always replace with new board
     board: Annotated[list[list[str | None]], replace_board_reducer] = Field(
-        default_factory=lambda: [[None for _ in range(3)] for _ in range(3)],
+        default_factory=_default_board,
         description="3x3 game board, each cell can be None, 'X', or 'O'",
     )
 

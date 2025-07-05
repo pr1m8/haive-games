@@ -21,8 +21,7 @@ try:
 except ImportError:
     RICH_AVAILABLE = False
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
+# Configure structured logging
 logger = logging.getLogger(__name__)
 
 

@@ -7,6 +7,7 @@ This module implements a robust poker agent with improved:
 - Enhanced prompts for LLM decisions
 """
 
+# Standard library imports
 import logging
 import os
 import time
@@ -14,8 +15,11 @@ import traceback
 from datetime import datetime
 from typing import Any
 
+# Local imports
 from haive.core.engine.agent.agent import Agent, register_agent
 from haive.core.engine.aug_llm import compose_runnable
+
+# Third-party imports
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START
 
@@ -33,18 +37,8 @@ from haive.games.poker.prompts import (
 from haive.games.poker.state import PokerState
 from haive.games.poker.state_manager import PokerStateManager
 
-# Set up enhanced logging
+# Get logger for this module
 logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler("poker_debug.log")
-file_handler.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-file_handler.setFormatter(formatter)
-console_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
-logger.setLevel(logging.DEBUG)
 
 
 class RetryConfiguration:
@@ -81,7 +75,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
         self._setup_agent_runnables()
         logger.info(f"Agent initialized with {len(self.config.player_names)} players")
 
-    def _setup_agent_runnables(self):
+    def _setup_agent_runnables(self) -> None:
         """Set up LLM runnables for all players with improved error handling."""
         logger.debug("Setting up agent runnables")
 
@@ -155,7 +149,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
                     f"Set up {style} agent for player {player_name} (ID: {player_id})"
                 )
 
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError) as e:
             logger.error(f"Error setting up agent runnables: {e}")
             logger.error(traceback.format_exc())
             raise

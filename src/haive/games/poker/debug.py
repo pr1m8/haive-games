@@ -8,11 +8,13 @@ performance, including:
 - Game state visualization
 """
 
+# Standard library imports
 import logging
 import time
 import traceback
 from typing import Any
 
+# Local imports
 from haive.games.poker.models import (
     AgentDecision,
     AgentDecisionSchema,
@@ -130,36 +132,36 @@ class StructuredOutputTester:
     def print_report(self):
         """Print a detailed report of the test results."""
         if not self.results:
-            print("No test results available.")
+            logger.info("No test results available.")
             return
 
         stats = self.run_batch_test(
             iterations=0
         )  # Just compile stats without running more tests
 
-        print("=" * 60)
-        print("STRUCTURED OUTPUT TEST REPORT")
-        print("=" * 60)
-        print(f"Total tests: {stats['total_tests']}")
-        print(f"Success rate: {stats['success_rate']*100:.2f}%")
-        print(f"Structured output rate: {stats['structured_rate']*100:.2f}%")
-        print(f"Average duration: {stats['avg_duration']:.2f}s")
-        print("\nAction distribution:")
+        logger.info("=" * 60)
+        logger.info("STRUCTURED OUTPUT TEST REPORT")
+        logger.info("=" * 60)
+        logger.info(f"Total tests: {stats['total_tests']}")
+        logger.info(f"Success rate: {stats['success_rate']*100:.2f}%")
+        logger.info(f"Structured output rate: {stats['structured_rate']*100:.2f}%")
+        logger.info(f"Average duration: {stats['avg_duration']:.2f}s")
+        logger.info("Action distribution:")
         for action, count in stats["action_distribution"].items():
-            print(f"  {action}: {count} ({count/stats['total_tests']*100:.2f}%)")
+            logger.info(f"  {action}: {count} ({count/stats['total_tests']*100:.2f}%)")
 
-        print("\nDetailed results:")
+        logger.info("\nDetailed results:")
         for i, result in enumerate(self.results):
-            print(f"\nTest #{i+1}:")
-            print(f"  Success: {result['success']}")
+            logger.info(f"\nTest #{i+1}:")
+            logger.info(f"  Success: {result['success']}")
             if result["success"]:
-                print(f"  Structured: {result.get('structured', False)}")
-                print(f"  Action: {result.get('action')}")
-                print(f"  Amount: {result.get('amount')}")
-                print(f"  Has reasoning: {result.get('has_reasoning', False)}")
+                logger.info(f"  Structured: {result.get('structured', False)}")
+                logger.info(f"  Action: {result.get('action')}")
+                logger.info(f"  Amount: {result.get('amount')}")
+                logger.info(f"  Has reasoning: {result.get('has_reasoning', False)}")
             else:
-                print(f"  Error: {result.get('error', 'Unknown error')}")
-            print(f"  Duration: {result['duration']:.2f}s")
+                logger.info(f"  Error: {result.get('error', 'Unknown error')}")
+            logger.info(f"  Duration: {result['duration']:.2f}s")
 
 
 class GameStatePrinter:

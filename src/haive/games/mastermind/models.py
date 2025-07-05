@@ -41,7 +41,8 @@ class MastermindGuess(BaseModel):
         ..., description="Player making the guess"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """String representation of the guess."""
         return f"{self.player} guesses: {', '.join(self.colors)}"
 
 
@@ -63,7 +64,8 @@ class MastermindFeedback(BaseModel):
         description="Number of pegs with correct color but wrong position",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """String representation of the feedback."""
         return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {self.correct_color}"
 
     def is_winning(self) -> bool:

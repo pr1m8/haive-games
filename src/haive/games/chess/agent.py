@@ -116,7 +116,8 @@ class ChessAgent(Agent[ChessConfig]):
 
         # Compile the graph
         self.graph = builder
-        # Compile the graph without recursion_limit, which will be applied in the runtime config
+        # Compile the graph without recursion_limit,
+        # which will be applied in the runtime config
         self._app = builder.compile()
 
     def make_move(self, state: ChessState, color: str) -> Command:
@@ -195,7 +196,7 @@ class ChessAgent(Agent[ChessConfig]):
                                 example_moves.append(
                                     f"{move} ({piece_name} from {from_sq} to {to_sq})"
                                 )
-                        except:
+                        except (ValueError, AttributeError):
                             example_moves.append(move)
 
                 # Build error context for retry attempts
@@ -204,7 +205,10 @@ class ChessAgent(Agent[ChessConfig]):
                     error_context = "\n⚠️ PREVIOUS ATTEMPT ERRORS:\n"
                     for i, err in enumerate(previous_errors, 1):
                         error_context += f"Attempt {i}: {err}\n"
-                    error_context += f"\nThis is attempt {attempt} of {max_attempts}. Please select a DIFFERENT legal move from the list below.\n"
+                    error_context += (
+                        f"\nThis is attempt {attempt} of {max_attempts}. "
+                        "Please select a DIFFERENT legal move from the list below.\n"
+                    )
 
                 # Format recent moves
                 recent_moves_formatted = []
@@ -225,7 +229,10 @@ class ChessAgent(Agent[ChessConfig]):
 
                 # Prepare context with examples
                 if example_moves:
-                    legal_moves_with_examples = f"Example moves: {', '.join(example_moves[:3])}\n\nAll legal moves:\n{legal_moves_str}"
+                    legal_moves_with_examples = (
+                        f"Example moves: {', '.join(example_moves[:3])}\n\n"
+                        f"All legal moves:\n{legal_moves_str}"
+                    )
                 else:
                     legal_moves_with_examples = legal_moves_str
 
@@ -238,7 +245,8 @@ class ChessAgent(Agent[ChessConfig]):
                 }
 
                 print(
-                    f"📋 Attempt {attempt}/{max_attempts}: {color.capitalize()} has {len(legal_moves)} legal moves"
+                    f"📋 Attempt {attempt}/{max_attempts}: "
+                    f"{color.capitalize()} has {len(legal_moves)} legal moves"
                 )
                 if previous_errors:
                     print(f"⚠️ Previous errors: {previous_errors[-1]}")
@@ -264,14 +272,18 @@ class ChessAgent(Agent[ChessConfig]):
 
                 if not move_uci:
                     raise ValueError(
-                        "Invalid move format returned by LLM - no move found in response"
+                        "Invalid move format returned by LLM - "
+                        "no move found in response"
                     )
 
                 print(f"🎯 {color.capitalize()} selected: {move_uci}")
 
                 # Validate move is legal
                 if move_uci not in legal_moves:
-                    error_msg = f"Move '{move_uci}' is not in the legal moves list. Please select from: {', '.join(legal_moves[:10])}..."
+                    error_msg = (
+                        f"Move '{move_uci}' is not in the legal moves list. "
+                        f"Please select from: {', '.join(legal_moves[:10])}..."
+                    )
                     previous_errors.append(error_msg)
 
                     if attempt < max_attempts:
@@ -279,7 +291,8 @@ class ChessAgent(Agent[ChessConfig]):
                         continue
                     # Last attempt failed, use first legal move
                     print(
-                        f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
+                        f"❌ Invalid move after {max_attempts} attempts! "
+                        "Using first legal move."
                     )
                     move_uci = legal_moves[0]
                     print(f"🔄 Auto-selected: {move_uci}")
@@ -349,10 +362,13 @@ class ChessAgent(Agent[ChessConfig]):
                                     ),
                                     "turn": "black" if color == "white" else "white",
                                     "game_status": determine_game_status(board),
-                                    "error_message": f"Used fallback move after errors: {', '.join(previous_errors)}",
+                                    "error_message": (
+                                        f"Used fallback move after errors: "
+                                        f"{', '.join(previous_errors)}"
+                                    ),
                                 }
                             )
-                    except:
+                    except (ValueError, AttributeError):
                         pass
 
                     return Command(update={"error_message": error_msg})

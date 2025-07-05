@@ -60,9 +60,6 @@ def generate_ship_placement_prompt(player: str) -> ChatPromptTemplate:
     )
 
 
-from langchain_core.prompts import ChatPromptTemplate
-
-
 def generate_move_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for move selection.
 

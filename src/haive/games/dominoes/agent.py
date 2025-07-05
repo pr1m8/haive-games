@@ -304,7 +304,8 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                         return decision.move
                     except Exception as e:
                         logger.warning(
-                            f"Failed to parse tool call arguments from additional_kwargs: {e}"
+                            "Failed to parse tool call arguments from "
+                            f"additional_kwargs: {e}"
                         )
 
         # Handle raw dict
@@ -494,7 +495,8 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                         return DominoesAnalysis.model_validate(args)
                     except Exception as e:
                         logger.warning(
-                            f"Failed to parse tool call arguments from additional_kwargs: {e}"
+                            "Failed to parse tool call arguments from "
+                            f"additional_kwargs: {e}"
                         )
 
         # Handle raw dict
@@ -543,28 +545,30 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 domino_state = DominoesState(**state)
 
-                print("\n" + "=" * 50)
-                print(f"🎮 Current Player: {domino_state.turn}")
-                print(f"📌 Game Status: {domino_state.game_status}")
-                print("=" * 50)
+                logger.info("\n" + "=" * 50)
+                logger.info(f"🎮 Current Player: {domino_state.turn}")
+                logger.info(f"📌 Game Status: {domino_state.game_status}")
+                logger.info("=" * 50)
 
                 # Show the board
-                print("\n" + domino_state.board_string)
+                logger.info("\n" + domino_state.board_string)
 
                 # Print player hands
                 for player in domino_state.players:
                     hand = domino_state.hands[player]
                     formatted_hand = [str(tile) for tile in hand]
-                    print(
-                        f"\n{player}'s hand: {', '.join(formatted_hand)} (Pip count: {sum(tile.left + tile.right for tile in hand)})"
+                    hand_info = (
+                        f"\n{player}'s hand: {', '.join(formatted_hand)} "
+                        f"(Pip count: {sum(tile.left + tile.right for tile in hand)})"
                     )
+                    logger.info(hand_info)
 
-                # Print boneyard
-                print(f"\nBoneyard: {len(domino_state.boneyard)} remaining tiles")
+                # Log boneyard
+                logger.info(f"\nBoneyard: {len(domino_state.boneyard)} remaining tiles")
 
-                # Print last move if available
+                # Log last move if available
                 if domino_state.move_history:
-                    print(f"\nLast move: {domino_state.move_history[-1]}")
+                    logger.info(f"\nLast move: {domino_state.move_history[-1]}")
 
                 # Print analysis if available
                 if (
@@ -572,16 +576,20 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                     and domino_state.player1_analysis
                     and domino_state.turn == "player1"
                 ):
-                    print(f"\nPlayer 1 Analysis: {domino_state.player1_analysis[-1]}")
+                    logger.info(
+                        f"\nPlayer 1 Analysis: {domino_state.player1_analysis[-1]}"
+                    )
                 if (
                     hasattr(domino_state, "player2_analysis")
                     and domino_state.player2_analysis
                     and domino_state.turn == "player2"
                 ):
-                    print(f"\nPlayer 2 Analysis: {domino_state.player2_analysis[-1]}")
+                    logger.info(
+                        f"\nPlayer 2 Analysis: {domino_state.player2_analysis[-1]}"
+                    )
             except Exception as e:
                 logger.error(f"Error in text visualization: {e}")
-                print(f"Error visualizing state: {e}")
+                logger.error(f"Error visualizing state: {e}")
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run the full game, optionally visualizing each step."""

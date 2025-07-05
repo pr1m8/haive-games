@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Main script to run the Battleship game.
 
 This module provides a standalone command-line interface for running
@@ -17,6 +16,7 @@ Command-line options:
     --debug: Enable debug mode with detailed logs
     --delay: Set delay between game steps (default: 0.5s)
 """
+
 import argparse
 import time
 

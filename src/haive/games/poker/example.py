@@ -1,3 +1,4 @@
+# Standard library imports
 import argparse
 import logging
 import os
@@ -6,16 +7,16 @@ import subprocess
 import sys
 import time
 
+# Third-party imports
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
 
+# Local imports
 from haive.games.poker.config import PokerAgentConfig
 from haive.games.poker.engines import poker_agent_configs
 from haive.games.poker.models import Card, GamePhase, PlayerAction
 from haive.games.poker.state_manager import PokerStateManager
-
-# Import the PokerUI class - if not available, the class is defined in the previous artifact
 from haive.games.poker.ui import PokerUI
 
 # Configure logging
@@ -74,7 +75,7 @@ def main():
     random.shuffle(ai_player_names)
     player_names = ai_player_names[: args.players]
 
-    print(f"Players: {', '.join(player_names)}")
+    logger.info("Players selected", extra={"players": player_names})
 
     # Create a complete game configuration with default engines
     config = PokerAgentConfig(
@@ -86,13 +87,18 @@ def main():
         engines=poker_agent_configs,  # Use the pre-defined poker agent configs
     )
 
-    # Print game information
-    print("\n🃏 Starting Texas Hold'em Poker Game 🃏")
-    print(f"Players: {', '.join(player_names)}")
-    print(f"Starting chips: ${args.chips}")
-    print(f"Blinds: ${args.small_blind}/${args.big_blind}")
-    print("Game will run until only one player remains with chips")
-    print("=" * 50)
+    # Log game information
+    logger.info("Starting Texas Hold'em Poker Game")
+    logger.info(
+        "Game configuration",
+        extra={
+            "players": player_names,
+            "starting_chips": args.chips,
+            "small_blind": args.small_blind,
+            "big_blind": args.big_blind,
+            "win_condition": "Last player with chips",
+        },
+    )
 
     # Handle separate window option
     if args.separate_window:

@@ -4,11 +4,14 @@ This module provides a compatibility layer to replace sente with sgfmill,
 which is compatible with Python 3.12.
 """
 
+import logging
 from typing import Optional, Tuple
 
 import sgfmill.boards
 import sgfmill.common
 import sgfmill.sgf
+
+logger = logging.getLogger(__name__)
 
 
 class GoGame:
@@ -87,8 +90,9 @@ def loads_sgf(sgf_string: str) -> GoGame:
     """Load a game from SGF string."""
     try:
         sgf_game = sgfmill.sgf.Sgf_game.from_string(sgf_string)
-    except:
+    except (ValueError, AttributeError) as e:
         # If parsing fails, return empty game
+        logger.warning(f"Failed to parse SGF string: {e}")
         return GoGame(19)
 
     size = sgf_game.get_size()

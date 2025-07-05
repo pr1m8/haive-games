@@ -5,11 +5,17 @@ which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
+import json
+import logging
 from typing import Any
 
+from langchain_core.messages import AIMessage
+
 from haive.games.framework.base.state_manager import GameStateManager
-from haive.games.mancala.models import MancalaMove
+from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 from haive.games.mancala.state import MancalaState
+
+logger = logging.getLogger(__name__)
 
 
 class MancalaStateManager(GameStateManager[MancalaState]):
@@ -263,10 +269,6 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
         # Ensure analysis is of the correct type
         if not isinstance(analysis, MancalaAnalysis):
-            import json
-
-            from langchain_core.messages import AIMessage
-
             # Try to convert AIMessage to MancalaAnalysis
             if isinstance(analysis, AIMessage):
                 try:
@@ -289,7 +291,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
                                 analysis = MancalaAnalysis(**args)
                 except Exception as e:
                     # If conversion fails, log error but continue
-                    print(f"Error converting AIMessage to MancalaAnalysis: {e}")
+                    logger.error(f"Error converting AIMessage to MancalaAnalysis: {e}")
                     # Return state unchanged
                     return state
 

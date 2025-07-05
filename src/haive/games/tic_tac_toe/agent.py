@@ -4,6 +4,7 @@ This module defines the agent responsible for initializing the game,
 coordinating turns, running inference engines, and maintaining the gameplay loop.
 """
 
+import logging
 import time
 from typing import Any
 
@@ -17,6 +18,8 @@ from haive.games.tic_tac_toe.config import TicTacToeConfig
 from haive.games.tic_tac_toe.state import TicTacToeState
 from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager
 
+logger = logging.getLogger(__name__)
+
 
 @register_agent(TicTacToeConfig)
 class TicTacToeAgent(GameAgent[TicTacToeConfig]):
@@ -29,7 +32,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize a new Tic Tac Toe game."""
-        print("[DEBUG] initialize_game called")
+        logger.debug("initialize_game called")
 
         game_state = self.state_manager.initialize(
             first_player=self.config.first_player,
@@ -37,10 +40,14 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             player_O=self.config.player_O,
         )
 
-        print("[DEBUG] Game state initialized:")
-        print(f"[DEBUG] Turn: {game_state.turn}")
-        print(f"[DEBUG] Status: {game_state.game_status}")
-        print(f"[DEBUG] Board: {game_state.board}")
+        logger.debug(
+            "Game state initialized",
+            extra={
+                "turn": game_state.turn,
+                "status": game_state.game_status,
+                "board": game_state.board,
+            },
+        )
 
         # Return only the essential fields for initialization
         return Command(
@@ -96,29 +103,32 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
     def make_move(self, state) -> Command:
         """Make a move for the current player."""
-        print(f"[DEBUG] make_move called with state type: {type(state)}")
+        logger.debug("make_move called", extra={"state_type": type(state).__name__})
 
         # Convert dict to TicTacToeState if needed
         if isinstance(state, dict):
             try:
                 game_state = TicTacToeState(**state)
-                print("[DEBUG] Converted dict to TicTacToeState successfully")
-                print(
-                    f"[DEBUG] Turn: {game_state.turn}, Status: {game_state.game_status}"
+                logger.debug(
+                    "Converted dict to TicTacToeState successfully",
+                    extra={
+                        "turn": game_state.turn,
+                        "status": game_state.game_status,
+                        "board": game_state.board,
+                    },
                 )
-                print(f"[DEBUG] Board: {game_state.board}")
             except Exception as e:
-                print(f"[DEBUG] State conversion failed: {e}")
+                logger.error("State conversion failed", extra={"error": str(e)})
                 return Command(
                     update={"error_message": f"State conversion failed: {e!s}"},
                     goto=END,
                 )
         else:
             game_state = state
-            print("[DEBUG] Using state directly")
+            logger.debug("Using state directly")
 
         if game_state.game_status != "ongoing":
-            print(f"[DEBUG] Game not ongoing, status: {game_state.game_status}")
+            logger.debug("Game not ongoing", extra={"status": game_state.game_status})
             return Command(update={}, goto=END)
 
         # Determine which engine to use based on current player
@@ -129,7 +139,10 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             engine = self.engines["O_player"]
             engine_name = "O_player"
 
-        print(f"[DEBUG] Using engine: {engine_name} for turn: {game_state.turn}")
+        logger.debug(
+            "Using engine for turn",
+            extra={"engine": engine_name, "turn": game_state.turn},
+        )
 
         try:
             context = self.prepare_move_context(game_state)
@@ -171,7 +184,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             return Command(update=update, goto=next_node)
 
         except Exception as e:
-            print(f"[DEBUG] Error in make_move: {e}")
+            logger.error("Error in make_move", extra={"error": str(e)}, exc_info=True)
             import traceback
 
             traceback.print_exc()
@@ -179,7 +192,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
     def analyze_position(self, state) -> Command:
         """Analyze the current position for the player who just moved."""
-        print("[DEBUG] analyze_position called")
+        logger.debug("analyze_position called")
 
         # Convert dict to TicTacToeState if needed
         if isinstance(state, dict):
@@ -228,7 +241,9 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             return Command(update=update, goto=next_node)
 
         except Exception as e:
-            print(f"[DEBUG] Error in analyze_position: {e}")
+            logger.error(
+                "Error in analyze_position", extra={"error": str(e)}, exc_info=True
+            )
             return Command(
                 update={"error_message": f"Analysis failed: {e!s}"},
                 goto="make_move" if game_state.game_status == "ongoing" else END,

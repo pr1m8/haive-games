@@ -383,10 +383,10 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         """
         logger.info(f"🃏 {self.config.player_name}: Analyzing hand...")
         if isinstance(state, dict):
-            print("--------------------------------")
-            print(state)
-            print(type(state))
-            print("--------------------------------")
+            logger.debug(
+                "State validation debug",
+                extra={"state": str(state), "state_type": str(type(state))},
+            )
             state = PlayerSubgraphState.model_validate(state)
         try:
             # Reconstruct HoldemState from the dict

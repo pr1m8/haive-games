@@ -4,11 +4,16 @@ This module defines the Connect 4 agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+# Standard library imports
 import copy
+import logging
 import time
 from typing import Any
 
+# Local imports
 from haive.core.engine.agent.agent import register_agent
+
+# Third-party imports
 from langgraph.types import Command
 
 from haive.games.connect4.config import Connect4AgentConfig
@@ -16,6 +21,8 @@ from haive.games.connect4.models import Connect4Move, Connect4PlayerDecision
 from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
 from haive.games.framework.base.agent import GameAgent
+
+logger = logging.getLogger(__name__)
 
 
 @register_agent(Connect4AgentConfig)
@@ -28,7 +35,7 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
 
     def __init__(self, config: Connect4AgentConfig):
         super().__init__(config)
-        # print(self.engines)
+        # logger.debug("Engines initialized", extra={"engines": list(self.engines.keys())})
         self.state_manager = Connect4StateManager
 
     def prepare_move_context(self, state: Connect4State, player: str) -> dict[str, Any]:
@@ -177,20 +184,23 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
         # Create a Connect4State from the dict
         connect4_state = Connect4State(**state)
 
-        print("\n" + "=" * 60)
-        print(f"🎮 Current Player: {connect4_state.turn.upper()}")
-        print(f"📌 Game Status: {connect4_state.game_status.upper()}")
-        print("=" * 60)
-
-        # 🎲 Display the board
-        print("\n" + connect4_state.board_string)
+        logger.info(
+            "Game state visualization",
+            extra={
+                "separator": "=" * 60,
+                "current_player": connect4_state.turn.upper(),
+                "game_status": connect4_state.game_status.upper(),
+                "board": connect4_state.board_string,
+            },
+        )
 
         # 📝 Show last move if available
         if connect4_state.move_history:
             last_move = connect4_state.move_history[-1]
             player = "red" if len(connect4_state.move_history) % 2 == 1 else "yellow"
-            print(
-                f"\n📝 **Last Move:** {player.upper()} played in column {last_move.column}"
+            logger.info(
+                "Last move information",
+                extra={"player": player.upper(), "column": last_move.column},
             )
 
         # 🔍 **Show analysis from the previous turn**
@@ -205,22 +215,28 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             analysis_color = "Yellow"
 
         if analysis:
-            print(f"\n🔍 **{analysis_color} Analysis:**")
-            print(f"   - 📈 Position Score: {analysis.get('position_score', 'N/A')}")
-            print(f"   - 🎯 Center Control: {analysis.get('center_control', 'N/A')}/10")
-            print(
-                f"   - 🎯 Suggested Columns: {', '.join(map(str, analysis.get('suggested_columns', [])))}"
-            )
-            print(f"   - ⚡ Winning Chances: {analysis.get('winning_chances', 'N/A')}%")
-
-            # 🔺 Threat Analysis
             threats = analysis.get("threats", {})
-            print("\n⚠️ **Threats:**")
-            print(
-                f"   - 🔴 Winning Moves: {', '.join(map(str, threats.get('winning_moves', []))) or 'None'}"
-            )
-            print(
-                f"   - 🛑 Blocking Moves: {', '.join(map(str, threats.get('blocking_moves', []))) or 'None'}"
+            logger.info(
+                "Player analysis",
+                extra={
+                    "analysis_color": analysis_color,
+                    "position_score": analysis.get("position_score", "N/A"),
+                    "center_control": f"{analysis.get('center_control', 'N/A')}/10",
+                    "suggested_columns": ", ".join(
+                        map(str, analysis.get("suggested_columns", []))
+                    ),
+                    "winning_chances": f"{analysis.get('winning_chances', 'N/A')}%",
+                    "threats": {
+                        "winning_moves": ", ".join(
+                            map(str, threats.get("winning_moves", []))
+                        )
+                        or "None",
+                        "blocking_moves": ", ".join(
+                            map(str, threats.get("blocking_moves", []))
+                        )
+                        or "None",
+                    },
+                },
             )
 
         # Short delay for readability

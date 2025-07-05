@@ -52,7 +52,7 @@ class MastermindConfig(GameConfig):
     )
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> "MastermindConfig":
         """Create a default configuration.
 
         Returns:

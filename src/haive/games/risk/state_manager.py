@@ -9,7 +9,7 @@ import random
 from pydantic import BaseModel, Field
 
 from haive.games.risk.config import RiskConfig
-from haive.games.risk.models import CardType, MoveType, PhaseType, RiskMove
+from haive.games.risk.models import CardType, GameStatus, MoveType, PhaseType, RiskMove
 from haive.games.risk.state import RiskState
 
 
@@ -368,8 +368,8 @@ class RiskStateManager(BaseModel):
 
             # Move attacking armies
             min_armies = 1  # At least 1 army must be moved
-            attacker_territory.armies - 1  # At least 1 army must remain
-            armies_to_move = min_armies  # Default to minimum
+            max_armies = attacker_territory.armies - 1  # At least 1 army must remain
+            armies_to_move = min(min_armies, max_armies)  # Default to minimum
 
             attacker_territory.armies -= armies_to_move
             defender_territory.armies = armies_to_move
@@ -504,5 +504,5 @@ class RiskStateManager(BaseModel):
         ]
 
         if len(active_players) == 1:
-            self.state.game_status = self.state.GameStatus.FINISHED
+            self.state.game_status = GameStatus.FINISHED
             self.state.phase = PhaseType.GAME_OVER

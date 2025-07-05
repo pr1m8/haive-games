@@ -32,7 +32,17 @@ class ChessMoveModel(BaseModel):
 
     @field_validator("move")
     def validate_move(cls, v: str) -> str:
-        """Validate the move format."""
+        """Validate the move format.
+
+        Args:
+            v: The move string to validate
+
+        Returns:
+            The validated move string
+
+        Raises:
+            ValueError: If move is not a string or too short
+        """
         if not isinstance(v, str) or len(v) < 4:
             raise ValueError("Move must be a string of at least 4 characters")
         return v

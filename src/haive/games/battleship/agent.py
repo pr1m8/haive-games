@@ -8,6 +8,7 @@ This module implements the main agent for the Battleship game, including:
     - Ship placement and move execution
 """
 
+import logging
 import time
 from typing import Any
 
@@ -25,6 +26,8 @@ from haive.games.battleship.models import (
 )
 from haive.games.battleship.state import BattleshipState
 from haive.games.battleship.state_manager import BattleshipStateManager
+
+logger = logging.getLogger(__name__)
 
 
 @register_agent(BattleshipAgentConfig)
@@ -321,7 +324,9 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             engine_key = f"{player}_analyzer"
             engine = self.engines.get(engine_key)
             if not engine:
-                print(f"WARNING: Missing analyzer engine: {engine_key}")
+                logger.warning(
+                    "Missing analyzer engine", extra={"engine_key": engine_key}
+                )
                 return Command(update=state_obj.model_dump(), goto=f"{player}_move")
 
             # Get public state for the player
@@ -346,8 +351,11 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             # Detailed error logging
             import traceback
 
-            print(f"FULL ERROR for {player} analysis:")
-            traceback.print_exc()
+            logger.error(
+                "Full error for player analysis",
+                extra={"player": player},
+                exc_info=True,
+            )
 
             # Update error message but don't stop the game
             state_obj.error_message = f"Analysis error for {player}: {e!s}"
@@ -456,8 +464,9 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
                         placements.append(ShipPlacement(**placement_data))
 
             if not placements:
-                print(
-                    f"WARNING: No valid placements found in LLM response, raw result: {result}"
+                logger.warning(
+                    "No valid placements found in LLM response",
+                    extra={"raw_result": result},
                 )
                 state_obj.error_message = (
                     f"Failed to generate valid ship placements for {player}"
@@ -484,8 +493,11 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         except Exception as e:
             import traceback
 
-            print(f"Ship placement error for {player}: {e}")
-            traceback.print_exc()
+            logger.error(
+                "Ship placement error for player",
+                extra={"player": player, "error": str(e)},
+                exc_info=True,
+            )
             # Update error message
             state_obj.error_message = f"Ship placement error for {player}: {e!s}"
             return Command(update=state_obj.model_dump(), goto="initialize_game")
@@ -567,7 +579,9 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             elif isinstance(result, dict) and "row" in result and "col" in result:
                 move_command = MoveCommand(row=result["row"], col=result["col"])
             else:
-                print(f"WARNING: Invalid move format returned by LLM: {result}")
+                logger.warning(
+                    "Invalid move format returned by LLM", extra={"result": result}
+                )
                 # Fallback to a valid move (first available position)
                 move_command = self._find_valid_move(state_obj, player)
 
@@ -580,8 +594,11 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         except Exception as e:
             import traceback
 
-            print(f"Move error for {player}: {e}")
-            traceback.print_exc()
+            logger.error(
+                "Move error for player",
+                extra={"player": player, "error": str(e)},
+                exc_info=True,
+            )
             # Update error message but don't stop the game
             state_obj.error_message = f"Move error for {player}: {e!s}"
             return Command(update=state_obj.model_dump(), goto=next_node)
@@ -712,8 +729,11 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             # Detailed error logging
             import traceback
 
-            print(f"FULL ERROR for {player} analysis:")
-            traceback.print_exc()
+            logger.error(
+                "Full error for player analysis",
+                extra={"player": player},
+                exc_info=True,
+            )
 
             # Update error message but don't stop the game
             state_obj.error_message = f"Analysis error for {player}: {e!s}"

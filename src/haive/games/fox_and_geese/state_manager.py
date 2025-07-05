@@ -5,11 +5,16 @@ which manages the state of the game and provides methods for initializing,
 applying moves, checking game status, and getting legal moves for the Fox and Geese game.
 """
 
+# Standard library imports
 import copy
+import logging
 
+# Local imports
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.framework.base.state_manager import GameStateManager
+
+logger = logging.getLogger(__name__)
 
 
 class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
@@ -21,12 +26,19 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
 
     @classmethod
     def initialize(cls) -> FoxAndGeeseState:
-        """Initialize a new Fox and Geese game."""
-        print("Attempting to initialize Fox and Geese game")
+        """Initialize a new Fox and Geese game.
+
+        Creates initial game state with fox in center position and geese
+        arranged in checkerboard pattern on the first two rows.
+
+        Returns:
+            FoxAndGeeseState: Initial game state with positions set up.
+        """
+        logger.info("Initializing Fox and Geese game")
 
         # Fox starts at the center
         fox_position = FoxAndGeesePosition(row=3, col=3)
-        # print('created fox position')
+        # Fox position created
 
         # Geese start at the top - create as list first, then convert to set
         geese_list = []

@@ -5,6 +5,7 @@ which manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
+import itertools
 import random
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -234,8 +235,6 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         code_length = 4  # Standard Mastermind code length
 
         # Generate all possible codes (expensive, but acceptable for analysis)
-        import itertools
-
         all_codes = set(itertools.product(colors, repeat=code_length))
 
         # Filter based on previous guesses and feedback
@@ -251,7 +250,10 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
     @classmethod
     def _is_consistent_with_feedback(
-        cls, code: tuple[str, ...], guess: tuple[str, ...], feedback: MastermindFeedback
+        cls,
+        code: tuple[str, ...],
+        guess: tuple[str, ...],
+        feedback: MastermindFeedback,
     ) -> bool:
         """Check if a potential code is consistent with a guess and its feedback.
 

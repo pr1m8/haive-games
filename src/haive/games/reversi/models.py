@@ -35,7 +35,7 @@ class ReversiMove(BaseModel):
         ..., description="Player making the move (B=Black, W=White)"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         row_letter = chr(ord("A") + self.row)
         col_num = self.col + 1
         return f"{self.player} places at {row_letter}{col_num} ({self.row}, {self.col})"

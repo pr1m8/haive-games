@@ -1,5 +1,3 @@
-# src/haive/agents/agent_games/dominoes/state.py
-
 import copy
 import logging
 import random
@@ -8,6 +6,8 @@ from typing import Any, Literal
 from haive.games.dominoes.models import DominoesAnalysis, DominoMove, DominoTile
 from haive.games.dominoes.state import DominoesState
 from haive.games.framework.base import GameStateManager
+
+# src/haive/agents/agent_games/dominoes/state.py
 
 logger = logging.getLogger(__name__)
 
@@ -287,9 +287,8 @@ class DominoesStateManager(GameStateManager[DominoesState]):
                         pip_count_assessment="Unknown",
                         open_ends=["Unknown"],
                         missing_values=[],
-                        suggested_strategy=analysis[
-                            :100
-                        ],  # Use the string content as strategy
+                        # Use the string content as strategy
+                        suggested_strategy=analysis[:100],
                         blocking_potential="Unknown",
                         reasoning=analysis,
                     )

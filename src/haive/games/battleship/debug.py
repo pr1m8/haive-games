@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Debug script for testing Battleship game.
 
 This module provides a debugging interface for the Battleship game,
@@ -12,6 +11,7 @@ It's designed for:
 Run this script directly to start a debug session:
     python -m haive.games.battleship.debug
 """
+
 import time
 
 from rich.console import Console

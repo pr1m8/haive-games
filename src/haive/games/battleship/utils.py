@@ -10,6 +10,14 @@ from typing import Any
 
 from haive.games.battleship.models import ShipType
 
+__all__ = [
+    "visualize_board",
+    "format_coordinates_list",
+    "format_ship_types",
+    "calculate_game_stats",
+    "check_all_ships_placed",
+]
+
 
 def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:
     """Create a string representation of the Battleship board.

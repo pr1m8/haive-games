@@ -14,6 +14,10 @@ class NimMove(BaseModel):
     pile_index: int = Field(..., description="Index of the pile to take from")
     stones_taken: int = Field(..., description="Number of stones to take")
 
+    def __str__(self) -> str:
+        """String representation of the move."""
+        return f"Take {self.stones_taken} stones from pile {self.pile_index}"
+
 
 class NimAnalysis(BaseModel):
     """Analysis of a Nim position.
@@ -34,5 +38,6 @@ class NimAnalysis(BaseModel):
     recommended_move: NimMove = Field(..., description="Recommended move")
     explanation: str = Field(..., description="Explanation of the analysis")
 
-    def __str__(self):
-        return f"Take {self.stones_taken} stones from pile {self.pile_index}"
+    def __str__(self) -> str:
+        """String representation of the analysis."""
+        return f"Analysis: {self.position_evaluation} - {self.explanation}"

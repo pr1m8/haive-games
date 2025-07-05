@@ -4,12 +4,18 @@ This module defines the Fox and Geese game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+# Standard library imports
+import json
 import logging
+import re
 import time
 from typing import Any
 
+# Local imports
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+
+# Third-party imports
 from langgraph.constants import END, START
 from langgraph.types import Command
 from rich.console import Console
@@ -206,8 +212,6 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             FoxAndGeeseMove: Parsed move object
         """
         logger.debug(f"Extracting move from response type: {type(response)}")
-        import json
-        import re
 
         # Handle different response types
         if isinstance(response, FoxAndGeeseMove):

@@ -4,6 +4,7 @@ This module defines the agent for the Clue game,
 which handles game state management and player actions.
 """
 
+import logging
 import time
 from typing import Any
 
@@ -13,6 +14,8 @@ from haive.games.clue.config import ClueConfig
 from haive.games.clue.state import ClueState
 from haive.games.clue.state_manager import ClueStateManager
 from haive.games.framework.base.agent import GameAgent
+
+logger = logging.getLogger(__name__)
 
 
 @register_agent(ClueConfig)
@@ -66,25 +69,25 @@ class ClueAgent(GameAgent[ClueConfig]):
         # Create a ClueState from the dict
         game_state = ClueState(**state)
 
-        print("\n" + "=" * 50)
-        print(f"🎮 Game: Clue v{self.config.version}")
-        print(f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}")
-        print(f"🎭 Current Player: {game_state.current_player}")
-        print(f"📝 Status: {game_state.game_status}")
+        logger.info("\n" + "=" * 50)
+        logger.info(f"🎮 Game: Clue v{self.config.version}")
+        logger.info(f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}")
+        logger.info(f"🎭 Current Player: {game_state.current_player}")
+        logger.info(f"📝 Status: {game_state.game_status}")
 
         # Only show solution if game is over
         if game_state.game_status != "ongoing":
-            print(
+            logger.info(
                 f"🔑 Solution: {game_state.solution.suspect}, {game_state.solution.weapon}, {game_state.solution.room}"
             )
 
-        print("=" * 50)
+        logger.info("=" * 50)
 
-        # Print the board with all guesses and responses
+        # Log the board with all guesses and responses
         if game_state.guesses:
-            print("\n" + game_state.board_string)
+            logger.info("\n" + game_state.board_string)
         else:
-            print("\nNo guesses yet.")
+            logger.info("\nNo guesses yet.")
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -132,7 +135,7 @@ class ClueAgent(GameAgent[ClueConfig]):
                     ):
                         # Check if max turns reached
                         if len(current_state.guesses) >= current_state.max_turns:
-                            print("\n⚠️ Maximum turns reached. Ending game.")
+                            logger.warning("\n⚠️ Maximum turns reached. Ending game.")
                             # Force game to end
                             current_state.game_status = "ongoing_win"
                             final_state = current_state.model_dump()

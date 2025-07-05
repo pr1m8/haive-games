@@ -6,12 +6,17 @@ This module provides the corrected main agent implementation that:
     - Fixes the validation error by maintaining BaseModel state
 """
 
+# Standard library imports
+import logging
 from typing import Any, Dict, Optional
 
+# Local imports
 from haive.core.engine.agent.agent import Agent, register_agent
 
 from haive.games.monopoly.config import MonopolyGameAgentConfig
 from haive.games.monopoly.state import MonopolyState
+
+logger = logging.getLogger(__name__)
 
 
 @register_agent(MonopolyGameAgentConfig)
@@ -38,12 +43,12 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         self.initial_state = config.create_initial_state()
 
         # CRITICAL: Validate initial state
-        print(
-            f"DEBUG: Initial state created with {len(self.initial_state.players)} players"
+        logger.debug(
+            f"Initial state created with {len(self.initial_state.players)} players"
         )
         if self.initial_state.players:
-            print(
-                f"DEBUG: Player names: {[p.name for p in self.initial_state.players]}"
+            logger.debug(
+                f"Player names: {[p.name for p in self.initial_state.players]}"
             )
         else:
             raise ValueError("CRITICAL: No players in initial state!")
@@ -158,7 +163,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
                 print(f"  ❌ {player.name}")
 
         # Display some game statistics
-        print("\n📈 Game Statistics:"s:")
+        print("\n📈 Game Statistics:")
         print(f"  • Total events: {len(final_state.game_events)}")
 
         # Count different event types

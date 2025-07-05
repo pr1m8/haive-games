@@ -52,8 +52,8 @@ class ClueStateManager(GameStateManager[ClueState]):
             Updated game state
         """
         # Validate player's turn
-        if move.player != state.current_player:
-            raise ValueError(f"Not {move.player}'s turn")
+        # Note: ClueGuess doesn't have a player attribute, so we use current_player
+        # This assumes the move is being made by the current player
 
         # Validate turn limit
         if len(state.guesses) >= state.max_turns:

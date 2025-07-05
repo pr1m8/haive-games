@@ -38,7 +38,7 @@ The models are designed to be immutable where possible and include comprehensive
 validation to ensure game rules are properly enforced throughout the implementation.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
@@ -180,21 +180,12 @@ class ClueHypothesis:
     confidence: float = 0.0
 
     # Additional information
-    excluded_suspects: list[ValidSuspect] = None
-    excluded_weapons: list[ValidWeapon] = None
-    excluded_rooms: list[ValidRoom] = None
+    excluded_suspects: list[ValidSuspect] = field(default_factory=list)
+    excluded_weapons: list[ValidWeapon] = field(default_factory=list)
+    excluded_rooms: list[ValidRoom] = field(default_factory=list)
 
     # Text reasoning
     reasoning: str = ""
-
-    def __post_init__(self):
-        """Initialize empty lists if None."""
-        if self.excluded_suspects is None:
-            self.excluded_suspects = []
-        if self.excluded_weapons is None:
-            self.excluded_weapons = []
-        if self.excluded_rooms is None:
-            self.excluded_rooms = []
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the hypothesis to a dictionary."""
