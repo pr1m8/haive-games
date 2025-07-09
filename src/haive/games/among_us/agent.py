@@ -310,5 +310,5 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
             if "discuss" in response.lower() or len(response) > 20:
                 return {"action": "discuss", "message": response}
 
-        # If we couldn't extract a structured move, return an "observe" action as fallback
+        # Default fallback action
         return {"action": "observe"}
