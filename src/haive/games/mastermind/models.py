@@ -256,11 +256,61 @@ class MastermindGuess(BaseModel):
 
 
 class MastermindFeedback(BaseModel):
-    """Feedback for a Mastermind guess.
+    """Feedback response for a Mastermind guess evaluation.
 
-    This class defines the structure of feedback for a guess in Mastermind,
-    which includes the number of pegs with correct color and position,
-    and the number of pegs with correct color but wrong position.
+    Represents the codemaker's response to a codebreaker's guess, providing
+    crucial information about the correctness of the guess without revealing
+    the exact positions or colors. This feedback is essential for the
+    codebreaker's deduction process.
+
+    The feedback follows traditional Mastermind rules:
+    - Black pegs (correct_position): Right color in right position
+    - White pegs (correct_color): Right color in wrong position
+    - No feedback for completely incorrect colors
+
+    Attributes:
+        correct_position: Number of pegs with correct color and position (0-4).
+            These are traditionally represented by black pegs.
+        correct_color: Number of pegs with correct color but wrong position (0-4).
+            These are traditionally represented by white pegs.
+
+    Examples:
+        Perfect guess feedback::
+
+            # All positions correct - winning feedback
+            perfect = MastermindFeedback(correct_position=4, correct_color=0)
+            assert perfect.is_winning() == True
+            print(perfect)  # "🌟 Correct position: 4, 🔄 Correct color: 0"
+
+        Partial match feedback::
+
+            # 2 correct positions, 1 correct color wrong position
+            partial = MastermindFeedback(correct_position=2, correct_color=1)
+            assert partial.is_winning() == False
+            print(partial)  # "🌟 Correct position: 2, 🔄 Correct color: 1"
+
+        No match feedback::
+
+            # Complete miss - no correct colors
+            miss = MastermindFeedback(correct_position=0, correct_color=0)
+            assert miss.is_winning() == False
+
+        Strategic interpretation::
+
+            feedback = MastermindFeedback(correct_position=1, correct_color=2)
+
+            # Interpretation:
+            # - 1 color is in the correct position
+            # - 2 additional colors are in the code but wrong positions
+            # - 1 color is not in the code at all
+
+            if feedback.correct_position + feedback.correct_color == 3:
+                print("3 out of 4 colors are in the secret code")
+
+    Note:
+        The sum of correct_position and correct_color should never exceed 4,
+        as there are only 4 positions in the code. The feedback provides
+        information about colors, not individual pegs.
     """
 
     correct_position: int = Field(
@@ -274,11 +324,34 @@ class MastermindFeedback(BaseModel):
     )
 
     def __str__(self) -> str:
-        """String representation of the feedback."""
+        """String representation of the feedback.
+
+        Returns:
+            str: Human-readable feedback with emoji indicators.
+
+        Examples:
+            Feedback display::
+
+                feedback = MastermindFeedback(correct_position=2, correct_color=1)
+                print(feedback)  # "🌟 Correct position: 2, 🔄 Correct color: 1"
+        """
         return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {self.correct_color}"
 
     def is_winning(self) -> bool:
-        """Check if this feedback indicates a win (all 4 pegs in correct position)."""
+        """Check if this feedback indicates a winning guess.
+
+        Returns:
+            bool: True if all 4 pegs are in correct positions (game won).
+
+        Examples:
+            Winning condition check::
+
+                winning_feedback = MastermindFeedback(correct_position=4, correct_color=0)
+                assert winning_feedback.is_winning() == True
+
+                partial_feedback = MastermindFeedback(correct_position=3, correct_color=1)
+                assert partial_feedback.is_winning() == False
+        """
         return self.correct_position == 4
 
 
