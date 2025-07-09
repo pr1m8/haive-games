@@ -1,7 +1,46 @@
-# state_manager_mixin.py
+"""Comprehensive state management mixin for Among Us social deduction gameplay.
+
+This module provides the core state management functionality for Among Us games,
+handling complex game mechanics including role assignments, task management,
+sabotage systems, meeting coordination, and win condition evaluation. The state
+manager coordinates all gameplay elements for authentic Among Us experiences.
+
+The state manager handles:
+- Game initialization with role assignments and task generation
+- Move validation and application for all player actions
+- Complex sabotage mechanics with resolution systems
+- Meeting and voting coordination
+- Win condition evaluation and game progression
+- Player state filtering for information hiding
+- Legal move generation for AI decision-making
+
+Examples:
+    Initializing a game::
+
+        state = AmongUsStateManagerMixin.initialize(
+            player_names=["Alice", "Bob", "Charlie", "David", "Eve"],
+            map_name="skeld",
+            num_impostors=1
+        )
+
+    Applying player moves::
+
+        move = {"action": "move", "location": "electrical"}
+        new_state = AmongUsStateManagerMixin.apply_move(state, "Alice", move)
+
+    Checking game status::
+
+        updated_state = AmongUsStateManagerMixin.check_game_status(state)
+        if updated_state.game_status == "ended":
+            print(f"Game over! Winner: {updated_state.winner}")
+
+Note:
+    This is a mixin class designed to be inherited by game agents,
+    providing state management capabilities without agent-specific behavior.
+"""
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Dict, List
 
 from haive.games.among_us.models import (
     AmongUsGamePhase,
@@ -20,16 +59,104 @@ from haive.games.framework.multi_player.state_manager import MultiPlayerGameStat
 
 
 class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
-    """Mixin class that implements state management for Among Us game.
+    """Comprehensive state management mixin for Among Us social deduction gameplay.
 
-    This class separates state management from agent behavior while allowing
-    any class that inherits from it to have state management capabilities.
+    This mixin class provides complete state management functionality for Among Us
+    games, handling complex mechanics including role-based gameplay, task systems,
+    sabotage mechanics, meeting coordination, and win condition evaluation. The
+    class separates state management from agent behavior, allowing any inheriting
+    class to gain full Among Us state management capabilities.
+
+    The state manager handles:
+    - Game initialization with intelligent role assignment
+    - Task generation and completion tracking
+    - Complex sabotage systems with resolution mechanics
+    - Meeting and voting coordination
+    - Move validation and application
+    - Win condition evaluation
+    - Player state filtering for information hiding
+    - Legal move generation for AI systems
+
+    Examples:
+        Initializing a new game::
+
+            state = AmongUsStateManagerMixin.initialize(
+                player_names=["Alice", "Bob", "Charlie", "David", "Eve"],
+                map_name="skeld",
+                num_impostors=1,
+                tasks_per_player=5
+            )
+
+        Applying player actions::
+
+            # Player movement
+            move = {"action": "move", "location": "electrical"}
+            new_state = AmongUsStateManagerMixin.apply_move(state, "Alice", move)
+
+            # Task completion
+            task_move = {"action": "complete_task", "task_id": "Alice_task_1"}
+            new_state = AmongUsStateManagerMixin.apply_move(state, "Alice", task_move)
+
+            # Impostor actions
+            kill_move = {"action": "kill", "target_id": "Bob"}
+            new_state = AmongUsStateManagerMixin.apply_move(state, "Eve", kill_move)
+
+        Checking game progression::
+
+            updated_state = AmongUsStateManagerMixin.check_game_status(state)
+            if updated_state.game_status == "ended":
+                print(f"Game over! {updated_state.winner} wins!")
+
+    Note:
+        This mixin is designed to be inherited by game agents, providing
+        state management capabilities without imposing specific agent behaviors.
     """
 
     @classmethod
-    def initialize(cls, player_names: list[str], **kwargs) -> AmongUsState:
-        """Initialize a new Among Us game state."""
-        # Default map name
+    def initialize(cls, player_names: List[str], **kwargs) -> AmongUsState:
+        """Initialize a new Among Us game state with intelligent defaults.
+
+        Creates a complete game state with role assignments, task generation,
+        map initialization, and all necessary game components. The initialization
+        process follows standard Among Us rules for balanced gameplay.
+
+        Args:
+            player_names: List of player identifiers (4-15 players).
+            **kwargs: Additional configuration options.
+                map_name (str): Map to use (default: "skeld").
+                num_impostors (int): Number of impostors (auto-calculated if None).
+                tasks_per_player (int): Tasks per crewmate (default: 5).
+                kill_cooldown (int): Impostor kill cooldown in seconds (default: 45).
+                seed: Random seed for reproducible games.
+
+        Returns:
+            AmongUsState: Fully initialized game state ready for gameplay.
+
+        Examples:
+            Standard initialization::
+
+                state = AmongUsStateManagerMixin.initialize(
+                    player_names=["Alice", "Bob", "Charlie", "David", "Eve"],
+                    map_name="skeld"
+                )
+                # Auto-assigns 1 impostor for 5 players
+
+            Custom configuration::
+
+                state = AmongUsStateManagerMixin.initialize(
+                    player_names=["Player_" + str(i) for i in range(10)],
+                    map_name="polus",
+                    num_impostors=2,
+                    tasks_per_player=6,
+                    kill_cooldown=30,
+                    seed=12345
+                )
+
+        Note:
+            The initialization automatically balances impostor count based on
+            player count following standard Among Us ratios.
+        """
+        # Set default map name
         map_name = kwargs.get("map_name", "skeld")
 
         # Create initial state with empty rooms and vents
@@ -155,8 +282,35 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return state
 
     @classmethod
-    def _generate_task_description(cls, task_type, location) -> str:
-        """Generate a description for a task based on its type and location."""
+    def _generate_task_description(cls, task_type: TaskType, location: str) -> str:
+        """Generate a realistic task description based on type and location.
+
+        Creates authentic Among Us task descriptions that match the game's
+        actual tasks, providing immersive gameplay experiences.
+
+        Args:
+            task_type: Type of task (VISUAL, COMMON, SHORT, LONG).
+            location: Room where the task is located.
+
+        Returns:
+            str: Human-readable task description.
+
+        Examples:
+            Visual task generation::
+
+                desc = cls._generate_task_description(TaskType.VISUAL, "medbay")
+                # Returns: "Submit scan"
+
+            Common task generation::
+
+                desc = cls._generate_task_description(TaskType.COMMON, "admin")
+                # Returns: "Swipe card"
+
+            Fallback generation::
+
+                desc = cls._generate_task_description(TaskType.SHORT, "unknown_room")
+                # Returns: "Complete short task in unknown_room"
+        """
         task_descriptions = {
             TaskType.VISUAL: {
                 "medbay": "Submit scan",
@@ -197,10 +351,48 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def apply_move(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Apply a player's move to the game state."""
-        # Create a copy of the state to avoid modifying the original
+        """Apply a player's move to the game state with comprehensive validation.
+
+        Processes and validates player moves, updating the game state accordingly.
+        Handles all move types across different game phases with proper error
+        handling and state consistency maintenance.
+
+        Args:
+            state: Current game state to modify.
+            player_id: ID of the player making the move.
+            move: Move dictionary containing action and parameters.
+
+        Returns:
+            AmongUsState: Updated game state after applying the move.
+
+        Examples:
+            Movement action::
+
+                move = {"action": "move", "location": "electrical"}
+                new_state = cls.apply_move(state, "Alice", move)
+
+            Task completion::
+
+                move = {"action": "complete_task", "task_id": "Alice_task_1"}
+                new_state = cls.apply_move(state, "Alice", move)
+
+            Impostor kill::
+
+                move = {"action": "kill", "target_id": "Bob"}
+                new_state = cls.apply_move(state, "Eve", move)
+
+            Voting action::
+
+                move = {"action": "vote", "vote_for": "Charlie"}
+                new_state = cls.apply_move(state, "Alice", move)
+
+        Note:
+            The method creates a deep copy of the state to avoid modifying
+            the original, ensuring state immutability.
+        """
+        # Create deep copy to avoid modifying original state
         state = state.model_copy(deep=True)
 
         # Validate player exists
@@ -263,9 +455,35 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     # Action handlers for different game actions
     @classmethod
     def _handle_move_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player moving to a new location."""
+        """Handle player movement with connection and sabotage validation.
+
+        Validates and processes player movement between rooms, checking for
+        room connections, blocked doors, and updating player location with
+        proper observation generation.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the moving player.
+            move: Move dictionary with target location.
+
+        Returns:
+            AmongUsState: Updated state with new player location.
+
+        Examples:
+            Valid movement::
+
+                move = {"action": "move", "location": "electrical"}
+                new_state = cls._handle_move_action(state, "Alice", move)
+
+            Invalid movement (blocked door)::
+
+                # If doors are sabotaged
+                move = {"action": "move", "location": "electrical"}
+                new_state = cls._handle_move_action(state, "Alice", move)
+                # Returns state with error_message set
+        """
         player_state = state.player_states[player_id]
         target_location = move.get("location")
 
@@ -315,9 +533,42 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_complete_task_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player completing a task."""
+        """Handle task completion with role validation and visual task detection.
+
+        Processes task completion for crewmates, validates task location and
+        status, and generates appropriate observations for other players.
+        Handles visual tasks specially for crewmate confirmation.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the player completing the task.
+            move: Move dictionary with task ID.
+
+        Returns:
+            AmongUsState: Updated state with completed task.
+
+        Examples:
+            Crewmate task completion::
+
+                move = {"action": "complete_task", "task_id": "Alice_task_1"}
+                new_state = cls._handle_complete_task_action(state, "Alice", move)
+
+            Impostor fake task::
+
+                # Impostor pretending to do tasks
+                move = {"action": "complete_task", "task_id": "fake_task"}
+                new_state = cls._handle_complete_task_action(state, "Eve", move)
+                # Creates fake observation without actually completing task
+
+            Visual task completion::
+
+                # Visual task provides crewmate confirmation
+                move = {"action": "complete_task", "task_id": "scan_task"}
+                new_state = cls._handle_complete_task_action(state, "Alice", move)
+                # Generates "[CONFIRMED CREWMATE]" observation
+        """
         player_state = state.player_states[player_id]
         task_id = move.get("task_id")
 
@@ -370,9 +621,43 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_kill_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle an impostor killing a crewmate."""
+        """Handle impostor elimination with cooldown and witness validation.
+
+        Processes impostor kill actions with comprehensive validation including
+        role verification, cooldown checks, location validation, and witness
+        detection. Updates player counts and applies kill cooldown.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the impostor player.
+            move: Move dictionary with target player ID.
+
+        Returns:
+            AmongUsState: Updated state with eliminated player.
+
+        Examples:
+            Successful kill::
+
+                move = {"action": "kill", "target_id": "Bob"}
+                new_state = cls._handle_kill_action(state, "Eve", move)
+                # Bob is eliminated, Eve gets cooldown
+
+            Failed kill (witnesses)::
+
+                # If other players are in the room
+                move = {"action": "kill", "target_id": "Bob"}
+                new_state = cls._handle_kill_action(state, "Eve", move)
+                # Returns state with error_message about witnesses
+
+            Failed kill (cooldown)::
+
+                # If impostor is on cooldown
+                move = {"action": "kill", "target_id": "Bob"}
+                new_state = cls._handle_kill_action(state, "Eve", move)
+                # Returns state with cooldown error message
+        """
         player_state = state.player_states[player_id]
         target_id = move.get("target_id")
 
@@ -441,9 +726,35 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_report_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player reporting a dead body."""
+        """Handle body reporting with meeting initiation and vent management.
+
+        Processes body report actions, validates dead body presence, transitions
+        to meeting phase, and forces all players out of vents for the meeting.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the reporting player.
+            move: Move dictionary (body reporting requires no parameters).
+
+        Returns:
+            AmongUsState: Updated state in meeting phase.
+
+        Examples:
+            Successful body report::
+
+                move = {"action": "report_body"}
+                new_state = cls._handle_report_action(state, "Alice", move)
+                # Game transitions to meeting phase
+
+            Failed report (no body)::
+
+                # If no dead body in current location
+                move = {"action": "report_body"}
+                new_state = cls._handle_report_action(state, "Alice", move)
+                # Returns state with error_message
+        """
         player_state = state.player_states[player_id]
 
         # Cannot report while in a vent
@@ -487,9 +798,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_emergency_meeting_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player calling an emergency meeting."""
+        """Handle emergency meeting calls with location validation.
+
+        Processes emergency meeting calls, validates the player is in the
+        cafeteria, transitions to meeting phase, and forces all players
+        out of vents.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the player calling the meeting.
+            move: Move dictionary (emergency meeting requires no parameters).
+
+        Returns:
+            AmongUsState: Updated state in meeting phase.
+
+        Examples:
+            Valid emergency meeting::
+
+                move = {"action": "call_emergency_meeting"}
+                new_state = cls._handle_emergency_meeting_action(state, "Alice", move)
+                # Game transitions to meeting phase
+
+            Invalid location::
+
+                # If player is not in cafeteria
+                move = {"action": "call_emergency_meeting"}
+                new_state = cls._handle_emergency_meeting_action(state, "Alice", move)
+                # Returns state with location error
+        """
         player_state = state.player_states[player_id]
 
         # Validate player is in cafeteria
@@ -523,9 +861,35 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_discussion_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player's discussion contribution."""
+        """Handle discussion contributions with automatic phase progression.
+
+        Processes player discussion messages, records them in discussion history,
+        and automatically transitions to voting phase when all players have
+        contributed to the discussion.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the discussing player.
+            move: Move dictionary with discussion message.
+
+        Returns:
+            AmongUsState: Updated state with discussion recorded.
+
+        Examples:
+            Discussion contribution::
+
+                move = {"action": "discuss", "message": "I saw Alice near the body!"}
+                new_state = cls._handle_discussion_action(state, "Bob", move)
+
+            Auto-transition to voting::
+
+                # When all players have discussed
+                move = {"action": "discuss", "message": "Let's vote!"}
+                new_state = cls._handle_discussion_action(state, "Eve", move)
+                # State transitions to voting phase
+        """
         message = move.get("message", "")
 
         # Record the message in the discussion history
@@ -555,9 +919,40 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_vote_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player's vote."""
+        """Handle voting with ejection processing and phase transition.
+
+        Processes player votes, counts votes when all players have voted,
+        handles ejection logic including tie resolution, and transitions
+        back to task phase for the next round.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the voting player.
+            move: Move dictionary with vote target.
+
+        Returns:
+            AmongUsState: Updated state with vote processed.
+
+        Examples:
+            Vote for player::
+
+                move = {"action": "vote", "vote_for": "Charlie"}
+                new_state = cls._handle_vote_action(state, "Alice", move)
+
+            Skip vote::
+
+                move = {"action": "vote", "vote_for": "skip"}
+                new_state = cls._handle_vote_action(state, "Bob", move)
+
+            Final vote triggering ejection::
+
+                # When all players have voted
+                move = {"action": "vote", "vote_for": "Charlie"}
+                new_state = cls._handle_vote_action(state, "Eve", move)
+                # Processes ejection and returns to task phase
+        """
         target_id = move.get("vote_for")
 
         # Validate target exists or is "skip"
@@ -638,9 +1033,45 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_sabotage_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle an impostor sabotaging a system."""
+        """Handle sabotage actions with complex resolution system management.
+
+        Processes impostor sabotage actions, creates appropriate resolution
+        points, handles different sabotage types (critical and non-critical),
+        and manages door locking mechanics.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the sabotaging impostor.
+            move: Move dictionary with sabotage type and location.
+
+        Returns:
+            AmongUsState: Updated state with active sabotage.
+
+        Examples:
+            Reactor sabotage::
+
+                move = {"action": "sabotage", "sabotage_type": "reactor"}
+                new_state = cls._handle_sabotage_action(state, "Eve", move)
+                # Creates critical sabotage with 45s timer
+
+            Lights sabotage::
+
+                move = {"action": "sabotage", "sabotage_type": "lights"}
+                new_state = cls._handle_sabotage_action(state, "Eve", move)
+                # Creates non-critical sabotage with 120s timer
+
+            Door sabotage::
+
+                move = {
+                    "action": "sabotage",
+                    "sabotage_type": "doors",
+                    "location": "electrical"
+                }
+                new_state = cls._handle_sabotage_action(state, "Eve", move)
+                # Blocks connections to/from electrical
+        """
         player_state = state.player_states[player_id]
 
         # Validate player is an impostor
@@ -796,9 +1227,44 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_resolve_sabotage_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle a player resolving a sabotage."""
+        """Handle sabotage resolution with multi-point validation.
+
+        Processes sabotage resolution actions, validates player location
+        against resolution points, handles multi-point sabotages (like
+        reactor and O2), and manages door unblocking.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the resolving player.
+            move: Move dictionary with sabotage and resolution point IDs.
+
+        Returns:
+            AmongUsState: Updated state with sabotage resolved (if complete).
+
+        Examples:
+            Reactor resolution::
+
+                move = {
+                    "action": "resolve_sabotage",
+                    "sabotage_id": "reactor",
+                    "resolution_point_id": "reactor_panel_1"
+                }
+                new_state = cls._handle_resolve_sabotage_action(state, "Alice", move)
+                # Resolves one of two reactor panels
+
+            Complete resolution::
+
+                # After both panels are resolved
+                move = {
+                    "action": "resolve_sabotage",
+                    "sabotage_id": "reactor",
+                    "resolution_point_id": "reactor_panel_2"
+                }
+                new_state = cls._handle_resolve_sabotage_action(state, "Bob", move)
+                # Fully resolves reactor sabotage
+        """
         player_state = state.player_states[player_id]
         sabotage_id = move.get("sabotage_id")
         resolution_point_id = move.get("resolution_point_id")
@@ -867,9 +1333,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_vent_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle an impostor entering or traveling through vents."""
+        """Handle impostor vent usage with connection validation.
+
+        Processes impostor vent actions, handling both entering vents and
+        traveling between connected vents. Validates vent connectivity and
+        updates player location appropriately.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the venting impostor.
+            move: Move dictionary with target vent ID.
+
+        Returns:
+            AmongUsState: Updated state with player in vent system.
+
+        Examples:
+            Entering a vent::
+
+                move = {"action": "vent", "vent_id": "electrical_vent"}
+                new_state = cls._handle_vent_action(state, "Eve", move)
+                # Player enters vent in current room
+
+            Traveling between vents::
+
+                # When already in a vent
+                move = {"action": "vent", "vent_id": "cafeteria_vent"}
+                new_state = cls._handle_vent_action(state, "Eve", move)
+                # Player travels to connected vent
+        """
         player_state = state.player_states[player_id]
         vent_id = move.get("vent_id")
 
@@ -920,9 +1413,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_exit_vent_action(
-        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle an impostor exiting a vent."""
+        """Handle impostor vent exit with location validation.
+
+        Processes impostor vent exit actions, validates the player is
+        actually in a vent, and properly sets their location to the
+        vent's room.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the exiting impostor.
+            move: Move dictionary (exit vent requires no parameters).
+
+        Returns:
+            AmongUsState: Updated state with player out of vent.
+
+        Examples:
+            Exiting a vent::
+
+                move = {"action": "exit_vent"}
+                new_state = cls._handle_exit_vent_action(state, "Eve", move)
+                # Player exits vent into current room
+
+            Invalid exit::
+
+                # If player is not in a vent
+                move = {"action": "exit_vent"}
+                new_state = cls._handle_exit_vent_action(state, "Eve", move)
+                # Returns state with error message
+        """
         player_state = state.player_states[player_id]
 
         # Check if player is actually in a vent
@@ -945,8 +1465,45 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def get_legal_moves(
         cls, state: AmongUsState, player_id: str
-    ) -> list[dict[str, Any]]:
-        """Get legal moves for a specific player."""
+    ) -> List[Dict[str, Any]]:
+        """Generate comprehensive legal moves for a player based on game state.
+
+        Analyzes the current game state and player situation to generate
+        all valid moves available to the player, considering their role,
+        location, game phase, and current constraints.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the player to generate moves for.
+
+        Returns:
+            List[Dict[str, Any]]: List of legal move dictionaries.
+
+        Examples:
+            Crewmate in task phase::
+
+                moves = cls.get_legal_moves(state, "Alice")
+                # Returns moves like:
+                # [{"action": "move", "location": "electrical"},
+                #  {"action": "complete_task", "task_id": "Alice_task_1"},
+                #  {"action": "report_body"}] (if body present)
+
+            Impostor in task phase::
+
+                moves = cls.get_legal_moves(state, "Eve")
+                # Returns moves like:
+                # [{"action": "move", "location": "medbay"},
+                #  {"action": "kill", "target_id": "Bob"},
+                #  {"action": "vent", "vent_id": "electrical_vent"},
+                #  {"action": "sabotage", "sabotage_type": "lights"}]
+
+            Player in voting phase::
+
+                moves = cls.get_legal_moves(state, "Alice")
+                # Returns moves like:
+                # [{"action": "vote", "vote_for": "Charlie"},
+                #  {"action": "vote", "vote_for": "skip"}]
+        """
         if player_id not in state.player_states:
             return []
 
@@ -1077,8 +1634,36 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return legal_moves
 
     @classmethod
-    def _get_potential_targets(cls, state: AmongUsState, player_id: str) -> list[str]:
-        """Get potential kill targets for an impostor."""
+    def _get_potential_targets(cls, state: AmongUsState, player_id: str) -> List[str]:
+        """Get potential kill targets for an impostor with witness validation.
+
+        Analyzes the current game state to find valid kill targets for an
+        impostor, considering location, role, witness presence, and other
+        constraints.
+
+        Args:
+            state: Current game state.
+            player_id: ID of the impostor player.
+
+        Returns:
+            List[str]: List of valid target player IDs.
+
+        Examples:
+            Isolated target::
+
+                targets = cls._get_potential_targets(state, "Eve")
+                # Returns ["Alice"] if Alice is alone with Eve
+
+            No valid targets::
+
+                targets = cls._get_potential_targets(state, "Eve")
+                # Returns [] if all crewmates have witnesses
+
+            Multiple targets::
+
+                targets = cls._get_potential_targets(state, "Eve")
+                # Returns ["Alice", "Bob"] if both are isolated
+        """
         if player_id not in state.player_states:
             return []
 
@@ -1117,7 +1702,33 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def check_game_status(cls, state: AmongUsState) -> AmongUsState:
-        """Check and update game status."""
+        """Check and update game status with win condition evaluation.
+
+        Evaluates the current game state to determine if any win conditions
+        have been met and updates the game status accordingly.
+
+        Args:
+            state: Current game state to check.
+
+        Returns:
+            AmongUsState: Updated state with current game status.
+
+        Examples:
+            Ongoing game::
+
+                updated_state = cls.check_game_status(state)
+                # Returns state with game_status="ongoing"
+
+            Crewmate victory::
+
+                updated_state = cls.check_game_status(state)
+                # Returns state with game_status="ended", winner="crewmates"
+
+            Impostor victory::
+
+                updated_state = cls.check_game_status(state)
+                # Returns state with game_status="ended", winner="impostors"
+        """
         winner = state.check_win_condition()
 
         if winner:
@@ -1129,7 +1740,34 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def advance_phase(cls, state: AmongUsState) -> AmongUsState:
-        """Advance the game to the next phase."""
+        """Advance the game to the next phase in the game cycle.
+
+        Progresses the game through its phases: TASKS -> MEETING -> VOTING -> TASKS.
+        Updates related state variables and resets phase-specific data.
+
+        Args:
+            state: Current game state to advance.
+
+        Returns:
+            AmongUsState: Updated state in the next phase.
+
+        Examples:
+            Task to meeting transition::
+
+                new_state = cls.advance_phase(state)
+                # game_phase changes from TASKS to MEETING
+
+            Meeting to voting transition::
+
+                new_state = cls.advance_phase(state)
+                # game_phase changes from MEETING to VOTING
+
+            Voting to tasks transition::
+
+                new_state = cls.advance_phase(state)
+                # game_phase changes from VOTING to TASKS
+                # round_number increments, votes cleared
+        """
         if state.game_phase == AmongUsGamePhase.TASKS:
             # TASKS -> MEETING
             state.game_phase = AmongUsGamePhase.MEETING
@@ -1152,8 +1790,39 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def filter_state_for_player(
         cls, state: AmongUsState, player_id: str
-    ) -> dict[str, Any]:
-        """Filter the state to include only information visible to a specific player."""
+    ) -> Dict[str, Any]:
+        """Filter game state to include only information visible to a specific player.
+
+        Creates a filtered view of the game state that includes only information
+        the specified player should have access to, implementing proper information
+        hiding for authentic social deduction gameplay.
+
+        Args:
+            state: Complete game state to filter.
+            player_id: ID of the player to create filtered state for.
+
+        Returns:
+            Dict[str, Any]: Filtered state dictionary with player-visible information.
+
+        Examples:
+            Crewmate filtered state::
+
+                filtered = cls.filter_state_for_player(state, "Alice")
+                # Includes: own location, tasks, observations, connected rooms
+                # Excludes: other players' roles, impostor identities
+
+            Impostor filtered state::
+
+                filtered = cls.filter_state_for_player(state, "Eve")
+                # Includes: fellow impostors, vent locations, kill cooldown
+                # Excludes: crewmate task progress details
+
+            Dead player filtered state::
+
+                filtered = cls.filter_state_for_player(state, "Bob")
+                # Includes: basic game information, spectator view
+                # Excludes: ability to influence game
+        """
         if player_id not in state.player_states:
             return {}
 
@@ -1283,3 +1952,5 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
                     filtered_state["my_vote"] = state.votes[player_id]
 
         return filtered_state
+
+    model_config = {"arbitrary_types_allowed": True}
