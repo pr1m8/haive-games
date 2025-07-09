@@ -778,25 +778,97 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto=next_step)
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run a complete Battleship game.
+        """Run a complete Battleship game with comprehensive state tracking.
 
-        Executes the full game workflow, from initialization through ship
-        placement and gameplay to completion. Optionally provides
-        console-based visualization of the game progress.
+        Executes the full game workflow from initialization through ship
+        placement and gameplay to completion. Provides detailed game state
+        tracking, error handling, and optional console visualization for
+        monitoring game progress and debugging.
+
+        The method handles all phases of Battleship gameplay:
+        - Game initialization and state setup
+        - Ship placement for both players
+        - Turn-based combat with move validation
+        - Game termination and winner determination
+        - Comprehensive error handling and recovery
 
         Args:
-            visualize: Whether to display game progress in the console
+            visualize (bool): Whether to display detailed game progress in console.
+                When True, shows turn-by-turn updates, board statistics, move history,
+                and error messages. When False, runs silently and returns final state.
 
         Returns:
-            dict[str, Any]: Final game state after completion
+            dict[str, Any]: Final game state dictionary containing:
+                - winner: Winning player identifier or None
+                - game_phase: Final phase (typically "ended")
+                - move_history: Complete record of all moves made
+                - player1_state/player2_state: Final player board states
+                - error_message: Any error that occurred during gameplay
+
+        Raises:
+            RuntimeError: If the game workflow fails to compile or execute properly.
+            ConfigurationError: If the agent configuration is invalid.
 
         Examples:
-            >>> agent = BattleshipAgent(BattleshipAgentConfig())
-            >>> # Run with visualization
-            >>> result = agent.run_game(visualize=True)
-            >>> # Run silently
-            >>> result = agent.run_game(visualize=False)
-            >>> winner = result.get("winner")
+            Running a visualized game for debugging::\n
+
+                agent = BattleshipAgent(BattleshipAgentConfig())
+                result = agent.run_game(visualize=True)
+
+                # Console output shows:
+                # --- GAME STATE (Step 1) ---
+                # Turn: player1
+                # Phase: setup
+                # Player 1 placed ships: False
+                # Player 2 placed ships: False
+                #
+                # --- GAME STATE (Step 2) ---
+                # Turn: player1
+                # Phase: playing
+                # Player 1 Hits: 0, Ships Sunk: 0
+                # Player 2 Hits: 0, Ships Sunk: 0
+                #
+                # 🎮 GAME OVER! Winner: player1 🎮
+
+            Running a silent game for automated testing::\n
+
+                agent = BattleshipAgent(BattleshipAgentConfig())
+                result = agent.run_game(visualize=False)
+
+                winner = result.get("winner")
+                if winner:
+                    print(f"Game completed, winner: {winner}")
+
+            Handling game errors gracefully::\n
+
+                try:
+                    result = agent.run_game(visualize=True)
+                    if result.get("error_message"):
+                        print(f"Game error: {result['error_message']}")
+                        # Could retry with different configuration
+                except Exception as e:
+                    print(f"Critical game failure: {e}")
+
+            Analyzing game performance::\n
+
+                result = agent.run_game(visualize=False)
+
+                # Extract performance metrics
+                move_history = result.get("move_history", [])
+                total_moves = len(move_history)
+
+                p1_state = result.get("player1_state", {})
+                p1_hits = len(p1_state.get("board", {}).get("successful_hits", []))
+                hit_rate = p1_hits / total_moves if total_moves > 0 else 0
+
+                print(f"Game completed in {total_moves} moves")
+                print(f"Player 1 hit rate: {hit_rate:.2%}")
+
+        Note:
+            The visualization mode provides detailed game state information that is
+            valuable for debugging agent behavior, understanding game flow, and
+            monitoring performance. Silent mode is optimized for automated testing
+            and batch game execution.
         """
         if not self.app:
             self.compile()
