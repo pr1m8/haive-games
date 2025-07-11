@@ -6,12 +6,20 @@ for game agents, leveraging the new haive.core.models.llm factory system.
 
 from typing import Any, Dict, Optional, Tuple
 
-from haive.core.models.llm import (
-    LLMConfig,
-    create_llm_config,
-    get_model_info,
-    list_available_models,
-)
+from haive.core.models.llm import LLMConfig
+from haive.core.models.llm.factory import create_llm
+
+
+# Note: These functions don't exist in the current core module
+# We'll implement simplified versions for games until core API is available
+def get_model_info(model: str) -> Dict[str, Any]:
+    """Placeholder for model info - not yet implemented in core."""
+    return {"model": model, "status": "placeholder"}
+
+
+def list_available_models() -> list:
+    """Placeholder for listing models - not yet implemented in core."""
+    return []
 
 
 class GameLLMFactory:
@@ -94,7 +102,17 @@ class GameLLMFactory:
             )
 
         # Use core factory with game defaults
-        return create_llm_config(model, temperature=temperature, **kwargs)
+        # Note: create_llm returns an LLM instance, not LLMConfig
+        # For now, create a basic LLMConfig - this needs to be updated when proper factory is available
+        from haive.core.models.llm.base import OpenAILLMConfig
+
+        # Simple provider detection - enhance this as needed
+        if "claude" in model.lower():
+            from haive.core.models.llm.base import AnthropicLLMConfig
+
+            return AnthropicLLMConfig(model=model, temperature=temperature, **kwargs)
+        else:
+            return OpenAILLMConfig(model=model, temperature=temperature, **kwargs)
 
     @classmethod
     def create_game_llm_pair(

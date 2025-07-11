@@ -670,24 +670,45 @@ class ShipPlacementWrapper(BaseModel):
         max_length=5,
         description="Complete list of ship placements for one fleet (exactly 5 ships)",
         examples=[
-            [  # Example fleet
+            [  # Example fleet with proper ship sizes
                 ShipPlacement(
-                    ship_type=ShipType.CARRIER, coordinates=[Coordinates(row=0, col=0)]
+                    ship_type=ShipType.CARRIER,
+                    coordinates=[
+                        Coordinates(row=0, col=0),
+                        Coordinates(row=0, col=1),
+                        Coordinates(row=0, col=2),
+                        Coordinates(row=0, col=3),
+                        Coordinates(row=0, col=4),
+                    ],
                 ),
                 ShipPlacement(
                     ship_type=ShipType.BATTLESHIP,
-                    coordinates=[Coordinates(row=1, col=0)],
+                    coordinates=[
+                        Coordinates(row=1, col=0),
+                        Coordinates(row=1, col=1),
+                        Coordinates(row=1, col=2),
+                        Coordinates(row=1, col=3),
+                    ],
                 ),
                 ShipPlacement(
-                    ship_type=ShipType.CRUISER, coordinates=[Coordinates(row=2, col=0)]
+                    ship_type=ShipType.CRUISER,
+                    coordinates=[
+                        Coordinates(row=2, col=0),
+                        Coordinates(row=2, col=1),
+                        Coordinates(row=2, col=2),
+                    ],
                 ),
                 ShipPlacement(
                     ship_type=ShipType.SUBMARINE,
-                    coordinates=[Coordinates(row=3, col=0)],
+                    coordinates=[
+                        Coordinates(row=3, col=0),
+                        Coordinates(row=3, col=1),
+                        Coordinates(row=3, col=2),
+                    ],
                 ),
                 ShipPlacement(
                     ship_type=ShipType.DESTROYER,
-                    coordinates=[Coordinates(row=4, col=0)],
+                    coordinates=[Coordinates(row=4, col=0), Coordinates(row=4, col=1)],
                 ),
             ]
         ],
@@ -1137,7 +1158,13 @@ class PlayerBoard(BaseModel):
         description="All ships placed on this player's board (maximum 5)",
         examples=[
             [],  # Empty board
-            [Ship(ship_type=ShipType.DESTROYER, size=2, coordinates=[])],  # Single ship
+            [
+                Ship(
+                    ship_type=ShipType.DESTROYER,
+                    size=2,
+                    coordinates=[Coordinates(row=0, col=0), Coordinates(row=0, col=1)],
+                )
+            ],  # Single destroyer
         ],
     )
 

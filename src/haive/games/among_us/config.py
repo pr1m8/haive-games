@@ -1,12 +1,12 @@
 # among_us_config.py
 
-from typing import Any, Literal
+from typing import Any, Dict, Literal
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from pydantic import Field, root_validator
+from pydantic import Field, computed_field, root_validator
 
 from haive.games.among_us.prompts import (
     CREWMATE_PROMPT,

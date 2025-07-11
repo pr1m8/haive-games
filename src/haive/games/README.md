@@ -242,12 +242,221 @@ game.add_observer(PokerCommentator())
 result = game.run()
 ```
 
+## Performance Considerations
+
+### Agent Response Time
+
+- **Temperature Settings**: Lower temperatures (0.1-0.3) speed up decision-making
+- **Context Pruning**: Only include recent moves and relevant state
+- **Structured Output**: Use JSON mode for faster, more reliable parsing
+- **Parallel Processing**: Run multiple agent decisions concurrently when possible
+
+### Memory Management
+
+- **State History**: Limit stored history to prevent memory bloat
+- **Move Validation**: Cache validation results for repeated checks
+- **Board Representations**: Use efficient data structures (bitboards for chess)
+- **Agent Pooling**: Reuse agent instances across games
+
+## Testing Games
+
+### Unit Testing Game Logic
+
+```python
+import pytest
+from haive.games.chess import ChessStateManager, ChessState
+
+class TestChessLogic:
+    def test_valid_move_detection(self):
+        manager = ChessStateManager()
+        state = manager.initialize_state()
+
+        # Test pawn move
+        move = {"from": "e2", "to": "e4", "piece": "pawn"}
+        assert manager.is_valid_move(state, move)
+
+        # Test invalid move
+        invalid_move = {"from": "e2", "to": "e5", "piece": "pawn"}
+        assert not manager.is_valid_move(state, invalid_move)
+
+    def test_checkmate_detection(self):
+        manager = ChessStateManager()
+        # Set up checkmate position
+        state = ChessState(board=setup_checkmate_position())
+        assert manager.is_checkmate(state)
+```
+
+### Integration Testing
+
+```python
+from haive.games.poker import PokerAgent
+from haive.games.utils.test_helpers import create_test_config, MockEngine
+
+async def test_full_poker_game():
+    # Create test configuration with mock engines
+    config = create_test_config(
+        PokerConfig,
+        player_engines=[
+            MockEngine(decisions=["call", "raise:20", "fold"]),
+            MockEngine(decisions=["raise:10", "call", "check"]),
+        ]
+    )
+
+    agent = PokerAgent(config)
+    result = await agent.arun()
+
+    assert result.winner in ["Player1", "Player2"]
+    assert len(result.hands_played) > 0
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Agent Makes Invalid Moves
+
+**Problem**: Agent repeatedly attempts invalid moves.
+
+**Solutions**:
+
+```python
+# 1. Add move validation examples to prompt
+config = ChessConfig(
+    system_message="""You are playing chess.
+    Valid moves are in format: {"from": "e2", "to": "e4"}
+    Only move your own pieces (white/black)."""
+)
+
+# 2. Use structured output
+config = ChessConfig(
+    output_format="json",
+    output_schema=ChessMoveSchema
+)
+
+# 3. Add retry logic
+config = ChessConfig(
+    max_invalid_moves=3,
+    invalid_move_penalty=True
+)
+```
+
+#### Game State Corruption
+
+**Problem**: Game state becomes inconsistent.
+
+**Solutions**:
+
+```python
+# 1. Enable state validation
+config = GameConfig(
+    validate_state_transitions=True,
+    state_validation_level="strict"
+)
+
+# 2. Use immutable states
+class MyGameState(GameState):
+    class Config:
+        frozen = True  # Make immutable
+
+# 3. Add state recovery
+manager = GameStateManager(
+    enable_checkpoints=True,
+    checkpoint_frequency=10
+)
+```
+
+#### Performance Degradation
+
+**Problem**: Games slow down over time.
+
+**Solutions**:
+
+```python
+# 1. Limit context window
+config = GameConfig(
+    max_history_length=20,
+    context_compression=True
+)
+
+# 2. Use caching
+from functools import lru_cache
+
+@lru_cache(maxsize=1000)
+def evaluate_position(board_hash):
+    # Expensive evaluation
+    pass
+
+# 3. Profile and optimize
+import cProfile
+
+with cProfile.Profile() as pr:
+    game.run()
+pr.print_stats(sort='cumulative')
+```
+
+## Examples
+
+For comprehensive examples demonstrating various games and patterns, see the [example.py](example.py) file which includes:
+
+- Quick game setup and execution
+- Tournament organization
+- Custom game creation
+- Agent evaluation
+- Visualization examples
+- Advanced configuration patterns
+
+## Contributing
+
+### Adding a New Game
+
+1. Create a new directory under `games/`
+2. Implement required classes:
+   - `{Game}State` - Game state model
+   - `{Game}StateManager` - Game logic
+   - `{Game}Config` - Configuration
+   - `{Game}Agent` - Main agent class
+3. Add tests under `tests/test_{game}/`
+4. Create README.md with game rules and usage
+5. Add example.py demonstrating gameplay
+
+### Code Style
+
+- Follow the project's coding standards
+- Use type hints for all public APIs
+- Include docstrings with examples
+- Add unit tests for game logic
+- Ensure moves are deterministic and reproducible
+
 ## API Reference
 
-For full API details, see the [documentation](https://docs.haive.ai/games/).
+### Core Classes
+
+| Class              | Description                    |
+| ------------------ | ------------------------------ |
+| `GameAgent`        | Base class for all game agents |
+| `GameState`        | Base state model for games     |
+| `GameStateManager` | Handles game logic and rules   |
+| `GameConfig`       | Configuration for games        |
+| `GameVisualizer`   | Base class for visualization   |
+| `GameObserver`     | Interface for game observers   |
+
+### Key Methods
+
+| Method                      | Description          |
+| --------------------------- | -------------------- |
+| `agent.run()`               | Run a complete game  |
+| `agent.arun()`              | Async version of run |
+| `manager.is_game_over()`    | Check if game ended  |
+| `manager.get_valid_moves()` | Get legal moves      |
+| `manager.process_move()`    | Apply move to state  |
+| `state.to_dict()`           | Serialize state      |
+
+For detailed API documentation, see the [API Reference](../../../../docs/source/api/haive/games/index.rst).
 
 ## Related Modules
 
-- **haive-core**: Core framework components used by games
-- **haive-agents**: Agent implementations that can play games
-- **haive-tools**: Tools used by agents during gameplay
+- [haive-core](../../../haive-core/README.md) - Core framework components
+- [haive-agents](../../../haive-agents/README.md) - Agent implementations
+- [haive-tools](../../../haive-tools/README.md) - Tools for gameplay
+- [Game Framework](framework/README.md) - Framework documentation
+- [Multi-Player Framework](multi_player/README.md) - Multi-player patterns

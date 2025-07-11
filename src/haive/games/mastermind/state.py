@@ -14,7 +14,83 @@ from haive.games.mastermind.models import (
 
 
 class MastermindState(GameState):
-    """State for a Mastermind game."""
+    """Comprehensive state management for Mastermind code-breaking games.
+
+    This class manages the complete state of a Mastermind game, including the
+    secret code, guess history, feedback tracking, and game progression. The
+    state supports both traditional codemaker/codebreaker roles and maintains
+    detailed analytics for AI decision-making.
+
+    The state tracks the classic Mastermind game flow:
+    - Secret code generation and protection
+    - Sequential guess validation and feedback
+    - Turn-based progression with role separation
+    - Win condition evaluation and game termination
+    - Strategic analysis for AI players
+
+    Attributes:
+        secret_code: The hidden 4-color code that players attempt to guess.
+            Kept secret from the codebreaker throughout the game.
+        guesses: Complete history of all guesses made during the game.
+            Maintains chronological order for analysis and replay.
+        feedback: Corresponding feedback for each guess made.
+            Provides positional and color correctness information.
+        turn: Current player's turn (the active codebreaker).
+            Alternates between players in multi-player scenarios.
+        codemaker: Player who created the secret code.
+            Remains constant throughout the game session.
+        max_turns: Maximum number of guesses allowed before game ends.
+            Typically 10-12 turns in standard Mastermind.
+        game_status: Current state of the game progression.
+            Tracks ongoing play, completion, and winner determination.
+        winner: The victorious player, if any.
+            Set when code is cracked or maximum turns reached.
+        player1_analysis: AI analysis history for player 1.
+            Tracks strategic reasoning and decision-making process.
+        player2_analysis: AI analysis history for player 2.
+            Tracks strategic reasoning and decision-making process.
+
+    Examples:
+        Game initialization::
+
+            from haive.games.mastermind.state import MastermindState
+
+            # Initialize with random secret code
+            state = MastermindState.initialize(
+                codemaker="player1",
+                colors=None,  # Random generation
+                max_turns=10
+            )
+
+            # Initialize with specific code
+            state = MastermindState.initialize(
+                codemaker="player1",
+                colors=["red", "blue", "green", "yellow"],
+                max_turns=12
+            )
+
+        Game progression tracking::
+
+            # Check current game state
+            if state.is_game_over:
+                print(f"Game ended! Winner: {state.winner}")
+            else:
+                print(f"Turn {state.current_turn}: {state.turn} to guess")
+                print(f"Guesses remaining: {state.turns_remaining}")
+
+        Strategic analysis::
+
+            # Access game statistics
+            stats = state.game_statistics
+            print(f"Guess accuracy: {stats['accuracy']:.2%}")
+            print(f"Information gain: {stats['information_efficiency']:.2f}")
+
+    Note:
+        The secret code is accessible to the game engine for validation
+        but should remain hidden from the codebreaker during gameplay.
+        The state maintains immutability for core game data while
+        supporting dynamic updates for game progression.
+    """
 
     secret_code: list[str] = Field(
         ..., min_items=4, max_items=4, description="Secret color code (4 colors)"

@@ -10,7 +10,16 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.models.llm.base import LLMConfig
-from haive.core.models.llm.factory import create_llm_config
+
+
+# Note: create_llm_config doesn't exist - using placeholder
+def create_llm_config(model: str, **kwargs):
+    """Placeholder function until core factory is available."""
+    from haive.core.models.llm.base import OpenAILLMConfig
+
+    return OpenAILLMConfig(model=model, **kwargs)
+
+
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig

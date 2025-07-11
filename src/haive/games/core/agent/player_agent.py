@@ -14,8 +14,30 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, Protocol, Union
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm import LLMConfig, create_llm_config
+from haive.core.models.llm import LLMConfig
+from haive.core.models.llm.base import (
+    AnthropicLLMConfig,
+    AzureLLMConfig,
+    OpenAILLMConfig,
+)
 from pydantic import BaseModel, Field
+
+
+def create_llm_config(model: str, **kwargs) -> LLMConfig:
+    """Create an LLM config based on model string.
+
+    This is a simple helper to create configs until a proper factory is available.
+    """
+    # Simple provider detection based on model name
+    if "gpt" in model.lower() or kwargs.get("model_provider") == "openai":
+        return OpenAILLMConfig(model=model, **kwargs)
+    elif "claude" in model.lower() or kwargs.get("model_provider") == "anthropic":
+        return AnthropicLLMConfig(model=model, **kwargs)
+    elif kwargs.get("model_provider") == "azure":
+        return AzureLLMConfig(model=model, **kwargs)
+    else:
+        # Default to OpenAI
+        return OpenAILLMConfig(model=model, **kwargs)
 
 
 class PlayerRole(Protocol):

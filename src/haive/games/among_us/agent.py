@@ -1,7 +1,7 @@
 # among_us_agent.py
 
 import re
-from typing import Any
+from typing import Any, Optional
 
 from haive.core.engine.agent.agent import register_agent
 

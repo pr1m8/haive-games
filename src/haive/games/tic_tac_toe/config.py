@@ -149,13 +149,13 @@ class TicTacToeConfig(GameConfig):
     state_schema: type[TicTacToeState] = Field(
         default=TicTacToeState,
         description="State management class defining game structure and rules",
-        examples=[TicTacToeState],
+        exclude=True,  # Exclude from serialization
     )
 
     engines: dict[str, AugLLMConfig] = Field(
-        default=tictactoe_engines,
+        default_factory=lambda: tictactoe_engines,
         description="AI engine configurations for move generation and analysis",
-        examples=[tictactoe_engines],
+        exclude=True,  # Exclude from serialization since it contains model classes
     )
 
     enable_analysis: bool = Field(

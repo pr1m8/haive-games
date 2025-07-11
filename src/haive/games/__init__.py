@@ -95,21 +95,79 @@ games_logger.setLevel(logging.INFO)
 
 __version__ = "0.1.0"
 
-# Import commonly used game components
+# Import all working game agents and configs
 try:
-    from haive.games.checkers import CheckersGame
-    from haive.games.clue import ClueGame
+    from haive.games.among_us import AmongUsAgent, AmongUsAgentConfig
+    from haive.games.battleship import BattleshipAgent, BattleshipAgentConfig
+    from haive.games.checkers import CheckersAgent, CheckersAgentConfig
+    from haive.games.chess import ChessAgent, ChessConfig
+    from haive.games.clue import ClueAgent, ClueConfig
+    from haive.games.connect4 import Connect4Agent, Connect4AgentConfig
+    from haive.games.debate import DebateAgent, DebateAgentConfig
+    from haive.games.dominoes import DominoesAgent, DominoesAgentConfig
+    from haive.games.fox_and_geese import FoxAndGeeseAgent, FoxAndGeeseConfig
+    from haive.games.go import GoAgent, GoAgentConfig
+    from haive.games.hold_em import HoldemGameAgent, HoldemGameAgentConfig
+    from haive.games.mafia import MafiaAgent, MafiaAgentConfig
+    from haive.games.mancala import MancalaAgent, MancalaConfig
+    from haive.games.mastermind import MastermindAgent, MastermindConfig
+    from haive.games.monopoly import MonopolyAgent, MonopolyAgentConfig
+    from haive.games.nim import NimAgent, NimConfig
+    from haive.games.poker import PokerAgent, PokerAgentConfig
+    from haive.games.reversi import ReversiAgent, ReversiConfig
+    from haive.games.risk import RiskAgent, RiskConfig
+    from haive.games.tic_tac_toe import TicTacToeAgent, TicTacToeConfig
 
     GAMES_AVAILABLE = True
-except ImportError:
+    games_logger.info("Successfully imported 40 game components")
+except ImportError as e:
     # Graceful degradation if specific games aren't available
     GAMES_AVAILABLE = False
-    games_logger.warning("Some game modules not available")
+    games_logger.warning(f"Some game modules not available: {e}")
 
 __all__ = [
     "__version__",
     "games_logger",
+    # Core agent classes from all working games
+    "AmongUsAgent",
+    "BattleshipAgent",
+    "CheckersAgent",
+    "ChessAgent",
+    "ClueAgent",
+    "Connect4Agent",
+    "DebateAgent",
+    "DominoesAgent",
+    "FoxAndGeeseAgent",
+    "GoAgent",
+    "HoldemGameAgent",
+    "MafiaAgent",
+    "MancalaAgent",
+    "MastermindAgent",
+    "MonopolyAgent",
+    "NimAgent",
+    "PokerAgent",
+    "ReversiAgent",
+    "RiskAgent",
+    "TicTacToeAgent",
+    # Core config classes
+    "AmongUsAgentConfig",
+    "BattleshipAgentConfig",
+    "CheckersAgentConfig",
+    "ChessConfig",
+    "ClueConfig",
+    "Connect4AgentConfig",
+    "DebateAgentConfig",
+    "DominoesAgentConfig",
+    "FoxAndGeeseConfig",
+    "GoAgentConfig",
+    "HoldemGameAgentConfig",
+    "MafiaAgentConfig",
+    "MancalaConfig",
+    "MastermindConfig",
+    "MonopolyAgentConfig",
+    "NimConfig",
+    "PokerAgentConfig",
+    "ReversiConfig",
+    "RiskConfig",
+    "TicTacToeConfig",
 ]
-
-if GAMES_AVAILABLE:
-    __all__.extend(["CheckersGame", "ClueGame"])

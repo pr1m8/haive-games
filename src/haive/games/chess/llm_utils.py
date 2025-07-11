@@ -7,7 +7,7 @@ LLMs for chess gameplay, building on the core LLM factory system.
 from typing import Any, Dict, Optional
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm import LLMConfig, create_llm_config
+from haive.core.models.llm import LLMConfig
 
 from haive.games.chess.aug_llms import (
     generate_analysis_prompt,

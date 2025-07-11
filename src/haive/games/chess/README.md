@@ -403,22 +403,444 @@ class ChessMove:
         # Implementation...
 ```
 
+## Advanced Patterns
+
+### Time Control Implementation
+
+```python
+from haive.games.chess import ChessAgent, ChessConfig
+import time
+
+class TimedChessAgent(ChessAgent):
+    """Chess agent with time control enforcement."""
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.time_remaining = {
+            "white": config.initial_time,
+            "black": config.initial_time
+        }
+        self.increment = config.increment
+
+    def get_agent_move(self, state):
+        """Get move with time tracking."""
+        color = state.turn
+        start_time = time.time()
+
+        # Set time limit for decision
+        time_for_move = min(
+            self.time_remaining[color] * 0.1,  # Use 10% of remaining
+            30  # Max 30 seconds per move
+        )
+
+        # Get move with timeout
+        move = self.get_move_with_timeout(state, time_for_move)
+
+        # Update clock
+        elapsed = time.time() - start_time
+        self.time_remaining[color] -= elapsed
+        self.time_remaining[color] += self.increment
+
+        # Check for time forfeit
+        if self.time_remaining[color] <= 0:
+            return self.handle_time_forfeit(color)
+
+        return move
+```
+
+### Multi-Engine Consultation
+
+```python
+class ConsultationChessAgent(ChessAgent):
+    """Chess agent that consults multiple engines."""
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.engines = [
+            self.create_tactical_engine(),
+            self.create_positional_engine(),
+            self.create_endgame_engine()
+        ]
+
+    def get_agent_move(self, state):
+        """Get move by consulting multiple engines."""
+        # Get candidate moves from each engine
+        candidates = []
+        for engine in self.engines:
+            move = engine.suggest_move(state)
+            eval = engine.evaluate_move(state, move)
+            candidates.append((move, eval, engine.name))
+
+        # Weight moves by engine expertise
+        if self.is_endgame(state):
+            # Prioritize endgame engine
+            weights = [0.2, 0.2, 0.6]
+        elif self.has_tactical_opportunity(state):
+            # Prioritize tactical engine
+            weights = [0.6, 0.3, 0.1]
+        else:
+            # Balanced weights
+            weights = [0.33, 0.34, 0.33]
+
+        # Select best weighted move
+        best_move = self.select_weighted_move(candidates, weights)
+        return best_move
+```
+
+### Learning from Games
+
+```python
+from haive.games.chess import ChessAgent
+import json
+
+class LearningChessAgent(ChessAgent):
+    """Chess agent that learns from past games."""
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.game_database = self.load_game_database()
+        self.position_evaluations = {}
+
+    def post_game_analysis(self, game_result):
+        """Analyze completed game for learning."""
+        # Identify critical positions
+        critical_positions = self.find_critical_positions(game_result)
+
+        # Store evaluations
+        for position in critical_positions:
+            fen = position.to_fen()
+            evaluation = {
+                "move_played": position.last_move,
+                "result": game_result.outcome,
+                "engine_eval": self.evaluate_position(position),
+                "better_moves": self.find_better_moves(position)
+            }
+            self.position_evaluations[fen] = evaluation
+
+        # Update database
+        self.save_to_database(game_result, self.position_evaluations)
+
+    def get_agent_move(self, state):
+        """Get move using learned knowledge."""
+        fen = state.to_fen()
+
+        # Check if we've seen this position
+        if fen in self.position_evaluations:
+            learned = self.position_evaluations[fen]
+            if learned["result"] == "win" and learned["move_played"]:
+                return learned["move_played"]
+            elif learned["better_moves"]:
+                return learned["better_moves"][0]
+
+        # Fall back to regular play
+        return super().get_agent_move(state)
+```
+
+## Performance Optimization
+
+### Move Generation Caching
+
+```python
+from functools import lru_cache
+
+class OptimizedChessStateManager(ChessStateManager):
+    """Optimized state manager with caching."""
+
+    @lru_cache(maxsize=10000)
+    def get_legal_moves_cached(self, fen: str) -> List[str]:
+        """Get legal moves with caching."""
+        state = ChessState.from_fen(fen)
+        return self.get_legal_moves(state)
+
+    def get_legal_moves(self, state: ChessState) -> List[str]:
+        """Wrapper that uses cache."""
+        return self.get_legal_moves_cached(state.to_fen())
+```
+
+### Parallel Position Analysis
+
+```python
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+class ParallelChessAnalyzer:
+    """Analyze multiple positions in parallel."""
+
+    def __init__(self, num_workers=4):
+        self.executor = ThreadPoolExecutor(max_workers=num_workers)
+
+    async def analyze_positions(self, positions: List[ChessState]):
+        """Analyze multiple positions concurrently."""
+        tasks = []
+        for position in positions:
+            task = asyncio.create_task(
+                self.analyze_single_position(position)
+            )
+            tasks.append(task)
+
+        results = await asyncio.gather(*tasks)
+        return dict(zip(positions, results))
+
+    async def analyze_single_position(self, state: ChessState):
+        """Analyze one position."""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            self.executor,
+            self._analyze_position_sync,
+            state
+        )
+```
+
+## Testing Strategies
+
+### Position Testing
+
+```python
+import pytest
+from haive.games.chess import ChessState, ChessStateManager
+
+class TestChessPositions:
+    """Test specific chess positions."""
+
+    @pytest.fixture
+    def positions(self):
+        """Famous chess positions for testing."""
+        return {
+            "fool_mate": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+            "scholar_mate": "r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4",
+            "back_rank": "6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1"
+        }
+
+    def test_checkmate_detection(self, positions):
+        """Test checkmate in specific positions."""
+        manager = ChessStateManager()
+
+        # Fool's mate position
+        state = ChessState.from_fen(positions["fool_mate"])
+        assert not manager.is_checkmate(state)  # Not mate yet
+
+        # Play Qh4#
+        state = manager.apply_move(state, "Qh4")
+        assert manager.is_checkmate(state)  # Checkmate!
+```
+
+### Integration Testing
+
+```python
+from haive.games.chess import ChessAgent, ChessConfig
+from haive.games.utils.test_helpers import create_test_engines
+
+async def test_full_game_flow():
+    """Test complete game flow."""
+    # Create deterministic test engines
+    engines = create_test_engines([
+        ["e4", "Nf3", "Bc4", "O-O"],  # White moves
+        ["e5", "Nc6", "Nf6", "O-O"]   # Black moves
+    ])
+
+    config = ChessConfig(
+        white_engine=engines[0],
+        black_engine=engines[1]
+    )
+
+    agent = ChessAgent(config)
+    result = await agent.arun()
+
+    # Verify game progression
+    assert len(result.move_history) >= 8
+    assert result.state_history[0].to_fen() == ChessState().to_fen()
+    assert all(move in result.move_history for move in ["e4", "e5", "Nf3", "Nc6"])
+```
+
+## Common Patterns
+
+### Pattern 1: Themed Tournaments
+
+```python
+from haive.games.chess import ChessConfig
+from haive.games.tournament import Tournament
+
+def create_themed_tournament(theme: str):
+    """Create tournament with specific opening theme."""
+    openings = {
+        "sicilian": "1.e4 c5",
+        "french": "1.e4 e6",
+        "caro_kann": "1.e4 c6",
+        "kings_indian": "1.d4 Nf6 2.c4 g6"
+    }
+
+    config = ChessConfig(
+        starting_position=openings.get(theme, ""),
+        theme_name=theme
+    )
+
+    return Tournament(
+        game_config=config,
+        num_players=8,
+        format="swiss"
+    )
+```
+
+### Pattern 2: Analysis Pipeline
+
+```python
+class ChessAnalysisPipeline:
+    """Complete analysis pipeline for chess games."""
+
+    def analyze_game(self, pgn_file: str):
+        """Full game analysis pipeline."""
+        # Load game
+        game = self.load_pgn(pgn_file)
+
+        # Phase 1: Opening analysis
+        opening_report = self.analyze_opening(game)
+
+        # Phase 2: Middle game analysis
+        middlegame_report = self.analyze_middlegame(game)
+
+        # Phase 3: Endgame analysis
+        endgame_report = self.analyze_endgame(game)
+
+        # Phase 4: Blunder detection
+        blunders = self.find_blunders(game)
+
+        # Phase 5: Alternative lines
+        alternatives = self.generate_alternatives(game)
+
+        return {
+            "opening": opening_report,
+            "middlegame": middlegame_report,
+            "endgame": endgame_report,
+            "blunders": blunders,
+            "alternatives": alternatives
+        }
+```
+
 ## Best Practices
 
-- **Position Representation**: Use standard FEN notation for position serialization
-- **Move Validation**: Implement thorough validation for all chess rules
-- **Special Moves**: Handle all special chess moves correctly (castling, en passant, promotion)
-- **Analysis Depth**: Balance analysis depth with performance considerations
-- **Opening Knowledge**: Use opening books for early game moves
-- **Evaluation Consistency**: Ensure consistent position evaluation methodology
-- **Game Visualization**: Provide clear visual representations of the board state
+### 1. Position Representation
+
+- Use FEN for serialization and storage
+- Cache position evaluations
+- Implement efficient board representations (bitboards)
+- Handle special positions correctly
+
+### 2. Move Validation
+
+- Validate all moves before applying
+- Check for pins and discovered checks
+- Handle special moves explicitly
+- Provide clear error messages
+
+### 3. Engine Integration
+
+- Use appropriate temperatures for different game phases
+- Implement timeout handling
+- Cache engine evaluations
+- Handle engine failures gracefully
+
+### 4. Game Analysis
+
+- Store games in standard formats (PGN)
+- Track critical positions
+- Implement post-game analysis
+- Generate insightful commentary
+
+### 5. Performance
+
+- Use move ordering for faster search
+- Implement transposition tables
+- Cache legal move generation
+- Profile critical paths
+
+## Troubleshooting
+
+### Invalid Move Generation
+
+**Problem**: Agent generates invalid moves.
+
+**Solution**:
+
+```python
+config = ChessConfig(
+    move_validation="strict",
+    retry_invalid_moves=True,
+    max_retries=3,
+    provide_legal_moves=True  # Include legal moves in prompt
+)
+```
+
+### Slow Move Generation
+
+**Problem**: Moves take too long to generate.
+
+**Solution**:
+
+```python
+# Reduce analysis depth
+config.analysis_depth = 10  # Instead of 20
+
+# Use caching
+config.enable_position_cache = True
+
+# Limit candidate moves
+config.max_candidate_moves = 5
+```
+
+### Memory Issues
+
+**Problem**: Game uses too much memory.
+
+**Solution**:
+
+```python
+# Limit history
+config.max_history_length = 50
+
+# Clear caches periodically
+if len(game.position_cache) > 10000:
+    game.position_cache.clear()
+```
+
+## Examples
+
+For comprehensive examples, see the [example.py](example.py) file which demonstrates:
+
+- Basic game setup
+- Advanced configurations
+- Tournament play
+- Position analysis
+- Custom agents
+- Integration patterns
 
 ## API Reference
 
-For full API details, see the [documentation](https://docs.haive.ai/games/chess).
+### Core Classes
+
+| Class               | Description                        |
+| ------------------- | ---------------------------------- |
+| `ChessAgent`        | Main agent orchestrating gameplay  |
+| `ChessState`        | Complete game state representation |
+| `ChessStateManager` | Game logic and rules engine        |
+| `ChessConfig`       | Configuration parameters           |
+| `ChessMove`         | Move representation and parsing    |
+| `ChessVisualizer`   | Board and game visualization       |
+
+### Key Methods
+
+| Method                      | Description             |
+| --------------------------- | ----------------------- |
+| `state.to_fen()`            | Convert to FEN notation |
+| `state.is_legal_move()`     | Check move legality     |
+| `manager.apply_move()`      | Apply move to state     |
+| `manager.get_legal_moves()` | Get all legal moves     |
+| `agent.run()`               | Run complete game       |
+
+For detailed API documentation, see the [API Reference](../../../../../docs/source/api/haive/games/chess/index.rst).
 
 ## Related Modules
 
-- **haive.games.framework**: Core framework used by the chess implementation
-- **haive.games.board**: Board game utilities shared across board games
-- **haive.core.engine**: Engine components used by chess agents
+- [Game Framework](../framework/README.md) - Core framework components
+- [Board Games](../board/README.md) - Shared board game utilities
+- [Chess Engines](engines.py) - Engine implementations
+- [Chess Models](models.py) - Data models and types
