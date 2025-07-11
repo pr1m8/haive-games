@@ -11,16 +11,12 @@ The configuration system uses Pydantic for validation and default values,
 making it easy to create and customize chess agent instances.
 """
 
-import uuid
 from typing import Any, Dict, List, Optional
 
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field, model_validator
 
 from haive.games.chess.engines import build_chess_aug_llms
 from haive.games.chess.generic_engines import create_generic_chess_engines
-from haive.games.chess.llm_utils import create_chess_engines_simple
 from haive.games.chess.state import ChessState
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 from haive.games.core.config import BaseGameConfig, GamePlayerRole

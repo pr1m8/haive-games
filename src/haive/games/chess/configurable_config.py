@@ -4,8 +4,7 @@ This module provides a chess configuration that supports configurable
 player agents instead of hardcoded engine configurations.
 """
 
-import uuid
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -19,7 +18,6 @@ from haive.games.chess.configurable_engines import (
 from haive.games.chess.state import ChessState
 from haive.games.core.agent.player_agent import (
     PlayerAgentConfig,
-    create_player_config,
     create_simple_player_configs,
 )
 from haive.games.utils.recursion_config import RecursionConfig

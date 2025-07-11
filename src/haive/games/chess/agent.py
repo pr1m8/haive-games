@@ -60,7 +60,7 @@ class ChessAgent(Agent[ChessConfig]):
         for key, engine_config in config.engines.items():
             self.engines[key] = engine_config
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Set up the workflow graph for the chess game.
 
         Creates a LangGraph StateGraph with nodes for:

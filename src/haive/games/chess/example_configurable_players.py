@@ -14,7 +14,6 @@ from haive.games.chess.configurable_config import (
     create_chess_config_from_player_configs,
 )
 from haive.games.core.agent.player_agent import (
-    PlayerAgentConfig,
     create_player_config,
 )
 
@@ -149,7 +148,7 @@ async def run_short_game(config: ConfigurableChessConfig, max_moves: int = 10):
         result = agent.run({})
 
         if result:
-            print(f"✅ Game completed successfully!")
+            print("✅ Game completed successfully!"!")
             print(f"Game status: {result.get('game_status', 'unknown')}")
             print(f"Total moves: {len(result.get('move_history', []))}")
 

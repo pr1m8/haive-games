@@ -15,7 +15,6 @@ from haive.games.core.agent.generic_player_agent import (
     ChessPlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
-    create_generic_game_config,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 
@@ -89,7 +88,7 @@ You MUST select one of the legal moves listed above. Analyze the position and ch
 
 Provide strategic insights including:
 1. Position score from -10 to +10 (positive favors White, negative favors Black)
-2. Attacking chances: describe {player.title()}'s offensive opportunities
+2. Attacking chances: describe {player.upper()}'s offensive opportunities
 3. Defensive needs: identify threats and weaknesses
 4. Suggested plans: provide 2-3 concrete strategic plans
 
@@ -97,13 +96,13 @@ Be specific and focus on the current position's tactical and strategic elements.
                 ),
                 (
                     "human",
-                    """Position (FEN): {current_board_fen}
+                    f"""Position (FEN): {{current_board_fen}}
 
-Recent moves: {recent_moves}
+Recent moves: {{recent_moves}}
 
-Captured pieces: {captured_pieces}
+Captured pieces: {{captured_pieces}}
 
-Analyze this position strategically from {player.title()}'s perspective.""",
+Analyze this position strategically from {player.upper()}'s perspective.""",
                 ),
             ]
         )

@@ -4,7 +4,6 @@ This module demonstrates how to create API endpoints for chess games
 with configurable LLM providers and models.
 """
 
-import asyncio
 import json
 import uuid
 from datetime import datetime
@@ -21,7 +20,6 @@ from haive.games.chess.llm_utils import (
     get_available_chess_providers,
 )
 from haive.games.chess.state import ChessState
-from haive.games.utils.recursion_config import RecursionConfig
 
 # Create FastAPI app
 app = FastAPI(

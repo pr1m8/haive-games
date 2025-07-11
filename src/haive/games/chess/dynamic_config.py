@@ -9,7 +9,7 @@ This module provides a flexible configuration system for chess that supports:
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
 from haive.games.chess.engines import build_chess_aug_llms
 from haive.games.chess.generic_engines import create_generic_chess_engines

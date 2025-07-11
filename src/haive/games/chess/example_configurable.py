@@ -142,8 +142,8 @@ def run_advanced_chess_example():
     )
 
     # Run the game
-    agent = ChessAgent(config)
-    initial_state = ChessState()
+    ChessAgent(config)
+    ChessState()
 
     print("\n🎯 Running advanced game with custom analyzers...")
     # ... (game execution code similar to above)

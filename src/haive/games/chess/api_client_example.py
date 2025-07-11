@@ -4,7 +4,6 @@ This shows how to interact with the chess API to create and play games.
 """
 
 import json
-import time
 from typing import Optional
 
 import requests
