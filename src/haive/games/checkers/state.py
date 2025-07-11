@@ -1,4 +1,4 @@
-"""Comprehensive state management system for Checkers gameplay and strategic analysis.
+r"""Comprehensive state management system for Checkers gameplay and strategic analysis.
 
 This module provides sophisticated state models for Checkers games with complete
 support for board representation, move tracking, strategic analysis, and game
@@ -58,7 +58,7 @@ Note:
 
 from collections.abc import Sequence
 from enum import Enum
-from typing import Any, ClassVar, Dict, List, Literal, Optional, Union
+from typing import ClassVar, Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -106,7 +106,7 @@ class GamePhase(str, Enum):
 
 
 class CheckersState(BaseModel):
-    """Comprehensive state model for Checkers gameplay with strategic analysis support.
+    r"""Comprehensive state model for Checkers gameplay with strategic analysis support.
 
     This class provides complete state management for Checkers games, supporting
     both game mechanics and strategic analysis. The state system maintains board
@@ -476,7 +476,7 @@ class CheckersState(BaseModel):
         }
 
     def get_piece_at(self, position: str) -> int:
-        """Get the piece at a specific algebraic position.
+        r"""Get the piece at a specific algebraic position.
 
         Args:
             position (str): Algebraic position (e.g., "a3", "h6").
@@ -605,7 +605,7 @@ class CheckersState(BaseModel):
 
     @classmethod
     def _create_board_string(cls, board: List[List[int]]) -> str:
-        """Create a string representation of the board for display.
+        r"""Create a string representation of the board for display.
 
         Converts the 2D grid representation to a human-readable string with
         row and column coordinates for visualization and debugging.
@@ -661,7 +661,7 @@ class CheckersState(BaseModel):
 
     @classmethod
     def initialize(cls) -> "CheckersState":
-        """Initialize a new checkers game state.
+        r"""Initialize a new checkers game state.
 
         Creates a fresh checkers state with the standard starting board,
         red to move first, and default values for all other fields.

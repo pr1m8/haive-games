@@ -186,7 +186,6 @@ class CheckersUI:
                 )
 
                 # Check if this square was part of the last move
-                is_last_move = False
                 is_last_move_highlight = ""
 
                 if (row, col) == last_from or (row, col) == last_to:

@@ -1,4 +1,4 @@
-"""Comprehensive data models for strategic Checkers gameplay and analysis.
+r"""Comprehensive data models for strategic Checkers gameplay and analysis.
 
 This module provides sophisticated data models for the classic game of Checkers
 (also known as Draughts), supporting both traditional gameplay and advanced
@@ -63,7 +63,7 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class CheckersMove(BaseModel):
-    """Comprehensive representation of a Checkers move with strategic context.
+    r"""Comprehensive representation of a Checkers move with strategic context.
 
     This model provides complete representation of Checkers moves, supporting
     both regular moves and jump sequences (captures). It uses standard algebraic
@@ -223,7 +223,7 @@ class CheckersMove(BaseModel):
         return v
 
     def __str__(self) -> str:
-        """Generate standard Checkers notation for the move.
+        r"""Generate standard Checkers notation for the move.
 
         Produces move notation following standard Checkers conventions:
         - Regular moves: "a3-b4"
@@ -268,7 +268,7 @@ class CheckersMove(BaseModel):
 
 
 class CheckersPlayerDecision(BaseModel):
-    """Comprehensive decision model for strategic Checkers gameplay.
+    r"""Comprehensive decision model for strategic Checkers gameplay.
 
     This model captures the complete decision-making process of a Checkers player,
     including the chosen move, strategic reasoning, position evaluation, and
@@ -397,7 +397,7 @@ class CheckersPlayerDecision(BaseModel):
 
 
 class CheckersAnalysis(BaseModel):
-    """Advanced strategic analysis model for Checkers position evaluation.
+    r"""Advanced strategic analysis model for Checkers position evaluation.
 
     This model provides comprehensive analysis of Checkers positions, including
     material evaluation, positional assessment, tactical opportunities, and

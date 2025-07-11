@@ -32,7 +32,6 @@ class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
             ChatPromptTemplate: Prompt template for move generation
         """
         player_upper = player.upper()
-        opponent = "BLACK" if player == "red" else "RED"
 
         return ChatPromptTemplate.from_messages(
             [

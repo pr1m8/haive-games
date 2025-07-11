@@ -1,4 +1,4 @@
-"""Comprehensive configuration system for strategic Checkers gameplay and AI agents.
+r"""Comprehensive configuration system for strategic Checkers gameplay and AI agents.
 
 This module provides sophisticated configuration management for Checkers agents with
 support for rule variations, performance optimization, and strategic AI customization.
@@ -50,7 +50,7 @@ Note:
     and integration with distributed game systems for tournament play.
 """
 
-from typing import Any, Dict, Literal, Optional, Union
+from typing import Dict, Optional, Union
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -62,7 +62,7 @@ from haive.games.checkers.state import CheckersState
 
 
 class CheckersAgentConfig(AgentConfig):
-    """Advanced configuration system for Checkers agents with comprehensive rule support.
+    r"""Advanced configuration system for Checkers agents with comprehensive rule support.
 
     This class provides complete configuration management for Checkers gameplay,
     supporting multiple rule variants, strategic AI customization, and performance
@@ -345,7 +345,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def american_checkers(cls) -> "CheckersAgentConfig":
-        """Create configuration for standard American Checkers.
+        r"""Create configuration for standard American Checkers.
 
         Standard American Checkers features:
         - 8x8 board with 64 squares
@@ -387,7 +387,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def international_draughts(cls) -> "CheckersAgentConfig":
-        """Create configuration for International Draughts (10x10).
+        r"""Create configuration for International Draughts (10x10).
 
         International Draughts features:
         - 10x10 board with 100 squares
@@ -429,7 +429,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def tournament(cls) -> "CheckersAgentConfig":
-        """Create configuration optimized for tournament play.
+        r"""Create configuration optimized for tournament play.
 
         Tournament configuration features:
         - Extended analysis depth for strong play
@@ -471,7 +471,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def training(cls) -> "CheckersAgentConfig":
-        """Create configuration optimized for AI training and experimentation.
+        r"""Create configuration optimized for AI training and experimentation.
 
         Training configuration features:
         - Balanced depth for learning
@@ -513,7 +513,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def performance(cls) -> "CheckersAgentConfig":
-        """Create configuration optimized for maximum performance.
+        r"""Create configuration optimized for maximum performance.
 
         Performance configuration features:
         - Maximum parallel processing
@@ -555,7 +555,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @classmethod
     def default(cls) -> "CheckersAgentConfig":
-        """Create a default configuration for checkers.
+        r"""Create a default configuration for checkers.
 
         Creates a configuration with standard American Checkers rules:
         - 8x8 board with 64 squares

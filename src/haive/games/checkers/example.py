@@ -23,16 +23,13 @@ import argparse
 import asyncio
 import json
 import logging
-import random
-import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List
 
 from haive.core.engine.aug_llm import AugLLMConfig
 
 from haive.games.checkers.agent import CheckersAgent
 from haive.games.checkers.config import CheckersAgentConfig
-from haive.games.checkers.models import CheckersAnalysis, CheckersMove
 from haive.games.checkers.state import CheckersState
 from haive.games.checkers.state_manager import CheckersStateManager
 
@@ -87,7 +84,7 @@ def create_tournament_config(
     }
 
     config = CheckersAgentConfig(
-        aug_llm_configs={
+        engines={
             "player1": AugLLMConfig(
                 model="gpt-4",
                 temperature=style_configs[player1_style]["temperature"],
@@ -105,9 +102,8 @@ def create_tournament_config(
             ),
         },
         max_turns=200,
-        show_analysis=True,
-        analysis_depth=2,
-        move_timeout=30,
+        strategic_depth=2,
+        time_per_move=30,
     )
 
     return config
@@ -127,14 +123,12 @@ async def example_1_basic_checkers_game():
     )
 
     # Create basic configuration
-    config = CheckersAgentConfig(
-        max_turns=150, show_analysis=True, ui_enabled=True, move_timeout=20
-    )
+    config = CheckersAgentConfig(max_turns=150, time_per_move=20)
 
     print("Configuration:")
     print(f"  Max turns: {config.max_turns}")
-    print(f"  Analysis enabled: {config.show_analysis}")
-    print(f"  Move timeout: {config.move_timeout}s")
+    print(f"  Strategic depth: {config.strategic_depth}")
+    print(f"  Move timeout: {config.time_per_move}s")
 
     # Create and run game
     print("\nStarting basic Checkers game...")
@@ -175,7 +169,7 @@ async def example_2_advanced_player_configuration():
 
     # Create configuration with different player personalities
     config = CheckersAgentConfig(
-        aug_llm_configs={
+        engines={
             "player1": AugLLMConfig(
                 model="gpt-4",
                 temperature=0.9,  # High creativity for aggressive play
@@ -198,21 +192,19 @@ async def example_2_advanced_player_configuration():
             ),
         },
         max_turns=250,
-        show_analysis=True,
-        analysis_depth=3,
-        move_timeout=45,
-        ui_enabled=True,
+        strategic_depth=3,
+        time_per_move=45,
     )
 
     print("Player Configurations:")
     print("  Player 1 (Aggressive):")
-    print(f"    Temperature: {config.aug_llm_configs['player1'].temperature}")
+    print(f"    Temperature: {config.engines['player1'].temperature}")
     print("    Style: Tactical combinations and forcing moves")
     print("  Player 2 (Defensive):")
-    print(f"    Temperature: {config.aug_llm_configs['player2'].temperature}")
+    print(f"    Temperature: {config.engines['player2'].temperature}")
     print("    Style: Piece safety and solid formations")
     print("  Analyzer:")
-    print(f"    Temperature: {config.aug_llm_configs['analyzer'].temperature}")
+    print(f"    Temperature: {config.engines['analyzer'].temperature}")
     print("    Style: Detailed strategic analysis")
 
     # Run game with personalities
@@ -238,7 +230,7 @@ async def example_2_advanced_player_configuration():
         else:
             print("  Balanced result - both strategies were effective")
 
-        print(f"\nFinal Results:")
+        print("\nFinal Results:")
         print(f"  Winner: {winner}")
         print(f"  Total turns: {result.get('turn_count', 'Unknown')}")
 
@@ -290,9 +282,7 @@ async def example_3_tournament_play():
 
             # Create configuration for this matchup
             config = create_tournament_config(player1, player2)
-            config.show_analysis = False  # Disable for speed
-            config.ui_enabled = False  # Disable for speed
-            config.move_timeout = 15  # Faster moves
+            config.time_per_move = 15  # Faster moves
 
             agent = CheckersAgent(config)
 
@@ -323,7 +313,7 @@ async def example_3_tournament_play():
             "total_games": games_per_matchup,
         }
 
-        print(f"  Matchup Results:")
+        print("  Matchup Results:")
         print(f"    {player1}: {matchup_wins['player1']} wins")
         print(f"    {player2}: {matchup_wins['player2']} wins")
         print(f"    Draws: {matchup_wins['draws']}")
@@ -406,7 +396,7 @@ async def example_4_position_analysis():
     print("\nPosition Analysis:")
 
     # Create analyzer configuration
-    analyzer_config = AugLLMConfig(
+    AugLLMConfig(
         model="gpt-4",
         temperature=0.1,
         system_message="You are a master-level checkers analyst who provides detailed position evaluations.",
@@ -426,12 +416,12 @@ async def example_4_position_analysis():
             print(f"Strategic Notes: {analysis.strategic_notes}")
 
             if analysis.tactical_opportunities:
-                print(f"Tactical Opportunities:")
+                print("Tactical Opportunities:")
                 for opportunity in analysis.tactical_opportunities:
                     print(f"  - {opportunity}")
 
             if analysis.threats:
-                print(f"Threats to Address:")
+                print("Threats to Address:")
                 for threat in analysis.threats:
                     print(f"  - {threat}")
 
@@ -469,7 +459,7 @@ async def example_5_educational_mode():
 
     # Create educational configuration
     config = CheckersAgentConfig(
-        aug_llm_configs={
+        engines={
             "player1": AugLLMConfig(
                 model="gpt-4",
                 temperature=0.5,
@@ -493,10 +483,8 @@ async def example_5_educational_mode():
             ),
         },
         max_turns=100,  # Shorter for educational focus
-        show_analysis=True,
-        analysis_depth=3,
-        move_timeout=60,  # More time for detailed explanations
-        ui_enabled=True,
+        strategic_depth=3,
+        time_per_move=60,  # More time for detailed explanations
     )
 
     print("Educational Features:")
@@ -506,7 +494,7 @@ async def example_5_educational_mode():
     print("  - Tactical pattern recognition")
 
     # Create state manager for educational demonstrations
-    state_manager = CheckersStateManager()
+    CheckersStateManager()
 
     print("\nBasic Strategy Concepts:")
     print("1. Opening Principles:")
@@ -535,12 +523,12 @@ async def example_5_educational_mode():
         # Enable educational mode features
         result = agent.run_game(visualize=True)
 
-        print(f"\nEducational Game Results:")
+        print("\nEducational Game Results:")
         print(f"  Winner: {result.get('winner', 'Draw')}")
         print(f"  Moves played: {result.get('turn_count', 'Unknown')}")
 
         # Educational summary
-        print(f"\nKey Learning Points:")
+        print("\nKey Learning Points:")
         print("- Observed opening development patterns")
         print("- Tactical opportunities were identified")
         print("- Position evaluation helped decision-making")
@@ -568,24 +556,18 @@ async def example_6_performance_testing():
     configs = {
         "speed_optimized": CheckersAgentConfig(
             max_turns=100,
-            show_analysis=False,
-            ui_enabled=False,
-            move_timeout=5,
-            analysis_depth=1,
+            time_per_move=5,
+            strategic_depth=1,
         ),
         "balanced": CheckersAgentConfig(
             max_turns=150,
-            show_analysis=True,
-            ui_enabled=False,
-            move_timeout=15,
-            analysis_depth=2,
+            time_per_move=15,
+            strategic_depth=2,
         ),
         "quality_focused": CheckersAgentConfig(
             max_turns=200,
-            show_analysis=True,
-            ui_enabled=True,
-            move_timeout=30,
-            analysis_depth=3,
+            time_per_move=30,
+            strategic_depth=3,
         ),
     }
 
@@ -593,10 +575,8 @@ async def example_6_performance_testing():
     for name, config in configs.items():
         print(f"  {name}:")
         print(f"    Max turns: {config.max_turns}")
-        print(f"    Analysis: {config.show_analysis}")
-        print(f"    UI enabled: {config.ui_enabled}")
-        print(f"    Move timeout: {config.move_timeout}s")
-        print(f"    Analysis depth: {config.analysis_depth}")
+        print(f"    Strategic depth: {config.strategic_depth}")
+        print(f"    Move timeout: {config.time_per_move}s")
 
     # Run performance tests
     results = {}
@@ -664,7 +644,7 @@ async def example_6_performance_testing():
     if results:
         fastest_config = min(results.keys(), key=lambda x: results[x]["avg_time"])
         print(f"\nFastest configuration: {fastest_config}")
-        print(f"Performance recommendations:")
+        print("Performance recommendations:")
         print("- Use speed_optimized for batch processing")
         print("- Use balanced for interactive play")
         print("- Use quality_focused for analysis and learning")
@@ -780,7 +760,7 @@ async def example_7_custom_strategy():
     }
 
     print("Custom Strategy Overview:")
-    for name, strategy in strategies.items():
+    for _name, strategy in strategies.items():
         print(f"  {strategy.name}: {strategy.description}")
 
     # Test strategies against each other
@@ -811,7 +791,7 @@ async def example_7_custom_strategy():
     print(f"\nValid moves for player1: {valid_moves}")
 
     # Test each strategy
-    for name, strategy in strategies.items():
+    for _name, strategy in strategies.items():
         print(f"\n{strategy.name} Analysis:")
 
         # Evaluate position
@@ -844,9 +824,7 @@ async def example_8_game_state_management():
     )
 
     # Create configuration for state management demo
-    config = CheckersAgentConfig(
-        max_turns=50, show_analysis=True, ui_enabled=False, move_timeout=10
-    )
+    config = CheckersAgentConfig(max_turns=50, time_per_move=10)
 
     print("Game State Management Features:")
     print("  - JSON serialization/deserialization")
@@ -882,7 +860,7 @@ async def example_8_game_state_management():
             print("Game state saved to checkers_game_state.json")
 
             # Display state information
-            print(f"\nState Information:")
+            print("\nState Information:")
             print(f"  Current player: {current_state.current_player}")
             print(f"  Game over: {current_state.game_over}")
             print(f"  Winner: {current_state.winner or 'Game in progress'}")
@@ -890,12 +868,12 @@ async def example_8_game_state_management():
 
             # Show recent moves
             if current_state.move_history:
-                print(f"\nRecent moves:")
+                print("\nRecent moves:")
                 for i, move in enumerate(current_state.move_history[-5:]):
                     print(f"  {i+1}. {move}")
 
             # Demonstrate state loading
-            print(f"\nLoading saved state...")
+            print("\nLoading saved state...")
             with open("checkers_game_state.json", "r") as f:
                 loaded_state_dict = json.load(f)
 
@@ -921,7 +899,7 @@ async def example_8_game_state_management():
         logger.error(f"State management error: {e}")
 
     # Demonstrate move history analysis
-    print(f"\nMove History Analysis:")
+    print("\nMove History Analysis:")
     print("This feature enables:")
     print("  - Game replay and analysis")
     print("  - Position reconstruction")
