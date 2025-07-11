@@ -32,7 +32,7 @@ Examples:
 """
 
 from enum import Enum
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 

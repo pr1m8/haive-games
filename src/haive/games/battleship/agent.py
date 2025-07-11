@@ -349,7 +349,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=updated_state.model_dump(), goto=f"{player}_move")
         except Exception as e:
             # Detailed error logging
-            import traceback
 
             logger.error(
                 "Full error for player analysis",
@@ -491,7 +490,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
             return Command(update=updated_state.model_dump(), goto=next_node)
         except Exception as e:
-            import traceback
 
             logger.error(
                 "Ship placement error for player",
@@ -592,7 +590,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
             return Command(update=updated_state.model_dump(), goto=next_node)
         except Exception as e:
-            import traceback
 
             logger.error(
                 "Move error for player",
@@ -727,7 +724,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             return Command(update=updated_state.model_dump(), goto=next_node)
         except Exception as e:
             # Detailed error logging
-            import traceback
 
             logger.error(
                 "Full error for player analysis",
@@ -778,7 +774,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         return Command(update=state_obj.model_dump(), goto=next_step)
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
-        """Run a complete Battleship game with comprehensive state tracking.
+        r"""Run a complete Battleship game with comprehensive state tracking.
 
         Executes the full game workflow from initialization through ship
         placement and gameplay to completion. Provides detailed game state

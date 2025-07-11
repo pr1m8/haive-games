@@ -1,4 +1,4 @@
-"""Comprehensive state management system for Battleship game mechanics and player tracking.
+r"""Comprehensive state management system for Battleship game mechanics and player tracking.
 
 This module provides sophisticated state models for the Battleship game, supporting
 complete game state tracking, turn management, strategic analysis, and secure state
@@ -48,7 +48,7 @@ Note:
 
 from typing import Annotated, Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import BaseModel, Field, computed_field
 
 from haive.games.battleship.models import (
     GamePhase,
@@ -59,7 +59,7 @@ from haive.games.battleship.models import (
 
 
 class PlayerState(BaseModel):
-    """Comprehensive state model for individual player tracking and strategic analysis.
+    r"""Comprehensive state model for individual player tracking and strategic analysis.
 
     This class maintains complete state information for a single player in the
     Battleship game, including their board configuration, ship placements, attack
@@ -143,7 +143,7 @@ class PlayerState(BaseModel):
 
 
 class BattleshipState(BaseModel):
-    """Comprehensive state model for managing complete Battleship game sessions.
+    r"""Comprehensive state model for managing complete Battleship game sessions.
 
     This class provides complete state management for Battleship games, supporting
     turn-based gameplay, phase transitions, strategic analysis, and secure state
@@ -275,7 +275,7 @@ class BattleshipState(BaseModel):
     )
 
     def get_player_state(self, player: str) -> PlayerState:
-        """Retrieve a player's complete state by their identifier.
+        r"""Retrieve a player's complete state by their identifier.
 
         Provides access to a player's complete state including board configuration,
         ship placements, strategic analysis, and game statistics. This method
@@ -319,7 +319,7 @@ class BattleshipState(BaseModel):
         )
 
     def get_opponent(self, player: str) -> str:
-        """Determine the opponent of a specified player.
+        r"""Determine the opponent of a specified player.
 
         Provides the identifier of the opposing player, essential for turn-based
         game mechanics and strategic analysis. This method ensures consistent
@@ -358,7 +358,7 @@ class BattleshipState(BaseModel):
         return "player2" if player == "player1" else "player1"
 
     def is_setup_complete(self) -> bool:
-        """Check if the ship placement phase is complete for both players.
+        r"""Check if the ship placement phase is complete for both players.
 
         Determines whether both players have successfully placed all their ships
         and the game is ready to transition from the SETUP phase to the PLAYING
@@ -398,7 +398,7 @@ class BattleshipState(BaseModel):
         )
 
     def is_game_over(self) -> bool:
-        """Determine if the game has reached a terminal state.
+        r"""Determine if the game has reached a terminal state.
 
         Checks multiple conditions to determine if the game is complete:
         1. Game phase is explicitly set to ENDED
@@ -444,7 +444,7 @@ class BattleshipState(BaseModel):
         )
 
     def get_public_state_for_player(self, player: str) -> Dict[str, Any]:
-        """Generate a secure public view of the game state for AI decision-making.
+        r"""Generate a secure public view of the game state for AI decision-making.
 
         Creates a carefully sanitized view of the game state that provides all
         information a player should legitimately know while hiding opponent secrets
@@ -566,7 +566,7 @@ class BattleshipState(BaseModel):
     @computed_field
     @property
     def game_statistics(self) -> Dict[str, Union[int, float, str]]:
-        """Calculate comprehensive game statistics and metrics.
+        r"""Calculate comprehensive game statistics and metrics.
 
         Returns:
             Dict[str, Union[int, float, str]]: Dictionary containing game statistics.

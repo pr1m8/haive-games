@@ -1,4 +1,4 @@
-"""Comprehensive configuration system for Battleship game agents and gameplay customization.
+r"""Comprehensive configuration system for Battleship game agents and gameplay customization.
 
 This module provides extensive configuration options for Battleship game agents,
 supporting various game modes, strategic analysis settings, visualization options,
@@ -44,19 +44,19 @@ Note:
 """
 
 import uuid
-from typing import Dict, Optional
+from typing import Dict
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, Field, computed_field, model_validator
+from pydantic import Field, computed_field, model_validator
 
 from haive.games.battleship.engines import build_battleship_engines
 from haive.games.battleship.state import BattleshipState
 
 
 class BattleshipAgentConfig(AgentConfig):
-    """Comprehensive configuration for Battleship game agents with extensive customization.
+    r"""Comprehensive configuration for Battleship game agents with extensive customization.
 
     This configuration class provides complete control over Battleship game mechanics,
     supporting various game modes, strategic analysis settings, visualization options,
@@ -188,7 +188,7 @@ class BattleshipAgentConfig(AgentConfig):
 
     @model_validator(mode="after")
     def update_player_names_from_engines(self):
-        """Update player names based on LLM provider and model from engines.
+        r"""Update player names based on LLM provider and model from engines.
 
         Automatically generates meaningful player names based on the configured
         LLM engines, creating identifiers that include provider and model information.
@@ -202,8 +202,8 @@ class BattleshipAgentConfig(AgentConfig):
 
                 config = BattleshipAgentConfig()
                 # After validation, player names might be:
-                # player1_name = "openai-gpt-4"
-                # player2_name = "openai-gpt-3.5-turbo"
+                # player1_name = "azure-gpt-4o"
+                # player2_name = "Player 2"
         """
         # Set thread_id if not already set
         if (
@@ -212,28 +212,24 @@ class BattleshipAgentConfig(AgentConfig):
         ):
             self.runnable_config["configurable"]["thread_id"] = str(uuid.uuid4())
 
-        if self.engines:
-            # Generate names based on LLM provider and model
-            player1_engine = self.engines.get("player1_move")
-            player2_engine = self.engines.get("player2_move")
-
-            if player1_engine and hasattr(player1_engine, "llm_config"):
-                llm_config = player1_engine.llm_config
-                provider = getattr(llm_config, "provider", "unknown")
-                model = getattr(llm_config, "model", "unknown")
-                self.player1_name = f"{provider.value if hasattr(provider, 'value') else provider}-{model}"
-
-            if player2_engine and hasattr(player2_engine, "llm_config"):
-                llm_config = player2_engine.llm_config
-                provider = getattr(llm_config, "provider", "unknown")
-                model = getattr(llm_config, "model", "unknown")
-                self.player2_name = f"{provider.value if hasattr(provider, 'value') else provider}-{model}"
+        # Safely update player names based on engine configuration
+        try:
+            if self.engines and self.player1_name == "Player 1":
+                player1_engine = self.engines.get("player1_move")
+                if player1_engine and hasattr(player1_engine, "llm_config"):
+                    llm_config = player1_engine.llm_config
+                    if hasattr(llm_config, "model"):
+                        model = getattr(llm_config, "model", "unknown")
+                        self.player1_name = f"azure-{model}"
+        except Exception:
+            # If there's any issue accessing engine config, keep default names
+            pass
 
         return self
 
     @classmethod
     def competitive(cls) -> "BattleshipAgentConfig":
-        """Create a configuration optimized for competitive gameplay.
+        r"""Create a configuration optimized for competitive gameplay.
 
         Generates a configuration suitable for tournaments and competitive matches,
         with analysis enabled but visualization disabled for performance.
@@ -267,7 +263,7 @@ class BattleshipAgentConfig(AgentConfig):
 
     @classmethod
     def training(cls) -> "BattleshipAgentConfig":
-        """Create a configuration optimized for training and development.
+        r"""Create a configuration optimized for training and development.
 
         Generates a configuration suitable for agent training, debugging, and
         development work, with full analysis and visualization enabled.
@@ -301,7 +297,7 @@ class BattleshipAgentConfig(AgentConfig):
 
     @classmethod
     def performance(cls) -> "BattleshipAgentConfig":
-        """Create a configuration optimized for maximum performance.
+        r"""Create a configuration optimized for maximum performance.
 
         Generates a configuration suitable for high-speed gameplay and benchmarking,
         with analysis and visualization disabled for optimal performance.
@@ -336,7 +332,7 @@ class BattleshipAgentConfig(AgentConfig):
     @computed_field
     @property
     def configuration_summary(self) -> Dict[str, str]:
-        """Get a summary of the current configuration settings.
+        r"""Get a summary of the current configuration settings.
 
         Returns:
             Dict[str, str]: Summary of key configuration parameters.
