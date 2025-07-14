@@ -27,7 +27,7 @@ PlayerType = TypeVar("PlayerType")  # e.g., "white", "red", "X"
 PlayerType2 = TypeVar("PlayerType2")  # e.g., "black", "yellow", "O"
 
 
-class GamePlayerIdentifiers(Generic[PlayerType, PlayerType2], BaseModel):
+class GamePlayerIdentifiers(BaseModel, Generic[PlayerType, PlayerType2]):
     """Generic container for two-player game identifiers.
 
     This class defines the player identifiers for a two-player game using generics.
@@ -62,7 +62,7 @@ class GamePlayerIdentifiers(Generic[PlayerType, PlayerType2], BaseModel):
             raise ValueError(f"Unknown player: {player}")
 
 
-class GenericGameRole(Generic[PlayerType], BaseModel):
+class GenericGameRole(BaseModel, Generic[PlayerType]):
     """Generic game role definition using player type generics.
 
     This class defines a role in a game (like "white_player" or "red_analyzer")
