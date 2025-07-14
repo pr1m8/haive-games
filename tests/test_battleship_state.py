@@ -9,7 +9,6 @@ import pytest
 from haive.games.battleship.models import (
     Coordinates,
     GamePhase,
-    MoveCommand,
     MoveResult,
     PlayerBoard,
     ShipPlacement,

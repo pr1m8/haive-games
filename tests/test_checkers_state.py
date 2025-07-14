@@ -4,8 +4,6 @@ This module tests the CheckersState class and its methods for managing
 the game board, visualization, and state initialization.
 """
 
-import pytest
-
 from haive.games.checkers.models import CheckersAnalysis, CheckersMove
 from haive.games.checkers.state import CheckersState
 

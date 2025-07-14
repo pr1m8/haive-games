@@ -4,9 +4,6 @@ This module tests all the data models and classes used in the Nim game,
 ensuring they behave correctly and validate input properly.
 """
 
-import pytest
-from pydantic import ValidationError
-
 from haive.games.nim.models import NimAnalysis, NimMove
 
 

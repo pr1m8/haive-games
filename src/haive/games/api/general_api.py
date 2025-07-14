@@ -8,14 +8,13 @@ documentation and game selection capabilities.
 import importlib
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Tuple
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse
 from haive.core.engine.agent.agent import Agent
 from haive.dataflow.api.game_api import GameAPI
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field
 
 from haive.games.core.config import BaseGameConfig
 
@@ -229,7 +228,7 @@ class GeneralGameAPI:
                 )
 
             game_info = self.discovered_games[game_id]
-            config_class = game_info["config_class"]
+            game_info["config_class"]
 
             # Build configuration based on mode
             config_kwargs = {}

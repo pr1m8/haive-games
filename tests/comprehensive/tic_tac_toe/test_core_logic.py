@@ -8,8 +8,6 @@ and validation logic.
 import sys
 from pathlib import Path
 
-import pytest
-
 # Add source to path for direct testing
 src_path = Path(__file__).parent.parent.parent.parent / "src"
 sys.path.insert(0, str(src_path))
@@ -79,8 +77,8 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in horizontal_boards:
-            assert check_win(board, "X") == True
-            assert check_win(board, "O") == False
+            assert check_win(board, "X")
+            assert not check_win(board, "O")
 
         # Test vertical wins
         vertical_boards = [
@@ -90,8 +88,8 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in vertical_boards:
-            assert check_win(board, "X") == True
-            assert check_win(board, "O") == False
+            assert check_win(board, "X")
+            assert not check_win(board, "O")
 
         # Test diagonal wins
         diagonal_boards = [
@@ -100,8 +98,8 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in diagonal_boards:
-            assert check_win(board, "X") == True
-            assert check_win(board, "O") == False
+            assert check_win(board, "X")
+            assert not check_win(board, "O")
 
         # Test no win conditions
         no_win_boards = [
@@ -111,8 +109,8 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in no_win_boards:
-            assert check_win(board, "X") == False
-            assert check_win(board, "O") == False
+            assert not check_win(board, "X")
+            assert not check_win(board, "O")
 
     def test_legal_moves_generation(self):
         """Test generation of legal moves for various board states."""
@@ -178,22 +176,22 @@ class TestTicTacToeGameLogic:
         board = [["X", None, None], [None, "O", None], [None, None, None]]
 
         # Valid moves
-        assert is_valid_move(board, 0, 1, "X")[0] == True
-        assert is_valid_move(board, 2, 2, "O")[0] == True
+        assert is_valid_move(board, 0, 1, "X")[0]
+        assert is_valid_move(board, 2, 2, "O")[0]
 
         # Invalid moves - out of bounds
-        assert is_valid_move(board, -1, 0, "X")[0] == False
-        assert is_valid_move(board, 3, 0, "X")[0] == False
-        assert is_valid_move(board, 0, -1, "X")[0] == False
-        assert is_valid_move(board, 0, 3, "X")[0] == False
+        assert not is_valid_move(board, -1, 0, "X")[0]
+        assert not is_valid_move(board, 3, 0, "X")[0]
+        assert not is_valid_move(board, 0, -1, "X")[0]
+        assert not is_valid_move(board, 0, 3, "X")[0]
 
         # Invalid moves - occupied cells
-        assert is_valid_move(board, 0, 0, "O")[0] == False  # X occupied
-        assert is_valid_move(board, 1, 1, "X")[0] == False  # O occupied
+        assert not is_valid_move(board, 0, 0, "O")[0]  # X occupied
+        assert not is_valid_move(board, 1, 1, "X")[0]  # O occupied
 
         # Invalid player
-        assert is_valid_move(board, 0, 1, "Y")[0] == False
-        assert is_valid_move(board, 0, 1, "")[0] == False
+        assert not is_valid_move(board, 0, 1, "Y")[0]
+        assert not is_valid_move(board, 0, 1, "")[0]
 
     def test_draw_detection(self):
         """Test detection of draw conditions."""
@@ -237,7 +235,7 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in draw_boards:
-            assert is_game_draw(board) == True
+            assert is_game_draw(board)
 
         # Non-draw boards
         non_draw_boards = [
@@ -248,7 +246,7 @@ class TestTicTacToeGameLogic:
         ]
 
         for board in non_draw_boards:
-            assert is_game_draw(board) == False
+            assert not is_game_draw(board)
 
     def test_board_representation(self):
         """Test board string representation logic."""
@@ -377,7 +375,7 @@ def test_all_core_logic():
         except Exception as e:
             print(f"✗ {test_name}: {e}")
 
-    print(f"\n=== Results ===")
+    print("\n=== Results ===")
     print(f"Passed: {passed}/{total}")
 
     if passed == total:

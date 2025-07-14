@@ -5,19 +5,14 @@ for playing Reversi/Othello.
 """
 
 # Standard library imports
-import asyncio
-from typing import Any, Dict
 
 # Third-party imports
-import pytest
 from langgraph.types import Command
 
 # Local imports
 from haive.games.reversi.agent import ReversiAgent
 from haive.games.reversi.config import ReversiConfig
 from haive.games.reversi.models import (
-    GameResult,
-    MoveAnalysis,
     Position,
     ReversiAnalysis,
     ReversiMove,

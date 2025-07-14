@@ -11,7 +11,7 @@ No mocks - real integration tests.
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List
 
 import pytest
 
@@ -158,7 +158,6 @@ class TestGameConfigurations:
         """Test Connect4 game configuration."""
         from haive.games.connect4.configurable_config import (
             create_connect4_config,
-            create_connect4_config_from_example,
         )
 
         # Test simple config
@@ -175,7 +174,6 @@ class TestGameConfigurations:
         """Test Tic-Tac-Toe game configuration."""
         from haive.games.tic_tac_toe.configurable_config import (
             create_ttt_config,
-            create_ttt_config_from_example,
             create_ttt_config_from_player_configs,
         )
 

@@ -7,10 +7,9 @@ including quick starts, tournaments, custom games, and advanced patterns.
 """
 
 import asyncio
-from typing import Any, Dict, List, Optional
+from typing import List
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.schema import StateSchema
 from pydantic import Field
 
 # Import various game implementations
@@ -197,7 +196,6 @@ def example_custom_game():
             while not self.state_manager.is_game_over(state):
                 # Get hint for agent
                 hint = state.hints[-1] if state.hints else "No hints yet"
-                prompt = f"Target is between {self.config.min_number} and {self.config.max_number}. {hint}. Your guess?"
 
                 # Get agent's guess (simplified - real implementation would parse response)
                 import random
@@ -235,8 +233,6 @@ def example_custom_game():
 def example_game_evaluation():
     """Example 5: Evaluating and comparing agents."""
     print("\n\n=== Example 5: Agent Evaluation ===\n")
-
-    from haive.games.benchmark import compare_strategies, evaluate_agents
 
     # Define different agent strategies
     strategies = {
@@ -359,7 +355,7 @@ def example_game_with_observers():
     """Example 8: Games with observer pattern."""
     print("\n\n=== Example 8: Game with Observers ===\n")
 
-    from haive.games.utils.observers import GameObserver, MoveLogger, StateAnalyzer
+    from haive.games.utils.observers import GameObserver, MoveLogger
 
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
@@ -396,7 +392,7 @@ def example_game_with_observers():
     game.add_observer(MoveLogger(filename="game_log.txt"))
 
     # Run game
-    result = game.run()
+    game.run()
 
 
 def example_parallel_games():

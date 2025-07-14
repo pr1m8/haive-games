@@ -49,17 +49,15 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean, stdev
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 # Add the package to the path if running directly
 if __name__ == "__main__":
     package_root = Path(__file__).parent.parent.parent.parent
     sys.path.insert(0, str(package_root))
 
-from rich.columns import Columns
 from rich.console import Console
 from rich.layout import Layout
-from rich.live import Live
 from rich.panel import Panel
 from rich.progress import (
     BarColumn,
@@ -69,12 +67,10 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 from rich.table import Table
-from rich.text import Text
 
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Analysis, Connect4Move
-from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
 from haive.games.connect4.ui import Connect4UI
 
@@ -127,7 +123,7 @@ def example_1_basic_game():
             max_moves=42,
             should_visualize_graph=False,
         )
-        agent = Connect4Agent(config)
+        Connect4Agent(config)
 
         # Run a simple game with UI
         console.print("[yellow]Running basic game with UI...[/yellow]")
@@ -351,7 +347,7 @@ def example_3_strategic_analysis():
     try:
         # Configuration optimized for analysis
         console.print("[yellow]Setting up strategic analysis configuration...[/yellow]")
-        config = Connect4AgentConfig(
+        Connect4AgentConfig(
             name="strategic_analysis",
             enable_analysis=True,
             max_moves=42,
@@ -359,7 +355,7 @@ def example_3_strategic_analysis():
         )
 
         ui = Connect4UI()
-        state = Connect4StateManager.initialize()
+        Connect4StateManager.initialize()
 
         # Create specific strategic scenarios
         scenarios = [
@@ -626,11 +622,11 @@ def example_4_performance_testing():
 
                 game_results = []
 
-                for i in range(num_games):
+                for _i in range(num_games):
                     start_time = time.time()
 
                     # Create fresh agent for each game
-                    agent = Connect4Agent(config)
+                    Connect4Agent(config)
 
                     # Simulate game with predefined moves for consistency
                     state = Connect4StateManager.initialize()
@@ -838,7 +834,7 @@ def example_5_error_handling():
             ]
 
             for i, config in enumerate(valid_configs):
-                agent = Connect4Agent(config)
+                Connect4Agent(config)
                 console.print(f"[green]✓ Config {i+1} valid: {config.name}[/green]")
 
         except Exception as e:
@@ -968,7 +964,7 @@ def example_6_tournament_mode():
                     start_time = time.time()
 
                     # Create fresh agent
-                    agent = Connect4Agent(config)
+                    Connect4Agent(config)
 
                     # Simulate game with some randomness
                     state = Connect4StateManager.initialize()
@@ -1251,7 +1247,7 @@ def example_7_custom_ai_configuration():
             console.print(f"[yellow]Testing {custom['name']} performance...[/yellow]")
 
             start_time = time.time()
-            agent = Connect4Agent(config)
+            Connect4Agent(config)
 
             # Run a quick simulation
             state = Connect4StateManager.initialize()
@@ -1280,7 +1276,7 @@ def example_7_custom_ai_configuration():
             console.print("─" * 60)
 
         # Configuration comparison
-        console.print(f"\n[bold green]Configuration Comparison[/bold green]")
+        console.print("\n[bold green]Configuration Comparison[/bold green]")
 
         comparison_table = Table(title="AI Configuration Comparison")
         comparison_table.add_column("Config", style="cyan", width=15)
@@ -1474,7 +1470,7 @@ async def example_8_async_batch_processing():
             )
 
         # Comprehensive batch analysis
-        console.print(f"\n[bold green]Async Batch Processing Results[/bold green]")
+        console.print("\n[bold green]Async Batch Processing Results[/bold green]")
 
         # Results table
         results_table = Table(title="Batch Processing Performance")
@@ -1498,7 +1494,7 @@ async def example_8_async_batch_processing():
         console.print(results_table)
 
         # Scalability analysis
-        console.print(f"\n[bold cyan]Scalability Analysis[/bold cyan]")
+        console.print("\n[bold cyan]Scalability Analysis[/bold cyan]")
 
         if len(batch_results) > 1:
             scaling_insights = []

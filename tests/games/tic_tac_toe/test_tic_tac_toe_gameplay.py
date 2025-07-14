@@ -1,7 +1,6 @@
 """Real gameplay tests for TicTacToeAgent with LLM engines."""
 
 import os
-from typing import Any, Dict
 
 import pytest
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -176,18 +175,6 @@ class TestTicTacToeGameplay:
         agent = TicTacToeAgent(simple_config)
 
         # Test state conversion from dict to TicTacToeState
-        state_dict = {
-            "board": [[None, None, None], [None, None, None], [None, None, None]],
-            "turn": "X",
-            "game_status": "ongoing",
-            "player_X": "player1",
-            "player_O": "player2",
-            "winner": None,
-            "error_message": None,
-            "move_history": [],
-            "player1_analysis": [],
-            "player2_analysis": [],
-        }
 
         # This would normally call LLM engines, but we can test state handling
         # by checking that invalid states are handled properly

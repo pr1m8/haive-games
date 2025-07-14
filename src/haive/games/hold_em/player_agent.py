@@ -155,7 +155,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         self.decision_log = []
         self.error_log = []
 
-    def _validate_required_engines(self):
+    def _validate_required_engines(self) -> None:
         """Validate that all required LLM engines are present and properly configured.
 
         This method checks that all the necessary engines for the player's decision
@@ -206,7 +206,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         logger.info(f"✅ All required engines validated for {self.config.player_name}")
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Setup the player decision workflow graph.
 
         This method configures the LangGraph workflow for player decision-making,

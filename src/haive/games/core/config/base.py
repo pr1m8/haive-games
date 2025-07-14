@@ -6,10 +6,9 @@ that support multiple LLM providers and configuration modes.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from haive.core.engine.agent.agent import AgentConfig
-from haive.core.models.llm.base import LLMConfig
 
 
 # Note: create_llm_config doesn't exist - using placeholder
@@ -20,7 +19,7 @@ def create_llm_config(model: str, **kwargs):
     return OpenAILLMConfig(model=model, **kwargs)
 
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 

@@ -14,7 +14,6 @@ from haive.games.battleship.models import (
     Coordinates,
     GamePhase,
     MoveCommand,
-    MoveResult,
     ShipPlacement,
     ShipType,
 )
@@ -130,9 +129,7 @@ class TestBattleshipAgentWorkflow:
         mock_engine.invoke.return_value = {"row": 5, "col": 3}
         agent.engines = {"player1_mover": mock_engine}
 
-        state_dict = (
-            state.model_dump() if hasattr(state, "model_dump") else state.dict()
-        )
+        (state.model_dump() if hasattr(state, "model_dump") else state.dict())
 
         # Test that the method exists and can be called
         # (Full integration would require complete workflow setup)
@@ -221,7 +218,7 @@ class TestBattleshipAgentLLMIntegration:
     def test_ship_placement_validation_logic(self):
         """Test ship placement validation in agent."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Test invalid placements handling
         invalid_placements = [
@@ -250,7 +247,7 @@ class TestBattleshipAgentLLMIntegration:
         ]
 
         # Agent should handle these gracefully (implementation specific)
-        for placements in invalid_placements:
+        for _placements in invalid_placements:
             # These would be caught by the state manager validation
             # Agent should handle the exceptions appropriately
             pass
@@ -258,17 +255,17 @@ class TestBattleshipAgentLLMIntegration:
     def test_move_validation_logic(self):
         """Test move validation in agent."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         state = BattleshipState()
         state.player1.board.grid[5][5] = True  # Already hit
 
         # Valid move
-        valid_move = MoveCommand(row=3, col=3)
+        MoveCommand(row=3, col=3)
         # Should be valid (implementation would check this)
 
         # Invalid move (already hit)
-        invalid_move = MoveCommand(row=5, col=5)
+        MoveCommand(row=5, col=5)
         # Should be invalid (implementation would check this)
 
         # These validations happen in the state manager
@@ -299,7 +296,7 @@ class TestBattleshipAgentGameFlow:
     def test_game_setup_to_playing_transition(self):
         """Test transition from setup to playing phase."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Create state with ships placed for both players
         state = BattleshipState()
@@ -316,7 +313,7 @@ class TestBattleshipAgentGameFlow:
     def test_game_end_detection(self):
         """Test game end condition detection."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Create state where all ships are sunk
         state = BattleshipState()
@@ -336,7 +333,7 @@ class TestBattleshipAgentGameFlow:
     def test_error_handling_during_execution(self, mock_logger):
         """Test error handling during game execution."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Test that errors are logged appropriately
         # (This tests the logging setup we added)
@@ -344,7 +341,7 @@ class TestBattleshipAgentGameFlow:
         # Simulate an error condition
         try:
             raise ValueError("Test error")
-        except ValueError as e:
+        except ValueError:
             # This is how the agent should log errors
             mock_logger.error.assert_not_called()  # Not called yet
 
@@ -361,7 +358,7 @@ class TestBattleshipAgentUtilities:
     def test_state_conversion_methods(self):
         """Test state conversion between dict and objects."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Create state object
         state = BattleshipState()
@@ -383,7 +380,7 @@ class TestBattleshipAgentUtilities:
     def test_player_identification_methods(self):
         """Test player identification and validation."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Valid players
         valid_players = ["player1", "player2"]
@@ -398,7 +395,7 @@ class TestBattleshipAgentUtilities:
     def test_coordinate_validation_utilities(self):
         """Test coordinate validation utilities."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Test coordinate bounds (0-9 for standard Battleship)
         valid_coords = [(0, 0), (9, 9), (5, 5)]
@@ -425,7 +422,7 @@ class TestBattleshipAgentPerformance:
         start_time = time.time()
 
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         end_time = time.time()
 
@@ -453,7 +450,7 @@ class TestBattleshipAgentPerformance:
     def test_state_memory_efficiency(self):
         """Test that state objects are memory efficient."""
         config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
+        BattleshipAgent(config)
 
         # Create multiple states
         states = []

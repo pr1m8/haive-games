@@ -2,10 +2,10 @@
 # Debug game runner for haive - shows all output
 
 # Check if game name is provided
-if [ -z "$1" ]; then
-    echo "Usage: ./run-debug.sh <game_name>"
-    echo "Available games: fox_and_geese, hold_em"
-    exit 1
+if [[ -z $1 ]]; then
+	echo "Usage: ./run-debug.sh <game_name>"
+	echo "Available games: fox_and_geese, hold_em"
+	exit 1
 fi
 
 # Enable all debug output
@@ -18,4 +18,4 @@ export HAIVE_LOG_LEVEL=DEBUG
 export USER_AGENT="haive-games/1.0"
 
 # Run the game
-exec python -m haive.games.$1.example "$@" 
+exec python -m haive.games."$1".example "$@"

@@ -1,3 +1,32 @@
+"""Example poker game demonstrating the Haive poker implementation.
+
+This module provides a comprehensive example of running a poker game with
+AI-powered players using the Haive framework. It demonstrates:
+    - Creating and configuring poker agents with different playing styles
+    - Running a complete poker game with betting rounds
+    - Rich terminal UI with card visualization
+    - Hand evaluation and winner determination
+    - Game state tracking and analysis
+
+The example supports various poker configurations including different
+numbers of players, starting chips, blind structures, and AI strategies.
+
+Usage:
+    Basic game:
+        $ python example.py
+
+    Custom configuration:
+        $ python example.py --players 6 --chips 1000 --blinds 10 20
+
+    With specific AI strategies:
+        $ python example.py --strategies aggressive conservative balanced random
+
+Example:
+    >>> # Run a basic 4-player game
+    >>> from haive.games.poker.example import run_poker_game
+    >>> run_poker_game(num_players=4, starting_chips=1000)
+"""
+
 # Standard library imports
 import argparse
 import logging

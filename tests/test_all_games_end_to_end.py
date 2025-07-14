@@ -12,7 +12,7 @@ No mocks are used - these are real integration tests.
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Tuple
 
 import pytest
 
@@ -312,7 +312,7 @@ class TestGameEngines:
 
                 # Verify each engine has required attributes
                 for engine in engines:
-                    assert hasattr(engine, "__call__"), f"{game} engine not callable"
+                    assert callable(engine), f"{game} engine not callable"
 
             except Exception as e:
                 failed_engines.append((game, str(e)))

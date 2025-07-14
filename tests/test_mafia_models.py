@@ -1,8 +1,6 @@
 """Test suite for Mafia game models."""
 
 # Standard library imports
-import json
-from typing import Dict, List, Optional
 
 # Third-party imports
 import pytest

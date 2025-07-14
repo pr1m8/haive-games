@@ -12,7 +12,6 @@ No external dependencies required - uses only Python standard library.
 
 # Standard library imports
 import json
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -200,7 +199,7 @@ Complexity: {complexity.upper()}
 - Parameter management
 """
 
-        architecture += f"""
+        architecture += """
 
 ## Game-Specific Features
 """
@@ -544,7 +543,7 @@ if __name__ == "__main__":
         # Generate summary index
         self._generate_summary_index(results)
 
-        print(f"\\n✅ Simple documentation generation completed!")
+        print("\\n✅ Simple documentation generation completed!"!")
         print(f"📁 Output directory: {self.output_dir}")
 
         return results
@@ -635,7 +634,7 @@ def main():
     successful_examples = sum(1 for path in results["examples"].values() if path)
     successful_templates = sum(1 for path in results["templates"].values() if path)
 
-    print(f"\\n📊 Generation Summary:")
+    print("\\n📊 Generation Summary:"y:")
     print(
         f"- Architecture diagrams: {successful_architectures}/{results['total_games']}"
     )

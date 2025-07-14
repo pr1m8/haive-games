@@ -1,7 +1,7 @@
 """Comprehensive tests for TicTacToeAgent."""
 
-from typing import Any, Dict
-from unittest.mock import MagicMock, Mock, patch
+from typing import Dict
+from unittest.mock import Mock, patch
 
 import pytest
 from langchain_core.runnables import Runnable
@@ -10,7 +10,7 @@ from langgraph.types import Command
 from haive.games.framework.base.agent import GameAgent
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
-from haive.games.tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
+from haive.games.tic_tac_toe.models import TicTacToeMove
 from haive.games.tic_tac_toe.state import TicTacToeState
 
 

@@ -192,6 +192,20 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             If no participants are provided, creates 4 default participants.
             Participant roles are assigned during the setup phase based on config.
         """
+        logger.debug(f"=== initialize_game called with state: {state}")
+        logger.debug(f"State type: {type(state)}")
+        logger.debug(
+            f"State keys: {state.keys() if isinstance(state, dict) else 'Not a dict'}"
+        )
+
+        # CRITICAL DEBUG: Check if this is a DynamicGraph issue
+        if isinstance(state, dict):
+            for key, value in state.items():
+                logger.debug(f"  {key}: {value} (type: {type(value)})")
+
+        # The real issue: DynamicGraph is overriding our input with default None values!
+        # This means we need to use a different approach
+
         # Extract debate topic if provided, otherwise use default
         topic_data = state.get(
             "topic",

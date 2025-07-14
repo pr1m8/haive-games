@@ -8,12 +8,10 @@ This test suite validates:
 5. Configuration validation
 """
 
-import asyncio
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.api import (
     Connect4API,
     Connect4GameResult,

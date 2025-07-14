@@ -4,7 +4,7 @@ This module provides generic engine creation functions for Among Us games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
+from typing import Dict
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -12,7 +12,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from haive.games.among_us.models import (
     AmongUsAnalysis,
     AmongUsPlayerDecision,
-    PlayerRole,
 )
 from haive.games.core.agent.generic_player_agent import (
     GamePlayerIdentifiers,

@@ -9,7 +9,6 @@ from typing import Any, Dict, Optional, Type
 from fastapi import FastAPI
 from haive.core.engine.agent.agent import Agent
 from haive.dataflow.api.game_api import GameAPI
-from haive.dataflow.api.game_socket import GameSocketServer
 from pydantic import BaseModel, Field
 
 

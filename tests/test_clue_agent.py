@@ -5,9 +5,7 @@ visualization, and execution methods.
 """
 
 import time
-from unittest.mock import Mock, patch
-
-import pytest
+from unittest.mock import patch
 
 from haive.games.clue.agent import ClueAgent
 from haive.games.clue.config import ClueConfig
@@ -280,10 +278,10 @@ class TestClueAgentGameExecution:
                 yield state_dict
 
         with patch.object(agent, "stream", side_effect=mock_stream):
-            result = agent.run_game(visualize=True)
+            agent.run_game(visualize=True)
 
             # Check if max turns warning was logged
-            warning_calls = [
+            [
                 call
                 for call in mock_logger.warning.call_args_list
                 if "Maximum turns reached" in str(call)
@@ -401,7 +399,7 @@ class TestClueAgentPerformance:
         """Test that agent initialization is reasonably fast."""
         start_time = time.time()
 
-        agent = ClueAgent()
+        ClueAgent()
 
         end_time = time.time()
 

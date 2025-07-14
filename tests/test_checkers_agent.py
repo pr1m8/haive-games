@@ -6,8 +6,6 @@ for playing checkers with LLM-based players.
 
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from haive.games.checkers.agent import CheckersAgent
 from haive.games.checkers.config import CheckersAgentConfig
 from haive.games.checkers.models import (
@@ -301,7 +299,7 @@ class TestCheckersAgent:
         state = CheckersStateManager.initialize()
         state.turn = "black"
 
-        command = agent.make_black_move(state)
+        agent.make_black_move(state)
 
         # Check that engine was called
         mock_engine.invoke.assert_called_once()

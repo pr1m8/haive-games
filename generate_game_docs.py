@@ -13,15 +13,12 @@ Usage:
 
 # Standard library imports
 import argparse
-import asyncio
-import json
 import logging
-import os
 import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional
 
 # Third-party imports
 try:
@@ -164,7 +161,7 @@ class GameDocumentationGenerator:
         for attr_name in dir(module):
             if attr_name.endswith("Agent") and not attr_name.startswith("_"):
                 agent_class = getattr(module, attr_name)
-                if hasattr(agent_class, "__call__"):  # Check if it's a class
+                if callable(agent_class):  # Check if it's a class
                     logger.debug(f"Found agent class: {attr_name} for {game_name}")
                     return agent_class
 
@@ -614,7 +611,7 @@ if __name__ == "__main__":
         # Generate master index
         self._generate_master_index(results)
 
-        logger.info(f"Documentation generation completed!")
+        logger.info("Documentation generation completed!")
         logger.info(f"Output directory: {self.output_dir}")
 
         return results
@@ -656,7 +653,7 @@ Each game includes a visual representation of its agent workflow:
             else:
                 content += f"- **{game_name.title()}**: ⚠️ Graph generation failed\n"
 
-        content += f"""
+        content += """
 ## 🎮 Example Runs
 
 Each game includes a comprehensive example with state history tracking:
@@ -671,7 +668,7 @@ Each game includes a comprehensive example with state history tracking:
             else:
                 content += f"- **{game_name.title()}**: ⚠️ Example generation failed\n"
 
-        content += f"""
+        content += """
 ## 📁 Directory Structure
 
 ```
@@ -773,7 +770,7 @@ def main():
         successful_graphs = sum(1 for path in results["graphs"].values() if path)
         successful_examples = sum(1 for path in results["examples"].values() if path)
 
-        print(f"\\nCompleted:")
+        print("\\nCompleted:")
         print(f"- Graphs: {successful_graphs}/{results['total_games']}")
         print(f"- Examples: {successful_examples}/{results['total_games']}")
         print(f"- Output: {generator.output_dir}")

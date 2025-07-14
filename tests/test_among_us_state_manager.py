@@ -11,23 +11,13 @@ This module provides comprehensive tests for Among Us state management including
 All tests use real components without mocks, following the no-mocks methodology.
 """
 
-from typing import Dict, List
-
-import pytest
-
 from haive.games.among_us.models import (
     AmongUsGamePhase,
-    GameLocation,
-    MeetingPhase,
     PlayerAction,
-    PlayerMemory,
     PlayerRole,
-    PlayerState,
     SabotageType,
     Task,
     TaskStatus,
-    TaskType,
-    VentConnection,
     VoteAction,
 )
 from haive.games.among_us.state import AmongUsState
@@ -505,7 +495,9 @@ class TestAmongUsStateManagerMixin:
 
         # Move all players to different locations
         locations = ["cafeteria", "electrical", "storage", "admin", "medbay"]
-        for i, (player_id, location) in enumerate(zip(state.players.keys(), locations)):
+        for _i, (player_id, location) in enumerate(
+            zip(state.players.keys(), locations)
+        ):
             action = PlayerAction(
                 type="move", player_id=player_id, target_location=location
             )

@@ -4,7 +4,7 @@ This module tests the ChessStateManager class, including move application,
 game state updates, and turn management.
 """
 
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import chess
 import pytest

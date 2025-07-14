@@ -4,10 +4,6 @@ This module tests the ClueState class and its initialization,
 properties, and methods.
 """
 
-from typing import Any
-
-import pytest
-
 from haive.games.clue.models import (
     ClueGuess,
     ClueResponse,
@@ -297,7 +293,7 @@ class TestClueStateManipulation:
         state = ClueState.initialize(max_turns=3)
 
         # Add guesses up to max turns
-        for i in range(3):
+        for _i in range(3):
             guess = ClueGuess(
                 suspect=ValidSuspect.MISS_SCARLET,
                 weapon=ValidWeapon.ROPE,

@@ -1,8 +1,6 @@
 """Test suite for Mafia game agent."""
 
 # Standard library imports
-import asyncio
-from typing import Any, Dict, List, Optional
 
 # Third-party imports
 import pytest
@@ -18,7 +16,6 @@ from haive.games.mafia.agent import (
 from haive.games.mafia.models import (
     MafiaAction,
     MafiaActionType,
-    MafiaGameConfig,
     MafiaGameState,
     MafiaObservation,
     MafiaPlayer,

@@ -30,7 +30,7 @@ def test_basic_imports():
             print(f"  Error type: {type(e)}")
 
         # Try to understand the model_registry object
-        print(f"\nInspecting model_registry:")
+        print("\nInspecting model_registry:")
         print(
             f"  Dir: {[x for x in dir(model_registry) if not x.startswith('_')][:10]}"
         )

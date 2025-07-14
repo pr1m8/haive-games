@@ -1,4 +1,4 @@
-"""Comprehensive state management system for Monopoly gameplay and real estate economics.
+r"""Comprehensive state management system for Monopoly gameplay and real estate economics.
 
 This module provides sophisticated state models for Monopoly games with complete
 support for game mechanics, economic transactions, strategic analysis, and
@@ -66,7 +66,7 @@ Note:
 """
 
 from enum import Enum
-from typing import Annotated, Any, Dict, List, Literal, Optional, Union
+from typing import Annotated, Any, Dict, List, Optional, Union
 
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, computed_field, field_validator
@@ -75,7 +75,6 @@ from haive.games.monopoly.models import (
     DiceRoll,
     GameEvent,
     Player,
-    PlayerActionType,
     Property,
     PropertyColor,
     PropertyType,
@@ -143,7 +142,7 @@ def add_strings(left: List[str], right: List[str]) -> List[str]:
 
 
 class MonopolyState(BaseModel):
-    """Comprehensive state model for Monopoly gameplay with economic analysis and strategic context.
+    r"""Comprehensive state model for Monopoly gameplay with economic analysis and strategic context.
 
     This class provides complete state management for Monopoly games, supporting
     both traditional gameplay mechanics and advanced economic simulation. The state

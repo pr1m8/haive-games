@@ -435,8 +435,8 @@ class TestDominoesAgentAnalysis:
         assert "player2: 1 tiles" in context["opponent_tiles"]
 
         # Check pip count
-        expected_pip_count = 12 + 11 + 9  # 32
-        assert f"32 pips" in context["hand"]
+        12 + 11 + 9  # 32
+        assert "32 pips" in context["hand"]
 
 
 class TestDominoesAgentVisualization:

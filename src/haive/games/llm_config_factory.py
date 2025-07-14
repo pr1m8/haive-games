@@ -7,7 +7,6 @@ for game agents, leveraging the new haive.core.models.llm factory system.
 from typing import Any, Dict, Optional, Tuple
 
 from haive.core.models.llm import LLMConfig
-from haive.core.models.llm.factory import create_llm
 
 
 # Note: These functions don't exist in the current core module

@@ -8,6 +8,7 @@ Texas Hold'em games in real-time, showing:
     - Game phase and status
 """
 
+import logging
 import time
 from typing import Any, Dict, Optional
 
@@ -22,6 +23,8 @@ from rich.text import Text
 
 from haive.games.hold_em.game_agent import HoldemGameAgent
 from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
+
+logger = logging.getLogger(__name__)
 
 
 class HoldemRichUI:
@@ -490,7 +493,9 @@ class HoldemRichUI:
                 )
 
             players.append(player)
-            print(f"✅ Created player: {player.name} with ID: '{player.player_id}'")
+            logger.info(
+                f"✅ Created player: {player.name} with ID: '{player.player_id}'"
+            )
 
         initial_state = HoldemState(
             game_id="ui_test_game",

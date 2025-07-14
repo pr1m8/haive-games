@@ -6,7 +6,6 @@ game initialization, move generation, analysis, and visualization.
 
 from unittest.mock import Mock, patch
 
-import pytest
 from langgraph.types import Command
 
 from haive.games.nim.agent import NimAgent, ensure_game_state
@@ -280,7 +279,7 @@ class TestNimAgentMoveGeneration:
         agent.engines = {"player2_player": mock_engine}
 
         with patch("haive.games.nim.agent.logger") as mock_logger:
-            command = agent.make_move(state, "player2")  # Try player2 move
+            agent.make_move(state, "player2")  # Try player2 move
 
             mock_logger.warning.assert_called_once_with(
                 "Not player2's turn, but was asked to make a move"

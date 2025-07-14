@@ -4,9 +4,9 @@ This module provides configurable Among Us game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.games.among_us.config import AmongUsConfig
 from haive.games.among_us.generic_engines import (

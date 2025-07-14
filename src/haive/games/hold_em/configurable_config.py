@@ -4,7 +4,14 @@ This module provides configurable Texas Hold'em game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
+<<<<<<< Updated upstream
 from typing import Any, Dict, Optional, Union
+
+=======
+import logging
+from typing import Any, Dict, Optional
+
+>>>>>>> Stashed changes
 
 from pydantic import BaseModel, Field
 
@@ -15,6 +22,8 @@ from haive.games.hold_em.generic_engines import (
     create_generic_holdem_engines,
     create_generic_holdem_engines_simple,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigurableHoldemConfig(HoldemGameAgentConfig):
@@ -323,6 +332,7 @@ def list_example_configurations() -> Dict[str, str]:
 
 if __name__ == "__main__":
     # Demo the configurable system
+    # Note: Using print for demo output (user-facing console application)
     print("🎰 Configurable Hold'em Configuration Demo")
     print("=" * 50)
 

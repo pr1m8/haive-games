@@ -88,7 +88,7 @@ class Connect4State(GameState):
 
         Example:
             >>> state = Connect4State.initialize()
-            >>> print(state.board_string)
+            >>> # state.board_string displays:
               0 1 2 3 4 5 6
               -------------
             0| | | | | | | |

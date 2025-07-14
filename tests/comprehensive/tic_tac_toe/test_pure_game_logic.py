@@ -286,27 +286,27 @@ class TestTicTacToeGame:
         # Valid move
         valid_move = Move(1, 1, "X")
         is_valid, msg = TicTacToeGame.is_valid_move(state, valid_move)
-        assert is_valid == True
+        assert is_valid
         assert msg == "Valid move"
 
         # Wrong player turn
         wrong_player = Move(1, 1, "O")
         is_valid, msg = TicTacToeGame.is_valid_move(state, wrong_player)
-        assert is_valid == False
+        assert not is_valid
         assert "turn" in msg.lower()
 
         # Occupy a cell and test occupied cell validation
         state.board[1][1] = "X"
         occupied_move = Move(1, 1, "X")
         is_valid, msg = TicTacToeGame.is_valid_move(state, occupied_move)
-        assert is_valid == False
+        assert not is_valid
         assert "occupied" in msg.lower()
 
         # Test finished game
         state.status = GameStatus.X_WIN
         finished_game_move = Move(0, 0, "X")
         is_valid, msg = TicTacToeGame.is_valid_move(state, finished_game_move)
-        assert is_valid == False
+        assert not is_valid
         assert "ongoing" in msg.lower()
 
     def test_move_application(self):
@@ -481,13 +481,13 @@ class TestTicTacToeGame:
         # Invalid move creation
         try:
             Move(-1, 0, "X")  # Out of bounds
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
         try:
             Move(0, 0, "Y")  # Invalid player
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -498,7 +498,7 @@ class TestTicTacToeGame:
         try:
             occupied_move = Move(0, 0, "X")  # Same player, but cell is occupied
             TicTacToeGame.apply_move(state, occupied_move)
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError as e:
             assert "occupied" in str(e).lower()
 
@@ -536,7 +536,7 @@ def run_all_tests():
 
             traceback.print_exc()
 
-    print(f"\n=== Test Results ===")
+    print("\n=== Test Results ===")
     print(f"Passed: {passed}/{total}")
 
     if passed == total:

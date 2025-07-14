@@ -4,7 +4,7 @@ This module provides a Connect4 configuration that supports configurable
 player agents instead of hardcoded engine configurations.
 """
 
-from typing import Any, Dict, Optional, Union
+from typing import Dict, Optional
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -19,7 +19,6 @@ from haive.games.connect4.generic_engines import (
 from haive.games.connect4.state import Connect4State
 from haive.games.core.agent.player_agent import (
     PlayerAgentConfig,
-    create_player_config,
 )
 
 

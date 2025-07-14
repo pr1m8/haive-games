@@ -5,7 +5,6 @@ This script will test the basic functionality of the Tic Tac Toe game
 to ensure we can get at least a working implementation.
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -31,7 +30,7 @@ def test_basic_tic_tac_toe_models():
 
         # Test move validation
         try:
-            invalid_move = TicTacToeMove(row=5, col=2, player="X")
+            TicTacToeMove(row=5, col=2, player="X")
             print("✗ Invalid move creation should have failed")
             return False
         except Exception as e:
@@ -65,7 +64,7 @@ def test_basic_tic_tac_toe_state():
 
         # Test board string representation
         board_str = state.board_string
-        print(f"✓ Board string representation works")
+        print("✓ Board string representation works"s")
         print(f"Board:\n{board_str}")
 
         return True
@@ -137,7 +136,7 @@ def run_all_tests():
 
             traceback.print_exc()
 
-    print(f"\n=== Final Results ===")
+    print("\n=== Final Results ===")
     print(f"Tests Passed: {passed}/{total}")
 
     if passed == total:

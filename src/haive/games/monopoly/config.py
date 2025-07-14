@@ -1,4 +1,4 @@
-"""Comprehensive configuration system for strategic Monopoly gameplay and real estate management.
+r"""Comprehensive configuration system for strategic Monopoly gameplay and real estate management.
 
 This module provides sophisticated configuration management for Monopoly agents with
 support for advanced gameplay features, strategic AI customization, and flexible
@@ -49,7 +49,7 @@ Note:
 
 import uuid
 from enum import Enum
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Union
 
 from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.config import AgentConfig
@@ -103,7 +103,7 @@ class GameVariant(str, Enum):
 
 
 class MonopolyPlayerAgentConfig(AgentConfig):
-    """Advanced configuration for individual Monopoly player AI agents.
+    r"""Advanced configuration for individual Monopoly player AI agents.
 
     This class provides comprehensive configuration for AI players, including
     strategic parameters, personality traits, and decision-making preferences.
@@ -256,7 +256,7 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
 
 class MonopolyGameAgentConfig(AgentConfig):
-    """Advanced configuration system for Monopoly game agents with comprehensive rule support.
+    r"""Advanced configuration system for Monopoly game agents with comprehensive rule support.
 
     This class provides complete configuration management for Monopoly gameplay,
     supporting multiple rule variants, economic simulation parameters, and strategic
@@ -628,7 +628,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         return round(velocity, 2)
 
     def create_initial_state(self) -> MonopolyState:
-        """Create the initial game state with all required fields and proper validation.
+        r"""Create the initial game state with all required fields and proper validation.
 
         Returns:
             MonopolyState: Fully initialized game state ready for gameplay.
@@ -699,7 +699,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         return initial_state
 
     def create_player_agent(self) -> Any:
-        """Create the player decision agent with configured engines.
+        r"""Create the player decision agent with configured engines.
 
         Returns:
             MonopolyPlayerAgent: Configured player agent for decision-making.
@@ -735,7 +735,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     @classmethod
     def family_game(cls) -> "MonopolyGameAgentConfig":
-        """Create configuration for family-friendly Monopoly game.
+        r"""Create configuration for family-friendly Monopoly game.
 
         Family game features:
         - Balanced difficulty for all skill levels

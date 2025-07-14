@@ -12,7 +12,6 @@ from haive.games.mastermind.models import (
     MastermindAnalysis,
     MastermindFeedback,
     MastermindGuess,
-    ValidColor,
 )
 
 

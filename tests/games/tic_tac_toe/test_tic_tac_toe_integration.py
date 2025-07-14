@@ -1,11 +1,8 @@
 """Integration tests for TicTacToeAgent with real gameplay."""
 
-from typing import Any, Dict
-
 import pytest
 
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
-from haive.games.tic_tac_toe.config import TicTacToeConfig
 from haive.games.tic_tac_toe.models import TicTacToeMove
 from haive.games.tic_tac_toe.state import TicTacToeState
 from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager

@@ -5,10 +5,10 @@ move generation, and game flow management.
 """
 
 import pytest
+from haive.core.engine.aug_llm import AugLLMConfig
 
 from haive.games.chess.agent import ChessAgent
 from haive.games.chess.config import ChessConfig
-from haive.games.chess.engines import RandomChessEngine
 from haive.games.chess.state import ChessState
 
 
@@ -16,20 +16,25 @@ class TestChessAgent:
     """Test suite for ChessAgent."""
 
     @pytest.fixture
-    def random_engine(self) -> RandomChessEngine:
-        """Create a random chess engine for testing."""
-        return RandomChessEngine()
+    def test_engine(self) -> AugLLMConfig:
+        """Create a test engine for chess testing."""
+        return AugLLMConfig(
+            name="test_engine",
+            temperature=0.1,
+            system_message="You are a chess player. Always respond with valid UCI moves.",
+        )
 
     @pytest.fixture
-    def chess_config(self, random_engine: RandomChessEngine) -> ChessConfig:
+    def chess_config(self, test_engine: AugLLMConfig) -> ChessConfig:
         """Create a chess configuration for testing."""
         return ChessConfig(
             name="test_chess",
-            white_player="AI",
-            black_player="AI",
             enable_analysis=False,
-            max_turns=100,
-            engines={"white": random_engine, "black": random_engine},
+            max_moves=100,
+            engines={
+                "white_player": test_engine,
+                "black_player": test_engine,
+            },
         )
 
     @pytest.fixture

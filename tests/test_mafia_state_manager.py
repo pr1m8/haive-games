@@ -1,18 +1,14 @@
 """Test suite for Mafia game state manager."""
 
 # Standard library imports
-import random
-from typing import Any, Dict, List, Optional
 
 # Third-party imports
-import pytest
 
 # Local imports
 from haive.games.mafia.models import (
     MafiaAction,
     MafiaActionType,
     MafiaGameConfig,
-    MafiaGameState,
     MafiaObservation,
     MafiaPlayer,
     MafiaRole,

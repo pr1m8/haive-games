@@ -27,14 +27,11 @@ import operator
 import random
 import sys
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List
 
-from haive.games.nim.agent import NimAgent
 from haive.games.nim.config import NimConfig
-from haive.games.nim.models import NimAnalysis, NimMove
-from haive.games.nim.state import NimState
+from haive.games.nim.models import NimMove
 from haive.games.nim.state_manager import NimStateManager
-from haive.games.nim.ui import RICH_AVAILABLE
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
@@ -100,7 +97,7 @@ async def example_1_basic_standard_nim():
 
     # Analyze position
     analysis = manager.analyze_position()
-    print(f"\nPosition Analysis:")
+    print("\nPosition Analysis:")
     print(f"  Evaluation: {analysis.position_evaluation}")
     print(f"  Recommended Move: {analysis.recommended_move}")
     print(f"  Strategy: {analysis.winning_strategy}")
@@ -156,7 +153,7 @@ async def example_2_misere_nim():
     print("Rules: Misère Nim - last player to move loses")
 
     # Create misère configuration
-    config = NimConfig(pile_sizes=initial_piles, misere_mode=True, enable_analysis=True)
+    NimConfig(pile_sizes=initial_piles, misere_mode=True, enable_analysis=True)
 
     manager = NimStateManager()
     manager.initialize_game(initial_piles)
@@ -251,14 +248,14 @@ async def example_3_mathematical_analysis():
         print(f"  Classification: {classification}")
 
         # Show binary calculation
-        print(f"  Binary calculation:")
+        print("  Binary calculation:")
         for j, pile in enumerate(piles):
             print(f"    Pile {j}: {pile:2d} = {bin(pile)[2:]:>6s}")
         print(f"    XOR:     {nim_sum:2d} = {bin(nim_sum)[2:]:>6s}")
 
         # Find optimal move if winning position
         if nim_sum != 0:
-            print(f"  Optimal moves:")
+            print("  Optimal moves:")
             for pile_idx, pile_size in enumerate(piles):
                 target_size = pile_size ^ nim_sum
                 if target_size < pile_size:
@@ -279,9 +276,9 @@ async def example_3_mathematical_analysis():
     print(f"\nTheorem: Position is {'winning' if nim_sum != 0 else 'losing'}")
     print(f"Proof: By Sprague-Grundy theorem, nim-sum = {nim_sum}")
     if nim_sum != 0:
-        print(f"Since nim-sum ≠ 0, this is an N-position (winning for next player)")
+        print("Since nim-sum ≠ 0, this is an N-position (winning for next player)")
     else:
-        print(f"Since nim-sum = 0, this is a P-position (losing for next player)")
+        print("Since nim-sum = 0, this is a P-position (losing for next player)")
 
 
 async def example_4_game_theory_positions():
@@ -341,7 +338,7 @@ async def example_4_game_theory_positions():
                     )
 
         # Show what happens after various moves
-        print(f"  Move consequences:")
+        print("  Move consequences:")
         for pile_idx, pile_size in enumerate(piles):
             if pile_size > 0:
                 # Show taking 1 stone
@@ -397,7 +394,7 @@ async def example_5_multiple_pile_variants():
         # Complexity analysis
         total_moves = sum(piles)
         branching_factor = sum(min(pile, 10) for pile in piles)  # Approximate
-        print(f"Game complexity:")
+        print("Game complexity:")
         print(f"  Maximum game length: {total_moves}")
         print(f"  Approximate branching factor: {branching_factor}")
 
@@ -456,7 +453,7 @@ async def example_6_performance_analysis():
 
             # Time nim-sum calculation
             start_time = time.time()
-            nim_sum = calculate_nim_sum(piles)
+            calculate_nim_sum(piles)
             end_time = time.time()
 
             times.append(end_time - start_time)
@@ -466,7 +463,7 @@ async def example_6_performance_analysis():
         max_time = max(times)
         min_time = min(times)
 
-        print(f"  Nim-sum calculation:")
+        print("  Nim-sum calculation:")
         print(f"    Average: {avg_time * 1000:.4f} ms")
         print(f"    Maximum: {max_time * 1000:.4f} ms")
         print(f"    Minimum: {min_time * 1000:.4f} ms")
@@ -475,7 +472,7 @@ async def example_6_performance_analysis():
         start_time = time.time()
         manager = NimStateManager()
         manager.initialize_game(piles)
-        optimal_move = manager.find_optimal_move()
+        manager.find_optimal_move()
         end_time = time.time()
 
         print(f"  Optimal move finding: {(end_time - start_time) * 1000:.4f} ms")
@@ -493,7 +490,7 @@ async def example_6_performance_analysis():
     print(f"Small position {small_piles}:")
     print(f"  Memory usage: {sys.getsizeof(small_piles)} bytes")
 
-    print(f"Large position (1000 piles):")
+    print("Large position (1000 piles):")
     print(f"  Memory usage: {sys.getsizeof(large_piles)} bytes")
 
     # Test move generation efficiency
@@ -690,7 +687,7 @@ async def example_8_advanced_integration():
         total_moves = []
         game_times = []
 
-        for game_num in range(10):  # 10 games per configuration
+        for _game_num in range(10):  # 10 games per configuration
             manager = NimStateManager()
             manager.initialize_game(piles.copy())
 
@@ -737,7 +734,7 @@ async def example_8_advanced_integration():
 
         tournament_results.append(result)
 
-        print(f"  Results after 10 games:")
+        print("  Results after 10 games:")
         print(f"    Player1 wins: {wins['Player1']}")
         print(f"    Player2 wins: {wins['Player2']}")
         print(f"    Average moves: {avg_moves:.1f}")
@@ -760,7 +757,7 @@ async def example_8_advanced_integration():
     all_moves = [r["avg_moves"] for r in tournament_results]
     all_times = [r["avg_time"] for r in tournament_results]
 
-    print(f"Overall Statistics:")
+    print("Overall Statistics:")
     print(f"  Average moves per game: {sum(all_moves) / len(all_moves):.1f}")
     print(f"  Move range: {min(all_moves):.1f} - {max(all_moves):.1f}")
     print(f"  Average time per game: {sum(all_times) / len(all_times):.3f}s")
@@ -840,7 +837,7 @@ async def run_all_examples():
 
         # Pause between examples
         if i < len(examples):
-            print(f"\n⏸️  Pausing before next example...")
+            print("\n⏸️  Pausing before next example...")
             await asyncio.sleep(2)
 
     print("\n🎉 All examples completed!")

@@ -18,7 +18,6 @@ from haive.games.chess.agent import ChessAgent
 
 # Test the configurable game systems
 from haive.games.chess.configurable_config import (
-    ConfigurableChessConfig,
     create_chess_config,
     create_chess_config_from_example,
 )
@@ -28,7 +27,6 @@ from haive.games.chess.generic_engines import (
 )
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.configurable_config import (
-    ConfigurableConnect4Config,
     create_connect4_config,
     create_connect4_config_from_example,
 )
@@ -36,7 +34,6 @@ from haive.games.connect4.generic_engines import (
     create_generic_connect4_config_from_example,
     create_generic_connect4_engines_simple,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 
 class TestGameConfigurationIntegration:

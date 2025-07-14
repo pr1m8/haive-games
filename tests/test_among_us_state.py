@@ -11,21 +11,15 @@ This module provides comprehensive tests for Among Us state management including
 All tests use real components without mocks, following the no-mocks methodology.
 """
 
-from datetime import datetime
-
-import pytest
-
 from haive.games.among_us.models import (
     AmongUsGamePhase,
     MeetingPhase,
-    PlayerAction,
     PlayerMemory,
     PlayerRole,
     PlayerState,
     Task,
     TaskStatus,
     TaskType,
-    VoteAction,
 )
 from haive.games.among_us.state import AmongUsState
 

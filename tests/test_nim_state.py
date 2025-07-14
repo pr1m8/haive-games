@@ -4,8 +4,6 @@ This module tests the NimState class and its properties and methods
 for managing the game state and board representation.
 """
 
-import pytest
-
 from haive.games.nim.models import NimAnalysis, NimMove
 from haive.games.nim.state import NimState
 

@@ -1,3 +1,42 @@
+"""Among Us social deduction game demo using the Haive framework.
+
+This module demonstrates an implementation of the popular social deduction game
+Among Us, where crewmates try to complete tasks while impostors attempt to
+eliminate them. The game features AI-powered players that engage in discussion,
+voting, and strategic deception.
+
+The demo showcases:
+    - Multi-player social deduction gameplay with AI agents
+    - Task completion and sabotage mechanics
+    - Emergency meetings and discussion phases
+    - Voting system with accusations and defenses
+    - Rich terminal UI with game state visualization
+    - Different AI personalities (suspicious, trusting, analytical)
+    - Victory conditions for both crewmates and impostors
+
+Game Flow:
+    1. Players are assigned roles (crewmate or impostor)
+    2. Crewmates complete tasks while impostors sabotage
+    3. Emergency meetings are called when bodies are found
+    4. Players discuss and vote to eject suspected impostors
+    5. Game ends when all tasks complete or impostors outnumber crew
+
+Usage:
+    Basic game (5 players, 1 impostor):
+        $ python demo.py
+
+    Custom configuration:
+        $ python demo.py --players 8 --impostors 2 --difficulty hard
+
+    With specific map:
+        $ python demo.py --map skeld --tasks 10
+
+Example:
+    >>> # Run a standard Among Us game
+    >>> from haive.games.among_us.demo import run_among_us_demo
+    >>> run_among_us_demo(num_players=7, num_impostors=2)
+"""
+
 # demo_among_us.py
 
 import argparse

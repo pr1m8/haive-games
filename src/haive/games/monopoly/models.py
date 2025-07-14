@@ -1,4 +1,4 @@
-"""Comprehensive data models for strategic Monopoly gameplay and real estate management.
+r"""Comprehensive data models for strategic Monopoly gameplay and real estate management.
 
 This module provides sophisticated data models for the classic Monopoly board game,
 supporting complex property transactions, strategic decision-making, and comprehensive
@@ -59,7 +59,7 @@ Note:
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -178,7 +178,7 @@ class PlayerActionType(str, Enum):
 
 
 class PropertyDecision(BaseModel):
-    """Strategic decision model for property purchase and auction scenarios.
+    r"""Strategic decision model for property purchase and auction scenarios.
 
     This model captures the decision-making process when a player lands on an
     unowned property, including the choice to purchase at list price or pass
@@ -286,7 +286,7 @@ class PropertyDecision(BaseModel):
 
 
 class JailDecision(BaseModel):
-    """Strategic decision model for jail escape and turn management.
+    r"""Strategic decision model for jail escape and turn management.
 
     This model captures the decision-making process when a player is in jail,
     including the choice of escape method, timing considerations, and strategic
@@ -385,7 +385,7 @@ class JailDecision(BaseModel):
 
 
 class BuildingDecision(BaseModel):
-    """Strategic decision model for property development and rental income optimization.
+    r"""Strategic decision model for property development and rental income optimization.
 
     This model captures the decision-making process for building houses and hotels
     on monopolized properties, including development strategy, cash flow management,
@@ -522,7 +522,7 @@ class BuildingDecision(BaseModel):
 
 
 class TradeOffer(BaseModel):
-    """Comprehensive model for inter-player trade negotiations and strategic exchanges.
+    r"""Comprehensive model for inter-player trade negotiations and strategic exchanges.
 
     This model captures complex trade offers between players, including property
     exchanges, cash considerations, and strategic reasoning. It supports multi-asset
@@ -1456,7 +1456,7 @@ class Property(BaseModel):
 
 
 class Player(BaseModel):
-    """Comprehensive model for individual players in Monopoly with complete state tracking.
+    r"""Comprehensive model for individual players in Monopoly with complete state tracking.
 
     This model represents a player's complete state in the Monopoly game, including
     financial position, property ownership, location, jail status, and strategic

@@ -8,12 +8,10 @@ This test suite validates:
 5. Configuration validation
 """
 
-import asyncio
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from haive.games.chess.agent import ChessAgent
 from haive.games.chess.api import (
     ChessAPI,
     ChessGameResult,

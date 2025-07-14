@@ -46,8 +46,8 @@ Example:
         ...     suggested_columns=[3, 2, 4],
         ...     winning_chances=75
         ... )
-        >>> print(f"Position strength: {analysis.position_score}")
-        >>> print(f"Winning chances: {analysis.winning_chances}%")
+        >>> # Position strength: {analysis.position_score}
+        >>> # Winning chances: {analysis.winning_chances}%
 
     Rich UI demonstration:
         >>> # Run game with beautiful interface

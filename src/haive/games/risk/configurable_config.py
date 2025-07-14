@@ -4,9 +4,9 @@ This module provides configurable Risk game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 from haive.games.risk.config import RiskConfig

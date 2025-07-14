@@ -13,15 +13,14 @@ The generic system supports:
 """
 
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import Any, Callable, Dict, Generic, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar, Union
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.games.core.agent.player_agent import PlayerAgentConfig, PlayerAgentFactory
+from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 # Generic type variables for player identifiers
 PlayerType = TypeVar("PlayerType")  # e.g., "white", "red", "X"

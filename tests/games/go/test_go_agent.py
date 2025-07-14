@@ -156,7 +156,7 @@ class TestGoAgent:
 
         # Act - Try to make a few moves
         state = initial_state
-        for i in range(3):  # Make 3 moves
+        for _i in range(3):  # Make 3 moves
             if state.turn == "black":
                 result = go_agent.black_move(state)
             else:

@@ -4,8 +4,6 @@ This module tests all data models, enumerations, and data structures
 used in the Clue game implementation.
 """
 
-import pytest
-
 from haive.games.clue.models import (
     CardType,
     ClueCard,

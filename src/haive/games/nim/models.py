@@ -1,4 +1,4 @@
-"""Comprehensive data models for strategic Nim gameplay and mathematical analysis.
+r"""Comprehensive data models for strategic Nim gameplay and mathematical analysis.
 
 This module provides sophisticated data models for the mathematical game of Nim,
 supporting both traditional gameplay and advanced strategic analysis. The models
@@ -103,7 +103,7 @@ class PositionType(str, Enum):
 
 
 class NimMove(BaseModel):
-    """Comprehensive representation of a Nim move with strategic context and validation.
+    r"""Comprehensive representation of a Nim move with strategic context and validation.
 
     This model provides complete representation of Nim moves, supporting both
     basic gameplay and advanced strategic analysis. It includes validation for
@@ -292,7 +292,7 @@ class NimMove(BaseModel):
         return self.reasoning is not None or self.move_quality is not None
 
     def __str__(self) -> str:
-        """Generate human-readable string representation of the move.
+        r"""Generate human-readable string representation of the move.
 
         Returns:
             str: Formatted move description including player and action.
@@ -318,7 +318,7 @@ class NimMove(BaseModel):
 
 
 class NimAnalysis(BaseModel):
-    """Advanced strategic analysis model for Nim positions with mathematical rigor.
+    r"""Advanced strategic analysis model for Nim positions with mathematical rigor.
 
     This model provides comprehensive analysis of Nim positions using game theory,
     nimber theory, and optimal play strategies. It supports advanced AI decision-making
@@ -527,7 +527,7 @@ class NimAnalysis(BaseModel):
         }
 
     def __str__(self) -> str:
-        """Generate human-readable string representation of the analysis.
+        r"""Generate human-readable string representation of the analysis.
 
         Returns:
             str: Formatted analysis summary with key insights.

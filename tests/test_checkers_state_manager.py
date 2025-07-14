@@ -365,7 +365,7 @@ class TestGameStatusAndWinning:
         board = [[0 for _ in range(8)] for _ in range(8)]
         board[0][0] = 1  # Single red piece
 
-        state = CheckersState(
+        CheckersState(
             board=board,
             turn="black",  # Black to move but has no pieces
             game_status="ongoing",
@@ -438,10 +438,10 @@ class TestMoveApplication:
         board = [[0 for _ in range(8)] for _ in range(8)]
         board[1][1] = 1  # Red piece near black's back rank
 
-        state = CheckersState(board=board, turn="red")
+        CheckersState(board=board, turn="red")
 
         # Move the piece to the back rank
-        promotion_move = CheckersMove(
+        CheckersMove(
             from_position="b7",  # b7 in algebraic notation
             to_position="a8",  # Reaching back rank
             player="red",

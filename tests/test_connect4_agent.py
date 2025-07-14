@@ -12,12 +12,9 @@ All tests use real components without mocks, following the no-mocks methodology.
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Move, Connect4PlayerDecision
-from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
 
 

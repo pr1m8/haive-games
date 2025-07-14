@@ -4,8 +4,6 @@ This module tests the DominoesState class and its properties and methods
 for managing the game state and board representation.
 """
 
-import pytest
-
 from haive.games.dominoes.models import DominoesAnalysis, DominoMove, DominoTile
 from haive.games.dominoes.state import DominoesState
 

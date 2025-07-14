@@ -162,7 +162,7 @@ class TestGoGameStateManager:
     def test_capture_mechanics(self, state_manager: GoGameStateManager) -> None:
         """Test stone capture mechanics."""
         # Arrange - Set up a capture scenario
-        state = GoGameState()
+        GoGameState()
         # This would require setting up a specific board position
         # For now, we test that the method exists and handles captures
 

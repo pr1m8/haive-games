@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Validate consistent structure across all games."""
 
-import os
 from pathlib import Path
 
 

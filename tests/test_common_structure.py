@@ -5,7 +5,6 @@ and provide consistent interfaces across the codebase.
 """
 
 import os
-from typing import Any, Dict, List
 
 import pytest
 
@@ -52,18 +51,11 @@ class TestCommonGameStructure:
                 CluePlayerIdentifiers,
                 Connect4PlayerIdentifiers,
                 DebatePlayerIdentifiers,
-                DominoesPlayerIdentifiers,
                 FoxAndGeesePlayerIdentifiers,
                 GoPlayerIdentifiers,
-                HoldEmPlayerIdentifiers,
                 MafiaPlayerIdentifiers,
-                MancalaPlayerIdentifiers,
                 MastermindPlayerIdentifiers,
-                MonopolyPlayerIdentifiers,
-                NimPlayerIdentifiers,
-                PokerPlayerIdentifiers,
                 ReversiPlayerIdentifiers,
-                RiskPlayerIdentifiers,
                 TicTacToePlayerIdentifiers,
             )
 
