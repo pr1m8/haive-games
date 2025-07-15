@@ -5,18 +5,18 @@ pattern from haive-agents, providing proper topic handling and state management
 without the deprecated DynamicGraph system.
 """
 
+import logging
 from typing import Any, Literal
 
 from haive.agents.conversation.base.agent import BaseConversationAgent
 from haive.agents.conversation.debate.agent import DebateConversation
 from haive.agents.conversation.debate.state import DebateState
-from haive.core.logging.rich_logger import LogLevel, get_logger
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langgraph.types import Command
 from pydantic import BaseModel, Field, model_validator
 
-logger = get_logger(__name__)
-logger.set_level(LogLevel.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class GameDebateAgent(DebateConversation):

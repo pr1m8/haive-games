@@ -5,10 +5,10 @@ sophisticated winner determination and performance evaluation.
 """
 
 import asyncio
+import logging
 from typing import Any, Dict, Literal, Optional
 
 from haive.agents.conversation.debate.state import DebateState
-from haive.core.logging.rich_logger import LogLevel, get_logger
 from langchain_core.messages import BaseMessage, SystemMessage
 from langgraph.types import Command
 from pydantic import BaseModel, Field
@@ -22,8 +22,8 @@ from .judges import (
     create_tournament_judges,
 )
 
-logger = get_logger(__name__)
-logger.set_level(LogLevel.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class JudgedGameDebateAgent(GameDebateAgent):

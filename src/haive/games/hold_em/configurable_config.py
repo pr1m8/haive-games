@@ -4,14 +4,8 @@ This module provides configurable Texas Hold'em game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-<<<<<<< Updated upstream
-from typing import Any, Dict, Optional, Union
-
-=======
 import logging
-from typing import Any, Dict, Optional
-
->>>>>>> Stashed changes
+from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, Field
 

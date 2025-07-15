@@ -142,7 +142,7 @@ class GameTemplateGenerator:
             f'''
         from typing import List, Dict, Literal, Optional, Tuple, Union
         from pydantic import BaseModel, Field, field_validator
-        from ...framework.base import GameState
+        from haive.games.framework.base import GameState
 
         class {self.game_class_name}Move(BaseModel):
             """Represents a move in {self.game_name}."""
@@ -237,7 +237,7 @@ class GameTemplateGenerator:
         from typing import List, Optional, Dict, Tuple
         import copy
         from .models import {self.game_class_name}State, {self.game_class_name}Move
-        from ...framework.base import GameStateManager
+        from haive.games.framework.base import GameStateManager
 
         class {self.game_class_name}StateManager(GameStateManager[{self.game_class_name}State]):
             """Manager for {self.game_name} game state."""
@@ -317,10 +317,10 @@ class GameTemplateGenerator:
         """
         content = dedent(
             f"""
-        from ...framework.base import GameConfig
+        from haive.games.framework.base import GameConfig
         from .models import {self.game_class_name}State, {self.game_class_name}PlayerDecision
-        from ....core.aug_llm.base import AugLLMConfig
-        from ....core.models.llm.base import AzureLLMConfig
+        from haive.core.aug_llm.base import AugLLMConfig
+        from haive.core.models.llm.base import AzureLLMConfig
         from langchain_core.prompts import ChatPromptTemplate
         from pydantic import Field
         from typing import Dict

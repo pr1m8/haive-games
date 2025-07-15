@@ -4,16 +4,16 @@ This module provides sophisticated AI judge agents that can evaluate debates
 using different criteria and scoring methodologies.
 """
 
+import logging
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.logging.rich_logger import LogLevel, get_logger
 from pydantic import BaseModel, Field
 
-logger = get_logger(__name__)
-logger.set_level(LogLevel.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class JudgingCriteria(str, Enum):

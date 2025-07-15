@@ -4,17 +4,17 @@ This module provides a reusable voting system that can evaluate game performance
 across different game types using AI judges with specialized perspectives.
 """
 
+import logging
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional, Protocol
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.logging.rich_logger import LogLevel, get_logger
 from pydantic import BaseModel, Field
 
-logger = get_logger(__name__)
-logger.set_level(LogLevel.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class JudgePersonality(str, Enum):
