@@ -125,3 +125,4 @@ test_outputs/
 test_simple_agent/
 token.json
 venv/
+poetry.lock
