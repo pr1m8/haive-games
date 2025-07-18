@@ -671,7 +671,7 @@ class MonopolyState(BaseModel):
 
     def player_owns_monopoly(self, player_name: str, color: str) -> bool:
         """Check if player owns all properties of a color group."""
-        from .utils import get_properties_by_color
+        from haive.games.monopoly.utils import get_properties_by_color
 
         color_group = get_properties_by_color(color)
         owned_in_group = [
@@ -684,7 +684,7 @@ class MonopolyState(BaseModel):
 
     def get_rent_amount(self, property_name: str, dice_roll: int = 0) -> int:
         """Calculate rent amount for a property."""
-        from .utils import calculate_rent
+        from haive.games.monopoly.utils import calculate_rent
 
         property_obj = self.get_property_by_name(property_name)
         if not property_obj:

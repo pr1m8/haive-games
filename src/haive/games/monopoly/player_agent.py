@@ -532,7 +532,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
         # Check for color group completion potential
         color_group_info = ""
         if property_obj:
-            from .utils import get_properties_by_color
+            from haive.games.monopoly.utils import get_properties_by_color
 
             color_props = get_properties_by_color(property_obj.color)
             owned_in_group = [prop for prop in owned_properties if prop in color_props]

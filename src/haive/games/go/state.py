@@ -26,7 +26,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from . import go_engine as sente
+from haive.games.go import go_engine as sente
 
 
 class GoGameState(BaseModel):

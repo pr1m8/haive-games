@@ -17,9 +17,8 @@ Example:
     >>> new_state = GoGameStateManager.apply_move(state, (3, 4))
 """
 
+from haive.games.go import go_engine as sente
 from haive.games.go.state import GoGameState
-
-from . import go_engine as sente
 
 
 class GoGameStateManager:

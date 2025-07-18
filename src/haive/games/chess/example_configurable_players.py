@@ -148,7 +148,7 @@ async def run_short_game(config: ConfigurableChessConfig, max_moves: int = 10):
         result = agent.run({})
 
         if result:
-            print("✅ Game completed successfully!"!")
+            print("✅ Game completed successfully!")
             print(f"Game status: {result.get('game_status', 'unknown')}")
             print(f"Total moves: {len(result.get('move_history', []))}")
 

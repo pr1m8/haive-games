@@ -1,10 +1,15 @@
-from typing import Generic
+import random
+import uuid
+from typing import Callable, Generic, TypeVar
 
 from pydantic import BaseModel, Field
 
 # ======================================================
 # GAME PIECE CONTAINERS - Collections of game pieces
 # ==================================Generic=============
+
+
+T = TypeVar("T")
 
 
 class GamePieceContainer(BaseModel, Generic[T]):

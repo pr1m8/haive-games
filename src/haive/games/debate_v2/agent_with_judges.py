@@ -13,8 +13,8 @@ from langchain_core.messages import BaseMessage, SystemMessage
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from .agent import GameDebateAgent
-from .judges import (
+from haive.games.debate_v2.agent import GameDebateAgent
+from haive.games.debate_v2.judges import (
     DebateJudgingPanel,
     DebateJudgment,
     create_academic_judges,

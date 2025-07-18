@@ -31,7 +31,7 @@ from haive.games.go.state_manager import GoGameStateManager
 
 logger = logging.getLogger(__name__)
 
-from . import go_engine as sente
+from haive.games.go import go_engine as sente
 
 
 @register_agent(GoAgentConfig)
