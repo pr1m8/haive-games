@@ -156,6 +156,7 @@ try:
     print("Rich UI available!")
 
 except ImportError:
+    pass
 
     class MastermindUI:
         """Basic fallback UI for Mastermind."""
