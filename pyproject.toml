@@ -30,6 +30,10 @@ chess = "^1.11.2"
 [tool.poetry.group.games.dependencies]
 sgfmill = "^1.1.1"
 
+
+[tool.poetry.group.go.dependencies]
+sgfmill = "^1.1.1"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
