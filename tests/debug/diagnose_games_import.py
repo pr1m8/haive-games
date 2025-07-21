@@ -37,7 +37,7 @@ for game in games_to_test:
     try:
         mod = importlib.import_module(game)
     except Exception as e:
-        pass")
+        pass
 
 # Check what's in __all__
 

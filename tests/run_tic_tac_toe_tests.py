@@ -45,21 +45,21 @@ def test_tic_tac_toe_move():
         TicTacToeMove(row=3, col=1, player="X")
         raise AssertionError("Should have raised ValueError")
     except ValueError:
-        pass")
+        pass
 
     # Invalid column (too high)
     try:
         TicTacToeMove(row=1, col=3, player="X")
         raise AssertionError("Should have raised ValueError")
     except ValueError:
-        pass")
+        pass
 
     # Invalid player
     try:
         TicTacToeMove(row=1, col=1, player="Z")
         raise AssertionError("Should have raised ValueError")
     except ValueError:
-        pass")
+        pass
 
 
 def test_tic_tac_toe_analysis():
@@ -132,7 +132,7 @@ def test_tic_tac_toe_analysis():
         )
         raise AssertionError("Should have raised ValueError")
     except ValueError:
-        pass")
+        pass
 
 
 def run_all_tests():
@@ -155,7 +155,6 @@ def run_all_tests():
 
             traceback.print_exc()
 
-
     if passed == total:
         return True
     print("❌ Some tests failed")
@@ -166,9 +165,10 @@ if __name__ == "__main__":
     success = run_all_tests()
 
     if success:
-
         # Mark task as completed
+        print("✅ All tests passed!")
     else:
-        pass")
+        print("❌ Some tests failed")
+        pass
 
     sys.exit(0 if success else 1)

@@ -543,7 +543,7 @@ if __name__ == "__main__":
         # Generate summary index
         self._generate_summary_index(results)
 
-        print("\\n✅ Simple documentation generation completed!"!")
+        print("\\n✅ Simple documentation generation completed!")
         print(f"📁 Output directory: {self.output_dir}")
 
         return results
@@ -634,7 +634,7 @@ def main():
     successful_examples = sum(1 for path in results["examples"].values() if path)
     successful_templates = sum(1 for path in results["templates"].values() if path)
 
-    print("\\n📊 Generation Summary:"y:")
+    print("\\n📊 Generation Summary:")
     print(
         f"- Architecture diagrams: {successful_architectures}/{results['total_games']}"
     )

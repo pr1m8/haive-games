@@ -64,7 +64,7 @@ def test_basic_tic_tac_toe_state():
 
         # Test board string representation
         board_str = state.board_string
-        print("✓ Board string representation works"s")
+        print("✓ Board string representation works")
         print(f"Board:\n{board_str}")
 
         return True
