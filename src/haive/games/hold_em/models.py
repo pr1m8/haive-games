@@ -130,6 +130,7 @@ class PokerCard(BaseModel):
     suit: str = Field(description="Card suit (hearts, diamonds, clubs, spades)")
 
     @field_validator("rank")
+    @classmethod
     def validate_rank(cls, v: str) -> str:
         """Validate card rank."""
         valid_ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
@@ -138,6 +139,7 @@ class PokerCard(BaseModel):
         return v
 
     @field_validator("suit")
+    @classmethod
     def validate_suit(cls, v: str) -> str:
         """Validate card suit."""
         valid_suits = ["hearts", "diamonds", "clubs", "spades", "h", "d", "c", "s"]
@@ -184,6 +186,7 @@ class PlayerDecisionModel(BaseModel):
     )
 
     @field_validator("amount")
+    @classmethod
     def validate_amount(cls, v: int) -> int:
         """Validate bet amount."""
         if v < 0:
@@ -191,6 +194,7 @@ class PlayerDecisionModel(BaseModel):
         return v
 
     @field_validator("confidence")
+    @classmethod
     def validate_confidence(cls, v: float) -> float:
         """Validate confidence score."""
         if not 0 <= v <= 1:

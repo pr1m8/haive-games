@@ -5,13 +5,13 @@ across different game types using AI judges with specialized perspectives.
 """
 
 import logging
-from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Literal, Optional, Protocol
+from typing import Any, Protocol
 
-from haive.agents.simple.agent import SimpleAgent
-from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
+
+from .engine.aug_llm import AugLLMConfig
+from .simple.agent import SimpleAgent
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -32,7 +32,7 @@ class VoteChoice(BaseModel):
     choice: str = Field(description="The judge's choice (player name, option, etc.)")
     confidence: float = Field(ge=0.0, le=1.0, description="Confidence in the choice")
     reasoning: str = Field(description="Detailed reasoning for the choice")
-    criteria_scores: Dict[str, int] = Field(
+    criteria_scores: dict[str, int] = Field(
         default_factory=dict, description="Scores on specific criteria"
     )
 
@@ -41,8 +41,8 @@ class VotingResult(BaseModel):
     """Complete voting results from multiple judges."""
 
     topic: str = Field(description="What was being voted on")
-    options: List[str] = Field(description="Available choices")
-    judge_votes: Dict[str, VoteChoice] = Field(description="Each judge's vote")
+    options: list[str] = Field(description="Available choices")
+    judge_votes: dict[str, VoteChoice] = Field(description="Each judge's vote")
     winner: str = Field(description="The winning choice")
     margin: float = Field(ge=0.0, le=1.0, description="Margin of victory")
     consensus: float = Field(ge=0.0, le=1.0, description="Level of agreement")
@@ -52,7 +52,7 @@ class VotingResult(BaseModel):
 class GameEvaluator(Protocol):
     """Protocol for game-specific evaluation logic."""
 
-    def get_evaluation_criteria(self) -> List[str]:
+    def get_evaluation_criteria(self) -> list[str]:
         """Get the criteria this game should be judged on."""
         ...
 
@@ -72,7 +72,7 @@ class AIGameJudge:
         self,
         name: str,
         personality: JudgePersonality = JudgePersonality.BALANCED,
-        expertise_area: Optional[str] = None,
+        expertise_area: str | None = None,
         focus_weight: float = 0.5,
     ):
         self.name = name
@@ -85,7 +85,6 @@ class AIGameJudge:
 
     def _create_judge_agent(self) -> SimpleAgent:
         """Create the AI agent for this judge."""
-
         personalities = {
             JudgePersonality.STRATEGIC: {
                 "focus": "strategic thinking, tactical decisions, and competitive advantage",
@@ -156,10 +155,9 @@ Be {personality_info['style']} in your evaluation. Focus on {personality_info['f
         return SimpleAgent(name=f"{self.name}_judge_agent", engine=engine)
 
     async def evaluate(
-        self, topic: str, options: List[str], game_data: str, criteria: List[str]
+        self, topic: str, options: list[str], game_data: str, criteria: list[str]
     ) -> VoteChoice:
         """Evaluate the game and return a vote choice."""
-
         criteria_text = "\n".join([f"• {criterion}" for criterion in criteria])
         options_text = "\n".join([f"• {option}" for option in options])
 
@@ -198,12 +196,11 @@ in the specified JSON format."""
                     reasoning=vote_data["reasoning"],
                     criteria_scores=vote_data.get("criteria_scores", {}),
                 )
-            else:
-                # Fallback if JSON parsing fails
-                return self._create_fallback_vote(options[0], response)
+            # Fallback if JSON parsing fails
+            return self._create_fallback_vote(options[0], response)
 
         except Exception as e:
-            logger.error(f"Judge {self.name} evaluation failed: {e}")
+            logger.exception(f"Judge {self.name} evaluation failed: {e}")
             return self._create_fallback_vote(
                 options[0] if options else "Unknown", f"Error: {e}"
             )
@@ -221,7 +218,7 @@ in the specified JSON format."""
 class GameVotingSystem:
     """Generalized voting system for any game type."""
 
-    def __init__(self, judges: List[AIGameJudge]):
+    def __init__(self, judges: list[AIGameJudge]):
         self.judges = judges
 
     @classmethod
@@ -284,7 +281,7 @@ class GameVotingSystem:
         judges = []
         used_names = set()
 
-        for i in range(num_judges):
+        for _i in range(num_judges):
             # Select unique name
             available_names = [name for name in judge_names if name not in used_names]
             if not available_names:
@@ -435,13 +432,12 @@ class GameVotingSystem:
     async def vote(
         self,
         topic: str,
-        options: List[str],
+        options: list[str],
         game_data: str,
-        criteria: List[str],
-        evaluator: Optional[GameEvaluator] = None,
+        criteria: list[str],
+        evaluator: GameEvaluator | None = None,
     ) -> VotingResult:
         """Conduct voting with all judges."""
-
         logger.info(f"🗳️ Conducting vote: '{topic}'")
         logger.info(f"📋 Options: {', '.join(options)}")
         logger.info(f"👨‍⚖️ Judges: {', '.join([j.name for j in self.judges])}")
@@ -478,15 +474,14 @@ class GameVotingSystem:
         )
 
     def _calculate_winner(
-        self, judge_votes: Dict[str, VoteChoice], options: List[str]
+        self, judge_votes: dict[str, VoteChoice], options: list[str]
     ) -> tuple[str, float, float]:
         """Calculate winner, margin, and consensus from votes."""
-
         # Count votes for each option
-        vote_counts = {option: 0 for option in options}
-        confidence_sums = {option: 0.0 for option in options}
+        vote_counts = dict.fromkeys(options, 0)
+        confidence_sums = dict.fromkeys(options, 0.0)
 
-        for judge_name, vote in judge_votes.items():
+        for _judge_name, vote in judge_votes.items():
             if vote.choice in vote_counts:
                 vote_counts[vote.choice] += 1
                 confidence_sums[vote.choice] += vote.confidence
@@ -520,24 +515,23 @@ class GameVotingSystem:
     def _create_summary(
         self,
         topic: str,
-        options: List[str],
-        judge_votes: Dict[str, VoteChoice],
+        options: list[str],
+        judge_votes: dict[str, VoteChoice],
         winner: str,
         margin: float,
         consensus: float,
     ) -> str:
         """Create a summary of the voting results."""
-
         summary_parts = [
-            f"🗳️ **VOTING RESULTS** 🗳️",
-            f"",
+            "🗳️ **VOTING RESULTS** 🗳️",
+            "",
             f"**Topic**: {topic}",
             f"**Options**: {', '.join(options)}",
-            f"",
+            "",
             f"🏆 **WINNER**: {winner}",
             f"📊 **Margin**: {margin:.1%}",
             f"🤝 **Consensus**: {consensus:.1%}",
-            f"",
+            "",
             "👨‍⚖️ **JUDGE VOTES**:",
         ]
 
@@ -566,7 +560,7 @@ class GameVotingSystem:
 class DebateEvaluator:
     """Evaluator for debate games."""
 
-    def get_evaluation_criteria(self) -> List[str]:
+    def get_evaluation_criteria(self) -> list[str]:
         return [
             "logical_strength",
             "evidence_quality",
@@ -588,7 +582,7 @@ class DebateEvaluator:
 class ChessEvaluator:
     """Evaluator for chess games."""
 
-    def get_evaluation_criteria(self) -> List[str]:
+    def get_evaluation_criteria(self) -> list[str]:
         return [
             "strategic_depth",
             "tactical_accuracy",
@@ -617,5 +611,4 @@ def create_voting_system(
     """
     if game_type == "general":
         return GameVotingSystem.create_standard_judges(num_judges)
-    else:
-        return GameVotingSystem.create_game_specific_judges(game_type, num_judges)
+    return GameVotingSystem.create_game_specific_judges(game_type, num_judges)

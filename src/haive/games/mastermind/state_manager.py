@@ -8,14 +8,14 @@ updating, and analyzing the game state.
 import itertools
 import random
 
-from haive.games.framework.base.state_manager import GameStateManager
-from haive.games.mastermind.models import (
+from .framework.base.state_manager import GameStateManager
+from .mastermind.models import (
     ColorCode,
     MastermindAnalysis,
     MastermindFeedback,
     MastermindGuess,
 )
-from haive.games.mastermind.state import MastermindState
+from .mastermind.state import MastermindState
 
 
 class MastermindStateManager(GameStateManager[MastermindState]):

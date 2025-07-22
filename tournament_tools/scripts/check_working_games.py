@@ -3,7 +3,6 @@
 
 import importlib
 import sys
-import traceback
 from pathlib import Path
 
 # Add the games package to the path
@@ -80,24 +79,15 @@ def main():
             else:
                 broken_games.append((game_name, message))
 
-    print(
-        f"=== WORKING GAMES ({len(working_games)}/{len(working_games) + len(broken_games)}) ==="
-    )
-    for i, (game, info) in enumerate(working_games, 1):
-        print(f"{i:2d}. {game:20s} - {info}")
+    for _i, (_game, _info) in enumerate(working_games, 1):
+        pass
 
-    print(
-        f"\n=== BROKEN GAMES ({len(broken_games)}/{len(working_games) + len(broken_games)}) ==="
-    )
-    for i, (game, error) in enumerate(broken_games, 1):
-        print(f"{i:2d}. {game:20s} - {error}")
+    for _i, (_game, _error) in enumerate(broken_games, 1):
+        pass
 
     # Summary
     total = len(working_games) + len(broken_games)
-    success_rate = len(working_games) / total * 100 if total > 0 else 0
-    print(
-        f"\nSUMMARY: {len(working_games)}/{total} games working ({success_rate:.1f}% success rate)"
-    )
+    len(working_games) / total * 100 if total > 0 else 0
 
 
 if __name__ == "__main__":

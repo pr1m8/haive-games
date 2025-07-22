@@ -3,9 +3,9 @@
 This script demonstrates how to run a Monopoly game with the fixed UI.
 """
 
-from haive.games.monopoly.config import MonopolyGameAgentConfig
-from haive.games.monopoly.main_agent import MonopolyAgent
-from haive.games.monopoly.ui_fixed import MonopolyRichUI
+from .monopoly.config import MonopolyGameAgentConfig
+from .monopoly.main_agent import MonopolyAgent
+from .monopoly.ui_fixed import MonopolyRichUI
 
 
 def main():

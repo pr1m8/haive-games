@@ -4,19 +4,17 @@ This module provides generic engine creation functions for Mastermind games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.mastermind.models import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .mastermind.models import (
     MastermindAnalysis,
     MastermindGuess,
 )
@@ -25,7 +23,7 @@ from haive.games.mastermind.models import (
 class MastermindPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Mastermind game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="codemaker", player2="codebreaker")
 
 
@@ -100,7 +98,7 @@ class MastermindPromptGenerator(GenericPromptGenerator[str, str]):
 class MastermindEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Mastermind game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = MastermindPlayerIdentifiers()
         prompt_generator = MastermindPromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -109,8 +107,7 @@ class MastermindEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return MastermindAnalysis
-        else:
-            return MastermindGuess
+        return MastermindGuess
 
 
 # Factory instance
@@ -118,8 +115,8 @@ mastermind_factory = MastermindEngineFactory()
 
 
 def create_generic_mastermind_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Mastermind engines from detailed player configurations.
 
     Args:
@@ -139,7 +136,7 @@ def create_generic_mastermind_engines(
 
 def create_generic_mastermind_engines_simple(
     codemaker_model: str, codebreaker_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Mastermind engines with simple model specifications.
 
     Args:
@@ -157,7 +154,7 @@ def create_generic_mastermind_engines_simple(
 
 def create_generic_mastermind_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Mastermind engines from a predefined example configuration.
 
     Args:
@@ -197,16 +194,16 @@ def create_generic_mastermind_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_mastermind_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_mastermind_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Mastermind engines with high-powered models."""
     return create_generic_mastermind_config_from_example("advanced", **kwargs)
 
 
-def create_budget_mastermind_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_mastermind_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Mastermind engines."""
     return create_generic_mastermind_config_from_example("budget", **kwargs)
 
 
-def create_mixed_mastermind_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_mastermind_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Mastermind engines."""
     return create_generic_mastermind_config_from_example("mixed", **kwargs)

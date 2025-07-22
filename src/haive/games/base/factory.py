@@ -2,6 +2,7 @@
 
 """Factory module for creating game agents.
 
+from typing import Any, Dict
 This module provides a factory class for creating game agents with standardized
 workflows and configurations. It simplifies the process of creating new game
 agents by providing a flexible, composable pattern.
@@ -28,19 +29,19 @@ Typical usage:
 from collections.abc import Callable
 from typing import Any, TypeVar
 
-from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.constants import END, START
 from langgraph.graph import StateGraph
 from pydantic import BaseModel
 
-from haive.games.framework.base import (
+from .engine.agent.agent import Agent, register_agent
+from .engine.aug_llm import AugLLMConfig
+from .framework.base import (
     GameAgent,
     GameConfig,
     GameState,
     GameStateManager,
 )
+from .graph.dynamic_graph_builder import DynamicGraph
 
 # Type variable for generic state
 T = TypeVar("T", bound=BaseModel)
@@ -142,24 +143,24 @@ class GameAgentFactory:
         )
 
         # Define methods for the agent class
-        def __init__(self, config):
+        def __init__(self, config: Dict[str, Any]):
             # Initialize as GameAgent
             GameAgent.__init__(self, config)
             self.state_manager = state_manager
 
-        def make_player1_move(self, state):
+        def make_player1_move(self, state: Dict[str, Any]):
             return self.make_move(state, player1_name)
 
-        def make_player2_move(self, state):
+        def make_player2_move(self, state: Dict[str, Any]):
             return self.make_move(state, player2_name)
 
-        def analyze_player1(self, state):
+        def analyze_player1(self, state: Dict[str, Any]):
             return self.analyze_position(state, player1_name)
 
-        def analyze_player2(self, state):
+        def analyze_player2(self, state: Dict[str, Any]):
             return self.analyze_position(state, player2_name)
 
-        def setup_workflow(self):
+        def setup_workflow(self) -> None:
             # Use DynamicGraph to build the workflow
             graph_builder = DynamicGraph(
                 components=[self.config.engine], state_schema=self.config.state_schema

@@ -4,19 +4,17 @@ This module provides generic engine creation functions for Monopoly games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Dict
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.monopoly.models import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .monopoly.models import (
     BuildingDecision,
     JailDecision,
     PlayerAnalysis,
@@ -28,7 +26,7 @@ from haive.games.monopoly.models import (
 class MonopolyPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Monopoly game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="player1", player2="player2")
 
 
@@ -119,7 +117,7 @@ class MonopolyPromptGenerator(GenericPromptGenerator[str, str]):
 class MonopolyEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Monopoly game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = MonopolyPlayerIdentifiers()
         prompt_generator = MonopolyPromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -128,16 +126,15 @@ class MonopolyEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return PlayerAnalysis
-        elif "property" in role:
+        if "property" in role:
             return PropertyDecision
-        elif "jail" in role:
+        if "jail" in role:
             return JailDecision
-        elif "building" in role:
+        if "building" in role:
             return BuildingDecision
-        elif "trade" in role:
+        if "trade" in role:
             return TradeResponse
-        else:
-            return PropertyDecision
+        return PropertyDecision
 
 
 # Factory instance
@@ -145,8 +142,8 @@ monopoly_factory = MonopolyEngineFactory()
 
 
 def create_generic_monopoly_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Monopoly engines from detailed player configurations.
 
     Args:
@@ -166,7 +163,7 @@ def create_generic_monopoly_engines(
 
 def create_generic_monopoly_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Monopoly engines with simple model specifications.
 
     Args:
@@ -184,7 +181,7 @@ def create_generic_monopoly_engines_simple(
 
 def create_generic_monopoly_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Monopoly engines from a predefined example configuration.
 
     Args:
@@ -226,21 +223,21 @@ def create_generic_monopoly_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_real_estate_mogul_monopoly_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_real_estate_mogul_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create real estate mogul-style Monopoly engines with high-powered models."""
     return create_generic_monopoly_config_from_example("real_estate_moguls", **kwargs)
 
 
-def create_budget_monopoly_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Monopoly engines."""
     return create_generic_monopoly_config_from_example("budget", **kwargs)
 
 
-def create_property_tycoon_monopoly_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_property_tycoon_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create property tycoon-style Monopoly engines."""
     return create_generic_monopoly_config_from_example("property_tycoons", **kwargs)
 
 
-def create_mixed_monopoly_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Monopoly engines."""
     return create_generic_monopoly_config_from_example("mixed", **kwargs)

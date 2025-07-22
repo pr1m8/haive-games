@@ -49,17 +49,17 @@ Note:
 
 import uuid
 from enum import Enum
-from typing import Any, Dict, List, Literal, Union
+from typing import Any, Literal
 
-from haive.core.config.runnable import RunnableConfigManager
-from haive.core.engine.agent.config import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from haive.games.monopoly.player_agent import PlayerDecisionState
-from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
+from .config.runnable import RunnableConfigManager
+from .engine.agent.config import AgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .monopoly.player_agent import PlayerDecisionState
+from .monopoly.state import MonopolyState
+from .monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class GameDifficulty(str, Enum):
@@ -212,14 +212,14 @@ class MonopolyPlayerAgentConfig(AgentConfig):
         description="Output schema for player decision responses",
     )
 
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict,
         description="LLM engines for different decision types (property, trading, building, jail)",
     )
 
     @computed_field
     @property
-    def player_profile(self) -> Dict[str, Union[str, float, bool]]:
+    def player_profile(self) -> dict[str, str | float | bool]:
         """Generate comprehensive player profile summary.
 
         Returns:
@@ -243,14 +243,13 @@ class MonopolyPlayerAgentConfig(AgentConfig):
         """
         if self.risk_tolerance < 0.3 and self.cash_reserve_preference > 0.6:
             return "Conservative Saver"
-        elif self.risk_tolerance > 0.7 and self.trading_willingness > 0.7:
+        if self.risk_tolerance > 0.7 and self.trading_willingness > 0.7:
             return "Aggressive Trader"
-        elif self.property_development_focus and self.risk_tolerance > 0.5:
+        if self.property_development_focus and self.risk_tolerance > 0.5:
             return "Property Developer"
-        elif self.negotiation_aggressiveness > 0.6 and self.trading_willingness > 0.6:
+        if self.negotiation_aggressiveness > 0.6 and self.trading_willingness > 0.6:
             return "Deal Maker"
-        else:
-            return "Balanced Player"
+        return "Balanced Player"
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -361,7 +360,7 @@ class MonopolyGameAgentConfig(AgentConfig):
     )
 
     # Player configuration
-    player_names: List[str] = Field(
+    player_names: list[str] = Field(
         default=["Alice", "Bob", "Charlie", "Diana"],
         min_length=2,
         max_length=8,
@@ -493,7 +492,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     @field_validator("player_names")
     @classmethod
-    def validate_player_names(cls, v: List[str]) -> List[str]:
+    def validate_player_names(cls, v: list[str]) -> list[str]:
         """Validate player names are unique and reasonable.
 
         Args:
@@ -539,7 +538,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     @computed_field
     @property
-    def game_profile(self) -> Dict[str, Union[str, int, float, bool]]:
+    def game_profile(self) -> dict[str, str | int | float | bool]:
         """Generate comprehensive game profile summary.
 
         Returns:
@@ -567,7 +566,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     @computed_field
     @property
-    def economic_parameters(self) -> Dict[str, Union[int, float]]:
+    def economic_parameters(self) -> dict[str, int | float]:
         """Calculate economic parameters for the game.
 
         Returns:
@@ -596,12 +595,11 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         if base_duration < 50:
             return "Short (30-60 minutes)"
-        elif base_duration < 100:
+        if base_duration < 100:
             return "Medium (60-120 minutes)"
-        elif base_duration < 200:
+        if base_duration < 200:
             return "Long (2-3 hours)"
-        else:
-            return "Extended (3+ hours)"
+        return "Extended (3+ hours)"
 
     def _calculate_economic_velocity(self) -> float:
         """Calculate economic velocity factor.
@@ -668,9 +666,6 @@ class MonopolyGameAgentConfig(AgentConfig):
                 "No players were created - check player_names configuration"
             )
 
-        print(f"DEBUG: Creating initial state with {len(players)} players")
-        print(f"DEBUG: Player names: {[p.name for p in players]}")
-
         # Create initial state with ALL required fields
         initial_state = MonopolyState(
             players=players,
@@ -688,13 +683,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         # Validate the initial state
         issues = initial_state.validate_state_consistency()
         if issues:
-            print(f"WARNING: Initial state has issues: {issues}")
             raise ValueError(f"Initial state validation failed: {issues}")
-
-        print("DEBUG: Initial state created successfully")
-        print(f"DEBUG: Current player: {initial_state.current_player.name}")
-        print(f"DEBUG: Starting money per player: ${self.starting_money}")
-        print(f"DEBUG: GO salary: ${self.go_salary}")
 
         return initial_state
 

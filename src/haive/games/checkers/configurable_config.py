@@ -8,13 +8,13 @@ from typing import Any, Dict, Optional
 
 from pydantic import Field
 
-from haive.games.checkers.config import CheckersAgentConfig
-from haive.games.checkers.generic_engines import (
+from .checkers.config import CheckersAgentConfig
+from .checkers.generic_engines import (
     create_generic_checkers_config_from_example,
     create_generic_checkers_engines,
     create_generic_checkers_engines_simple,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
+from .core.agent.player_agent import PlayerAgentConfig
 
 
 class ConfigurableCheckersConfig(CheckersAgentConfig):

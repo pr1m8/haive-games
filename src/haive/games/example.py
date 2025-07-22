@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-"""
-Haive Games Examples
+"""from typing import Any, Dict
+Haive Games Examples.
 
 This file demonstrates comprehensive usage of the Haive Games framework,
 including quick starts, tournaments, custom games, and advanced patterns.
 """
 
 import asyncio
-from typing import List
 
-from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
 # Import various game implementations
@@ -18,11 +16,11 @@ from haive.games.poker import PokerAgent, PokerConfig
 from haive.games.tic_tac_toe import TicTacToeAgent, TicTacToeConfig
 from haive.games.wordle import WordleAgent, WordleConfig
 
+from .engine.aug_llm import AugLLMConfig
 
-def example_quick_game():
+
+def example_quick_game() -> None:
     """Example 1: Quick game setup - Tic Tac Toe."""
-    print("=== Example 1: Quick Tic Tac Toe Game ===\n")
-
     # Simple configuration
     config = TicTacToeConfig(
         player_names=["Alice", "Bob"],
@@ -34,23 +32,18 @@ def example_quick_game():
 
     # Create and run game
     game = TicTacToeAgent(config)
-    result = game.run()
+    game.run()
 
     # Display results
-    print(f"Winner: {result.winner}")
-    print(f"Total moves: {len(result.moves)}")
-    print(f"Final board:\n{result.final_board}")
 
 
-def example_advanced_chess():
+def example_advanced_chess() -> None:
     """Example 2: Advanced game with custom engines - Chess."""
-    print("\n\n=== Example 2: Advanced Chess Game ===\n")
-
     # Create different player personalities
     aggressive_engine = AugLLMConfig(
         name="aggressive_player",
         temperature=0.7,
-        system_message="""You are an aggressive chess player. 
+        system_message="""You are an aggressive chess player.
         Prioritize attacks, sacrifices for position, and king safety threats.
         Always look for tactical opportunities.""",
     )
@@ -73,19 +66,13 @@ def example_advanced_chess():
 
     # Run game
     game = ChessAgent(config)
-    result = game.run()
+    game.run()
 
     # Analyze game
-    print(f"Winner: {result.winner}")
-    print(f"Game length: {result.total_moves} moves")
-    print(f"Opening: {result.opening_name}")
-    print(f"Key moments: {result.critical_positions}")
 
 
 async def example_poker_tournament():
     """Example 3: Multi-player tournament - Poker."""
-    print("\n\n=== Example 3: Poker Tournament ===\n")
-
     # Create player configurations
     players = []
     for i, style in enumerate(["tight", "loose", "aggressive", "balanced"]):
@@ -121,25 +108,19 @@ async def example_poker_tournament():
     result = await game.arun()
 
     # Display results
-    print("\nTournament Results:")
-    for i, player_result in enumerate(result.final_standings):
-        print(f"{i+1}. {player_result.name}: ${player_result.chips}")
-
-    print(f"\nTotal hands played: {result.total_hands}")
-    print(f"Biggest pot: ${result.biggest_pot}")
+    for i, _player_result in enumerate(result.final_standings):
+        pass
 
 
-def example_custom_game():
+def example_custom_game() -> Any:
     """Example 4: Creating a custom game - Number Guessing."""
-    print("\n\n=== Example 4: Custom Number Guessing Game ===\n")
-
     from haive.games.framework import GameAgent, GameConfig, GameState, GameStateManager
 
     # Define custom game state
     class NumberGameState(GameState):
         target_number: int = Field(default=0)
-        guesses: List[int] = Field(default_factory=list)
-        hints: List[str] = Field(default_factory=list)
+        guesses: list[int] = Field(default_factory=list)
+        hints: list[str] = Field(default_factory=list)
         found: bool = Field(default=False)
 
     # Define configuration
@@ -175,7 +156,7 @@ def example_custom_game():
 
             return state
 
-        def get_valid_moves(self, state: NumberGameState) -> List[int]:
+        def get_valid_moves(self, state: NumberGameState) -> list[int]:
             return list(range(self.config.min_number, self.config.max_number + 1))
 
     # Create game agent
@@ -190,7 +171,7 @@ def example_custom_game():
                 Be strategic about your guesses.""",
             )
 
-        def run(self):
+        def run(self) -> Any:
             state = self.state_manager.initialize_state()
 
             while not self.state_manager.is_game_over(state):
@@ -213,7 +194,6 @@ def example_custom_game():
                         guess = random.randint(self.config.min_number, last_guess - 1)
 
                 state = self.state_manager.process_guess(state, guess)
-                print(f"Guess {len(state.guesses)}: {guess} - {state.hints[-1]}")
 
             return state
 
@@ -223,17 +203,13 @@ def example_custom_game():
     result = game.run()
 
     if result.found:
-        print(
-            f"\nFound the number {result.target_number} in {len(result.guesses)} guesses!"
-        )
+        pass
     else:
-        print(f"\nFailed to find {result.target_number}. Guesses: {result.guesses}")
+        pass
 
 
-def example_game_evaluation():
+def example_game_evaluation() -> None:
     """Example 5: Evaluating and comparing agents."""
-    print("\n\n=== Example 5: Agent Evaluation ===\n")
-
     # Define different agent strategies
     strategies = {
         "random": AugLLMConfig(
@@ -269,14 +245,12 @@ def example_game_evaluation():
 
         results[name] = wins / games
 
-    print("Win rates against random player:")
-    for strategy, win_rate in results.items():
-        print(f"  {strategy}: {win_rate:.1%}")
+    for _strategy, _win_rate in results.items():
+        pass
 
 
-def example_game_visualization():
+def example_game_visualization() -> Any:
     """Example 6: Visualizing game states."""
-    print("\n\n=== Example 6: Game Visualization ===\n")
 
     # Simple ASCII chess board visualization
     def visualize_chess_position(fen: str) -> str:
@@ -318,22 +292,17 @@ def example_game_visualization():
         return result
 
     # Example position
-    starting_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    print("Starting Chess Position:")
-    print(visualize_chess_position(starting_fen))
 
 
-def example_wordle_with_strategy():
+def example_wordle_with_strategy() -> None:
     """Example 7: Single player game with strategy - Wordle."""
-    print("\n\n=== Example 7: Strategic Wordle ===\n")
-
     # Configure with strategy hints
     config = WordleConfig(
         word_length=5,
         max_guesses=6,
         llm_config=AugLLMConfig(
             temperature=0.2,
-            system_message="""You are playing Wordle. 
+            system_message="""You are playing Wordle.
             Start with words containing common vowels and consonants.
             Use the feedback to eliminate possibilities.
             Green = correct position, Yellow = wrong position, Gray = not in word.""",
@@ -344,43 +313,39 @@ def example_wordle_with_strategy():
     game = WordleAgent(config)
     result = game.run()
 
-    print(f"Target word: {result.target_word}")
-    print(f"Found in {len(result.guesses)} guesses: {result.found}")
-    print("Guess progression:")
-    for i, (guess, feedback) in enumerate(zip(result.guesses, result.feedback)):
-        print(f"  {i+1}. {guess} -> {feedback}")
+    for _i, (_guess, _feedback) in enumerate(
+        zip(result.guesses, result.feedback, strict=False)
+    ):
+        pass
 
 
-def example_game_with_observers():
+def example_game_with_observers() -> None:
     """Example 8: Games with observer pattern."""
-    print("\n\n=== Example 8: Game with Observers ===\n")
-
     from haive.games.utils.observers import GameObserver, MoveLogger
 
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
 
-        def on_move(self, state, move, player):
-            print(f"[Commentary] {player} plays {move}")
+        def on_move(self, state: Dict[str, Any], move, player):
+            pass
 
-        def on_game_end(self, state, winner):
-            print(f"[Commentary] Game over! {winner} wins!")
+        def on_game_end(self, state: Dict[str, Any], winner):
+            pass
 
     class StatisticsObserver(GameObserver):
         """Track game statistics."""
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.move_count = 0
             self.player_moves = {}
 
-        def on_move(self, state, move, player):
+        def on_move(self, state: Dict[str, Any], move, player):
             self.move_count += 1
             self.player_moves[player] = self.player_moves.get(player, 0) + 1
 
-        def on_game_end(self, state, winner):
-            print(f"\n[Stats] Total moves: {self.move_count}")
-            for player, count in self.player_moves.items():
-                print(f"[Stats] {player}: {count} moves")
+        def on_game_end(self, state: Dict[str, Any], winner):
+            for _player, _count in self.player_moves.items():
+                pass
 
     # Create game with observers
     config = TicTacToeConfig(player_names=["Alice", "Bob"])
@@ -395,9 +360,8 @@ def example_game_with_observers():
     game.run()
 
 
-def example_parallel_games():
+def example_parallel_games() -> Any:
     """Example 9: Running games in parallel."""
-    print("\n\n=== Example 9: Parallel Game Execution ===\n")
 
     async def run_game_async(game_id: int, config: TicTacToeConfig):
         """Run a single game asynchronously."""
@@ -420,18 +384,15 @@ def example_parallel_games():
         results = await asyncio.gather(*tasks)
 
         # Summarize results
-        print("Parallel Tournament Results:")
-        for game_id, winner in results:
-            print(f"  Game {game_id}: {winner} wins")
+        for _game_id, _winner in results:
+            pass
 
     # Run the tournament
     asyncio.run(run_parallel_tournament())
 
 
-def example_save_and_load():
+def example_save_and_load() -> None:
     """Example 10: Saving and loading game states."""
-    print("\n\n=== Example 10: Save/Load Game States ===\n")
-
     import json
     from pathlib import Path
 
@@ -457,25 +418,20 @@ def example_save_and_load():
     with open(save_path, "w") as f:
         json.dump(save_data, f, indent=2)
 
-    print(f"Game saved to {save_path}")
-
     # Load state
-    with open(save_path, "r") as f:
+    with open(save_path) as f:
         loaded_data = json.load(f)
 
     # Restore game
     loaded_config = ChessConfig(**loaded_data["config"])
     loaded_game = ChessAgent(loaded_config)
-    loaded_state = loaded_game.state_manager.state_class(**loaded_data["state"])
-
-    print(f"Game loaded. Current turn: {loaded_state.current_player}")
-    print(f"Moves played: {len(loaded_data['move_history'])}")
+    loaded_game.state_manager.state_class(**loaded_data["state"])
 
     # Clean up
     save_path.unlink()
 
 
-def main():
+def main() -> None:
     """Run all examples."""
     examples = [
         example_quick_game,
@@ -524,6 +480,6 @@ if __name__ == "__main__":
             else:
                 example()
         else:
-            print(f"Invalid example number. Choose 1-{len(examples)}")
+            pass
     else:
         main()

@@ -4,11 +4,12 @@ from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.games.cards.bs.models import (  # BullshitGameState,
+from haive.games.cards.standard.bs.models import (  # BullshitGameState,
+    Any,
     ChallengeAction,
     PlayerClaimAction,
 )
-from haive.games.cards.bs.state import BullshitGameState
+from haive.games.cards.standard.bs.state import BullshitGameState
 
 
 def generate_claim_prompt() -> ChatPromptTemplate:
@@ -93,7 +94,7 @@ class BullshitAgentConfig(AgentConfig):
         }
 
     @classmethod
-    def default(cls):
+    def default(cls) -> Any:
         """Create a default configuration for Bullshit."""
         return cls(
             name="bullshit_multi_agent",

@@ -4,28 +4,26 @@ This module provides generic engine creation functions for Clue games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.clue.models import (
+from .clue.models import (
     ClueGuess,
     ClueResponse,
 )
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
 
 
 class CluePlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Clue game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="detective", player2="suspect")
 
 
@@ -100,7 +98,7 @@ class CluePromptGenerator(GenericPromptGenerator[str, str]):
 class ClueEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Clue game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = CluePlayerIdentifiers()
         prompt_generator = CluePromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -109,8 +107,7 @@ class ClueEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return ClueResponse
-        else:
-            return ClueGuess
+        return ClueGuess
 
 
 # Factory instance
@@ -118,8 +115,8 @@ clue_factory = ClueEngineFactory()
 
 
 def create_generic_clue_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Clue engines from detailed player configurations.
 
     Args:
@@ -139,7 +136,7 @@ def create_generic_clue_engines(
 
 def create_generic_clue_engines_simple(
     detective_model: str, suspect_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Clue engines with simple model specifications.
 
     Args:
@@ -157,7 +154,7 @@ def create_generic_clue_engines_simple(
 
 def create_generic_clue_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Clue engines from a predefined example configuration.
 
     Args:
@@ -197,16 +194,16 @@ def create_generic_clue_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_clue_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_clue_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Clue engines with high-powered models."""
     return create_generic_clue_config_from_example("advanced", **kwargs)
 
 
-def create_budget_clue_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_clue_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Clue engines."""
     return create_generic_clue_config_from_example("budget", **kwargs)
 
 
-def create_mixed_clue_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_clue_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Clue engines."""
     return create_generic_clue_config_from_example("mixed", **kwargs)

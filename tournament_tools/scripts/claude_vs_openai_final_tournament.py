@@ -11,7 +11,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Add the parent directories to the path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))
@@ -58,9 +58,8 @@ openai_config = LLMConfig(
 )
 
 
-def create_game_config(game_name: str) -> Tuple[Any, Any]:
+def create_game_config(game_name: str) -> tuple[Any, Any]:
     """Create agent and config for a specific game."""
-
     if game_name == "tic_tac_toe":
         config = TicTacToeConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
@@ -68,63 +67,63 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return TicTacToeAgent, config
 
-    elif game_name == "nim":
+    if game_name == "nim":
         config = NimConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
             max_rounds=20,
         )
         return NimAgent, config
 
-    elif game_name == "mancala":
+    if game_name == "mancala":
         config = MancalaConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
             max_rounds=100,
         )
         return MancalaAgent, config
 
-    elif game_name == "mastermind":
+    if game_name == "mastermind":
         config = MastermindConfig(
             aug_llm_configs={"codebreaker": claude_config, "codemaker": openai_config},
             max_rounds=10,
         )
         return MastermindAgent, config
 
-    elif game_name == "connect4":
+    if game_name == "connect4":
         config = Connect4AgentConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
             max_rounds=42,
         )
         return Connect4Agent, config
 
-    elif game_name == "reversi":
+    if game_name == "reversi":
         config = ReversiConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
             max_rounds=64,
         )
         return ReversiAgent, config
 
-    elif game_name == "chess":
+    if game_name == "chess":
         config = ChessConfig(
             aug_llm_configs={"white": claude_config, "black": openai_config},
             max_moves=200,
         )
         return ChessAgent, config
 
-    elif game_name == "checkers":
+    if game_name == "checkers":
         config = CheckersAgentConfig(
             aug_llm_configs={"red": claude_config, "black": openai_config},
             max_moves=200,
         )
         return CheckersAgent, config
 
-    elif game_name == "battleship":
+    if game_name == "battleship":
         config = BattleshipAgentConfig(
             aug_llm_configs={"player_1": claude_config, "player_2": openai_config},
             max_rounds=100,
         )
         return BattleshipAgent, config
 
-    elif game_name == "clue":
+    if game_name == "clue":
         config = ClueConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -135,7 +134,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return ClueAgent, config
 
-    elif game_name == "debate":
+    if game_name == "debate":
         config = DebateAgentConfig(
             aug_llm_configs={"debater_1": claude_config, "debater_2": openai_config},
             max_rounds=5,
@@ -143,7 +142,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return DebateAgent, config
 
-    elif game_name == "dominoes":
+    if game_name == "dominoes":
         config = DominoesAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -153,14 +152,14 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return DominoesAgent, config
 
-    elif game_name == "fox_and_geese":
+    if game_name == "fox_and_geese":
         config = FoxAndGeeseConfig(
             aug_llm_configs={"fox": claude_config, "geese": openai_config},
             max_rounds=100,
         )
         return FoxAndGeeseAgent, config
 
-    elif game_name == "mafia":
+    if game_name == "mafia":
         config = MafiaAgentConfig(
             aug_llm_configs={
                 "narrator": claude_config,
@@ -174,7 +173,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return MafiaAgent, config
 
-    elif game_name == "poker":
+    if game_name == "poker":
         config = PokerAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -185,7 +184,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return PokerAgent, config
 
-    elif game_name == "risk":
+    if game_name == "risk":
         config = RiskConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -195,7 +194,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return RiskAgent, config
 
-    elif game_name == "among_us":
+    if game_name == "among_us":
         config = AmongUsAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -208,7 +207,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return AmongUsAgent, config
 
-    elif game_name == "monopoly":
+    if game_name == "monopoly":
         config = MonopolyAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -218,7 +217,7 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return MonopolyAgent, config
 
-    elif game_name == "hold_em":
+    if game_name == "hold_em":
         config = HoldemGameAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -229,16 +228,11 @@ def create_game_config(game_name: str) -> Tuple[Any, Any]:
         )
         return HoldemGameAgent, config
 
-    else:
-        raise ValueError(f"Unknown game: {game_name}")
+    raise ValueError(f"Unknown game: {game_name}")
 
 
-async def run_single_game(game_name: str) -> Dict[str, Any]:
+async def run_single_game(game_name: str) -> dict[str, Any]:
     """Run a single game and return results."""
-    print(f"\n{'='*60}")
-    print(f"Running {game_name}...")
-    print(f"{'='*60}")
-
     start_time = time.time()
 
     try:
@@ -253,23 +247,22 @@ async def run_single_game(game_name: str) -> Dict[str, Any]:
             initial_state = agent.initialize()
         elif hasattr(agent, "get_initial_state"):
             initial_state = agent.get_initial_state()
-        else:
-            # Try to create initial state from config
-            if game_name == "mafia":
-                from haive.games.mafia.state_manager import MafiaStateManager
+        # Try to create initial state from config
+        elif game_name == "mafia":
+            from haive.games.mafia.state_manager import MafiaStateManager
 
-                player_names = [
-                    "Player_1",
-                    "Player_2",
-                    "Player_3",
-                    "Player_4",
-                    "Player_5",
-                    "Player_6",
-                    "Narrator",
-                ]
-                initial_state = MafiaStateManager.initialize(player_names)
-            else:
-                initial_state = {}
+            player_names = [
+                "Player_1",
+                "Player_2",
+                "Player_3",
+                "Player_4",
+                "Player_5",
+                "Player_6",
+                "Narrator",
+            ]
+            initial_state = MafiaStateManager.initialize(player_names)
+        else:
+            initial_state = {}
 
         # Run the game
         final_state = None
@@ -283,9 +276,9 @@ async def run_single_game(game_name: str) -> Dict[str, Any]:
             if isinstance(state, dict):
                 if state.get("game_over") or state.get("winner"):
                     break
-            elif hasattr(state, "game_over") and state.game_over:
-                break
-            elif hasattr(state, "winner") and state.winner:
+            elif (hasattr(state, "game_over") and state.game_over) or (
+                hasattr(state, "winner") and state.winner
+            ):
                 break
 
         # Determine winner
@@ -333,15 +326,9 @@ async def run_single_game(game_name: str) -> Dict[str, Any]:
             "timestamp": datetime.now().isoformat(),
         }
 
-        print(f"\nGame completed!")
-        print(f"Winner: {winner_ai}")
-        print(f"Steps: {step_count}")
-        print(f"Duration: {duration:.2f}s")
-
         return result
 
     except Exception as e:
-        print(f"Error in {game_name}: {str(e)}")
         import traceback
 
         traceback.print_exc()
@@ -356,10 +343,6 @@ async def run_single_game(game_name: str) -> Dict[str, Any]:
 
 async def run_tournament():
     """Run the complete tournament."""
-    print("Starting Final Tournament - Claude vs OpenAI")
-    print(f"Time: {datetime.now()}")
-    print(f"Games: 21 working games")
-
     # List of all working games
     games = [
         "tic_tac_toe",
@@ -437,27 +420,14 @@ async def run_tournament():
         json.dump(summary, f, indent=2)
 
     # Print summary
-    print("\n" + "=" * 60)
-    print("TOURNAMENT SUMMARY")
-    print("=" * 60)
-    print(f"Total Games: {len(games)}")
-    print(f"Completed: {len(results) - errors}")
-    print(f"Errors: {errors}")
-    print(f"\nClaude Wins: {claude_wins}")
-    print(f"OpenAI Wins: {openai_wins}")
-    print(f"Draws: {draws}")
-    print(f"\nClaude Win Rate: {summary['claude_win_rate']:.1%}")
 
     # Print detailed results
-    print("\nDetailed Results:")
-    print("-" * 40)
     for result in results:
         game = result["game"]
         if result["status"] == "completed":
-            winner = result["winner"]
-            print(f"{game:<20} -> {winner}")
+            result["winner"]
         else:
-            print(f"{game:<20} -> ERROR: {result.get('error', 'Unknown')}")
+            pass
 
     return summary
 

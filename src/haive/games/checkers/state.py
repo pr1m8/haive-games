@@ -62,7 +62,7 @@ from typing import ClassVar, Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from haive.games.checkers.models import CheckersAnalysis, CheckersMove
+from .checkers.models import CheckersAnalysis, CheckersMove
 
 
 class PieceType(int, Enum):

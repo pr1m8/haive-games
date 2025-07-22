@@ -1,9 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from enum import Enum
-from typing import List, Optional, Type, TypeVar
+from typing import Any, TypeVar
 
 from haive.core.engine.agent.agent import AgentConfig
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import Field, computed_field, field_validator
 
 
 class GamePlayerType(Enum):
@@ -22,8 +22,8 @@ Player = TypeVar("Player")
 class GameAgentConfig(AgentConfig, ABC):
     """Base class for game agent configurations."""
 
-    players: List[Player] = Field(default_factory=list)
-    state_schema: Type[GameState] = Field(default_factory=GameState)
+    players: list[Player] = Field(default_factory=list)
+    state_schema: type[GameState] = Field(default_factory=GameState)
 
     @computed_field
     @property
@@ -32,7 +32,8 @@ class GameAgentConfig(AgentConfig, ABC):
         return len(self.players)
 
     @field_validator("players")
-    def validate_players(cls, v):
+    @classmethod
+    def validate_players(cls, v) -> Any:
         """Validate the players in the game."""
         if len(v) == 0:
             raise ValueError("At least one player is required")

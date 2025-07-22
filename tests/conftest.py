@@ -1,5 +1,5 @@
 """Configuration file for pytest to properly handle imports and logging.
-Save as tests/conftest.py
+Save as tests/conftest.py.
 """
 
 import logging
@@ -36,7 +36,6 @@ def pytest_configure(config):
     root_path = Path(__file__).resolve().parent.parent
     if str(root_path) not in sys.path:
         sys.path.insert(0, str(root_path))
-        print(f"✅ Added project root to sys.path: {root_path}")
 
 
 # Optional: global root logger setup (safe)

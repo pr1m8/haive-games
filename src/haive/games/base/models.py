@@ -1,5 +1,6 @@
 """Base models for game agents.
 
+from typing import Any
 This module provides the foundational data models used across game agents.
 It includes models for game state, player state, moves, and other common
 game-related data structures.
@@ -49,7 +50,8 @@ class MoveModel(BaseModel, Generic[TMove], ABC):
     timestamp: float = Field(default_factory=time.time, description="Move timestamp")
 
     @field_validator("move")
-    def validate_move(cls, move, info):
+    @classmethod
+    def validate_move(cls, move, info) -> Any:
         """Override in game-specific models to validate the move."""
         return move
 

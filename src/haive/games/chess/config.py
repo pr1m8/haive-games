@@ -1,5 +1,6 @@
 """Chess agent configuration module.
 
+from typing import Any
 This module provides configuration classes for chess agents, including:
     - Core game parameters
     - LLM engine settings
@@ -11,7 +12,7 @@ The configuration system uses Pydantic for validation and default values,
 making it easy to create and customize chess agent instances.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import Field, model_validator
 
@@ -65,20 +66,16 @@ class ChessConfig(BaseGameConfig):
     name: str = Field(default="Chess", description="Name of the game")
 
     # Player names
-    white_player_name: Optional[str] = Field(
+    white_player_name: str | None = Field(
         default=None, description="Name of the white player"
     )
-    black_player_name: Optional[str] = Field(
+    black_player_name: str | None = Field(
         default=None, description="Name of the black player"
     )
 
     # Chess-specific model fields (override base class)
-    white_model: Optional[str] = Field(
-        default=None, description="Model for white player"
-    )
-    black_model: Optional[str] = Field(
-        default=None, description="Model for black player"
-    )
+    white_model: str | None = Field(default=None, description="Model for white player")
+    black_model: str | None = Field(default=None, description="Model for black player")
 
     # Analysis settings (already in base class)
     # enable_analysis is inherited from BaseGameConfig
@@ -99,7 +96,7 @@ class ChessConfig(BaseGameConfig):
     )
 
     # LLM engines - no default factory for backward compatibility mode
-    engines: Optional[List[Any]] = Field(
+    engines: list[Any] | None = Field(
         default=None,
         description="LLM configurations for players and analyzers",
     )
@@ -113,7 +110,7 @@ class ChessConfig(BaseGameConfig):
         description="Runtime configuration for the agent",
     )
 
-    def get_role_definitions(self) -> Dict[str, GamePlayerRole]:
+    def get_role_definitions(self) -> dict[str, GamePlayerRole]:
         """Define chess player roles."""
         return {
             "white_player": GamePlayerRole(
@@ -140,7 +137,7 @@ class ChessConfig(BaseGameConfig):
             ),
         }
 
-    def get_example_configs(self) -> Dict[str, Dict[str, Any]]:
+    def get_example_configs(self) -> dict[str, dict[str, Any]]:
         """Define example chess configurations."""
         return {
             "gpt_vs_claude": {
@@ -156,12 +153,12 @@ class ChessConfig(BaseGameConfig):
             },
         }
 
-    def build_legacy_engines(self) -> List[Any]:
+    def build_legacy_engines(self) -> list[Any]:
         """Build legacy hardcoded engines."""
         # Import here to avoid circular imports
         return build_chess_aug_llms()
 
-    def create_simple_player_configs(self) -> Dict[str, PlayerAgentConfig]:
+    def create_simple_player_configs(self) -> dict[str, PlayerAgentConfig]:
         """Create player configs from simple model strings."""
         # Use white_model/black_model if provided, otherwise use base class defaults
         white_model = self.white_model or self.player1_model or "gpt-4o"
@@ -191,13 +188,14 @@ class ChessConfig(BaseGameConfig):
         }
 
     def create_engines_from_player_configs(
-        self, player_configs: Dict[str, PlayerAgentConfig]
-    ) -> List[Any]:
+        self, player_configs: dict[str, PlayerAgentConfig]
+    ) -> list[Any]:
         """Create engines from player configurations."""
         return create_generic_chess_engines(player_configs)
 
     @model_validator(mode="after")
-    def finalize_config(self):
+    @classmethod
+    def finalize_config(cls) -> Any:
         """Finalize configuration after engine setup."""
         # Call parent validator first
         super().configure_engines()

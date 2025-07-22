@@ -1,12 +1,13 @@
 """Base configuration classes for configurable games.
 
+from typing import Any
 This module provides the foundation for creating flexible game configurations
 that support multiple LLM providers and configuration modes.
 """
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from haive.core.engine.agent.agent import AgentConfig
 
@@ -70,16 +71,16 @@ class BaseGameConfig(AgentConfig, ABC):
     )
 
     # Simple mode - games override with specific fields like white_model, red_model, etc.
-    player1_model: Optional[str] = Field(default=None, description="Model for player 1")
-    player2_model: Optional[str] = Field(default=None, description="Model for player 2")
+    player1_model: str | None = Field(default=None, description="Model for player 1")
+    player2_model: str | None = Field(default=None, description="Model for player 2")
 
     # Example mode
-    example_config: Optional[str] = Field(
+    example_config: str | None = Field(
         default=None, description="Name of predefined example configuration"
     )
 
     # Advanced mode
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -91,7 +92,7 @@ class BaseGameConfig(AgentConfig, ABC):
     recursion_limit: int = Field(default=500, description="Python recursion limit")
 
     @abstractmethod
-    def get_role_definitions(self) -> Dict[str, GamePlayerRole]:
+    def get_role_definitions(self) -> dict[str, GamePlayerRole]:
         """Define the player roles for this game.
 
         Returns:
@@ -105,10 +106,9 @@ class BaseGameConfig(AgentConfig, ABC):
                 "black_analyzer": GamePlayerRole(name="black_analyzer", display_name="Black Analyst", is_analyzer=True),
             }
         """
-        pass
 
     @abstractmethod
-    def get_example_configs(self) -> Dict[str, Dict[str, Any]]:
+    def get_example_configs(self) -> dict[str, dict[str, Any]]:
         """Define available example configurations.
 
         Returns:
@@ -128,21 +128,19 @@ class BaseGameConfig(AgentConfig, ABC):
                 }
             }
         """
-        pass
 
     @abstractmethod
-    def build_legacy_engines(self) -> List[Any]:
+    def build_legacy_engines(self) -> list[Any]:
         """Build legacy hardcoded engines for backward compatibility.
 
         Returns:
             List of game engines using hardcoded LLM configurations
         """
-        pass
 
     @abstractmethod
     def create_engines_from_player_configs(
-        self, player_configs: Dict[str, PlayerAgentConfig]
-    ) -> List[Any]:
+        self, player_configs: dict[str, PlayerAgentConfig]
+    ) -> list[Any]:
         """Create engines from detailed player configurations.
 
         Args:
@@ -151,7 +149,6 @@ class BaseGameConfig(AgentConfig, ABC):
         Returns:
             List of configured game engines
         """
-        pass
 
     def determine_config_mode(self) -> ConfigMode:
         """Automatically determine configuration mode based on provided fields."""
@@ -160,14 +157,13 @@ class BaseGameConfig(AgentConfig, ABC):
 
         if self.use_legacy_engines:
             return ConfigMode.LEGACY
-        elif self.player_configs:
+        if self.player_configs:
             return ConfigMode.ADVANCED
-        elif self.example_config:
+        if self.example_config:
             return ConfigMode.EXAMPLE
-        else:
-            return ConfigMode.SIMPLE
+        return ConfigMode.SIMPLE
 
-    def create_simple_player_configs(self) -> Dict[str, PlayerAgentConfig]:
+    def create_simple_player_configs(self) -> dict[str, PlayerAgentConfig]:
         """Create player configs from simple model strings.
 
         This method should be overridden by games that use different
@@ -195,7 +191,7 @@ class BaseGameConfig(AgentConfig, ABC):
 
     def create_example_player_configs(
         self, example_name: str
-    ) -> Dict[str, PlayerAgentConfig]:
+    ) -> dict[str, PlayerAgentConfig]:
         """Create player configs from example configuration."""
         examples = self.get_example_configs()
 
@@ -216,7 +212,8 @@ class BaseGameConfig(AgentConfig, ABC):
         return self.create_simple_player_configs()
 
     @model_validator(mode="after")
-    def configure_engines(self) -> "BaseGameConfig":
+    @classmethod
+    def configure_engines(cls) -> "BaseGameConfig":
         """Configure engines based on the determined mode."""
         mode = self.determine_config_mode()
 
@@ -240,7 +237,7 @@ class BaseGameConfig(AgentConfig, ABC):
 
         return self
 
-    def get_player_names(self) -> Dict[str, str]:
+    def get_player_names(self) -> dict[str, str]:
         """Get display names for all players."""
         roles = self.get_role_definitions()
         return {
@@ -295,7 +292,7 @@ def create_example_config(
 
 def create_advanced_config(
     config_class: type[BaseGameConfig],
-    player_configs: Dict[str, PlayerAgentConfig],
+    player_configs: dict[str, PlayerAgentConfig],
     **kwargs,
 ) -> BaseGameConfig:
     """Create a game configuration with detailed player configs.

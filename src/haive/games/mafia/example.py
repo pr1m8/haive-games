@@ -28,11 +28,11 @@ import traceback
 import uuid
 
 # Local imports
-from haive.games.mafia.agent import MafiaAgent
-from haive.games.mafia.config import MafiaAgentConfig, aug_llm_configs
-from haive.games.mafia.models import GamePhase
-from haive.games.mafia.state import MafiaGameState
-from haive.games.mafia.state_manager import MafiaStateManager
+from .mafia.agent import MafiaAgent
+from .mafia.config import MafiaAgentConfig, aug_llm_configs
+from .mafia.models import GamePhase
+from .mafia.state import MafiaGameState
+from .mafia.state_manager import MafiaStateManager
 
 # Third-party imports
 

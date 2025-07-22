@@ -2,16 +2,16 @@ import logging
 import time
 from typing import Any
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.types import Command
 from rich.console import Console
 
-from haive.games.framework.base.agent import GameAgent
-from haive.games.mastermind.config import MastermindConfig
-from haive.games.mastermind.models import ColorCode, MastermindGuess
-from haive.games.mastermind.state import MastermindState
-from haive.games.mastermind.state_manager import MastermindStateManager
+from .engine.agent.agent import register_agent
+from .framework.base.agent import GameAgent
+from .graph.dynamic_graph_builder import DynamicGraph
+from .mastermind.config import MastermindConfig
+from .mastermind.models import ColorCode, MastermindGuess
+from .mastermind.state import MastermindState
+from .mastermind.state_manager import MastermindStateManager
 
 # Import the UI module
 try:
@@ -56,7 +56,7 @@ def ensure_game_state(
             )
             return MastermindState.model_validate(state_input)
         except Exception as e:
-            logger.error(f"Failed to convert dict to MastermindState: {e}")
+            logger.exception(f"Failed to convert dict to MastermindState: {e}")
             logger.debug(f"Dict contents: {state_input}")
             # Initialize a new state as fallback rather than crashing
             logger.info("ensure_game_state: Using default state as fallback")
@@ -490,11 +490,11 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                         logger.info(f"Strategy: {last_analysis.strategy}")
                         logger.info(f"Confidence: {last_analysis.confidence}/10")
         except Exception as e:
-            logger.error(f"Error visualizing state: {e}")
+            logger.exception(f"Error visualizing state: {e}")
             if self.console:
                 self.console.print(f"[bold red]Error visualizing state: {e}[/bold red]")
             else:
-                logger.error(f"Error visualizing state: {e}")
+                logger.exception(f"Error visualizing state: {e}")
 
         # Add a short delay for readability
         time.sleep(0.5)
@@ -591,24 +591,21 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                         break
 
                     # Detect if we're stuck in an infinite loop
-                    if last_state:
-                        if (
-                            len(current_state.guesses) == len(last_state.guesses)
-                            and len(current_state.guesses) > 0
-                        ):
-                            # Check if max turns reached
-                            if len(current_state.guesses) >= current_state.max_turns:
-                                self.console.print(
-                                    "\n[bold yellow]⚠️ Maximum turns reached. Ending game.[/bold yellow]"
-                                )
+                    if last_state and (
+                        len(current_state.guesses) == len(last_state.guesses)
+                        and len(current_state.guesses) > 0
+                    ):
+                        # Check if max turns reached
+                        if len(current_state.guesses) >= current_state.max_turns:
+                            self.console.print(
+                                "\n[bold yellow]⚠️ Maximum turns reached. Ending game.[/bold yellow]"
+                            )
 
-                                # Force game to end with codemaker win
-                                current_state.game_status = (
-                                    f"{current_state.codemaker}_win"
-                                )
-                                current_state.winner = current_state.codemaker
-                                final_state = current_state.model_dump()
-                                break
+                            # Force game to end with codemaker win
+                            current_state.game_status = f"{current_state.codemaker}_win"
+                            current_state.winner = current_state.codemaker
+                            final_state = current_state.model_dump()
+                            break
 
                     # Update last state
                     last_state = current_state
@@ -675,7 +672,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                     )
                     secret_code = None
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error getting secret code from LLM: {e}. Using random code."
                 )
                 secret_code = None
@@ -746,13 +743,13 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                         # Update last state
                         last_state = current_state
                     except Exception as e:
-                        logger.error(f"Error processing state: {e}")
+                        logger.exception(f"Error processing state: {e}")
                         if self.console:
                             self.console.print(
                                 f"[bold red]Error processing state: {e}[/bold red]"
                             )
                         else:
-                            logger.error(f"Error processing state: {e}")
+                            logger.exception(f"Error processing state: {e}")
 
                     time.sleep(1)
 
@@ -763,7 +760,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
                 return final_state if final_state else step
             except Exception as e:
-                logger.error(f"Error running game: {e}")
+                logger.exception(f"Error running game: {e}")
                 return {}
         else:
             # Non-visualized mode

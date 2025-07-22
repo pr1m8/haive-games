@@ -65,8 +65,8 @@ from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import Field, computed_field, field_validator
 
-from haive.games.dominoes.models import DominoesAnalysis, DominoMove, DominoTile
-from haive.games.framework.base.state import GameState
+from .dominoes.models import DominoesAnalysis, DominoMove, DominoTile
+from .framework.base.state import GameState
 
 
 class DominoesState(GameState):

@@ -1,22 +1,21 @@
 """Generic Checkers engines using the new generic player agent system.
 
+from typing import Any
 This module demonstrates how to use the generic player agent system for Checkers,
 showing the same pattern working across different games with different player identifiers.
 """
 
-from typing import Type, Union
-
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.checkers.models import CheckersAnalysis, CheckersPlayerDecision
-from haive.games.core.agent.generic_player_agent import (
+from .checkers.models import CheckersAnalysis, CheckersPlayerDecision
+from .core.agent.generic_player_agent import (
     CheckersPlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .models.llm import LLMConfig
 
 
 class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
@@ -115,11 +114,11 @@ class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
             ]
         )
 
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for Checkers moves."""
         return CheckersPlayerDecision
 
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for Checkers analysis."""
         return CheckersAnalysis
 
@@ -162,8 +161,8 @@ def create_generic_checkers_engines(
 
 
 def create_generic_checkers_engines_simple(
-    red_model: Union[str, LLMConfig] = "gpt-4o",
-    black_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    red_model: str | LLMConfig = "gpt-4o",
+    black_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     temperature: float = 0.3,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:
@@ -242,79 +241,52 @@ def create_generic_checkers_config_from_example(
 # Demonstrate the cross-game pattern
 
 
-def compare_checkers_with_other_games():
+def compare_checkers_with_other_games() -> None:
     """Compare the checkers pattern with other games to show generalization.
 
     This function demonstrates how the same generic system works for
     different games with different player naming conventions.
     """
-    print("🎯 Cross-Game Pattern Comparison")
-    print("=" * 40)
-
     # Chess pattern
-    print("♟️  Chess Pattern:")
     chess_engines = {
         "white_player": "White player moves",
         "black_player": "Black player moves",
         "white_analyzer": "White position analysis",
         "black_analyzer": "Black position analysis",
     }
-    for role, desc in chess_engines.items():
-        print(f"   {role}: {desc}")
-
-    print()
+    for _role, _desc in chess_engines.items():
+        pass
 
     # Checkers pattern
-    print("🔴 Checkers Pattern:")
     checkers_engines = {
         "red_player": "Red player moves",
         "black_player": "Black player moves",
         "red_analyzer": "Red position analysis",
         "black_analyzer": "Black position analysis",
     }
-    for role, desc in checkers_engines.items():
-        print(f"   {role}: {desc}")
-
-    print()
+    for _role, _desc in checkers_engines.items():
+        pass
 
     # Tic Tac Toe pattern
-    print("⭕ Tic Tac Toe Pattern:")
     ttt_engines = {
         "X_player": "X player moves",
         "O_player": "O player moves",
         "X_analyzer": "X position analysis",
         "O_analyzer": "O position analysis",
     }
-    for role, desc in ttt_engines.items():
-        print(f"   {role}: {desc}")
-
-    print()
-    print("🔄 Same Generic Pattern:")
-    print("   {player1}_player: First player moves")
-    print("   {player2}_player: Second player moves")
-    print("   {player1}_analyzer: First player analysis")
-    print("   {player2}_analyzer: Second player analysis")
-
-    print()
-    print("✅ Type-safe player identifiers")
-    print("✅ Consistent role structure")
-    print("✅ Configurable LLM per role")
-    print("✅ Cross-game compatibility")
-    print("✅ Easy to add new games")
+    for _role, _desc in ttt_engines.items():
+        pass
 
 
 # Advanced example: Multi-game configuration
 
 
-def create_multi_game_checkers_demo():
+def create_multi_game_checkers_demo() -> Any:
     """Create engines for multiple games including checkers.
 
     This demonstrates how the same configuration approach works
     across different games with the generic system.
     """
-    print("\n🎮 Multi-Game Configuration with Checkers")
-    print("=" * 50)
-
     # Same models, different games
     model1 = "openai:gpt-4o"
     model2 = "anthropic:claude-3-5-sonnet-20240620"
@@ -343,39 +315,19 @@ def create_multi_game_checkers_demo():
     # Checkers engines
     checkers_engines = create_generic_checkers_engines_simple(model1, model2)
 
-    print(f"🔧 Using models: {model1} vs {model2}")
-    print()
-
     if has_chess:
-        print("♟️  Chess roles:")
         for role in sorted(chess_engines.keys()):
             engine = chess_engines[role]
-            model = getattr(engine.llm_config, "model", "unknown")
-            print(f"   {role}: {model}")
-        print()
+            getattr(engine.llm_config, "model", "unknown")
 
-    print("🔴 Checkers roles:")
     for role in sorted(checkers_engines.keys()):
         engine = checkers_engines[role]
-        model = getattr(engine.llm_config, "model", "unknown")
-        print(f"   {role}: {model}")
+        getattr(engine.llm_config, "model", "unknown")
 
     if has_ttt:
-        print()
-        print("⭕ Tic Tac Toe roles:")
         for role in sorted(ttt_engines.keys()):
             engine = ttt_engines[role]
-            model = getattr(engine.llm_config, "model", "unknown")
-            print(f"   {role}: {model}")
-
-    print()
-    print("🎯 Benefits of Generic System:")
-    print("   ✅ Same configuration API across all games")
-    print("   ✅ Type safety prevents configuration errors")
-    print("   ✅ Easy to add new games following the pattern")
-    print("   ✅ No hardcoded LLM configurations")
-    print("   ✅ Consistent role naming conventions")
-    print("   ✅ Checkers seamlessly integrates with other games")
+            getattr(engine.llm_config, "model", "unknown")
 
 
 if __name__ == "__main__":

@@ -17,11 +17,11 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.dominoes.models import (
+from .dominoes.models import (
     DominoMove,
     DominoTile,
 )
-from haive.games.dominoes.state import DominoesState
+from .dominoes.state import DominoesState
 
 logger = logging.getLogger(__name__)
 

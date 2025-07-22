@@ -52,6 +52,7 @@ class Connect4Move(BaseModel):
     )
 
     @field_validator("column")
+    @classmethod
     def validate_column(cls, v: int) -> int:
         """Validate the column number.
 
@@ -177,6 +178,7 @@ class Connect4Analysis(BaseModel):
     )
 
     @field_validator("center_control")
+    @classmethod
     def validate_center_control(cls, v: int) -> int:
         """Validate the center control rating.
 
@@ -194,6 +196,7 @@ class Connect4Analysis(BaseModel):
         return v
 
     @field_validator("winning_chances")
+    @classmethod
     def validate_winning_chances(cls, v: int) -> int:
         """Validate the winning chances percentage.
 

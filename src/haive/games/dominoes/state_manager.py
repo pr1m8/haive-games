@@ -3,9 +3,9 @@ import logging
 import random
 from typing import Any, Literal
 
-from haive.games.dominoes.models import DominoesAnalysis, DominoMove, DominoTile
-from haive.games.dominoes.state import DominoesState
-from haive.games.framework.base import GameStateManager
+from .dominoes.models import DominoesAnalysis, DominoMove, DominoTile
+from .dominoes.state import DominoesState
+from .framework.base import GameStateManager
 
 # src/haive/agents/agent_games/dominoes/state.py
 

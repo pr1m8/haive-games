@@ -1,175 +1,137 @@
-"""Connect4 game implementation module.
+"""Module exports."""
 
-This package provides a complete implementation of the Connect4 game, including:
-    - Game agent with LLM-powered players and strategic reasoning
-    - State management and move validation with gravity mechanics
-    - Position analysis and threat detection
-    - Rich UI visualization with animations
-    - Configuration and model definitions with type safety
-    - Comprehensive examples and testing utilities
-
-The Connect4 module demonstrates advanced game AI capabilities with:
-    - Strategic position evaluation
-    - Multi-directional threat detection (horizontal, vertical, diagonal)
-    - Center control analysis and strategic positioning
-    - Pattern recognition for winning combinations
-    - Performance optimization for high-throughput scenarios
-
-Example:
-    Basic usage:
-        >>> from haive.games.connect4 import Connect4Agent, Connect4AgentConfig, Connect4UI
-        >>> from haive.games.connect4.state_manager import Connect4StateManager
-        >>>
-        >>> # Create and configure a Connect4 agent
-        >>> config = Connect4AgentConfig(enable_analysis=True)
-        >>> agent = Connect4Agent(config)
-        >>> ui = Connect4UI()
-        >>>
-        >>> # Initialize and display game state
-        >>> state = Connect4StateManager.initialize()
-        >>> ui.display_state(state)
-        >>>
-        >>> # Create and apply moves
-        >>> from haive.games.connect4.models import Connect4Move
-        >>> move = Connect4Move(column=3, explanation="Control center")
-        >>> new_state = Connect4StateManager.apply_move(state, move)
-        >>> ui.display_state(new_state)
-
-    Advanced usage with analysis:
-        >>> from haive.games.connect4.models import Connect4Analysis
-        >>>
-        >>> # Create position analysis
-        >>> analysis = Connect4Analysis(
-        ...     position_score=0.5,
-        ...     center_control=8,
-        ...     threats={"winning_moves": [3], "blocking_moves": [2]},
-        ...     suggested_columns=[3, 2, 4],
-        ...     winning_chances=75
-        ... )
-        >>> # Position strength: {analysis.position_score}
-        >>> # Winning chances: {analysis.winning_chances}%
-
-    Rich UI demonstration:
-        >>> # Run game with beautiful interface
-        >>> for step in agent.app.stream(state.model_dump(), debug=False):
-        ...     ui.display_state(step)
-        ...     if step.get("game_status") != "ongoing":
-        ...         ui.show_game_over(step.get("winner"))
-        ...         break
-"""
-
-from typing import TYPE_CHECKING
-
-# Core game components
-from haive.games.connect4.agent import Connect4Agent
-from haive.games.connect4.config import Connect4AgentConfig
-
-# Game models and data structures
-from haive.games.connect4.models import (
+from connect4.agent import (
+    Connect4Agent,
+    analyze_player1,
+    analyze_player2,
+    extract_move,
+    make_player1_move,
+    make_player2_move,
+    prepare_analysis_context,
+    prepare_move_context,
+    visualize_state,
+)
+from connect4.config import Config, Connect4AgentConfig
+from connect4.configurable_config import (
+    Config,
+    ConfigurableConnect4Config,
+    configure_engines_and_names,
+    create_connect4_config,
+    create_connect4_config_from_example,
+    create_connect4_config_from_player_configs,
+)
+from connect4.engines import generate_analysis_prompt, generate_move_prompt
+from connect4.example import (
+    GameResult,
+    example_1_basic_game,
+    example_2_rich_ui_game,
+    example_3_strategic_analysis,
+    example_4_performance_testing,
+    example_5_error_handling,
+    example_6_tournament_mode,
+    example_7_custom_ai_configuration,
+    main,
+)
+from connect4.factory import run_connect4_game
+from connect4.generic_engines import (
+    Connect4PromptGenerator,
+    create_analysis_prompt,
+    create_generic_connect4_config_from_example,
+    create_generic_connect4_engines,
+    create_generic_connect4_engines_simple,
+    create_move_prompt,
+    get_analysis_output_model,
+    get_move_output_model,
+)
+from connect4.models import (
     Connect4Analysis,
     Connect4Move,
     Connect4PlayerDecision,
+    validate_center_control,
+    validate_column,
+    validate_winning_chances,
 )
-from haive.games.connect4.state import Connect4State
-from haive.games.connect4.state_manager import Connect4StateManager
-from haive.games.connect4.ui import Connect4UI
+from connect4.state import (
+    Connect4State,
+    board_string,
+    get_next_row,
+    initialize,
+    is_column_full,
+    validate_board_dimensions,
+)
+from connect4.state_manager import (
+    Connect4StateManager,
+    apply_move,
+    check_game_over,
+    ensure_state,
+    get_legal_moves,
+    initialize,
+)
+from connect4.ui import (
+    Connect4UI,
+    display_state,
+    show_game_over,
+    show_move,
+    show_thinking,
+)
 
-# Type checking imports for better IDE support
-if TYPE_CHECKING:
-    from haive.games.connect4.engines import Connect4Engine
-    from haive.games.connect4.factory import Connect4Factory
-
-# Version information
-__version__ = "1.0.0"
-
-# Public API exports
 __all__ = [
-    # Core classes
+    "Config",
+    "ConfigurableConnect4Config",
     "Connect4Agent",
     "Connect4AgentConfig",
-    "Connect4State",
-    "Connect4StateManager",
-    "Connect4UI",
-    # Data models
     "Connect4Analysis",
     "Connect4Move",
     "Connect4PlayerDecision",
-    # Module metadata
-    "__version__",
+    "Connect4PromptGenerator",
+    "Connect4State",
+    "Connect4StateManager",
+    "Connect4UI",
+    "GameResult",
+    "analyze_player1",
+    "analyze_player2",
+    "apply_move",
+    "board_string",
+    "check_game_over",
+    "configure_engines_and_names",
+    "create_analysis_prompt",
+    "create_connect4_config",
+    "create_connect4_config_from_example",
+    "create_connect4_config_from_player_configs",
+    "create_generic_connect4_config_from_example",
+    "create_generic_connect4_engines",
+    "create_generic_connect4_engines_simple",
+    "create_move_prompt",
+    "display_state",
+    "ensure_state",
+    "example_1_basic_game",
+    "example_2_rich_ui_game",
+    "example_3_strategic_analysis",
+    "example_4_performance_testing",
+    "example_5_error_handling",
+    "example_6_tournament_mode",
+    "example_7_custom_ai_configuration",
+    "extract_move",
+    "generate_analysis_prompt",
+    "generate_move_prompt",
+    "get_analysis_output_model",
+    "get_legal_moves",
+    "get_move_output_model",
+    "get_next_row",
+    "initialize",
+    "is_column_full",
+    "main",
+    "make_player1_move",
+    "make_player2_move",
+    "prepare_analysis_context",
+    "prepare_move_context",
+    "run_connect4_game",
+    "show_game_over",
+    "show_move",
+    "show_thinking",
+    "validate_board_dimensions",
+    "validate_center_control",
+    "validate_column",
+    "validate_winning_chances",
+    "visualize_state",
 ]
-
-# Module-level constants
-BOARD_ROWS = 6
-BOARD_COLUMNS = 7
-MAX_MOVES = 42
-DEFAULT_PLAYER_COLORS = ["red", "yellow"]
-WIN_LENGTH = 4
-
-
-# Quick access functions for common operations
-def create_game(
-    enable_analysis: bool = True, max_moves: int = MAX_MOVES
-) -> Connect4Agent:
-    """Create a Connect4 game with default configuration.
-
-    Args:
-        enable_analysis: Whether to enable position analysis
-        max_moves: Maximum number of moves allowed
-
-    Returns:
-        Connect4Agent: Configured game agent
-
-    Example:
-        >>> game = create_game(enable_analysis=True)
-        >>> # Game ready to play
-    """
-    config = Connect4AgentConfig(
-        name="default_connect4",
-        enable_analysis=enable_analysis,
-        max_moves=max_moves,
-        should_visualize_graph=False,
-    )
-    return Connect4Agent(config)
-
-
-def create_ui() -> Connect4UI:
-    """Create a Connect4 UI with default settings.
-
-    Returns:
-        Connect4UI: Configured UI instance
-
-    Example:
-        >>> ui = create_ui()
-        >>> state = Connect4StateManager.initialize()
-        >>> ui.display_state(state)
-    """
-    return Connect4UI()
-
-
-def initialize_game() -> Connect4State:
-    """Initialize a new Connect4 game state.
-
-    Returns:
-        Connect4State: Initial game state
-
-    Example:
-        >>> state = initialize_game()
-        >>> assert state.turn == "red"
-        >>> assert state.game_status == "ongoing"
-    """
-    return Connect4StateManager.initialize()
-
-
-# Add convenience functions to __all__
-__all__.extend(
-    [
-        "create_game",
-        "create_ui",
-        "initialize_game",
-        "BOARD_ROWS",
-        "BOARD_COLUMNS",
-        "MAX_MOVES",
-        "DEFAULT_PLAYER_COLORS",
-        "WIN_LENGTH",
-    ]
-)

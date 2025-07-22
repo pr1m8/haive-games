@@ -4,7 +4,7 @@ This module provides temporary workarounds for testing game functionality
 while the LLM factory registry issues are being resolved.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import (
@@ -31,15 +31,14 @@ def create_test_llm_config(model: str, **kwargs) -> LLMConfig:
     # Simple model to provider mapping
     if "gpt" in model.lower():
         return OpenAILLMConfig(model=model, **kwargs)
-    elif "claude" in model.lower():
+    if "claude" in model.lower():
         return AnthropicLLMConfig(model=model, **kwargs)
-    elif "gemini" in model.lower():
+    if "gemini" in model.lower():
         return GeminiLLMConfig(model=model, **kwargs)
-    elif "llama" in model.lower() or "mixtral" in model.lower():
+    if "llama" in model.lower() or "mixtral" in model.lower():
         return GroqLLMConfig(model=model, **kwargs)
-    else:
-        # Default to OpenAI for unknown models
-        return OpenAILLMConfig(model=model, **kwargs)
+    # Default to OpenAI for unknown models
+    return OpenAILLMConfig(model=model, **kwargs)
 
 
 def create_test_player_agent_config(
@@ -111,7 +110,7 @@ def create_test_engines_simple(
     player1_name: str = "player1",
     player2_name: str = "player2",
     temperature: float = 0.3,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create a simple set of test engines for any two-player game.
 
     Args:
@@ -169,7 +168,7 @@ def create_test_engines_simple(
 
 def create_test_chess_engines(
     white_model: str = "gpt-4o", black_model: str = "claude-3-opus", **kwargs
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create test engines for Chess."""
     return create_test_engines_simple(
         white_model, black_model, "white", "black", **kwargs
@@ -178,7 +177,7 @@ def create_test_chess_engines(
 
 def create_test_connect4_engines(
     red_model: str = "gpt-4o", yellow_model: str = "claude-3-opus", **kwargs
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create test engines for Connect4."""
     return create_test_engines_simple(
         red_model, yellow_model, "red", "yellow", **kwargs
@@ -187,14 +186,14 @@ def create_test_connect4_engines(
 
 def create_test_checkers_engines(
     red_model: str = "gpt-4o", black_model: str = "claude-3-opus", **kwargs
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create test engines for Checkers."""
     return create_test_engines_simple(red_model, black_model, "red", "black", **kwargs)
 
 
 def create_test_ttt_engines(
     x_model: str = "gpt-4o", o_model: str = "claude-3-opus", **kwargs
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create test engines for Tic-Tac-Toe."""
     return create_test_engines_simple(x_model, o_model, "X", "O", **kwargs)
 
@@ -202,7 +201,7 @@ def create_test_ttt_engines(
 # Test validation helpers
 
 
-def validate_engine_structure(engines: Dict[str, AugLLMConfig], game_name: str) -> bool:
+def validate_engine_structure(engines: dict[str, AugLLMConfig], game_name: str) -> bool:
     """Validate that engines have the expected structure.
 
     Args:
@@ -213,19 +212,15 @@ def validate_engine_structure(engines: Dict[str, AugLLMConfig], game_name: str) 
         bool: True if structure is valid
     """
     if len(engines) != 4:
-        print(f"❌ {game_name}: Expected 4 engines, got {len(engines)}")
         return False
 
     # Check that all engines have required attributes
-    for name, engine in engines.items():
+    for _name, engine in engines.items():
         if not hasattr(engine, "llm_config"):
-            print(f"❌ {game_name}: Engine {name} missing llm_config")
             return False
         if not hasattr(engine, "prompt_template"):
-            print(f"❌ {game_name}: Engine {name} missing prompt_template")
             return False
 
-    print(f"✅ {game_name}: Engine structure validation passed")
     return True
 
 
@@ -243,7 +238,6 @@ def test_basic_game_structure(
         bool: True if test passed
     """
     try:
-        print(f"\n=== TESTING {game_name.upper()} STRUCTURE ===")
 
         # Create engines
         engines = create_engines_func()
@@ -256,17 +250,9 @@ def test_basic_game_structure(
         actual_roles = set(engines.keys())
         expected_roles_set = set(expected_roles)
 
-        if actual_roles != expected_roles_set:
-            print(f"❌ {game_name}: Role mismatch")
-            print(f"   Expected: {expected_roles_set}")
-            print(f"   Actual: {actual_roles}")
-            return False
+        return actual_roles == expected_roles_set
 
-        print(f"✅ {game_name}: All tests passed!")
-        return True
-
-    except Exception as e:
-        print(f"❌ {game_name}: Test failed with error: {e}")
+    except Exception:
         return False
 
 
@@ -299,15 +285,9 @@ if __name__ == "__main__":
     )
 
     # Summary
-    print("\n" + "=" * 50)
-    print("TEST SUMMARY")
-    print("=" * 50)
 
     passed = sum(results.values())
     total = len(results)
 
-    for game, result in results.items():
+    for _game, result in results.items():
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{game:15} {status}")
-
-    print(f"\nOverall: {passed}/{total} games passed basic structure tests")

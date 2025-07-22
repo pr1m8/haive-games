@@ -262,7 +262,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
             elif "complete task" in response.lower() or "do task" in response.lower():
                 # Try to extract task ID from message
-                task_match = re.search(r"task[_\s]*(\w+)", response, re.IGNORECASE)
+                task_match = re.search(r"task[_\s]*()", response, re.IGNORECASE)
                 if task_match:
                     return {"action": "complete_task", "task_id": task_match.group(1)}
 

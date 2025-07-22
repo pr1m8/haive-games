@@ -24,17 +24,17 @@ Example:
     >>> })
 """
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.hold_em.models import (
+from .engine.aug_llm import AugLLMConfig
+from .hold_em.models import (
     BettingDecision,
     GameSituationAnalysis,
     OpponentModel,
     PokerAnalysis,
     TableDynamics,
 )
+from .models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 
 # ============================================================================
 # SPECIALIZED HAND ANALYZERS
@@ -69,7 +69,7 @@ def get_hand_analyzer(level: str = "standard") -> AugLLMConfig:
 
     # Create prompt with level-specific instructions
     base_instructions = """
-    You are a professional poker hand analyzer. Evaluate the given hole cards 
+    You are a professional poker hand analyzer. Evaluate the given hole cards
     and community cards to determine hand strength, potential, and optimal strategy.
     """
 
@@ -153,7 +153,7 @@ def get_opponent_profiler(tracking_depth: str = "standard") -> AugLLMConfig:
 
     # Create prompt with depth-specific instructions
     base_instructions = """
-    You are a poker opponent profiler who specializes in analyzing player behavior 
+    You are a poker opponent profiler who specializes in analyzing player behavior
     and tendencies. Build models of opponents based on their actions and patterns.
     """
 
@@ -507,10 +507,10 @@ def get_table_dynamics_analyzer() -> AugLLMConfig:
             (
                 "system",
                 """
-        You are a poker table dynamics analyzer who specializes in understanding the 
+        You are a poker table dynamics analyzer who specializes in understanding the
         complex interactions between players at a poker table. Analyze player types,
         table image, chip distribution, and meta-game elements.
-        
+
         Provide insights on:
         - Table aggression level
         - Power dynamics between players

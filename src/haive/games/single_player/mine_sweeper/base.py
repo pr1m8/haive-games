@@ -435,7 +435,8 @@ class MinesweeperGame(BaseModel):
     end_time: float | None = None
 
     @model_validator(mode="after")
-    def validate_game(self) -> MinesweeperGame:
+    @classmethod
+    def validate_game(cls) -> MinesweeperGame:
         """Ensure game has valid components."""
         return self
 

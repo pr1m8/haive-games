@@ -12,7 +12,6 @@ No mocks are used - these are real integration tests.
 
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 import pytest
 
@@ -89,7 +88,7 @@ class TestGameImports:
 class TestGameConfiguration:
     """Test that games can be configured using the new system."""
 
-    def get_test_games(self) -> List[str]:
+    def get_test_games(self) -> list[str]:
         """Get list of games to test."""
         return [
             "chess",
@@ -198,7 +197,8 @@ class TestGameConfiguration:
                         config = create_func(player1_model=model1, player2_model=model2)
 
                     # Verify engines were created
-                    assert hasattr(config, "engines") and config.engines is not None
+                    assert hasattr(config, "engines")
+                    assert config.engines is not None
 
                 except Exception as e:
                     failed_tests.append((game, model1, model2, str(e)))
@@ -213,7 +213,7 @@ class TestGameConfiguration:
 class TestGameEngines:
     """Test that game engines can be created and used."""
 
-    def get_test_games(self) -> List[str]:
+    def get_test_games(self) -> list[str]:
         """Get list of games with generic engines."""
         return [
             "chess",
@@ -327,7 +327,7 @@ class TestGameEngines:
 class TestGameStates:
     """Test that game states can be created and manipulated."""
 
-    def get_test_games(self) -> List[Tuple[str, str]]:
+    def get_test_games(self) -> list[tuple[str, str]]:
         """Get list of games with their state class names."""
         return [
             ("chess", "ChessState"),

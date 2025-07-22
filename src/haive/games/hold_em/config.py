@@ -8,16 +8,15 @@ This module provides configuration classes for the Hold'em game, including:
 
 import logging
 import uuid
-from typing import Dict, List, Optional, Tuple
 
-from haive.core.config.runnable import RunnableConfigManager
-from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from haive.games.hold_em.engines import build_holdem_game_engines, build_player_engines
-from haive.games.hold_em.game_agent import HoldemGameAgentConfig
-from haive.games.hold_em.player_agent import HoldemPlayerAgentConfig
-from haive.games.hold_em.state import HoldemState
+from .config.runnable import RunnableConfigManager
+from .engine.aug_llm import AugLLMConfig
+from .hold_em.engines import build_holdem_game_engines, build_player_engines
+from .hold_em.game_agent import HoldemGameAgentConfig
+from .hold_em.player_agent import HoldemPlayerAgentConfig
+from .hold_em.state import HoldemState
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +28,6 @@ def create_default_holdem_config(
     big_blind: int = 20,
 ) -> HoldemGameAgentConfig:
     """Create a default Hold'em game configuration."""
-
     logger.info("🎮 Creating default Hold'em configuration...")
     logger.info(f"   Players: {num_players}")
     logger.info(f"   Starting chips: {starting_chips}")
@@ -67,7 +65,7 @@ def create_default_holdem_config(
 
     logger.info(f"🎭 Creating {num_players} player configurations...")
 
-    for i, (name, style) in enumerate(zip(player_names, player_styles)):
+    for i, (name, style) in enumerate(zip(player_names, player_styles, strict=False)):
         logger.info(f"   Setting up {name} ({style} style)")
 
         # Build engines for this player with error handling
@@ -81,7 +79,7 @@ def create_default_holdem_config(
                 logger.warning(f"     ⚠️ Engine validation failed for {name}")
 
         except Exception as e:
-            logger.error(f"     ❌ Error building engines for {name}: {e}")
+            logger.exception(f"     ❌ Error building engines for {name}: {e}")
             player_engines = create_fallback_engines(name, style)
             logger.info(f"     🔄 Using fallback engines for {name}")
 
@@ -102,7 +100,7 @@ def create_default_holdem_config(
             logger.info(f"     ✅ Created config for {name}")
 
         except Exception as e:
-            logger.error(f"     ❌ Error creating config for {name}: {e}")
+            logger.exception(f"     ❌ Error creating config for {name}: {e}")
             raise ValueError(f"Failed to create player config for {name}: {e}")
 
     logger.info("🎯 Building game engines...")
@@ -112,7 +110,7 @@ def create_default_holdem_config(
         game_engines = build_holdem_game_engines()
         logger.info(f"   ✅ Built {len(game_engines)} game engines")
     except Exception as e:
-        logger.error(f"   ❌ Error building game engines: {e}")
+        logger.exception(f"   ❌ Error building game engines: {e}")
         game_engines = create_fallback_game_engines()
         logger.info("   🔄 Using fallback game engines")
 
@@ -140,17 +138,16 @@ def create_default_holdem_config(
         return game_config
 
     except Exception as e:
-        logger.error(f"❌ Error creating game configuration: {e}")
+        logger.exception(f"❌ Error creating game configuration: {e}")
         raise ValueError(f"Failed to create game configuration: {e}")
 
 
 def create_tournament_config(
     num_players: int = 6,
     starting_chips: int = 1500,
-    blind_levels: Optional[List[Tuple[int, int]]] = None,
+    blind_levels: list[tuple[int, int]] | None = None,
 ) -> HoldemGameAgentConfig:
     """Create a tournament-style configuration with escalating blinds."""
-
     logger.info("🏆 Creating tournament configuration...")
 
     if blind_levels is None:
@@ -195,7 +192,6 @@ def create_cash_game_config(
     min_buy_in: int = 400,
 ) -> HoldemGameAgentConfig:
     """Create a cash game configuration."""
-
     logger.info("💰 Creating cash game configuration...")
 
     small_blind = big_blind // 2
@@ -239,7 +235,6 @@ def create_heads_up_config(
     big_blind: int = 20,
 ) -> HoldemGameAgentConfig:
     """Create a heads-up (2 player) configuration."""
-
     logger.info(f"🥊 Creating heads-up configuration: {player1_name} vs {player2_name}")
 
     # Create specialized player configs for heads-up
@@ -260,7 +255,7 @@ def create_heads_up_config(
                 logger.warning(f"     ⚠️ Engine validation failed for {name}")
 
         except Exception as e:
-            logger.error(f"     ❌ Error building engines for {name}: {e}")
+            logger.exception(f"     ❌ Error building engines for {name}: {e}")
             player_engines = create_fallback_engines(name, style)
             logger.info(f"     🔄 Using fallback engines for {name}")
 
@@ -281,7 +276,7 @@ def create_heads_up_config(
             logger.info(f"     ✅ Created heads-up config for {name}")
 
         except Exception as e:
-            logger.error(f"     ❌ Error creating config for {name}: {e}")
+            logger.exception(f"     ❌ Error creating config for {name}: {e}")
             raise ValueError(f"Failed to create heads-up config for {name}: {e}")
 
     # Build game engines
@@ -289,7 +284,7 @@ def create_heads_up_config(
         game_engines = build_holdem_game_engines()
         logger.info(f"   ✅ Built {len(game_engines)} game engines")
     except Exception as e:
-        logger.error(f"   ❌ Error building game engines: {e}")
+        logger.exception(f"   ❌ Error building game engines: {e}")
         game_engines = create_fallback_game_engines()
         logger.info("   🔄 Using fallback game engines")
 
@@ -320,7 +315,7 @@ def create_heads_up_config(
         return config
 
     except Exception as e:
-        logger.error(f"❌ Error creating heads-up configuration: {e}")
+        logger.exception(f"❌ Error creating heads-up configuration: {e}")
         raise ValueError(f"Failed to create heads-up configuration: {e}")
 
 
@@ -365,24 +360,22 @@ class HoldemGameSettings(BaseModel):
 
     def to_game_config(self) -> HoldemGameAgentConfig:
         """Convert settings to a game configuration."""
-
         if self.heads_up:
             return create_heads_up_config(
                 starting_chips=self.starting_chips, big_blind=self.big_blind
             )
-        elif self.tournament_mode:
+        if self.tournament_mode:
             return create_tournament_config(
                 num_players=self.num_players, starting_chips=self.starting_chips
             )
-        else:
-            return create_cash_game_config(
-                num_players=self.num_players,
-                big_blind=self.big_blind,
-                max_buy_in=self.starting_chips * 2,
-            )
+        return create_cash_game_config(
+            num_players=self.num_players,
+            big_blind=self.big_blind,
+            max_buy_in=self.starting_chips * 2,
+        )
 
 
-def validate_player_engines(engines: Dict[str, AugLLMConfig]) -> bool:
+def validate_player_engines(engines: dict[str, AugLLMConfig]) -> bool:
     """Validate that player engines are properly configured."""
     required_engines = [
         "decision_maker",
@@ -410,7 +403,7 @@ def validate_player_engines(engines: Dict[str, AugLLMConfig]) -> bool:
             if not hasattr(engine, "prompt_template"):
                 logger.warning(f"⚠️ Engine {engine_name} missing prompt_template")
         except Exception as e:
-            logger.error(f"❌ Error validating engine {engine_name}: {e}")
+            logger.exception(f"❌ Error validating engine {engine_name}: {e}")
             return False
 
     return True
@@ -418,7 +411,7 @@ def validate_player_engines(engines: Dict[str, AugLLMConfig]) -> bool:
 
 def create_fallback_engines(
     player_name: str, player_style: str
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create minimal fallback engines if the main engine creation fails."""
     from haive.core.models.llm.base import AzureLLMConfig
     from langchain_core.prompts import ChatPromptTemplate
@@ -486,11 +479,11 @@ def create_fallback_engines(
             ),
         }
     except Exception as e:
-        logger.error(f"❌ Failed to create fallback engines: {e}")
+        logger.exception(f"❌ Failed to create fallback engines: {e}")
         return {}
 
 
-def create_fallback_game_engines() -> Dict[str, AugLLMConfig]:
+def create_fallback_game_engines() -> dict[str, AugLLMConfig]:
     """Create minimal fallback game engines."""
     from haive.core.models.llm.base import AzureLLMConfig
     from langchain_core.prompts import ChatPromptTemplate
@@ -517,7 +510,7 @@ def create_fallback_game_engines() -> Dict[str, AugLLMConfig]:
             )
         }
     except Exception as e:
-        logger.error(f"❌ Failed to create fallback game engines: {e}")
+        logger.exception(f"❌ Failed to create fallback game engines: {e}")
         return {}
 
 
@@ -526,7 +519,7 @@ def create_custom_holdem_config(settings: HoldemGameSettings) -> HoldemGameAgent
     return settings.to_game_config()
 
 
-def validate_config(config: HoldemGameAgentConfig) -> Tuple[bool, List[str]]:
+def validate_config(config: HoldemGameAgentConfig) -> tuple[bool, list[str]]:
     """Validate a game configuration and return issues found."""
     issues = []
 

@@ -31,6 +31,7 @@ class ChessMoveModel(BaseModel):
     )
 
     @field_validator("move")
+    @classmethod
     def validate_move(cls, v: str) -> str:
         """Validate the move format.
 

@@ -1,5 +1,6 @@
 """General API system for all haive games.
 
+from typing import Any
 This module provides a general-purpose API that automatically discovers
 all available games and creates endpoints for each one, with OpenAPI
 documentation and game selection capabilities.
@@ -8,7 +9,7 @@ documentation and game selection capabilities.
 import importlib
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
@@ -27,10 +28,10 @@ class GameInfo(BaseModel):
     name: str = Field(description="Display name of the game")
     game_id: str = Field(description="Unique identifier for the game")
     description: str = Field(description="Description of the game")
-    players: List[str] = Field(description="List of player roles")
-    example_configs: List[str] = Field(description="Available example configurations")
-    default_models: Dict[str, str] = Field(description="Default models for each player")
-    api_endpoints: Dict[str, str] = Field(description="API endpoints for this game")
+    players: list[str] = Field(description="List of player roles")
+    example_configs: list[str] = Field(description="Available example configurations")
+    default_models: dict[str, str] = Field(description="Default models for each player")
+    api_endpoints: dict[str, str] = Field(description="API endpoints for this game")
 
 
 class GameSelectionRequest(BaseModel):
@@ -41,16 +42,16 @@ class GameSelectionRequest(BaseModel):
         default="simple",
         description="Configuration mode: simple, example, advanced, legacy",
     )
-    player_models: Optional[Dict[str, str]] = Field(
+    player_models: dict[str, str] | None = Field(
         default=None, description="Models for each player (simple mode)"
     )
-    example_config: Optional[str] = Field(
+    example_config: str | None = Field(
         default=None, description="Example configuration name (example mode)"
     )
-    player_configs: Optional[Dict[str, Any]] = Field(
+    player_configs: dict[str, Any] | None = Field(
         default=None, description="Advanced player configurations"
     )
-    game_settings: Optional[Dict[str, Any]] = Field(
+    game_settings: dict[str, Any] | None = Field(
         default=None, description="Additional game settings"
     )
 
@@ -64,7 +65,7 @@ class GeneralGameAPI:
         games_package: str = "haive.games",
         route_prefix: str = "/api/games",
         ws_route_prefix: str = "/ws/games",
-        exclude_games: Optional[List[str]] = None,
+        exclude_games: list[str] | None = None,
     ):
         """Initialize the general game API.
 
@@ -81,8 +82,8 @@ class GeneralGameAPI:
         self.ws_route_prefix = ws_route_prefix
         self.exclude_games = exclude_games or ["go", "among_us"]  # Default exclusions
 
-        self.discovered_games: Dict[str, Dict[str, Any]] = {}
-        self.game_apis: Dict[str, GameAPI] = {}
+        self.discovered_games: dict[str, dict[str, Any]] = {}
+        self.game_apis: dict[str, GameAPI] = {}
 
         # Discover and register games
         self._discover_games()
@@ -98,7 +99,7 @@ class GeneralGameAPI:
             games_module = importlib.import_module(self.games_package)
             games_path = Path(games_module.__file__).parent
         except Exception as e:
-            logger.error(f"Failed to import games package: {e}")
+            logger.exception(f"Failed to import games package: {e}")
             return
 
         # Scan for game directories
@@ -122,7 +123,7 @@ class GeneralGameAPI:
             except Exception as e:
                 logger.warning(f"Failed to import game {game_name}: {e}")
 
-    def _import_game(self, game_name: str) -> Optional[Dict[str, Any]]:
+    def _import_game(self, game_name: str) -> dict[str, Any] | None:
         """Import a specific game and extract its information."""
         try:
             # Try to import agent module
@@ -184,14 +185,14 @@ class GeneralGameAPI:
             return game_info
 
         except Exception as e:
-            logger.error(f"Error importing game {game_name}: {e}")
+            logger.exception(f"Error importing game {game_name}: {e}")
             return None
 
     def _register_routes(self):
         """Register API routes for all discovered games."""
 
         # Main games list endpoint
-        @self.app.get(f"{self.route_prefix}/", response_model=List[GameInfo])
+        @self.app.get(f"{self.route_prefix}/", response_model=list[GameInfo])
         async def list_games():
             """List all available games."""
             games = []
@@ -252,37 +253,36 @@ class GeneralGameAPI:
                     )
                 config_kwargs["player_configs"] = request.player_configs
 
-            else:  # simple mode
-                if request.player_models:
-                    # Map generic player1/player2 to game-specific fields
-                    if game_id == "chess":
-                        config_kwargs["white_model"] = request.player_models.get(
-                            "player1", "gpt-4"
-                        )
-                        config_kwargs["black_model"] = request.player_models.get(
-                            "player2", "claude-3-opus"
-                        )
-                    elif game_id == "connect4":
-                        config_kwargs["red_model"] = request.player_models.get(
-                            "player1", "gpt-4"
-                        )
-                        config_kwargs["yellow_model"] = request.player_models.get(
-                            "player2", "claude-3-opus"
-                        )
-                    elif game_id == "tic_tac_toe":
-                        config_kwargs["x_model"] = request.player_models.get(
-                            "player1", "gpt-4"
-                        )
-                        config_kwargs["o_model"] = request.player_models.get(
-                            "player2", "claude-3-opus"
-                        )
-                    else:
-                        config_kwargs["player1_model"] = request.player_models.get(
-                            "player1", "gpt-4"
-                        )
-                        config_kwargs["player2_model"] = request.player_models.get(
-                            "player2", "claude-3-opus"
-                        )
+            elif request.player_models:
+                # Map generic player1/player2 to game-specific fields
+                if game_id == "chess":
+                    config_kwargs["white_model"] = request.player_models.get(
+                        "player1", "gpt-4"
+                    )
+                    config_kwargs["black_model"] = request.player_models.get(
+                        "player2", "claude-3-opus"
+                    )
+                elif game_id == "connect4":
+                    config_kwargs["red_model"] = request.player_models.get(
+                        "player1", "gpt-4"
+                    )
+                    config_kwargs["yellow_model"] = request.player_models.get(
+                        "player2", "claude-3-opus"
+                    )
+                elif game_id == "tic_tac_toe":
+                    config_kwargs["x_model"] = request.player_models.get(
+                        "player1", "gpt-4"
+                    )
+                    config_kwargs["o_model"] = request.player_models.get(
+                        "player2", "claude-3-opus"
+                    )
+                else:
+                    config_kwargs["player1_model"] = request.player_models.get(
+                        "player1", "gpt-4"
+                    )
+                    config_kwargs["player2_model"] = request.player_models.get(
+                        "player2", "claude-3-opus"
+                    )
 
             # Add any additional game settings
             if request.game_settings:
@@ -313,7 +313,7 @@ class GeneralGameAPI:
         for game_id, game_info in self.discovered_games.items():
             self._create_game_api(game_id, game_info)
 
-    def _create_game_api(self, game_id: str, game_info: Dict[str, Any]):
+    def _create_game_api(self, game_id: str, game_info: dict[str, Any]):
         """Create API for a specific game."""
         agent_class = game_info["agent_class"]
         config_class = game_info["config_class"]
@@ -341,7 +341,7 @@ class GeneralGameAPI:
     def _setup_openapi(self):
         """Setup custom OpenAPI documentation."""
 
-        def custom_openapi():
+        def custom_openapi() -> Any:
             if self.app.openapi_schema:
                 return self.app.openapi_schema
 
@@ -350,30 +350,30 @@ class GeneralGameAPI:
                 version="1.0.0",
                 description="""
                 # Haive Games API
-                
+
                 This API provides access to all available games in the Haive framework.
-                
+
                 ## Features
                 - Automatic game discovery
                 - Configurable AI opponents
                 - Multiple configuration modes
                 - Real-time gameplay via WebSocket
                 - OpenAPI documentation
-                
+
                 ## Configuration Modes
-                
+
                 ### Simple Mode
                 Specify models as strings for each player.
-                
+
                 ### Example Mode
                 Use predefined configurations like "budget" or "gpt_vs_claude".
-                
+
                 ### Advanced Mode
                 Full control with PlayerAgentConfig objects.
-                
+
                 ### Legacy Mode
                 Use hardcoded engines for backward compatibility.
-                
+
                 ## Available Games
                 """
                 + "\n".join(
@@ -424,8 +424,8 @@ class GeneralGameAPI:
 
 
 def create_general_game_api(
-    app: Optional[FastAPI] = None, **kwargs
-) -> Tuple[FastAPI, GeneralGameAPI]:
+    app: FastAPI | None = None, **kwargs
+) -> tuple[FastAPI, GeneralGameAPI]:
     """Create a general game API that discovers all games.
 
     Args:
@@ -480,11 +480,7 @@ if __name__ == "__main__":
     # Create the general API
     app, game_api = create_general_game_api()
 
-    print(f"Discovered {len(game_api.discovered_games)} games:")
-    for game_id, info in game_api.discovered_games.items():
-        print(f"  - {info['name']} ({game_id})")
-
-    print("\nStarting server at http://localhost:8000")
-    print("Documentation at http://localhost:8000/docs")
+    for _game_id, _info in game_api.discovered_games.items():
+        pass
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

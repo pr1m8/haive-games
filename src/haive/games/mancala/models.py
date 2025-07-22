@@ -61,6 +61,7 @@ class MancalaMove(BaseModel):
     )
 
     @field_validator("pit_index")
+    @classmethod
     def validate_pit_index(cls, v: int, info: ValidationInfo) -> int:
         """Validate that the pit index is valid for the player.
 

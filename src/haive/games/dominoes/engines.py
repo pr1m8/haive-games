@@ -1,8 +1,8 @@
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.dominoes.models import DominoesAnalysis, DominoesPlayerDecision
+from .dominoes.models import DominoesAnalysis, DominoesPlayerDecision
+from .engine.aug_llm import AugLLMConfig
+from .models.llm.base import AzureLLMConfig
 
 # Define the prompts for each agent
 

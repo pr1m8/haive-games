@@ -8,9 +8,9 @@ from typing import Any, Dict, Optional
 
 from pydantic import Field
 
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.monopoly.config import MonopolyGameAgentConfig
-from haive.games.monopoly.generic_engines import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .monopoly.config import MonopolyGameAgentConfig
+from .monopoly.generic_engines import (
     create_generic_monopoly_config_from_example,
     create_generic_monopoly_engines,
     create_generic_monopoly_engines_simple,

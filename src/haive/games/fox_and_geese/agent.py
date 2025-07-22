@@ -248,7 +248,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                     logger.warning(f"Failed to extract JSON from string content: {e}")
 
                 # Check if content has move information in text format
-                move_pattern = r"from\s*\((\d+),?\s*(\d+)\)\s*to\s*\((\d+),?\s*(\d+)\)"
+                move_pattern = r"from\s*\((),?\s*()\)\s*to\s*\((),?\s*()\)"
                 match = re.search(move_pattern, response.content)
                 if match:
                     try:
@@ -259,7 +259,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
                         # Check for capture info
                         capture = None
-                        capture_pattern = r"capture.*\((\d+),?\s*(\d+)\)"
+                        capture_pattern = r"capture.*\((),?\s*()\)"
                         capture_match = re.search(capture_pattern, response.content)
                         if capture_match:
                             cap_row, cap_col = map(int, capture_match.groups())

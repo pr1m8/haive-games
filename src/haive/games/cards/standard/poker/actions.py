@@ -38,10 +38,7 @@ class PokerAction(CardAction[StandardCard, PokerGameState]):
         if self.player_id in state.folded_players:
             return False
 
-        if self.player_id in state.all_in_players:
-            return False
-
-        return True
+        return self.player_id not in state.all_in_players
 
 
 class CheckAction(PokerAction):
@@ -56,7 +53,7 @@ class CheckAction(PokerAction):
 
         # Can only check if no one has bet yet or player has matched the current bet
         current_player_bet = state.current_bets.get(self.player_id, 0)
-        return state.current_bet == 0 or current_player_bet == state.current_bet
+        return state.current_bet in (0, current_player_bet)
 
     def execute(self, state: PokerGameState) -> ActionResult:
         """Execute check action."""
@@ -160,7 +157,8 @@ class BetAction(PokerAction):
     amount: int
 
     @model_validator(mode="after")
-    def validate_bet(self) -> "BetAction":
+    @classmethod
+    def validate_bet(cls) -> "BetAction":
         """Validate bet amount."""
         if self.amount <= 0:
             raise ValueError("Bet amount must be greater than 0")
@@ -229,7 +227,8 @@ class RaiseAction(PokerAction):
     amount: int  # Total amount, including the call amount
 
     @model_validator(mode="after")
-    def validate_raise(self) -> "RaiseAction":
+    @classmethod
+    def validate_raise(cls) -> "RaiseAction":
         """Validate raise amount."""
         if self.amount <= 0:
             raise ValueError("Raise amount must be greater than 0")

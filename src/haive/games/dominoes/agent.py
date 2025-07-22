@@ -2,22 +2,22 @@ import logging
 import time
 from typing import Any, Literal
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 from rich.console import Console
 from rich.live import Live
 
-from haive.games.dominoes.config import DominoesAgentConfig
-from haive.games.dominoes.models import (
+from .dominoes.config import DominoesAgentConfig
+from .dominoes.models import (
     DominoesAnalysis,
     DominoesPlayerDecision,
     DominoMove,
 )
-from haive.games.dominoes.state import DominoesState
-from haive.games.dominoes.state_manager import DominoesStateManager
-from haive.games.framework.base.agent import GameAgent
+from .dominoes.state import DominoesState
+from .dominoes.state_manager import DominoesStateManager
+from .engine.agent.agent import register_agent
+from .framework.base.agent import GameAgent
+from .graph.dynamic_graph_builder import DynamicGraph
 
 # Import the UI module
 try:
@@ -106,7 +106,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(f"Error converting dict to DominoesState: {e}")
+                logger.exception(f"Error converting dict to DominoesState: {e}")
                 # Return a minimal Command to avoid crashing
                 return Command(update=state, goto="player2_move")
 
@@ -132,7 +132,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(f"Error converting dict to DominoesState: {e}")
+                logger.exception(f"Error converting dict to DominoesState: {e}")
                 # Return a minimal Command to avoid crashing
                 return Command(update=state, goto="player1_move")
 
@@ -159,7 +159,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error converting dict to DominoesState in make_move: {e}"
                 )
                 # Return a minimal Command to avoid crashing
@@ -225,7 +225,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         except Exception as e:
             # If any error occurs, log it and use a fallback move
-            logger.error(f"Error making move: {e}")
+            logger.exception(f"Error making move: {e}")
             legal_moves = self.state_manager.get_legal_moves(state)
             fallback_move = legal_moves[0]
             updated_state = self.state_manager.apply_move(state, fallback_move)
@@ -335,9 +335,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         value_counts = {}
         for i in range(7):  # Values 0-6
-            value_counts[i] = sum(
-                1 for tile in hand if tile.left == i or tile.right == i
-            )
+            value_counts[i] = sum(1 for tile in hand if i in (tile.left, tile.right))
 
         return {
             "player": player,
@@ -367,7 +365,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error converting dict to DominoesState in analyze_player1: {e}"
                 )
                 # Return a minimal Command to avoid crashing
@@ -391,7 +389,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error converting dict to DominoesState in analyze_player2: {e}"
                 )
                 # Return a minimal Command to avoid crashing
@@ -416,7 +414,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             try:
                 state = DominoesState.model_validate(state)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Error converting dict to DominoesState in analyze_position: {e}"
                 )
                 # Return a minimal Command to avoid crashing
@@ -441,7 +439,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             updated_state = self.state_manager.update_analysis(state, analysis, player)
         except Exception as e:
             # If any error occurs, log it and skip analysis
-            logger.error(f"Error during analysis: {e}")
+            logger.exception(f"Error during analysis: {e}")
             updated_state = state
 
         # Return the updated state
@@ -588,8 +586,8 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                         f"\nPlayer 2 Analysis: {domino_state.player2_analysis[-1]}"
                     )
             except Exception as e:
-                logger.error(f"Error in text visualization: {e}")
-                logger.error(f"Error visualizing state: {e}")
+                logger.exception(f"Error in text visualization: {e}")
+                logger.exception(f"Error visualizing state: {e}")
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:
         """Run the full game, optionally visualizing each step."""
@@ -613,7 +611,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                 time.sleep(1)  # Add delay for better visualization
             return step
         except Exception as e:
-            logger.error(f"Error running game: {e}")
+            logger.exception(f"Error running game: {e}")
             return {}
 
     def run_game_with_ui(self, delay: float = 1.5) -> dict[str, Any]:

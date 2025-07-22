@@ -18,13 +18,13 @@ Typical usage:
 
 from typing import Any, Generic, TypeVar
 
-# from haive.games.framework.base.state import GameState
-from haive.core.engine.agent.agent import Agent
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import BaseModel
 
-from haive.games.framework.base.config import GameConfig
+# from haive.games.framework.base.state import GameState
+from .engine.agent.agent import Agent
+from .framework.base.config import GameConfig
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -63,7 +63,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         """
         super().__init__(config)
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Setup the standard game workflow with configurable analysis.
 
         This method sets up the default game workflow including initialization,
@@ -475,8 +475,6 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
     game_state = initial_state or {}
 
     # Run the game
-    print("\n🎮 Starting Game")
-    print("=" * 50)
 
     # Stream through the game steps
     for step in agent.app.stream(
@@ -487,14 +485,11 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
 
         # Check for errors
         if step.get("error_message"):
-            print(f"\n❌ Error: {step['error_message']}")
+            pass
 
         # Show game status
-        if step.get("game_status") != "ongoing":
-            print(f"\n🏆 Game Status: {step['game_status'].upper()}")
-            if step.get("winner"):
-                print(f"🎖️ Winner: {step['winner']}")
+        if step.get("game_status") != "ongoing" and step.get("winner"):
+            pass
 
     # Save game history
     agent.save_state_history()
-    print("\n✅ Game Complete!")

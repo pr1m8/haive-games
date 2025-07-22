@@ -124,12 +124,10 @@ class LogicGridClue(BaseModel):
     items: list[list[int]]  # Indices of items involved in the clue
 
     @model_validator(mode="after")
-    def validate_clue(self) -> LogicGridClue:
+    @classmethod
+    def validate_clue(cls) -> LogicGridClue:
         """Validate the clue based on its type."""
-        if (
-            self.clue_type == ClueType.DIRECT_MATCH
-            or self.clue_type == ClueType.DIRECT_NONMATCH
-        ):
+        if self.clue_type in (ClueType.DIRECT_MATCH, ClueType.DIRECT_NONMATCH):
             # Should have 2 categories and 1 item per category
             if (
                 len(self.categories) != 2
@@ -141,7 +139,7 @@ class LogicGridClue(BaseModel):
                     f"{self.clue_type} clue must have 2 categories with 1 item each"
                 )
 
-        elif self.clue_type == ClueType.RELATIVE or self.clue_type == ClueType.ORDERING:
+        elif self.clue_type in (ClueType.RELATIVE, ClueType.ORDERING):
             # Should have 2 categories and at least 1 item per category
             if len(self.categories) != 2 or len(self.items) != 2:
                 raise ValueError(f"{self.clue_type} clue must have 2 categories")

@@ -83,6 +83,7 @@ class GoGameState(BaseModel):
     )
 
     @field_validator("turn")
+    @classmethod
     def validate_turn(cls, v, info) -> str:
         """Validate that the turn matches the board state.
 

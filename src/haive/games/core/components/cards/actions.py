@@ -32,7 +32,8 @@ class CardAction(BaseModel, Generic[TCard, TState]):
         arbitrary_types_allowed = True
 
     @model_validator(mode="after")
-    def validate_action(self) -> "CardAction":
+    @classmethod
+    def validate_action(cls) -> "CardAction":
         """Validate the action is properly formed."""
         return self
 
@@ -52,7 +53,8 @@ class DrawCardAction(CardAction[TCard, TState]):
     count: int = 1
 
     @model_validator(mode="after")
-    def validate_action(self) -> "DrawCardAction":
+    @classmethod
+    def validate_action(cls) -> "DrawCardAction":
         """Validate draw count."""
         if self.count < 1:
             raise ValueError("Must draw at least one card")

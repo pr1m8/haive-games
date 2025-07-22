@@ -4,8 +4,8 @@ from typing import Annotated, Literal
 
 from pydantic import Field, computed_field
 
-from haive.games.framework.base.state import GameState
-from haive.games.mastermind.models import (
+from .framework.base.state import GameState
+from .mastermind.models import (
     ColorCode,
     MastermindAnalysis,
     MastermindFeedback,

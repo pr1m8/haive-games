@@ -50,15 +50,13 @@ Note:
     and integration with distributed game systems for tournament play.
 """
 
-from typing import Dict, Optional, Union
-
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from haive.games.checkers.engines import build_checkers_aug_llms
-from haive.games.checkers.state import CheckersState
+from .checkers.engines import build_checkers_aug_llms
+from .checkers.state import CheckersState
+from .engine.agent.agent import AgentConfig
+from .engine.aug_llm import AugLLMConfig
 
 
 class CheckersAgentConfig(AgentConfig):
@@ -184,7 +182,7 @@ class CheckersAgentConfig(AgentConfig):
         examples=[True, False],
     )
 
-    king_promotion_row: Optional[int] = Field(
+    king_promotion_row: int | None = Field(
         default=None,
         ge=0,
         description="Row where pieces promote to kings (auto-calculated from board_size if not specified)",
@@ -234,7 +232,7 @@ class CheckersAgentConfig(AgentConfig):
         description="State schema for the checkers game (Pydantic model)",
     )
 
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_checkers_aug_llms,
         description="LLM configurations for players and analyzers",
     )
@@ -246,7 +244,7 @@ class CheckersAgentConfig(AgentConfig):
 
     @field_validator("king_promotion_row")
     @classmethod
-    def validate_king_promotion_row(cls, v: Optional[int], values) -> int:
+    def validate_king_promotion_row(cls, v: int | None, values) -> int:
         """Validate and auto-calculate king promotion row.
 
         Args:
@@ -309,14 +307,13 @@ class CheckersAgentConfig(AgentConfig):
         """
         if self.board_size == 8 and not self.allow_flying_kings:
             return "American Checkers"
-        elif self.board_size == 10 and self.allow_flying_kings:
+        if self.board_size == 10 and self.allow_flying_kings:
             return "International Draughts"
-        else:
-            return "Custom Variant"
+        return "Custom Variant"
 
     @computed_field
     @property
-    def performance_profile(self) -> Dict[str, Union[str, int, float]]:
+    def performance_profile(self) -> dict[str, str | int | float]:
         """Generate performance profile based on configuration.
 
         Returns:

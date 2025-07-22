@@ -8,7 +8,6 @@ without the deprecated DynamicGraph system.
 import logging
 from typing import Any, Literal
 
-from haive.agents.conversation.base.agent import BaseConversationAgent
 from haive.agents.conversation.debate.agent import DebateConversation
 from haive.agents.conversation.debate.state import DebateState
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
@@ -83,7 +82,8 @@ class GameDebateAgent(DebateConversation):
     )
 
     @model_validator(mode="after")
-    def validate_game_setup(self) -> "GameDebateAgent":
+    @classmethod
+    def validate_game_setup(cls) -> "GameDebateAgent":
         """Validate game configuration."""
         # Ensure state schema is set
         if not self.state_schema or self.state_schema != DebateState:
@@ -118,13 +118,11 @@ class GameDebateAgent(DebateConversation):
         # Add game-specific fields
         game_fields = {
             # Scoring system
-            "player_scores": {name: 0 for name in (self.debate_positions or {}).keys()},
+            "player_scores": dict.fromkeys((self.debate_positions or {}).keys(), 0),
             "argument_scores": {},  # Track individual argument scores
             "rebuttal_scores": {},  # Track individual rebuttal scores
-            "bonus_points": {name: 0 for name in (self.debate_positions or {}).keys()},
-            "penalty_points": {
-                name: 0 for name in (self.debate_positions or {}).keys()
-            },
+            "bonus_points": dict.fromkeys((self.debate_positions or {}).keys(), 0),
+            "penalty_points": dict.fromkeys((self.debate_positions or {}).keys(), 0),
             # Performance metrics
             "response_times": {},  # Track response speed if available
             "argument_quality": {},  # Quality assessments
@@ -202,7 +200,7 @@ class GameDebateAgent(DebateConversation):
 
 📜 **How to Win**:
 • Make compelling, well-researched arguments
-• Counter your opponent's points effectively  
+• Counter your opponent's points effectively
 • Cite evidence and sources for bonus points
 • Stay consistent with your position
 • Engage with respect and intellectual honesty
@@ -406,7 +404,7 @@ class GameDebateAgent(DebateConversation):
 
         # Build gamified summary
         summary_parts = [
-            f"🏁 **GAME OVER** - Debate Tournament Match Complete!",
+            "🏁 **GAME OVER** - Debate Tournament Match Complete!",
             f"📋 Topic: '{self.topic}'",
             "",
             "🏆 **FINAL SCORES:**",

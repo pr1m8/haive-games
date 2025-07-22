@@ -4,19 +4,17 @@ This module provides generic engine creation functions for Texas Hold'em games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.hold_em.models import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .hold_em.models import (
     BettingDecision,
     PlayerDecisionModel,
     PokerAnalysis,
@@ -26,7 +24,7 @@ from haive.games.hold_em.models import (
 class HoldemPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Texas Hold'em game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="player1", player2="player2")
 
 
@@ -117,7 +115,7 @@ class HoldemPromptGenerator(GenericPromptGenerator[str, str]):
 class HoldemEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Texas Hold'em game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = HoldemPlayerIdentifiers()
         prompt_generator = HoldemPromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -126,10 +124,9 @@ class HoldemEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return PokerAnalysis
-        elif "decision" in role:
+        if "decision" in role:
             return BettingDecision
-        else:
-            return PlayerDecisionModel
+        return PlayerDecisionModel
 
 
 # Factory instance
@@ -137,8 +134,8 @@ holdem_factory = HoldemEngineFactory()
 
 
 def create_generic_holdem_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Hold'em engines from detailed player configurations.
 
     Args:
@@ -158,7 +155,7 @@ def create_generic_holdem_engines(
 
 def create_generic_holdem_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.4
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Hold'em engines with simple model specifications.
 
     Args:
@@ -176,7 +173,7 @@ def create_generic_holdem_engines_simple(
 
 def create_generic_holdem_config_from_example(
     example_name: str, temperature: float = 0.4
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Hold'em engines from a predefined example configuration.
 
     Args:
@@ -218,21 +215,21 @@ def create_generic_holdem_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_poker_pro_holdem_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_poker_pro_holdem_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create poker professional-style Hold'em engines with high-powered models."""
     return create_generic_holdem_config_from_example("poker_pros", **kwargs)
 
 
-def create_budget_holdem_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_holdem_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Hold'em engines."""
     return create_generic_holdem_config_from_example("budget", **kwargs)
 
 
-def create_heads_up_holdem_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_heads_up_holdem_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create specialized Hold'em engines for heads-up play."""
     return create_generic_holdem_config_from_example("heads_up", **kwargs)
 
 
-def create_mixed_holdem_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_holdem_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Hold'em engines."""
     return create_generic_holdem_config_from_example("mixed", **kwargs)

@@ -69,8 +69,8 @@ all necessary parameters for consistent and customizable gameplay experiences.
 
 from pydantic import Field
 
-from haive.games.clue.state import ClueState
-from haive.games.framework.base.config import GameConfig
+from .clue.state import ClueState
+from .framework.base.config import GameConfig
 
 # Version information for tracking changes
 VERSION = "1.0.0"

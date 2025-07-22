@@ -17,11 +17,11 @@ Example:
     >>> analysis = analyzer.invoke(game_state)
 """
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.mafia.models import MafiaAnalysis
+from .engine.aug_llm import AugLLMConfig
+from .mafia.models import MafiaAnalysis
+from .models.llm.base import AzureLLMConfig
 
 
 def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:

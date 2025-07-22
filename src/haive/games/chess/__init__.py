@@ -1,36 +1,262 @@
-"""Chess game implementation module.
+"""Module exports."""
 
-This package provides a complete implementation of the Chess game, including:
-    - Game agent with LLM-powered players
-    - State management with FEN support
-    - Position analysis and evaluation
-    - Move validation and piece movement
-    - Game visualization
-
-Example:
-    >>> from haive.games.chess import ChessAgent, ChessConfig
-    >>>
-    >>> # Create and configure a Chess agent
-    >>> config = ChessConfig(enable_analysis=True)
-    >>> agent = ChessAgent(config)
-"""
-
-from haive.games.chess.agent import ChessAgent
-from haive.games.chess.config import ChessConfig
-from haive.games.chess.models import (
+from chess.agent import (
+    ChessAgent,
+    analyze_black_position,
+    analyze_position,
+    analyze_white_position,
+    check_game_status,
+    make_black_move,
+    make_move,
+    make_white_move,
+    route_next_step,
+    setup_workflow,
+)
+from chess.api_client_example import (
+    ChessAPIClient,
+    create_game,
+    delete_game,
+    get_game_state,
+    handle_event,
+    list_games,
+    list_providers,
+    main,
+    stream_game,
+)
+from chess.api_example import (
+    CreateGameRequest,
+    GameResponse,
+    GameStateResponse,
+    LLMConfig,
+    MoveStreamEvent,
+)
+from chess.aug_llms import (
+    build_chess_aug_llms_per_color,
+    generate_analysis_prompt,
+    generate_move_prompt,
+)
+from chess.config import (
+    ChessConfig,
+    Config,
+    build_legacy_engines,
+    create_engines_from_player_configs,
+    create_simple_player_configs,
+    finalize_config,
+    get_example_configs,
+    get_role_definitions,
+)
+from chess.configurable_config import (
+    Config,
+    ConfigurableChessConfig,
+    configure_engines_and_names,
+    create_chess_config,
+    create_chess_config_from_example,
+    create_chess_config_from_player_configs,
+)
+from chess.configurable_engines import (
+    create_anthropic_vs_openai_engines,
+    create_chess_analysis_prompt,
+    create_chess_move_prompt,
+    create_configurable_chess_engines,
+    create_mixed_provider_engines,
+    create_same_model_engines,
+    get_chess_role_definitions,
+    get_example_engines,
+)
+from chess.debug_schema import debug_field, main
+from chess.dynamic_config import (
+    ChessConfig,
+    budget_chess,
+    build_legacy_engines,
+    competitive_chess,
+    create_chess_config,
+    create_chess_config_from_example,
+    create_chess_config_with_players,
+    create_engines_from_player_configs,
+    create_legacy_chess_config,
+    create_simple_player_configs,
+    experimental_chess,
+    get_example_configs,
+    get_role_definitions,
+)
+from chess.engines import (
+    build_chess_aug_llms,
+    create_black_analyzer_engine,
+    create_black_player_engine,
+    create_white_analyzer_engine,
+    create_white_player_engine,
+)
+from chess.example import run_chess_game
+from chess.example_configurable import (
+    list_available_providers,
+    run_advanced_chess_example,
+    run_chess_with_custom_llms,
+)
+from chess.example_configurable_players import (
+    example_1_simple_models,
+    example_2_canonical_strings,
+    example_3_example_configs,
+    example_4_custom_player_configs,
+    example_5_budget_friendly,
+    example_6_same_model,
+    main,
+)
+from chess.generic_engines import (
+    ChessPromptGenerator,
+    create_analysis_prompt,
+    create_generic_chess_config_from_example,
+    create_generic_chess_engines,
+    create_generic_chess_engines_simple,
+    create_move_prompt,
+    create_role_specific_chess_engines,
+    create_typed_chess_engines,
+    demonstrate_generic_pattern,
+    get_analysis_output_model,
+    get_move_output_model,
+)
+from chess.llm_utils import (
+    create_chess_engines_from_config,
+    create_chess_engines_simple,
+    get_available_chess_providers,
+    get_recommended_chess_models,
+)
+from chess.models import (
     ChessAnalysis,
     ChessMoveModel,
+    ChessMoveValidation,
     ChessPlayerDecision,
+    SegmentedAnalysis,
+    from_move,
+    to_move,
+    validate_move,
 )
-from haive.games.chess.state import ChessState
-from haive.games.chess.state_manager import ChessGameStateManager
+from chess.state import ChessState, board_fen, current_board_fen, get_board
+from chess.state_manager import ChessGameStateManager, apply_move, initialize
+from chess.ui import (
+    ChessRichUI,
+    main,
+    render_analysis,
+    render_board,
+    render_current_move,
+    render_footer,
+    render_game_info,
+    render_header,
+    render_move_history,
+    render_player_info,
+    run,
+)
+from chess.utils import determine_game_status, generate_ascii_board, validate_move
 
 __all__ = [
+    "ChessAPIClient",
     "ChessAgent",
-    "ChessConfig",
     "ChessAnalysis",
+    "ChessConfig",
     "ChessGameStateManager",
     "ChessMoveModel",
+    "ChessMoveValidation",
     "ChessPlayerDecision",
+    "ChessPromptGenerator",
+    "ChessRichUI",
     "ChessState",
+    "Config",
+    "ConfigurableChessConfig",
+    "CreateGameRequest",
+    "GameResponse",
+    "GameStateResponse",
+    "LLMConfig",
+    "MoveStreamEvent",
+    "SegmentedAnalysis",
+    "analyze_black_position",
+    "analyze_position",
+    "analyze_white_position",
+    "apply_move",
+    "board_fen",
+    "budget_chess",
+    "build_chess_aug_llms",
+    "build_chess_aug_llms_per_color",
+    "build_legacy_engines",
+    "check_game_status",
+    "competitive_chess",
+    "configure_engines_and_names",
+    "create_analysis_prompt",
+    "create_anthropic_vs_openai_engines",
+    "create_black_analyzer_engine",
+    "create_black_player_engine",
+    "create_chess_analysis_prompt",
+    "create_chess_config",
+    "create_chess_config_from_example",
+    "create_chess_config_from_player_configs",
+    "create_chess_config_with_players",
+    "create_chess_engines_from_config",
+    "create_chess_engines_simple",
+    "create_chess_move_prompt",
+    "create_configurable_chess_engines",
+    "create_engines_from_player_configs",
+    "create_game",
+    "create_generic_chess_config_from_example",
+    "create_generic_chess_engines",
+    "create_generic_chess_engines_simple",
+    "create_legacy_chess_config",
+    "create_mixed_provider_engines",
+    "create_move_prompt",
+    "create_role_specific_chess_engines",
+    "create_same_model_engines",
+    "create_simple_player_configs",
+    "create_typed_chess_engines",
+    "create_white_analyzer_engine",
+    "create_white_player_engine",
+    "current_board_fen",
+    "debug_field",
+    "delete_game",
+    "demonstrate_generic_pattern",
+    "determine_game_status",
+    "example_1_simple_models",
+    "example_2_canonical_strings",
+    "example_3_example_configs",
+    "example_4_custom_player_configs",
+    "example_5_budget_friendly",
+    "example_6_same_model",
+    "experimental_chess",
+    "finalize_config",
+    "from_move",
+    "generate_analysis_prompt",
+    "generate_ascii_board",
+    "generate_move_prompt",
+    "get_analysis_output_model",
+    "get_available_chess_providers",
+    "get_board",
+    "get_chess_role_definitions",
+    "get_example_configs",
+    "get_example_engines",
+    "get_game_state",
+    "get_move_output_model",
+    "get_recommended_chess_models",
+    "get_role_definitions",
+    "handle_event",
+    "initialize",
+    "list_available_providers",
+    "list_games",
+    "list_providers",
+    "main",
+    "make_black_move",
+    "make_move",
+    "make_white_move",
+    "render_analysis",
+    "render_board",
+    "render_current_move",
+    "render_footer",
+    "render_game_info",
+    "render_header",
+    "render_move_history",
+    "render_player_info",
+    "route_next_step",
+    "run",
+    "run_advanced_chess_example",
+    "run_chess_game",
+    "run_chess_with_custom_llms",
+    "setup_workflow",
+    "stream_game",
+    "to_move",
+    "validate_move",
 ]

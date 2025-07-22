@@ -4,19 +4,17 @@ This module provides generic engine creation functions for Mafia games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.mafia.models import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .mafia.models import (
     MafiaAction,
 )
 
@@ -24,7 +22,7 @@ from haive.games.mafia.models import (
 class MafiaPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Mafia game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="mafia", player2="town")
 
 
@@ -99,7 +97,7 @@ class MafiaPromptGenerator(GenericPromptGenerator[str, str]):
 class MafiaEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Mafia game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = MafiaPlayerIdentifiers()
         prompt_generator = MafiaPromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -108,8 +106,7 @@ class MafiaEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return MafiaAction
-        else:
-            return MafiaAction
+        return MafiaAction
 
 
 # Factory instance
@@ -117,8 +114,8 @@ mafia_factory = MafiaEngineFactory()
 
 
 def create_generic_mafia_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Mafia engines from detailed player configurations.
 
     Args:
@@ -138,7 +135,7 @@ def create_generic_mafia_engines(
 
 def create_generic_mafia_engines_simple(
     mafia_model: str, town_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Mafia engines with simple model specifications.
 
     Args:
@@ -156,7 +153,7 @@ def create_generic_mafia_engines_simple(
 
 def create_generic_mafia_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Mafia engines from a predefined example configuration.
 
     Args:
@@ -194,16 +191,16 @@ def create_generic_mafia_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_mafia_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_mafia_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Mafia engines with high-powered models."""
     return create_generic_mafia_config_from_example("advanced", **kwargs)
 
 
-def create_budget_mafia_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_mafia_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Mafia engines."""
     return create_generic_mafia_config_from_example("budget", **kwargs)
 
 
-def create_mixed_mafia_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_mafia_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Mafia engines."""
     return create_generic_mafia_config_from_example("mixed", **kwargs)

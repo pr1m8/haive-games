@@ -163,10 +163,7 @@ class Disk(GamePiece[PegPosition]):
 
         # Can only place on top of a larger disk
         top_disk = board.get_top_disk(position.peg)
-        if top_disk is not None and top_disk.size < self.size:
-            return False
-
-        return True
+        return not (top_disk is not None and top_disk.size < self.size)
 
     def _is_top_disk(self, board: HanoiBoard) -> bool:
         """Check if this disk is the top disk on its peg."""
@@ -206,10 +203,7 @@ class PegSpace(Space[PegPosition, Disk]):
             return True
 
         # Otherwise, can only place smaller disk on top of larger disk
-        if self.piece and disk.size >= self.piece.size:
-            return False
-
-        return True
+        return not (self.piece and disk.size >= self.piece.size)
 
 
 # ======================================================
@@ -346,7 +340,8 @@ class HanoiGame(Game[PegPosition, Disk]):
     min_moves: int = 0
 
     @model_validator(mode="after")
-    def calculate_min_moves(self) -> HanoiGame:
+    @classmethod
+    def calculate_min_moves(cls) -> HanoiGame:
         """Calculate the minimum number of moves to solve the puzzle."""
         # Formula: 2^n - 1 where n is the number of disks
         self.min_moves = (2**self.board.num_disks) - 1

@@ -112,7 +112,8 @@ class TwentyFortyEightGame(BaseModel):
     moves: int = 0
 
     @model_validator(mode="after")
-    def validate_game(self) -> TwentyFortyEightGame:
+    @classmethod
+    def validate_game(cls) -> TwentyFortyEightGame:
         """Ensure game has valid components."""
         # Initialize board if not done already
         if self.board and not self.board.spaces:

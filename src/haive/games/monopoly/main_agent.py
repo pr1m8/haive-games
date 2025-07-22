@@ -8,13 +8,12 @@ This module provides the corrected main agent implementation that:
 
 # Standard library imports
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Local imports
-from haive.core.engine.agent.agent import Agent, register_agent
-
-from haive.games.monopoly.config import MonopolyGameAgentConfig
-from haive.games.monopoly.state import MonopolyState
+from .engine.agent.agent import Agent, register_agent
+from .monopoly.config import MonopolyGameAgentConfig
+from .monopoly.state import MonopolyState
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +31,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
 
     def __init__(self, config: MonopolyGameAgentConfig):
         """Initialize the monopoly agent."""
-
         # Set up player agent engines first
         config.setup_player_agent_engines()
 
@@ -55,7 +53,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
 
         super().__init__(config)
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Set up the complete monopoly workflow.
 
         This creates the main game workflow nodes and connects them properly.
@@ -81,14 +79,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         # Use the game agent's workflow as our main workflow
         self.graph = self.game_agent.graph
 
-        print(
-            f"🎮 Monopoly game initialized with {len(self.config.player_names)} players"
-        )
-        print(f"📋 Players: {', '.join(self.config.player_names)}")
-        print(
-            f"⚙️ Settings: Max turns={self.config.max_turns}, Trading={self.config.enable_trading}"
-        )
-
     def start_game(self) -> MonopolyState:
         """Start a new monopoly game.
 
@@ -97,12 +87,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         Returns:
             Final game state as MonopolyState BaseModel
         """
-        print("🎲 Starting Monopoly game!")
-        print("=" * 50)
-
         # CRITICAL FIX: Pass the BaseModel directly, no conversion to dict
-        print(f"DEBUG: Starting with {len(self.initial_state.players)} players")
-        print(f"DEBUG: Initial state type: {type(self.initial_state)}")
 
         try:
             # Use the BaseModel directly with the graph
@@ -110,9 +95,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
                 self.initial_state,  # Pass BaseModel directly
                 config=self.runnable_config,
             )
-
-            print("\n" + "=" * 50)
-            print("🏁 Game Complete!")
 
             # Ensure final_state is MonopolyState
             if not isinstance(final_state, MonopolyState):
@@ -122,21 +104,13 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
 
             return final_state
 
-        except Exception as e:
-            print(f"\n❌ Game error: {str(e)}")
-            import traceback
+        except Exception:
 
-            print(f"Traceback: {traceback.format_exc()}")
             raise
 
     def _display_final_results(self, final_state: MonopolyState) -> None:
         """Display final game results."""
-        print(f"🏆 Winner: {final_state.winner}")
-        print(f"🎮 Turns played: {final_state.turn_number}")
-        print(f"🔄 Rounds completed: {final_state.round_number}")
-
         # Display player final standings
-        print("\n📊 Final Standings:")
         players_by_worth = []
 
         for player in final_state.players:
@@ -149,22 +123,16 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         # Sort by net worth
         players_by_worth.sort(key=lambda x: x[1], reverse=True)
 
-        for i, (name, net_worth, money, prop_count) in enumerate(players_by_worth):
-            status = "👑" if name == final_state.winner else f"{i+1}."
-            print(
-                f"  {status} {name}: ${net_worth:,} net worth (${money:,} cash, {prop_count} properties)"
-            )
+        for i, (name, net_worth, _money, _prop_count) in enumerate(players_by_worth):
+            "👑" if name == final_state.winner else f"{i+1}."
 
         # Display bankrupted players
         bankrupt_players = [p for p in final_state.players if p.bankrupt]
         if bankrupt_players:
-            print("\n💥 Bankrupted:")
             for player in bankrupt_players:
-                print(f"  ❌ {player.name}")
+                pass
 
         # Display some game statistics
-        print("\n📈 Game Statistics:")
-        print(f"  • Total events: {len(final_state.game_events)}")
 
         # Count different event types
         event_counts = {}
@@ -172,10 +140,10 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
             event_type = event.event_type
             event_counts[event_type] = event_counts.get(event_type, 0) + 1
 
-        for event_type, count in sorted(event_counts.items()):
-            print(f"  • {event_type.replace('_', ' ').title()}: {count}")
+        for event_type, _count in sorted(event_counts.items()):
+            pass
 
-    def save_game_history(self, filename: Optional[str] = None) -> None:
+    def save_game_history(self, filename: str | None = None) -> None:
         """Save game history to a file."""
         if filename is None:
             from datetime import datetime
@@ -185,9 +153,8 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
 
         # This would save the game state history
         # Implementation would depend on desired format
-        print(f"💾 Game history saved to {filename}")
 
-    def get_game_summary(self) -> Dict[str, Any]:
+    def get_game_summary(self) -> dict[str, Any]:
         """Get a summary of the game configuration and status."""
         return {
             "players": self.config.player_names,

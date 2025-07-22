@@ -5,9 +5,10 @@ external dependencies. It serves as both a reference implementation and
 comprehensive test suite for the core game mechanics.
 """
 
+import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Literal, Optional, Tuple
+from typing import Literal
 
 
 class GameStatus(Enum):
@@ -41,11 +42,11 @@ class Move:
 class GameState:
     """Represents the complete state of a Tic Tac Toe game."""
 
-    board: List[List[Optional[str]]]
+    board: list[list[str | None]]
     current_player: Literal["X", "O"]
     status: GameStatus
-    winner: Optional[Literal["X", "O"]]
-    move_history: List[Move]
+    winner: Literal["X", "O"] | None
+    move_history: list[Move]
 
     def __post_init__(self):
         """Validate game state."""
@@ -94,7 +95,7 @@ class TicTacToeGame:
         )
 
     @staticmethod
-    def get_legal_moves(state: GameState) -> List[Move]:
+    def get_legal_moves(state: GameState) -> list[Move]:
         """Get all legal moves for the current player."""
         if state.status != GameStatus.ONGOING:
             return []
@@ -108,7 +109,7 @@ class TicTacToeGame:
         return legal_moves
 
     @staticmethod
-    def is_valid_move(state: GameState, move: Move) -> Tuple[bool, str]:
+    def is_valid_move(state: GameState, move: Move) -> tuple[bool, str]:
         """Check if a move is valid."""
         # Check if game is ongoing
         if state.status != GameStatus.ONGOING:
@@ -156,8 +157,8 @@ class TicTacToeGame:
 
     @staticmethod
     def _check_game_status(
-        board: List[List[Optional[str]]],
-    ) -> Tuple[GameStatus, Optional[Literal["X", "O"]]]:
+        board: list[list[str | None]],
+    ) -> tuple[GameStatus, Literal["X", "O"] | None]:
         """Check the current game status."""
         # Check for wins
         for player in ["X", "O"]:
@@ -173,7 +174,7 @@ class TicTacToeGame:
         return GameStatus.ONGOING, None
 
     @staticmethod
-    def _has_won(board: List[List[Optional[str]]], player: str) -> bool:
+    def _has_won(board: list[list[str | None]], player: str) -> bool:
         """Check if a player has won."""
         # Check rows
         for row in board:
@@ -190,13 +191,10 @@ class TicTacToeGame:
             return True
 
         # Check anti-diagonal (top-right to bottom-left)
-        if all(board[i][2 - i] == player for i in range(3)):
-            return True
-
-        return False
+        return bool(all(board[i][2 - i] == player for i in range(3)))
 
     @staticmethod
-    def _is_board_full(board: List[List[Optional[str]]]) -> bool:
+    def _is_board_full(board: list[list[str | None]]) -> bool:
         """Check if the board is completely filled."""
         for row in board:
             for cell in row:
@@ -205,7 +203,7 @@ class TicTacToeGame:
         return True
 
     @staticmethod
-    def find_winning_moves(state: GameState, player: Literal["X", "O"]) -> List[Move]:
+    def find_winning_moves(state: GameState, player: Literal["X", "O"]) -> list[Move]:
         """Find all moves that would result in an immediate win."""
         winning_moves = []
 
@@ -404,7 +402,6 @@ class TestTicTacToeGame:
         ]
 
         for i, move in enumerate(moves):
-            print(f"Move {i+1}: {move.player} plays ({move.row}, {move.col})")
 
             # Verify move is legal
             legal_moves = TicTacToeGame.get_legal_moves(state)
@@ -414,11 +411,8 @@ class TestTicTacToeGame:
             # Apply move
             state = TicTacToeGame.apply_move(state, move)
 
-            print(f"Board after move:\n{state.board_string}")
-            print(f"Status: {state.status.value}")
             if state.winner:
-                print(f"Winner: {state.winner}")
-            print()
+                pass
 
             # Check if game ended
             if state.status != GameStatus.ONGOING:
@@ -473,9 +467,6 @@ class TestTicTacToeGame:
         assert " " in board_str  # Empty cells
         assert "|" in board_str  # Column separators
 
-        print("Sample board representation:")
-        print(board_str)
-
     def test_edge_cases(self):
         """Test edge cases and error conditions."""
         # Invalid move creation
@@ -505,8 +496,6 @@ class TestTicTacToeGame:
 
 def run_all_tests():
     """Run all tests and report results."""
-    print("=== Pure Tic Tac Toe Game Logic Tests ===\n")
-
     test_suite = TestTicTacToeGame()
 
     tests = [
@@ -525,32 +514,18 @@ def run_all_tests():
     passed = 0
     total = len(tests)
 
-    for test_name, test_func in tests:
+    for _test_name, test_func in tests:
         try:
             test_func()
-            print(f"✓ {test_name}")
             passed += 1
-        except Exception as e:
-            print(f"✗ {test_name}: {e}")
+        except Exception:
             import traceback
 
             traceback.print_exc()
 
-    print("\n=== Test Results ===")
-    print(f"Passed: {passed}/{total}")
-
-    if passed == total:
-        print("🎉 All pure game logic tests passed!")
-        print("\nThis validates that the core Tic Tac Toe game logic is sound.")
-        print(
-            "Next step: Test the actual haive-games implementation against this reference."
-        )
-        return True
-    else:
-        print("❌ Some tests failed")
-        return False
+    return passed == total
 
 
 if __name__ == "__main__":
     success = run_all_tests()
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

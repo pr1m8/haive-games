@@ -1,21 +1,190 @@
-"""Debate game implementation module.
+"""Module exports."""
 
-This package provides a complete implementation of formal debate games, including:
-    - Multi-round debate structure
-    - Argument presentation and rebuttal phases
-    - Scoring and judging mechanisms
-    - Topic selection and research phases
-
-Example:
-    >>> from haive.games.debate import DebateAgent, DebateAgentConfig
-    >>> config = DebateAgentConfig()
-    >>> agent = DebateAgent(config)
-"""
-
-from haive.games.debate.agent import DebateAgent
-from haive.games.debate.config import DebateAgentConfig
+from debate.agent import (
+    DebateAgent,
+    debate_setup,
+    determine_next_step,
+    extract_move,
+    get_player_role,
+    handle_moderator_turn,
+    handle_participant_turn,
+    handle_phase_transition,
+    initialize_game,
+    prepare_move_context,
+    setup_workflow,
+    visualize_state,
+)
+from debate.config import (
+    DebateAgentConfig,
+    default,
+    panel_discussion,
+    presidential,
+    trial,
+    validate_debate_format,
+    validate_participant_roles,
+)
+from debate.configurable_config import (
+    ConfigurableDebateConfig,
+    create_advanced_debate_config,
+    create_budget_debate_config,
+    create_debate_config,
+    create_debate_config_from_example,
+    create_debate_config_from_player_configs,
+    create_experimental_debate_config,
+    get_example_config,
+    list_example_configurations,
+    model_post_init,
+    model_to_name,
+)
+from debate.engines import (
+    build_debate_engines,
+    generate_debater_prompt,
+    generate_defense_prompt,
+    generate_judge_prompt,
+    generate_moderator_prompt,
+    generate_persona_prompt,
+    generate_prosecutor_prompt,
+)
+from debate.example import run_debate, run_policy_debate, run_trial_debate
+from debate.factory import (
+    DebateFactory,
+    create_legal_trial,
+    create_panel_discussion,
+    create_presidential_debate,
+    create_prisoner_dilemma,
+)
+from debate.generic_engines import (
+    DebateEngineFactory,
+    DebatePlayerIdentifiers,
+    DebatePromptGenerator,
+    create_advanced_debate_engines,
+    create_analyzer_prompt,
+    create_budget_debate_engines,
+    create_generic_debate_config_from_example,
+    create_generic_debate_engines,
+    create_generic_debate_engines_simple,
+    create_mixed_debate_engines,
+    create_move_prompt,
+    get_structured_output_model,
+)
+from debate.models import (
+    DebateAnalysis,
+    DebatePhase,
+    Participant,
+    Statement,
+    Topic,
+    Vote,
+    get_lincoln_douglas_flow,
+    get_oxford_flow,
+    get_parliamentary_flow,
+    validate_content,
+    validate_keywords,
+    validate_position,
+    validate_role,
+    validate_timestamp,
+    validate_title,
+    validate_vote_value,
+)
+from debate.state import DebateState, current_speaker
+from debate.state_manager import (
+    DebateStateManager,
+    advance_phase,
+    apply_move,
+    check_game_status,
+    filter_state_for_player,
+    get_legal_moves,
+    initialize,
+)
+from debate.test_topic_handling import (
+    test_empty_state,
+    test_explicit_topic,
+    test_none_topic,
+)
 
 __all__ = [
+    "ConfigurableDebateConfig",
     "DebateAgent",
     "DebateAgentConfig",
+    "DebateAnalysis",
+    "DebateEngineFactory",
+    "DebateFactory",
+    "DebatePhase",
+    "DebatePlayerIdentifiers",
+    "DebatePromptGenerator",
+    "DebateState",
+    "DebateStateManager",
+    "Participant",
+    "Statement",
+    "Topic",
+    "Vote",
+    "advance_phase",
+    "apply_move",
+    "build_debate_engines",
+    "check_game_status",
+    "create_advanced_debate_config",
+    "create_advanced_debate_engines",
+    "create_analyzer_prompt",
+    "create_budget_debate_config",
+    "create_budget_debate_engines",
+    "create_debate_config",
+    "create_debate_config_from_example",
+    "create_debate_config_from_player_configs",
+    "create_experimental_debate_config",
+    "create_generic_debate_config_from_example",
+    "create_generic_debate_engines",
+    "create_generic_debate_engines_simple",
+    "create_legal_trial",
+    "create_mixed_debate_engines",
+    "create_move_prompt",
+    "create_panel_discussion",
+    "create_presidential_debate",
+    "create_prisoner_dilemma",
+    "current_speaker",
+    "debate_setup",
+    "default",
+    "determine_next_step",
+    "extract_move",
+    "filter_state_for_player",
+    "generate_debater_prompt",
+    "generate_defense_prompt",
+    "generate_judge_prompt",
+    "generate_moderator_prompt",
+    "generate_persona_prompt",
+    "generate_prosecutor_prompt",
+    "get_example_config",
+    "get_legal_moves",
+    "get_lincoln_douglas_flow",
+    "get_oxford_flow",
+    "get_parliamentary_flow",
+    "get_player_role",
+    "get_structured_output_model",
+    "handle_moderator_turn",
+    "handle_participant_turn",
+    "handle_phase_transition",
+    "initialize",
+    "initialize_game",
+    "list_example_configurations",
+    "model_post_init",
+    "model_to_name",
+    "panel_discussion",
+    "prepare_move_context",
+    "presidential",
+    "run_debate",
+    "run_policy_debate",
+    "run_trial_debate",
+    "setup_workflow",
+    "test_empty_state",
+    "test_explicit_topic",
+    "test_none_topic",
+    "trial",
+    "validate_content",
+    "validate_debate_format",
+    "validate_keywords",
+    "validate_participant_roles",
+    "validate_position",
+    "validate_role",
+    "validate_timestamp",
+    "validate_title",
+    "validate_vote_value",
+    "visualize_state",
 ]

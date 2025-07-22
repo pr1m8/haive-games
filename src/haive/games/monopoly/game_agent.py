@@ -4,17 +4,17 @@ This module provides the corrected main game agent for orchestrating a Monopoly 
 with proper handling of BaseModel objects from LangGraph instead of dictionaries.
 """
 
-from typing import Any, Dict, Type, Union
+from typing import Any
 
-from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.agent.config import AgentConfig
 from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.games.monopoly.models import GameEvent, PlayerActionType
-from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import (
+from .engine.agent.agent import Agent, register_agent
+from .engine.agent.config import AgentConfig
+from .monopoly.models import GameEvent, PlayerActionType
+from .monopoly.state import MonopolyState
+from .monopoly.utils import (
     check_game_end,
     get_property_at_position,
     move_player,
@@ -29,7 +29,7 @@ class MonopolyGameAgentConfig(AgentConfig):
     player_names: list[str] = Field(description="Names of players in the game")
     max_turns: int = Field(default=1000, description="Maximum turns before ending game")
     enable_trading: bool = Field(default=False, description="Enable trade negotiations")
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=MonopolyState, description="The state schema for the game"
     )
     # Reference to player agent (will be set externally)
@@ -48,7 +48,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         super().__init__(config)
         self.player_agent = config.player_agent
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Set up the main game workflow."""
         # Add core game nodes
         self.graph.add_node("start_turn", self.start_turn)
@@ -92,18 +92,11 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             },
         )
 
-    def start_turn(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
-    ) -> Command:
+    def start_turn(self, state: MonopolyState | BaseModel | dict[str, Any]) -> Command:
         """Start a player's turn."""
         # CRITICAL FIX: Handle BaseModel objects properly
-        print(f"Starting turn with state: {state}")
-        print(f"Type of state: {type(state)}")
         monopoly_state = state
         current_player = monopoly_state.current_player
-
-        print(f"\n🎲 Turn {monopoly_state.turn_number}: {current_player.name}'s turn")
-        print(f"💰 Money: ${current_player.money}, Position: {current_player.position}")
 
         # Reset doubles count if starting new turn
         if not monopoly_state.doubles_rolled:
@@ -124,7 +117,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         )
 
     def roll_dice_node(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> Command:
         """Roll dice for the current player."""
         monopoly_state = MonopolyState.from_state_object(state)
@@ -136,15 +129,11 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         # Roll dice
         dice_roll = roll_dice()
-        print(
-            f"🎲 {current_player.name} rolled: {dice_roll.die1} + {dice_roll.die2} = {dice_roll.total}"
-        )
 
         # Track doubles
         is_doubles = dice_roll.is_doubles
         if is_doubles:
             current_player.doubles_count += 1
-            print(f"🎯 Doubles! ({current_player.doubles_count}/3)")
 
         # Add dice roll event
         event = GameEvent(
@@ -163,7 +152,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         )
 
     def move_player_node(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> Command:
         """Move the current player based on dice roll."""
         monopoly_state = MonopolyState.from_state_object(state)
@@ -177,14 +166,11 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         old_position = current_player.position
         new_position, passed_go = move_player(current_player, dice_roll)
 
-        print(f"🚶 {current_player.name} moves from {old_position} to {new_position}")
-
         # Handle passing GO
         money_gained = 0
         if passed_go:
             money_gained = 200
             current_player.money += money_gained
-            print("💵 Passed GO! Collected $200")
 
         # Add movement event
         event = GameEvent(
@@ -211,24 +197,19 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 monopoly_state.current_player_index, current_player
             )
             event_update["players"] = updated_state.players
-        else:
-            # Handle the empty players list case
-            print(
-                "⚠️ Warning: Cannot update player - players list is empty or index out of bounds"
-            )
-            # Initialize players list if needed
-            if not monopoly_state.players:
-                event_update["players"] = [current_player]
+        # Handle the empty players list case
+        # Initialize players list if needed
+        elif not monopoly_state.players:
+            event_update["players"] = [current_player]
 
         return Command(update=event_update)
 
     def handle_landing(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> Command:
         """Handle the player landing on a space."""
         if isinstance(state, dict):
             state = MonopolyState.model_validate(state)
-        print(f"State: {state}")
 
         monopoly_state = state
         current_player = monopoly_state.current_player
@@ -240,13 +221,11 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             )
 
         position_name = position_data["name"]
-        print(f"🎯 {current_player.name} landed on {position_name}")
 
         # Handle different types of spaces
         if position_data["type"] == "special":
             return self.handle_special_space(monopoly_state, position_name)
-        else:
-            return self.handle_property_space(monopoly_state, position_name)
+        return self.handle_property_space(monopoly_state, position_name)
 
     def handle_special_space(self, state: MonopolyState, space_name: str) -> Command:
         """Handle landing on special spaces like GO, Jail, etc."""
@@ -259,7 +238,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             tax_amount = 200
             current_player.money -= tax_amount
             money_change = -tax_amount
-            print("💸 Paid $200 income tax")
 
             events.append(
                 GameEvent(
@@ -274,7 +252,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             tax_amount = 75
             current_player.money -= tax_amount
             money_change = -tax_amount
-            print("💸 Paid $75 luxury tax")
 
             events.append(
                 GameEvent(
@@ -290,7 +267,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             current_player.in_jail = True
             current_player.jail_turns = 0
             current_player.doubles_count = 0  # Reset doubles when going to jail
-            print("🔒 Go to jail!")
 
             events.append(
                 GameEvent(
@@ -303,7 +279,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         elif space_name in ["Chance", "Community Chest"]:
             # For now, just log the card draw
             # In a full implementation, this would draw and execute cards
-            print(f"🃏 Draw {space_name} card (not implemented)")
 
             events.append(
                 GameEvent(
@@ -315,7 +290,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         else:
             # Free Parking, visiting Jail, etc. - no action needed
-            print(f"🆓 {space_name} - no action needed")
+            pass
 
         # Update player in the players list
         updated_players = state.players.copy()
@@ -332,8 +307,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         if not property_obj:
             # Handle the case where property isn't found - log error but don't crash
-            print(f"⚠️ WARNING: Property not found: {property_name}")
-            print(f"⚠️ Available properties: {list(state.properties.keys())}")
 
             # Try to get property info from utils.BOARD_PROPERTIES
             from haive.games.monopoly.utils import BOARD_PROPERTIES
@@ -342,7 +315,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
             position_data = BOARD_PROPERTIES.get(position)
 
             if position_data and position_data["name"] == property_name:
-                print(f"🔄 Creating missing property: {property_name}")
                 # Create the property on the fly based on board data
                 from haive.games.monopoly.models import (
                     Property,
@@ -379,37 +351,32 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                         ],
                     }
                 )
-            else:
-                # If we can't recover, return error but don't crash the game
-                return Command(
-                    update={
-                        "game_events": [
-                            GameEvent(
-                                event_type="property_error",
-                                player=current_player.name,
-                                description=f"Unable to find property: {property_name}",
-                            )
-                        ]
-                    }
-                )
+            # If we can't recover, return error but don't crash the game
+            return Command(
+                update={
+                    "game_events": [
+                        GameEvent(
+                            event_type="property_error",
+                            player=current_player.name,
+                            description=f"Unable to find property: {property_name}",
+                        )
+                    ]
+                }
+            )
 
         # Check if property is owned
         if property_obj.owner is None:
             # Property is unowned - offer to buy
             return self.offer_property_purchase(state, property_obj)
-        elif property_obj.owner == current_player.name:
+        if property_obj.owner == current_player.name:
             # Player owns the property - no action needed
-            print(f"🏠 {current_player.name} owns {property_name}")
             return Command(update={})
-        else:
-            # Property is owned by another player - pay rent
-            return self.pay_rent(state, property_obj)
+        # Property is owned by another player - pay rent
+        return self.pay_rent(state, property_obj)
 
     def offer_property_purchase(self, state: MonopolyState, property_obj) -> Command:
         """Offer property purchase to current player."""
         current_player = state.current_player
-
-        print(f"🏠 {property_obj.name} is available for ${property_obj.price}")
 
         # Create decision input for player agent
         decision_input = {
@@ -432,15 +399,12 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         if self.player_agent and hasattr(self.player_agent, "app"):
             decision_result = self.player_agent.run(decision_input)
             decision = decision_result.get("decision", {})
-            reasoning = decision_result.get("reasoning", "No reasoning provided")
+            decision_result.get("reasoning", "No reasoning provided")
         else:
             # Fallback decision
             decision = {"action": PlayerActionType.PASS_PROPERTY.value}
-            reasoning = "No player agent available"
 
         action = decision.get("action", PlayerActionType.PASS_PROPERTY.value)
-
-        print(f"🤔 {current_player.name} decides to {action}: {reasoning}")
 
         events = []
         updated_players = state.players.copy()
@@ -452,8 +416,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 current_player.money -= property_obj.price
                 current_player.properties.append(property_obj.name)
                 property_obj.owner = current_player.name
-
-                print(f"✅ Purchased {property_obj.name} for ${property_obj.price}")
 
                 events.append(
                     GameEvent(
@@ -470,7 +432,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 updated_properties[property_obj.name] = property_obj
 
             else:
-                print(f"❌ Cannot afford {property_obj.name}")
                 events.append(
                     GameEvent(
                         event_type="purchase_failed",
@@ -480,7 +441,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 )
         else:
             # Pass on property - could trigger auction in full implementation
-            print(f"🚫 Passed on {property_obj.name}")
             events.append(
                 GameEvent(
                     event_type="property_passed",
@@ -504,7 +464,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         owner = state.get_player_by_name(property_obj.owner)
 
         if not owner or owner.bankrupt:
-            print(f"🏚️ Owner of {property_obj.name} is bankrupt - no rent")
             return Command(update={})
 
         # Calculate rent
@@ -512,10 +471,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         rent_amount = state.get_rent_amount(property_obj.name, dice_total)
 
         if rent_amount <= 0:
-            print(f"🆓 No rent due on {property_obj.name}")
             return Command(update={})
-
-        print(f"💸 {current_player.name} owes ${rent_amount} rent to {owner.name}")
 
         events = []
         updated_players = state.players.copy()
@@ -524,8 +480,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         if current_player.can_afford(rent_amount):
             current_player.money -= rent_amount
             owner.money += rent_amount
-
-            print(f"✅ Paid ${rent_amount} rent")
 
             events.append(
                 GameEvent(
@@ -546,7 +500,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                     break
         else:
             # Player cannot afford rent - simplified bankruptcy
-            print(f"💥 {current_player.name} cannot afford rent - bankruptcy!")
             current_player.bankrupt = True
 
             events.append(
@@ -563,14 +516,14 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         return Command(update={"players": updated_players, "game_events": events})
 
     def check_doubles(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> Command:
         """Check if doubles were rolled and handle accordingly."""
         # No additional processing needed here - just pass through
         return Command(update={})
 
     def route_after_doubles(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> str:
         """Route based on doubles status."""
         monopoly_state = MonopolyState.from_state_object(state)
@@ -578,19 +531,15 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         # Check for three doubles in a row
         if current_player.doubles_count >= 3:
-            print(f"🔒 Three doubles! {current_player.name} goes to jail")
             return "go_to_jail"
 
         # Check if doubles were rolled
         if monopoly_state.doubles_rolled and current_player.doubles_count < 3:
-            print(f"🎲 Doubles rolled - {current_player.name} gets another turn")
             return "continue_turn"
 
         return "end_turn"
 
-    def end_turn(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
-    ) -> Command:
+    def end_turn(self, state: MonopolyState | BaseModel | dict[str, Any]) -> Command:
         """End the current player's turn."""
         monopoly_state = MonopolyState.from_state_object(state)
         current_player = monopoly_state.current_player
@@ -621,7 +570,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
             # Move to next player
             monopoly_state.next_player()
-            print(f"🔄 Next player: {monopoly_state.current_player.name}")
         else:
             doubles_rolled = monopoly_state.doubles_rolled
 
@@ -637,7 +585,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         )
 
     def check_game_end_node(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
+        self, state: MonopolyState | BaseModel | dict[str, Any]
     ) -> Command:
         """Check if the game should end."""
         monopoly_state = MonopolyState.from_state_object(state)
@@ -646,12 +594,10 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         game_ended, winner = check_game_end(monopoly_state)
 
         if game_ended:
-            print(f"🏆 Game Over! Winner: {winner}")
             return Command(update={"game_status": "finished", "winner": winner})
 
         # Check turn limit
         if monopoly_state.turn_number >= self.config.max_turns:
-            print(f"⏰ Game ended due to turn limit ({self.config.max_turns})")
 
             # Determine winner by net worth
             best_player = None
@@ -667,9 +613,7 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         return Command(update={})
 
-    def route_game_end(
-        self, state: Union[MonopolyState, BaseModel, Dict[str, Any]]
-    ) -> str:
+    def route_game_end(self, state: MonopolyState | BaseModel | dict[str, Any]) -> str:
         """Route based on game end status."""
         monopoly_state = MonopolyState.from_state_object(state)
 
@@ -681,10 +625,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
     def handle_jail_turn(self, state: MonopolyState) -> Command:
         """Handle a turn when player is in jail."""
         current_player = state.current_player
-
-        print(
-            f"🔒 {current_player.name} is in jail (turn {current_player.jail_turns + 1}/3)"
-        )
 
         # Create decision input for player agent
         decision_input = {
@@ -711,7 +651,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 current_player.money -= 50
                 current_player.in_jail = False
                 current_player.jail_turns = 0
-                print("💰 Paid $50 fine to get out of jail")
 
                 events.append(
                     GameEvent(
@@ -724,7 +663,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
                 # Now roll dice normally
                 dice_roll = roll_dice()
-                print(f"🎲 Rolled: {dice_roll.total}")
 
                 updated_players[state.current_player_index] = current_player
 
@@ -741,7 +679,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                 current_player.jail_cards -= 1
                 current_player.in_jail = False
                 current_player.jail_turns = 0
-                print("🎫 Used Get Out of Jail Free card")
 
                 events.append(
                     GameEvent(
@@ -753,7 +690,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
                 # Now roll dice normally
                 dice_roll = roll_dice()
-                print(f"🎲 Rolled: {dice_roll.total}")
 
                 updated_players[state.current_player_index] = current_player
 
@@ -767,13 +703,11 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         # Default: Roll for jail (or if other options failed)
         dice_roll = roll_dice()
-        print(f"🎲 Jail roll: {dice_roll.die1} + {dice_roll.die2} = {dice_roll.total}")
 
         if dice_roll.is_doubles:
             # Doubles gets you out
             current_player.in_jail = False
             current_player.jail_turns = 0
-            print("🎯 Rolled doubles! Out of jail")
 
             events.append(
                 GameEvent(
@@ -792,7 +726,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                     current_player.money -= 50
                     current_player.in_jail = False
                     current_player.jail_turns = 0
-                    print("💰 Forced to pay $50 fine after 3 turns")
 
                     events.append(
                         GameEvent(
@@ -804,7 +737,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                     )
                 else:
                     # Can't afford fine - bankruptcy (simplified)
-                    print("💥 Cannot afford jail fine - bankruptcy!")
                     current_player.bankrupt = True
 
                     events.append(
@@ -815,7 +747,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                         )
                     )
             else:
-                print("🔒 Stays in jail")
 
                 events.append(
                     GameEvent(

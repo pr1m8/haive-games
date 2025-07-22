@@ -11,7 +11,6 @@ No mocks - real integration tests.
 
 import sys
 from pathlib import Path
-from typing import List
 
 import pytest
 
@@ -28,7 +27,7 @@ class TestGameImportsAndStructure:
     """Verify all games can be imported and have expected structure."""
 
     @pytest.fixture
-    def all_games(self) -> List[str]:
+    def all_games(self) -> list[str]:
         """List of all games in the package."""
         return [
             "among_us",
@@ -91,9 +90,6 @@ class TestGameImportsAndStructure:
         expected_games = ["chess", "connect4", "tic_tac_toe"]
         for game in expected_games:
             assert game in games_with_configs, f"{game} missing configurable_config"
-
-        print(f"\nGames with configurable configs: {games_with_configs}")
-        print(f"Games without: {games_without_configs}")
 
 
 class TestLLMSystemIntegration:
@@ -298,9 +294,8 @@ class TestGameStatesBasic:
         except Exception as e:
             failures.append(("nim", str(e)))
 
-        print(f"\nSuccessfully created states for: {successes}")
         if failures:
-            print(f"Failed to create states for: {failures}")
+            pass
 
         # At least some should succeed
         assert len(successes) >= 2, f"Too few successful state creations: {successes}"
@@ -333,7 +328,6 @@ class TestAPICompatibility:
             assert hasattr(config, "name"), f"{game_name} missing 'name'"
             assert hasattr(config, "engines"), f"{game_name} missing 'engines'"
             assert config.engines is not None, f"{game_name} engines is None"
-            print(f"✓ {game_name} is API-ready")
 
 
 class TestEndToEndScenarios:
@@ -353,7 +347,6 @@ class TestEndToEndScenarios:
             config = create_chess_config(white_model, black_model)
             assert config is not None
             assert config.engines is not None
-            print(f"✓ Created chess game: {white_model} vs {black_model}")
 
     def test_create_game_from_examples(self):
         """Test creating games from example configurations."""
@@ -367,9 +360,8 @@ class TestEndToEndScenarios:
             try:
                 config = create_chess_config_from_example(example)
                 assert config is not None
-                print(f"✓ Created chess from example: {example}")
-            except Exception as e:
-                print(f"✗ Failed chess example {example}: {e}")
+            except Exception:
+                pass
 
         # Tic-Tac-Toe examples
         from haive.games.tic_tac_toe.configurable_config import (
@@ -381,13 +373,14 @@ class TestEndToEndScenarios:
             try:
                 config = create_ttt_config_from_example(example)
                 assert config is not None
-                print(f"✓ Created tic-tac-toe from example: {example}")
-            except Exception as e:
-                print(f"✗ Failed tic-tac-toe example {example}: {e}")
+            except Exception:
+                pass
 
 
 if __name__ == "__main__":
     # Run specific test classes for debugging
     import subprocess
 
-    subprocess.run(["pytest", __file__, "-v", "-k", "TestEndToEndScenarios"])
+    subprocess.run(
+        ["pytest", __file__, "-v", "-k", "TestEndToEndScenarios"], check=False
+    )

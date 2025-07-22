@@ -4,7 +4,7 @@ This module provides a chess configuration that supports configurable
 player agents instead of hardcoded engine configurations.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -81,39 +81,39 @@ class ConfigurableChessConfig(AgentConfig):
     # Player configuration options (multiple ways to configure)
 
     # Option 1: Simple model strings
-    white_model: Optional[str] = Field(
+    white_model: str | None = Field(
         default=None,
         description="Model string for white player (e.g., 'gpt-4', 'claude-3-opus')",
     )
-    black_model: Optional[str] = Field(
+    black_model: str | None = Field(
         default=None, description="Model string for black player"
     )
 
     # Option 2: Player agent configurations
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None,
         description="Dictionary of role name to player agent configuration",
     )
 
     # Option 3: Example configuration name
-    example_config: Optional[str] = Field(
+    example_config: str | None = Field(
         default=None,
         description="Name of example configuration (e.g., 'anthropic_vs_openai')",
     )
 
     # Global settings
-    temperature: Optional[float] = Field(
+    temperature: float | None = Field(
         default=0.7,
         description="Temperature for all engines (can be overridden per player)",
     )
 
     # Computed engines (set by validator)
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="LLM configurations for players and analyzers"
     )
 
     # Runnable config with proper defaults
-    runnable_config: Dict[str, Any] = Field(
+    runnable_config: dict[str, Any] = Field(
         default_factory=lambda: RecursionConfig.configure_runnable(
             game_name="chess",
             enable_analysis=True,
@@ -122,9 +122,9 @@ class ConfigurableChessConfig(AgentConfig):
     )
 
     @model_validator(mode="after")
-    def configure_engines_and_names(self):
+    @classmethod
+    def configure_engines_and_names(cls) -> Any:
         """Configure engines from the provided player configurations."""
-
         # Ensure proper recursion configuration
         self.runnable_config = RecursionConfig.configure_runnable(
             runnable_config=self.runnable_config,
@@ -223,8 +223,7 @@ class ConfigurableChessConfig(AgentConfig):
         if ":" in model_string:
             provider, model = model_string.split(":", 1)
             return f"{provider.title()}-{model}"
-        else:
-            return model_string
+        return model_string
 
     class Config:
         """Pydantic configuration."""
@@ -291,7 +290,7 @@ def create_chess_config_from_example(
 
 
 def create_chess_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], enable_analysis: bool = True, **kwargs
+    player_configs: dict[str, PlayerAgentConfig], enable_analysis: bool = True, **kwargs
 ) -> ConfigurableChessConfig:
     """Create a chess configuration from player agent configurations.
 

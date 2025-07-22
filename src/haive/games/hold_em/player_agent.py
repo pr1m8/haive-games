@@ -37,13 +37,13 @@ import logging
 import traceback
 from typing import Any, Literal
 
-from haive.core.engine.agent.agent import Agent, AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.games.hold_em.state import (
+from .engine.agent.agent import Agent, AgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .hold_em.state import (
     HoldemState,
     PlayerState,
     PlayerStatus,
@@ -342,8 +342,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             error_msg = (
                 f"Situation analysis failed for {self.config.player_name}: {e!s}"
             )
-            logger.error(f"❌ {error_msg}")
-            logger.error(f"   Stack trace: {traceback.format_exc()}")
+            logger.exception(f"❌ {error_msg}")
+            logger.exception(f"   Stack trace: {traceback.format_exc()}")
 
             error_entry = {
                 "player_name": self.config.player_name,
@@ -458,8 +458,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         except Exception as e:
             error_msg = f"Hand analysis failed for {self.config.player_name}: {e!s}"
-            logger.error(f"❌ {error_msg}")
-            logger.error(f"   Stack trace: {traceback.format_exc()}")
+            logger.exception(f"❌ {error_msg}")
+            logger.exception(f"   Stack trace: {traceback.format_exc()}")
 
             error_entry = {
                 "player_name": self.config.player_name,
@@ -735,8 +735,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         except Exception as e:
             error_msg = f"Decision making failed for {self.config.player_name}: {e!s}"
-            logger.error(f"❌ {error_msg}")
-            logger.error(f"   Stack trace: {traceback.format_exc()}")
+            logger.exception(f"❌ {error_msg}")
+            logger.exception(f"   Stack trace: {traceback.format_exc()}")
             raise RuntimeError(error_msg) from e
 
     def _normalize_decision(self, decision: Any) -> dict[str, Any]:
@@ -1004,7 +1004,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         return validated
 
-    def save_debug_logs(self, timestamp: str = None):
+    def save_debug_logs(self, timestamp: str | None = None):
         """Save debug logs for this player agent to JSON files.
 
         This method saves three types of debug logs to help with debugging and
@@ -1050,6 +1050,6 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             )
 
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"❌ Failed to save debug logs for {self.config.player_name}: {e}"
             )

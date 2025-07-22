@@ -6,10 +6,8 @@ This module provides the game controller that manages the state and flow of the 
 import random
 from dataclasses import dataclass, field
 
-from haive.core.engine.aug_llm import AugLLMEngine
-
-from haive.games.clue.engines import clue_engines
-from haive.games.clue.models import (
+from .clue.engines import clue_engines
+from .clue.models import (
     ClueCard,
     ClueGuess,
     ClueHypothesis,
@@ -20,6 +18,7 @@ from haive.games.clue.models import (
     ValidSuspect,
     ValidWeapon,
 )
+from .engine.aug_llm import AugLLMEngine
 
 
 @dataclass

@@ -16,17 +16,17 @@ import sys
 import time
 from typing import Any
 
-from haive.core.engine.agent.agent import register_agent
-from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.games.checkers.config import CheckersAgentConfig
-from haive.games.checkers.models import CheckersMove, CheckersPlayerDecision
-from haive.games.checkers.state import CheckersState
-from haive.games.checkers.state_manager import CheckersStateManager
-from haive.games.checkers.ui import CheckersUI
-from haive.games.framework.base import GameAgent
+from .checkers.config import CheckersAgentConfig
+from .checkers.models import CheckersMove, CheckersPlayerDecision
+from .checkers.state import CheckersState
+from .checkers.state_manager import CheckersStateManager
+from .checkers.ui import CheckersUI
+from .engine.agent.agent import register_agent
+from .framework.base import GameAgent
+from .graph.dynamic_graph_builder import DynamicGraph
 
 
 @register_agent(CheckersAgentConfig)
@@ -279,9 +279,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                 if attempt < max_attempts:
                     continue
                 # Use fallback after max attempts
-                print(
-                    f"❌ Invalid move after {max_attempts} attempts! Using first legal move."
-                )
                 # Apply first legal move as fallback
                 legal_moves = self.state_manager.get_legal_moves(state)
                 if legal_moves:
@@ -292,7 +289,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                     return Command(update=updated_state.model_dump(), goto=goto)
 
             except Exception as e:
-                print(f"❌ Error in attempt {attempt}: {e}")
                 previous_error = str(e)
 
                 if attempt >= max_attempts:
@@ -316,6 +312,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                         )
                         return Command(update=updated_state.model_dump(), goto=goto)
                     return Command(update={"game_status": "game_over"}, goto=END)
+        return None
 
     def prepare_move_context(self, state: CheckersState, player: str) -> dict[str, Any]:
         """Prepare context for move generation.
@@ -421,8 +418,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         try:
             analysis = engine.invoke(context)
             updated_state = self.state_manager.update_analysis(state, analysis, player)
-        except Exception as e:
-            print(f"Error during analysis: {e}")
+        except Exception:
             # Create a default analysis to keep the game going
             from haive.games.checkers.models import CheckersAnalysis
 
@@ -488,8 +484,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
                 self.visualize_state(step)
 
             return step
-        except Exception as e:
-            print(f"Error running game: {e}")
+        except Exception:
             return {}
 
     def run_game(self, visualize: bool = True) -> dict[str, Any]:

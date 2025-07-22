@@ -1,38 +1,172 @@
-"""Mancala game module for the Haive framework.
+"""Module exports."""
 
-This package implements the classic Mancala (Kalah) board game, providing:
-- Data models for game state, moves, and analysis
-- Game logic and rules implementation
-- State management for applying moves and tracking game progress
-- LLM-based agents for move generation and position analysis
-- Configuration options for customizing gameplay
-- Example scripts for running and testing the game
-
-The implementation follows the standard Kalah rules:
-- Players take turns sowing stones from their pits
-- Stones are distributed counterclockwise, one per pit
-- Players' own stores are included; opponent's stores are skipped
-- If the last stone lands in the player's store, they get another turn
-- If the last stone lands in an empty pit on the player's side, they capture that stone and all stones in the opposite pit
-- Game ends when all pits on one side are empty
-
-For a quick demonstration without dependencies, run the minimal_test.py script.
-For a full game with LLM agents, run the example.py script.
-"""
-
-from haive.games.mancala.agent import MancalaAgent
-from haive.games.mancala.config import MancalaConfig
-from haive.games.mancala.engines import mancala_engines
-from haive.games.mancala.models import MancalaAnalysis, MancalaMove
-from haive.games.mancala.state import MancalaState
-from haive.games.mancala.state_manager import MancalaStateManager
+from mancala.agent import (
+    MancalaAgent,
+    check_game_over,
+    ensure_game_state,
+    extract_data_from_response,
+    make_move,
+    player1_turn,
+    player2_turn,
+    simple_play,
+)
+from mancala.agent_original import (
+    MancalaAgent,
+    analyze_player1,
+    analyze_player2,
+    analyze_position,
+    ensure_game_state,
+    extract_analysis,
+    extract_move,
+    initialize_game,
+    make_move,
+    make_player1_move,
+    make_player2_move,
+    prepare_analysis_context,
+    prepare_move_context,
+    run_game,
+    setup_workflow,
+    visualize_state,
+)
+from mancala.config import MancalaConfig, default_config
+from mancala.configurable_config import (
+    ConfigurableMancalaConfig,
+    create_advanced_mancala_config,
+    create_budget_mancala_config,
+    create_experimental_mancala_config,
+    create_mancala_config,
+    create_mancala_config_from_example,
+    create_mancala_config_from_player_configs,
+    get_example_config,
+    list_example_configurations,
+    model_post_init,
+    model_to_name,
+)
+from mancala.engines import generate_analysis_prompt, generate_move_prompt
+from mancala.generic_engines import (
+    MancalaEngineFactory,
+    MancalaPlayerIdentifiers,
+    MancalaPromptGenerator,
+    create_advanced_mancala_engines,
+    create_analyzer_prompt,
+    create_budget_mancala_engines,
+    create_generic_mancala_config_from_example,
+    create_generic_mancala_engines,
+    create_generic_mancala_engines_simple,
+    create_mixed_mancala_engines,
+    create_move_prompt,
+    get_structured_output_model,
+)
+from mancala.models import MancalaAnalysis, MancalaMove, validate_pit_index
+from mancala.state import (
+    MancalaState,
+    determine_winner,
+    display_board,
+    extract_analysis_from_message,
+    get_scores,
+    get_valid_moves,
+    handle_analysis_data,
+    handle_initialization_data,
+    is_game_over,
+    validate_board,
+)
+from mancala.state_manager import (
+    MancalaStateManager,
+    add_analysis,
+    apply_move,
+    check_game_status,
+    get_legal_moves,
+    get_winner,
+    initialize,
+)
+from mancala.state_original import (
+    MancalaState,
+    board_string,
+    copy,
+    get_valid_moves,
+    get_winner,
+    handle_analysis_data,
+    handle_initialization_data,
+    initialize,
+    is_game_over,
+    model_dump,
+    player1_score,
+    player2_score,
+    validate_board,
+)
 
 __all__ = [
+    "ConfigurableMancalaConfig",
     "MancalaAgent",
     "MancalaAnalysis",
     "MancalaConfig",
+    "MancalaEngineFactory",
     "MancalaMove",
+    "MancalaPlayerIdentifiers",
+    "MancalaPromptGenerator",
     "MancalaState",
     "MancalaStateManager",
-    "mancala_engines",
+    "add_analysis",
+    "analyze_player1",
+    "analyze_player2",
+    "analyze_position",
+    "apply_move",
+    "board_string",
+    "check_game_over",
+    "check_game_status",
+    "copy",
+    "create_advanced_mancala_config",
+    "create_advanced_mancala_engines",
+    "create_analyzer_prompt",
+    "create_budget_mancala_config",
+    "create_budget_mancala_engines",
+    "create_experimental_mancala_config",
+    "create_generic_mancala_config_from_example",
+    "create_generic_mancala_engines",
+    "create_generic_mancala_engines_simple",
+    "create_mancala_config",
+    "create_mancala_config_from_example",
+    "create_mancala_config_from_player_configs",
+    "create_mixed_mancala_engines",
+    "create_move_prompt",
+    "default_config",
+    "determine_winner",
+    "display_board",
+    "ensure_game_state",
+    "extract_analysis",
+    "extract_analysis_from_message",
+    "extract_data_from_response",
+    "extract_move",
+    "generate_analysis_prompt",
+    "generate_move_prompt",
+    "get_example_config",
+    "get_legal_moves",
+    "get_scores",
+    "get_structured_output_model",
+    "get_valid_moves",
+    "get_winner",
+    "handle_analysis_data",
+    "handle_initialization_data",
+    "initialize",
+    "initialize_game",
+    "is_game_over",
+    "list_example_configurations",
+    "make_move",
+    "make_player1_move",
+    "make_player2_move",
+    "model_dump",
+    "model_post_init",
+    "model_to_name",
+    "player1_score",
+    "player1_turn",
+    "player2_score",
+    "player2_turn",
+    "prepare_analysis_context",
+    "prepare_move_context",
+    "run_game",
+    "setup_workflow",
+    "simple_play",
+    "validate_board",
+    "validate_pit_index",
+    "visualize_state",
 ]

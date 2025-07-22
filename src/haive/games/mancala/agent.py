@@ -7,7 +7,7 @@ to generate moves and analyze positions in the game.
 import json
 import logging
 import traceback
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_game_state(
-    state_input: Union[dict[str, Any], MancalaState, Command],
+    state_input: dict[str, Any] | MancalaState | Command,
 ) -> MancalaState:
     """Ensure input is converted to MancalaState.
 
@@ -37,21 +37,19 @@ def ensure_game_state(
     """
     if isinstance(state_input, MancalaState):
         return state_input
-    elif isinstance(state_input, dict):
+    if isinstance(state_input, dict):
         return MancalaState(**state_input)
-    elif isinstance(state_input, Command):
+    if isinstance(state_input, Command):
         # For Commands, we assume the update contains the state
         if hasattr(state_input, "update") and state_input.update:
             return MancalaState(**state_input.update)
-        else:
-            return MancalaState()
-    else:
         return MancalaState()
+    return MancalaState()
 
 
 def extract_data_from_response(
     response: Any, data_type: str = "move"
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """Extract move or analysis data from an LLM response.
 
     Args:
@@ -62,11 +60,11 @@ def extract_data_from_response(
         Extracted data dictionary or None.
     """
     # If it's already a dict with the expected fields
-    if isinstance(response, dict):
-        if data_type == "move" and "pit_index" in response:
-            return response
-        elif data_type == "analysis" and "position_evaluation" in response:
-            return response
+    if isinstance(response, dict) and (
+        (data_type == "move" and "pit_index" in response)
+        or (data_type == "analysis" and "position_evaluation" in response)
+    ):
+        return response
 
     # If it's an AIMessage, try to extract from tool calls
     if isinstance(response, AIMessage):
@@ -85,7 +83,7 @@ def extract_data_from_response(
                         args = json.loads(tool_call["function"]["arguments"])
                         return args
                     except json.JSONDecodeError as e:
-                        logger.error(f"Failed to parse JSON: {e}")
+                        logger.exception(f"Failed to parse JSON: {e}")
 
     # For other message types with tool_calls
     if hasattr(response, "tool_calls") and response.tool_calls:
@@ -126,7 +124,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             self.graph_builder = self._create_graph_structure()
             self._app = self.graph_builder.build()
         except Exception as e:
-            logger.error(f"Failed to build graph: {e}")
+            logger.exception(f"Failed to build graph: {e}")
             # Fall back to a simple structure
             self.graph_builder = self._create_simple_graph()
             self._app = self.graph_builder.build()
@@ -200,10 +198,11 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             return state
 
         # Make move based on current turn
-        if state.turn == "player1":
-            state = self.player1_turn(state)
-        else:
-            state = self.player2_turn(state)
+        state = (
+            self.player1_turn(state)
+            if state.turn == "player1"
+            else self.player2_turn(state)
+        )
 
         # Check game over
         return self.check_game_over(state)
@@ -296,13 +295,12 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     if pit_index in valid_moves:
                         move = MancalaMove(pit_index=pit_index, player=player)
                         return self._apply_move(state, move)
-                    else:
-                        logger.warning(f"Invalid move {pit_index} not in {valid_moves}")
+                    logger.warning(f"Invalid move {pit_index} not in {valid_moves}")
                 else:
                     logger.warning("Could not extract move from response")
 
             except Exception as e:
-                logger.error(f"Error in attempt {attempt + 1}: {e}")
+                logger.exception(f"Error in attempt {attempt + 1}: {e}")
                 if logger.isEnabledFor(logging.DEBUG):
                     logger.debug(traceback.format_exc())
 
@@ -355,7 +353,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             return new_state
 
         except Exception as e:
-            logger.error(f"Failed to apply move: {e}")
+            logger.exception(f"Failed to apply move: {e}")
             if logger.isEnabledFor(logging.DEBUG):
                 logger.debug(traceback.format_exc())
             return state
@@ -393,6 +391,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     state.player2_analysis.append(analysis)
 
         except Exception as e:
-            logger.error(f"Failed to analyze position: {e}")
+            logger.exception(f"Failed to analyze position: {e}")
 
         return state

@@ -9,8 +9,8 @@ import argparse
 import random
 import sys
 
-from haive.games.mastermind.agent import MastermindAgent
-from haive.games.mastermind.config import MastermindConfig
+from .mastermind.agent import MastermindAgent
+from .mastermind.config import MastermindConfig
 
 
 def parse_args():

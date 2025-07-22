@@ -28,7 +28,7 @@ import random
 import time
 import traceback
 
-from haive.games.clue.models import (
+from .clue.models import (
     CardType,
     ClueCard,
     ClueGuess,
@@ -39,9 +39,9 @@ from haive.games.clue.models import (
     ValidSuspect,
     ValidWeapon,
 )
-from haive.games.clue.state import ClueState
-from haive.games.clue.state_manager import ClueStateManager
-from haive.games.clue.ui import ClueUI
+from .clue.state import ClueState
+from .clue.state_manager import ClueStateManager
+from .clue.ui import ClueUI
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

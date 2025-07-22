@@ -15,9 +15,9 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.monopoly.config import MonopolyGameAgentConfig
-from haive.games.monopoly.main_agent import MonopolyAgent
-from haive.games.monopoly.state import MonopolyState
+from .monopoly.config import MonopolyGameAgentConfig
+from .monopoly.main_agent import MonopolyAgent
+from .monopoly.state import MonopolyState
 
 
 class MonopolyRichUI:

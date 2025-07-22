@@ -8,10 +8,10 @@ import uuid
 from rich.console import Console
 from rich.panel import Panel
 
-from haive.games.dominoes.agent import DominoesAgent
-from haive.games.dominoes.config import DominoesAgentConfig
-from haive.games.dominoes.rich_ui import DominoesRichUI
-from haive.games.dominoes.state import DominoesState
+from .dominoes.agent import DominoesAgent
+from .dominoes.config import DominoesAgentConfig
+from .dominoes.rich_ui import DominoesRichUI
+from .dominoes.state import DominoesState
 
 # Set up logging - uncomment to see detailed debug logs
 # logging.basicConfig(level=logging.DEBUG)

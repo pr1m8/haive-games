@@ -1,15 +1,82 @@
-"""Blackjack - TODO: Add brief description
+"""Module exports."""
 
-TODO: Add detailed description of module functionality
+from blackjack.agent import (
+    BlackjackAgent,
+    betting_phase,
+    deal_cards,
+    dealer_turn,
+    initialize_game,
+    player_turns,
+    setup_workflow,
+    visualize_state,
+)
+from blackjack.config import (
+    BlackjackAgentConfig,
+    Config,
+    build_blackjack_aug_llms,
+    default,
+    generate_betting_prompt,
+    generate_player_action_prompt,
+)
+from blackjack.factory import create_blackjack_agent, run_blackjack_game
+from blackjack.models import (
+    BlackjackGameState,
+    Card,
+    CardSuit,
+    PlayerAction,
+    PlayerHand,
+    PlayerState,
+    add_hand,
+    is_blackjack,
+    is_bust,
+    point_value,
+    total_value,
+)
+from blackjack.state_manager import (
+    BlackjackStateManager,
+    create_deck,
+    deal_initial_cards,
+    dealer_turn,
+    get_current_player_and_hand,
+    initialize_game,
+    place_bet,
+    process_player_action,
+    reset_game,
+)
 
-
-
-Example:
-    Basic usage::
-
-        from haive.blackjack import module_function
-
-        # TODO: Add example
-
-
-"""
+__all__ = [
+    "BlackjackAgent",
+    "BlackjackAgentConfig",
+    "BlackjackGameState",
+    "BlackjackStateManager",
+    "Card",
+    "CardSuit",
+    "Config",
+    "PlayerAction",
+    "PlayerHand",
+    "PlayerState",
+    "add_hand",
+    "betting_phase",
+    "build_blackjack_aug_llms",
+    "create_blackjack_agent",
+    "create_deck",
+    "deal_cards",
+    "deal_initial_cards",
+    "dealer_turn",
+    "default",
+    "generate_betting_prompt",
+    "generate_player_action_prompt",
+    "get_current_player_and_hand",
+    "initialize_game",
+    "is_blackjack",
+    "is_bust",
+    "place_bet",
+    "player_turns",
+    "point_value",
+    "process_player_action",
+    "reset_game",
+    "run_blackjack_game",
+    "setup_workflow",
+    "total_value",
+    "visualize_state",
+]

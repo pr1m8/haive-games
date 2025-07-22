@@ -71,7 +71,8 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
     hand_rankings: dict[str, PokerHandRank] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def setup_active_players(self) -> "PokerGameState":
+    @classmethod
+    def setup_active_players(cls) -> "PokerGameState":
         """Ensure active_players is populated."""
         if not self.active_players and self.players:
             self.active_players = self.players.copy()

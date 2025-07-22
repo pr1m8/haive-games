@@ -1,16 +1,13 @@
-"""Game API integration module.
+"""Module exports."""
 
-This module provides utilities for integrating games with the
-standardized GameAPI system from haive-dataflow.
-"""
-
-from haive.games.api.general_api import (
+from api.general_api import (
     GameInfo,
     GameSelectionRequest,
     GeneralGameAPI,
     create_general_game_api,
+    custom_openapi,
 )
-from haive.games.api.setup import (
+from api.setup import (
     GameAPIConfig,
     create_chess_api,
     create_connect4_api,
@@ -19,15 +16,14 @@ from haive.games.api.setup import (
 )
 
 __all__ = [
-    # Specific game APIs
-    "create_game_api",
-    "create_chess_api",
-    "create_connect4_api",
-    "create_tic_tac_toe_api",
     "GameAPIConfig",
-    # General API
-    "create_general_game_api",
-    "GeneralGameAPI",
     "GameInfo",
     "GameSelectionRequest",
+    "GeneralGameAPI",
+    "create_chess_api",
+    "create_connect4_api",
+    "create_game_api",
+    "create_general_game_api",
+    "create_tic_tac_toe_api",
+    "custom_openapi",
 ]

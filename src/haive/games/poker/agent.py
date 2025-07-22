@@ -501,7 +501,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
                                 r"action[:\s]+([A-Z]+)", content, re.IGNORECASE
                             )
                             amount_match = re.search(
-                                r"amount[:\s]+(\d+)", content, re.IGNORECASE
+                                r"amount[:\s]+()", content, re.IGNORECASE
                             )
 
                             if action_match:

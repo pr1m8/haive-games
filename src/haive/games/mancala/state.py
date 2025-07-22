@@ -7,7 +7,7 @@ free turn, winner, and player analyses.
 
 import json
 import logging
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import Field, field_validator, model_validator
 
@@ -17,7 +17,7 @@ from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 logger = logging.getLogger(__name__)
 
 
-def extract_analysis_from_message(analysis: Any) -> Optional[Dict[str, Any]]:
+def extract_analysis_from_message(analysis: Any) -> dict[str, Any] | None:
     """Extract analysis data from an AIMessage object.
 
     Args:
@@ -41,7 +41,7 @@ def extract_analysis_from_message(analysis: Any) -> Optional[Dict[str, Any]]:
                     args = json.loads(tool_call["function"]["arguments"])
                     return args
         except Exception as e:
-            logger.error(f"Error parsing analysis: {e}")
+            logger.exception(f"Error parsing analysis: {e}")
 
     return None
 
@@ -91,6 +91,7 @@ class MancalaState(GameState):
     )
 
     @field_validator("board")
+    @classmethod
     def validate_board(cls, v: list[int]) -> list[int]:
         """Validate that the board has exactly 14 positions.
 
@@ -174,7 +175,7 @@ class MancalaState(GameState):
         return data
 
     @classmethod
-    def _create_initial_board(cls, stones_per_pit: int) -> List[int]:
+    def _create_initial_board(cls, stones_per_pit: int) -> list[int]:
         """Create the initial board configuration.
 
         Args:
@@ -197,8 +198,8 @@ class MancalaState(GameState):
 
     @classmethod
     def _convert_analysis_list(
-        cls, analyses: List[Any], player: str
-    ) -> List[Dict[str, Any]]:
+        cls, analyses: list[Any], player: str
+    ) -> list[dict[str, Any]]:
         """Convert a list of analysis objects to proper format.
 
         Args:
@@ -254,11 +255,10 @@ class MancalaState(GameState):
         if player == "player1":
             # Player 1's pits are indices 0-5
             return [i for i in range(6) if self.board[i] > 0]
-        else:
-            # Player 2's pits are indices 7-12
-            valid_indices = [i for i in range(7, 13) if self.board[i] > 0]
-            # Convert to 0-5 range for consistency with MancalaMove
-            return [i - 7 for i in valid_indices]
+        # Player 2's pits are indices 7-12
+        valid_indices = [i for i in range(7, 13) if self.board[i] > 0]
+        # Convert to 0-5 range for consistency with MancalaMove
+        return [i - 7 for i in valid_indices]
 
     def is_game_over(self) -> bool:
         """Check if the game is over.
@@ -304,7 +304,6 @@ class MancalaState(GameState):
         # Determine winner
         if final_board[6] > final_board[13]:
             return "player1"
-        elif final_board[13] > final_board[6]:
+        if final_board[13] > final_board[6]:
             return "player2"
-        else:
-            return "draw"
+        return "draw"

@@ -1,22 +1,124 @@
-"""Reversi (Othello) game module.
+"""Module exports."""
 
-This package provides components for simulating and interacting with Reversi,
-including game agents, state logic, model schemas, engine prompts, and configuration.
-"""
-
-from haive.games.reversi.agent import ReversiAgent
-from haive.games.reversi.config import ReversiConfig
-from haive.games.reversi.engines import reversi_engines
-from haive.games.reversi.models import ReversiAnalysis, ReversiMove
-from haive.games.reversi.state import ReversiState
-from haive.games.reversi.state_manager import ReversiStateManager
+from reversi.agent import (
+    ReversiAgent,
+    analyze_B,
+    analyze_W,
+    extract_move,
+    initialize_game,
+    make_B_move,
+    make_W_move,
+    prepare_analysis_context,
+    prepare_move_context,
+    run_game,
+    setup_workflow,
+    visualize_state,
+)
+from reversi.config import ReversiConfig, default_config
+from reversi.configurable_config import (
+    ConfigurableReversiConfig,
+    create_advanced_reversi_config,
+    create_budget_reversi_config,
+    create_experimental_reversi_config,
+    create_reversi_config,
+    create_reversi_config_from_example,
+    create_reversi_config_from_player_configs,
+    get_example_config,
+    list_example_configurations,
+    model_post_init,
+    model_to_name,
+)
+from reversi.engines import generate_analysis_prompt, generate_move_prompt
+from reversi.generic_engines import (
+    ReversiEngineFactory,
+    ReversiPlayerIdentifiers,
+    ReversiPromptGenerator,
+    create_advanced_reversi_engines,
+    create_analyzer_prompt,
+    create_budget_reversi_engines,
+    create_generic_reversi_config_from_example,
+    create_generic_reversi_engines,
+    create_generic_reversi_engines_simple,
+    create_mixed_reversi_engines,
+    create_move_prompt,
+    get_structured_output_model,
+)
+from reversi.models import Position, ReversiAnalysis, ReversiMove
+from reversi.state import (
+    ReversiState,
+    board_string,
+    current_player_name,
+    disc_count,
+    initialize,
+    validate_board,
+)
+from reversi.state_manager import (
+    ReversiStateManager,
+    add_analysis,
+    apply_move,
+    check_game_status,
+    get_legal_moves,
+    get_skip_move,
+    get_winner,
+    initialize,
+    is_legal_move,
+)
 
 __all__ = [
+    "ConfigurableReversiConfig",
+    "Position",
     "ReversiAgent",
     "ReversiAnalysis",
     "ReversiConfig",
+    "ReversiEngineFactory",
     "ReversiMove",
+    "ReversiPlayerIdentifiers",
+    "ReversiPromptGenerator",
     "ReversiState",
     "ReversiStateManager",
-    "reversi_engines",
+    "add_analysis",
+    "analyze_B",
+    "analyze_W",
+    "apply_move",
+    "board_string",
+    "check_game_status",
+    "create_advanced_reversi_config",
+    "create_advanced_reversi_engines",
+    "create_analyzer_prompt",
+    "create_budget_reversi_config",
+    "create_budget_reversi_engines",
+    "create_experimental_reversi_config",
+    "create_generic_reversi_config_from_example",
+    "create_generic_reversi_engines",
+    "create_generic_reversi_engines_simple",
+    "create_mixed_reversi_engines",
+    "create_move_prompt",
+    "create_reversi_config",
+    "create_reversi_config_from_example",
+    "create_reversi_config_from_player_configs",
+    "current_player_name",
+    "default_config",
+    "disc_count",
+    "extract_move",
+    "generate_analysis_prompt",
+    "generate_move_prompt",
+    "get_example_config",
+    "get_legal_moves",
+    "get_skip_move",
+    "get_structured_output_model",
+    "get_winner",
+    "initialize",
+    "initialize_game",
+    "is_legal_move",
+    "list_example_configurations",
+    "make_B_move",
+    "make_W_move",
+    "model_post_init",
+    "model_to_name",
+    "prepare_analysis_context",
+    "prepare_move_context",
+    "run_game",
+    "setup_workflow",
+    "validate_board",
+    "visualize_state",
 ]

@@ -12,7 +12,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.mastermind.state import MastermindState
+from .mastermind.state import MastermindState
 
 
 class MastermindUI:

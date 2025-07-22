@@ -17,13 +17,13 @@ import logging
 import time
 import uuid
 
-from haive.games.mafia.agent import MafiaAgent
-from haive.games.mafia.config import MafiaAgentConfig
-from haive.games.mafia.models import (
+from .mafia.agent import MafiaAgent
+from .mafia.config import MafiaAgentConfig
+from .mafia.models import (
     GamePhase,
     PlayerRole,
 )
-from haive.games.mafia.state_manager import MafiaStateManager
+from .mafia.state_manager import MafiaStateManager
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -53,21 +53,13 @@ def run_mafia_game_simple(
     Raises:
         ValueError: If player_count is less than 4.
     """
-    print("\n🎭 Setting up Mafia Game")
-    print("=" * 60)
-    print(f"Number of players: {player_count}")
-    print(f"Maximum days: {max_days}")
-    print(f"Debug mode: {'Enabled' if debug else 'Disabled'}")
-    print("=" * 60)
-
     try:
         # Print available configs for debugging
         if debug:
             from haive.games.mafia.engines import aug_llm_configs
 
-            print("\n🔧 Available Engine Configs:")
-            for role, engines in aug_llm_configs.items():
-                print(f"  {role}: {list(engines.keys())}")
+            for role, _engines in aug_llm_configs.items():
+                pass
 
         # Create agent config
         config = MafiaAgentConfig.default_config(
@@ -78,7 +70,6 @@ def run_mafia_game_simple(
         config.debug = debug
 
         # Create the agent
-        print("\n🎮 Creating Mafia agent")
         agent = MafiaAgent(config)
 
         # Generate player names
@@ -87,30 +78,20 @@ def run_mafia_game_simple(
 
         # Dump engine keys for debugging
         if debug:
-            print("\n🔧 Available Engines in Agent:")
-            for key, value in agent.engines.items():
-                print(
-                    f"  {key}: {list(value.keys()) if isinstance(value, dict) else 'None'}"
-                )
+            for key, _value in agent.engines.items():
+                pass
 
-            print("\n🔑 Role to Engine Mapping:")
-            for role, engine_key in agent.role_enum_mapping.items():
-                print(f"  {role}: {engine_key}")
+            for role, _engine_key in agent.role_enum_mapping.items():
+                pass
 
         # Initialize game state
-        print("\n🎲 Initializing game state")
         game_state = MafiaStateManager.initialize(player_names)
 
         if debug:
-            print("\n🎲 Game Role Assignment:")
             for player_id, role in game_state.roles.items():
-                print(f"  {player_id}: {role.value}")
+                pass
 
         # Run the game
-        print("\n🎭 Starting Mafia Game")
-        print("=" * 60)
-        print(f"Players: {', '.join(player_names[:-1])} + Narrator")
-        print("=" * 60)
 
         # Track day count to prevent infinite games
         current_day = 0
@@ -182,7 +163,7 @@ def run_mafia_game_simple(
                         ):
                             game_state = MafiaStateManager.advance_phase(game_state)
                     except Exception as e:
-                        logger.error(f"Error in narrator turn: {e}")
+                        logger.exception(f"Error in narrator turn: {e}")
                 else:
                     logger.error("No narrator engine found")
             else:
@@ -205,7 +186,7 @@ def run_mafia_game_simple(
                             game_state, player_id, move
                         )
                     except Exception as e:
-                        logger.error(f"Error in player {player_id}'s turn: {e}")
+                        logger.exception(f"Error in player {player_id}'s turn: {e}")
                 else:
                     logger.error(f"No move engine found for player {player_id}")
 
@@ -284,7 +265,6 @@ def run_mafia_game_simple(
 
             # Check if we've reached max days
             if current_day > max_days:
-                print(f"\n⏰ Maximum days ({max_days}) reached. Ending game.")
                 game_state.game_status = "ended"
                 game_state.game_phase = GamePhase.GAME_OVER
                 break
@@ -294,27 +274,21 @@ def run_mafia_game_simple(
 
         # Save game history
         try:
-            print("\n📊 Saving game history")
             agent.save_state_history()
-            print("✅ Game history saved successfully")
-        except Exception as save_error:
-            print(f"⚠️ Could not save game history: {save_error}")
+        except Exception:
             if debug:
                 import traceback
 
                 traceback.print_exc()
 
-    except Exception as e:
-        print(f"\n❌ ERROR: {e}")
+    except Exception:
         if debug:
             import traceback
 
             traceback.print_exc()
 
-    print("\n✅ Game Complete!")
 
-
-def main():
+def main() -> None:
     """Main entry point for command-line execution."""
     parser = argparse.ArgumentParser(description="Run a simple Mafia game simulation")
     parser.add_argument(

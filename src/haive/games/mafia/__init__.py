@@ -1,92 +1,183 @@
-"""Mafia game implementation module.
+"""Module exports."""
 
-This package provides a complete implementation of the Mafia party game, including:
-    - Multi-player game agent with role-based gameplay
-    - Day/Night phase management
-    - Role-specific actions and abilities
-    - Hidden information and voting mechanics
-    - Game state tracking and validation
-    - Specialized LLM configurations for different roles
-    - Advanced analysis capabilities
-
-The Mafia game is a social deduction game where players are assigned secret roles
-and must work together or against each other to achieve their faction's goals.
-The game alternates between day and night phases, with different actions available
-to players based on their roles.
-
-Example:
-    >>> from haive.games.mafia import MafiaAgent, MafiaAgentConfig
-    >>>
-    >>> # Create and configure a Mafia game agent
-    >>> config = MafiaAgentConfig.default_config(
-    ...     player_count=7,
-    ...     max_days=3
-    ... )
-    >>> agent = MafiaAgent(config)
-    >>>
-    >>> # Initialize the game with players
-    >>> from haive.games.mafia.state_manager import MafiaStateManager
-    >>> player_names = ["Player_1", "Player_2", "Player_3", "Player_4", "Player_5", "Player_6", "Narrator"]
-    >>> initial_state = MafiaStateManager.initialize(player_names)
-    >>>
-    >>> # Run the game
-    >>> for state in agent.app.stream(initial_state.model_dump()):
-    ...     agent.visualize_state(state)
-"""
-
-from haive.games.mafia.agent import MafiaAgent
-from haive.games.mafia.config import MafiaAgentConfig
-from haive.games.mafia.engines import (
-    aug_llm_configs,
+from mafia.agent import (
+    MafiaAgent,
+    determine_next_step_after_player_turn,
+    extract_move,
+    get_engine_for_player,
+    get_player_role,
+    handle_narrator_turn,
+    handle_player_turn,
+    prepare_move_context,
+    prepare_narrator_context,
+    state_to_dict,
+    visualize_state,
+)
+from mafia.aug_llms import get_mafia_analyzer
+from mafia.config import MafiaAgentConfig, default_config
+from mafia.configurable_config import (
+    ConfigurableMafiaConfig,
+    create_advanced_mafia_config,
+    create_budget_mafia_config,
+    create_experimental_mafia_config,
+    create_mafia_config,
+    create_mafia_config_from_example,
+    create_mafia_config_from_player_configs,
+    get_example_config,
+    list_example_configurations,
+    model_post_init,
+    model_to_name,
+)
+from mafia.engines import (
     generate_detective_prompt,
     generate_doctor_prompt,
     generate_mafia_prompt,
     generate_narrator_prompt,
     generate_villager_prompt,
 )
-from haive.games.mafia.models import (
+from mafia.example import main, run_mafia_game
+from mafia.generic_engines import (
+    MafiaEngineFactory,
+    MafiaPlayerIdentifiers,
+    MafiaPromptGenerator,
+    create_advanced_mafia_engines,
+    create_analyzer_prompt,
+    create_budget_mafia_engines,
+    create_generic_mafia_config_from_example,
+    create_generic_mafia_engines,
+    create_generic_mafia_engines_simple,
+    create_mixed_mafia_engines,
+    create_move_prompt,
+    get_structured_output_model,
+)
+from mafia.mock_runner import (
+    MockEngine,
+    generate_detective_response,
+    generate_doctor_response,
+    generate_mafia_response,
+    generate_narrator_response,
+    generate_villager_response,
+    invoke,
+    main,
+    run_mafia_game_mock,
+)
+from mafia.models import (
     ActionType,
+    Config,
     GamePhase,
     MafiaAction,
+    MafiaPlayerDecision,
+    MafiaPlayerDecisionSchema,
+    NarratorAction,
+    NarratorDecision,
+    NarratorDecisionSchema,
     PlayerRole,
     PlayerState,
+    serialize_next_phase,
+    to_dict,
 )
-from haive.games.mafia.state import MafiaGameState
-from haive.games.mafia.state_manager import MafiaStateManager
-
-# Temporarily disabled due to import issues
-# from haive.games.mafia.aug_llms import (
-#     get_mafia_analyzer,
-#     suspicion_analyzer,
-#     psychology_analyzer,
-#     strategy_analyzer,
-#     voting_analyzer,
-# )
+from mafia.simple_demo import run_simple_demo, visualize_state
+from mafia.simple_runner import main, run_mafia_game_simple
+from mafia.state import (
+    Config,
+    MafiaGameState,
+    add_public_announcement,
+    log_action,
+    model_copy,
+    update_alive_counts,
+)
+from mafia.state_manager import (
+    MafiaStateManager,
+    advance_phase,
+    apply_move,
+    check_game_status,
+    filter_state_for_player,
+    get_legal_moves,
+    handle_phase_transition,
+    initialize,
+    resolve_night_actions,
+)
 
 __all__ = [
-    # Agent and configuration
+    "ActionType",
+    "Config",
+    "ConfigurableMafiaConfig",
+    "GamePhase",
+    "MafiaAction",
     "MafiaAgent",
     "MafiaAgentConfig",
-    # Core models
+    "MafiaEngineFactory",
     "MafiaGameState",
-    "PlayerState",
-    "MafiaAction",
-    "PlayerRole",
-    "GamePhase",
-    "ActionType",
-    # State management
+    "MafiaPlayerDecision",
+    "MafiaPlayerDecisionSchema",
+    "MafiaPlayerIdentifiers",
+    "MafiaPromptGenerator",
     "MafiaStateManager",
-    # Engine prompts
-    "generate_villager_prompt",
-    "generate_mafia_prompt",
+    "MockEngine",
+    "NarratorAction",
+    "NarratorDecision",
+    "NarratorDecisionSchema",
+    "PlayerRole",
+    "PlayerState",
+    "add_public_announcement",
+    "advance_phase",
+    "apply_move",
+    "check_game_status",
+    "create_advanced_mafia_config",
+    "create_advanced_mafia_engines",
+    "create_analyzer_prompt",
+    "create_budget_mafia_config",
+    "create_budget_mafia_engines",
+    "create_experimental_mafia_config",
+    "create_generic_mafia_config_from_example",
+    "create_generic_mafia_engines",
+    "create_generic_mafia_engines_simple",
+    "create_mafia_config",
+    "create_mafia_config_from_example",
+    "create_mafia_config_from_player_configs",
+    "create_mixed_mafia_engines",
+    "create_move_prompt",
+    "default_config",
+    "determine_next_step_after_player_turn",
+    "extract_move",
+    "filter_state_for_player",
     "generate_detective_prompt",
+    "generate_detective_response",
     "generate_doctor_prompt",
+    "generate_doctor_response",
+    "generate_mafia_prompt",
+    "generate_mafia_response",
     "generate_narrator_prompt",
-    "aug_llm_configs",
-    # Advanced analyzers (temporarily disabled)
-    # "get_mafia_analyzer",
-    # "suspicion_analyzer",
-    # "psychology_analyzer",
-    # "strategy_analyzer",
-    # "voting_analyzer",
+    "generate_narrator_response",
+    "generate_villager_prompt",
+    "generate_villager_response",
+    "get_engine_for_player",
+    "get_example_config",
+    "get_legal_moves",
+    "get_mafia_analyzer",
+    "get_player_role",
+    "get_structured_output_model",
+    "handle_narrator_turn",
+    "handle_phase_transition",
+    "handle_player_turn",
+    "initialize",
+    "invoke",
+    "list_example_configurations",
+    "log_action",
+    "main",
+    "model_copy",
+    "model_post_init",
+    "model_to_name",
+    "prepare_move_context",
+    "prepare_narrator_context",
+    "resolve_night_actions",
+    "run_mafia_game",
+    "run_mafia_game_mock",
+    "run_mafia_game_simple",
+    "run_simple_demo",
+    "serialize_next_phase",
+    "state_to_dict",
+    "to_dict",
+    "update_alive_counts",
+    "visualize_state",
 ]

@@ -1,3 +1,5 @@
+from typing import Any
+
 r"""Comprehensive configuration system for Battleship game agents and gameplay customization.
 
 This module provides extensive configuration options for Battleship game agents,
@@ -44,7 +46,6 @@ Note:
 """
 
 import uuid
-from typing import Dict
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -181,13 +182,14 @@ class BattleshipAgentConfig(AgentConfig):
         description="LangChain runnable configuration with execution parameters and thread management",
     )
 
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_battleship_engines,
         description="LLM engine configurations for ship placement, move generation, and analysis",
     )
 
     @model_validator(mode="after")
-    def update_player_names_from_engines(self):
+    @classmethod
+    def update_player_names_from_engines(cls) -> Any:
         r"""Update player names based on LLM provider and model from engines.
 
         Automatically generates meaningful player names based on the configured
@@ -331,7 +333,7 @@ class BattleshipAgentConfig(AgentConfig):
 
     @computed_field
     @property
-    def configuration_summary(self) -> Dict[str, str]:
+    def configuration_summary(self) -> dict[str, str]:
         r"""Get a summary of the current configuration settings.
 
         Returns:

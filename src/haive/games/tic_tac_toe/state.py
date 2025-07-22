@@ -1,5 +1,6 @@
 """Comprehensive state management system for strategic Tic Tac Toe gameplay.
 
+from typing import Any
 This module provides sophisticated state management for Tic Tac Toe games with
 complete support for game mechanics, strategic analysis, and LangGraph integration.
 The state system maintains game rules, move validation, and comprehensive game
@@ -57,9 +58,9 @@ Note:
     reducer behavior and concurrent update handling.
 """
 
-from typing import Annotated, Any, List, Literal, Optional
+from typing import Annotated, Any, Literal
 
-from pydantic import Field, computed_field, field_validator
+from pydantic import Field, field_validator
 
 from haive.games.framework.base.state import GameState
 from haive.games.tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
@@ -331,7 +332,8 @@ class TicTacToeState(GameState):
     )
 
     @field_validator("board")
-    def validate_board(cls, board):
+    @classmethod
+    def validate_board(cls, board) -> Any:
         """Validate that the board is a proper 3x3 grid with valid symbols.
 
         Ensures the board maintains the correct structure and contains only

@@ -121,7 +121,8 @@ class CrosswordWord(BaseModel):
     letters: list[str]  # Letters of the word
 
     @model_validator(mode="after")
-    def validate_word(self) -> CrosswordWord:
+    @classmethod
+    def validate_word(cls) -> CrosswordWord:
         """Ensure the word's length matches positions and letters."""
         if (
             len(self.positions) != len(self.letters)
@@ -179,10 +180,7 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
             return False
 
         # Letter must be alphabetic
-        if not move.letter.isalpha() or len(move.letter) != 1:
-            return False
-
-        return True
+        return not (not move.letter.isalpha() or len(move.letter) != 1)
 
     def make_move(self, move: CrosswordMove | dict[str, any]) -> bool:
         """Make a move in the game."""
@@ -252,11 +250,9 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
         word = self.board.words[clue_id]
 
         # Check each letter
-        for _i, pos in enumerate(word.positions):
-            if not self.board.check_letter(pos):
-                return False
-
-        return True
+        return all(
+            self.board.check_letter(pos) for _i, pos in enumerate(word.positions)
+        )
 
     def check_all(self) -> dict[str, bool]:
         """Check all filled letters against the solution."""

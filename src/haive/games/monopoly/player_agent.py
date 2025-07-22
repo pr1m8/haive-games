@@ -1,5 +1,6 @@
 """Monopoly player agent implementation.
 
+from typing import Any
 This module provides the player agent (subgraph) for making individual
 player decisions in Monopoly, including:
     - Property purchase decisions
@@ -11,22 +12,22 @@ player decisions in Monopoly, including:
 import operator
 from typing import Annotated, Any
 
-from haive.core.engine.agent.agent import Agent, register_agent
-from haive.core.engine.agent.config import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.schema.prebuilt.messages_state import MessagesState
 from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field, computed_field
 
-from haive.games.monopoly.models import (
+from .engine.agent.agent import Agent, register_agent
+from .engine.agent.config import AgentConfig
+from .engine.aug_llm import AugLLMConfig
+from .monopoly.models import (
     BuildingDecision,
     JailDecision,
     PlayerActionType,
     PropertyDecision,
     TradeResponse,
 )
-from haive.games.monopoly.state import MonopolyState
+from .monopoly.state import MonopolyState
+from .schema.prebuilt.messages_state import MessagesState
 
 
 class PlayerDecisionState(MessagesState):
@@ -85,12 +86,12 @@ This module provides corrected configuration classes for the monopoly game agent
 import uuid
 from typing import Any
 
-from haive.core.config.runnable import RunnableConfigManager
 from langchain_core.runnables import RunnableConfig
 from pydantic import Field
 
-from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
+from .config.runnable import RunnableConfigManager
+from .monopoly.state import MonopolyState
+from .monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class MonopolyPlayerAgentConfig(AgentConfig):
@@ -191,9 +192,6 @@ class MonopolyGameAgentConfig(AgentConfig):
                 "No players were created - check player_names configuration"
             )
 
-        print(f"DEBUG: Creating initial state with {len(players)} players")
-        print(f"DEBUG: Player names: {[p.name for p in players]}")
-
         # Create initial state with ALL required fields including messages
         initial_state = MonopolyState(
             players=players,
@@ -211,15 +209,11 @@ class MonopolyGameAgentConfig(AgentConfig):
         # Validate the initial state
         issues = initial_state.validate_state_consistency()
         if issues:
-            print(f"WARNING: Initial state has issues: {issues}")
             raise ValueError(f"Initial state validation failed: {issues}")
-
-        print("DEBUG: Initial state created successfully")
-        print(f"DEBUG: Current player: {initial_state.current_player.name}")
 
         return initial_state
 
-    def create_player_agent(self):
+    def create_player_agent(self) -> Any:
         """Create the player decision agent."""
         # Import here to avoid circular dependency
         from haive.games.monopoly.engines import build_monopoly_player_aug_llms
@@ -261,7 +255,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             if self.engines[key] is None:
                 raise ValueError(f"Failed to create engine for {key}")
 
-    def setup_workflow(self):
+    def setup_workflow(self) -> None:
         """Set up the player decision workflow."""
         # Add decision nodes
         self.graph.add_node("route_decision", self.route_decision)
@@ -297,13 +291,8 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
     def route_decision(self, state: BaseModel) -> Command:
         """Route to appropriate decision node based on decision type."""
-        print(f"Route decision state: {state}")
-        print(f"Route decision state type: {type(state)}")
-
         if isinstance(state, dict):
             # Debug: Print the raw state dict
-            print(f"🔍 DEBUG - Raw state dict: {state}")
-            print(f"🔍 DEBUG - decision_type value: {state.get('decision_type')}")
 
             # Map simplified decision types to PlayerActionType values
             decision_type_mapping = {
@@ -319,15 +308,10 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
                 and state["decision_type"] in decision_type_mapping
             ):
                 state["decision_type"] = decision_type_mapping[state["decision_type"]]
-                print(f"🔄 DEBUG - Mapped decision_type to: {state['decision_type']}")
 
             decision_state = PlayerDecisionState.model_validate(state)
         else:
             decision_state = state
-
-        print(
-            f"🎯 Routing {decision_state.player_name}'s {decision_state.decision_type} decision"
-        )
 
         # Map PlayerActionType values back to simple route names
         route_mapping = {
@@ -373,10 +357,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             state = PlayerDecisionState.model_validate(state)
         decision_state = PlayerDecisionState.model_validate(state)
 
-        print(
-            f"🏠 {decision_state.player_name} deciding on {decision_state.property_name}"
-        )
-
         # Get the decision engine
         decision_engine = self.engines.get("property_decision")
         if not decision_engine:
@@ -402,8 +382,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             else:
                 decision_dict = dict(decision_result)
 
-            print(f"💰 Decision: {decision_dict.get('action', 'unknown')}")
-
             return Command(
                 update={
                     "decision": decision_dict,
@@ -413,7 +391,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
         except Exception as e:
             error_msg = f"Error making property decision: {e!s}"
-            print(f"❌ {error_msg}")
             return Command(
                 update={
                     "error_message": error_msg,
@@ -426,8 +403,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
         if isinstance(state, dict):
             state = PlayerDecisionState.model_validate(state)
         decision_state = PlayerDecisionState.model_validate(state)
-
-        print(f"🔒 {decision_state.player_name} deciding jail action")
 
         # Get the decision engine
         decision_engine = self.engines.get("jail_decision")
@@ -454,8 +429,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
             else:
                 decision_dict = dict(decision_result)
 
-            print(f"⚖️ Decision: {decision_dict.get('action', 'unknown')}")
-
             return Command(
                 update={
                     "decision": decision_dict,
@@ -465,7 +438,6 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
         except Exception as e:
             error_msg = f"Error making jail decision: {e!s}"
-            print(f"❌ {error_msg}")
             return Command(
                 update={
                     "error_message": error_msg,
@@ -477,9 +449,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
         """Make a building decision."""
         if isinstance(state, dict):
             state = PlayerDecisionState.model_validate(state)
-        decision_state = PlayerDecisionState.model_validate(state)
-
-        print(f"🏗️ {decision_state.player_name} deciding on building")
+        PlayerDecisionState.model_validate(state)
 
         # For now, return no building decision
         # This would be expanded with proper building logic
@@ -494,9 +464,7 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
         """Make a trade decision."""
         if isinstance(state, dict):
             state = PlayerDecisionState.model_validate(state)
-        decision_state = PlayerDecisionState.model_validate(state)
-
-        print(f"🤝 {decision_state.player_name} deciding on trade")
+        PlayerDecisionState.model_validate(state)
 
         # For now, return decline trade decision
         # This would be expanded with proper trade logic

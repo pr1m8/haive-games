@@ -21,17 +21,16 @@ gameplay mechanics, and configuration options for educational purposes.
 
 import argparse
 import asyncio
+import contextlib
 import json
 import logging
 import time
-from typing import List
 
-from haive.core.engine.aug_llm import AugLLMConfig
-
-from haive.games.checkers.agent import CheckersAgent
-from haive.games.checkers.config import CheckersAgentConfig
-from haive.games.checkers.state import CheckersState
-from haive.games.checkers.state_manager import CheckersStateManager
+from .checkers.agent import CheckersAgent
+from .checkers.config import CheckersAgentConfig
+from .checkers.state import CheckersState
+from .checkers.state_manager import CheckersStateManager
+from .engine.aug_llm import AugLLMConfig
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
@@ -40,24 +39,18 @@ logger = logging.getLogger(__name__)
 
 def print_section_header(title: str, subtitle: str = "") -> None:
     """Print a formatted section header."""
-    print("\n" + "=" * 80)
-    print(f"  {title}")
     if subtitle:
-        print(f"  {subtitle}")
-    print("=" * 80)
+        pass
 
 
 def print_subsection(title: str) -> None:
     """Print a formatted subsection header."""
-    print(f"\n--- {title} ---")
 
 
 def display_board_position(state: CheckersState, title: str = "Board Position") -> None:
     """Display board position in a readable format."""
-    print(f"\n{title}:")
-    print("  " + " ".join([f"{i:2d}" for i in range(8)]))
-    for i, row in enumerate(state.board):
-        print(f"{i} {' '.join([f'{cell:2s}' for cell in row])}")
+    for _i, _row in enumerate(state.board):
+        pass
 
 
 def create_tournament_config(
@@ -125,32 +118,17 @@ async def example_1_basic_checkers_game():
     # Create basic configuration
     config = CheckersAgentConfig(max_turns=150, time_per_move=20)
 
-    print("Configuration:")
-    print(f"  Max turns: {config.max_turns}")
-    print(f"  Strategic depth: {config.strategic_depth}")
-    print(f"  Move timeout: {config.time_per_move}s")
-
     # Create and run game
-    print("\nStarting basic Checkers game...")
     agent = CheckersAgent(config)
 
     try:
         result = agent.run_game(visualize=True)
 
-        print("\nGame Results:")
-        print(f"  Winner: {result.get('winner', 'Draw')}")
-        print(f"  Total turns: {result.get('turn_count', 'Unknown')}")
-        print(f"  Game duration: {result.get('duration', 'Unknown')}")
-
         if result.get("move_history"):
-            print(f"  Moves played: {len(result['move_history'])}")
-            print(
-                f"  Last move: {result['move_history'][-1] if result['move_history'] else 'None'}"
-            )
+            pass
 
     except Exception as e:
-        print(f"Error during game: {e}")
-        logger.error(f"Game execution failed: {e}")
+        logger.exception(f"Game execution failed: {e}")
 
 
 async def example_2_advanced_player_configuration():
@@ -196,47 +174,23 @@ async def example_2_advanced_player_configuration():
         time_per_move=45,
     )
 
-    print("Player Configurations:")
-    print("  Player 1 (Aggressive):")
-    print(f"    Temperature: {config.engines['player1'].temperature}")
-    print("    Style: Tactical combinations and forcing moves")
-    print("  Player 2 (Defensive):")
-    print(f"    Temperature: {config.engines['player2'].temperature}")
-    print("    Style: Piece safety and solid formations")
-    print("  Analyzer:")
-    print(f"    Temperature: {config.engines['analyzer'].temperature}")
-    print("    Style: Detailed strategic analysis")
-
     # Run game with personalities
-    print("\nRunning game with different player personalities...")
     agent = CheckersAgent(config)
 
     try:
-        start_time = time.time()
+        time.time()
         result = agent.run_game(visualize=True)
-        end_time = time.time()
-
-        print(f"\nGame completed in {end_time - start_time:.2f} seconds")
-        print("\nPersonality Impact Analysis:")
+        time.time()
 
         # Analyze how personalities affected gameplay
         winner = result.get("winner", "Draw")
-        if winner == "player1":
-            print("  Aggressive strategy prevailed")
-            print("  Tactical combinations likely influenced the outcome")
-        elif winner == "player2":
-            print("  Defensive strategy prevailed")
-            print("  Solid play and piece safety likely influenced the outcome")
+        if winner in {"player1", "player2"}:
+            pass
         else:
-            print("  Balanced result - both strategies were effective")
-
-        print("\nFinal Results:")
-        print(f"  Winner: {winner}")
-        print(f"  Total turns: {result.get('turn_count', 'Unknown')}")
+            pass
 
     except Exception as e:
-        print(f"Error during advanced game: {e}")
-        logger.error(f"Advanced game execution failed: {e}")
+        logger.exception(f"Advanced game execution failed: {e}")
 
 
 async def example_3_tournament_play():
@@ -264,21 +218,13 @@ async def example_3_tournament_play():
     tournament_results = {}
     games_per_matchup = 3
 
-    print("Tournament Setup:")
-    print(f"  Players: {', '.join(players)}")
-    print(f"  Matchups: {len(matchups)}")
-    print(f"  Games per matchup: {games_per_matchup}")
-    print(f"  Total games: {len(matchups) * games_per_matchup}")
-
     # Run tournament
-    for matchup_idx, (player1, player2) in enumerate(matchups):
-        print(f"\n--- Matchup {matchup_idx + 1}: {player1} vs {player2} ---")
+    for _matchup_idx, (player1, player2) in enumerate(matchups):
 
         matchup_wins = {"player1": 0, "player2": 0, "draws": 0}
         matchup_times = []
 
-        for game_num in range(games_per_matchup):
-            print(f"  Game {game_num + 1}/{games_per_matchup}...")
+        for _game_num in range(games_per_matchup):
 
             # Create configuration for this matchup
             config = create_tournament_config(player1, player2)
@@ -300,11 +246,8 @@ async def example_3_tournament_play():
                 else:
                     matchup_wins["draws"] += 1
 
-                print(f"    Winner: {winner or 'Draw'} ({game_time:.1f}s)")
-
             except Exception as e:
-                print(f"    Error: {e}")
-                logger.error(f"Tournament game failed: {e}")
+                logger.exception(f"Tournament game failed: {e}")
 
         # Store matchup results
         tournament_results[f"{player1}_vs_{player2}"] = {
@@ -313,16 +256,7 @@ async def example_3_tournament_play():
             "total_games": games_per_matchup,
         }
 
-        print("  Matchup Results:")
-        print(f"    {player1}: {matchup_wins['player1']} wins")
-        print(f"    {player2}: {matchup_wins['player2']} wins")
-        print(f"    Draws: {matchup_wins['draws']}")
-        print(f"    Average game time: {sum(matchup_times) / len(matchup_times):.1f}s")
-
     # Final tournament analysis
-    print("\n" + "=" * 60)
-    print("TOURNAMENT SUMMARY")
-    print("=" * 60)
 
     overall_stats = {"total_games": 0, "total_time": 0}
     style_performance = {style: {"wins": 0, "games": 0} for style in players}
@@ -338,15 +272,8 @@ async def example_3_tournament_play():
         style_performance[player2_style]["wins"] += results["wins"]["player2"]
         style_performance[player2_style]["games"] += results["total_games"]
 
-    print(f"Total games played: {overall_stats['total_games']}")
-    print(
-        f"Average game time: {overall_stats['total_time'] / overall_stats['total_games']:.1f}s"
-    )
-
-    print("\nStyle Performance:")
-    for style, stats in style_performance.items():
-        win_rate = (stats["wins"] / stats["games"]) * 100 if stats["games"] > 0 else 0
-        print(f"  {style}: {stats['wins']}/{stats['games']} ({win_rate:.1f}%)")
+    for _style, stats in style_performance.items():
+        (stats["wins"] / stats["games"]) * 100 if stats["games"] > 0 else 0
 
 
 async def example_4_position_analysis():
@@ -367,11 +294,9 @@ async def example_4_position_analysis():
 
     # Create initial position
     initial_state = state_manager.initialize_game()
-    print("Starting from initial position...")
     display_board_position(initial_state, "Initial Board Position")
 
     # Simulate some moves to reach an interesting position
-    print("\nSimulating opening moves...")
     test_moves = [
         ("player1", "22-18"),  # Common opening move
         ("player2", "9-14"),  # Response
@@ -384,16 +309,13 @@ async def example_4_position_analysis():
     current_state = initial_state
     for player, move in test_moves:
         try:
-            print(f"  {player}: {move}")
             current_state = state_manager.make_move(current_state, player, move)
-        except Exception as e:
-            print(f"  Error with move {move}: {e}")
+        except Exception:
             break
 
     display_board_position(current_state, "Position After Opening Moves")
 
     # Analyze position for both players
-    print("\nPosition Analysis:")
 
     # Create analyzer configuration
     AugLLMConfig(
@@ -404,32 +326,23 @@ async def example_4_position_analysis():
 
     # Analyze for both players
     for player in ["player1", "player2"]:
-        print(f"\n--- Analysis for {player} ---")
 
         try:
             # Get position analysis
             analysis = state_manager.analyze_position(current_state, player)
 
-            print(f"Material Balance: {analysis.material_advantage}")
-            print(f"Position Evaluation: {analysis.positional_evaluation}")
-            print(f"Recommended Move: {analysis.best_move}")
-            print(f"Strategic Notes: {analysis.strategic_notes}")
-
             if analysis.tactical_opportunities:
-                print("Tactical Opportunities:")
-                for opportunity in analysis.tactical_opportunities:
-                    print(f"  - {opportunity}")
+                for _opportunity in analysis.tactical_opportunities:
+                    pass
 
             if analysis.threats:
-                print("Threats to Address:")
-                for threat in analysis.threats:
-                    print(f"  - {threat}")
+                for _threat in analysis.threats:
+                    pass
 
-        except Exception as e:
-            print(f"Analysis failed for {player}: {e}")
+        except Exception:
+            pass
 
     # Test move validation
-    print("\nMove Validation Analysis:")
     test_move_validation = [
         ("player1", "24-19"),  # Should be valid
         ("player1", "22-17"),  # Should be valid
@@ -440,8 +353,7 @@ async def example_4_position_analysis():
     ]
 
     for player, move in test_move_validation:
-        is_valid = state_manager.validate_move(current_state, player, move)
-        print(f"  {player}: {move} -> {'Valid' if is_valid else 'Invalid'}")
+        state_manager.validate_move(current_state, player, move)
 
 
 async def example_5_educational_mode():
@@ -487,56 +399,20 @@ async def example_5_educational_mode():
         time_per_move=60,  # More time for detailed explanations
     )
 
-    print("Educational Features:")
-    print("  - Detailed move explanations")
-    print("  - Strategic concept teaching")
-    print("  - Position evaluation tutorials")
-    print("  - Tactical pattern recognition")
-
     # Create state manager for educational demonstrations
     CheckersStateManager()
 
-    print("\nBasic Strategy Concepts:")
-    print("1. Opening Principles:")
-    print("   - Control the center squares")
-    print("   - Develop pieces toward the center")
-    print("   - Avoid weakening your position")
-    print("   - Maintain piece coordination")
-
-    print("\n2. Tactical Patterns:")
-    print("   - Forks: Attack two pieces simultaneously")
-    print("   - Pins: Immobilize defending pieces")
-    print("   - Skewers: Force valuable pieces to move")
-    print("   - Sacrifices: Trade material for advantage")
-
-    print("\n3. Endgame Technique:")
-    print("   - King activity is crucial")
-    print("   - Control key squares (opposition)")
-    print("   - Calculate precisely")
-    print("   - Use tempo effectively")
-
     # Run educational game
-    print("\nRunning educational game with explanations...")
     agent = CheckersAgent(config)
 
     try:
         # Enable educational mode features
-        result = agent.run_game(visualize=True)
-
-        print("\nEducational Game Results:")
-        print(f"  Winner: {result.get('winner', 'Draw')}")
-        print(f"  Moves played: {result.get('turn_count', 'Unknown')}")
+        agent.run_game(visualize=True)
 
         # Educational summary
-        print("\nKey Learning Points:")
-        print("- Observed opening development patterns")
-        print("- Tactical opportunities were identified")
-        print("- Position evaluation helped decision-making")
-        print("- Strategic principles guided gameplay")
 
     except Exception as e:
-        print(f"Educational game error: {e}")
-        logger.error(f"Educational game failed: {e}")
+        logger.exception(f"Educational game failed: {e}")
 
 
 async def example_6_performance_testing():
@@ -571,25 +447,19 @@ async def example_6_performance_testing():
         ),
     }
 
-    print("Performance Test Configurations:")
-    for name, config in configs.items():
-        print(f"  {name}:")
-        print(f"    Max turns: {config.max_turns}")
-        print(f"    Strategic depth: {config.strategic_depth}")
-        print(f"    Move timeout: {config.time_per_move}s")
+    for _name, config in configs.items():
+        pass
 
     # Run performance tests
     results = {}
     games_per_config = 5
 
     for config_name, config in configs.items():
-        print(f"\nTesting {config_name} configuration...")
 
         times = []
         outcomes = []
 
-        for game_num in range(games_per_config):
-            print(f"  Game {game_num + 1}/{games_per_config}...", end=" ")
+        for _game_num in range(games_per_config):
 
             agent = CheckersAgent(config)
 
@@ -602,11 +472,8 @@ async def example_6_performance_testing():
                 times.append(game_time)
                 outcomes.append(result.get("winner", "Draw"))
 
-                print(f"{game_time:.1f}s ({result.get('winner', 'Draw')})")
-
             except Exception as e:
-                print(f"Error: {e}")
-                logger.error(f"Performance test failed: {e}")
+                logger.exception(f"Performance test failed: {e}")
 
         # Calculate statistics
         if times:
@@ -622,32 +489,14 @@ async def example_6_performance_testing():
                 "outcomes": outcomes,
             }
 
-        print(f"  Average time: {avg_time:.1f}s")
-        print(f"  Time range: {min_time:.1f}s - {max_time:.1f}s")
-
     # Performance comparison
-    print("\n" + "=" * 60)
-    print("PERFORMANCE COMPARISON")
-    print("=" * 60)
 
-    print(
-        f"{'Configuration':<20} {'Avg Time':<10} {'Min Time':<10} {'Max Time':<10} {'Games':<6}"
-    )
-    print("-" * 60)
-
-    for config_name, stats in results.items():
-        print(
-            f"{config_name:<20} {stats['avg_time']:<10.1f} {stats['min_time']:<10.1f} {stats['max_time']:<10.1f} {stats['games_played']:<6}"
-        )
+    for config_name, _stats in results.items():
+        pass
 
     # Identify optimal configuration
     if results:
-        fastest_config = min(results.keys(), key=lambda x: results[x]["avg_time"])
-        print(f"\nFastest configuration: {fastest_config}")
-        print("Performance recommendations:")
-        print("- Use speed_optimized for batch processing")
-        print("- Use balanced for interactive play")
-        print("- Use quality_focused for analysis and learning")
+        min(results.keys(), key=lambda x: results[x]["avg_time"])
 
 
 async def example_7_custom_strategy():
@@ -691,7 +540,7 @@ async def example_7_custom_strategy():
                         player_pieces += (
                             3 if "K" in cell else 1
                         )  # Kings worth 3, men worth 1
-                    elif cell != "." and cell != " ":
+                    elif cell not in {".", " "}:
                         opponent_pieces += 3 if "K" in cell else 1
 
             return player_pieces - opponent_pieces
@@ -713,15 +562,15 @@ async def example_7_custom_strategy():
                             center_control += 0.5
 
                         # Advanced pieces are valuable
-                        if player == "player1" and i < 3:
-                            piece_activity += 0.3
-                        elif player == "player2" and i > 4:
+                        if (player == "player1" and i < 3) or (
+                            player == "player2" and i > 4
+                        ):
                             piece_activity += 0.3
 
             return center_control + piece_activity
 
         def select_move(
-            self, state: CheckersState, player: str, valid_moves: List[str]
+            self, state: CheckersState, player: str, valid_moves: list[str]
         ) -> str:
             """Select the best move from valid options."""
             if not valid_moves:
@@ -759,12 +608,10 @@ async def example_7_custom_strategy():
         ),
     }
 
-    print("Custom Strategy Overview:")
     for _name, strategy in strategies.items():
-        print(f"  {strategy.name}: {strategy.description}")
+        pass
 
     # Test strategies against each other
-    print("\nStrategy Comparison Test:")
 
     # Create state manager for testing
     state_manager = CheckersStateManager()
@@ -779,35 +626,25 @@ async def example_7_custom_strategy():
     ]
 
     for player, move in opening_moves:
-        try:
+        with contextlib.suppress(Exception):
             test_state = state_manager.make_move(test_state, player, move)
-        except Exception as e:
-            print(f"Error applying move {move}: {e}")
 
     display_board_position(test_state, "Test Position")
 
     # Get valid moves for current player
     valid_moves = state_manager.get_valid_moves(test_state, "player1")
-    print(f"\nValid moves for player1: {valid_moves}")
 
     # Test each strategy
     for _name, strategy in strategies.items():
-        print(f"\n{strategy.name} Analysis:")
 
         # Evaluate position
-        position_score = strategy.evaluate_position(test_state, "player1")
-        print(f"  Position evaluation: {position_score:.2f}")
+        strategy.evaluate_position(test_state, "player1")
 
         # Select best move
         if valid_moves:
-            best_move = strategy.select_move(test_state, "player1", valid_moves)
-            print(f"  Recommended move: {best_move}")
+            strategy.select_move(test_state, "player1", valid_moves)
         else:
-            print("  No valid moves available")
-
-    print("\nStrategy Implementation Complete!")
-    print("Custom strategies can be integrated into the main game loop")
-    print("for specialized AI behavior and analysis.")
+            pass
 
 
 async def example_8_game_state_management():
@@ -826,19 +663,12 @@ async def example_8_game_state_management():
     # Create configuration for state management demo
     config = CheckersAgentConfig(max_turns=50, time_per_move=10)
 
-    print("Game State Management Features:")
-    print("  - JSON serialization/deserialization")
-    print("  - Move history tracking")
-    print("  - State validation")
-    print("  - Game replay capability")
-
     # Create and run partial game
-    print("\nRunning partial game for state capture...")
     agent = CheckersAgent(config)
 
     try:
         # Run game for limited turns
-        result = agent.run_game(visualize=False)
+        agent.run_game(visualize=False)
 
         # Get current state
         current_state = (
@@ -846,9 +676,6 @@ async def example_8_game_state_management():
         )
 
         if current_state:
-            print(
-                f"Game state captured after {result.get('turn_count', 'unknown')} turns"
-            )
 
             # Serialize state to JSON
             state_dict = current_state.model_dump()
@@ -857,54 +684,33 @@ async def example_8_game_state_management():
             with open("checkers_game_state.json", "w") as f:
                 json.dump(state_dict, f, indent=2)
 
-            print("Game state saved to checkers_game_state.json")
-
             # Display state information
-            print("\nState Information:")
-            print(f"  Current player: {current_state.current_player}")
-            print(f"  Game over: {current_state.game_over}")
-            print(f"  Winner: {current_state.winner or 'Game in progress'}")
-            print(f"  Move history length: {len(current_state.move_history)}")
 
             # Show recent moves
             if current_state.move_history:
-                print("\nRecent moves:")
-                for i, move in enumerate(current_state.move_history[-5:]):
-                    print(f"  {i+1}. {move}")
+                for _i, _move in enumerate(current_state.move_history[-5:]):
+                    pass
 
             # Demonstrate state loading
-            print("\nLoading saved state...")
-            with open("checkers_game_state.json", "r") as f:
+            with open("checkers_game_state.json") as f:
                 loaded_state_dict = json.load(f)
 
             # Recreate state object
             loaded_state = CheckersState.model_validate(loaded_state_dict)
 
-            print("State loaded successfully!")
-            print(f"  Loaded current player: {loaded_state.current_player}")
-            print(f"  Loaded game over: {loaded_state.game_over}")
-            print(f"  Loaded move count: {len(loaded_state.move_history)}")
-
             # Verify state integrity
             if current_state.model_dump() == loaded_state.model_dump():
-                print("✓ State integrity verified - save/load working correctly")
+                pass
             else:
-                print("✗ State integrity check failed")
+                pass
 
         else:
-            print("Unable to capture game state")
+            pass
 
     except Exception as e:
-        print(f"State management demo failed: {e}")
-        logger.error(f"State management error: {e}")
+        logger.exception(f"State management error: {e}")
 
     # Demonstrate move history analysis
-    print("\nMove History Analysis:")
-    print("This feature enables:")
-    print("  - Game replay and analysis")
-    print("  - Position reconstruction")
-    print("  - Performance evaluation")
-    print("  - Educational review")
 
     # Clean up
     try:
@@ -912,7 +718,6 @@ async def example_8_game_state_management():
 
         if os.path.exists("checkers_game_state.json"):
             os.remove("checkers_game_state.json")
-            print("Cleaned up temporary files")
     except:
         pass
 
@@ -939,33 +744,18 @@ async def main():
     ]
 
     if args.example:
-        print(f"Running Example {args.example}...")
         await examples[args.example - 1]()
     elif args.all:
-        print("Running all Checkers examples...")
         for i, example in enumerate(examples, 1):
-            print(f"\n{'='*20} EXAMPLE {i} {'='*20}")
             try:
                 await example()
             except Exception as e:
-                print(f"Example {i} failed: {e}")
-                logger.error(f"Example {i} execution failed: {e}")
+                logger.exception(f"Example {i} execution failed: {e}")
 
             if i < len(examples):
                 input("\nPress Enter to continue to next example...")
     else:
-        print("Checkers Game Examples")
-        print("Available examples:")
-        print("  1. Basic Checkers Game")
-        print("  2. Advanced Player Configuration")
-        print("  3. Tournament Play")
-        print("  4. Position Analysis")
-        print("  5. Educational Mode")
-        print("  6. Performance Testing")
-        print("  7. Custom Strategy")
-        print("  8. Game State Management")
-        print("\nUse --example <number> to run specific example")
-        print("Use --all to run all examples")
+        pass
 
 
 if __name__ == "__main__":

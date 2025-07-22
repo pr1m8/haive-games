@@ -4,28 +4,26 @@ This module provides generic engine creation functions for Dominoes games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
-from typing import Any, Dict, Optional
-
-from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.core.agent.generic_player_agent import (
+from .core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.dominoes.models import (
+from .core.agent.player_agent import PlayerAgentConfig
+from .dominoes.models import (
     DominoesAnalysis,
     DominoMove,
 )
+from .engine.aug_llm import AugLLMConfig
 
 
 class DominoesPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Dominoes game."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(player1="player1", player2="player2")
 
 
@@ -100,7 +98,7 @@ class DominoesPromptGenerator(GenericPromptGenerator[str, str]):
 class DominoesEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Dominoes game engines."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         identifiers = DominoesPlayerIdentifiers()
         prompt_generator = DominoesPromptGenerator()
         super().__init__(identifiers, prompt_generator)
@@ -109,8 +107,7 @@ class DominoesEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return DominoesAnalysis
-        else:
-            return DominoMove
+        return DominoMove
 
 
 # Factory instance
@@ -118,8 +115,8 @@ dominoes_factory = DominoesEngineFactory()
 
 
 def create_generic_dominoes_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Dominoes engines from detailed player configurations.
 
     Args:
@@ -139,7 +136,7 @@ def create_generic_dominoes_engines(
 
 def create_generic_dominoes_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Dominoes engines with simple model specifications.
 
     Args:
@@ -157,7 +154,7 @@ def create_generic_dominoes_engines_simple(
 
 def create_generic_dominoes_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Dominoes engines from a predefined example configuration.
 
     Args:
@@ -197,16 +194,16 @@ def create_generic_dominoes_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_dominoes_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_dominoes_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Dominoes engines with high-powered models."""
     return create_generic_dominoes_config_from_example("advanced", **kwargs)
 
 
-def create_budget_dominoes_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_dominoes_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Dominoes engines."""
     return create_generic_dominoes_config_from_example("budget", **kwargs)
 
 
-def create_mixed_dominoes_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_dominoes_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Dominoes engines."""
     return create_generic_dominoes_config_from_example("mixed", **kwargs)

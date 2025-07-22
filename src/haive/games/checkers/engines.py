@@ -10,11 +10,11 @@ The engines use LLM configurations optimized for checkers gameplay,
 with prompt templates designed to generate high-quality moves and analysis.
 """
 
-from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.checkers.models import CheckersAnalysis, CheckersPlayerDecision
+from .checkers.models import CheckersAnalysis, CheckersPlayerDecision
+from .engine.aug_llm import AugLLMConfig
+from .models.llm.base import AzureLLMConfig
 
 
 def generate_move_prompt(color: str) -> ChatPromptTemplate:

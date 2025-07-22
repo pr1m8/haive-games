@@ -1,12 +1,14 @@
 # src/haive/agents/agent_games/dominoes/config.py
 
 
-from haive.core.engine.aug_llm import AugLLMConfig
+from typing import Any
+
 from pydantic import Field
 
-from haive.games.dominoes.engines import aug_llm_configs
-from haive.games.dominoes.state import DominoesState
-from haive.games.framework.base.config import GameConfig
+from .dominoes.engines import aug_llm_configs
+from .dominoes.state import DominoesState
+from .engine.aug_llm import AugLLMConfig
+from .framework.base.config import GameConfig
 
 
 class DominoesAgentConfig(GameConfig):
@@ -27,7 +29,7 @@ class DominoesAgentConfig(GameConfig):
     hand_size: int = Field(default=7, description="Tiles per player at start")
 
     @classmethod
-    def default_config(cls):
+    def default_config(cls) -> Any:
         return cls(
             state_schema=DominoesState,
             engines=aug_llm_configs,

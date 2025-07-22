@@ -25,16 +25,16 @@ Example:
 """
 
 # Standard library imports
+import contextlib
 import copy
 import logging
 from typing import Any
 
 # Local imports
-from haive.core.engine.agent.agent import register_agent
-
-from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
-from haive.games.mafia.config import MafiaAgentConfig
-from haive.games.mafia.models import (
+from .engine.agent.agent import register_agent
+from .framework.multi_player.agent import MultiPlayerGameAgent
+from .mafia.config import MafiaAgentConfig
+from .mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -43,8 +43,8 @@ from haive.games.mafia.models import (
     NarratorDecision,
     PlayerRole,
 )
-from haive.games.mafia.state import MafiaGameState
-from haive.games.mafia.state_manager import MafiaStateManager
+from .mafia.state import MafiaGameState
+from .mafia.state_manager import MafiaStateManager
 
 # Third-party imports
 
@@ -375,32 +375,31 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             completed_actions = 0
 
             for player_id, role in state.roles.items():
-                if state.player_states[player_id].is_alive:
-                    if role in [
-                        PlayerRole.MAFIA,
-                        PlayerRole.DOCTOR,
-                        PlayerRole.DETECTIVE,
-                    ]:
-                        expected_actions += 1
-                        # Check if action was performed
-                        for action in reversed(state.action_history):
-                            action_player = None
-                            if isinstance(action, dict):
-                                action_player = action.get("player_id")
-                                action_phase = action.get("phase")
-                                action_round = action.get("round_number")
-                            else:
-                                action_player = getattr(action, "player_id", None)
-                                action_phase = getattr(action, "phase", None)
-                                action_round = getattr(action, "round_number", None)
+                if state.player_states[player_id].is_alive and role in [
+                    PlayerRole.MAFIA,
+                    PlayerRole.DOCTOR,
+                    PlayerRole.DETECTIVE,
+                ]:
+                    expected_actions += 1
+                    # Check if action was performed
+                    for action in reversed(state.action_history):
+                        action_player = None
+                        if isinstance(action, dict):
+                            action_player = action.get("player_id")
+                            action_phase = action.get("phase")
+                            action_round = action.get("round_number")
+                        else:
+                            action_player = getattr(action, "player_id", None)
+                            action_phase = getattr(action, "phase", None)
+                            action_round = getattr(action, "round_number", None)
 
-                            if (
-                                action_player == player_id
-                                and action_phase == GamePhase.NIGHT.value
-                                and action_round == state.round_number
-                            ):
-                                completed_actions += 1
-                                break
+                        if (
+                            action_player == player_id
+                            and action_phase == GamePhase.NIGHT.value
+                            and action_round == state.round_number
+                        ):
+                            completed_actions += 1
+                            break
 
             phase_info["expected_actions"] = expected_actions
             phase_info["completed_actions"] = completed_actions
@@ -458,7 +457,9 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             "phase_context_task": current_task,  # Direct field for compatibility
         }
 
-    def extract_move(self, response, player_id: str) -> MafiaAction | NarratorAction:
+    def extract_move(
+        self, response: str, player_id: str
+    ) -> MafiaAction | NarratorAction:
         """Extract move from engine response.
 
         This method processes the LLM response into a valid game action,
@@ -534,7 +535,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             return action
 
         # The old approach for handling directly returned actions
-        if isinstance(response, MafiaAction) or isinstance(response, NarratorAction):
+        if isinstance(response, MafiaAction | NarratorAction):
             # Make sure round_number is set for MafiaAction
             if isinstance(response, MafiaAction) and not hasattr(
                 response, "round_number"
@@ -692,7 +693,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         try:
             player_id = state.players[current_idx]
         except IndexError:
-            logger.error(
+            logger.exception(
                 f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
             )
             # Default to first player
@@ -1051,7 +1052,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         try:
             player_id = state.players[current_idx]
         except IndexError:
-            logger.error(
+            logger.exception(
                 f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
             )
             player_id = state.players[0] if state.players else "Player_1"
@@ -1110,7 +1111,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         logger.debug("Continuing with next player")
         return "next_player"
 
-    def visualize_state(self, state_obj, debug=False):
+    def visualize_state(self, state_obj, debug: bool = False):
         """Visualize the current game state.
 
         This method creates a human-readable display of:
@@ -1148,113 +1149,87 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 state_dict = {}
                 for attr in dir(state):
                     if not attr.startswith("_") and not callable(getattr(state, attr)):
-                        try:
+                        with contextlib.suppress(Exception):
                             state_dict[attr] = getattr(state, attr)
-                        except Exception:
-                            pass
 
             # Display basic game info
-            print("\n" + "=" * 60)
-            day_number = state_dict.get("day_number", 0)
+            state_dict.get("day_number", 0)
             game_phase = state_dict.get("game_phase", "unknown")
             if hasattr(game_phase, "value"):
                 game_phase = game_phase.value
-
-            print(
-                f"🎮 MAFIA GAME - Day {day_number}, {str(game_phase).replace('_', ' ').title()}"
-            )
-            print(f"📌 Game Status: {state_dict.get('game_status', 'unknown')}")
-            print("=" * 60)
 
             # Show players
             players = state_dict.get("players", [])
             player_states = state_dict.get("player_states", {})
             current_player_idx = state_dict.get("current_player_idx", 0)
 
-            print("\n👥 Players:")
             current_player = None
             if 0 <= current_player_idx < len(players):
                 current_player = players[current_player_idx]
 
             # Display player info
             for player_id, player_state in player_states.items():
-                is_alive = (
+                (
                     player_state.get("is_alive", True)
                     if isinstance(player_state, dict)
                     else getattr(player_state, "is_alive", True)
                 )
-                status = "🟢 ALIVE" if is_alive else "🔴 DEAD"
 
                 # Get role info for debug mode
-                role_info = ""
                 if debug:
                     roles = state_dict.get("roles", {})
                     player_role = roles.get(player_id, "unknown")
                     if hasattr(player_role, "value"):
-                        role_info = f" ({player_role.value})"
+                        pass
                     else:
-                        role_info = f" ({player_role})"
+                        pass
 
                 if player_id == current_player:
-                    print(f"  ➡️ {player_id}{role_info}: {status}")
+                    pass
                 else:
-                    print(f"    {player_id}{role_info}: {status}")
+                    pass
 
             # Show announcements
             announcements = state_dict.get("public_announcements", [])
             if announcements:
-                print("\n📢 Recent Announcements:")
-                for announcement in announcements[-3:]:
-                    print(f"  {announcement}")
+                for _announcement in announcements[-3:]:
+                    pass
 
             # Show game statistics
-            alive_mafia = state_dict.get("alive_mafia_count", 0)
-            alive_village = state_dict.get("alive_village_count", 0)
-            alive_doctor = state_dict.get("alive_doctor_count", 0)
-            alive_detective = state_dict.get("alive_detective_count", 0)
-
-            print("\n📊 Game Statistics:")
-            print(f"  Alive Villagers: {alive_village}")
-            print(f"  Alive Mafia: {alive_mafia}")
-            print(f"  Alive Doctors: {alive_doctor}")
-            print(f"  Alive Detectives: {alive_detective}")
+            state_dict.get("alive_mafia_count", 0)
+            state_dict.get("alive_village_count", 0)
+            state_dict.get("alive_doctor_count", 0)
+            state_dict.get("alive_detective_count", 0)
 
             # Show voting in voting phase
             votes = state_dict.get("votes", {})
             if game_phase == "day_voting" and votes:
-                print("\n🗳️ Current Votes:")
                 vote_count = {}
-                for voter, votee in votes.items():
-                    print(f"  {voter} voted for {votee}")
+                for _voter, votee in votes.items():
                     vote_count[votee] = vote_count.get(votee, 0) + 1
 
-                print("\n📊 Vote Tally:")
-                for votee, count in vote_count.items():
-                    print(f"  {votee}: {count} vote(s)")
+                for votee, _count in vote_count.items():
+                    pass
 
             # Show any errors
             error_message = state_dict.get("error_message")
             if error_message:
-                print(f"\n❌ Error: {error_message}")
+                pass
 
             # Show winner if game is over
             winner = state_dict.get("winner")
             if state_dict.get("game_status") != "ongoing" and winner:
-                print("\n🏆 Winner: " + winner.upper())
                 if winner == "mafia":
-                    print("  The mafia has taken over the village!")
+                    pass
                 else:
-                    print("  The village has eliminated all mafia members!")
+                    pass
 
-        except Exception as e:
-            print(f"\n❌ Error visualizing state: {e}")
-            print("\n📑 Raw State Information:")
+        except Exception:
             if isinstance(state_obj, dict):
-                for key, value in state_obj.items():
-                    print(f"  {key}: {str(value)[:100]}")
+                for _key, _value in state_obj.items():
+                    pass
             else:
-                print(f"  Type: {type(state_obj)}")
-                print(f"  Content: {str(state_obj)[:200]}")
+                pass
 
     def state_to_dict(self, state: MafiaGameState) -> dict[str, Any]:
         """Convert state to dictionary consistently.
@@ -1286,13 +1261,11 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 # Skip private attributes and methods
                 if key.startswith("_") or callable(getattr(state, key)):
                     continue
-                try:
+                with contextlib.suppress(Exception):
                     state_dict[key] = getattr(state, key)
-                except Exception:
-                    pass
             return state_dict
         except Exception as e:
-            logger.error(f"Error converting state to dict: {e}")
+            logger.exception(f"Error converting state to dict: {e}")
             # Return minimal state to avoid failures
             return {
                 "error_message": f"Error converting state: {e!s}",

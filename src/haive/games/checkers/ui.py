@@ -27,8 +27,8 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.checkers.models import CheckersMove
-from haive.games.checkers.state import CheckersState
+from .checkers.models import CheckersMove
+from .checkers.state import CheckersState
 
 
 class CheckersUI:

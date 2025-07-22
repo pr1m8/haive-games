@@ -1,49 +1,78 @@
-"""Multi-player game framework for building complex game agents.
+"""Module exports."""
 
-This package provides a framework for creating multi-player game agents with support for:
-    - Variable number of players
-    - Role-based player configurations
-    - Phase-based game flow
-    - Information hiding between players
-    - Concurrent or sequential player actions
-
-Core Components:
-    - MultiPlayerGameAgent: Base agent for multi-player games
-    - MultiPlayerGameConfig: Configuration for multi-player agents
-    - MultiPlayerGameState: Base state for multi-player games
-    - MultiPlayerGameStateManager: State management for multi-player games
-    - MultiPlayerGameFactory: Factory for creating multi-player agents
-    - GamePhase: Common game phase enumerations
-
-Example:
-    >>> from haive.agents.agent_games.framework.multi_player import MultiPlayerGameAgent
-    >>> from haive.agents.agent_games.framework.multi_player import MultiPlayerGameConfig
-    >>>
-    >>> # Create a custom multi-player game agent
-    >>> class MyGameAgent(MultiPlayerGameAgent):
-    ...     def __init__(self, config: MultiPlayerGameConfig):
-    ...         super().__init__(config)
-    ...         self.state_manager = MyGameStateManager
-
-Typical usage:
-    - Import base classes to create game-specific implementations
-    - Use the factory to create standard game agents
-    - Customize game flow with phase-based logic
-    - Implement role-specific behaviors
-"""
-
-from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
-from haive.games.framework.multi_player.config import MultiPlayerGameConfig
-from haive.games.framework.multi_player.factory import MultiPlayerGameFactory
-from haive.games.framework.multi_player.models import GamePhase
-from haive.games.framework.multi_player.state import MultiPlayerGameState
-from haive.games.framework.multi_player.state_manager import MultiPlayerGameStateManager
+from multi_player.agent import (
+    MultiPlayerGameAgent,
+    determine_next_step_after_player_turn,
+    extract_move,
+    get_engine_for_player,
+    get_player_role,
+    handle_end_game,
+    handle_narrator_turn,
+    handle_phase_transition,
+    handle_player_turn,
+    handle_setup_phase,
+    initialize_game,
+    prepare_move_context,
+    prepare_narrator_context,
+    setup_workflow,
+    should_continue_after_phase_transition,
+    should_continue_to_main_phase,
+    should_transition_phase,
+    visualize_state,
+)
+from multi_player.config import Config, MultiPlayerGameConfig
+from multi_player.factory import MultiPlayerGameFactory, create_game_agent
+from multi_player.models import GamePhase
+from multi_player.state import (
+    Config,
+    MultiPlayerGameState,
+    advance_player,
+    current_player,
+    get_player_private_data,
+)
+from multi_player.state_manager import (
+    MultiPlayerGameStateManager,
+    advance_phase,
+    apply_move,
+    check_game_status,
+    filter_state_for_player,
+    get_legal_moves,
+    initialize,
+)
 
 __all__ = [
+    "Config",
     "GamePhase",
     "MultiPlayerGameAgent",
     "MultiPlayerGameConfig",
     "MultiPlayerGameFactory",
     "MultiPlayerGameState",
     "MultiPlayerGameStateManager",
+    "advance_phase",
+    "advance_player",
+    "apply_move",
+    "check_game_status",
+    "create_game_agent",
+    "current_player",
+    "determine_next_step_after_player_turn",
+    "extract_move",
+    "filter_state_for_player",
+    "get_engine_for_player",
+    "get_legal_moves",
+    "get_player_private_data",
+    "get_player_role",
+    "handle_end_game",
+    "handle_narrator_turn",
+    "handle_phase_transition",
+    "handle_player_turn",
+    "handle_setup_phase",
+    "initialize",
+    "initialize_game",
+    "prepare_move_context",
+    "prepare_narrator_context",
+    "setup_workflow",
+    "should_continue_after_phase_transition",
+    "should_continue_to_main_phase",
+    "should_transition_phase",
+    "visualize_state",
 ]

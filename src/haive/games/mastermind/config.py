@@ -5,12 +5,12 @@ including game state schema, engines, analysis settings, visualization,
 and game parameters.
 """
 
-from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from haive.games.framework.base.config import GameConfig
-from haive.games.mastermind.engines import mastermind_engines
-from haive.games.mastermind.state import MastermindState
+from .engine.aug_llm import AugLLMConfig
+from .framework.base.config import GameConfig
+from .mastermind.engines import mastermind_engines
+from .mastermind.state import MastermindState
 
 # Version information for tracking changes
 VERSION = "1.1.0"
