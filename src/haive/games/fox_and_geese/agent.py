@@ -133,14 +133,16 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             f"Initialized game state: fox at {game_state.fox_position}, {game_state.num_geese} geese"
         )
 
-        # Return the state as a Command with dictionary update
+        # Return the state as a Command with properly serialized dictionary update
         return Command(
             update={
-                "fox_position": game_state.fox_position,
-                "geese_positions": game_state.geese_positions,
+                "fox_position": game_state.fox_position.model_dump(),
+                "geese_positions": [
+                    pos.model_dump() for pos in game_state.geese_positions
+                ],
                 "turn": game_state.turn,
                 "game_status": game_state.game_status,
-                "move_history": game_state.move_history,
+                "move_history": [move.model_dump() for move in game_state.move_history],
                 "winner": game_state.winner,
                 "num_geese": game_state.num_geese,
                 "fox_analysis": game_state.fox_analysis,
@@ -346,11 +348,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         new_state = self.make_fox_move(state)
         return Command(
             update={
-                "fox_position": new_state.fox_position,
-                "geese_positions": new_state.geese_positions,
+                "fox_position": new_state.fox_position.model_dump(),
+                "geese_positions": [
+                    pos.model_dump() for pos in new_state.geese_positions
+                ],
                 "turn": new_state.turn,
                 "game_status": new_state.game_status,
-                "move_history": new_state.move_history,
+                "move_history": [move.model_dump() for move in new_state.move_history],
                 "winner": new_state.winner,
                 "num_geese": new_state.num_geese,
                 "error_message": None,
@@ -369,11 +373,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         new_state = self.make_geese_move(state)
         return Command(
             update={
-                "fox_position": new_state.fox_position,
-                "geese_positions": new_state.geese_positions,
+                "fox_position": new_state.fox_position.model_dump(),
+                "geese_positions": [
+                    pos.model_dump() for pos in new_state.geese_positions
+                ],
                 "turn": new_state.turn,
                 "game_status": new_state.game_status,
-                "move_history": new_state.move_history,
+                "move_history": [move.model_dump() for move in new_state.move_history],
                 "winner": new_state.winner,
                 "num_geese": new_state.num_geese,
                 "error_message": None,
@@ -733,21 +739,18 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                 return "Fox analysis: The fox should aim to capture geese while maintaining mobility."
             return "Geese analysis: The geese should coordinate to restrict the fox's movement."
 
-    def should_continue_game(self, state: FoxAndGeeseState) -> bool:
+    def should_continue_game(self, state: dict | FoxAndGeeseState) -> bool:
         """Determine if the game should continue.
 
         Args:
-            state: Current game state
+            state: Current game state (dict or FoxAndGeeseState)
 
         Returns:
             bool: True if the game should continue, False otherwise
         """
         try:
-            # Convert state to FoxAndGeeseState if needed
-            if isinstance(state, dict):
-                game_state = FoxAndGeeseState.model_validate(state)
-            else:
-                game_state = state
+            # Ensure we have a proper game state
+            game_state = ensure_game_state(state)
 
             # Check if game is over by status
             if game_state.game_status != "ongoing":
@@ -762,6 +765,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             return True
         except Exception as e:
             logger.error(f"Error in should_continue_game: {e}")
+            # Always return a boolean - default to ending the game on error
             return False
 
     def setup_workflow(self) -> None:
@@ -997,3 +1001,87 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             logger.error(f"Error during game execution: {e}", exc_info=True)
             # Return the last valid state we had
             return final_state if final_state else self.state_manager.initialize()
+
+    def run(
+        self, input_data: dict[str, Any] | FoxAndGeeseState | None = None, **kwargs
+    ) -> dict[str, Any]:
+        """Run the Fox and Geese game.
+
+        Args:
+            input_data: Optional input data for the game (state dict or FoxAndGeeseState)
+            **kwargs: Additional arguments (e.g., thread_id)
+
+        Returns:
+            The final game state as a dictionary
+        """
+        try:
+            # Initialize state from input if provided, otherwise create new game
+            if input_data is None:
+                initial_state = self.state_manager.initialize()
+            elif isinstance(input_data, FoxAndGeeseState):
+                initial_state = input_data
+            elif isinstance(input_data, dict):
+                initial_state = FoxAndGeeseState.model_validate(input_data)
+            else:
+                logger.warning(
+                    f"Invalid input_data type: {type(input_data)}, creating new game"
+                )
+                initial_state = self.state_manager.initialize()
+
+            # Extract thread_id from kwargs if provided
+            thread_id = kwargs.get("thread_id")
+            config = {}
+            if thread_id:
+                config = {"configurable": {"thread_id": thread_id}}
+
+            # Run the game using the stream method
+            logger.info("Starting Fox and Geese game run")
+            final_state = initial_state
+
+            step_count = 0
+            for state_update in self.stream(
+                initial_state, config=config, stream_mode="values"
+            ):
+                step_count += 1
+                logger.debug(f"Game step {step_count}: Received state update")
+
+                if state_update is None:
+                    logger.warning("Received None state from stream, skipping")
+                    continue
+
+                # Convert state update to FoxAndGeeseState
+                if isinstance(state_update, FoxAndGeeseState):
+                    game_state = state_update
+                elif isinstance(state_update, dict):
+                    try:
+                        game_state = FoxAndGeeseState.model_validate(state_update)
+                    except Exception as e:
+                        logger.warning(f"Could not validate state update: {e}")
+                        continue
+                else:
+                    logger.warning(
+                        f"Unexpected state update type: {type(state_update)}"
+                    )
+                    continue
+
+                final_state = game_state
+
+                # Check if game is complete
+                if game_state.game_status != "ongoing":
+                    logger.info(f"Game completed with status: {game_state.game_status}")
+                    break
+
+            logger.info(f"Fox and Geese game completed after {step_count} steps")
+            return (
+                final_state.model_dump()
+                if hasattr(final_state, "model_dump")
+                else final_state
+            )
+
+        except Exception as e:
+            logger.exception(f"Failed to run Fox and Geese game: {e}")
+            # Return error state
+            error_state = self.state_manager.initialize()
+            error_state.game_status = "ended"
+            error_state.error_message = str(e)
+            return error_state.model_dump()

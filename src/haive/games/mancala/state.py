@@ -83,10 +83,10 @@ class MancalaState(GameState):
     winner: Literal["player1", "player2", "draw", None] = Field(
         default=None, description="Winner of the game, if any"
     )
-    player1_analysis: list[MancalaAnalysis] = Field(
+    player1_analyses: list[MancalaAnalysis] = Field(
         default_factory=list, description="Analysis for player 1"
     )
-    player2_analysis: list[MancalaAnalysis] = Field(
+    player2_analyses: list[MancalaAnalysis] = Field(
         default_factory=list, description="Analysis for player 2"
     )
 
@@ -131,8 +131,8 @@ class MancalaState(GameState):
                 "move_history": [],
                 "free_turn": False,
                 "winner": None,
-                "player1_analysis": [],
-                "player2_analysis": [],
+                "player1_analyses": [],
+                "player2_analyses": [],
                 "__pydantic_extra__": {
                     k: v
                     for k, v in data.items()
@@ -145,8 +145,8 @@ class MancalaState(GameState):
                         "move_history",
                         "free_turn",
                         "winner",
-                        "player1_analysis",
-                        "player2_analysis",
+                        "player1_analyses",
+                        "player2_analyses",
                     ]
                 },
             }
@@ -160,19 +160,44 @@ class MancalaState(GameState):
         if not isinstance(data, dict):
             return data
 
-        # Convert player1_analysis items if needed
-        if data.get("player1_analysis"):
-            data["player1_analysis"] = cls._convert_analysis_list(
-                data["player1_analysis"], "player1"
+        # Convert player1_analyses items if needed
+        if data.get("player1_analyses"):
+            data["player1_analyses"] = cls._convert_analysis_list(
+                data["player1_analyses"], "player1"
             )
 
-        # Convert player2_analysis items if needed
-        if data.get("player2_analysis"):
-            data["player2_analysis"] = cls._convert_analysis_list(
-                data["player2_analysis"], "player2"
+        # Convert player2_analyses items if needed
+        if data.get("player2_analyses"):
+            data["player2_analyses"] = cls._convert_analysis_list(
+                data["player2_analyses"], "player2"
             )
 
         return data
+
+    @classmethod
+    def initialize(cls, **kwargs) -> "MancalaState":
+        """Initialize the Mancala game state.
+
+        Args:
+            **kwargs: Optional parameters including stones_per_pit.
+
+        Returns:
+            MancalaState: A fully initialized Mancala game state.
+        """
+        stones_per_pit = kwargs.get("stones_per_pit", 4)
+        board = cls._create_initial_board(stones_per_pit)
+
+        return cls(
+            players=["player1", "player2"],
+            board=board,
+            turn="player1",
+            game_status="ongoing",
+            move_history=[],
+            free_turn=False,
+            winner=None,
+            player1_analyses=[],
+            player2_analyses=[],
+        )
 
     @classmethod
     def _create_initial_board(cls, stones_per_pit: int) -> list[int]:

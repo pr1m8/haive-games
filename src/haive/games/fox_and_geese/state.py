@@ -431,7 +431,7 @@ class FoxAndGeeseState(GameState):
             Dict[str, Union[int, float, str]]: Game statistics and metrics.
         """
         total_moves = len(self.move_history)
-        fox_moves = sum(1 for move in self.move_history if move.player == "fox")
+        fox_moves = sum(1 for move in self.move_history if move.piece_type == "fox")
         geese_moves = total_moves - fox_moves
 
         return {

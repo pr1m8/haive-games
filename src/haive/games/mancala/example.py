@@ -88,8 +88,8 @@ try:
     console.print("(This may take a moment to initialize the LLM engines)")
     console.print()
 
-    # Run the game with visualization
-    final_state = agent.run_game(visualize=not args.no_visual, debug=args.debug)
+    # Run the game
+    final_state = agent.run({"initialize": {"stones_per_pit": args.stones}})
 
     # Display final result
     if final_state:

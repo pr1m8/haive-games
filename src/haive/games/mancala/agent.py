@@ -122,12 +122,14 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         """Build the game flow graph."""
         try:
             self.graph_builder = self._create_graph_structure()
-            self._app = self.graph_builder.build()
+            graph = self.graph_builder.build()
+            self._app = graph.compile()
         except Exception as e:
             logger.exception(f"Failed to build graph: {e}")
             # Fall back to a simple structure
             self.graph_builder = self._create_simple_graph()
-            self._app = self.graph_builder.build()
+            graph = self.graph_builder.build()
+            self._app = graph.compile()
 
     def _create_graph_structure(self) -> DynamicGraph:
         """Create the full graph structure for the game.
@@ -140,19 +142,19 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         # Add conditional edges
         graph_builder.add_conditional_edges(
             "check_game_over",
-            lambda x: "end" if x.game_status == "ended" else "continue",
+            lambda x: "end" if x.get("game_status") == "ended" else "continue",
             {"end": "__end__", "continue": "player_turn"},
         )
 
         graph_builder.add_conditional_edges(
             "player_turn",
-            lambda x: x.turn,
+            lambda x: x.get("turn"),
             {"player1": "player1_turn", "player2": "player2_turn"},
         )
 
         graph_builder.add_conditional_edges(
             "after_move",
-            lambda x: "extra_turn" if x.free_turn else "normal",
+            lambda x: "extra_turn" if x.get("free_turn") else "normal",
             {"extra_turn": "player_turn", "normal": "check_game_over"},
         )
 
@@ -184,67 +186,68 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         graph_builder.set_finish_point("play")
         return graph_builder
 
-    def simple_play(self, state: MancalaState) -> MancalaState:
+    def simple_play(self, state: dict | MancalaState) -> dict:
         """Simple play logic for fallback mode.
 
         Args:
             state: Current game state.
 
         Returns:
-            Updated game state.
+            Updated game state as dictionary.
         """
-        state = ensure_game_state(state)
-        if state.game_status == "ended":
-            return state
+        state_obj = ensure_game_state(state)
+        if state_obj.game_status == "ended":
+            return state_obj.model_dump()
 
         # Make move based on current turn
-        state = (
-            self.player1_turn(state)
-            if state.turn == "player1"
-            else self.player2_turn(state)
-        )
+        if state_obj.turn == "player1":
+            result_state = self.make_move(state_obj, "player1")
+        else:
+            result_state = self.make_move(state_obj, "player2")
 
         # Check game over
-        return self.check_game_over(state)
+        return self.check_game_over(result_state)
 
-    def check_game_over(self, state: MancalaState) -> MancalaState:
+    def check_game_over(self, state: dict | MancalaState) -> dict:
         """Check if the game is over and update state accordingly.
 
         Args:
             state: Current game state.
 
         Returns:
-            Updated game state.
+            Updated game state as dictionary.
         """
-        state = ensure_game_state(state)
-        if state.is_game_over():
-            state.game_status = "ended"
-            state.winner = state.determine_winner()
-        return state
+        state_obj = ensure_game_state(state)
+        if state_obj.is_game_over():
+            state_obj.game_status = "ended"
+            state_obj.winner = state_obj.determine_winner()
+        return state_obj.model_dump()
 
-    def player1_turn(self, state: MancalaState) -> MancalaState:
+    def player1_turn(self, state: dict | MancalaState) -> dict:
         """Execute player 1's turn.
 
         Args:
             state: Current game state.
 
         Returns:
-            Updated game state after player 1's move.
+            Updated game state after player 1's move as dictionary.
         """
-        state = ensure_game_state(state)
-        return self.make_move(state, "player1")
+        state_obj = ensure_game_state(state)
+        result_state = self.make_move(state_obj, "player1")
+        return result_state.model_dump()
 
-    def player2_turn(self, state: MancalaState) -> MancalaState:
+    def player2_turn(self, state: dict | MancalaState) -> dict:
         """Execute player 2's turn.
 
         Args:
             state: Current game state.
 
         Returns:
-            Updated game state after player 2's move.
+            Updated game state after player 2's move as dictionary.
         """
-        state = ensure_game_state(state)
-        return self.make_move(state, "player2")
+        state_obj = ensure_game_state(state)
+        result_state = self.make_move(state_obj, "player2")
+        return result_state.model_dump()
 
     def make_move(self, state: MancalaState, player: str) -> MancalaState:
         """Make a move for the specified player.
@@ -386,11 +389,39 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             if analysis_data:
                 analysis = MancalaAnalysis(**analysis_data)
                 if player == "player1":
-                    state.player1_analysis.append(analysis)
+                    state.player1_analyses.append(analysis)
                 else:
-                    state.player2_analysis.append(analysis)
+                    state.player2_analyses.append(analysis)
 
         except Exception as e:
             logger.exception(f"Failed to analyze position: {e}")
 
         return state
+
+    def run(self, input_data: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Run the Mancala game.
+
+        Args:
+            input_data: Optional input data for the game.
+
+        Returns:
+            The final game state as a dictionary.
+        """
+        try:
+            if not hasattr(self, "_app") or self._app is None:
+                self._build_graph()
+
+            # Initialize state with proper configuration
+            stones_per_pit = self.config.stones_per_pit
+            if input_data and "initialize" in input_data:
+                stones_per_pit = input_data["initialize"].get(
+                    "stones_per_pit", stones_per_pit
+                )
+
+            initial_state = MancalaState.initialize(stones_per_pit=stones_per_pit)
+            result = self._app.invoke(initial_state.model_dump())
+            return result
+
+        except Exception as e:
+            logger.exception(f"Failed to run Mancala game: {e}")
+            return {"error": str(e), "game_status": "ended"}

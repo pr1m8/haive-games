@@ -32,12 +32,12 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
             (
                 "human",
                 "Current Game State:\n"
-                "{board_string}\n\n"
-                "Turn: {turn}\n"
-                "Legal Moves Available:\n{legal_moves}\n\n"
-                "Recent Moves:\n{move_history}\n\n"
-                "Previous Analysis (if available):\n{player_analysis}\n\n"
-                "Choose one of the available legal moves. Provide your reasoning and return a MancalaMove object with the correct pit_index and player.",
+                "{board_state}\n\n"
+                "Current Player: {current_player}\n"
+                "Valid Moves: {valid_moves}\n\n"
+                "Recent Moves: {move_history}\n\n"
+                "Current Scores: {scores}\n\n"
+                "Choose one of the available valid moves. Provide your reasoning and return a MancalaMove object with the correct pit_index and player.",
             ),
         ]
     )
@@ -64,12 +64,10 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
             (
                 "human",
                 "Current Game State:\n"
-                "{board_string}\n\n"
-                "Player: {player}\n"
-                "Current scores: Player 1: {player1_score}, Player 2: {player2_score}\n\n"
-                "Pit stones (Player 1): {player1_pits}\n"
-                "Pit stones (Player 2): {player2_pits}\n\n"
-                "Recent Moves:\n{move_history}\n\n"
+                "{board_state}\n\n"
+                "Current Player: {current_player}\n"
+                "Current Scores: {scores}\n\n"
+                "Game Status: {game_status}\n\n"
                 "Analyze this position. Consider:\n"
                 "1. Overall position evaluation\n"
                 "2. Stone distribution analysis\n"

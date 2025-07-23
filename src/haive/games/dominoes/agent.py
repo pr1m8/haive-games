@@ -755,7 +755,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
         self.graph = gb.build()
 
         # Compile the app for later use in run_game
-        self.app = self.graph.compile()
+        self._app = self.graph.compile()
 
 
 # For direct script execution
