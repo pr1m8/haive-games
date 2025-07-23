@@ -55,7 +55,7 @@ from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.config import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, computed_field, field_validator
 
 from haive.games.monopoly.player_agent import PlayerDecisionState
 from haive.games.monopoly.state import MonopolyState
@@ -517,17 +517,17 @@ class MonopolyGameAgentConfig(AgentConfig):
 
     @field_validator("max_turns")
     @classmethod
-    def validate_max_turns(cls, v: int, values) -> int:
+    def validate_max_turns(cls, v: int, info: ValidationInfo) -> int:
         """Validate max turns is reasonable for the number of players.
 
         Args:
             v (int): Maximum turns to validate.
-            values: Other field values for validation context.
+            info (ValidationInfo): Validation context containing other field values.
 
         Returns:
             int: Validated max turns value.
         """
-        player_count = len(values.get("player_names", []))
+        player_count = len(info.data.get("player_names", []))
         if player_count > 0:
             min_turns = player_count * 10  # Minimum 10 turns per player
             if v < min_turns:

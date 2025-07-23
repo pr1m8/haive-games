@@ -9,10 +9,10 @@ This module provides configuration classes for the Hold'em game, including:
 import logging
 import uuid
 
+from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from haive.games.config.runnable import RunnableConfigManager
 from haive.games.hold_em.engines import build_holdem_game_engines, build_player_engines
 from haive.games.hold_em.game_agent import HoldemGameAgentConfig
 from haive.games.hold_em.player_agent import HoldemPlayerAgentConfig

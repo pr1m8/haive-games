@@ -129,7 +129,7 @@ class GoAgent(Agent[GoAgentConfig]):
             Command: Command to update the game state with initial settings.
         """
         game_state = GoGameStateManager.initialize()
-        return Command(update=game_state.dict())
+        return Command(update=game_state.model_dump())
 
     def make_move(self, state: GoGameState, color: str) -> Command:
         """Execute a move for the given player.
@@ -174,7 +174,7 @@ class GoAgent(Agent[GoAgentConfig]):
         move = move_response.move  # Extract move tuple (row, col)
         new_state = GoGameStateManager.apply_move(state, move)
 
-        return Command(update=new_state.dict())
+        return Command(update=new_state.model_dump())
 
     def analyze_position(self, state: GoGameState, color: str) -> Command:
         """Analyze the current position for a player.
@@ -344,66 +344,108 @@ def run_go_game(agent: GoAgent) -> None:
     for step in agent.app.stream(
         initial_state, config=agent.runnable_config, debug=True, stream_mode="values"
     ):
-        game = sente.sgf.loads(step["board_sgf"])
+        # Check if step has board_sgf
+        if hasattr(step, "board_sgf"):
+            board_sgf = step.board_sgf
+        elif isinstance(step, dict) and "board_sgf" in step:
+            board_sgf = step["board_sgf"]
+        else:
+            # Skip steps without board_sgf
+            continue
+
+        # Load the game from SGF
+        try:
+            game = sente.sgf.loads(board_sgf)
+        except Exception as e:
+            logger.warning(f"Failed to load SGF: {e}")
+            continue
 
         # 🎯 **Game Board Visualization**
         logger.info("\n🔷 Current Board Position:")
         logger.info(str(game))
 
         # 🎯 **Game State Information**
-        logger.info(f"\n🎮 Current Player: {step['turn'].capitalize()}")
-        logger.info(f"📌 Game Status: {step['game_status']}")
+        turn = (
+            step.get("turn", "unknown")
+            if isinstance(step, dict)
+            else getattr(step, "turn", "unknown")
+        )
+        game_status = (
+            step.get("game_status", "unknown")
+            if isinstance(step, dict)
+            else getattr(step, "game_status", "unknown")
+        )
+        logger.info(f"\n🎮 Current Player: {turn.capitalize()}")
+        logger.info(f"📌 Game Status: {game_status}")
         logger.info("-" * 50)
 
         # ✅ **Display Last Move**
-        if step.get("move_history"):
-            last_move = step["move_history"][-1]
+        move_history = (
+            step.get("move_history", [])
+            if isinstance(step, dict)
+            else getattr(step, "move_history", [])
+        )
+        if move_history:
+            last_move = move_history[-1]
             logger.info(
                 f"📝 Last Move: {last_move[0].capitalize()} played at {last_move[1]}"
             )
 
         # ✅ **Handle Black's Analysis Safely**
-        if step.get("black_analysis"):
-            last_black_analysis: dict[str, Any] = step["black_analysis"][
-                -1
-            ]  # Extract last analysis dictionary
-            logger.info("\n🔍 Black's Analysis:")
-            logger.info(
-                f"   - Territory Estimate: {last_black_analysis.get('territory_evaluation', 'N/A')}"
-            )
-            logger.info(
-                f"   - Strong Positions: {last_black_analysis.get('strong_positions', 'N/A')}"
-            )
-            logger.info(
-                f"   - Weak Positions: {last_black_analysis.get('weak_positions', 'N/A')}"
-            )
-            logger.info(
-                f"   - Strategic Advice: {', '.join(last_black_analysis.get('strategic_advice', []))}"
-            )
+        black_analysis = (
+            step.get("black_analysis", [])
+            if isinstance(step, dict)
+            else getattr(step, "black_analysis", [])
+        )
+        if black_analysis:
+            last_black_analysis = black_analysis[-1]
+            if isinstance(last_black_analysis, dict):
+                logger.info("\n🔍 Black's Analysis:")
+                logger.info(
+                    f"   - Territory Estimate: {last_black_analysis.get('territory_evaluation', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Strong Positions: {last_black_analysis.get('strong_positions', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Weak Positions: {last_black_analysis.get('weak_positions', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Strategic Advice: {', '.join(last_black_analysis.get('strategic_advice', []))}"
+                )
 
         # ✅ **Handle White's Analysis Safely**
-        if step.get("white_analysis"):
-            last_white_analysis: dict[str, Any] = step["white_analysis"][
-                -1
-            ]  # Extract last analysis dictionary
-            logger.info("\n🔍 White's Analysis:")
-            logger.info(
-                f"   - Territory Estimate: {last_white_analysis.get('territory_evaluation', 'N/A')}"
-            )
-            logger.info(
-                f"   - Strong Positions: {last_white_analysis.get('strong_positions', 'N/A')}"
-            )
-            logger.info(
-                f"   - Weak Positions: {last_white_analysis.get('weak_positions', 'N/A')}"
-            )
-            logger.info(
-                f"   - Strategic Advice: {', '.join(last_white_analysis.get('strategic_advice', []))}"
-            )
+        white_analysis = (
+            step.get("white_analysis", [])
+            if isinstance(step, dict)
+            else getattr(step, "white_analysis", [])
+        )
+        if white_analysis:
+            last_white_analysis = white_analysis[-1]
+            if isinstance(last_white_analysis, dict):
+                logger.info("\n🔍 White's Analysis:")
+                logger.info(
+                    f"   - Territory Estimate: {last_white_analysis.get('territory_evaluation', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Strong Positions: {last_white_analysis.get('strong_positions', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Weak Positions: {last_white_analysis.get('weak_positions', 'N/A')}"
+                )
+                logger.info(
+                    f"   - Strategic Advice: {', '.join(last_white_analysis.get('strategic_advice', []))}"
+                )
 
         # ✅ **Captured Stones**
-        if step.get("captured_stones"):
+        captured_stones = (
+            step.get("captured_stones", {})
+            if isinstance(step, dict)
+            else getattr(step, "captured_stones", {})
+        )
+        if captured_stones:
             logger.info("\n🔻 Captured Stones:")
-            logger.info(f"   - Black Captured: {step['captured_stones']['black']}")
-            logger.info(f"   - White Captured: {step['captured_stones']['white']}")
+            logger.info(f"   - Black Captured: {captured_stones.get('black', 0)}")
+            logger.info(f"   - White Captured: {captured_stones.get('white', 0)}")
 
         logger.info("\n" + "-" * 60)  # Divider for clarity

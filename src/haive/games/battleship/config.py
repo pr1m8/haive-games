@@ -188,8 +188,7 @@ class BattleshipAgentConfig(AgentConfig):
     )
 
     @model_validator(mode="after")
-    @classmethod
-    def update_player_names_from_engines(cls) -> Any:
+    def update_player_names_from_engines(self) -> Any:
         r"""Update player names based on LLM provider and model from engines.
 
         Automatically generates meaningful player names based on the configured

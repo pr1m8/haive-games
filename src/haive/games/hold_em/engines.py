@@ -5,6 +5,7 @@ Fixed variable naming consistency issues.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.hold_em.models import (
@@ -13,7 +14,6 @@ from haive.games.hold_em.models import (
     OpponentModel,
     PokerAnalysis,
 )
-from haive.games.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 
 # ============================================================================
 # PLAYER DECISION PROMPTS

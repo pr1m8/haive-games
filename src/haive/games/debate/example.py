@@ -3,7 +3,8 @@
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 
-from haive.games.debate.agent import DebateAgent, DebateConfig
+from haive.games.debate.agent import DebateAgent
+from haive.games.debate.config import DebateAgentConfig
 
 
 def run_debate(
@@ -28,7 +29,7 @@ def run_debate(
     print("-" * 60)
 
     # Create configuration
-    config = DebateConfig(
+    config = DebateAgentConfig(
         topic=topic,
         description=description,
         max_rounds=max_rounds,

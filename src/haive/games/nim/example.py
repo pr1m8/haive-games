@@ -92,45 +92,79 @@ async def example_1_basic_standard_nim():
     binary_representation(initial_piles)
 
     # Create state manager for analysis
-    manager = NimStateManager()
-    manager.initialize_game(initial_piles)
+    state = NimStateManager.initialize(pile_sizes=initial_piles)
 
-    # Analyze position
-    analysis = manager.analyze_position()
+    # Analyze position using basic logic
+    nim_sum = calculate_nim_sum(state.piles)
     print("\nPosition Analysis:")
-    print(f"  Evaluation: {analysis.position_evaluation}")
-    print(f"  Recommended Move: {analysis.recommended_move}")
-    print(f"  Strategy: {analysis.winning_strategy}")
-    print(f"  Explanation: {analysis.explanation}")
+    if nim_sum == 0:
+        print("  Evaluation: Losing position (P-position)")
+        print("  Strategy: Defensive - any move gives opponent advantage")
+    else:
+        print("  Evaluation: Winning position (N-position)")
+        print("  Strategy: Offensive - force nim-sum to 0")
+        # Find optimal move
+        for pile_idx, pile_size in enumerate(state.piles):
+            target_size = pile_size ^ nim_sum
+            if target_size < pile_size:
+                stones_to_take = pile_size - target_size
+                print(f"  Recommended Move: Take {stones_to_take} from pile {pile_idx}")
 
     # Demonstrate optimal play sequence
     print_subsection("Optimal Play Demonstration")
     move_count = 0
+    current_state = state
+    current_player = "player1"
 
-    while not manager.is_game_over():
+    while sum(current_state.piles) > 0:
         move_count += 1
-        current_piles = manager.state.piles.copy()
+        current_piles = current_state.piles.copy()
 
         print(f"\nMove {move_count}: Current position {current_piles}")
 
         # Find and apply optimal move
-        optimal_move = manager.find_optimal_move()
-        print(
-            f"  Optimal move: Take {optimal_move.stones_taken} from pile {optimal_move.pile_index}"
-        )
+        nim_sum = calculate_nim_sum(current_piles)
+        optimal_move = None
 
-        # Show nim-sum before and after
-        nim_sum_before = calculate_nim_sum(current_piles)
-        manager.make_move(optimal_move)
-        nim_sum_after = calculate_nim_sum(manager.state.piles)
+        if nim_sum != 0:
+            # Find optimal move
+            for pile_idx, pile_size in enumerate(current_piles):
+                target_size = pile_size ^ nim_sum
+                if target_size < pile_size:
+                    stones_to_take = pile_size - target_size
+                    optimal_move = NimMove(
+                        pile_index=pile_idx,
+                        stones_taken=stones_to_take,
+                        player=current_player,
+                    )
+                    break
+        else:
+            # Losing position - take any legal move
+            legal_moves = NimStateManager.get_legal_moves(current_state)
+            if legal_moves:
+                optimal_move = legal_moves[0]
 
-        print(f"  Nim-sum: {nim_sum_before} → {nim_sum_after}")
-        print(f"  New position: {manager.state.piles}")
+        if optimal_move:
+            print(
+                f"  Optimal move: Take {optimal_move.stones_taken} from pile {optimal_move.pile_index}"
+            )
 
-        # Add small delay for readability
-        await asyncio.sleep(0.5)
+            # Show nim-sum before and after
+            nim_sum_before = calculate_nim_sum(current_piles)
+            current_state = NimStateManager.apply_move(current_state, optimal_move)
+            nim_sum_after = calculate_nim_sum(current_state.piles)
 
-    print(f"\nGame Over! Winner: {manager.get_winner()}")
+            print(f"  Nim-sum: {nim_sum_before} → {nim_sum_after}")
+            print(f"  New position: {current_state.piles}")
+
+            # Switch player
+            current_player = "player2" if current_player == "player1" else "player1"
+
+            # Add small delay for readability
+            await asyncio.sleep(0.5)
+
+    winner = NimStateManager.get_winner(current_state)
+    print(f"\nGame Over! Winner: {winner}")
     print(f"Total moves: {move_count}")
 
 
@@ -153,10 +187,8 @@ async def example_2_misere_nim():
     print("Rules: Misère Nim - last player to move loses")
 
     # Create misère configuration
-    NimConfig(pile_sizes=initial_piles, misere_mode=True, enable_analysis=True)
-
-    manager = NimStateManager()
-    manager.initialize_game(initial_piles)
+    state = NimStateManager.initialize(pile_sizes=initial_piles)
+    state.misere_mode = True
 
     # Analyze misère position
     print_subsection("Misère Strategy Analysis")
@@ -179,10 +211,12 @@ async def example_2_misere_nim():
     # Play through misère game
     print_subsection("Misère Game Sequence")
     move_count = 0
+    current_state = state
+    current_player = "player1"
 
-    while not manager.is_game_over():
+    while sum(current_state.piles) > 0:
         move_count += 1
-        current_piles = manager.state.piles.copy()
+        current_piles = current_state.piles.copy()
 
         print(f"\nMove {move_count}: Position {current_piles}")
 
@@ -196,15 +230,20 @@ async def example_2_misere_nim():
             print(f"  Current player should {'win' if non_empty % 2 == 0 else 'lose'}")
 
         # Make move (simplified for demonstration)
-        legal_moves = manager.get_legal_moves()
+        legal_moves = NimStateManager.get_legal_moves(current_state)
         move = legal_moves[0]  # Take first legal move for simplicity
+        move.player = current_player
 
         print(f"  Move: Take {move.stones_taken} from pile {move.pile_index}")
-        manager.make_move(move)
+        current_state = NimStateManager.apply_move(current_state, move)
+
+        # Switch player
+        current_player = "player2" if current_player == "player1" else "player1"
 
         await asyncio.sleep(0.5)
 
-    print(f"\nMisère Game Over! Winner: {manager.get_winner()}")
+    winner = NimStateManager.get_winner(current_state)
+    print(f"\nMisère Game Over! Winner: {winner}")
 
 
 async def example_3_mathematical_analysis():
@@ -470,9 +509,14 @@ async def example_6_performance_analysis():
 
         # Test optimal move finding
         start_time = time.time()
-        manager = NimStateManager()
-        manager.initialize_game(piles)
-        manager.find_optimal_move()
+        state = NimStateManager.initialize(pile_sizes=piles)
+        # Find optimal move manually
+        nim_sum = calculate_nim_sum(piles)
+        if nim_sum != 0:
+            for pile_idx, pile_size in enumerate(piles):
+                target_size = pile_size ^ nim_sum
+                if target_size < pile_size:
+                    break
         end_time = time.time()
 
         print(f"  Optimal move finding: {(end_time - start_time) * 1000:.4f} ms")
@@ -497,11 +541,10 @@ async def example_6_performance_analysis():
     print_subsection("Move Generation Efficiency")
 
     test_position = [10, 15, 20]
-    manager = NimStateManager()
-    manager.initialize_game(test_position)
+    state = NimStateManager.initialize(pile_sizes=test_position)
 
     start_time = time.time()
-    legal_moves = manager.get_legal_moves()
+    legal_moves = NimStateManager.get_legal_moves(state)
     end_time = time.time()
 
     print(f"Position: {test_position}")
@@ -606,11 +649,11 @@ async def example_7_educational_tutorial():
     game_position = [3, 4, 5]
     move_num = 1
 
-    manager = NimStateManager()
-    manager.initialize_game(game_position)
+    state = NimStateManager.initialize(pile_sizes=game_position)
+    current_player = "Player1"
 
-    while not manager.is_game_over() and move_num <= 5:  # Limit for example
-        current_piles = manager.state.piles.copy()
+    while sum(state.piles) > 0 and move_num <= 5:  # Limit for example
+        current_piles = state.piles.copy()
         nim_sum = calculate_nim_sum(current_piles)
 
         print(f"\nMove {move_num}: Position {current_piles}")
@@ -630,26 +673,29 @@ async def example_7_educational_tutorial():
                     move = NimMove(
                         pile_index=pile_idx,
                         stones_taken=stones_to_take,
-                        player=f"Player{move_num % 2 + 1}",
+                        player=current_player,
                     )
-                    manager.make_move(move)
+                    state = NimStateManager.apply_move(state, move)
                     break
         else:
             # Make any legal move (losing position)
-            legal_moves = manager.get_legal_moves()
+            legal_moves = NimStateManager.get_legal_moves(state)
             if legal_moves:
                 move = legal_moves[0]
+                move.player = current_player
                 print(
                     f"  Forced move: Take {move.stones_taken} from pile {move.pile_index}"
                 )
-                manager.make_move(move)
+                state = NimStateManager.apply_move(state, move)
 
+        current_player = "Player2" if current_player == "Player1" else "Player1"
         move_num += 1
         await asyncio.sleep(0.8)
 
-    print(f"\nFinal position: {manager.state.piles}")
-    if manager.is_game_over():
-        print(f"Game over! Winner: {manager.get_winner()}")
+    print(f"\nFinal position: {state.piles}")
+    if sum(state.piles) == 0:
+        winner = NimStateManager.get_winner(state)
+        print(f"Game over! Winner: {winner}")
 
 
 async def example_8_advanced_integration():
@@ -688,32 +734,45 @@ async def example_8_advanced_integration():
         game_times = []
 
         for _game_num in range(10):  # 10 games per configuration
-            manager = NimStateManager()
-            manager.initialize_game(piles.copy())
+            state = NimStateManager.initialize(pile_sizes=piles.copy())
 
             start_time = time.time()
             moves = 0
             current_player = "Player1"
 
-            while not manager.is_game_over():
+            while sum(state.piles) > 0:
                 moves += 1
 
                 # Simulate optimal play
-                nim_sum = calculate_nim_sum(manager.state.piles)
+                nim_sum = calculate_nim_sum(state.piles)
+                optimal_move = None
+
                 if nim_sum != 0:
                     # Find optimal move
-                    optimal_move = manager.find_optimal_move()
-                    manager.make_move(optimal_move)
+                    for pile_idx, pile_size in enumerate(state.piles):
+                        target_size = pile_size ^ nim_sum
+                        if target_size < pile_size:
+                            stones_to_take = pile_size - target_size
+                            optimal_move = NimMove(
+                                pile_index=pile_idx,
+                                stones_taken=stones_to_take,
+                                player=current_player,
+                            )
+                            break
                 else:
                     # Make any legal move
-                    legal_moves = manager.get_legal_moves()
+                    legal_moves = NimStateManager.get_legal_moves(state)
                     if legal_moves:
-                        manager.make_move(legal_moves[0])
+                        optimal_move = legal_moves[0]
+                        optimal_move.player = current_player
+
+                if optimal_move:
+                    state = NimStateManager.apply_move(state, optimal_move)
 
                 current_player = "Player2" if current_player == "Player1" else "Player1"
 
             end_time = time.time()
-            winner = manager.get_winner()
+            winner = NimStateManager.get_winner(state)
 
             wins[winner] += 1
             total_moves.append(moves)

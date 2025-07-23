@@ -212,8 +212,7 @@ class BaseGameConfig(AgentConfig, ABC):
         return self.create_simple_player_configs()
 
     @model_validator(mode="after")
-    @classmethod
-    def configure_engines(cls) -> "BaseGameConfig":
+    def configure_engines(self) -> "BaseGameConfig":
         """Configure engines based on the determined mode."""
         mode = self.determine_config_mode()
 

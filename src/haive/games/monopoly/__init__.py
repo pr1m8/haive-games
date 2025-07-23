@@ -1,3 +1,78 @@
 """Module exports."""
 
-__all__ = []
+from haive.games.monopoly.agent import MonopolyAgent, MonopolyAgentConfig
+from haive.games.monopoly.engines import build_monopoly_player_aug_llms
+from haive.games.monopoly.game import (
+    ActionType,
+    Card,
+    MonopolyGame,
+    Player,
+    Property,
+    PropertyType,
+    SpecialSquareType,
+)
+from haive.games.monopoly.models import (
+    BuildingDecision,
+    DiceRoll,
+    JailDecision,
+    Player,
+    Property,
+    PropertyColor,
+    PropertyDecision,
+    PropertyType,
+    TradeResponse,
+)
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import (
+    BOARD_PROPERTIES,
+    CHANCE_CARDS,
+    COLOR_GROUPS,
+    COMMUNITY_CHEST_CARDS,
+    calculate_rent,
+    can_trade_properties,
+    check_game_end,
+    create_board,
+    create_players,
+    get_building_cost,
+    get_properties_by_color,
+    get_property_at_position,
+    handle_special_position,
+    move_player,
+    roll_dice,
+    shuffle_cards,
+)
+
+__all__ = [
+    "MonopolyAgent",
+    "MonopolyAgentConfig",
+    "MonopolyState",
+    "build_monopoly_player_aug_llms",
+    "Card",
+    "MonopolyGame",
+    "Player",
+    "Property",
+    "PropertyColor",
+    "PropertyType",
+    "SpecialSquareType",
+    "DiceRoll",
+    "BOARD_PROPERTIES",
+    "COLOR_GROUPS",
+    "CHANCE_CARDS",
+    "COMMUNITY_CHEST_CARDS",
+    "create_board",
+    "create_players",
+    "roll_dice",
+    "move_player",
+    "get_properties_by_color",
+    "calculate_rent",
+    "get_property_at_position",
+    "shuffle_cards",
+    "handle_special_position",
+    "check_game_end",
+    "get_building_cost",
+    "can_trade_properties",
+    "BuildingDecision",
+    "JailDecision",
+    "PropertyDecision",
+    "TradeResponse",
+]

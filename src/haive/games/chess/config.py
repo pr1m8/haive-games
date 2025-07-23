@@ -194,8 +194,7 @@ class ChessConfig(BaseGameConfig):
         return create_generic_chess_engines(player_configs)
 
     @model_validator(mode="after")
-    @classmethod
-    def finalize_config(cls) -> Any:
+    def finalize_config(self) -> "ChessConfig":
         """Finalize configuration after engine setup."""
         # Call parent validator first
         super().configure_engines()

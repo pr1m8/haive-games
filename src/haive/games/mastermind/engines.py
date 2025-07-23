@@ -5,10 +5,10 @@ including the codemaker engine, guess engines, and analyzer engines.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.mastermind.models import ColorCode, MastermindAnalysis, MastermindGuess
-from haive.games.models.llm.base import AzureLLMConfig
 
 
 def generate_codemaker_prompt() -> ChatPromptTemplate:

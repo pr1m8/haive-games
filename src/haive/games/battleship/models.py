@@ -341,8 +341,7 @@ class Ship(BaseModel):
         return v
 
     @model_validator(mode="after")
-    @classmethod
-    def validate_ship_consistency(cls) -> "Ship":
+    def validate_ship_consistency(self) -> "Ship":
         """Validate ship size, coordinates, and type consistency.
 
         Returns:
@@ -573,8 +572,7 @@ class ShipPlacement(BaseModel):
         return processed_coords
 
     @model_validator(mode="after")
-    @classmethod
-    def validate_placement_rules(cls) -> "ShipPlacement":
+    def validate_placement_rules(self) -> "ShipPlacement":
         """Validate ship placement follows game rules.
 
         Returns:
@@ -715,8 +713,7 @@ class ShipPlacementWrapper(BaseModel):
     )
 
     @model_validator(mode="after")
-    @classmethod
-    def validate_complete_fleet(cls) -> "ShipPlacementWrapper":
+    def validate_complete_fleet(self) -> "ShipPlacementWrapper":
         """Validate fleet contains exactly one ship of each type.
 
         Returns:
@@ -960,8 +957,7 @@ class MoveOutcome(BaseModel):
     )
 
     @model_validator(mode="after")
-    @classmethod
-    def validate_sunk_ship_consistency(cls) -> "MoveOutcome":
+    def validate_sunk_ship_consistency(self) -> "MoveOutcome":
         """Validate sunk ship is only specified for SUNK results.
 
         Returns:
