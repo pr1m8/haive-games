@@ -146,11 +146,11 @@ def run_all_tests():
     passed = 0
     total = len(tests)
 
-    for test_name, test_func in tests:
+    for _test_name, test_func in tests:
         try:
             test_func()
             passed += 1
-        except Exception as e:
+        except Exception:
             import traceback
 
             traceback.print_exc()

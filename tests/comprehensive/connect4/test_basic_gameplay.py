@@ -2,10 +2,7 @@
 
 import pytest
 
-from haive.games.connect4.agent import Connect4Agent
-from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Move
-from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
 
 
@@ -135,7 +132,7 @@ class TestConnect4BasicGameplay:
             Connect4Move(column=3, player="red"),  # Winning diagonal move
         ]
 
-        for i, move in enumerate(moves):
+        for _i, move in enumerate(moves):
             # Adjust player to match game flow
             move.player = state.turn
             state = Connect4StateManager.apply_move(state, move)
@@ -152,7 +149,7 @@ class TestConnect4BasicGameplay:
         # Column pattern: 0-6 alternating to prevent 4-in-a-row
         column_order = [0, 1, 2, 3, 4, 5, 6] * 6
 
-        for i, col in enumerate(column_order[:42]):  # 42 moves fill the board
+        for _i, col in enumerate(column_order[:42]):  # 42 moves fill the board
             if not state.is_column_full(col):
                 move = Connect4Move(column=col, player=state.turn)
                 state = Connect4StateManager.apply_move(state, move)

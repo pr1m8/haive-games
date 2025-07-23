@@ -141,7 +141,6 @@ class TestConnect4AgentIntegration:
     def test_agent_workflow_nodes(self, connect4_agent):
         """Test agent has correct workflow nodes."""
         # Agent should have set up proper nodes
-        expected_nodes = ["initialize_game", "red_move", "yellow_move"]
 
         # Verify through agent setup (implementation specific)
         assert hasattr(connect4_agent, "setup_workflow")

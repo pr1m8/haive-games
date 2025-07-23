@@ -27,7 +27,7 @@ class TestConnect4EndToEndGameplay:
         agent = Connect4Agent(config)
 
         # Run game (synchronous)
-        initial_state = Connect4State(
+        Connect4State(
             board=[[None] * 7 for _ in range(6)],
             turn="red",
             game_status="ongoing",
@@ -122,26 +122,9 @@ class TestConnect4EndToEndGameplay:
         """Test various game termination scenarios."""
         # Test 1: Horizontal win
         config = Connect4AgentConfig(name="termination_test", enable_analysis=False)
-        agent = Connect4Agent(config)
+        Connect4Agent(config)
 
         # Create near-win state
-        near_win_state = {
-            "board": [
-                [None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None],
-                ["red", "red", "red", None, "yellow", "yellow", None],
-            ],
-            "turn": "red",
-            "game_status": "ongoing",
-            "move_history": [],
-            "red_analysis": [],
-            "yellow_analysis": [],
-            "winner": None,
-            "error_message": None,
-        }
 
         # If red plays column 3, game should end
         # (This tests termination detection)
@@ -182,7 +165,7 @@ class TestConnect4EndToEndGameplay:
     async def test_async_game_execution(self):
         """Test async game execution capabilities."""
         config = Connect4AgentConfig(name="async_test", enable_analysis=False)
-        agent = Connect4Agent(config)
+        Connect4Agent(config)
 
         # Async execution should work
         try:

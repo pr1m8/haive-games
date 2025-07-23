@@ -10,8 +10,6 @@ This module provides comprehensive tests for Fox and Geese state management incl
 All tests use real components without mocks, following the no-mocks methodology.
 """
 
-import pytest
-
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 

@@ -1,9 +1,5 @@
 """Strategic analysis tests for Connect4 with real components - NO MOCKS."""
 
-import pytest
-
-from haive.games.connect4.agent import Connect4Agent
-from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Analysis, Connect4Move
 from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
@@ -66,7 +62,6 @@ class TestConnect4StrategicAnalysis:
         state = Connect4StateManager.initialize()
 
         # Center columns are 2, 3, 4 (0-indexed)
-        center_columns = [2, 3, 4]
 
         # Play in center
         center_move = Connect4Move(column=3, player="red")
@@ -236,7 +231,7 @@ class TestConnect4StrategicAnalysis:
                 if row is not None:
                     temp_board[row][col] = "red"
                     # Would red win?
-                    temp_state = Connect4State(
+                    Connect4State(
                         board=temp_board,
                         turn="yellow",
                         game_status="ongoing",

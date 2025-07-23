@@ -20,7 +20,7 @@ for package_dir in packages_dir.glob("haive-*"):
 try:
     import haive.games
 
-except Exception as e:
+except Exception:
     traceback.print_exc()
 
 # Test submodules
@@ -36,7 +36,7 @@ games_to_test = [
 for game in games_to_test:
     try:
         mod = importlib.import_module(game)
-    except Exception as e:
+    except Exception:
         pass
 
 # Check what's in __all__
