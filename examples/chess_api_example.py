@@ -22,7 +22,7 @@ async def main():
 
     # Example 1: Simple model configuration
     print("=== Example 1: Simple Configuration ===")
-    chess_api = create_chess_api(
+    create_chess_api(
         app,
         config_overrides={
             "white_model": "gpt-4",
@@ -35,7 +35,7 @@ async def main():
 
     # Example 2: Using example configurations
     print("\n=== Example 2: Example Configuration ===")
-    chess_api_budget = create_chess_api(
+    create_chess_api(
         app,
         config_overrides={
             "example_config": "budget",
@@ -71,7 +71,7 @@ async def main():
         ),
     }
 
-    chess_api_advanced = create_chess_api(
+    create_chess_api(
         app,
         config_overrides={"player_configs": player_configs, "config_mode": "advanced"},
     )
@@ -79,9 +79,7 @@ async def main():
 
     # Example 4: Legacy mode (backward compatibility)
     print("\n=== Example 4: Legacy Configuration ===")
-    chess_api_legacy = create_chess_api(
-        app, config_overrides={"use_legacy_engines": True}
-    )
+    create_chess_api(app, config_overrides={"use_legacy_engines": True})
     print("Created chess with legacy hardcoded engines")
 
     # Add root endpoint

@@ -7,9 +7,6 @@ can be used via the generic GameAPI without custom API implementations.
 
 import os
 import sys
-from typing import Any, Dict
-
-from pydantic import BaseModel
 
 # Add packages to path for imports
 packages_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
@@ -29,18 +26,14 @@ from haive.games.chess.agent import ChessAgent
 
 # Import the configurable game systems
 from haive.games.chess.configurable_config import (
-    ConfigurableChessConfig,
     create_chess_config,
     create_chess_config_from_example,
 )
-from haive.games.chess.state import ChessState
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.configurable_config import (
-    ConfigurableConnect4Config,
     create_connect4_config,
     create_connect4_config_from_example,
 )
-from haive.games.connect4.state import Connect4State
 
 
 def demo_configurable_agents_with_standard_api():

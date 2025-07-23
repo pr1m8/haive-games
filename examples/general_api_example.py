@@ -12,7 +12,6 @@ import json
 
 import httpx
 import uvicorn
-from fastapi import FastAPI
 
 from haive.games.api import create_general_game_api
 
@@ -175,7 +174,7 @@ async def test_api_client():
             )
             if response.status_code == 200:
                 game_info = response.json()
-                print(f"\nCreated chess game:")
+                print("\nCreated chess game:")
                 print(f"  Thread ID: {game_info['thread_id']}")
                 print(f"  Status endpoint: {game_info['endpoints']['status']}")
 

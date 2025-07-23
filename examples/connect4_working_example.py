@@ -6,19 +6,11 @@ generic player agent system with configurable LLMs.
 
 import asyncio
 import time
-from typing import Any, Dict
 
-from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.api import (
     Connect4API,
-    Connect4GameStatus,
-    play_connect4_async,
-    play_connect4_example,
-    play_connect4_simple,
 )
 from haive.games.connect4.configurable_config import (
-    create_connect4_config,
-    create_connect4_config_from_example,
     create_connect4_config_from_player_configs,
 )
 from haive.games.connect4.generic_engines import (
@@ -135,7 +127,7 @@ def demo_4_custom_player_configs():
         player_configs, enable_analysis=True
     )
 
-    print(f"✅ Custom configuration created:")
+    print("✅ Custom configuration created:":")
     print(f"   Red Player: {config.red_player_name}")
     print(f"   Yellow Player: {config.yellow_player_name}")
     print(f"   Analysis: {'Enabled' if config.enable_analysis else 'Disabled'}")
@@ -206,7 +198,7 @@ def demo_6_real_game_execution():
         print(f"   Duration: {result.duration_seconds:.2f}s")
 
         if result.move_history:
-            print(f"   First few moves:")
+            print("   First few moves:")
             for i, (player, column) in enumerate(result.move_history[:5], 1):
                 print(f"     {i}. {player}: Column {column}")
 
@@ -241,7 +233,7 @@ async def demo_7_async_execution():
         # Run async
         result = await Connect4API.run_game_async(agent, game_id)
 
-        print(f"✅ Async game completed!")
+        print("✅ Async game completed!"!")
         print(f"   Status: {result.status.value}")
         print(f"   Total moves: {result.total_moves}")
         print(f"   Duration: {result.duration_seconds:.2f}s")

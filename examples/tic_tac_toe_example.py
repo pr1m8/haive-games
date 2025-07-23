@@ -31,7 +31,7 @@ class TicTacToeGame:
         print("   |   |   ")
         print(f" {self.board[6]} | {self.board[7]} | {self.board[8]} ")
         print("   |   |   ")
-        print(f"\nPositions: 1-9 (left to right, top to bottom)")
+        print("\nPositions: 1-9 (left to right, top to bottom)")
 
     def make_move(self, position: int, player: str) -> bool:
         """Make a move on the board."""
@@ -148,7 +148,7 @@ async def main():
     player_x = await create_game_agent("Strategic Player", "X", "smart")
     player_o = await create_game_agent("Creative Player", "O", "creative")
 
-    print(f"\n🤖 Players:")
+    print("\n🤖 Players:"s:")
     print(f"   X: {player_x.name} (Strategic)")
     print(f"   O: {player_o.name} (Creative)")
 
@@ -157,7 +157,7 @@ async def main():
     current_symbol = "X"
     move_count = 0
 
-    print(f"\n🎯 Game Start!")
+    print("\n🎯 Game Start!"t!")
     game.display_board()
 
     while True:
@@ -178,7 +178,7 @@ async def main():
                 winner = game.check_winner()
                 if winner:
                     if winner == "TIE":
-                        print(f"\n🤝 Game ended in a tie!")
+                        print("\n🤝 Game ended in a tie!"e!")
                     else:
                         winning_agent = player_x if winner == "X" else player_o
                         print(f"\n🏆 {winning_agent.name} ({winner}) wins!")

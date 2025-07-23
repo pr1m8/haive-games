@@ -12,7 +12,6 @@ AFTER: Configurable player agents that can be passed as config inputs
 """
 
 import time
-from typing import Any, Dict
 
 # Import agents for testing
 from haive.games.chess.agent import ChessAgent
@@ -25,9 +24,7 @@ from haive.games.chess.configurable_config import (
 )
 from haive.games.chess.configurable_engines import get_example_engines
 from haive.games.core.agent.player_agent import (
-    PlayerAgentConfig,
     create_player_config,
-    create_simple_player_configs,
 )
 from haive.games.tic_tac_toe.configurable_engines import get_example_tic_tac_toe_engines
 
@@ -218,7 +215,7 @@ def demo_real_game_execution():
     config.max_moves = 8
     config.should_visualize_graph = False
 
-    print(f"🏁 Game Setup:")
+    print("🏁 Game Setup:"p:")
     print(f"   White: {config.white_player_name}")
     print(f"   Black: {config.black_player_name}")
     print(f"   Max moves: {config.max_moves}")
