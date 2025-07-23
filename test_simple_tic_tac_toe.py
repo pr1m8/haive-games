@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Simple standalone test for Tic Tac Toe game logic."""
 
-import os
 import sys
 from pathlib import Path
 
@@ -251,7 +250,7 @@ def main():
     print("\n3. Testing complete game simulation...")
     results.append(run_comprehensive_game_test())
 
-    print(f"\n=== Test Results ===")
+    print("\n=== Test Results ===")
     passed = sum(results)
     total = len(results)
     print(f"Passed: {passed}/{total}")

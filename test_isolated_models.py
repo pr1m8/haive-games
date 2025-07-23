@@ -30,7 +30,7 @@ def test_models():
 
         # Test validation
         try:
-            invalid_move = TicTacToeMove(row=5, col=1, player="X")  # Invalid row
+            TicTacToeMove(row=5, col=1, player="X")  # Invalid row
             print("✗ Invalid move was accepted")
             return False
         except pydantic.ValidationError:
@@ -133,8 +133,8 @@ def test_basic_game_logic():
 
         # Test winning positions
         win_board = [["X", "X", "X"], ["O", "O", None], [None, None, None]]
-        assert check_win(win_board, "X") == True
-        assert check_win(win_board, "O") == False
+        assert check_win(win_board, "X")
+        assert not check_win(win_board, "O")
         print("✓ Win detection works correctly")
 
         # Test legal moves
@@ -176,7 +176,7 @@ def main():
     passed = sum(results)
     total = len(results)
 
-    print(f"\n=== Results ===")
+    print("\n=== Results ===")
     print(f"Passed: {passed}/{total}")
 
     if passed == total:
