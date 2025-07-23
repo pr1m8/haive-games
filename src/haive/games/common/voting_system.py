@@ -8,10 +8,10 @@ import logging
 from enum import Enum
 from typing import Any, Protocol
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field
 
-from .engine.aug_llm import AugLLMConfig
-from .simple.agent import SimpleAgent
+from haive.games.simple.agent import SimpleAgent
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

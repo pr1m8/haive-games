@@ -68,11 +68,12 @@ import logging
 import time
 from typing import Any
 
-from .clue.config import ClueConfig
-from .clue.state import ClueState
-from .clue.state_manager import ClueStateManager
-from .engine.agent.agent import register_agent
-from .framework.base.agent import GameAgent
+from haive.core.engine.agent.agent import register_agent
+
+from haive.games.clue.config import ClueConfig
+from haive.games.clue.state import ClueState
+from haive.games.clue.state_manager import ClueStateManager
+from haive.games.framework.base.agent import GameAgent
 
 logger = logging.getLogger(__name__)
 

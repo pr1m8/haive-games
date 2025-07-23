@@ -1,5 +1,5 @@
 from haive.core.engine.agent.config import AgentConfig
-from haive.core.engine.aug_llm.config import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.graph.state_graph.base_graph2 import BaseGraph
 
 

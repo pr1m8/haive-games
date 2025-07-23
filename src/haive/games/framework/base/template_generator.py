@@ -142,7 +142,7 @@ class GameTemplateGenerator:
             f'''
         from typing import List, Dict, Literal, Optional, Tuple, Union
         from pydantic import BaseModel, Field, field_validator
-        from ...framework.base import GameState
+        from haive.games...framework.base import GameState
 
         class {self.game_class_name}Move(BaseModel):
             """Represents a move in {self.game_name}."""
@@ -236,8 +236,8 @@ class GameTemplateGenerator:
             f'''
         from typing import List, Optional, Dict, Tuple
         import copy
-        from .models import {self.game_class_name}State, {self.game_class_name}Move
-        from ...framework.base import GameStateManager
+        from haive.games.models import {self.game_class_name}State, {self.game_class_name}Move
+        from haive.games...framework.base import GameStateManager
 
         class {self.game_class_name}StateManager(GameStateManager[{self.game_class_name}State]):
             """Manager for {self.game_name} game state."""
@@ -317,10 +317,10 @@ class GameTemplateGenerator:
         """
         content = dedent(
             f"""
-        from ...framework.base import GameConfig
-        from .models import {self.game_class_name}State, {self.game_class_name}PlayerDecision
-        from ....core.aug_llm.base import AugLLMConfig
-        from ....core.models.llm.base import AzureLLMConfig
+        from haive.games.framework.base import GameConfig
+        from haive.games.models import {self.game_class_name}State, {self.game_class_name}PlayerDecision
+        from haive.core.engine.aug_llm import AugLLMConfig
+        from haive.core.models.llm.azure import AzureLLMConfig
         from langchain_core.prompts import ChatPromptTemplate
         from pydantic import Field
         from typing import Dict
@@ -331,7 +331,7 @@ class GameTemplateGenerator:
         if self.enable_analysis:
             content += dedent(
                 f"""
-            from .models import {self.game_class_name}Analysis
+            from haive.games.models import {self.game_class_name}Analysis
             """
             )
 
@@ -468,11 +468,11 @@ class GameTemplateGenerator:
             f"""
         from typing import Dict, Any, List
         from langgraph.types import Command
-        from ...framework.base import GameAgent
-        from .models import {self.game_class_name}State, {self.game_class_name}Move, {self.game_class_name}PlayerDecision
-        from .state import {self.game_class_name}StateManager
-        from .config import {self.game_class_name}AgentConfig
-        from ...base import register_agent
+        from haive.games...framework.base import GameAgent
+        from haive.games.models import {self.game_class_name}State, {self.game_class_name}Move, {self.game_class_name}PlayerDecision
+        from haive.games.state import {self.game_class_name}StateManager
+        from haive.games.config import {self.game_class_name}AgentConfig
+        from haive.games...base import register_agent
         import time
         """
         )
@@ -603,8 +603,8 @@ class GameTemplateGenerator:
         """
         content = dedent(
             f'''
-        from .agent import {self.game_class_name}Agent
-        from .config import {self.game_class_name}AgentConfig
+        from haive.games.agent import {self.game_class_name}Agent
+        from haive.games.config import {self.game_class_name}AgentConfig
         import time
 
         def run_{self.game_slug}_game():

@@ -16,11 +16,11 @@ Typical usage:
     - Use as configuration for game agents
 """
 
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from .engine.agent.agent import AgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .framework.base.state import GameState
+from haive.games.framework.base.state import GameState
 
 
 class GameConfig(AgentConfig):

@@ -16,17 +16,17 @@ import sys
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from .checkers.config import CheckersAgentConfig
-from .checkers.models import CheckersMove, CheckersPlayerDecision
-from .checkers.state import CheckersState
-from .checkers.state_manager import CheckersStateManager
-from .checkers.ui import CheckersUI
-from .engine.agent.agent import register_agent
-from .framework.base import GameAgent
-from .graph.dynamic_graph_builder import DynamicGraph
+from haive.games.checkers.config import CheckersAgentConfig
+from haive.games.checkers.models import CheckersMove, CheckersPlayerDecision
+from haive.games.checkers.state import CheckersState
+from haive.games.checkers.state_manager import CheckersStateManager
+from haive.games.checkers.ui import CheckersUI
+from haive.games.framework.base import GameAgent
 
 
 @register_agent(CheckersAgentConfig)

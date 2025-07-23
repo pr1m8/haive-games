@@ -7,8 +7,8 @@ import asyncio
 import json
 from typing import Any
 
-from .clue.controller import ClueGameController
-from .clue.models import ClueGuess
+from haive.games.clue.controller import ClueGameController
+from haive.games.clue.models import ClueGuess
 
 
 async def run_clue_game(

@@ -16,8 +16,8 @@ from typing import Any
 
 from loguru import logger
 
-from .framework.multi_player.state_manager import MultiPlayerGameStateManager
-from .mafia.models import (
+from haive.games.framework.multi_player.state_manager import MultiPlayerGameStateManager
+from haive.games.mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -25,7 +25,7 @@ from .mafia.models import (
     PlayerRole,
     PlayerState,
 )
-from .mafia.state import MafiaGameState
+from haive.games.mafia.state import MafiaGameState
 
 
 class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):

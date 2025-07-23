@@ -8,6 +8,7 @@ including quick starts, tournaments, custom games, and advanced patterns.
 
 import asyncio
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
 # Import various game implementations
@@ -15,8 +16,6 @@ from haive.games.chess import ChessAgent, ChessConfig
 from haive.games.poker import PokerAgent, PokerConfig
 from haive.games.tic_tac_toe import TicTacToeAgent, TicTacToeConfig
 from haive.games.wordle import WordleAgent, WordleConfig
-
-from .engine.aug_llm import AugLLMConfig
 
 
 def example_quick_game() -> None:

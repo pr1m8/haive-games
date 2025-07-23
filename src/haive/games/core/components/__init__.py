@@ -1,18 +1,3 @@
-"""Components - TODO: Add brief description
+"""Module exports."""
 
-TODO: Add detailed description of module functionality
-
-
-
-Example:
-    Basic usage::
-
-        from haive.components import module_function
-
-        # TODO: Add example
-
-
-See Also:
-    :mod:`haive.components.cards`: TODO: Add description
-
-"""
+__all__ = []

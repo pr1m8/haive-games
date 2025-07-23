@@ -50,13 +50,13 @@ Note:
     and integration with distributed game systems for tournament play.
 """
 
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from .checkers.engines import build_checkers_aug_llms
-from .checkers.state import CheckersState
-from .engine.agent.agent import AgentConfig
-from .engine.aug_llm import AugLLMConfig
+from haive.games.checkers.engines import build_checkers_aug_llms
+from haive.games.checkers.state import CheckersState
 
 
 class CheckersAgentConfig(AgentConfig):

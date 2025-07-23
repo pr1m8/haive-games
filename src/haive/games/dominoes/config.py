@@ -3,12 +3,12 @@
 
 from typing import Any
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from .dominoes.engines import aug_llm_configs
-from .dominoes.state import DominoesState
-from .engine.aug_llm import AugLLMConfig
-from .framework.base.config import GameConfig
+from haive.games.dominoes.engines import aug_llm_configs
+from haive.games.dominoes.state import DominoesState
+from haive.games.framework.base.config import GameConfig
 
 
 class DominoesAgentConfig(GameConfig):

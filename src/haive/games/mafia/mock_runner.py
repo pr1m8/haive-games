@@ -17,9 +17,9 @@ import time
 import uuid
 from typing import Any
 
-from .mafia.agent import MafiaAgent
-from .mafia.config import MafiaAgentConfig
-from .mafia.models import (
+from haive.games.mafia.agent import MafiaAgent
+from haive.games.mafia.config import MafiaAgentConfig
+from haive.games.mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -28,7 +28,7 @@ from .mafia.models import (
     NarratorDecision,
     PlayerRole,
 )
-from .mafia.state_manager import MafiaStateManager
+from haive.games.mafia.state_manager import MafiaStateManager
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

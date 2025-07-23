@@ -24,17 +24,17 @@ Example:
     >>> })
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .engine.aug_llm import AugLLMConfig
-from .hold_em.models import (
+from haive.games.hold_em.models import (
     BettingDecision,
     GameSituationAnalysis,
     OpponentModel,
     PokerAnalysis,
     TableDynamics,
 )
-from .models.llm.base import AnthropicLLMConfig, AzureLLMConfig
+from haive.games.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 
 # ============================================================================
 # SPECIALIZED HAND ANALYZERS

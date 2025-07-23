@@ -18,13 +18,13 @@ Typical usage:
 
 from typing import Any, Generic, TypeVar
 
+# from haive.games.framework.base.state import GameState
+from haive.core.engine.agent.agent import Agent
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import BaseModel
 
-# from haive.games.framework.base.state import GameState
-from .engine.agent.agent import Agent
-from .framework.base.config import GameConfig
+from haive.games.framework.base.config import GameConfig
 
 T = TypeVar("T", bound=BaseModel)
 

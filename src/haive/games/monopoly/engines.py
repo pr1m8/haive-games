@@ -8,11 +8,11 @@ including:
     - Trade negotiations
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .engine.aug_llm import AugLLMConfig
-from .models.llm.base import AnthropicLLMConfig, AzureLLMConfig
-from .monopoly.models import (
+from haive.games.monopoly.models import (
     BuildingDecision,
     JailDecision,
     PropertyDecision,

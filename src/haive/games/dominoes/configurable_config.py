@@ -8,9 +8,9 @@ from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from .core.agent.player_agent import PlayerAgentConfig
-from .dominoes.config import DominoesAgentConfig
-from .dominoes.generic_engines import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.dominoes.config import DominoesAgentConfig
+from haive.games.dominoes.generic_engines import (
     create_generic_dominoes_config_from_example,
     create_generic_dominoes_engines,
     create_generic_dominoes_engines_simple,

@@ -9,9 +9,9 @@ from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from .core.agent.player_agent import PlayerAgentConfig
-from .hold_em.config import HoldemGameAgentConfig
-from .hold_em.generic_engines import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.hold_em.config import HoldemGameAgentConfig
+from haive.games.hold_em.generic_engines import (
     create_generic_holdem_config_from_example,
     create_generic_holdem_engines,
     create_generic_holdem_engines_simple,

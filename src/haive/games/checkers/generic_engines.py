@@ -5,17 +5,17 @@ This module demonstrates how to use the generic player agent system for Checkers
 showing the same pattern working across different games with different player identifiers.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .checkers.models import CheckersAnalysis, CheckersPlayerDecision
-from .core.agent.generic_player_agent import (
+from haive.games.checkers.models import CheckersAnalysis, CheckersPlayerDecision
+from haive.games.core.agent.generic_player_agent import (
     CheckersPlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
 )
-from .core.agent.player_agent import PlayerAgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .models.llm import LLMConfig
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.models.llm import LLMConfig
 
 
 class CheckersPromptGenerator(GenericPromptGenerator[str, str]):

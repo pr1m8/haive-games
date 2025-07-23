@@ -21,8 +21,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .hold_em.game_agent import HoldemGameAgent
-from .hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
+from haive.games.hold_em.game_agent import HoldemGameAgent
+from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
 
 logger = logging.getLogger(__name__)
 

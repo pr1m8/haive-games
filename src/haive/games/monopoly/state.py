@@ -71,7 +71,7 @@ from typing import Annotated, Any, Dict, List, Optional, Union
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from .monopoly.models import (
+from haive.games.monopoly.models import (
     DiceRoll,
     GameEvent,
     Player,

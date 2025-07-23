@@ -35,8 +35,8 @@ Example:
 
 import uuid
 
-from .hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
-from .hold_em.utils import (
+from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
+from haive.games.hold_em.utils import (
     create_standard_deck,
     evaluate_hand_simple,
     shuffle_deck,

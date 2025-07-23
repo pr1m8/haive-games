@@ -2,22 +2,22 @@ import logging
 import time
 from typing import Any, Literal
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 from rich.console import Console
 from rich.live import Live
 
-from .dominoes.config import DominoesAgentConfig
-from .dominoes.models import (
+from haive.games.dominoes.config import DominoesAgentConfig
+from haive.games.dominoes.models import (
     DominoesAnalysis,
     DominoesPlayerDecision,
     DominoMove,
 )
-from .dominoes.state import DominoesState
-from .dominoes.state_manager import DominoesStateManager
-from .engine.agent.agent import register_agent
-from .framework.base.agent import GameAgent
-from .graph.dynamic_graph_builder import DynamicGraph
+from haive.games.dominoes.state import DominoesState
+from haive.games.dominoes.state_manager import DominoesStateManager
+from haive.games.framework.base.agent import GameAgent
 
 # Import the UI module
 try:

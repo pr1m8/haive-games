@@ -14,7 +14,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from .dominoes.state import DominoesState
+from haive.games.dominoes.state import DominoesState
 
 logger = logging.getLogger(__name__)
 

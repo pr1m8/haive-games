@@ -8,9 +8,9 @@ from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from .core.agent.player_agent import PlayerAgentConfig
-from .mastermind.config import MastermindConfig
-from .mastermind.generic_engines import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.mastermind.config import MastermindConfig
+from haive.games.mastermind.generic_engines import (
     create_generic_mastermind_config_from_example,
     create_generic_mastermind_engines,
     create_generic_mastermind_engines_simple,

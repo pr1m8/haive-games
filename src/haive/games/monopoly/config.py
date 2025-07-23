@@ -51,15 +51,15 @@ import uuid
 from enum import Enum
 from typing import Any, Literal
 
+from haive.core.config.runnable import RunnableConfigManager
+from haive.core.engine.agent.config import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-from .config.runnable import RunnableConfigManager
-from .engine.agent.config import AgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .monopoly.player_agent import PlayerDecisionState
-from .monopoly.state import MonopolyState
-from .monopoly.utils import create_board, create_players, shuffle_cards
+from haive.games.monopoly.player_agent import PlayerDecisionState
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class GameDifficulty(str, Enum):

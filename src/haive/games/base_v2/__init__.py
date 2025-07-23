@@ -1,15 +1,3 @@
-"""Base V2 - TODO: Add brief description
+"""Module exports."""
 
-TODO: Add detailed description of module functionality
-
-
-
-Example:
-    Basic usage::
-
-        from haive.base_v2 import module_function
-
-        # TODO: Add example
-
-
-"""
+__all__ = []

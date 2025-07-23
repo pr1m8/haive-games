@@ -26,11 +26,12 @@ import json
 import logging
 import time
 
-from .checkers.agent import CheckersAgent
-from .checkers.config import CheckersAgentConfig
-from .checkers.state import CheckersState
-from .checkers.state_manager import CheckersStateManager
-from .engine.aug_llm import AugLLMConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+
+from haive.games.checkers.agent import CheckersAgent
+from haive.games.checkers.config import CheckersAgentConfig
+from haive.games.checkers.state import CheckersState
+from haive.games.checkers.state_manager import CheckersStateManager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")

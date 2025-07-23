@@ -6,15 +6,15 @@ with proper handling of BaseModel objects from LangGraph instead of dictionaries
 
 from typing import Any
 
+from haive.core.engine.agent.agent import Agent, register_agent
+from haive.core.engine.agent.config import AgentConfig
 from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from .engine.agent.agent import Agent, register_agent
-from .engine.agent.config import AgentConfig
-from .monopoly.models import GameEvent, PlayerActionType
-from .monopoly.state import MonopolyState
-from .monopoly.utils import (
+from haive.games.monopoly.models import GameEvent, PlayerActionType
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import (
     check_game_end,
     get_property_at_position,
     move_player,

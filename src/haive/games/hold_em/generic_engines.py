@@ -4,17 +4,17 @@ This module provides generic engine creation functions for Texas Hold'em games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .core.agent.generic_player_agent import (
+from haive.games.core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from .core.agent.player_agent import PlayerAgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .hold_em.models import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.hold_em.models import (
     BettingDecision,
     PlayerDecisionModel,
     PokerAnalysis,

@@ -4,12 +4,12 @@ This module provides the main agent interface for Monopoly games,
 wrapping the game agent and providing a simplified interface.
 """
 
-from .monopoly.game_agent import MonopolyGameAgent, MonopolyGameAgentConfig
-from .monopoly.player_agent import (
+from haive.games.monopoly.game_agent import MonopolyGameAgent, MonopolyGameAgentConfig
+from haive.games.monopoly.player_agent import (
     MonopolyPlayerAgent,
     MonopolyPlayerAgentConfig,
 )
-from .monopoly.state import MonopolyState
+from haive.games.monopoly.state import MonopolyState
 
 # Export the main classes for easy importing
 __all__ = [

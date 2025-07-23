@@ -10,14 +10,14 @@ This module provides utility functions for the monopoly game, including:
 import random
 from typing import Any
 
-from .monopoly.models import (
+from haive.games.monopoly.models import (
     DiceRoll,
     Player,
     Property,
     PropertyColor,
     PropertyType,
 )
-from .monopoly.state import MonopolyState
+from haive.games.monopoly.state import MonopolyState
 
 # Board positions and property definitions
 BOARD_PROPERTIES = {

@@ -30,8 +30,8 @@ from typing import Any
 from pydantic import Field
 
 # Import the actual MultiPlayerGameState class
-from .framework.multi_player.state import MultiPlayerGameState
-from .mafia.models import (
+from haive.games.framework.multi_player.state import MultiPlayerGameState
+from haive.games.mafia.models import (
     GamePhase,
     MafiaAction,
     NarratorAction,

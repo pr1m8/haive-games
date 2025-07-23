@@ -16,8 +16,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from .monopoly.test import MonopolyAgentTester
-from .poker.test import PokerAgentTester
+from haive.games.monopoly.test import MonopolyAgentTester
+from haive.games.poker.test import PokerAgentTester
 
 # Configure logging
 logging.basicConfig(

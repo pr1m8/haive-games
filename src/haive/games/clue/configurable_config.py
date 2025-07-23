@@ -8,13 +8,13 @@ from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from .clue.config import ClueConfig
-from .clue.generic_engines import (
+from haive.games.clue.config import ClueConfig
+from haive.games.clue.generic_engines import (
     create_generic_clue_config_from_example,
     create_generic_clue_engines,
     create_generic_clue_engines_simple,
 )
-from .core.agent.player_agent import PlayerAgentConfig
+from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 
 class ConfigurableClueConfig(ClueConfig):

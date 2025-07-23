@@ -31,10 +31,11 @@ import logging
 from typing import Any
 
 # Local imports
-from .engine.agent.agent import register_agent
-from .framework.multi_player.agent import MultiPlayerGameAgent
-from .mafia.config import MafiaAgentConfig
-from .mafia.models import (
+from haive.core.engine.agent.agent import register_agent
+
+from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
+from haive.games.mafia.config import MafiaAgentConfig
+from haive.games.mafia.models import (
     ActionType,
     GamePhase,
     MafiaAction,
@@ -43,8 +44,8 @@ from .mafia.models import (
     NarratorDecision,
     PlayerRole,
 )
-from .mafia.state import MafiaGameState
-from .mafia.state_manager import MafiaStateManager
+from haive.games.mafia.state import MafiaGameState
+from haive.games.mafia.state_manager import MafiaStateManager
 
 # Third-party imports
 

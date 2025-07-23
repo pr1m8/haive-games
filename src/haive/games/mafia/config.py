@@ -18,13 +18,13 @@ Example:
     >>> print(config.max_days)  # Shows 3
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-from .engine.aug_llm import AugLLMConfig
-from .framework.multi_player.config import MultiPlayerGameConfig
-from .mafia.engines import aug_llm_configs
-from .mafia.models import PlayerRole
-from .mafia.state import MafiaGameState
+from haive.games.framework.multi_player.config import MultiPlayerGameConfig
+from haive.games.mafia.engines import aug_llm_configs
+from haive.games.mafia.models import PlayerRole
+from haive.games.mafia.state import MafiaGameState
 
 
 class MafiaAgentConfig(MultiPlayerGameConfig):

@@ -15,15 +15,4 @@ from api.setup import (
     create_tic_tac_toe_api,
 )
 
-__all__ = [
-    "GameAPIConfig",
-    "GameInfo",
-    "GameSelectionRequest",
-    "GeneralGameAPI",
-    "create_chess_api",
-    "create_connect4_api",
-    "create_game_api",
-    "create_general_game_api",
-    "create_tic_tac_toe_api",
-    "custom_openapi",
-]
+__all__ = []

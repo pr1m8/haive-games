@@ -5,6 +5,8 @@ from typing import Any, TypeVar
 from haive.core.engine.agent.agent import AgentConfig
 from pydantic import Field, computed_field, field_validator
 
+from haive.games.base.models import GameState
+
 
 class GamePlayerType(Enum):
     SinglePlayer = "single_player"

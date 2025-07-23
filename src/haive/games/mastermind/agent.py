@@ -2,16 +2,16 @@ import logging
 import time
 from typing import Any
 
+from haive.core.engine.agent.agent import register_agent
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.types import Command
 from rich.console import Console
 
-from .engine.agent.agent import register_agent
-from .framework.base.agent import GameAgent
-from .graph.dynamic_graph_builder import DynamicGraph
-from .mastermind.config import MastermindConfig
-from .mastermind.models import ColorCode, MastermindGuess
-from .mastermind.state import MastermindState
-from .mastermind.state_manager import MastermindStateManager
+from haive.games.framework.base.agent import GameAgent
+from haive.games.mastermind.config import MastermindConfig
+from haive.games.mastermind.models import ColorCode, MastermindGuess
+from haive.games.mastermind.state import MastermindState
+from haive.games.mastermind.state_manager import MastermindStateManager
 
 # Import the UI module
 try:

@@ -4,17 +4,17 @@ This module provides generic engine creation functions for Monopoly games,
 allowing for configurable LLM models and game-specific player identifiers.
 """
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from .core.agent.generic_player_agent import (
+from haive.games.core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
     GenericPromptGenerator,
     create_engines_from_simple_configs,
 )
-from .core.agent.player_agent import PlayerAgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .monopoly.models import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.monopoly.models import (
     BuildingDecision,
     JailDecision,
     PlayerAnalysis,
@@ -32,6 +32,9 @@ class MonopolyPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
 
 class MonopolyPromptGenerator(GenericPromptGenerator[str, str]):
     """Prompt generator for Monopoly game."""
+
+    def __init__(self, players: GamePlayerIdentifiers[str, str]):
+        super().__init__(players)
 
     def create_move_prompt(self, player: str) -> ChatPromptTemplate:
         """Create move prompt for Monopoly player."""
@@ -113,13 +116,25 @@ class MonopolyPromptGenerator(GenericPromptGenerator[str, str]):
             ]
         )
 
+    def create_analysis_prompt(self, player: str) -> ChatPromptTemplate:
+        """Create analysis prompt - alias for create_analyzer_prompt."""
+        return self.create_analyzer_prompt(player)
+
+    def get_analysis_output_model(self, role: str) -> type:
+        """Get analysis output model."""
+        return PlayerAnalysis
+
+    def get_move_output_model(self, role: str) -> type:
+        """Get move output model."""
+        return PropertyDecision
+
 
 class MonopolyEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Monopoly game engines."""
 
     def __init__(self) -> None:
         identifiers = MonopolyPlayerIdentifiers()
-        prompt_generator = MonopolyPromptGenerator()
+        prompt_generator = MonopolyPromptGenerator(identifiers)
         super().__init__(identifiers, prompt_generator)
 
     def get_structured_output_model(self, role: str) -> type:

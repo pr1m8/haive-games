@@ -1,6 +1,5 @@
 """Base models for game agents.
 
-from typing import Any
 This module provides the foundational data models used across game agents.
 It includes models for game state, player state, moves, and other common
 game-related data structures.
@@ -17,7 +16,7 @@ Typical usage:
 
 import time
 from abc import ABC
-from typing import Generic, Literal, TypeVar
+from typing import Any, Generic, Literal, TypeVar
 
 from pydantic import BaseModel, Field, field_validator
 

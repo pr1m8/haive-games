@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Import the agent setup function
-from .monopoly.integration import setup_monopoly_agent
+from haive.games.monopoly.integration import setup_monopoly_agent
 
 
 def main():

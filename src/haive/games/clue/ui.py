@@ -43,14 +43,14 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from .clue.models import (
+from haive.games.clue.models import (
     ClueGuess,
     ClueResponse,
     ValidRoom,
     ValidSuspect,
     ValidWeapon,
 )
-from .clue.state import ClueState
+from haive.games.clue.state import ClueState
 
 
 class ClueUI:

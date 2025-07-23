@@ -12,22 +12,22 @@ player decisions in Monopoly, including:
 import operator
 from typing import Annotated, Any
 
+from haive.core.engine.agent.agent import Agent, register_agent
+from haive.core.engine.agent.config import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.schema.prebuilt.messages_state import MessagesState
 from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field, computed_field
 
-from .engine.agent.agent import Agent, register_agent
-from .engine.agent.config import AgentConfig
-from .engine.aug_llm import AugLLMConfig
-from .monopoly.models import (
+from haive.games.monopoly.models import (
     BuildingDecision,
     JailDecision,
     PlayerActionType,
     PropertyDecision,
     TradeResponse,
 )
-from .monopoly.state import MonopolyState
-from .schema.prebuilt.messages_state import MessagesState
+from haive.games.monopoly.state import MonopolyState
 
 
 class PlayerDecisionState(MessagesState):
@@ -86,12 +86,12 @@ This module provides corrected configuration classes for the monopoly game agent
 import uuid
 from typing import Any
 
+from haive.core.config.runnable import RunnableConfigManager
 from langchain_core.runnables import RunnableConfig
 from pydantic import Field
 
-from .config.runnable import RunnableConfigManager
-from .monopoly.state import MonopolyState
-from .monopoly.utils import create_board, create_players, shuffle_cards
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class MonopolyPlayerAgentConfig(AgentConfig):

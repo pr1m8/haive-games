@@ -29,19 +29,19 @@ Typical usage:
 from collections.abc import Callable
 from typing import Any, TypeVar
 
+from haive.core.engine.agent.agent import Agent, register_agent
+from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.constants import END, START
 from langgraph.graph import StateGraph
 from pydantic import BaseModel
 
-from .engine.agent.agent import Agent, register_agent
-from .engine.aug_llm import AugLLMConfig
-from .framework.base import (
+from haive.games.framework.base import (
     GameAgent,
     GameConfig,
     GameState,
     GameStateManager,
 )
-from .graph.dynamic_graph_builder import DynamicGraph
 
 # Type variable for generic state
 T = TypeVar("T", bound=BaseModel)

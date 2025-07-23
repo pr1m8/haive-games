@@ -8,9 +8,9 @@ from typing import Any, Dict, Optional
 
 from pydantic import Field
 
-from .core.agent.player_agent import PlayerAgentConfig
-from .mafia.config import MafiaConfig
-from .mafia.generic_engines import (
+from haive.games.core.agent.player_agent import PlayerAgentConfig
+from haive.games.mafia.config import MafiaConfig
+from haive.games.mafia.generic_engines import (
     create_generic_mafia_config_from_example,
     create_generic_mafia_engines,
     create_generic_mafia_engines_simple,

@@ -8,9 +8,9 @@ It shows the basic game flow and state transitions.
 import random
 import time
 
-from .mafia.models import ActionType, GamePhase, MafiaAction, PlayerRole
-from .mafia.state import MafiaGameState
-from .mafia.state_manager import MafiaStateManager
+from haive.games.mafia.models import ActionType, GamePhase, MafiaAction, PlayerRole
+from haive.games.mafia.state import MafiaGameState
+from haive.games.mafia.state_manager import MafiaStateManager
 
 
 def run_simple_demo():

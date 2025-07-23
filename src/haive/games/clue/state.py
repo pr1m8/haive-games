@@ -63,7 +63,7 @@ from typing import Any, Literal
 
 from pydantic import Field
 
-from .clue.models import (
+from haive.games.clue.models import (
     ClueGuess,
     ClueResponse,
     ClueSolution,
@@ -71,7 +71,7 @@ from .clue.models import (
     ValidSuspect,
     ValidWeapon,
 )
-from .framework.base.state import GameState
+from haive.games.framework.base.state import GameState
 
 
 class ClueState(GameState):

@@ -11,9 +11,10 @@ import logging
 from typing import Any
 
 # Local imports
-from .engine.agent.agent import Agent, register_agent
-from .monopoly.config import MonopolyGameAgentConfig
-from .monopoly.state import MonopolyState
+from haive.core.engine.agent.agent import Agent, register_agent
+
+from haive.games.monopoly.config import MonopolyGameAgentConfig
+from haive.games.monopoly.state import MonopolyState
 
 logger = logging.getLogger(__name__)
 
