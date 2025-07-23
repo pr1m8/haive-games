@@ -3,7 +3,6 @@
 
 import ast
 import importlib.util
-import os
 import sys
 from pathlib import Path
 

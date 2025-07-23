@@ -35,7 +35,7 @@ patterns = [
 
 # Process all Python files
 fixed_files = []
-for root, dirs, files in os.walk(monopoly_dir):
+for root, _dirs, files in os.walk(monopoly_dir):
     for file in files:
         if file.endswith(".py"):
             filepath = os.path.join(root, file)
