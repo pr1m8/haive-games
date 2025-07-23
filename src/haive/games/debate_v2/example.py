@@ -156,7 +156,7 @@ def example_2_ai_regulation_tournament():
         final_scores = result.get("final_scores", {})
         winner = result.get("debate_winner")
 
-        print("\n🏆 TOURNAMENT RESULTS"TS")
+        print("\n🏆 TOURNAMENT RESULTSTS")
         print(f"📋 Match ID: {debate.match_id}")
         print(f"🎯 Topic: {debate.topic}")
 
@@ -176,7 +176,7 @@ def example_2_ai_regulation_tournament():
         total_args = result.get("total_arguments", 0)
         total_rebuttals = result.get("total_rebuttals", 0)
 
-        print("\n📈 Match Statistics:"s:")
+        print("\n📈 Match Statistics:s:")
         print(f"  • Total Arguments: {total_args}")
         print(f"  • Total Rebuttals: {total_rebuttals}")
         print(
@@ -244,7 +244,7 @@ def example_3_rapid_fire_debate():
         final_scores = result.get("final_scores", {})
         winner = result.get("debate_winner")
 
-        print("\n⚡ SPEED ROUND RESULTS"S")
+        print("\n⚡ SPEED ROUND RESULTSS")
         if final_scores:
             for player, score in final_scores.items():
                 print(f"  🏃 {player}: {score} points")

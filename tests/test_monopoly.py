@@ -18,7 +18,7 @@ def test_init():
 
     print("Testing end_player_turn...")
     state_obj = MonopolyState(**initialized_state)
-    updated_state = agent.end_player_turn(state_obj)
+    agent.end_player_turn(state_obj)
     print("end_player_turn executed successfully")
 
     return "Basic initialization tests passed"
@@ -47,7 +47,7 @@ def test_move():
 
     # Execute move
     print("Executing move...")
-    move_result = agent.execute_move(state_obj)
+    agent.execute_move(state_obj)
     print("Move execution successful")
 
     return "Move tests passed"
@@ -83,7 +83,7 @@ def test_property_management():
 
     # Execute property management
     print("Executing property management...")
-    property_result = agent.manage_properties(state_obj)
+    agent.manage_properties(state_obj)
     print("Property management successful")
 
     return "Property management tests passed"

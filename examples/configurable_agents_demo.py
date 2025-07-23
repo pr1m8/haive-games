@@ -215,7 +215,7 @@ def demo_real_game_execution():
     config.max_moves = 8
     config.should_visualize_graph = False
 
-    print("🏁 Game Setup:"p:")
+    print("🏁 Game Setup:p:")
     print(f"   White: {config.white_player_name}")
     print(f"   Black: {config.black_player_name}")
     print(f"   Max moves: {config.max_moves}")

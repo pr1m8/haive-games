@@ -21,7 +21,7 @@ def main():
         # Test MonopolyAgent creation
         from haive.games.monopoly.agent import MonopolyAgent
 
-        agent = MonopolyAgent(config=config)
+        MonopolyAgent(config=config)
         print("Success! MonopolyAgent created.")
 
         return 0

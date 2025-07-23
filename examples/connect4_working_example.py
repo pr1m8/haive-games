@@ -127,7 +127,7 @@ def demo_4_custom_player_configs():
         player_configs, enable_analysis=True
     )
 
-    print("✅ Custom configuration created:":")
+    print("✅ Custom configuration created::")
     print(f"   Red Player: {config.red_player_name}")
     print(f"   Yellow Player: {config.yellow_player_name}")
     print(f"   Analysis: {'Enabled' if config.enable_analysis else 'Disabled'}")
@@ -233,7 +233,7 @@ async def demo_7_async_execution():
         # Run async
         result = await Connect4API.run_game_async(agent, game_id)
 
-        print("✅ Async game completed!"!")
+        print("✅ Async game completed!!")
         print(f"   Status: {result.status.value}")
         print(f"   Total moves: {result.total_moves}")
         print(f"   Duration: {result.duration_seconds:.2f}s")

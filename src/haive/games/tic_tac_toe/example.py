@@ -375,7 +375,7 @@ def example_5_error_handling():
                 visualize=False,
                 first_player="X",
             )
-            console.print("[green]✓ Valid configuration created successfully[/green]"]")
+            console.print("[green]✓ Valid configuration created successfully[/green]")
         except Exception as e:
             console.print(f"[red]✗ Configuration failed: {e}[/red]")
 
