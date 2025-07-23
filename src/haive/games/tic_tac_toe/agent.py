@@ -48,7 +48,7 @@ Note:
 
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -193,7 +193,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
         )
 
     def prepare_move_context(self, state: TicTacToeState) -> dict[str, Any]:
-        """Prepare structured context for LLM move generation.
+        r"""Prepare structured context for LLM move generation.
 
         Creates a comprehensive context dictionary containing the current board
         state, legal moves, and previous analysis to enable informed decision-making

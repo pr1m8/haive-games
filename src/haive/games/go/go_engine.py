@@ -42,7 +42,6 @@ class GoGame:
             point = (self.board_size - 1 - row, col)
 
             # Check for captures before playing
-            opponent = "w" if color == "b" else "b"
 
             # Play the move
             try:

@@ -6,7 +6,7 @@ using different criteria and scoring methodologies.
 
 import logging
 from enum import Enum
-from typing import Any, Dict, List, Literal, Optional
+from typing import Dict, List, Optional
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -303,7 +303,7 @@ class DebateJudgingPanel:
             selected_profiles = []
             available_profiles = judge_profiles.copy()
 
-            for i in range(num_judges):
+            for _i in range(num_judges):
                 if not available_profiles:
                     available_profiles = judge_profiles.copy()
                 profile = random.choice(available_profiles)
@@ -432,15 +432,15 @@ class DebateJudgingPanel:
         """Create a comprehensive summary of the judging results."""
 
         summary_parts = [
-            f"🏛️ **JUDICIAL PANEL DECISION** 🏛️",
-            f"",
+            "🏛️ **JUDICIAL PANEL DECISION** 🏛️",
+            "",
             f"**Debate Topic**: {topic}",
             f"**Participants**: {', '.join(players)}",
             f"**Judges**: {', '.join([j.name for j in self.judges])}",
-            f"",
+            "",
             f"🏆 **WINNER**: {winner}",
             f"📊 **Margin of Victory**: {margin:.1%}",
-            f"",
+            "",
             "⚖️ **JUDGE BREAKDOWN**:",
         ]
 
@@ -511,7 +511,7 @@ def create_academic_judges(num_judges: int = 3) -> DebateJudgingPanel:
     if num_judges > len(academic_profiles):
         selected_profiles = []
         available = academic_profiles.copy()
-        for i in range(num_judges):
+        for _i in range(num_judges):
             if not available:
                 available = academic_profiles.copy()
             profile = random.choice(available)
@@ -560,7 +560,7 @@ def create_public_judges(num_judges: int = 3) -> DebateJudgingPanel:
     if num_judges > len(public_profiles):
         selected_profiles = []
         available = public_profiles.copy()
-        for i in range(num_judges):
+        for _i in range(num_judges):
             if not available:
                 available = public_profiles.copy()
             profile = random.choice(available)

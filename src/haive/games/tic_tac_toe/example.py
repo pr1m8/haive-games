@@ -45,7 +45,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 # Add the package to the path if running directly
 if __name__ == "__main__":
@@ -56,7 +56,6 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
-from rich.text import Text
 
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
@@ -272,7 +271,7 @@ def example_4_performance_testing():
 
             # Run multiple games for average
             num_games = 10
-            for i in range(num_games):
+            for _i in range(num_games):
                 fast_agent.run_game(visualize=False)
                 progress.update(task1, advance=1)
 
@@ -285,7 +284,7 @@ def example_4_performance_testing():
             slow_agent = TicTacToeAgent(slow_config)
             start_time = time.time()
 
-            for i in range(num_games):
+            for _i in range(num_games):
                 slow_agent.run_game(visualize=False)
                 progress.update(task2, advance=1)
 
@@ -360,10 +359,10 @@ def example_5_error_handling():
         # Test 1: Invalid move validation
         console.print("\n[bold]Test 1: Invalid Move Validation[/bold]")
         try:
-            invalid_move = TicTacToeMove(
+            TicTacToeMove(
                 row=5, col=5, player="X"
             )  # Invalid coordinates
-            console.print(f"[red]ERROR: Invalid move should have failed![/red]")
+            console.print("[red]ERROR: Invalid move should have failed![/red]")
         except ValueError as e:
             console.print(f"[green]✓ Correctly caught invalid move: {e}[/green]")
 
@@ -376,7 +375,7 @@ def example_5_error_handling():
                 visualize=False,
                 first_player="X",
             )
-            console.print(f"[green]✓ Valid configuration created successfully[/green]")
+            console.print("[green]✓ Valid configuration created successfully[/green]"]")
         except Exception as e:
             console.print(f"[red]✗ Configuration failed: {e}[/red]")
 
@@ -408,7 +407,7 @@ def example_5_error_handling():
         # Test 4: UI error handling
         console.print("\n[bold]Test 4: UI Error Handling[/bold]")
         try:
-            ui_runner = RichTicTacToeRunner(agent)
+            RichTicTacToeRunner(agent)
             console.print("[green]✓ UI runner created successfully[/green]")
 
             # Test UI components

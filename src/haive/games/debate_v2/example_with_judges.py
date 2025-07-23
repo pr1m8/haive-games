@@ -113,7 +113,6 @@ async def example_academic_judges():
     print()
 
     # Quick demo (shorter version)
-    config = {"configurable": {"thread_id": "academic_debate_demo"}}
 
     try:
         # For demo purposes, create a simplified debate
@@ -151,7 +150,7 @@ async def example_custom_judge_panel():
     custom_panel = DebateJudgingPanel(custom_judges)
 
     # Create debate with custom panel
-    debate = JudgedGameDebateAgent(
+    JudgedGameDebateAgent(
         name="CustomJudgedDebate_AI_Ethics",
         topic="Should AI systems be granted legal personhood status?",
         debate_positions={

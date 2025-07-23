@@ -5,9 +5,9 @@ hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 import logging
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 from haive.games.hold_em.config import HoldemGameAgentConfig

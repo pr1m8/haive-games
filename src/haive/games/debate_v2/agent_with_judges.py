@@ -4,14 +4,13 @@ This module extends the basic gamified debate with AI judge panels for
 sophisticated winner determination and performance evaluation.
 """
 
-import asyncio
 import logging
 from typing import Any, Dict, Literal, Optional
 
 from haive.agents.conversation.debate.state import DebateState
-from langchain_core.messages import BaseMessage, SystemMessage
+from langchain_core.messages import SystemMessage
 from langgraph.types import Command
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from haive.games.debate_v2.agent import GameDebateAgent
 from haive.games.debate_v2.judges import (
@@ -255,16 +254,16 @@ class JudgedGameDebateAgent(GameDebateAgent):
         final_scores = getattr(state, "player_scores", {})
 
         summary_parts = [
-            f"🏛️ **JUDGED DEBATE TOURNAMENT - FINAL DECISION** 🏛️",
-            f"",
+            "🏛️ **JUDGED DEBATE TOURNAMENT - FINAL DECISION** 🏛️",
+            "",
             f"📋 **Topic**: {self.topic}",
             f"👥 **Participants**: {', '.join(judgment.players)}",
             f"⚖️ **Judge Panel**: {self.judge_panel_type.title()} ({len(self.custom_judges.judges) if self.custom_judges else self.num_judges} judges)",
-            f"",
+            "",
             f"🏆 **OFFICIAL WINNER**: {judgment.overall_winner}",
             f"📊 **Margin of Victory**: {judgment.margin_of_victory:.1%}",
             f"🤝 **Judge Consensus**: {judgment.consensus_level:.1%}",
-            f"",
+            "",
             "🏅 **FINAL SCORES**:",
         ]
 
