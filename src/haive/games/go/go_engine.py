@@ -7,9 +7,24 @@ which is compatible with Python 3.12.
 import logging
 from typing import Optional, Tuple
 
-import sgfmill.boards
-import sgfmill.common
-import sgfmill.sgf
+# Handle optional sgfmill dependency
+try:
+    import sgfmill.boards
+    import sgfmill.common
+    import sgfmill.sgf
+
+    SGFMILL_AVAILABLE = True
+except ImportError:
+    SGFMILL_AVAILABLE = False
+
+    # Create dummy classes for when sgfmill is not available
+    class DummySgfmill:
+        def __getattr__(self, name):
+            raise ImportError(
+                f"sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
+            )
+
+    sgfmill = DummySgfmill()
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +33,11 @@ class GoGame:
     """Simple Go game wrapper using sgfmill."""
 
     def __init__(self, board_size: int = 19):
+        if not SGFMILL_AVAILABLE:
+            raise ImportError(
+                "sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
+            )
+
         self.board_size = board_size
         self.board = sgfmill.boards.Board(board_size)
         self.move_history = []

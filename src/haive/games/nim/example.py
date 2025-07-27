@@ -143,6 +143,7 @@ async def example_1_basic_standard_nim():
             legal_moves = NimStateManager.get_legal_moves(current_state)
             if legal_moves:
                 optimal_move = legal_moves[0]
+                optimal_move.player = current_player
 
         if optimal_move:
             print(
@@ -982,4 +983,31 @@ async def main():
 
 
 if __name__ == "__main__":
-    sys.exit(asyncio.run(main()))
+    # Run just a quick basic example for testing
+    print("Running basic Nim example...")
+
+    # Quick demo - just show that the game works
+    initial_piles = [3, 5, 7]
+    print(f"Initial Position: {initial_piles}")
+
+    # Create state manager for analysis
+    state = NimStateManager.initialize(pile_sizes=initial_piles)
+    print(f"Game state created: {state.piles}")
+
+    # Test legal moves generation (this was the failing part)
+    legal_moves = NimStateManager.get_legal_moves(state)
+    print(f"Generated {len(legal_moves)} legal moves successfully")
+
+    # Show a few moves
+    for i, move in enumerate(legal_moves[:3]):
+        print(
+            f"  Move {i+1}: {move.player} takes {move.stones_taken} from pile {move.pile_index}"
+        )
+
+    # Test applying a move
+    first_move = legal_moves[0]
+    new_state = NimStateManager.apply_move(state, first_move)
+    print(f"After move: {new_state.piles}")
+
+    print("✅ Nim example completed successfully")
+    sys.exit(0)

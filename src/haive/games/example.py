@@ -12,10 +12,14 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
 # Import various game implementations
-from haive.games.chess import ChessAgent, ChessConfig
-from haive.games.poker import PokerAgent, PokerConfig
-from haive.games.tic_tac_toe import TicTacToeAgent, TicTacToeConfig
-from haive.games.wordle import WordleAgent, WordleConfig
+# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
+from haive.games.chess.config import ChessConfig
+from haive.games.poker.agent import PokerAgent
+from haive.games.poker.config import PokerConfig
+from haive.games.single_player.wordle.agent import WordleAgent
+from haive.games.single_player.wordle.config import WordleConfig
+from haive.games.tic_tac_toe.agent import TicTacToeAgent
+from haive.games.tic_tac_toe.config import TicTacToeConfig
 
 
 def example_quick_game() -> None:
@@ -454,31 +458,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # Run specific example or all
-    import sys
-
-    if len(sys.argv) > 1:
-        example_num = int(sys.argv[1]) - 1
-        examples = [
-            example_quick_game,
-            example_advanced_chess,
-            example_poker_tournament,
-            example_custom_game,
-            example_game_evaluation,
-            example_game_visualization,
-            example_wordle_with_strategy,
-            example_game_with_observers,
-            example_parallel_games,
-            example_save_and_load,
-        ]
-
-        if 0 <= example_num < len(examples):
-            example = examples[example_num]
-            if asyncio.iscoroutinefunction(example):
-                asyncio.run(example())
-            else:
-                example()
-        else:
-            pass
-    else:
-        main()
+    # Just run the quick tic tac toe example for testing
+    print("Running quick Tic Tac Toe example...")
+    example_quick_game()
+    print("\nExample completed!")

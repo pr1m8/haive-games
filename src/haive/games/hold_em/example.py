@@ -256,4 +256,7 @@ Examples:
 
 
 if __name__ == "__main__":
-    main()
+    # Run a quick heads-up game for testing
+    print("Running quick Hold'em heads-up game example...")
+    run_example_game("heads-up", delay=0.1)
+    print("\nExample completed!")

@@ -56,7 +56,7 @@ from typing import Any, Dict
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
-from langgraph.graph import END
+from langgraph.graph import END, START
 from langgraph.types import Command
 
 from haive.games.debate.config import DebateAgentConfig
@@ -1124,6 +1124,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         gb.add_node("handle_phase_transition", self.handle_phase_transition)
 
         # Add the edges
+        gb.add_edge(START, "initialize")  # Add edge from START
         gb.add_edge("initialize", "debate_setup")
         gb.add_edge("debate_setup", "handle_participant_turn")
         gb.add_edge("handle_participant_turn", "handle_participant_turn")

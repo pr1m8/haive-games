@@ -260,7 +260,7 @@ def create_board() -> dict[str, Property]:
                 property_type=property_type,
                 color=PropertyColor(prop_data["color"]),
                 price=prop_data.get("price", 0),
-                rent=prop_data.get("rent", [0]),
+                rent=prop_data.get("rent", [0, 0, 0, 0, 0, 0]),
                 house_cost=prop_data.get("house_cost", 0),
                 mortgage_value=prop_data.get("mortgage_value", 0),
             )
@@ -272,7 +272,7 @@ def create_board() -> dict[str, Property]:
                 property_type=property_type,
                 color=PropertyColor(prop_data["color"]),
                 price=0,
-                rent=[0],
+                rent=[0, 0, 0, 0, 0, 0],
                 house_cost=0,
                 mortgage_value=0,
             )
@@ -549,7 +549,7 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
             property_type=PropertyType(position_data["type"]),
             color=PropertyColor(position_data["color"]),
             price=position_data.get("price", 0),
-            rent=position_data.get("rent", [0]),
+            rent=position_data.get("rent", [0, 0, 0, 0, 0, 0]),
             house_cost=position_data.get("house_cost", 0),
             mortgage_value=position_data.get("mortgage_value", 0),
         )

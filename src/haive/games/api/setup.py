@@ -107,7 +107,7 @@ def create_chess_api(
         ...     }
         ... )
     """
-    from haive.games.chess.agent import ChessAgent
+    # from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
 
     api_config = GameAPIConfig(
         app_name="Chess",

@@ -32,22 +32,27 @@ class NimStateManager(GameStateManager[NimState]):
         return NimState(piles=pile_sizes)
 
     @classmethod
-    def get_legal_moves(cls, state: NimState) -> list[NimMove]:
+    def get_legal_moves(cls, state: NimState, player: str = None) -> list[NimMove]:
         """Get all legal moves for the current state.
 
         Args:
             state: The current game state.
+            player: The player making the moves. If None, uses current player from state.
 
         Returns:
             List[NimMove]: A list of all legal moves.
         """
         legal_moves = []
 
+        # Use current player from state if not provided
+        if player is None:
+            player = state.turn
+
         for pile_idx, pile_size in enumerate(state.piles):
             if pile_size > 0:
                 for stones in range(1, pile_size + 1):
                     legal_moves.append(
-                        NimMove(pile_index=pile_idx, stones_taken=stones)
+                        NimMove(pile_index=pile_idx, stones_taken=stones, player=player)
                     )
 
         return legal_moves

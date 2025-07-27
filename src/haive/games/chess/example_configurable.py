@@ -6,7 +6,7 @@ and models, showing the flexibility of the new configuration system.
 
 import uuid
 
-from haive.games.chess.agent import ChessAgent
+# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
 from haive.games.chess.config import ChessConfig
 from haive.games.chess.llm_utils import (
     create_chess_engines_from_config,

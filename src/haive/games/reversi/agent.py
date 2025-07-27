@@ -3,6 +3,7 @@ from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langgraph.graph import START
 from langgraph.types import Command
 
 from haive.games.framework.base.agent import GameAgent
@@ -425,6 +426,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         builder.add_node("analyze_W", self.analyze_W)
 
         # Set up the game flow
+        builder.add_edge(START, "initialize")  # Add START edge
         builder.add_edge(
             "initialize",
             "make_B_move" if self.config.first_player == "B" else "make_W_move",

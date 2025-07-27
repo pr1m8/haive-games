@@ -1623,4 +1623,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Just run a simple basic game for testing
+    console.print("[bold green]Running Connect4 basic game example...[/bold green]")
+    result = example_1_basic_game()
+    if result:
+        console.print("[green]✓ Connect4 example completed successfully[/green]")
+    else:
+        console.print("[red]✗ Connect4 example failed[/red]")

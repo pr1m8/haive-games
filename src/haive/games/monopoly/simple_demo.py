@@ -203,7 +203,7 @@ def handle_property_landing(state: MonopolyState, position: int) -> list[GameEve
             property_type=PropertyType(position_data["type"]),
             color=PropertyColor(position_data["color"]),
             price=position_data.get("price", 0),
-            rent=position_data.get("rent", [0]),
+            rent=position_data.get("rent", [0, 0, 0, 0, 0, 0]),
             house_cost=position_data.get("house_cost", 0),
             mortgage_value=position_data.get("mortgage_value", 0),
         )
