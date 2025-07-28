@@ -62,7 +62,8 @@ from haive.games.debate.state import DebateState
 
 
 class DebateAgentConfig(AgentConfig):
-    """Comprehensive configuration for debate agents with format-specific settings.
+    """Comprehensive configuration for debate agents with format-specific
+    settings.
 
     This configuration class provides extensive customization options for debate
     agents, supporting various debate formats, role assignments, timing controls,
