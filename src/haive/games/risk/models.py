@@ -929,7 +929,8 @@ class RiskMove(BaseModel):
     @computed_field
     @property
     def is_aggressive(self) -> bool:
-        """Determine if this move is aggressive (attack or large army placement).
+        """Determine if this move is aggressive (attack or large army
+        placement).
 
         Returns:
             bool: True if move represents aggressive action.

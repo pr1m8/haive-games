@@ -1,7 +1,7 @@
 """State model for the Risk game.
 
-This module defines the state model for the Risk game, tracking the
-game board, player information, and game status.
+This module defines the state model for the Risk game, tracking the game
+board, player information, and game status.
 """
 
 import random

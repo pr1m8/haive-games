@@ -1,7 +1,7 @@
 """Risk game engines.
 
-This module defines engine configurations for the Risk game,
-including state management, analysis, and strategic planning.
+This module defines engine configurations for the Risk game, including
+state management, analysis, and strategic planning.
 """
 
 from typing import Any

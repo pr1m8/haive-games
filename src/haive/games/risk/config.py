@@ -64,7 +64,8 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class RiskConfig(BaseModel):
-    """Comprehensive configuration for Risk game variants with extensive customization.
+    """Comprehensive configuration for Risk game variants with extensive
+    customization.
 
     This configuration class provides complete control over Risk game mechanics,
     supporting classic rules, modern variants, tournament settings, and custom

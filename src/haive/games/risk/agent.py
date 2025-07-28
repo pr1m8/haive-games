@@ -58,7 +58,8 @@ from haive.games.risk.state import RiskState
 
 
 class RiskAgent(BaseModel):
-    """Advanced AI agent for strategic Risk gameplay with sophisticated decision-making.
+    """Advanced AI agent for strategic Risk gameplay with sophisticated
+    decision-making.
 
     This agent employs multi-layered strategic analysis to excel at the classic Risk
     board game, combining territorial evaluation, military logistics, continental
@@ -335,7 +336,8 @@ class RiskAgent(BaseModel):
         )
 
     def get_move(self) -> RiskMove:
-        """Determine optimal next move through strategic analysis and decision-making.
+        """Determine optimal next move through strategic analysis and decision-
+        making.
 
         Performs comprehensive position analysis and selects the best move based on
         current game state, agent strategy, risk tolerance, and historical performance.
@@ -482,7 +484,8 @@ class RiskAgent(BaseModel):
     def _generate_balanced_move(
         self, controlled_territories: List[Territory], position_evaluation: str
     ) -> RiskMove:
-        """Generate balanced move considering both offensive and defensive needs.
+        """Generate balanced move considering both offensive and defensive
+        needs.
 
         Args:
             controlled_territories (List[Territory]): Agent's controlled territories.
@@ -501,7 +504,8 @@ class RiskAgent(BaseModel):
     def _refine_move_with_strategy(
         self, base_move: RiskMove, analysis: RiskAnalysis
     ) -> RiskMove:
-        """Refine move recommendation based on agent strategy and risk tolerance.
+        """Refine move recommendation based on agent strategy and risk
+        tolerance.
 
         Args:
             base_move (RiskMove): Initial move recommendation.
