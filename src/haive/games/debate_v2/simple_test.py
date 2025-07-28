@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 def test_agent_creation() -> bool:
-    """Test that GameDebateAgent can be created without abstract method errors."""
+    """Test that GameDebateAgent can be created without abstract method
+    errors."""
     try:
         # Create gamified debate - this should NOT raise abstract method errors
         GameDebateAgent.create_tournament_match(

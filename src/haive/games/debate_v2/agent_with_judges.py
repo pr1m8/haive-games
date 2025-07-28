@@ -28,9 +28,9 @@ logger.setLevel(logging.INFO)
 class JudgedGameDebateAgent(GameDebateAgent):
     """Gamified debate agent with AI judge panel integration.
 
-    This agent extends the basic GameDebateAgent with sophisticated AI judge
-    evaluation for more nuanced winner determination and detailed performance
-    feedback from multiple judge perspectives.
+    This agent extends the basic GameDebateAgent with sophisticated AI
+    judge evaluation for more nuanced winner determination and detailed
+    performance feedback from multiple judge perspectives.
     """
 
     # Judge system configuration
