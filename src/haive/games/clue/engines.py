@@ -1,7 +1,7 @@
 """Engines for the Clue game.
 
-This module contains the engines for the Clue game,
-including the player engines, guess engines, and analysis engines.
+This module contains the engines for the Clue game, including the player
+engines, guess engines, and analysis engines.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig

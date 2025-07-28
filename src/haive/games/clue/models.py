@@ -1,4 +1,5 @@
-"""Comprehensive data models and enumerations for the Clue (Cluedo) mystery game implementation.
+"""Comprehensive data models and enumerations for the Clue (Cluedo) mystery
+game implementation.
 
 This module defines the core data structures, enumerations, and models used
 throughout the Clue game implementation. It includes the traditional game

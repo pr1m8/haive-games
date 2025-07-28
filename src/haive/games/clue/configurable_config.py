@@ -149,7 +149,8 @@ def create_clue_config(
     suspect_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableClueConfig:
-    """Create a configurable Clue configuration with simple model specifications.
+    """Create a configurable Clue configuration with simple model
+    specifications.
 
     Args:
         detective_model: Model for detective and analyzer
@@ -202,7 +203,8 @@ def create_clue_config_from_example(
 def create_clue_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableClueConfig:
-    """Create a configurable Clue configuration from detailed player configurations.
+    """Create a configurable Clue configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

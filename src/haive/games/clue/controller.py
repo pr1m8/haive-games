@@ -1,6 +1,7 @@
 """Controller for the Clue game.
 
-This module provides the game controller that manages the state and flow of the Clue game.
+This module provides the game controller that manages the state and flow
+of the Clue game.
 """
 
 import random

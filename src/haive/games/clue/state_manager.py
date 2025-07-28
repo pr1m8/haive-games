@@ -1,7 +1,7 @@
 """State manager for the Clue game.
 
-This module defines the state management for the Clue game,
-providing methods for game logic and state transitions.
+This module defines the state management for the Clue game, providing
+methods for game logic and state transitions.
 """
 
 from typing import Any
