@@ -1,7 +1,7 @@
 """Example script for running the Flow Free game agent.
 
-This script demonstrates how to configure and run the Flow Free game agent
-in different modes and difficulty levels.
+This script demonstrates how to configure and run the Flow Free game
+agent in different modes and difficulty levels.
 """
 
 import sys

@@ -1,7 +1,7 @@
 """State manager for Flow Free game logic and mechanics.
 
-This module handles game initialization, move validation, and state transitions
-for the Flow Free puzzle game.
+This module handles game initialization, move validation, and state
+transitions for the Flow Free puzzle game.
 """
 
 import random

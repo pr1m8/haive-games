@@ -95,7 +95,8 @@ class FlowFreeState(SinglePlayerGameState):
     def is_solved(self) -> bool:
         """Check if the puzzle is solved.
 
-        The puzzle is solved when all flows are completed and all cells are filled.
+        The puzzle is solved when all flows are completed and all cells
+        are filled.
         """
         # Check if all flows are completed
         if not all(flow.completed for flow in self.flows.values()):

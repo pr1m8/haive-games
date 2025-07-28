@@ -1,7 +1,7 @@
 """Flow Free game agent implementation.
 
-This module implements the agent for the Flow Free puzzle game,
-handling move generation, analysis, and game flow.
+This module implements the agent for the Flow Free puzzle game, handling
+move generation, analysis, and game flow.
 """
 
 import time
