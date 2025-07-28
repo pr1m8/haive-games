@@ -1,9 +1,8 @@
 """General API system for all haive games.
 
-from typing import Any
-This module provides a general-purpose API that automatically discovers
-all available games and creates endpoints for each one, with OpenAPI
-documentation and game selection capabilities.
+from typing import Any This module provides a general-purpose API that
+automatically discovers all available games and creates endpoints for
+each one, with OpenAPI documentation and game selection capabilities.
 """
 
 import importlib
