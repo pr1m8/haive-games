@@ -1,8 +1,8 @@
 """State for the Mancala game.
 
-This module defines the state for the Mancala game,
-which includes the board, turn, game status, move history,
-free turn, winner, and player analyses.
+This module defines the state for the Mancala game, which includes the
+board, turn, game status, move history, free turn, winner, and player
+analyses.
 """
 
 import json

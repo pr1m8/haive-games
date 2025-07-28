@@ -1,7 +1,7 @@
 """State manager for the Mancala game.
 
-This module defines the state manager for the Mancala game,
-which manages the state of the game and provides methods for initializing,
+This module defines the state manager for the Mancala game, which
+manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
@@ -21,12 +21,14 @@ logger = logging.getLogger(__name__)
 class MancalaStateManager(GameStateManager[MancalaState]):
     """Manager for Mancala game state.
 
-    This class provides methods for initializing, updating, and analyzing the game state.
+    This class provides methods for initializing, updating, and
+    analyzing the game state.
     """
 
     @classmethod
     def initialize(cls, **kwargs) -> MancalaState:
-        """Initialize a new Mancala game with a fresh board and default settings.
+        """Initialize a new Mancala game with a fresh board and default
+        settings.
 
         Args:
             **kwargs: Keyword arguments for game initialization.

@@ -1,7 +1,7 @@
 """Configuration for the Mancala game agent.
 
-This module defines the configuration for the Mancala game agent,
-which includes the game name, state schema, engine configurations,
+This module defines the configuration for the Mancala game agent, which
+includes the game name, state schema, engine configurations,
 enable_analysis, visualize, and stones_per_pit.
 """
 

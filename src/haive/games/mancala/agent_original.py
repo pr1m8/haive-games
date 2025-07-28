@@ -69,8 +69,8 @@ def ensure_game_state(
 class MancalaAgent(GameAgent[MancalaConfig]):
     """Agent for playing Mancala.
 
-    This class implements the Mancala game agent, which uses language models
-    to generate moves and analyze positions in the game.
+    This class implements the Mancala game agent, which uses language
+    models to generate moves and analyze positions in the game.
     """
 
     def __init__(self, config: MancalaConfig = MancalaConfig()):
@@ -579,8 +579,9 @@ class MancalaAgent(GameAgent[MancalaConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization, move making,
-        and analysis. Adds edges between nodes based on the current player's turn.
+        Creates a dynamic graph with nodes for game initialization, move
+        making, and analysis. Adds edges between nodes based on the
+        current player's turn.
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)

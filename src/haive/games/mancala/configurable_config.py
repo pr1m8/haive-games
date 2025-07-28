@@ -1,7 +1,7 @@
 """Configurable Mancala configuration using the generic player agent system.
 
-This module provides configurable Mancala game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Mancala game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -147,7 +147,8 @@ def create_mancala_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMancalaConfig:
-    """Create a configurable Mancala configuration with simple model specifications.
+    """Create a configurable Mancala configuration with simple model
+    specifications.
 
     Args:
         player1_model: Model for player1 and analyzer
@@ -200,7 +201,8 @@ def create_mancala_config_from_example(
 def create_mancala_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMancalaConfig:
-    """Create a configurable Mancala configuration from detailed player configurations.
+    """Create a configurable Mancala configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

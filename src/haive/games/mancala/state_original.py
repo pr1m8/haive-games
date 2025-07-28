@@ -1,8 +1,8 @@
 """State for the Mancala game.
 
-This module defines the state for the Mancala game,
-which includes the board, turn, game status, move history,
-free turn, winner, and player analyses.
+This module defines the state for the Mancala game, which includes the
+board, turn, game status, move history, free turn, winner, and player
+analyses.
 """
 
 import logging
@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 class MancalaState(GameState):
     """State for a Mancala game.
 
-    This class defines the structure of the Mancala game state,
-    which includes the board, turn, game status, move history,
-    free turn, winner, and player analyses.
+    This class defines the structure of the Mancala game state, which
+    includes the board, turn, game status, move history, free turn,
+    winner, and player analyses.
     """
 
     # The board has 14 pits:
