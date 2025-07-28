@@ -219,7 +219,7 @@ def create_checkers_config_from_player_configs(
         - "red_player": Red player configuration
         - "black_player": Black player configuration
         - "red_analyzer": Red analyzer configuration
-        - "black_analyzer": Black analyzer configuration
+        - "black_analyzef": Black analyzer configuration
 
     Example:
         >>> player_configs = {
