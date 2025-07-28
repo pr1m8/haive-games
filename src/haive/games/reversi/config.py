@@ -1,7 +1,7 @@
 """Configuration model for the Reversi (Othello) game agent.
 
-Defines game metadata, initial settings, and engine bindings used to drive
-the game loop and decision-making by language models.
+Defines game metadata, initial settings, and engine bindings used to
+drive the game loop and decision-making by language models.
 """
 
 from typing import Literal

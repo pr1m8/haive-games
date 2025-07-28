@@ -1,7 +1,7 @@
 """Configurable Reversi configuration using the generic player agent system.
 
-This module provides configurable Reversi game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Reversi game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -145,7 +145,8 @@ def create_reversi_config(
     white_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableReversiConfig:
-    """Create a configurable Reversi configuration with simple model specifications.
+    """Create a configurable Reversi configuration with simple model
+    specifications.
 
     Args:
         black_model: Model for black and analyzer
@@ -198,7 +199,8 @@ def create_reversi_config_from_example(
 def create_reversi_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableReversiConfig:
-    """Create a configurable Reversi configuration from detailed player configurations.
+    """Create a configurable Reversi configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

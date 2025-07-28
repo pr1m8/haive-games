@@ -1,4 +1,5 @@
-"""Example Reversi (Othello) game demonstrating the Haive Reversi implementation.
+"""Example Reversi (Othello) game demonstrating the Haive Reversi
+implementation.
 
 This module provides a simple example of running a Reversi game with AI players
 using the Haive framework. Reversi, also known as Othello, is a strategy board

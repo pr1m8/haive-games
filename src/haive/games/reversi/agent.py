@@ -18,7 +18,8 @@ class ReversiAgent(GameAgent[ReversiConfig]):
     """Agent for playing Reversi/Othello."""
 
     def __init__(self, config: ReversiConfig = ReversiConfig()):
-        """Initialize the Reversi agent with game configuration and state manager.
+        """Initialize the Reversi agent with game configuration and state
+        manager.
 
         Args:
             config (ReversiConfig): Configuration object defining player settings,
@@ -28,7 +29,8 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         super().__init__(config)
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
-        """Initialize a new Reversi game by constructing the initial game state.
+        """Initialize a new Reversi game by constructing the initial game
+        state.
 
         Args:
             state (Dict[str, Any]): Placeholder for incoming LangGraph state (not used directly).
@@ -93,7 +95,8 @@ class ReversiAgent(GameAgent[ReversiConfig]):
     def prepare_analysis_context(
         self, state: ReversiState, symbol: str
     ) -> dict[str, Any]:
-        """Prepare the prompt context for board analysis by the strategy engine.
+        """Prepare the prompt context for board analysis by the strategy
+        engine.
 
         Args:
             state (ReversiState): The current game state.

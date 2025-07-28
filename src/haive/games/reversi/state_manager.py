@@ -1,7 +1,7 @@
 """State manager for Reversi (Othello) game logic and mechanics.
 
-Handles legal move validation, disc flipping, game progression,
-skipping turns, win detection, and analysis updates.
+Handles legal move validation, disc flipping, game progression, skipping
+turns, win detection, and analysis updates.
 """
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -231,7 +231,8 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     def _get_flips(
         cls, board: list[list[str | None]], row: int, col: int, player: str
     ) -> set[tuple[int, int]]:
-        """Get the positions of opponent's discs that would be flipped by placing player's disc at (row, col).
+        """Get the positions of opponent's discs that would be flipped by
+        placing player's disc at (row, col).
 
         Args:
             board: The current board.
