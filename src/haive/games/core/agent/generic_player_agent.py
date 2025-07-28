@@ -65,8 +65,9 @@ class GamePlayerIdentifiers(BaseModel, Generic[PlayerType, PlayerType2]):
 class GenericGameRole(BaseModel, Generic[PlayerType]):
     """Generic game role definition using player type generics.
 
-    This class defines a role in a game (like "white_player" or "red_analyzer")
-    using generic types for type safety and reusability across games.
+    This class defines a role in a game (like "white_player" or
+    "red_analyzer") using generic types for type safety and reusability
+    across games.
     """
 
     role_name: str = Field(description="Name of the role (e.g., 'white_player')")
@@ -88,8 +89,8 @@ class GenericGameRole(BaseModel, Generic[PlayerType]):
 class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
     """Abstract base class for generating game-specific prompts using generics.
 
-    This class provides the interface for generating move and analysis prompts
-    for any two-player game using generic player types.
+    This class provides the interface for generating move and analysis
+    prompts for any two-player game using generic player types.
     """
 
     def __init__(self, players: GamePlayerIdentifiers[PlayerType, PlayerType2]):
@@ -123,8 +124,9 @@ class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
 class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
     """Generic factory for creating game engines using player type generics.
 
-    This factory creates AugLLMConfig engines for any two-player game using
-    the generic player agent system and type-safe player identifiers.
+    This factory creates AugLLMConfig engines for any two-player game
+    using the generic player agent system and type-safe player
+    identifiers.
     """
 
     def __init__(

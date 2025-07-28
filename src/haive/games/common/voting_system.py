@@ -1,7 +1,8 @@
 """Generalized AI Voting System for Game Winner Determination.
 
-This module provides a reusable voting system that can evaluate game performance
-across different game types using AI judges with specialized perspectives.
+This module provides a reusable voting system that can evaluate game
+performance across different game types using AI judges with specialized
+perspectives.
 """
 
 import logging
@@ -223,7 +224,8 @@ class GameVotingSystem:
 
     @classmethod
     def create_standard_judges(cls, num_judges: int = 3) -> "GameVotingSystem":
-        """Create standard judge panel with configurable size and randomized personalities.
+        """Create standard judge panel with configurable size and randomized
+        personalities.
 
         Args:
             num_judges: Number of judges to create (default: 3 to avoid ties)
