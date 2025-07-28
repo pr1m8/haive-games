@@ -1,8 +1,8 @@
 """Generic Checkers engines using the new generic player agent system.
 
-from typing import Any
-This module demonstrates how to use the generic player agent system for Checkers,
-showing the same pattern working across different games with different player identifiers.
+from typing import Any This module demonstrates how to use the generic
+player agent system for Checkers, showing the same pattern working
+across different games with different player identifiers.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -284,8 +284,8 @@ def compare_checkers_with_other_games() -> None:
 def create_multi_game_checkers_demo() -> Any:
     """Create engines for multiple games including checkers.
 
-    This demonstrates how the same configuration approach works
-    across different games with the generic system.
+    This demonstrates how the same configuration approach works across
+    different games with the generic system.
     """
     # Same models, different games
     model1 = "openai:gpt-4o"

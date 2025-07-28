@@ -1,7 +1,7 @@
 """Configurable Checkers configuration using the generic player agent system.
 
-This module provides configurable Checkers game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Checkers game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -151,7 +151,8 @@ class ConfigurableCheckersConfig(CheckersAgentConfig):
 def create_checkers_config(
     red_model: str = "gpt-4o", black_model: str = "claude-3-5-sonnet-20240620", **kwargs
 ) -> ConfigurableCheckersConfig:
-    """Create a configurable Checkers configuration with simple model specifications.
+    """Create a configurable Checkers configuration with simple model
+    specifications.
 
     Args:
         red_model: Model for red player and analyzer
@@ -204,7 +205,8 @@ def create_checkers_config_from_example(
 def create_checkers_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableCheckersConfig:
-    """Create a configurable Checkers configuration from detailed player configurations.
+    """Create a configurable Checkers configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

@@ -1,4 +1,5 @@
-r"""Comprehensive state management system for Checkers gameplay and strategic analysis.
+r"""Comprehensive state management system for Checkers gameplay and strategic
+analysis.
 
 This module provides sophisticated state models for Checkers games with complete
 support for board representation, move tracking, strategic analysis, and game
@@ -106,7 +107,8 @@ class GamePhase(str, Enum):
 
 
 class CheckersState(BaseModel):
-    r"""Comprehensive state model for Checkers gameplay with strategic analysis support.
+    r"""Comprehensive state model for Checkers gameplay with strategic analysis
+    support.
 
     This class provides complete state management for Checkers games, supporting
     both game mechanics and strategic analysis. The state system maintains board
@@ -307,7 +309,8 @@ class CheckersState(BaseModel):
     @computed_field
     @property
     def game_phase(self) -> GamePhase:
-        """Determine the current game phase based on piece count and move history.
+        """Determine the current game phase based on piece count and move
+        history.
 
         Returns:
             GamePhase: Current phase of the game (opening, middle, endgame, finished).

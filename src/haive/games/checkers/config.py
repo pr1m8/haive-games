@@ -1,4 +1,5 @@
-r"""Comprehensive configuration system for strategic Checkers gameplay and AI agents.
+r"""Comprehensive configuration system for strategic Checkers gameplay and AI
+agents.
 
 This module provides sophisticated configuration management for Checkers agents with
 support for rule variations, performance optimization, and strategic AI customization.
@@ -60,7 +61,8 @@ from haive.games.checkers.state import CheckersState
 
 
 class CheckersAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Checkers agents with comprehensive rule support.
+    r"""Advanced configuration system for Checkers agents with comprehensive
+    rule support.
 
     This class provides complete configuration management for Checkers gameplay,
     supporting multiple rule variants, strategic AI customization, and performance
