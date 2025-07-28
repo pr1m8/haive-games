@@ -493,7 +493,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             pass
 
             logger.error(
-                "Ship placement error for player",
+                "Ship placement error for playef",
                 extra={"player": player, "error": str(e)},
                 exc_info=True,
             )
@@ -593,7 +593,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         except Exception as e:
 
             logger.error(
-                "Move error for player",
+                "Move error for playef",
                 extra={"player": player, "error": str(e)},
                 exc_info=True,
             )

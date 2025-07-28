@@ -77,7 +77,7 @@ class ShipType(str, Enum):
     BATTLESHIP = "Battleship"  #: Heavy battleship, major combat vessel (4 squares)
     CRUISER = "Cruiser"  #: Medium cruiser, balanced warship (3 squares)
     SUBMARINE = "Submarine"  #: Submarine, stealth vessel (3 squares)
-    DESTROYER = "Destroyer"  #: Destroyer, smallest escort ship (2 squares)
+    DESTROYER = "Destroyef"  #: Destroyer, smallest escort ship (2 squares)
 
 
 # Ship sizes by type for validation and game logic
