@@ -101,24 +101,20 @@ class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
         self, player: Union[PlayerType, PlayerType2]
     ) -> ChatPromptTemplate:
         """Create a move generation prompt for the specified player."""
-        pass
 
     @abstractmethod
     def create_analysis_prompt(
         self, player: Union[PlayerType, PlayerType2]
     ) -> ChatPromptTemplate:
         """Create a position analysis prompt for the specified player."""
-        pass
 
     @abstractmethod
     def get_move_output_model(self) -> Type:
         """Get the structured output model for moves."""
-        pass
 
     @abstractmethod
     def get_analysis_output_model(self) -> Type:
         """Get the structured output model for analysis."""
-        pass
 
 
 class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
