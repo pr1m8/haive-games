@@ -197,9 +197,9 @@ class FoxAndGeesePosition(BaseModel):
 class FoxAndGeeseMove(BaseModel):
     """Represents a move in Fox and Geese.
 
-    This class defines the structure of a move in Fox and Geese,
-    which includes a starting position, an ending position,
-    a piece type, and an optional captured position.
+    This class defines the structure of a move in Fox and Geese, which
+    includes a starting position, an ending position, a piece type, and
+    an optional captured position.
     """
 
     # Enable frozen for consistency
@@ -234,10 +234,9 @@ class FoxAndGeeseMove(BaseModel):
 class FoxAndGeeseAnalysis(BaseModel):
     """Analysis of a Fox and Geese position.
 
-    This class defines the structure of an analysis of a Fox and Geese position,
-    which includes an advantage, an advantage level,
-    key features, fox strategy, geese strategy,
-    and critical squares.
+    This class defines the structure of an analysis of a Fox and Geese
+    position, which includes an advantage, an advantage level, key
+    features, fox strategy, geese strategy, and critical squares.
     """
 
     model_config = ConfigDict(frozen=True)

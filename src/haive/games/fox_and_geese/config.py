@@ -16,9 +16,10 @@ from haive.games.framework.base.config import GameConfig
 class FoxAndGeeseConfig(GameConfig):
     """Configuration for the Fox and Geese game agent.
 
-    This class defines the configuration for the Fox and Geese game agent,
-    which includes the game name, state schema, AugLLM configurations,
-    enable_analysis, visualize, recursion_limit and max_turns.
+    This class defines the configuration for the Fox and Geese game
+    agent, which includes the game name, state schema, AugLLM
+    configurations, enable_analysis, visualize, recursion_limit and
+    max_turns.
     """
 
     name: str = Field(default="fox_and_geese", description="Name of the game")

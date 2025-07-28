@@ -1,7 +1,8 @@
 """Enhanced Rich UI module for Fox and Geese game visualization.
 
-This module provides an enhanced rich console UI for visualizing the Fox and Geese game,
-with better styling, animated piece movements, and improved game information display.
+This module provides an enhanced rich console UI for visualizing the Fox
+and Geese game, with better styling, animated piece movements, and
+improved game information display.
 """
 
 import logging

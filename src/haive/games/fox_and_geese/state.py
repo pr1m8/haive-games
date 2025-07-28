@@ -1,4 +1,5 @@
-"""Comprehensive state management system for Fox and Geese gameplay and strategic analysis.
+"""Comprehensive state management system for Fox and Geese gameplay and
+strategic analysis.
 
 This module provides sophisticated state models for the classic Fox and Geese game
 with complete support for position tracking, strategic analysis, and game flow
@@ -69,7 +70,8 @@ from haive.games.framework.base.state import GameState
 
 
 class FoxAndGeeseState(GameState):
-    """Comprehensive state management for Fox and Geese gameplay with strategic analysis.
+    """Comprehensive state management for Fox and Geese gameplay with strategic
+    analysis.
 
     This class provides complete state management for the classic Fox and Geese game,
     supporting both traditional game mechanics and strategic analysis. The state system

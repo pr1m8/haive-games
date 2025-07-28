@@ -1,7 +1,7 @@
 """Engines for the Fox and Geese game.
 
-This module defines the engines for the Fox and Geese game,
-which includes the move and analysis prompts.
+This module defines the engines for the Fox and Geese game, which
+includes the move and analysis prompts.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -47,8 +47,8 @@ def generate_fox_move_prompt() -> ChatPromptTemplate:
 def generate_geese_move_prompt() -> ChatPromptTemplate:
     """Generate a prompt for the geese to make a move.
 
-    This function constructs a prompt template for the geese move engine,
-    which generates a move for the Fox and Geese game.
+    This function constructs a prompt template for the geese move
+    engine, which generates a move for the Fox and Geese game.
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -78,8 +78,9 @@ def generate_geese_move_prompt() -> ChatPromptTemplate:
 def generate_fox_analysis_prompt() -> ChatPromptTemplate:
     """Generate a prompt for analyzing the Fox's position.
 
-    This function constructs a prompt template for the fox analysis engine,
-    which analyzes the current game state from the perspective of the fox player.
+    This function constructs a prompt template for the fox analysis
+    engine, which analyzes the current game state from the perspective
+    of the fox player.
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -111,8 +112,9 @@ def generate_fox_analysis_prompt() -> ChatPromptTemplate:
 def generate_geese_analysis_prompt() -> ChatPromptTemplate:
     """Generate a prompt for analyzing the Geese's position.
 
-    This function constructs a prompt template for the geese analysis engine,
-    which analyzes the current game state from the perspective of the geese player.
+    This function constructs a prompt template for the geese analysis
+    engine, which analyzes the current game state from the perspective
+    of the geese player.
     """
     return ChatPromptTemplate.from_messages(
         [

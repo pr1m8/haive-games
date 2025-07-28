@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Enhanced example runner for Fox and Geese game with Rich UI visualization."""
+"""Enhanced example runner for Fox and Geese game with Rich UI
+visualization."""
 
 import argparse
 import time

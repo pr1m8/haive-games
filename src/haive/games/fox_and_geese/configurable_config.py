@@ -1,7 +1,8 @@
-"""Configurable FoxAndGeese configuration using the generic player agent system.
+"""Configurable FoxAndGeese configuration using the generic player agent
+system.
 
-This module provides configurable FoxAndGeese game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable FoxAndGeese game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -141,7 +142,8 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
 def create_fox_and_geese_config(
     fox_model: str = "gpt-4o", geese_model: str = "claude-3-5-sonnet-20240620", **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration with simple model specifications.
+    """Create a configurable FoxAndGeese configuration with simple model
+    specifications.
 
     Args:
         fox_model: Model for fox and analyzer
@@ -167,7 +169,8 @@ def create_fox_and_geese_config(
 def create_fox_and_geese_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration from a predefined example.
+    """Create a configurable FoxAndGeese configuration from a predefined
+    example.
 
     Args:
         example_name: Name of the example configuration
@@ -194,7 +197,8 @@ def create_fox_and_geese_config_from_example(
 def create_fox_and_geese_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration from detailed player configurations.
+    """Create a configurable FoxAndGeese configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -251,7 +255,8 @@ def create_advanced_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseCon
 
 
 def create_experimental_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseConfig:
-    """Create an experimental FoxAndGeese configuration with mixed providers."""
+    """Create an experimental FoxAndGeese configuration with mixed
+    providers."""
     return create_fox_and_geese_config_from_example("mixed", **kwargs)
 
 

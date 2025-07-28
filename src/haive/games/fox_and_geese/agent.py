@@ -1,7 +1,7 @@
 """Fox and Geese game agent with fixed state handling and UI integration.
 
-This module defines the Fox and Geese game agent, which uses language models
-to generate moves and analyze positions in the game.
+This module defines the Fox and Geese game agent, which uses language
+models to generate moves and analyze positions in the game.
 """
 
 # Standard library imports
@@ -90,8 +90,8 @@ def ensure_game_state(
 class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
     """Agent for playing Fox and Geese.
 
-    This class implements the Fox and Geese game agent, which uses language models
-    to generate moves and analyze positions in the game.
+    This class implements the Fox and Geese game agent, which uses
+    language models to generate moves and analyze positions in the game.
     """
 
     def __init__(self, config: FoxAndGeeseConfig = FoxAndGeeseConfig()):
@@ -771,8 +771,8 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization, move making,
-        and analysis. Uses the base GameAgent workflow pattern.
+        Creates a dynamic graph with nodes for game initialization, move
+        making, and analysis. Uses the base GameAgent workflow pattern.
         """
         logger.info("Setting up Fox and Geese workflow")
 
