@@ -1,7 +1,7 @@
 """Container models for game pieces in the game framework.
 
-This module defines containers for game pieces like decks of cards,
-bags of tiles, and player hands.
+This module defines containers for game pieces like decks of cards, bags
+of tiles, and player hands.
 """
 
 from __future__ import annotations
@@ -21,8 +21,8 @@ T = TypeVar("T", bound=GamePiece)
 class GamePieceContainer(BaseModel, Generic[T]):
     """Base container for game pieces.
 
-    This represents a collection of game pieces like a deck of cards,
-    a bag of tiles, or a player's hand.
+    This represents a collection of game pieces like a deck of cards, a
+    bag of tiles, or a player's hand.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -179,14 +179,16 @@ C = TypeVar("C", bound=Card)
 class Deck(GamePieceContainer[C]):
     """A deck of cards.
 
-    This represents a collection of cards that can be drawn, shuffled, and dealt.
+    This represents a collection of cards that can be drawn, shuffled,
+    and dealt.
     """
 
     face_down: bool = True  # Whether cards are hidden by default
     discard_pile: list[C] = Field(default_factory=list)
 
     def draw(self) -> C | None:
-        """Draw the top card and set its face up/down based on deck configuration.
+        """Draw the top card and set its face up/down based on deck
+        configuration.
 
         Returns:
             The drawn card, or None if deck is empty
@@ -273,8 +275,8 @@ class Deck(GamePieceContainer[C]):
 class PlayerHand(GamePieceContainer[T]):
     """A player's hand of pieces.
 
-    This represents the collection of pieces a player holds,
-    such as cards in a card game or tiles in Scrabble.
+    This represents the collection of pieces a player holds, such as
+    cards in a card game or tiles in Scrabble.
     """
 
     player_id: str

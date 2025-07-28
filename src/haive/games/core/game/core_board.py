@@ -26,8 +26,8 @@ class Board(BaseModel, Generic[S, P, T]):
     """Base class for all game boards.
 
     A Board represents the playing surface in a game, containing spaces
-    where pieces can be placed. It manages the spatial relationships between
-    spaces.
+    where pieces can be placed. It manages the spatial relationships
+    between spaces.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

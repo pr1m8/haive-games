@@ -79,8 +79,9 @@ class GameConfiguration(BaseModel):
 class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     """Base class for all games.
 
-    The Game class ties together all game components and implements the core game loop.
-    It manages the game state, players, turns, and rules.
+    The Game class ties together all game components and implements the
+    core game loop. It manages the game state, players, turns, and
+    rules.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -115,7 +116,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     def initialize(self) -> None:
         """Initialize the game.
 
-        This should be called after adding players and before starting the game.
+        This should be called after adding players and before starting
+        the game.
         """
         # Validate player count
         if not self.config.is_valid_player_count(len(self.players)):

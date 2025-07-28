@@ -1,7 +1,7 @@
 """Position models for the game framework.
 
-This module defines the base Position class and its specific implementations
-for different coordinate systems used in games.
+This module defines the base Position class and its specific
+implementations for different coordinate systems used in games.
 """
 
 from __future__ import annotations
@@ -15,8 +15,9 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 class Position(BaseModel):
     """Base class for all position types in games.
 
-    A Position represents a location in a game. Different games use different
-    coordinate systems, so this base class is extended for specific needs.
+    A Position represents a location in a game. Different games use
+    different coordinate systems, so this base class is extended for
+    specific needs.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -26,6 +27,7 @@ class Position(BaseModel):
 
     def __eq__(self, other: object) -> bool:
         """Check if positions are equal.
+
         Base implementation compares IDs; subclasses should override.
         """
         if not isinstance(other, Position):
@@ -80,8 +82,9 @@ class GridPosition(Position):
     def display_coords(self) -> str:
         """Return human-readable coordinates.
 
-        For chess-style notation, this returns coordinates like 'A1', 'B2', etc.
-        where the column is a letter (A-Z) and the row is a number (1-based).
+        For chess-style notation, this returns coordinates like 'A1',
+        'B2', etc. where the column is a letter (A-Z) and the row is a
+        number (1-based).
         """
         col_letter = chr(ord("A") + self.col)
         return f"{col_letter}{self.row + 1}"
@@ -128,7 +131,8 @@ class GridPosition(Position):
         """Calculate the Chebyshev distance to another grid position.
 
         This is the maximum of the horizontal and vertical distances,
-        which corresponds to the number of moves a king in chess would need.
+        which corresponds to the number of moves a king in chess would
+        need.
         """
         return max(abs(self.row - other.row), abs(self.col - other.col))
 
