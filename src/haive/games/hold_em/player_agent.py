@@ -56,13 +56,15 @@ logger = logging.getLogger(__name__)
 class PlayerSubgraphState(BaseModel):
     """State model for the player decision subgraph.
 
-    This model represents the complete state for a player's decision-making process,
-    including the inputs from the main game, intermediate analysis results, and the
-    final decision output. It tracks the entire decision pipeline from situation
-    analysis through hand analysis and opponent modeling to the final betting decision.
+    This model represents the complete state for a player's decision-
+    making process, including the inputs from the main game,
+    intermediate analysis results, and the final decision output. It
+    tracks the entire decision pipeline from situation analysis through
+    hand analysis and opponent modeling to the final betting decision.
 
-    The state is passed between nodes in the player's decision graph and accumulates
-    information at each step, ultimately producing a final poker action decision.
+    The state is passed between nodes in the player's decision graph and
+    accumulates information at each step, ultimately producing a final
+    poker action decision.
     """
 
     # Input from main game
@@ -94,13 +96,15 @@ class PlayerSubgraphState(BaseModel):
 class HoldemPlayerAgentConfig(AgentConfig):
     """Configuration for Hold'em player agent.
 
-    This configuration class defines the parameters for a Texas Hold'em player agent,
-    including player identity, playing style, risk tolerance, and the LLM engines
-    used for different aspects of decision-making.
+    This configuration class defines the parameters for a Texas Hold'em
+    player agent, including player identity, playing style, risk
+    tolerance, and the LLM engines used for different aspects of
+    decision-making.
 
-    The configuration is used to initialize a player agent with specific characteristics
-    and behavior patterns. Different combinations of style and risk_tolerance create
-    varied player behaviors from conservative to aggressive play.
+    The configuration is used to initialize a player agent with specific
+    characteristics and behavior patterns. Different combinations of
+    style and risk_tolerance create varied player behaviors from
+    conservative to aggressive play.
     """
 
     state_schema: type = Field(default=PlayerSubgraphState)
@@ -156,7 +160,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         self.error_log = []
 
     def _validate_required_engines(self) -> None:
-        """Validate that all required LLM engines are present and properly configured.
+        """Validate that all required LLM engines are present and properly
+        configured.
 
         This method checks that all the necessary engines for the player's decision
         pipeline exist and have the required attributes (structured_output_model and
@@ -521,7 +526,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             raise RuntimeError(error_msg) from e
 
     def _prepare_opponent_context(self, game_state, opponents) -> dict[str, str]:
-        """Prepare context dictionary for opponent analysis with error handling."""
+        """Prepare context dictionary for opponent analysis with error
+        handling."""
 
         # Helper to safely get position info
         def _get_position_info(game_state):
@@ -740,7 +746,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             raise RuntimeError(error_msg) from e
 
     def _normalize_decision(self, decision: Any) -> dict[str, Any]:
-        """Normalize different decision model formats to a consistent dictionary structure.
+        """Normalize different decision model formats to a consistent
+        dictionary structure.
 
         This method handles the conversion of various structured output formats into
         a standardized decision dictionary that can be used by the game agent. It's
@@ -865,7 +872,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _get_available_actions(
         self, game_state: HoldemState, player: PlayerState
     ) -> list[str]:
-        """Get list of available legal actions for the player in the current game state.
+        """Get list of available legal actions for the player in the current
+        game state.
 
         This method determines which poker actions are legally available to the player
         based on the current game state, betting situation, and player's chip stack.
@@ -920,7 +928,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _validate_decision(
         self, decision: dict[str, Any], game_state: HoldemState, player: PlayerState
     ) -> dict[str, Any]:
-        """Validate and correct a decision to ensure it's legal in the current game state.
+        """Validate and correct a decision to ensure it's legal in the current
+        game state.
 
         This method ensures that the LLM-generated decision is valid and legal according
         to poker rules. It checks that the chosen action is available, and that bet

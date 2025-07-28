@@ -84,6 +84,7 @@ def evaluate_hand_simple(
     hole_cards: list[str], community_cards: list[str]
 ) -> dict[str, any]:
     """Simple hand evaluation (placeholder for production poker evaluator).
+
     Returns hand rank, strength score, and description.
     """
     all_cards = hole_cards + community_cards

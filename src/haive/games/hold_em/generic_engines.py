@@ -1,7 +1,8 @@
 """Generic Hold'em engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Texas Hold'em games,
-allowing for configurable LLM models and game-specific player identifiers.
+This module provides generic engine creation functions for Texas Hold'em
+games, allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -216,7 +217,8 @@ def create_generic_holdem_config_from_example(
 
 
 def create_poker_pro_holdem_engines(**kwargs) -> dict[str, AugLLMConfig]:
-    """Create poker professional-style Hold'em engines with high-powered models."""
+    """Create poker professional-style Hold'em engines with high-powered
+    models."""
     return create_generic_holdem_config_from_example("poker_pros", **kwargs)
 
 

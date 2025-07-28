@@ -65,14 +65,15 @@ logger = logging.getLogger(__name__)
 class HoldemGameAgentConfig(AgentConfig):
     """Configuration for the main Hold'em game agent.
 
-    This configuration class defines the parameters for a Texas Hold'em game,
-    including the number of players, blinds, starting chips, game limits, and
-    player agent configurations. It encapsulates all the settings needed to
-    initialize and run a complete poker game.
+    This configuration class defines the parameters for a Texas Hold'em
+    game, including the number of players, blinds, starting chips, game
+    limits, and player agent configurations. It encapsulates all the
+    settings needed to initialize and run a complete poker game.
 
-    The configuration serves as the blueprint for creating a HoldemGameAgent
-    instance with specific game rules and player characteristics. It can be
-    created directly or through helper functions in the config module.
+    The configuration serves as the blueprint for creating a
+    HoldemGameAgent instance with specific game rules and player
+    characteristics. It can be created directly or through helper
+    functions in the config module.
     """
 
     state_schema: type = Field(default=HoldemState)
@@ -1394,7 +1395,8 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _evaluate_hand_simple(
         self, hole_cards: List[str], community_cards: List[str]
     ) -> float:
-        """Simple hand evaluation method (placeholder for production evaluator).
+        """Simple hand evaluation method (placeholder for production
+        evaluator).
 
         This is a simplified poker hand evaluator that assigns a score based
         primarily on high card values. In a production system, this would be

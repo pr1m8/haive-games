@@ -1,7 +1,7 @@
 """Configurable Hold'em configuration using the generic player agent system.
 
-This module provides configurable Texas Hold'em game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Texas Hold'em game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 import logging
@@ -148,7 +148,8 @@ def create_holdem_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableHoldemConfig:
-    """Create a configurable Hold'em configuration with simple model specifications.
+    """Create a configurable Hold'em configuration with simple model
+    specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -202,7 +203,8 @@ def create_holdem_config_from_example(
 def create_holdem_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableHoldemConfig:
-    """Create a configurable Hold'em configuration from detailed player configurations.
+    """Create a configurable Hold'em configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -254,7 +256,8 @@ def create_budget_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
 
 
 def create_poker_pro_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
-    """Create a poker professional-style Hold'em configuration with powerful models."""
+    """Create a poker professional-style Hold'em configuration with powerful
+    models."""
     return create_holdem_config_from_example("poker_pros", **kwargs)
 
 

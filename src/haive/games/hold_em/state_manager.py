@@ -47,12 +47,13 @@ class HoldemGameStateManager:
     """State manager for Texas Hold'em poker games.
 
     This class provides static methods for manipulating the game state,
-    separating state logic from the game agent. It handles state transitions,
-    player actions, and game flow management in a functional manner.
+    separating state logic from the game agent. It handles state
+    transitions, player actions, and game flow management in a
+    functional manner.
 
-    All methods are static and take a state object as input, returning a new
-    state object with the requested changes applied, following an immutable
-    approach to state management.
+    All methods are static and take a state object as input, returning a
+    new state object with the requested changes applied, following an
+    immutable approach to state management.
     """
 
     @staticmethod
