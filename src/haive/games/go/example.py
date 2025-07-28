@@ -1,7 +1,7 @@
 """Example of playing a Go game.
 
-This script demonstrates how to initialize and run a Go game
-with the Haive framework.
+This script demonstrates how to initialize and run a Go game with the
+Haive framework.
 """
 
 # Quick demo for testing - check for sgfmill dependency
