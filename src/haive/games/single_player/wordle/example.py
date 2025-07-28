@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Example Word Connections game with interactive UI.
+
 Uses the May 22, 2025 puzzle (#711).
 """
 
