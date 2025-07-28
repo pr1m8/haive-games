@@ -1,7 +1,8 @@
 """Example of running chess with configurable LLMs.
 
-This example demonstrates how to run chess games with different LLM providers
-and models, showing the flexibility of the new configuration system.
+This example demonstrates how to run chess games with different LLM
+providers and models, showing the flexibility of the new configuration
+system.
 """
 
 import uuid

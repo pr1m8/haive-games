@@ -1,7 +1,7 @@
 """Example of using configurable chess players.
 
-This example demonstrates how to create chess games with different
-LLM configurations for players without hardcoding them.
+This example demonstrates how to create chess games with different LLM
+configurations for players without hardcoding them.
 """
 
 import asyncio

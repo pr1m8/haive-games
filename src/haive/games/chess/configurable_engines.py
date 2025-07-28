@@ -1,8 +1,8 @@
 """Configurable chess engines using the new player agent system.
 
 This module provides chess engine configurations that use configurable
-player agents instead of hardcoded LLM configurations, making it easy
-to switch LLMs for different players.
+player agents instead of hardcoded LLM configurations, making it easy to
+switch LLMs for different players.
 """
 
 from typing import Dict

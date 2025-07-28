@@ -1,7 +1,8 @@
 """Generic chess engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for chess,
-providing a clean, type-safe implementation that eliminates hardcoded LLM configurations.
+This module demonstrates how to use the generic player agent system for
+chess, providing a clean, type-safe implementation that eliminates
+hardcoded LLM configurations.
 """
 
 from typing import Type, Union

@@ -1,7 +1,7 @@
 """Debug script for chess game validation models.
 
-This script prints the validation models and field requirements
-for better debugging of validation errors.
+This script prints the validation models and field requirements for
+better debugging of validation errors.
 """
 
 import inspect

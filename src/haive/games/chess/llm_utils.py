@@ -1,7 +1,8 @@
 """Chess-specific LLM utilities using the game LLM factory.
 
-This module provides chess-specific utilities for creating and configuring
-LLMs for chess gameplay, building on the core LLM factory system.
+This module provides chess-specific utilities for creating and
+configuring LLMs for chess gameplay, building on the core LLM factory
+system.
 """
 
 from typing import Any, Dict, Optional
