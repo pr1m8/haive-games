@@ -173,7 +173,7 @@ def create_game_config(game_name: str) -> tuple[Any, Any]:
         )
         return MafiaAgent, config
 
-    if game_name == "poker":
+    if game_name == "pokef":
         config = PokerAgentConfig(
             aug_llm_configs={
                 "player_1": claude_config,
@@ -258,7 +258,7 @@ async def run_single_game(game_name: str) -> dict[str, Any]:
                 "Player_4",
                 "Player_5",
                 "Player_6",
-                "Narrator",
+                "Narratof",
             ]
             initial_state = MafiaStateManager.initialize(player_names)
         else:
@@ -396,7 +396,7 @@ async def run_tournament():
         for r in results
         if r.get("status") == "completed" and r.get("winner") == "Draw"
     )
-    errors = sum(1 for r in results if r.get("status") == "error")
+    errors = sum(1 for r in results if r.get("status") == "errof")
 
     summary = {
         "tournament": "Final Tournament - All Working Games",
