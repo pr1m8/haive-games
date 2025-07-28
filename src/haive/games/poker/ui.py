@@ -7,7 +7,7 @@ from rich.text import Text
 
 
 class PokerUI:
-    """Clean, readable UI for the poker game simulation"""
+    """Clean, readable UI for the poker game simulation."""
 
     def __init__(self):
         self.layout = Layout()
@@ -18,7 +18,7 @@ class PokerUI:
         self._setup_layout()
 
     def _setup_layout(self):
-        """Set up the UI layout with clean, simple sections"""
+        """Set up the UI layout with clean, simple sections."""
         # Main layout with header, body, footer
         self.layout.split(
             Layout(name="header", size=3),
@@ -53,7 +53,7 @@ class PokerUI:
         )
 
     def assign_ai_models(self, player_names):
-        """Assign consistent AI models to players"""
+        """Assign consistent AI models to players."""
         ai_models = {
             "Claude-3": {"model": "Claude-3", "arch": "Anthropic"},
             "GPT-4o": {"model": "GPT-4o", "arch": "OpenAI"},
@@ -71,14 +71,14 @@ class PokerUI:
         }
 
     def render_header(self):
-        """Render a clean header with title"""
+        """Render a clean header with title."""
         header_text = Text(
             "♠️ TEXAS HOLD'EM POKER ♥️", justify="center", style="bold white on blue"
         )
         return Panel(header_text, border_style="blue")
 
     def render_footer(self):
-        """Render a simple footer with controls"""
+        """Render a simple footer with controls."""
         controls = [
             ("ENTER", "Continue"),
             ("ESC", "Exit"),
@@ -95,7 +95,7 @@ class PokerUI:
         return Panel(Align.center(footer_content), border_style="blue")
 
     def render_game_info(self):
-        """Render clean game info panel"""
+        """Render clean game info panel."""
         if not self.current_game_state:
             return Panel("Game not started", title="Game Info", border_style="green")
 
@@ -122,7 +122,7 @@ class PokerUI:
         return Panel(content, title="Game Info", border_style="green")
 
     def render_action_history(self):
-        """Render clean action history"""
+        """Render clean action history."""
         if not self.current_game_state:
             return Panel(
                 "No actions yet", title="Recent Actions", border_style="yellow"
@@ -168,7 +168,7 @@ class PokerUI:
         return Panel(content, title="Recent Actions", border_style="yellow")
 
     def render_table(self):
-        """Render poker table with community cards"""
+        """Render poker table with community cards."""
         if not self.current_game_state:
             return Panel("Table not set up", title="Poker Table", border_style="red")
 
@@ -200,7 +200,7 @@ class PokerUI:
         return Panel(Align.center(content), title="♦️ Poker Table ♣️", border_style="red")
 
     def render_players(self):
-        """Render players table with clear information"""
+        """Render players table with clear information."""
         if not self.current_game_state:
             return Panel("No players", title="Players", border_style="blue")
 
@@ -293,7 +293,7 @@ class PokerUI:
         return table
 
     def render_active_player(self):
-        """Render active player information"""
+        """Render active player information."""
         if not self.current_game_state:
             return Panel(
                 "No active player", title="🎮 Active Player 🎮", border_style="cyan"
@@ -335,7 +335,7 @@ class PokerUI:
         return Panel(content, title="🎮 Active Player 🎮", border_style="cyan")
 
     def _format_card(self, card):
-        """Format a card with unicode symbols"""
+        """Format a card with unicode symbols."""
         suits = {"hearts": "♥", "diamonds": "♦", "clubs": "♣", "spades": "♠"}
 
         suit_value = card.suit.value if hasattr(card.suit, "value") else str(card.suit)
@@ -351,7 +351,7 @@ class PokerUI:
         return f"[bold {color}]{card_value}{suit_symbol}[/bold {color}]"
 
     def _get_position_name(self, position, num_players):
-        """Get the poker position name"""
+        """Get the poker position name."""
         if position == 0:
             return "Dealer"
         if position == 1:

@@ -132,8 +132,9 @@ class PokerState(BaseModel):
     def deal_hands(self):
         """Deal two cards to each active player.
 
-        Deals hole cards to all active players with chips. Skips inactive
-        or busted players. Logs an error if there aren't enough cards.
+        Deals hole cards to all active players with chips. Skips
+        inactive or busted players. Logs an error if there aren't enough
+        cards.
         """
         if len(self.game.deck) < len(self.game.players) * 2:
             self.log_event("Not enough cards in deck to deal hands")

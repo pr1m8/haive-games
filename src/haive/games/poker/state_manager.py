@@ -30,13 +30,13 @@ class PokerStateManager:
     """
 
     def __init__(self, debug: bool = False):
-        """Initialize the poker state manager"""
+        """Initialize the poker state manager."""
         self.state = PokerState()
         self.debug = debug
         self.history = []
 
     def initialize_game(self, config: "PokerAgentConfig"):
-        """Initialize a new poker game with the given players"""
+        """Initialize a new poker game with the given players."""
         # Initialize state
         self.state.initialize_game(config.player_names, config.starting_chips)
 
@@ -65,13 +65,13 @@ class PokerStateManager:
         return current_player.id
 
     def get_player_observation(self, player_id: str) -> PlayerObservation:
-        """Get the game state from a specific player's perspective"""
+        """Get the game state from a specific player's perspective."""
         return self.state.create_player_observation(player_id)
 
     def handle_player_action(
         self, player_id: str, action: PlayerAction, amount: int = 0
     ) -> tuple[bool, str]:
-        """Process a player's action
+        """Process a player's action.
 
         Args:
             player_id: ID of the player making the action
@@ -126,7 +126,7 @@ class PokerStateManager:
             return False, str(e)
 
     def advance_phase(self) -> tuple[bool, str]:
-        """Advance to the next game phase
+        """Advance to the next game phase.
 
         Returns:
             Tuple of (success, message)
@@ -182,7 +182,7 @@ class PokerStateManager:
         }
 
     def get_game_summary(self) -> dict[str, Any]:
-        """Get a summary of the current game state"""
+        """Get a summary of the current game state."""
         return {
             "phase": self.state.game.phase.value,
             "active_players": len(self.state.game.active_players),
@@ -210,7 +210,7 @@ class PokerStateManager:
         }
 
     def get_legal_actions(self, player_id: str) -> list[dict[str, Any]]:
-        """Get all legal actions for a player"""
+        """Get all legal actions for a player."""
         player = next((p for p in self.state.game.players if p.id == player_id), None)
         if not player:
             logger.warning(f"Player {player_id} not found")
@@ -270,7 +270,7 @@ class PokerStateManager:
         return legal_actions
 
     def _save_state_snapshot(self, action_type: str):
-        """Save a snapshot of the current state"""
+        """Save a snapshot of the current state."""
         timestamp = datetime.now().strftime("%H:%M:%S.%f")
 
         snapshot = {
@@ -306,20 +306,20 @@ class PokerStateManager:
             logger.debug(f"Current bet: {self.state.game.current_bet}")
 
     def _log_event(self, message: str):
-        """Log an event to the state game log and logger"""
+        """Log an event to the state game log and logger."""
         self.state.log_event(message)
         if self.debug:
             logger.info(message)
 
     def export_history(self) -> list[dict[str, Any]]:
-        """Export the full game history"""
+        """Export the full game history."""
         return self.history
 
     def reset(self):
-        """Reset the state manager"""
+        """Reset the state manager."""
         self.state = PokerState()
         self.history = []
 
     def is_game_over(self):
-        """Check if the game is over based on phase"""
+        """Check if the game is over based on phase."""
         return self.state.game.phase == GamePhase.GAME_OVER

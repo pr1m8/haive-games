@@ -143,7 +143,7 @@ def main():
 
 
 def launch_in_separate_window(args, player_names):
-    """Launch the poker game in a separate terminal window"""
+    """Launch the poker game in a separate terminal window."""
     try:
         # Construct the command to run in the new window
         script_path = os.path.abspath(__file__)
@@ -206,7 +206,7 @@ def launch_in_separate_window(args, player_names):
 
 
 def create_config_from_args(args, player_names):
-    """Create a poker agent config from command line args"""
+    """Create a poker agent config from command line args."""
     return PokerAgentConfig(
         player_names=player_names,
         starting_chips=args.chips,
@@ -218,7 +218,7 @@ def create_config_from_args(args, player_names):
 
 
 def run_rich_ui_game(config, player_names, delay, max_hands=None):
-    """Run the game with rich UI visualization"""
+    """Run the game with rich UI visualization."""
     global ui, live
 
     # Initialize the UI
@@ -328,7 +328,7 @@ def run_rich_ui_game(config, player_names, delay, max_hands=None):
 
 
 def update_ui():
-    """Helper function to update all UI components"""
+    """Helper function to update all UI components."""
     global ui, live
 
     if ui and live:
@@ -361,7 +361,7 @@ def update_ui():
 
 
 def run_text_game(config, delay):
-    """Run the game with text-only visualization"""
+    """Run the game with text-only visualization."""
     # Initialize the state manager
     state_manager = PokerStateManager()
     state_manager.initialize_game(config)
@@ -443,14 +443,14 @@ def run_text_game(config, delay):
 
 
 def format_card(card: Card) -> str:
-    """Format a card with unicode symbols"""
+    """Format a card with unicode symbols."""
     suits = {"hearts": "♥️", "diamonds": "♦️", "clubs": "♣️", "spades": "♠️"}
     suit_symbol = suits.get(card.suit.value, card.suit.value)
     return f"{card.value.value}{suit_symbol}"
 
 
 def get_position_name(position: int, num_players: int) -> str:
-    """Get the poker position name"""
+    """Get the poker position name."""
     if position == 0:
         return "Dealer"
     if position == 1:
@@ -465,7 +465,7 @@ def get_position_name(position: int, num_players: int) -> str:
 
 
 def visualize_game_state(game_state):
-    """Visualize the current game state in a human-readable format"""
+    """Visualize the current game state in a human-readable format."""
     print("\n" + "=" * 50)
 
     # Extract phase

@@ -1,7 +1,8 @@
 """Generic Poker engine creation using the generic player agent system.
 
 This module provides generic engine creation functions for Poker games,
-allowing for configurable LLM models and game-specific player identifiers.
+allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from typing import Dict
