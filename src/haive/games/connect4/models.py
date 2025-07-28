@@ -1,5 +1,4 @@
 # src/haive/agents/agent_games/connect4/models.py
-
 """Connect4 game models module.
 
 This module provides data models for the Connect4 game implementation, including:

@@ -1,7 +1,8 @@
 """Generic Connect4 engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for Connect4,
-showing the same pattern working with red/yellow player identifiers.
+This module demonstrates how to use the generic player agent system for
+Connect4, showing the same pattern working with red/yellow player
+identifiers.
 """
 
 from typing import Type, Union

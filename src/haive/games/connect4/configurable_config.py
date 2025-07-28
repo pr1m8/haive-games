@@ -1,8 +1,8 @@
 """Configurable Connect4 agent configuration using player agents.
 
-from typing import Any
-This module provides a Connect4 configuration that supports configurable
-player agents instead of hardcoded engine configurations.
+from typing import Any This module provides a Connect4 configuration
+that supports configurable player agents instead of hardcoded engine
+configurations.
 """
 
 from haive.core.engine.agent.agent import AgentConfig

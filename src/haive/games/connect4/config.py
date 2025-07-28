@@ -75,7 +75,8 @@ class Connect4AgentConfig(AgentConfig):
     class Config:
         """Pydantic configuration class.
 
-        This inner class configures Pydantic behavior for the Connect4AgentConfig.
+        This inner class configures Pydantic behavior for the
+        Connect4AgentConfig.
         """
 
         arbitrary_types_allowed = True
