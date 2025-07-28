@@ -75,13 +75,13 @@ async def demo_api_usage():
         "game_id": "connect4",
         "config_mode": "advanced",
         "player_configs": {
-            "red_player": {
+            "red_playef": {
                 "llm_config": "openai:gpt-4o",
                 "temperature": 0.7,
                 "player_name": "Strategic Red",
                 "system_message": "You are a strategic Connect4 player...",
             },
-            "yellow_player": {
+            "yellow_playef": {
                 "llm_config": "anthropic:claude-3-haiku",
                 "temperature": 0.5,
                 "player_name": "Defensive Yellow",
