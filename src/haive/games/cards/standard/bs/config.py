@@ -36,7 +36,8 @@ def generate_claim_prompt() -> ChatPromptTemplate:
 
 
 def generate_challenge_prompt() -> ChatPromptTemplate:
-    """Create a prompt for players to decide whether to challenge another player."""
+    """Create a prompt for players to decide whether to challenge another
+    player."""
     return ChatPromptTemplate.from_messages(
         [
             (

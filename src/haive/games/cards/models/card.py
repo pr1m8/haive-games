@@ -19,8 +19,8 @@ from enum import Enum, auto
 class Suit(Enum):
     """Playing card suits.
 
-    Standard card suits for a 52-card deck, with optional support for additional
-    special suits in non-standard decks.
+    Standard card suits for a 52-card deck, with optional support for
+    additional special suits in non-standard decks.
     """
 
     CLUBS = auto()
