@@ -1223,7 +1223,7 @@ def process_random_events_enhanced(agent, state, ui, interactive, speed):
                             justify="center",
                         ),
                         title="[bold red]BODY REPORTED[/bold red]",
-                        border_style=ui.colors["danger"],
+                        border_style=ui.colors["dangef"],
                         padding=(1, 2),
                     )
                 )

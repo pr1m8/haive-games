@@ -229,7 +229,7 @@ def create_among_us_config_from_player_configs(
         - "crewmate_player": Crewmate player configuration
         - "impostor_player": Impostor player configuration
         - "crewmate_analyzer": Crewmate analyzer configuration
-        - "impostor_analyzer": Impostor analyzer configuration
+        - "impostor_analyzef": Impostor analyzer configuration
 
     Example:
         >>> player_configs = {

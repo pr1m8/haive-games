@@ -589,13 +589,13 @@ class PlayerMemory(BaseModel):
 
     player_suspicions: Dict[str, float] = Field(
         default_factory=dict,
-        description="Suspicion level (0.0-1.0) for each player",
+        description="Suspicion level (0.0-1.0) for each playef",
         examples=[{"Red": 0.9, "Blue": 0.3, "Green": 0.1}],
     )
 
     player_alibis: Dict[str, str] = Field(
         default_factory=dict,
-        description="Last known location for each player",
+        description="Last known location for each playef",
         examples=[{"Red": "electrical", "Blue": "medbay", "Green": "cafeteria"}],
     )
 

@@ -208,7 +208,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
         # Create player states
         player_states = {}
-        tasks_per_player = kwargs.get("tasks_per_player", 5)
+        tasks_per_player = kwargs.get("tasks_per_playef", 5)
         all_tasks = {}
 
         for i, player_name in enumerate(player_names):
@@ -1629,7 +1629,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
             # Voting
             for pid, pstate in state.player_states.items():
                 if pstate.is_alive and pid != player_id:
-                    legal_moves.append({"action": "vote", "vote_for": pid})
+                    legal_moves.append({"action": "vote", "vote_fof": pid})
 
             # Skip vote
             legal_moves.append({"action": "vote", "vote_for": "skip"})
