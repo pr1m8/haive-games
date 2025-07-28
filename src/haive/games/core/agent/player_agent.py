@@ -26,7 +26,8 @@ from pydantic import BaseModel, Field
 def create_llm_config(model: str, **kwargs) -> LLMConfig:
     """Create an LLM config based on model string.
 
-    This is a simple helper to create configs until a proper factory is available.
+    This is a simple helper to create configs until a proper factory is
+    available.
     """
     # Simple provider detection based on model name
     if "gpt" in model.lower() or kwargs.get("model_provider") == "openai":
@@ -182,7 +183,8 @@ class PlayerAgentFactory:
     def create_engines_from_player_configs(
         roles: Dict[str, GamePlayerRole], player_configs: Dict[str, PlayerAgentConfig]
     ) -> Dict[str, AugLLMConfig]:
-        """Create a complete set of engines from role definitions and player configs.
+        """Create a complete set of engines from role definitions and player
+        configs.
 
         Args:
             roles: Dictionary of role name to role definition

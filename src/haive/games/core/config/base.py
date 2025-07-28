@@ -1,8 +1,8 @@
 """Base configuration classes for configurable games.
 
-from typing import Any
-This module provides the foundation for creating flexible game configurations
-that support multiple LLM providers and configuration modes.
+from typing import Any This module provides the foundation for creating
+flexible game configurations that support multiple LLM providers and
+configuration modes.
 """
 
 from abc import ABC, abstractmethod
@@ -151,7 +151,8 @@ class BaseGameConfig(AgentConfig, ABC):
         """
 
     def determine_config_mode(self) -> ConfigMode:
-        """Automatically determine configuration mode based on provided fields."""
+        """Automatically determine configuration mode based on provided
+        fields."""
         if self.config_mode != ConfigMode.AUTO:
             return self.config_mode
 
@@ -167,7 +168,8 @@ class BaseGameConfig(AgentConfig, ABC):
         """Create player configs from simple model strings.
 
         This method should be overridden by games that use different
-        field names (e.g., white_model/black_model instead of player1_model/player2_model).
+        field names (e.g., white_model/black_model instead of
+        player1_model/player2_model).
         """
         roles = self.get_role_definitions()
         configs = {}

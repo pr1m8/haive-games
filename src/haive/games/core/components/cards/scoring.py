@@ -40,7 +40,10 @@ class HandEvaluator(BaseModel, Generic[TCard]):
     def compare_hands(
         cls, hand1: list[TCard], hand2: list[TCard], context: dict = None
     ) -> int:
-        """Compare two hands. Returns: -1 if hand1 < hand2, 0 if equal, 1 if hand1 > hand2."""
+        """Compare two hands.
+
+        Returns: -1 if hand1 < hand2, 0 if equal, 1 if hand1 > hand2.
+        """
         rank1 = cls.evaluate(hand1, context)
         rank2 = cls.evaluate(hand2, context)
 
