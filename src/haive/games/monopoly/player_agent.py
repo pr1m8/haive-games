@@ -1,6 +1,5 @@
 """Monopoly player agent implementation.
 
-from typing import Any
 This module provides the player agent (subgraph) for making individual
 player decisions in Monopoly, including:
     - Property purchase decisions
@@ -10,12 +9,15 @@ player decisions in Monopoly, including:
 """
 
 import operator
+import uuid
 from typing import Annotated, Any
 
+from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.agent.agent import Agent, register_agent
 from haive.core.engine.agent.config import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.schema.prebuilt.messages_state import MessagesState
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field, computed_field
@@ -28,6 +30,7 @@ from haive.games.monopoly.models import (
     TradeResponse,
 )
 from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class PlayerDecisionState(MessagesState):
@@ -72,26 +75,6 @@ class PlayerDecisionState(MessagesState):
         if self.decisions:
             return self.decisions[-1]
         return None
-
-
-"""Fixed Monopoly agent configuration module.
-
-This module provides corrected configuration classes for the monopoly game agent, including:
-    - Proper initial state creation with all required fields
-    - Clean BaseModel usage
-    - Fixed field validation
-    - Enhanced debug logging
-"""
-
-import uuid
-from typing import Any
-
-from haive.core.config.runnable import RunnableConfigManager
-from langchain_core.runnables import RunnableConfig
-from pydantic import Field
-
-from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class MonopolyPlayerAgentConfig(AgentConfig):
@@ -178,7 +161,9 @@ class MonopolyGameAgentConfig(AgentConfig):
     )
 
     def create_initial_state(self) -> MonopolyState:
-        """Create the initial game state with all required fields and proper validation."""
+        """Create the initial game state with all required fields and proper
+        validation.
+        """
         # Create board and players
         properties = create_board()
         players = create_players(self.player_names)
@@ -227,7 +212,9 @@ class MonopolyGameAgentConfig(AgentConfig):
         return MonopolyPlayerAgent(self.player_agent_config)
 
     def setup_player_agent_engines(self) -> None:
-        """Set up the engines for the player agent if not already configured."""
+        """Set up the engines for the player agent if not already
+        configured.
+        """
         if not self.player_agent_config.engines:
             from haive.games.monopoly.engines import build_monopoly_player_aug_llms
 

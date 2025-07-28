@@ -420,8 +420,6 @@ def create_board() -> dict[str, Property]:
             )
 
     # Debug print to verify all properties were created
-    print(f"Created {len(properties)} properties")
-    print(f"Properties include 'Vermont Avenue': {'Vermont Avenue' in properties}")
 
     return properties
 
@@ -578,7 +576,4 @@ def can_trade_properties(
         return False
 
     # Can't trade properties with buildings
-    if prop1.houses > 0 or prop1.hotel or prop2.houses > 0 or prop2.hotel:
-        return False
-
-    return True
+    return not (prop1.houses > 0 or prop1.hotel or prop2.houses > 0 or prop2.hotel)

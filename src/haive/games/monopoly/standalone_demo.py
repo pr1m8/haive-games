@@ -277,9 +277,6 @@ def create_board() -> dict[str, Property]:
                 mortgage_value=0,
             )
 
-    print(f"Created {len(properties)} properties")
-    print(f"Properties include 'Vermont Avenue': {'Vermont Avenue' in properties}")
-
     return properties
 
 
@@ -373,39 +370,21 @@ class Color:
 # UI helper functions
 def print_divider():
     """Print a divider line."""
-    print(Color.CYAN + "=" * 80 + Color.RESET)
 
 
 def print_property(property_obj: Property):
     """Print property details."""
     if property_obj.property_type == PropertyType.SPECIAL:
-        print(f"{Color.BOLD}{property_obj.name}{Color.RESET} (Special)")
         return
 
-    owner_text = f"Owned by {property_obj.owner}" if property_obj.owner else "Unowned"
-
-    print(
-        f"{Color.BOLD}{property_obj.name}{Color.RESET} - Price: ${property_obj.price} - {owner_text}"
-    )
-    print(f"  Rent: ${property_obj.rent[0]}")
-
-    if property_obj.mortgaged:
-        print(f"  {Color.RED}MORTGAGED{Color.RESET} for ${property_obj.mortgage_value}")
-    elif property_obj.hotel:
-        print(
-            f"  {Color.RED}{Color.BOLD}HOTEL{Color.RESET} - Rent: ${property_obj.rent[5]}"
-        )
+    if property_obj.mortgaged or property_obj.hotel:
+        pass
     elif property_obj.houses > 0:
-        houses = "■ " * property_obj.houses
-        print(
-            f"  {Color.GREEN}{houses}{Color.RESET} - Rent: ${property_obj.rent[property_obj.houses]}"
-        )
+        "■ " * property_obj.houses
 
 
 def print_player_status(state: GameState):
     """Print current status of all players."""
-    print("\n" + Color.BOLD + "Player Status:" + Color.RESET)
-
     table = state.players.copy()
     # Sort so current player is first
     if state.current_player_index < len(table):
@@ -414,30 +393,23 @@ def print_player_status(state: GameState):
         table.insert(0, current)
 
     for player in table:
-        is_current = player.name == state.current_player.name
-        name_style = f"{Color.GREEN}{Color.BOLD}" if is_current else Color.BOLD
-
-        print(f"{name_style}{player.name}{Color.RESET} - ${player.money}")
 
         if player.properties:
-            property_text = ", ".join(player.properties)
-            print(f"  Properties: {property_text}")
+            ", ".join(player.properties)
 
         if player.in_jail:
-            print(f"  {Color.RED}IN JAIL{Color.RESET} (Turn {player.jail_turns}/3)")
+            pass
 
         if player.bankrupt:
-            print(f"  {Color.RED}BANKRUPT{Color.RESET}")
+            pass
 
         # Print current position name
         position = player.position
         position_data = get_property_at_position(position)
         if position_data:
-            print(f"  Position: {position_data['name']} ({position})")
+            pass
         else:
-            print(f"  Position: {position}")
-
-        print("")
+            pass
 
 
 def print_recent_events(events: list[GameEvent], count: int = 5):
@@ -446,29 +418,21 @@ def print_recent_events(events: list[GameEvent], count: int = 5):
         return
 
     recent = events[-count:]
-    print("\n" + Color.BOLD + "Recent Events:" + Color.RESET)
 
     for event in reversed(recent):
         # Style based on event type
-        if event.event_type in ["property_purchase", "rent_payment"]:
-            style = Color.GREEN
-        elif event.event_type in ["bankruptcy", "go_to_jail"]:
-            style = Color.RED
-        elif event.event_type == "dice_roll":
-            style = Color.CYAN
+        if (
+            event.event_type in ["property_purchase", "rent_payment"]
+            or event.event_type in ["bankruptcy", "go_to_jail"]
+            or event.event_type == "dice_roll"
+        ):
+            pass
         else:
-            style = ""
+            pass
 
         # Money indicator
-        money_indicator = ""
-        if event.money_change > 0:
-            money_indicator = f" {Color.GREEN}(+${event.money_change}){Color.RESET}"
-        elif event.money_change < 0:
-            money_indicator = f" {Color.RED}(${event.money_change}){Color.RESET}"
-
-        print(
-            f"• {Color.BOLD}{event.player}{Color.RESET}: {style}{event.description}{Color.RESET}{money_indicator}"
-        )
+        if event.money_change > 0 or event.money_change < 0:
+            pass
 
 
 def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
@@ -479,20 +443,15 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
     # Get position data
     position_data = get_property_at_position(position)
     if not position_data:
-        print(f"{Color.RED}Error: Invalid position {position}{Color.RESET}")
         return events
 
     property_name = position_data["name"]
-    print(
-        f"\n{Color.BOLD}🎯 {current_player.name} landed on {property_name}{Color.RESET}"
-    )
 
     # Handle special positions
     if position_data["type"] == PropertyType.SPECIAL:
         if property_name == "Income Tax":
             tax = 200
             current_player.money -= tax
-            print(f"{Color.RED}Paid ${tax} in Income Tax{Color.RESET}")
             events.append(
                 GameEvent(
                     event_type="tax_payment",
@@ -504,7 +463,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
         elif property_name == "Luxury Tax":
             tax = 75
             current_player.money -= tax
-            print(f"{Color.RED}Paid ${tax} in Luxury Tax{Color.RESET}")
             events.append(
                 GameEvent(
                     event_type="tax_payment",
@@ -516,7 +474,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
         elif property_name == "Go To Jail":
             current_player.position = 10  # Jail position
             current_player.in_jail = True
-            print(f"{Color.RED}Go to Jail! Moving to Jail...{Color.RESET}")
             events.append(
                 GameEvent(
                     event_type="go_to_jail",
@@ -525,11 +482,9 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
                 )
             )
         elif property_name in ["Chance", "Community Chest"]:
-            print(
-                f"{Color.YELLOW}Draw a {property_name} card (not implemented in demo){Color.RESET}"
-            )
+            pass
         else:
-            print(f"{Color.BLUE}On {property_name} - no action needed{Color.RESET}")
+            pass
 
         return events
 
@@ -537,10 +492,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
     property_obj = state.properties.get(property_name)
 
     if not property_obj:
-        print(
-            f"{Color.RED}Warning: Property '{property_name}' not found in state.{Color.RESET}"
-        )
-        print("Creating property from board data...")
 
         # Create property from board data
         property_obj = Property(
@@ -573,9 +524,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
         # Property is unowned - offer to buy
         if property_obj.price <= current_player.money:
             # In this demo, always buy if can afford
-            print(
-                f"\n{Color.GREEN}Buying {property_name} for ${property_obj.price}{Color.RESET}"
-            )
             current_player.money -= property_obj.price
             current_player.properties.append(property_name)
             property_obj.owner = current_player.name
@@ -590,9 +538,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
                 )
             )
         else:
-            print(
-                f"\n{Color.RED}Cannot afford {property_name} (${property_obj.price}){Color.RESET}"
-            )
             events.append(
                 GameEvent(
                     event_type="property_pass",
@@ -602,7 +547,7 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
                 )
             )
     elif property_obj.owner == current_player.name:
-        print(f"\n{Color.BLUE}You own this property - no action needed{Color.RESET}")
+        pass
     else:
         # Pay rent to owner
         owner = None
@@ -612,9 +557,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
                 break
 
         if not owner:
-            print(
-                f"{Color.RED}Error: Owner '{property_obj.owner}' not found{Color.RESET}"
-            )
             return events
 
         # Calculate rent
@@ -622,21 +564,12 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
         rent = calculate_rent(property_obj, state, dice_total)
 
         if rent <= 0:
-            print(
-                f"\n{Color.BLUE}No rent due (property mortgaged or special circumstances){Color.RESET}"
-            )
             return events
-
-        print(
-            f"\n{Color.YELLOW}Property owned by {owner.name} - rent: ${rent}{Color.RESET}"
-        )
 
         # Pay rent
         if current_player.money >= rent:
             current_player.money -= rent
             owner.money += rent
-
-            print(f"{Color.RED}Paid ${rent} in rent to {owner.name}{Color.RESET}")
 
             events.append(
                 GameEvent(
@@ -649,9 +582,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
             )
         else:
             # Simplified bankruptcy
-            print(
-                f"{Color.RED}{Color.BOLD}Cannot afford ${rent} rent - {current_player.name} goes BANKRUPT!{Color.RESET}"
-            )
             current_player.bankrupt = True
 
             events.append(
@@ -674,7 +604,6 @@ def run_demo(turns: int = 10):
 
     # Ensure Vermont Avenue exists in properties
     if "Vermont Avenue" not in properties:
-        print("WARNING: Vermont Avenue not in properties!")
         # Get position 8 (Vermont Avenue)
         vermont_data = get_property_at_position(8)
         if vermont_data:
@@ -697,39 +626,26 @@ def run_demo(turns: int = 10):
         game_events=[],
     )
 
-    print(f"{Color.GREEN}{Color.BOLD}🎮 MONOPOLY DEMO{Color.RESET}")
-    print("A simplified demonstration of the Monopoly game\n")
-
     # Show initial state
     print_player_status(state)
 
     # Game loop
-    for turn in range(1, turns + 1):
+    for _turn in range(1, turns + 1):
         if len(state.active_players) <= 1:
-            print(
-                f"{Color.RED}{Color.BOLD}Game over - only one player remains!{Color.RESET}"
-            )
             break
 
         current_player = state.current_player
 
         if current_player.bankrupt:
-            print(
-                f"{Color.RED}{current_player.name} is bankrupt - skipping turn{Color.RESET}"
-            )
             state.next_player()
             continue
 
         print_divider()
-        print(f"{Color.BOLD}Turn {turn}: {current_player.name}'s turn{Color.RESET}")
 
         # Roll dice
         dice = roll_dice()
         state.last_roll = dice
 
-        print(
-            f"\n🎲 {Color.BOLD}{current_player.name}{Color.RESET} rolls: {dice.die1} + {dice.die2} = {dice.total}"
-        )
         state.game_events.append(
             GameEvent(
                 event_type="dice_roll",
@@ -743,7 +659,6 @@ def run_demo(turns: int = 10):
         if current_player.in_jail:
             if dice.is_doubles:
                 current_player.in_jail = False
-                print(f"{Color.GREEN}Rolled doubles! Out of jail!{Color.RESET}")
                 state.game_events.append(
                     GameEvent(
                         event_type="jail_release",
@@ -758,9 +673,6 @@ def run_demo(turns: int = 10):
                     if current_player.money >= 50:
                         current_player.money -= 50
                         current_player.in_jail = False
-                        print(
-                            f"{Color.YELLOW}Paid $50 to get out of jail after 3 turns{Color.RESET}"
-                        )
                         state.game_events.append(
                             GameEvent(
                                 event_type="jail_release",
@@ -771,9 +683,6 @@ def run_demo(turns: int = 10):
                         )
                     else:
                         # Simplified bankruptcy
-                        print(
-                            f"{Color.RED}{Color.BOLD}Cannot afford jail fine - goes BANKRUPT!{Color.RESET}"
-                        )
                         current_player.bankrupt = True
                         state.game_events.append(
                             GameEvent(
@@ -785,9 +694,6 @@ def run_demo(turns: int = 10):
                         state.next_player()
                         continue
                 else:
-                    print(
-                        f"{Color.RED}Stays in jail (turn {current_player.jail_turns}/3){Color.RESET}"
-                    )
                     state.game_events.append(
                         GameEvent(
                             event_type="jail_stay",
@@ -799,15 +705,11 @@ def run_demo(turns: int = 10):
                     continue
 
         # Move player
-        old_position = current_player.position
         new_position, passed_go = move_player(current_player, dice)
-
-        print(f"\n🚶 Moves from {old_position} to {new_position}")
 
         # Handle passing GO
         if passed_go:
             current_player.money += 200
-            print(f"{Color.GREEN}Passed GO! Collect $200{Color.RESET}")
             state.game_events.append(
                 GameEvent(
                     event_type="pass_go",
@@ -829,22 +731,17 @@ def run_demo(turns: int = 10):
         state.next_player()
 
         # Brief pause between turns for readability
-        print("\n...Next turn in 1 second...")
         import time
 
         time.sleep(1)
 
     # Game summary
     print_divider()
-    print(f"{Color.GREEN}{Color.BOLD}🏁 Game Summary{Color.RESET}")
 
     # Determine winner
     active_players = state.active_players
     if len(active_players) == 1:
-        winner = active_players[0]
-        print(
-            f"{Color.GREEN}{Color.BOLD}Winner: {winner.name} with ${winner.money}{Color.RESET}"
-        )
+        active_players[0]
     else:
         # Find player with highest money (simplified)
         best_player = None
@@ -856,9 +753,7 @@ def run_demo(turns: int = 10):
                 best_player = player
 
         if best_player:
-            print(
-                f"{Color.GREEN}{Color.BOLD}Highest money: {best_player.name} with ${best_money}{Color.RESET}"
-            )
+            pass
 
     # Print final player status
     print_player_status(state)
@@ -871,23 +766,19 @@ def run_demo(turns: int = 10):
                 property_owners[prop.owner] = []
             property_owners[prop.owner].append(prop_name)
 
-    print(f"\n{Color.BOLD}Property Ownership:{Color.RESET}")
-    for owner, props in property_owners.items():
-        print(f"{Color.BOLD}{owner}{Color.RESET}: {len(props)} properties")
+    for _owner, props in property_owners.items():
         for prop in props:
-            print(f"  • {prop}")
+            pass
 
 
 if __name__ == "__main__":
-    print("Starting Monopoly standalone demo...")
     try:
         run_demo(10)
     except KeyboardInterrupt:
-        print("\nDemo interrupted by user.")
-    except Exception as e:
-        print(f"\nError: {e}")
+        pass
+    except Exception:
         import traceback
 
         traceback.print_exc()
     finally:
-        print("\nThanks for playing!")
+        pass

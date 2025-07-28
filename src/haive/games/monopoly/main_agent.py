@@ -57,7 +57,8 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
     def setup_workflow(self) -> None:
         """Set up the complete monopoly workflow.
 
-        This creates the main game workflow nodes and connects them properly.
+        This creates the main game workflow nodes and connects them
+        properly.
         """
         # Import the game agent here to avoid circular dependency
         from haive.games.monopoly.game_agent import (

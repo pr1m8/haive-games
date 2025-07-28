@@ -1,10 +1,10 @@
 """Configurable Monopoly configuration using the generic player agent system.
 
-This module provides configurable Monopoly game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Monopoly game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -37,12 +37,12 @@ class ConfigurableMonopolyConfig(MonopolyGameAgentConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    player1_model: Optional[str] = Field(default=None, description="Model for player 1")
-    player2_model: Optional[str] = Field(default=None, description="Model for player 2")
-    example_config: Optional[str] = Field(
+    player1_model: str | None = Field(default=None, description="Model for player 1")
+    player2_model: str | None = Field(default=None, description="Model for player 2")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -131,17 +131,16 @@ class ConfigurableMonopolyConfig(MonopolyGameAgentConfig):
         def model_to_name(model: str) -> str:
             if "gpt" in model.lower():
                 return "GPT"
-            elif "claude" in model.lower():
+            if "claude" in model.lower():
                 return "Claude"
-            elif "gemini" in model.lower():
+            if "gemini" in model.lower():
                 return "Gemini"
-            elif "llama" in model.lower():
+            if "llama" in model.lower():
                 return "Llama"
-            else:
-                # Extract provider or model name
-                if ":" in model:
-                    return model.split(":")[0].title()
-                return model.split("-")[0].title()
+            # Extract provider or model name
+            if ":" in model:
+                return model.split(":")[0].title()
+            return model.split("-")[0].title()
 
         names = (
             f"{model_to_name(player1_model)} Mogul",
@@ -159,7 +158,8 @@ def create_monopoly_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMonopolyConfig:
-    """Create a configurable Monopoly configuration with simple model specifications.
+    """Create a configurable Monopoly configuration with simple model
+    specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -211,9 +211,10 @@ def create_monopoly_config_from_example(
 
 
 def create_monopoly_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMonopolyConfig:
-    """Create a configurable Monopoly configuration from detailed player configurations.
+    """Create a configurable Monopoly configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -265,7 +266,9 @@ def create_budget_monopoly_config(**kwargs) -> ConfigurableMonopolyConfig:
 
 
 def create_real_estate_mogul_monopoly_config(**kwargs) -> ConfigurableMonopolyConfig:
-    """Create a real estate mogul-style Monopoly configuration with powerful models."""
+    """Create a real estate mogul-style Monopoly configuration with powerful
+    models.
+    """
     return create_monopoly_config_from_example("real_estate_moguls", **kwargs)
 
 
@@ -324,7 +327,7 @@ def get_example_config(name: str) -> ConfigurableMonopolyConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:
@@ -337,50 +340,17 @@ def list_example_configurations() -> Dict[str, str]:
 
 if __name__ == "__main__":
     # Demo the configurable system
-    print("🏠 Configurable Monopoly Configuration Demo")
-    print("=" * 50)
 
     # Example 1: Simple configuration
-    print("1️⃣ Simple Configuration:")
     config1 = create_monopoly_config("gpt-4o", "claude-3-opus")
-    print(
-        f"   Player 1: {config1.player_names[0] if hasattr(config1, 'player_names') and config1.player_names else 'Player 1'}"
-    )
-    print(
-        f"   Player 2: {config1.player_names[1] if hasattr(config1, 'player_names') and len(config1.player_names) > 1 else 'Player 2'}"
-    )
-    print(f"   Engines: {len(config1.engines)}")
-    print()
 
     # Example 2: Example configuration
-    print("2️⃣ Example Configuration:")
     config2 = create_monopoly_config_from_example("real_estate_moguls")
-    print(
-        f"   Player 1: {config2.player_names[0] if hasattr(config2, 'player_names') and config2.player_names else 'Player 1'}"
-    )
-    print(
-        f"   Player 2: {config2.player_names[1] if hasattr(config2, 'player_names') and len(config2.player_names) > 1 else 'Player 2'}"
-    )
-    print(f"   Example: {config2.example_config}")
-    print()
 
     # Example 3: Property tycoon configuration
-    print("3️⃣ Property Tycoon Configuration:")
     config3 = create_property_tycoon_monopoly_config(enable_building=True)
-    print(
-        f"   Player 1: {config3.player_names[0] if hasattr(config3, 'player_names') and config3.player_names else 'Player 1'}"
-    )
-    print(
-        f"   Player 2: {config3.player_names[1] if hasattr(config3, 'player_names') and len(config3.player_names) > 1 else 'Player 2'}"
-    )
-    print(f"   Building Enabled: {config3.enable_building}")
-    print()
 
     # List available examples
-    print("4️⃣ Available Examples:")
     examples = list_example_configurations()
-    for name, desc in examples.items():
-        print(f"   {name}: {desc}")
-    print()
-
-    print("✅ Monopoly configurable system ready!")
+    for _name, _desc in examples.items():
+        pass

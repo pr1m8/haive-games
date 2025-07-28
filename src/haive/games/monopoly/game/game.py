@@ -18,6 +18,7 @@ from haive.games.monopoly.game.types import ActionType, PropertyType, SpecialSqu
 
 class MonopolyGame:
     """Core Monopoly game engine without UI dependencies.
+
     Designed for AI agent experimentation.
     """
 
@@ -1804,31 +1805,16 @@ class MonopolyGame:
 
     def print_game_state(self) -> None:
         """Print the current game state to the console."""
-        print("\n==== MONOPOLY GAME STATE ====")
-        print(f"Round: {self.current_round}")
-
         if self.game_over:
-            print(f"GAME OVER! Winner: {self.winner.name if self.winner else 'None'}")
+            pass
         else:
-            print(f"Current Player: {self.get_current_player().name}")
-            print(f"Last Dice Roll: {self.last_dice_roll}")
+            pass
 
-        print("\nPlayers:")
         for player in self.players:
-            status = "BANKRUPT" if player.bankruptcy_status else ""
-            jail_status = "IN JAIL" if player.in_jail else ""
-
-            print(
-                f"  {player.name}: ${player.cash} - Position: {self.properties[player.position].name} {status} {jail_status}"
-            )
 
             # Print properties
             if player.properties:
-                props = [self.properties[pos].name for pos in player.properties]
-                print(f"    Properties: {', '.join(props)}")
+                [self.properties[pos].name for pos in player.properties]
 
-        print("\nRecent Events:")
-        for event in self.event_log[-5:]:
-            print(f"  {event}")
-
-        print("============================\n")
+        for _event in self.event_log[-5:]:
+            pass

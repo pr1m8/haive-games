@@ -3,14 +3,20 @@
 This script demonstrates how to run a Monopoly game with the fixed UI.
 """
 
+import logging
+
 from haive.games.monopoly.config import MonopolyGameAgentConfig
 from haive.games.monopoly.main_agent import MonopolyAgent
 from haive.games.monopoly.ui_fixed import MonopolyRichUI
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def main():
     """Run a Monopoly game with the fixed UI."""
-    print("Starting Monopoly game...")
+    logger.info("Starting Monopoly game...")
 
     # Create configuration with more explicit settings
     config = MonopolyGameAgentConfig(

@@ -1,4 +1,5 @@
-r"""Comprehensive state management system for Monopoly gameplay and real estate economics.
+r"""Comprehensive state management system for Monopoly gameplay and real estate
+economics.
 
 This module provides sophisticated state models for Monopoly games with complete
 support for game mechanics, economic transactions, strategic analysis, and
@@ -66,7 +67,7 @@ Note:
 """
 
 from enum import Enum
-from typing import Annotated, Any, Dict, List, Optional, Union
+from typing import Annotated, Any, Union
 
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field, computed_field, field_validator
@@ -102,7 +103,7 @@ class GameStatus(str, Enum):
     ABANDONED = "abandoned"
 
 
-def add_events(left: List[GameEvent], right: List[GameEvent]) -> List[GameEvent]:
+def add_events(left: list[GameEvent], right: list[GameEvent]) -> list[GameEvent]:
     """Custom reducer for game events - always append new events.
 
     This reducer ensures that when state updates occur through LangGraph Commands,
@@ -122,7 +123,7 @@ def add_events(left: List[GameEvent], right: List[GameEvent]) -> List[GameEvent]
     return left + right
 
 
-def add_strings(left: List[str], right: List[str]) -> List[str]:
+def add_strings(left: list[str], right: list[str]) -> list[str]:
     """Custom reducer for string lists.
 
     Generic reducer for accumulating string lists in LangGraph state updates.
@@ -142,7 +143,8 @@ def add_strings(left: List[str], right: List[str]) -> List[str]:
 
 
 class MonopolyState(BaseModel):
-    r"""Comprehensive state model for Monopoly gameplay with economic analysis and strategic context.
+    r"""Comprehensive state model for Monopoly gameplay with economic analysis
+    and strategic context.
 
     This class provides complete state management for Monopoly games, supporting
     both traditional gameplay mechanics and advanced economic simulation. The state
@@ -274,12 +276,12 @@ class MonopolyState(BaseModel):
     """
 
     # Core game data with comprehensive player and property management
-    players: List[Player] = Field(
+    players: list[Player] = Field(
         default_factory=list,
         description="All players in the game with complete financial profiles and strategic context",
     )
 
-    properties: Dict[str, Property] = Field(
+    properties: dict[str, Property] = Field(
         default_factory=dict,
         description="All properties on the board with ownership details and development status",
     )
@@ -307,7 +309,7 @@ class MonopolyState(BaseModel):
     )
 
     # Dice and movement mechanics
-    last_roll: Optional[DiceRoll] = Field(
+    last_roll: DiceRoll | None = Field(
         default=None, description="Most recent dice roll with movement information"
     )
 
@@ -324,31 +326,31 @@ class MonopolyState(BaseModel):
     )
 
     # Card deck management
-    chance_cards: List[str] = Field(
+    chance_cards: list[str] = Field(
         default_factory=list, description="Shuffled deck of Chance cards"
     )
 
-    community_chest_cards: List[str] = Field(
+    community_chest_cards: list[str] = Field(
         default_factory=list, description="Shuffled deck of Community Chest cards"
     )
 
     # Game events with proper reducer for Command updates
-    game_events: Annotated[List[GameEvent], add_events] = Field(
+    game_events: Annotated[list[GameEvent], add_events] = Field(
         default_factory=list,
         description="Complete history of all game events and transactions",
     )
 
     # Game end state
-    winner: Optional[str] = Field(
+    winner: str | None = Field(
         default=None, description="Name of the winning player if game is complete"
     )
 
-    error_message: Optional[str] = Field(
+    error_message: str | None = Field(
         default=None, description="Error message if any operation failed"
     )
 
     # Optional messages field for LLM compatibility
-    messages: Optional[List[BaseMessage]] = Field(
+    messages: list[BaseMessage] | None = Field(
         default_factory=list,
         description="Optional conversation messages for LLM compatibility",
     )
@@ -373,7 +375,7 @@ class MonopolyState(BaseModel):
         default=0, ge=0, description="Money accumulated on Free Parking (house rule)"
     )
 
-    jail_get_out_free_cards: Dict[str, int] = Field(
+    jail_get_out_free_cards: dict[str, int] = Field(
         default_factory=dict, description="Get Out of Jail Free cards held by players"
     )
 
@@ -411,7 +413,8 @@ class MonopolyState(BaseModel):
     @computed_field
     @property
     def current_player(self) -> Player:
-        """Get the current player with comprehensive bounds checking and validation.
+        """Get the current player with comprehensive bounds checking and
+        validation.
 
         Returns:
             Player: The player whose turn it currently is, with defensive fallbacks.
@@ -433,7 +436,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def active_players(self) -> List[Player]:
+    def active_players(self) -> list[Player]:
         """Get list of active (non-bankrupt) players.
 
         Returns:
@@ -443,7 +446,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def bankrupt_players(self) -> List[Player]:
+    def bankrupt_players(self) -> list[Player]:
         """Get list of bankrupt players.
 
         Returns:
@@ -467,7 +470,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def economic_metrics(self) -> Dict[str, Union[int, float]]:
+    def economic_metrics(self) -> dict[str, int | float]:
         """Calculate comprehensive economic metrics for the game.
 
         Returns:
@@ -527,7 +530,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def property_distribution(self) -> Dict[str, Any]:
+    def property_distribution(self) -> dict[str, Any]:
         """Analyze property distribution and development across players.
 
         Returns:
@@ -591,7 +594,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def player_rankings(self) -> List[Dict[str, Any]]:
+    def player_rankings(self) -> list[dict[str, Any]]:
         """Generate player rankings by net worth and strategic position.
 
         Returns:
@@ -624,7 +627,7 @@ class MonopolyState(BaseModel):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Union[int, float, str]]:
+    def game_statistics(self) -> dict[str, int | float | str]:
         """Generate comprehensive game statistics and metrics.
 
         Returns:
@@ -730,7 +733,8 @@ class MonopolyState(BaseModel):
     ) -> "MonopolyState":
         """Convert any state object to MonopolyState.
 
-        This is the primary method for ensuring consistency across all state handling.
+        This is the primary method for ensuring consistency across all
+        state handling.
         """
         if isinstance(state, cls):
             return state
@@ -769,9 +773,8 @@ class MonopolyState(BaseModel):
             ]
 
         # Handle DiceRoll object
-        if data.get("last_roll"):
-            if isinstance(data["last_roll"], dict):
-                data["last_roll"] = DiceRoll.model_validate(data["last_roll"])
+        if data.get("last_roll") and isinstance(data["last_roll"], dict):
+            data["last_roll"] = DiceRoll.model_validate(data["last_roll"])
 
         # Ensure messages field exists and is empty list if not provided
         if "messages" not in data:
@@ -802,7 +805,9 @@ class MonopolyState(BaseModel):
         return result
 
     def update_player(self, player_index: int, player: Player) -> "MonopolyState":
-        """Update a player and return a new state instance with proper bounds checking."""
+        """Update a player and return a new state instance with proper bounds
+        checking.
+        """
         # Validate player_index bounds
         if not self.players:
             raise ValueError("No players in the game to update")
@@ -870,7 +875,7 @@ class MonopolyState(BaseModel):
 
         return issues
 
-    def _get_player_monopolies(self, player_name: str) -> List[str]:
+    def _get_player_monopolies(self, player_name: str) -> list[str]:
         """Get list of color groups where player has monopoly.
 
         Args:
@@ -919,7 +924,7 @@ class MonopolyState(BaseModel):
 
         return score
 
-    def get_player_strategic_position(self, player_name: str) -> Dict[str, Any]:
+    def get_player_strategic_position(self, player_name: str) -> dict[str, Any]:
         """Get comprehensive strategic position analysis for a player.
 
         Args:
@@ -964,8 +969,9 @@ class MonopolyState(BaseModel):
             "bankrupt": player.bankrupt,
         }
 
-    def get_public_view_for_player(self, player_name: str) -> Dict[str, Any]:
-        """Generate a secure public view of the game state for a specific player.
+    def get_public_view_for_player(self, player_name: str) -> dict[str, Any]:
+        """Generate a secure public view of the game state for a specific
+        player.
 
         This method creates a view that contains all information a player should
         legitimately know while hiding private information from other players.

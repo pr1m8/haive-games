@@ -2,7 +2,9 @@ from langchain_core.prompts import ChatPromptTemplate
 
 
 def generate_move_decision_prompt() -> ChatPromptTemplate:
-    """Creates a prompt for the player to decide on movement-related actions."""
+    """Creates a prompt for the player to decide on movement-related
+    actions.
+    """
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -36,7 +38,9 @@ def generate_move_decision_prompt() -> ChatPromptTemplate:
 
 
 def generate_property_decision_prompt() -> ChatPromptTemplate:
-    """Creates a prompt for the player to decide on property-related actions."""
+    """Creates a prompt for the player to decide on property-related
+    actions.
+    """
     return ChatPromptTemplate.from_messages(
         [
             (

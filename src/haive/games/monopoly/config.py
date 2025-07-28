@@ -1,4 +1,5 @@
-r"""Comprehensive configuration system for strategic Monopoly gameplay and real estate management.
+r"""Comprehensive configuration system for strategic Monopoly gameplay and real
+estate management.
 
 This module provides sophisticated configuration management for Monopoly agents with
 support for advanced gameplay features, strategic AI customization, and flexible
@@ -255,7 +256,8 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
 
 class MonopolyGameAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Monopoly game agents with comprehensive rule support.
+    r"""Advanced configuration system for Monopoly game agents with
+    comprehensive rule support.
 
     This class provides complete configuration management for Monopoly gameplay,
     supporting multiple rule variants, economic simulation parameters, and strategic
@@ -626,7 +628,8 @@ class MonopolyGameAgentConfig(AgentConfig):
         return round(velocity, 2)
 
     def create_initial_state(self) -> MonopolyState:
-        r"""Create the initial game state with all required fields and proper validation.
+        r"""Create the initial game state with all required fields and proper
+        validation.
 
         Returns:
             MonopolyState: Fully initialized game state ready for gameplay.
@@ -714,8 +717,9 @@ class MonopolyGameAgentConfig(AgentConfig):
     def setup_player_agent_engines(self) -> None:
         """Set up the engines for the player agent if not already configured.
 
-        This method ensures that the player agent has the necessary LLM engines
-        configured for different types of decisions (property, trading, building, etc.).
+        This method ensures that the player agent has the necessary LLM
+        engines configured for different types of decisions (property,
+        trading, building, etc.).
         """
         if not self.player_agent_config.engines:
             from haive.games.monopoly.engines import build_monopoly_player_aug_llms

@@ -7,11 +7,11 @@ from haive.games.monopoly.game.property import Property
 from haive.games.monopoly.game.types import ActionType, PropertyType, SpecialSquareType
 
 __all__ = [
+    "ActionType",
     "Card",
     "Game",
     "Player",
     "Property",
-    "ActionType",
     "PropertyType",
     "SpecialSquareType",
 ]

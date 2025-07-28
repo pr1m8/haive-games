@@ -52,16 +52,22 @@ class MonopolyRichUI:
     def render_header(self) -> Panel:
         """Render the game header."""
         if not self.state:
-            header_text = Text("🏠 Monopoly Game - Initializing...", justify="center", style="bold white on blue")
+            header_text = Text(
+                "🏠 Monopoly Game - Initializing...",
+                justify="center",
+                style="bold white on blue",
+            )
         else:
-            #state = MonopolyState.model_validate(self.state)
+            # state = MonopolyState.model_validate(self.state)
             if hasattr(self.state, "model_dump"):
-              self.state=self.state.model_dump()
-            status_color = "green" if self.state["game_status"] == "playing" else "yellow"
+                self.state = self.state.model_dump()
+            status_color = (
+                "green" if self.state["game_status"] == "playing" else "yellow"
+            )
             header_text = Text(
                 f"🏠 Monopoly Game - Turn {self.state["turn_number"]} - {self.state["game_status"].title()}",
                 justify="center",
-                style=f"bold white on {status_color}"
+                style=f"bold white on {status_color}",
             )
 
         return Panel(header_text, border_style="blue")
@@ -79,10 +85,14 @@ class MonopolyRichUI:
                 state = self.state
 
             footer_text.append(f"Round: {state.round_number} ", style="bold")
-            footer_text.append(f"• Active Players: {len(state.active_players)} ", style="green")
+            footer_text.append(
+                f"• Active Players: {len(state.active_players)} ", style="green"
+            )
 
             if state.bankrupt_players:
-                footer_text.append(f"• Bankrupt: {len(state.bankrupt_players)} ", style="red")
+                footer_text.append(
+                    f"• Bankrupt: {len(state.bankrupt_players)} ", style="red"
+                )
 
             if state.winner:
                 footer_text.append(f"• WINNER: {state.winner} ", style="bold gold1")
@@ -100,7 +110,9 @@ class MonopolyRichUI:
     def render_board(self) -> Panel:
         """Render a simplified board view."""
         if not self.state:
-            return Panel("Waiting for game state...", title="Board", border_style="magenta")
+            return Panel(
+                "Waiting for game state...", title="Board", border_style="magenta"
+            )
 
         # Create a simple grid representation of the board
         board_text = Text()
@@ -108,16 +120,16 @@ class MonopolyRichUI:
         # Top row (positions 20-30)
         board_text.append("FREE  ", style="yellow")
         for pos in range(21, 30):
-          if isinstance(self.state,dict):
-            state = MonopolyState.model_validate(self.state)
-            prop = state.get_property_by_position(pos)
-          else:
-            prop = self.state.get_property_by_position(pos)
-            if prop and prop.owner:
-                style = self._get_player_color(prop.owner)
-                board_text.append(f"{prop.name[:5]:<5} ", style=style)
+            if isinstance(self.state, dict):
+                state = MonopolyState.model_validate(self.state)
+                prop = state.get_property_by_position(pos)
             else:
-                board_text.append("-----  ", style="dim")
+                prop = self.state.get_property_by_position(pos)
+                if prop and prop.owner:
+                    style = self._get_player_color(prop.owner)
+                    board_text.append(f"{prop.name[:5]:<5} ", style=style)
+                else:
+                    board_text.append("-----  ", style="dim")
         board_text.append("JAIL\n", style="red")
 
         # Middle sections (simplified)
@@ -127,11 +139,11 @@ class MonopolyRichUI:
         # Bottom row (positions 10-0)
         board_text.append("VISIT ", style="cyan")
         for pos in range(9, 0, -1):
-            if isinstance(self.state,dict):
-              state = MonopolyState.model_validate(self.state)
-              prop = state.get_property_by_position(pos)
+            if isinstance(self.state, dict):
+                state = MonopolyState.model_validate(self.state)
+                prop = state.get_property_by_position(pos)
             else:
-              prop = self.state.get_property_by_position(pos)
+                prop = self.state.get_property_by_position(pos)
             if prop and prop.owner:
                 style = self._get_player_color(prop.owner)
                 board_text.append(f"{prop.name[:5]:<5} ", style=style)
@@ -141,11 +153,11 @@ class MonopolyRichUI:
 
         # Show player positions
         board_text.append("\nPlayer Positions:\n", style="bold underline")
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          players = state.players
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            players = state.players
         else:
-          players = self.state.players
+            players = self.state.players
         for player in players:
             if not player.bankrupt:
                 pos_info = self._get_position_name(player.position)
@@ -159,33 +171,39 @@ class MonopolyRichUI:
         if not self.state:
             return Panel("No current player", title="Current Turn", border_style="cyan")
 
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          current = state.current_player
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            current = state.current_player
         else:
-          current = self.state.current_player
+            current = self.state.current_player
         style = self._get_player_color(current.name)
 
         player_text = Text()
         player_text.append(f"{current.name}\n", style=f"bold {style}")
         player_text.append(f"💰 Money: ${current.money:,}\n")
-        player_text.append(f"📍 Position: {self._get_position_name(current.position)}\n")
+        player_text.append(
+            f"📍 Position: {self._get_position_name(current.position)}\n"
+        )
         player_text.append(f"🏠 Properties: {len(current.properties)}\n")
 
         if current.in_jail:
-            player_text.append(f"🔒 In Jail (Turn {current.jail_turns}/3)\n", style="red")
+            player_text.append(
+                f"🔒 In Jail (Turn {current.jail_turns}/3)\n", style="red"
+            )
 
         if current.jail_cards > 0:
             player_text.append(f"🎫 Jail Cards: {current.jail_cards}\n", style="yellow")
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          last_roll = state.last_roll
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            last_roll = state.last_roll
         else:
-          last_roll = self.state.last_roll
+            last_roll = self.state.last_roll
         if last_roll:
             roll = last_roll
             roll_style = "bold green" if roll.is_doubles else "white"
-            player_text.append(f"🎲 Last Roll: {roll.die1}+{roll.die2}={roll.total}", style=roll_style)
+            player_text.append(
+                f"🎲 Last Roll: {roll.die1}+{roll.die2}={roll.total}", style=roll_style
+            )
             if roll.is_doubles:
                 player_text.append(" (DOUBLES!)", style="bold yellow")
 
@@ -202,28 +220,22 @@ class MonopolyRichUI:
         table.add_column("Props", justify="center")
         table.add_column("Status")
 
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          players = state.players
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            players = state.players
         else:
-          players = self.state.players
+            players = self.state.players
         for player in players:
             if player.bankrupt:
-                table.add_row(
-                    player.name,
-                    "💥",
-                    "0",
-                    "Bankrupt",
-                    style="red dim"
-                )
+                table.add_row(player.name, "💥", "0", "Bankrupt", style="red dim")
             else:
                 status = "🔒 Jail" if player.in_jail else "Active"
                 style = self._get_player_color(player.name)
-                if isinstance(self.state,dict):
-                  state = MonopolyState.model_validate(self.state)
-                  current_player = state.current_player
+                if isinstance(self.state, dict):
+                    state = MonopolyState.model_validate(self.state)
+                    current_player = state.current_player
                 else:
-                  current_player = self.state.current_player
+                    current_player = self.state.current_player
                 if player.name == current_player.name:
                     style += " bold"
 
@@ -232,18 +244,18 @@ class MonopolyRichUI:
                     f"${player.money:,}",
                     str(len(player.properties)),
                     status,
-                    style=style
+                    style=style,
                 )
 
         return Panel(table, title="Players", border_style="green")
 
     def render_recent_events(self) -> Panel:
         """Render recent game events."""
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          recent_events = state.get_recent_events(8)
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            recent_events = state.get_recent_events(8)
         else:
-          recent_events = self.state.get_recent_events(8)
+            recent_events = self.state.get_recent_events(8)
         if not self.state or not recent_events:
             return Panel("No events yet", title="Recent Events", border_style="yellow")
 
@@ -267,7 +279,9 @@ class MonopolyRichUI:
             elif event.money_change < 0:
                 money_indicator = f" (${event.money_change})"
 
-            events_text.append(f"• {event.player}: {event.description}{money_indicator}\n", style=style)
+            events_text.append(
+                f"• {event.player}: {event.description}{money_indicator}\n", style=style
+            )
 
         return Panel(events_text, title="Recent Events", border_style="yellow")
 
@@ -281,17 +295,17 @@ class MonopolyRichUI:
             4: "cyan",
             5: "yellow",
             6: "bright_red",
-            7: "bright_blue"
+            7: "bright_blue",
         }
 
         if not self.state:
             return "white"
 
-        if isinstance(self.state,dict):
-          state = MonopolyState.model_validate(self.state)
-          players = state.players
+        if isinstance(self.state, dict):
+            state = MonopolyState.model_validate(self.state)
+            players = state.players
         else:
-          players = self.state.players
+            players = self.state.players
         for i, player in enumerate(players):
             if player.name == player_name:
                 return colors.get(i, "white")
@@ -309,14 +323,13 @@ class MonopolyRichUI:
 
     def run(self, agent: MonopolyAgent, delay: float = 2.0):
         """Run the live UI with the Monopoly agent.
-        
+
         Args:
             agent: The Monopoly agent to run
             delay: Delay between updates for readability
         """
         # CRITICAL FIX: Ensure initial state has messages field
         initial_state = agent.initial_state
-
 
         # Show initial state
         self.state = agent.initial_state
@@ -327,9 +340,7 @@ class MonopolyRichUI:
                 last_update_time = time.time()
 
                 for step in agent.app.stream(
-                    initial_state,
-                    config=agent.runnable_config,
-                    stream_mode="values"
+                    initial_state, config=agent.runnable_config, stream_mode="values"
                 ):
                     # Update state
                     self.state = step
@@ -343,7 +354,9 @@ class MonopolyRichUI:
 
                     # Check for game end
                     if step.get("error_message"):
-                        self.console.print(f"\n[bold red]Error: {step['error_message']}[/bold red]")
+                        self.console.print(
+                            f"\n[bold red]Error: {step['error_message']}[/bold red]"
+                        )
                         time.sleep(1)
                         break
 
@@ -356,6 +369,7 @@ class MonopolyRichUI:
         except Exception as e:
             self.console.print(f"\n[bold red]Error during game: {e!s}[/bold red]")
             import traceback
+
             self.console.print(traceback.format_exc())
 
         self.console.print("\n[bold magenta]🏁 Game Over![/bold magenta]")
@@ -372,9 +386,13 @@ class MonopolyRichUI:
         self.layout["footer"].update(self.render_footer())
 
         self.layout["body"]["board"].update(self.render_board())
-        self.layout["body"]["right_panel"]["current_player"].update(self.render_current_player())
+        self.layout["body"]["right_panel"]["current_player"].update(
+            self.render_current_player()
+        )
         self.layout["body"]["right_panel"]["players"].update(self.render_players())
-        self.layout["body"]["right_panel"]["recent_events"].update(self.render_recent_events())
+        self.layout["body"]["right_panel"]["recent_events"].update(
+            self.render_recent_events()
+        )
 
 
 def main():
@@ -384,7 +402,7 @@ def main():
         player_names=["Alice", "Bob", "Charlie", "Diana"],
         max_turns=500,
         enable_trading=False,  # Disable for simpler initial version
-        enable_building=False
+        enable_building=False,
     )
 
     # Create agent

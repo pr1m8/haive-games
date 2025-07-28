@@ -1,7 +1,8 @@
 """Generic Monopoly engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Monopoly games,
-allowing for configurable LLM models and game-specific player identifiers.
+This module provides generic engine creation functions for Monopoly
+games, allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -239,7 +240,9 @@ def create_generic_monopoly_config_from_example(
 
 
 def create_real_estate_mogul_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
-    """Create real estate mogul-style Monopoly engines with high-powered models."""
+    """Create real estate mogul-style Monopoly engines with high-powered
+    models.
+    """
     return create_generic_monopoly_config_from_example("real_estate_moguls", **kwargs)
 
 

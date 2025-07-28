@@ -11,11 +11,11 @@ Usage:
     python simple_demo.py
 """
 
-# Use relative imports to work in the local development environment
-from models import GameEvent, Property, PropertyColor, PropertyType
 from rich.console import Console
-from state import MonopolyState
-from utils import (
+
+from haive.games.monopoly.models import GameEvent, Property, PropertyColor, PropertyType
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import (
     calculate_rent,
     create_board,
     create_players,
@@ -326,7 +326,6 @@ def run_demo(turns: int = 20):
 
     # Ensure Vermont Avenue exists in properties
     if "Vermont Avenue" not in properties:
-        print("WARNING: Vermont Avenue not in properties!")
         # Get position 8 (Vermont Avenue)
         vermont_data = get_property_at_position(8)
         if vermont_data:

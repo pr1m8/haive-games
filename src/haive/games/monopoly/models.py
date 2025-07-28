@@ -1,4 +1,5 @@
-r"""Comprehensive data models for strategic Monopoly gameplay and real estate management.
+r"""Comprehensive data models for strategic Monopoly gameplay and real estate
+management.
 
 This module provides sophisticated data models for the classic Monopoly board game,
 supporting complex property transactions, strategic decision-making, and comprehensive
@@ -59,7 +60,7 @@ Note:
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -247,7 +248,7 @@ class PropertyDecision(BaseModel):
         ],
     )
 
-    max_bid: Optional[int] = Field(
+    max_bid: int | None = Field(
         default=None,
         ge=0,
         le=10000,
@@ -385,7 +386,8 @@ class JailDecision(BaseModel):
 
 
 class BuildingDecision(BaseModel):
-    r"""Strategic decision model for property development and rental income optimization.
+    r"""Strategic decision model for property development and rental income
+    optimization.
 
     This model captures the decision-making process for building houses and hotels
     on monopolized properties, including development strategy, cash flow management,
@@ -522,7 +524,8 @@ class BuildingDecision(BaseModel):
 
 
 class TradeOffer(BaseModel):
-    r"""Comprehensive model for inter-player trade negotiations and strategic exchanges.
+    r"""Comprehensive model for inter-player trade negotiations and strategic
+    exchanges.
 
     This model captures complex trade offers between players, including property
     exchanges, cash considerations, and strategic reasoning. It supports multi-asset
@@ -609,7 +612,7 @@ class TradeOffer(BaseModel):
         examples=["Player2", "Bob", "Tactical_AI", "Computer_Opponent"],
     )
 
-    offered_properties: List[str] = Field(
+    offered_properties: list[str] = Field(
         default_factory=list,
         description="List of property names being offered by the offering player",
         examples=[
@@ -627,7 +630,7 @@ class TradeOffer(BaseModel):
         examples=[0, 100, 200, 500, 800],
     )
 
-    requested_properties: List[str] = Field(
+    requested_properties: list[str] = Field(
         default_factory=list,
         description="List of property names being requested from the receiving player",
         examples=[["New York Avenue"], ["Water Works"], ["Boardwalk"]],
@@ -780,7 +783,7 @@ class TradeResponse(BaseModel):
         ],
     )
 
-    counter_offer: Optional[TradeOffer] = Field(
+    counter_offer: TradeOffer | None = Field(
         default=None,
         description="Optional alternative trade proposal if declining the original offer",
     )
@@ -819,7 +822,8 @@ class TradeResponse(BaseModel):
 
 
 class PlayerAnalysis(BaseModel):
-    """Comprehensive strategic analysis model for player position and game state evaluation.
+    """Comprehensive strategic analysis model for player position and game
+    state evaluation.
 
     This model provides detailed analysis of a player's current position in the game,
     including financial assessment, strategic planning, opportunity identification,
@@ -913,7 +917,7 @@ class PlayerAnalysis(BaseModel):
         ],
     )
 
-    immediate_goals: List[str] = Field(
+    immediate_goals: list[str] = Field(
         ...,
         min_length=1,
         max_length=5,
@@ -928,7 +932,7 @@ class PlayerAnalysis(BaseModel):
         ],
     )
 
-    threats: List[str] = Field(
+    threats: list[str] = Field(
         default_factory=list,
         description="Identified threats from other players including potential monopolies and competitive risks",
         examples=[
@@ -938,7 +942,7 @@ class PlayerAnalysis(BaseModel):
         ],
     )
 
-    opportunities: List[str] = Field(
+    opportunities: list[str] = Field(
         default_factory=list,
         description="Current opportunities available for strategic advancement and competitive positioning",
         examples=[
@@ -964,10 +968,9 @@ class PlayerAnalysis(BaseModel):
 
         if opportunity_count > threat_count:
             return "Favorable - More opportunities than threats"
-        elif threat_count > opportunity_count:
+        if threat_count > opportunity_count:
             return "Challenging - More threats than opportunities"
-        else:
-            return "Balanced - Equal opportunities and threats"
+        return "Balanced - Equal opportunities and threats"
 
 
 class GameEvent(BaseModel):
@@ -1081,7 +1084,7 @@ class GameEvent(BaseModel):
         examples=[0, -180, -350, 200, 1500, -50],
     )
 
-    property_involved: Optional[str] = Field(
+    property_involved: str | None = Field(
         default=None,
         min_length=3,
         max_length=30,
@@ -1094,7 +1097,7 @@ class GameEvent(BaseModel):
         ],
     )
 
-    details: Dict[str, Any] = Field(
+    details: dict[str, Any] = Field(
         default_factory=dict,
         description="Additional structured data about the event including game state changes and metadata",
         examples=[
@@ -1221,12 +1224,12 @@ class DiceRoll(BaseModel):
         """
         if self.is_doubles:
             return f"Rolled doubles {self.die1}s (total: {self.total})"
-        else:
-            return f"Rolled {self.die1} and {self.die2} (total: {self.total})"
+        return f"Rolled {self.die1} and {self.die2} (total: {self.total})"
 
 
 class Property(BaseModel):
-    """Comprehensive model for Monopoly board properties with development and ownership tracking.
+    """Comprehensive model for Monopoly board properties with development and
+    ownership tracking.
 
     This model represents individual properties on the Monopoly board, including
     streets, railroads, utilities, and special spaces. It tracks ownership,
@@ -1348,7 +1351,7 @@ class Property(BaseModel):
         examples=[60, 180, 200, 400],  # Mediterranean, St. James, Railroad, Boardwalk
     )
 
-    rent: List[int] = Field(
+    rent: list[int] = Field(
         ...,
         min_length=6,
         max_length=6,
@@ -1376,7 +1379,7 @@ class Property(BaseModel):
         examples=[30, 90, 100, 200],  # Half of property prices
     )
 
-    owner: Optional[str] = Field(
+    owner: str | None = Field(
         default=None,
         min_length=1,
         max_length=20,
@@ -1447,7 +1450,8 @@ class Property(BaseModel):
     @computed_field
     @property
     def total_investment(self) -> int:
-        """Calculate total investment in property including purchase and development.
+        """Calculate total investment in property including purchase and
+        development.
 
         Returns:
             int: Total amount invested in property.
@@ -1456,7 +1460,8 @@ class Property(BaseModel):
 
 
 class Player(BaseModel):
-    r"""Comprehensive model for individual players in Monopoly with complete state tracking.
+    r"""Comprehensive model for individual players in Monopoly with complete
+    state tracking.
 
     This model represents a player's complete state in the Monopoly game, including
     financial position, property ownership, location, jail status, and strategic
@@ -1553,7 +1558,7 @@ class Player(BaseModel):
         examples=[0, 5, 10, 16, 39],  # GO, Railroad, Jail, St. James, Boardwalk
     )
 
-    properties: List[str] = Field(
+    properties: list[str] = Field(
         default_factory=list,
         description="List of owned property names for portfolio tracking",
         examples=[
@@ -1608,8 +1613,9 @@ class Player(BaseModel):
         """
         return self.money >= amount
 
-    def net_worth(self, properties_dict: Dict[str, Property]) -> int:
-        """Calculate player's total net worth including properties and development.
+    def net_worth(self, properties_dict: dict[str, Property]) -> int:
+        """Calculate player's total net worth including properties and
+        development.
 
         Args:
             properties_dict (Dict[str, Property]): Dictionary of all properties by name.
@@ -1674,9 +1680,8 @@ class Player(BaseModel):
         """
         if not self.in_jail:
             return "Free"
-        elif self.jail_turns == 0:
+        if self.jail_turns == 0:
             return "Just jailed"
-        elif self.jail_turns < 3:
+        if self.jail_turns < 3:
             return f"In jail ({self.jail_turns} turns)"
-        else:
-            return "Must pay fine"
+        return "Must pay fine"
