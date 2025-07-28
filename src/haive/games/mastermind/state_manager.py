@@ -1,7 +1,7 @@
 """State manager for the Mastermind game.
 
-This module defines the state manager for the Mastermind game,
-which manages the state of the game and provides methods for initializing,
+This module defines the state manager for the Mastermind game, which
+manages the state of the game and provides methods for initializing,
 updating, and analyzing the game state.
 """
 
@@ -21,7 +21,8 @@ from haive.games.mastermind.state import MastermindState
 class MastermindStateManager(GameStateManager[MastermindState]):
     """Manager for Mastermind game state.
 
-    This class provides methods for initializing, updating, and analyzing the game state.
+    This class provides methods for initializing, updating, and
+    analyzing the game state.
     """
 
     VALID_COLORS = ["red", "blue", "green", "yellow", "purple", "orange"]
@@ -220,7 +221,8 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
     @classmethod
     def get_possible_codes(cls, state: MastermindState) -> set[tuple[str, ...]]:
-        """Get all possible secret codes that are consistent with all guesses and feedback so far.
+        """Get all possible secret codes that are consistent with all guesses
+        and feedback so far.
 
         This is computationally expensive for a full game, so it's limited to use for analysis.
 
@@ -255,7 +257,8 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         guess: tuple[str, ...],
         feedback: MastermindFeedback,
     ) -> bool:
-        """Check if a potential code is consistent with a guess and its feedback.
+        """Check if a potential code is consistent with a guess and its
+        feedback.
 
         Args:
             code: Potential secret code.

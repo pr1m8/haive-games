@@ -72,8 +72,8 @@ def ensure_game_state(
 class MastermindAgent(GameAgent[MastermindConfig]):
     """Agent for playing Mastermind.
 
-    This class implements the Mastermind game agent, which uses language models
-    to generate guesses and analyze positions in the game.
+    This class implements the Mastermind game agent, which uses language
+    models to generate guesses and analyze positions in the game.
     """
 
     def __init__(self, config: MastermindConfig = MastermindConfig()):
@@ -206,7 +206,8 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         }
 
     def extract_guess(self, response: Any) -> MastermindGuess:
-        """Extract a structured MastermindGuess object from the engine response.
+        """Extract a structured MastermindGuess object from the engine
+        response.
 
         Args:
             response (Any): Response from the guess engine.
@@ -502,8 +503,9 @@ class MastermindAgent(GameAgent[MastermindConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization, guess making,
-        and analysis. Adds edges between nodes based on the codemaker's role.
+        Creates a dynamic graph with nodes for game initialization,
+        guess making, and analysis. Adds edges between nodes based on
+        the codemaker's role.
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)

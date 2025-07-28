@@ -20,8 +20,8 @@ class MastermindConfig(GameConfig):
     """Configuration for the Mastermind game agent.
 
     This class defines the configuration for the Mastermind game agent,
-    including game state schema, engines, analysis settings, visualization,
-    and game parameters.
+    including game state schema, engines, analysis settings,
+    visualization, and game parameters.
     """
 
     name: str = Field(default="mastermind", description="Name of the game")

@@ -1,7 +1,7 @@
 """Configurable Mastermind configuration using the generic player agent system.
 
-This module provides configurable Mastermind game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Mastermind game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -153,7 +153,8 @@ def create_mastermind_config(
     codebreaker_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration with simple model specifications.
+    """Create a configurable Mastermind configuration with simple model
+    specifications.
 
     Args:
         codemaker_model: Model for codemaker and analyzer
@@ -179,7 +180,8 @@ def create_mastermind_config(
 def create_mastermind_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration from a predefined example.
+    """Create a configurable Mastermind configuration from a predefined
+    example.
 
     Args:
         example_name: Name of the example configuration
@@ -206,7 +208,8 @@ def create_mastermind_config_from_example(
 def create_mastermind_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration from detailed player configurations.
+    """Create a configurable Mastermind configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

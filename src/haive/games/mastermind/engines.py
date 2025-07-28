@@ -1,7 +1,7 @@
 """Engines for the Mastermind game.
 
-This module contains the engines for the Mastermind game,
-including the codemaker engine, guess engines, and analyzer engines.
+This module contains the engines for the Mastermind game, including the
+codemaker engine, guess engines, and analyzer engines.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -74,7 +74,8 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for analyzing a Mastermind position.
 
     This function constructs a prompt template for the analyzer engine,
-    which analyzes the current game state from the perspective of the specified player.
+    which analyzes the current game state from the perspective of the
+    specified player.
     """
     return ChatPromptTemplate.from_messages(
         [

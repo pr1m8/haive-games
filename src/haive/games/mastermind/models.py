@@ -82,7 +82,7 @@ ValidColor = Literal["red", "blue", "green", "yellow", "purple", "orange"]
 
 The six available colors in the classic Mastermind game:
 - red: Traditional primary color
-- blue: Traditional primary color  
+- blue: Traditional primary color
 - green: Traditional secondary color
 - yellow: Traditional primary color
 - purple: Traditional secondary color
@@ -90,9 +90,9 @@ The six available colors in the classic Mastermind game:
 
 Examples:
     Using color validation::
-    
+
         from haive.games.mastermind.models import ValidColor
-        
+
         def validate_color(color: str) -> ValidColor:
             valid_colors = ["red", "blue", "green", "yellow", "purple", "orange"]
             if color not in valid_colors:
@@ -358,11 +358,10 @@ class MastermindFeedback(BaseModel):
 class MastermindAnalysis(BaseModel):
     """Analysis of a Mastermind position.
 
-    This class defines the structure of an analysis for a Mastermind position,
-    which includes the estimated number of possible combinations left,
-    the colors with high probability of being in the solution,
-    the recommended next guess,
-    the colors likely eliminated,
+    This class defines the structure of an analysis for a Mastermind
+    position, which includes the estimated number of possible
+    combinations left, the colors with high probability of being in the
+    solution, the recommended next guess, the colors likely eliminated,
     and the fixed positions.
     """
 
