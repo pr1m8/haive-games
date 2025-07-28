@@ -1,7 +1,8 @@
 """State manager for Tic Tac Toe game logic and mechanics.
 
-Handles core operations like initializing the board, validating and applying moves,
-evaluating win conditions, and updating the state with engine analyses.
+Handles core operations like initializing the board, validating and
+applying moves, evaluating win conditions, and updating the state with
+engine analyses.
 """
 
 from haive.games.framework.base.state_manager import GameStateManager

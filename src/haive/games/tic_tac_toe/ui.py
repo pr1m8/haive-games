@@ -1,7 +1,7 @@
 """Rich UI Game Runner for Tic Tac Toe.
 
-This module provides a beautiful, interactive UI for running Tic Tac Toe games
-using the Rich library for enhanced terminal displays.
+This module provides a beautiful, interactive UI for running Tic Tac Toe
+games using the Rich library for enhanced terminal displays.
 """
 
 import time

@@ -1,7 +1,7 @@
 """Configurable Tic Tac Toe engines using the new player agent system.
 
-This module provides Tic Tac Toe engine configurations that use configurable
-player agents instead of hardcoded LLM configurations.
+This module provides Tic Tac Toe engine configurations that use
+configurable player agents instead of hardcoded LLM configurations.
 """
 
 from typing import Dict

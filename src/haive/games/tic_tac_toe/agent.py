@@ -65,7 +65,8 @@ logger = logging.getLogger(__name__)
 
 @register_agent(TicTacToeConfig)
 class TicTacToeAgent(GameAgent[TicTacToeConfig]):
-    """Strategic agent for Tic Tac Toe gameplay with LLM-driven decision-making.
+    """Strategic agent for Tic Tac Toe gameplay with LLM-driven decision-
+    making.
 
     This agent manages the complete Tic Tac Toe game lifecycle, from initialization
     through gameplay to completion. It coordinates LLM engines for move generation

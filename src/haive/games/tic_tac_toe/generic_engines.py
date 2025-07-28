@@ -1,7 +1,8 @@
 """Generic Tic Tac Toe engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for Tic Tac Toe,
-showing the same pattern working across different games with different player identifiers.
+This module demonstrates how to use the generic player agent system for
+Tic Tac Toe, showing the same pattern working across different games
+with different player identifiers.
 """
 
 from typing import Type, Union
@@ -144,7 +145,8 @@ def create_generic_ttt_engines_simple(
     temperature: float = 0.3,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:
-    """Create Tic Tac Toe engines with simple model configurations using generics.
+    """Create Tic Tac Toe engines with simple model configurations using
+    generics.
 
     Args:
         x_model: Model for X player and analyzer
@@ -267,8 +269,8 @@ def compare_chess_vs_ttt_patterns():
 def create_multi_game_comparison():
     """Create engines for multiple games to show the pattern.
 
-    This demonstrates how the same configuration approach works
-    across different games with the generic system.
+    This demonstrates how the same configuration approach works across
+    different games with the generic system.
     """
     print("\n🎮 Multi-Game Configuration Demonstration")
     print("=" * 50)

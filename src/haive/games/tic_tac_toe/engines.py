@@ -1,7 +1,8 @@
 """Prompt generation and engine configuration for Tic Tac Toe agents.
 
-This module defines prompt templates and model configurations for both move generation and board analysis.
-These are used by agents to communicate with LLMs in a structured and strategic way.
+This module defines prompt templates and model configurations for both
+move generation and board analysis. These are used by agents to
+communicate with LLMs in a structured and strategic way.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -45,7 +46,8 @@ def generate_move_prompt(player_symbol: str) -> ChatPromptTemplate:
 
 
 def generate_analysis_prompt(player_symbol: str) -> ChatPromptTemplate:
-    """Generate a prompt template for analyzing a board position in Tic Tac Toe.
+    """Generate a prompt template for analyzing a board position in Tic Tac
+    Toe.
 
     Args:
         player_symbol (str): The symbol ('X' or 'O') for the analyzing player.

@@ -131,7 +131,8 @@ def replace_board_reducer(left: Any, right: Any) -> Any:
 
 
 class TicTacToeState(GameState):
-    """Comprehensive state model for Tic Tac Toe gameplay with LangGraph integration.
+    """Comprehensive state model for Tic Tac Toe gameplay with LangGraph
+    integration.
 
     This class provides complete state management for Tic Tac Toe games, supporting
     both traditional gameplay mechanics and advanced features for AI analysis. The

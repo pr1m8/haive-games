@@ -1,4 +1,5 @@
-"""Comprehensive data models for strategic Tic Tac Toe gameplay and positional analysis.
+"""Comprehensive data models for strategic Tic Tac Toe gameplay and positional
+analysis.
 
 This module provides sophisticated data models for the classic game of Tic Tac Toe,
 supporting both traditional gameplay and advanced strategic analysis. The models
@@ -60,7 +61,8 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class TicTacToeMove(BaseModel):
-    """Comprehensive representation of a Tic Tac Toe move with validation and game context.
+    """Comprehensive representation of a Tic Tac Toe move with validation and
+    game context.
 
     This model provides complete representation of moves in Tic Tac Toe, supporting
     both basic gameplay and advanced strategic analysis. It includes coordinate
@@ -198,7 +200,8 @@ class TicTacToeMove(BaseModel):
 
 
 class TicTacToeAnalysis(BaseModel):
-    """Advanced strategic analysis model for Tic Tac Toe positions with game theory insights.
+    """Advanced strategic analysis model for Tic Tac Toe positions with game
+    theory insights.
 
     This model provides comprehensive analysis of Tic Tac Toe positions using
     game theory principles, perfect play algorithms, and strategic heuristics.
