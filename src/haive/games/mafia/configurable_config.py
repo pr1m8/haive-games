@@ -143,7 +143,8 @@ def create_mafia_config(
     town_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMafiaConfig:
-    """Create a configurable Mafia configuration with simple model specifications.
+    """Create a configurable Mafia configuration with simple model
+    specifications.
 
     Args:
         mafia_model: Model for mafia and analyzer
@@ -196,7 +197,8 @@ def create_mafia_config_from_example(
 def create_mafia_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMafiaConfig:
-    """Create a configurable Mafia configuration from detailed player configurations.
+    """Create a configurable Mafia configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
