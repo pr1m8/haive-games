@@ -1,7 +1,7 @@
 """Agent for playing Nim.
 
-This module defines the Nim agent, which uses language models
-to generate moves and analyze positions in the game.
+This module defines the Nim agent, which uses language models to
+generate moves and analyze positions in the game.
 """
 
 import logging

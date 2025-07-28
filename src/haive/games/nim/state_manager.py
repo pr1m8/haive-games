@@ -13,8 +13,8 @@ class NimStateManager(GameStateManager[NimState]):
     """Manager for Nim game state.
 
     This class provides methods for initializing a new Nim game,
-    retrieving legal moves, applying moves, adding analyses,
-    and checking game status.
+    retrieving legal moves, applying moves, adding analyses, and
+    checking game status.
     """
 
     @classmethod

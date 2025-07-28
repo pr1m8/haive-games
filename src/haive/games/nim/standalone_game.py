@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Standalone game implementation of Nim.
-This script allows playing Nim without requiring the full Haive framework.
+
+This script allows playing Nim without requiring the full Haive
+framework.
 """
 
 import argparse

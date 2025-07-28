@@ -1,4 +1,5 @@
-r"""Comprehensive data models for strategic Nim gameplay and mathematical analysis.
+r"""Comprehensive data models for strategic Nim gameplay and mathematical
+analysis.
 
 This module provides sophisticated data models for the mathematical game of Nim,
 supporting both traditional gameplay and advanced strategic analysis. The models
@@ -103,7 +104,8 @@ class PositionType(str, Enum):
 
 
 class NimMove(BaseModel):
-    r"""Comprehensive representation of a Nim move with strategic context and validation.
+    r"""Comprehensive representation of a Nim move with strategic context and
+    validation.
 
     This model provides complete representation of Nim moves, supporting both
     basic gameplay and advanced strategic analysis. It includes validation for
@@ -318,7 +320,8 @@ class NimMove(BaseModel):
 
 
 class NimAnalysis(BaseModel):
-    r"""Advanced strategic analysis model for Nim positions with mathematical rigor.
+    r"""Advanced strategic analysis model for Nim positions with mathematical
+    rigor.
 
     This model provides comprehensive analysis of Nim positions using game theory,
     nimber theory, and optimal play strategies. It supports advanced AI decision-making

@@ -1,7 +1,8 @@
 """Rich UI implementation for the Nim game.
 
-This module provides a Rich-based UI for visualizing and interacting with the Nim game.
-It includes a NimUI class that handles visualization of the game state, piles, and game information.
+This module provides a Rich-based UI for visualizing and interacting
+with the Nim game. It includes a NimUI class that handles visualization
+of the game state, piles, and game information.
 """
 
 import logging
@@ -33,8 +34,9 @@ logger = logging.getLogger(__name__)
 class NimUI:
     """Rich terminal UI for the Nim game.
 
-    This class provides methods for visualizing the Nim game state using the Rich library.
-    It includes methods for displaying the game board, piles, game information, and analysis.
+    This class provides methods for visualizing the Nim game state using
+    the Rich library. It includes methods for displaying the game board,
+    piles, game information, and analysis.
     """
 
     # Stone representation
@@ -253,7 +255,8 @@ class NimUI:
             self._display_text_ui(state)
 
     def _display_text_ui(self, state: NimState):
-        """Display a text-based UI for the game state when Rich is not available.
+        """Display a text-based UI for the game state when Rich is not
+        available.
 
         Args:
             state: The current game state.

@@ -147,7 +147,8 @@ def create_nim_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableNimConfig:
-    """Create a configurable Nim configuration with simple model specifications.
+    """Create a configurable Nim configuration with simple model
+    specifications.
 
     Args:
         player1_model: Model for player1 and analyzer
@@ -200,7 +201,8 @@ def create_nim_config_from_example(
 def create_nim_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableNimConfig:
-    """Create a configurable Nim configuration from detailed player configurations.
+    """Create a configurable Nim configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations

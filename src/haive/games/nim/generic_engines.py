@@ -1,7 +1,8 @@
 """Generic Nim engine creation using the generic player agent system.
 
 This module provides generic engine creation functions for Nim games,
-allowing for configurable LLM models and game-specific player identifiers.
+allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from typing import Dict
