@@ -1,7 +1,8 @@
 """Generic Battleship engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Battleship games,
-allowing for configurable LLM models and game-specific player identifiers.
+This module provides generic engine creation functions for Battleship
+games, allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from typing import Dict
@@ -200,7 +201,8 @@ def create_generic_battleship_config_from_example(
 
 
 def create_naval_battleship_engines(**kwargs) -> Dict[str, AugLLMConfig]:
-    """Create naval commander-style Battleship engines with high-powered models."""
+    """Create naval commander-style Battleship engines with high-powered
+    models."""
     return create_generic_battleship_config_from_example("naval_commanders", **kwargs)
 
 

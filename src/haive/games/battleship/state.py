@@ -1,4 +1,5 @@
-r"""Comprehensive state management system for Battleship game mechanics and player tracking.
+r"""Comprehensive state management system for Battleship game mechanics and
+player tracking.
 
 This module provides sophisticated state models for the Battleship game, supporting
 complete game state tracking, turn management, strategic analysis, and secure state
@@ -59,7 +60,8 @@ from haive.games.battleship.models import (
 
 
 class PlayerState(BaseModel):
-    r"""Comprehensive state model for individual player tracking and strategic analysis.
+    r"""Comprehensive state model for individual player tracking and strategic
+    analysis.
 
     This class maintains complete state information for a single player in the
     Battleship game, including their board configuration, ship placements, attack
@@ -143,7 +145,8 @@ class PlayerState(BaseModel):
 
 
 class BattleshipState(BaseModel):
-    r"""Comprehensive state model for managing complete Battleship game sessions.
+    r"""Comprehensive state model for managing complete Battleship game
+    sessions.
 
     This class provides complete state management for Battleship games, supporting
     turn-based gameplay, phase transitions, strategic analysis, and secure state
@@ -444,7 +447,8 @@ class BattleshipState(BaseModel):
         )
 
     def get_public_state_for_player(self, player: str) -> Dict[str, Any]:
-        r"""Generate a secure public view of the game state for AI decision-making.
+        r"""Generate a secure public view of the game state for AI decision-
+        making.
 
         Creates a carefully sanitized view of the game state that provides all
         information a player should legitimately know while hiding opponent secrets

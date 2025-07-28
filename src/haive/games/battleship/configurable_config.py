@@ -1,7 +1,7 @@
 """Configurable Battleship configuration using the generic player agent system.
 
-This module provides configurable Battleship game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Battleship game configurations that
+replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
 from typing import Any, Dict, Optional
@@ -145,7 +145,8 @@ def create_battleship_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration with simple model specifications.
+    """Create a configurable Battleship configuration with simple model
+    specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -171,7 +172,8 @@ def create_battleship_config(
 def create_battleship_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration from a predefined example.
+    """Create a configurable Battleship configuration from a predefined
+    example.
 
     Args:
         example_name: Name of the example configuration
@@ -198,7 +200,8 @@ def create_battleship_config_from_example(
 def create_battleship_config_from_player_configs(
     player_configs: Dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration from detailed player configurations.
+    """Create a configurable Battleship configuration from detailed player
+    configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -250,7 +253,8 @@ def create_budget_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
 
 
 def create_naval_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
-    """Create a naval commander-style Battleship configuration with powerful models."""
+    """Create a naval commander-style Battleship configuration with powerful
+    models."""
     return create_battleship_config_from_example("naval_commanders", **kwargs)
 
 
