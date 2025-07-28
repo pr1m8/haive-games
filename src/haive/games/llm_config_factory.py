@@ -1,7 +1,8 @@
 """Unified LLM configuration factory for games.
 
-This module provides a simplified factory for creating LLM configurations
-for game agents, leveraging the new haive.core.models.llm factory system.
+This module provides a simplified factory for creating LLM
+configurations for game agents, leveraging the new haive.core.models.llm
+factory system.
 """
 
 from typing import Any, Dict, Optional, Tuple
@@ -24,8 +25,9 @@ def list_available_models() -> list:
 class GameLLMFactory:
     """Factory for creating game-specific LLM configurations.
 
-    This factory simplifies the process of creating LLM configurations for games
-    by providing game-optimized defaults and leveraging the core LLM factory.
+    This factory simplifies the process of creating LLM configurations
+    for games by providing game-optimized defaults and leveraging the
+    core LLM factory.
     """
 
     # Game-optimized temperature defaults

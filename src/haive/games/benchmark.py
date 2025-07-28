@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Benchmark script for testing game agents.
 
-This script runs benchmarks for the Monopoly and Poker agents
-to test their performance and identify issues.
+This script runs benchmarks for the Monopoly and Poker agents to test
+their performance and identify issues.
 """
 
 import argparse

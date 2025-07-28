@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""from typing import Any, Dict
-Haive Games Examples.
+"""From typing import Any, Dict Haive Games Examples.
 
 This file demonstrates comprehensive usage of the Haive Games framework,
-including quick starts, tournaments, custom games, and advanced patterns.
+including quick starts, tournaments, custom games, and advanced
+patterns.
 """
 
 import asyncio
