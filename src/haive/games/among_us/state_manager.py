@@ -59,7 +59,8 @@ from haive.games.framework.multi_player.state_manager import MultiPlayerGameStat
 
 
 class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
-    """Comprehensive state management mixin for Among Us social deduction gameplay.
+    """Comprehensive state management mixin for Among Us social deduction
+    gameplay.
 
     This mixin class provides complete state management functionality for Among Us
     games, handling complex mechanics including role-based gameplay, task systems,
@@ -353,7 +354,8 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     def apply_move(
         cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Apply a player's move to the game state with comprehensive validation.
+        """Apply a player's move to the game state with comprehensive
+        validation.
 
         Processes and validates player moves, updating the game state accordingly.
         Handles all move types across different game phases with proper error
@@ -535,7 +537,8 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     def _handle_complete_task_action(
         cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
     ) -> AmongUsState:
-        """Handle task completion with role validation and visual task detection.
+        """Handle task completion with role validation and visual task
+        detection.
 
         Processes task completion for crewmates, validates task location and
         status, and generates appropriate observations for other players.
@@ -1791,7 +1794,8 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     def filter_state_for_player(
         cls, state: AmongUsState, player_id: str
     ) -> Dict[str, Any]:
-        """Filter game state to include only information visible to a specific player.
+        """Filter game state to include only information visible to a specific
+        player.
 
         Creates a filtered view of the game state that includes only information
         the specified player should have access to, implementing proper information

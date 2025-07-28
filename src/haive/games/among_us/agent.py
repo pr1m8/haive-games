@@ -59,7 +59,8 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
     # Add this method to the AmongUsAgent class
 
     def get_engine_for_player(self, role: str, engine_key: str) -> Optional[Any]:
-        """Get the appropriate engine for a player based on their role and the current phase.
+        """Get the appropriate engine for a player based on their role and the
+        current phase.
 
         Args:
             role: Player role (CREWMATE or IMPOSTOR)

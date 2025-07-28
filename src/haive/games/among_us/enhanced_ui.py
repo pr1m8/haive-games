@@ -1,7 +1,8 @@
 """Enhanced Rich UI module for Among Us game visualization.
 
-This module provides an enhanced rich console UI for visualizing the Among Us game,
-with better styling, animated visualizations, and improved game information display.
+This module provides an enhanced rich console UI for visualizing the
+Among Us game, with better styling, animated visualizations, and
+improved game information display.
 """
 
 import logging
@@ -217,7 +218,8 @@ class EnhancedAmongUsUI:
     def create_map_visualization(
         self, state: AmongUsState, player_id: str | None = None
     ) -> Panel:
-        """Create a visual representation of the map with rooms, vents, and players.
+        """Create a visual representation of the map with rooms, vents, and
+        players.
 
         Args:
             state: Current game state

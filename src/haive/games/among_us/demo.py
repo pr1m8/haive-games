@@ -409,7 +409,8 @@ def get_role_color(role):
 
 
 def process_player_turn(agent, state, player_id, console, interactive, speed):
-    """Process a single player's turn with enhanced visibility into AI thoughts."""
+    """Process a single player's turn with enhanced visibility into AI
+    thoughts."""
     # Skip dead players during task phase
     player_state = state.player_states.get(player_id)
     if (
@@ -1159,7 +1160,8 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
 
 def process_random_events_enhanced(agent, state, ui, interactive, speed):
-    """Process random events that might occur during the task phase with enhanced UI.
+    """Process random events that might occur during the task phase with
+    enhanced UI.
 
     Args:
         agent: The AmongUsAgent instance
