@@ -654,7 +654,8 @@ class SinglePlayerGameAgent:
 
         # Ensure state is JSON serializable
         def _ensure_json_serializable(obj: Any) -> Any:
-            """Ensure object is JSON serializable, converting non-serializable objects."""
+            """Ensure object is JSON serializable, converting non-serializable
+            objects."""
             try:
                 json.dumps(obj)
                 return obj

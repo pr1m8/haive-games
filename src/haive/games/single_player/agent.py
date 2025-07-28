@@ -1,7 +1,7 @@
 """Single-player game agent base class.
 
-This module provides the SinglePlayerGameAgent base class for implementing
-single-player game agents in the Haive framework.
+This module provides the SinglePlayerGameAgent base class for
+implementing single-player game agents in the Haive framework.
 """
 
 from typing import TypeVar
@@ -47,8 +47,8 @@ class SinglePlayerGameAgent(GameAgent[T]):
     def setup_single_player_workflow(self) -> None:
         """Set up the workflow specific to single-player games.
 
-        This method can be overridden by subclasses to customize
-        the workflow for specific single-player game mechanics.
+        This method can be overridden by subclasses to customize the
+        workflow for specific single-player game mechanics.
         """
         # Default implementation uses the base game workflow
         self.setup_workflow()

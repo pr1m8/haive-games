@@ -1,4 +1,4 @@
-"""Tower of Hanoi prompts"""
+"""Tower of Hanoi prompts."""
 
 from langchain_core.prompts import (
     ChatPromptTemplate,

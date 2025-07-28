@@ -182,7 +182,8 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
         return False
 
     def update_candidates_for_related_cells(self, row: int, col: int) -> None:
-        """Update candidates for all cells related to the specified position."""
+        """Update candidates for all cells related to the specified
+        position."""
         # Update cells in the same row
         for c in range(self.cols):
             if c != col:
