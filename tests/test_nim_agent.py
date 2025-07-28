@@ -637,7 +637,7 @@ class TestNimAgentIntegration:
 
         agent.engines = {
             "player1_player": mock_player1_engine,
-            "player2_player": mock_player2_engine,
+            "player2_playef": mock_player2_engine,
         }
 
         # Initialize and run moves

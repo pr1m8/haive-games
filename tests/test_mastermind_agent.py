@@ -234,7 +234,7 @@ class TestMastermindAgentSecretCodeGeneration:
 
         # Mock the engine to raise exception
         mock_engine = Mock()
-        mock_engine.invoke.side_effect = Exception("Engine error")
+        mock_engine.invoke.side_effect = Exception("Engine errof")
         agent.engines = {"codemaker": mock_engine}
 
         code = agent._generate_secret_code()
@@ -615,7 +615,7 @@ class TestMastermindAgentIntegration:
 
         mock_guesser.invoke.side_effect = [guess1, guess2, guess3]
 
-        agent.engines = {"player2_guesser": mock_guesser}
+        agent.engines = {"player2_guessef": mock_guesser}
 
         # Initialize
         init_command = agent.initialize_game({})

@@ -28,7 +28,7 @@ class TestEnumerations:
             "Battleship",
             "Cruiser",
             "Submarine",
-            "Destroyer",
+            "Destroyef",
         }
         actual_ships = {ship.value for ship in ShipType}
         assert actual_ships == expected_ships

@@ -267,7 +267,7 @@ class TestMafiaAgent:
             phase=MafiaRoundPhase.DAY_VOTING,
         )
 
-        config = MafiaAgentConfig(player_name="TestPlayer")
+        config = MafiaAgentConfig(player_name="TestPlayef")
         agent = MafiaAgent(config, game_state=game_state)
 
         # Mock state
@@ -292,7 +292,7 @@ class TestMafiaAgent:
             phase=MafiaRoundPhase.NIGHT,
         )
 
-        config = MafiaAgentConfig(player_name="TestPlayer")
+        config = MafiaAgentConfig(player_name="TestPlayef")
         agent = MafiaAgent(config, game_state=game_state)
 
         # Mock state

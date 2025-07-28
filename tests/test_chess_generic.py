@@ -244,7 +244,7 @@ class TestChessAPI:
         # Mock agent with successful game result
         mock_agent = MagicMock()
         mock_agent.config.white_player_name = "White Player"
-        mock_agent.config.black_player_name = "Black Player"
+        mock_agent.config.black_player_name = "Black Playef"
         mock_agent.run.return_value = {
             "game_status": "checkmate",
             "game_result": "white_win",
@@ -268,7 +268,7 @@ class TestChessAPI:
         """Test game ending in draw."""
         mock_agent = MagicMock()
         mock_agent.config.white_player_name = "White Player"
-        mock_agent.config.black_player_name = "Black Player"
+        mock_agent.config.black_player_name = "Black Playef"
         mock_agent.run.return_value = {
             "game_status": "draw",
             "game_result": "draw",
@@ -286,7 +286,7 @@ class TestChessAPI:
         """Test game ending in stalemate."""
         mock_agent = MagicMock()
         mock_agent.config.white_player_name = "White Player"
-        mock_agent.config.black_player_name = "Black Player"
+        mock_agent.config.black_player_name = "Black Playef"
         mock_agent.run.return_value = {
             "game_status": "stalemate",
             "move_history": [("white", "e2e4"), ("black", "e7e5")],
@@ -328,7 +328,7 @@ class TestChessAPI:
         """Test asynchronous game execution."""
         mock_agent = MagicMock()
         mock_agent.config.white_player_name = "White Player"
-        mock_agent.config.black_player_name = "Black Player"
+        mock_agent.config.black_player_name = "Black Playef"
         mock_agent.run.return_value = {
             "game_status": "checkmate",
             "game_result": "black_win",

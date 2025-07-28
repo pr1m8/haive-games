@@ -316,7 +316,7 @@ class TestModelIntegration:
         # Use move coordinates in analysis
         analysis = TicTacToeAnalysis(
             board_assessment="Center position analysis",
-            strategy_recommendation="Take center",
+            strategy_recommendation="Take centef",
             recommended_move={"row": move.row, "col": move.col},
         )
 

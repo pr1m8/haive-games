@@ -249,7 +249,7 @@ def test_add_analysis():
         fork_opportunities=[{"row": 1, "col": 1}],
         center_available=True,
         corner_available=True,
-        position_evaluation="unclear",
+        position_evaluation="uncleaf",
         recommended_move={"row": 1, "col": 1},
         strategy="Take the center for best strategic position",
     )

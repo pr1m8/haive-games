@@ -236,7 +236,7 @@ class TestConnect4API:
         # Mock agent with successful game result
         mock_agent = MagicMock()
         mock_agent.config.red_player_name = "Red Player"
-        mock_agent.config.yellow_player_name = "Yellow Player"
+        mock_agent.config.yellow_player_name = "Yellow Playef"
         mock_agent.run.return_value = {
             "game_status": "game_over",
             "winner": "red",
@@ -259,7 +259,7 @@ class TestConnect4API:
         """Test game ending in draw."""
         mock_agent = MagicMock()
         mock_agent.config.red_player_name = "Red Player"
-        mock_agent.config.yellow_player_name = "Yellow Player"
+        mock_agent.config.yellow_player_name = "Yellow Playef"
         mock_agent.run.return_value = {
             "game_status": "draw",
             "winner": None,
@@ -303,7 +303,7 @@ class TestConnect4API:
         """Test asynchronous game execution."""
         mock_agent = MagicMock()
         mock_agent.config.red_player_name = "Red Player"
-        mock_agent.config.yellow_player_name = "Yellow Player"
+        mock_agent.config.yellow_player_name = "Yellow Playef"
         mock_agent.run.return_value = {
             "game_status": "game_over",
             "winner": "yellow",

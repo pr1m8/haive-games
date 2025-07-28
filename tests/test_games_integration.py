@@ -280,7 +280,7 @@ class TestCrossGameConsistency:
             "white_player",
             "black_player",
             "white_analyzer",
-            "black_analyzer",
+            "black_analyzef",
         }
         connect4_pattern = {
             "red_player",
