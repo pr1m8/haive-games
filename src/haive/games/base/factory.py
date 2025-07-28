@@ -1,5 +1,4 @@
 # src/haive/agents/agent_games/framework/factory.py
-
 """Factory module for creating game agents.
 
 from typing import Any, Dict
