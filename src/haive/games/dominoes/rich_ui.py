@@ -1,7 +1,8 @@
 """Enhanced Rich UI module for Dominoes game visualization.
 
-This module provides an enhanced rich console UI for visualizing the Dominoes game,
-with better styling, clearer representation of dominoes, and improved game animations.
+This module provides an enhanced rich console UI for visualizing the
+Dominoes game, with better styling, clearer representation of dominoes,
+and improved game animations.
 """
 
 import logging

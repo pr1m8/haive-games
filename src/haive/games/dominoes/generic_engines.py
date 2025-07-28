@@ -1,7 +1,8 @@
 """Generic Dominoes engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Dominoes games,
-allowing for configurable LLM models and game-specific player identifiers.
+This module provides generic engine creation functions for Dominoes
+games, allowing for configurable LLM models and game-specific player
+identifiers.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig

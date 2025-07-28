@@ -1,6 +1,7 @@
 """Rich UI module for Dominoes game visualization.
 
-This module provides rich console UI components for visualizing the Dominoes game.
+This module provides rich console UI components for visualizing the
+Dominoes game.
 """
 
 import logging

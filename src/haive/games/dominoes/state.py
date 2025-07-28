@@ -1,4 +1,5 @@
-"""Comprehensive state management system for Dominoes gameplay and strategic analysis.
+"""Comprehensive state management system for Dominoes gameplay and strategic
+analysis.
 
 This module provides sophisticated state models for Dominoes games with complete
 support for tile tracking, board management, strategic analysis, and game flow
@@ -70,7 +71,8 @@ from haive.games.framework.base.state import GameState
 
 
 class DominoesState(GameState):
-    """Comprehensive state management for Dominoes gameplay with strategic analysis support.
+    """Comprehensive state management for Dominoes gameplay with strategic
+    analysis support.
 
     This class provides complete state management for Dominoes games, supporting
     both traditional dominoes mechanics and strategic analysis. The state system
@@ -292,7 +294,8 @@ class DominoesState(GameState):
     @computed_field
     @property
     def total_tiles_in_play(self) -> int:
-        """Get the total number of tiles currently in players' hands and on board."""
+        """Get the total number of tiles currently in players' hands and on
+        board."""
         hand_tiles = sum(len(hand) for hand in self.hands.values())
         board_tiles = len(self.board)
         return hand_tiles + board_tiles
