@@ -1,3 +1,11 @@
+"""Factory core module.
+
+This module provides factory functionality for the Haive framework.
+
+Functions:
+    create_among_us_game: Create Among Us Game functionality.
+"""
+
 # among_us_factory.py
 
 from typing import Any

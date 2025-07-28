@@ -1,3 +1,16 @@
+"""Deck core module.
+
+This module provides deck functionality for the Haive framework.
+
+Classes:
+    Deck: Deck implementation.
+
+Functions:
+    draw: Draw functionality.
+    draw_many: Draw Many functionality.
+    discard: Discard functionality.
+"""
+
 # game_framework/containers/deck.py
 from __future__ import annotations
 

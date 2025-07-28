@@ -1,3 +1,14 @@
+"""Grid core module.
+
+This module provides grid functionality for the Haive framework.
+
+Classes:
+    GridPosition: GridPosition implementation.
+
+Functions:
+    validate_coordinates: Validate Coordinates functionality.
+"""
+
 # game_framework/positions/grid.py
 from __future__ import annotations
 

@@ -1,3 +1,17 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Classes:
+    CheckersStrategy: CheckersStrategy implementation.
+    for: for implementation.
+
+Functions:
+    print_section_header: Print Section Header functionality.
+    print_subsection: Print Subsection functionality.
+    display_board_position: Display Board Position functionality.
+"""
+
 #!/usr/bin/env python3
 """Comprehensive Checkers Game Examples - Strategic Gameplay and AI Analysis.
 

@@ -1,3 +1,13 @@
+"""Example_With_Judges core module.
+
+This module provides example with judges functionality for the Haive framework.
+
+Functions:
+    example_basic_judged_debate: Example Basic Judged Debate functionality.
+    example_academic_judges: Example Academic Judges functionality.
+    example_custom_judge_panel: Example Custom Judge Panel functionality.
+"""
+
 #!/usr/bin/env python3
 """Example usage of AI judge system for gamified debates.
 

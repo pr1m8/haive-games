@@ -295,7 +295,8 @@ class DominoesState(GameState):
     @property
     def total_tiles_in_play(self) -> int:
         """Get the total number of tiles currently in players' hands and on
-        board."""
+        board.
+        """
         hand_tiles = sum(len(hand) for hand in self.hands.values())
         board_tiles = len(self.board)
         return hand_tiles + board_tiles

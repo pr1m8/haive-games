@@ -1,3 +1,18 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    BattleshipAgentConfig: BattleshipAgentConfig implementation.
+    provides: provides implementation.
+    for: for implementation.
+
+Functions:
+    update_player_names_from_engines: Update Player Names From Engines functionality.
+    competitive: Competitive functionality.
+    training: Training functionality.
+"""
+
 from typing import Any
 
 r"""Comprehensive configuration system for Battleship game agents and gameplay customization.

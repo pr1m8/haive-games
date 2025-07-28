@@ -1,3 +1,15 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    BullshitAgent: BullshitAgent implementation.
+
+Functions:
+    initialize_game: Initialize Game functionality.
+    prepare_claim_context: Prepare Claim Context functionality.
+"""
+
 import random
 import time
 from typing import Any

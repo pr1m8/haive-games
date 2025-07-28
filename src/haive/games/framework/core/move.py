@@ -1,3 +1,17 @@
+"""Move core module.
+
+This module provides move functionality for the Haive framework.
+
+Classes:
+    Move: Move implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    is_valid: Is Valid functionality.
+    apply: Apply functionality.
+"""
+
 # game_framework/core/move.py
 from __future__ import annotations
 

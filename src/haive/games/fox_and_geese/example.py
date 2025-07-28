@@ -1,3 +1,12 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    run_fox_and_geese_game: Run Fox And Geese Game functionality.
+    run_fox_and_geese_with_ui: Run Fox And Geese With Ui functionality.
+"""
+
 #!/usr/bin/env python3
 """Simple runner for Fox and Geese game."""
 

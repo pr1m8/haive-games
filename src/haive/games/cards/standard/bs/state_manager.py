@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    BullshitStateManager: BullshitStateManager implementation.
+
+Functions:
+    initialize_game: Initialize Game functionality.
+    validate_claim: Validate Claim functionality.
+    process_player_claim: Process Player Claim functionality.
+"""
+
 import copy
 import random
 

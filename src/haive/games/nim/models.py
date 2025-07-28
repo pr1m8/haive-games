@@ -1,3 +1,18 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    NimVariant: NimVariant implementation.
+    PositionType: PositionType implementation.
+    NimMove: NimMove implementation.
+
+Functions:
+    validate_alternative_moves: Validate Alternative Moves functionality.
+    move_notation: Move Notation functionality.
+    has_strategic_context: Has Strategic Context functionality.
+"""
+
 r"""Comprehensive data models for strategic Nim gameplay and mathematical
 analysis.
 

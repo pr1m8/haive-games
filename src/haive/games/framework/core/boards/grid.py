@@ -1,3 +1,16 @@
+"""Grid core module.
+
+This module provides grid functionality for the Haive framework.
+
+Classes:
+    GridBoard: GridBoard implementation.
+
+Functions:
+    validate_dimensions: Validate Dimensions functionality.
+    get_space_at_position: Get Space At Position functionality.
+    get_space_at: Get Space At functionality.
+"""
+
 # game_framework/boards/grid.py
 from __future__ import annotations
 

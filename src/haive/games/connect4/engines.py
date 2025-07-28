@@ -1,3 +1,12 @@
+"""Engines engine module.
+
+This module provides engines functionality for the Haive framework.
+
+Functions:
+    generate_move_prompt: Generate Move Prompt functionality.
+    generate_analysis_prompt: Generate Analysis Prompt functionality.
+"""
+
 # src/haive/agents/agent_games/connect4/config.py
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -34,7 +43,8 @@ def generate_move_prompt(color: str) -> ChatPromptTemplate:
 
 def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
     """Generate a structured and detailed prompt for analyzing a Connect 4
-    position."""
+    position.
+    """
     return ChatPromptTemplate.from_messages(
         [
             (

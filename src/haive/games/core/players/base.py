@@ -1,3 +1,13 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    PlayerTypes: PlayerTypes implementation.
+    Player: Player implementation.
+    for: for implementation.
+"""
+
 from enum import Enum
 
 from pydantic import BaseModel

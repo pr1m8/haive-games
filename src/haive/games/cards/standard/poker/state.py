@@ -1,3 +1,17 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    PokerPhase: PokerPhase implementation.
+    PokerBettingRound: PokerBettingRound implementation.
+    PokerVariant: PokerVariant implementation.
+
+Functions:
+    setup_active_players: Setup Active Players functionality.
+    start_game: Start Game functionality.
+"""
+
 # haive/packages/haive-games/src/haive/games/card/poker/state.py
 
 from enum import Enum

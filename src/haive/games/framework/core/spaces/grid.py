@@ -1,3 +1,16 @@
+"""Grid core module.
+
+This module provides grid functionality for the Haive framework.
+
+Classes:
+    GridSpace: GridSpace implementation.
+
+Functions:
+    get_row: Get Row functionality.
+    get_col: Get Col functionality.
+    is_dark_square: Is Dark Square functionality.
+"""
+
 # game_framework/spaces/grid.py
 from typing import TypeVar
 

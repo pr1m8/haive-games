@@ -1,3 +1,16 @@
+"""Position core module.
+
+This module provides position functionality for the Haive framework.
+
+Classes:
+    Position: Position implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    serialize: Serialize functionality.
+"""
+
 # game_framework/core/position.py
 from __future__ import annotations
 

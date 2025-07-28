@@ -1,3 +1,16 @@
+"""Tile core module.
+
+This module provides tile functionality for the Haive framework.
+
+Classes:
+    Tile: Tile implementation.
+
+Functions:
+    flip: Flip functionality.
+    can_move_to: Can Move To functionality.
+"""
+
+
 class Tile(GamePiece[P]):
     """A tile used in tile-based games (Scrabble, Mahjong, etc.)."""
 

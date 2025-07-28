@@ -1,3 +1,13 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    print_section_header: Print Section Header functionality.
+    print_subsection: Print Subsection functionality.
+    calculate_nim_sum: Calculate Nim Sum functionality.
+"""
+
 #!/usr/bin/env python3
 """Comprehensive Nim Game Examples - Mathematical Strategy and Game Theory Demonstration.
 

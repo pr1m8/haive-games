@@ -1,3 +1,15 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    AmongUsAgentConfig: AmongUsAgentConfig implementation.
+
+Functions:
+    set_defaults: Set Defaults functionality.
+    game_balance: Game Balance functionality.
+"""
+
 # among_us_config.py
 
 from typing import Any, Dict, Literal

@@ -1,3 +1,17 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    AmongUsAgent: AmongUsAgent implementation.
+    inherits: inherits implementation.
+    def: def implementation.
+
+Functions:
+    visualize_state: Visualize State functionality.
+    get_engine_for_player: Get Engine For Player functionality.
+"""
+
 # among_us_agent.py
 
 import re

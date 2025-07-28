@@ -1,3 +1,15 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    WordConnectionsGuess: WordConnectionsGuess implementation.
+    WordConnectionsAgentConfig: WordConnectionsAgentConfig implementation.
+
+Functions:
+    create_game_prompt: Create Game Prompt functionality.
+"""
+
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate

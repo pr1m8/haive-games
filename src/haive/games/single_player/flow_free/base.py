@@ -1,3 +1,18 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    PipeDirection: PipeDirection implementation.
+    EndpointType: EndpointType implementation.
+    FlowPiece: FlowPiece implementation.
+
+Functions:
+    validate_color: Validate Color functionality.
+    can_move_to: Can Move To functionality.
+    can_move_to: Can Move To functionality.
+"""
+
 from __future__ import annotations
 
 import uuid

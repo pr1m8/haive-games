@@ -1,3 +1,18 @@
+"""Actions core module.
+
+This module provides actions functionality for the Haive framework.
+
+Classes:
+    ActionResult: ActionResult implementation.
+    CardAction: CardAction implementation.
+    Config: Config implementation.
+
+Functions:
+    validate_action: Validate Action functionality.
+    can_execute: Can Execute functionality.
+    execute: Execute functionality.
+"""
+
 # haive/games/core/components/cards/actions.py
 
 from abc import abstractmethod

@@ -1,3 +1,14 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    WordConnectionsState: WordConnectionsState implementation.
+
+Functions:
+    board_string: Board String functionality.
+"""
+
 from typing import Literal
 
 from pydantic import Field

@@ -1,3 +1,18 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    GameStatus: GameStatus implementation.
+    MonopolyState: MonopolyState implementation.
+    provides: provides implementation.
+
+Functions:
+    add_events: Add Events functionality.
+    add_strings: Add Strings functionality.
+    validate_current_player_index: Validate Current Player Index functionality.
+"""
+
 r"""Comprehensive state management system for Monopoly gameplay and real estate
 economics.
 

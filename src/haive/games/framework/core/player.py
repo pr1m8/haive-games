@@ -1,3 +1,18 @@
+"""Player core module.
+
+This module provides player functionality for the Haive framework.
+
+Classes:
+    Player: Player implementation.
+    for: for implementation.
+    that: that implementation.
+
+Functions:
+    get_move: Get Move functionality.
+    get_move: Get Move functionality.
+    select_move: Select Move functionality.
+"""
+
 # game_framework/core/player.py
 from __future__ import annotations
 

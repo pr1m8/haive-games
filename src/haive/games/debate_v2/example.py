@@ -1,3 +1,13 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    example_1_simple_game_debate: Example 1 Simple Game Debate functionality.
+    example_2_ai_regulation_tournament: Example 2 Ai Regulation Tournament functionality.
+    example_3_rapid_fire_debate: Example 3 Rapid Fire Debate functionality.
+"""
+
 #!/usr/bin/env python3
 """Gamified Debate Examples - Modern Implementation.
 

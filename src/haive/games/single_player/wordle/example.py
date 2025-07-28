@@ -1,3 +1,15 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Classes:
+    WordConnectionsUI: WordConnectionsUI implementation.
+
+Functions:
+    display_grid: Display Grid functionality.
+    display_solution: Display Solution functionality.
+"""
+
 #!/usr/bin/env python3
 """Example Word Connections game with interactive UI.
 

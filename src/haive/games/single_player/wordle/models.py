@@ -1,3 +1,17 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    WordConnectionsMove: WordConnectionsMove implementation.
+    WordConnectionsState: WordConnectionsState implementation.
+
+Functions:
+    validate_words_length: Validate Words Length functionality.
+    remaining_words: Remaining Words functionality.
+    display_grid: Display Grid functionality.
+"""
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator

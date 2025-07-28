@@ -1,3 +1,15 @@
+"""Ui core module.
+
+This module provides ui functionality for the Haive framework.
+
+Classes:
+    HanoiUI: HanoiUI implementation.
+
+Functions:
+    run: Run functionality.
+    play_game: Play Game functionality.
+"""
+
 import time
 
 from rich.console import Console

@@ -1,3 +1,15 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    BlackjackAgent: BlackjackAgent implementation.
+
+Functions:
+    initialize_game: Initialize Game functionality.
+    betting_phase: Betting Phase functionality.
+"""
+
 import time
 from typing import Any
 

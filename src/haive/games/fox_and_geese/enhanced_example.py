@@ -1,6 +1,16 @@
+"""Enhanced_Example core module.
+
+This module provides enhanced example functionality for the Haive framework.
+
+Functions:
+    run_fox_and_geese_game: Run Fox And Geese Game functionality.
+    demo_ui_features: Demo Ui Features functionality.
+"""
+
 #!/usr/bin/env python3
 """Enhanced example runner for Fox and Geese game with Rich UI
-visualization."""
+visualization.
+"""
 
 import argparse
 import time

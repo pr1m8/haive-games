@@ -1,3 +1,17 @@
+"""Standalone_Game core module.
+
+This module provides standalone game functionality for the Haive framework.
+
+Classes:
+    NimMove: NimMove implementation.
+    NimState: NimState implementation.
+    class: class implementation.
+
+Functions:
+    board_string: Board String functionality.
+    is_game_over: Is Game Over functionality.
+"""
+
 #!/usr/bin/env python3
 """Standalone game implementation of Nim.
 

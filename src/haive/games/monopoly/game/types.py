@@ -1,3 +1,13 @@
+"""Types core module.
+
+This module provides types functionality for the Haive framework.
+
+Classes:
+    ActionType: ActionType implementation.
+    PropertyType: PropertyType implementation.
+    SpecialSquareType: SpecialSquareType implementation.
+"""
+
 from enum import Enum
 
 

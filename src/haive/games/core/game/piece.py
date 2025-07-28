@@ -1,3 +1,18 @@
+"""Piece core module.
+
+This module provides piece functionality for the Haive framework.
+
+Classes:
+    GamePiece: GamePiece implementation.
+    for: for implementation.
+    GamePieceProtocol: GamePieceProtocol implementation.
+
+Functions:
+    can_move_to: Can Move To functionality.
+    assign_to_player: Assign To Player functionality.
+    place_at: Place At functionality.
+"""
+
 import uuid
 from abc import abstractmethod
 from typing import Generic, Protocol

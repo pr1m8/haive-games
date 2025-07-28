@@ -1,3 +1,17 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    CardSuit: CardSuit implementation.
+    Card: Card implementation.
+    PlayerClaimAction: PlayerClaimAction implementation.
+
+Functions:
+    create_deck: Create Deck functionality.
+    play_cards: Play Cards functionality.
+"""
+
 import random
 from enum import Enum
 

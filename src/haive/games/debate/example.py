@@ -1,3 +1,13 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    run_debate: Run Debate functionality.
+    run_trial_debate: Run Trial Debate functionality.
+    run_policy_debate: Run Policy Debate functionality.
+"""
+
 # Example usage of the Multi-Agent Debate Framework
 
 from haive.core.engine.aug_llm import AugLLMConfig

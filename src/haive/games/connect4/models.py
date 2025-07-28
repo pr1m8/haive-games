@@ -1,3 +1,16 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    Connect4Move: Connect4Move implementation.
+    represents: represents implementation.
+    Connect4PlayerDecision: Connect4PlayerDecision implementation.
+
+Functions:
+    validate_column: Validate Column functionality.
+"""
+
 # src/haive/agents/agent_games/connect4/models.py
 """Connect4 game models module.
 

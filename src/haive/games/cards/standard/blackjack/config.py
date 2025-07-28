@@ -1,3 +1,17 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    BlackjackAgentConfig: BlackjackAgentConfig implementation.
+    Config: Config implementation.
+
+Functions:
+    generate_betting_prompt: Generate Betting Prompt functionality.
+    generate_player_action_prompt: Generate Player Action Prompt functionality.
+    build_blackjack_aug_llms: Build Blackjack Aug Llms functionality.
+"""
+
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig

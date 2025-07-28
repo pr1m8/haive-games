@@ -1,3 +1,15 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    ReversiAgent: ReversiAgent implementation.
+
+Functions:
+    initialize_game: Initialize Game functionality.
+    prepare_move_context: Prepare Move Context functionality.
+"""
+
 import time
 from typing import Any
 

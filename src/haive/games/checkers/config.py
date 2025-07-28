@@ -1,3 +1,17 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    CheckersAgentConfig: CheckersAgentConfig implementation.
+    provides: provides implementation.
+
+Functions:
+    validate_king_promotion_row: Validate King Promotion Row functionality.
+    total_squares: Total Squares functionality.
+    playable_squares: Playable Squares functionality.
+"""
+
 r"""Comprehensive configuration system for strategic Checkers gameplay and AI
 agents.
 

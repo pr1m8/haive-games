@@ -1,3 +1,17 @@
+"""Container core module.
+
+This module provides container functionality for the Haive framework.
+
+Classes:
+    GamePieceContainer: GamePieceContainer implementation.
+    Config: Config implementation.
+
+Functions:
+    add: Add functionality.
+    remove: Remove functionality.
+    count: Count functionality.
+"""
+
 # game_framework/core/container.py
 from __future__ import annotations
 

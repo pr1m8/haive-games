@@ -1,3 +1,17 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    GameDifficulty: GameDifficulty implementation.
+    GameVariant: GameVariant implementation.
+    MonopolyPlayerAgentConfig: MonopolyPlayerAgentConfig implementation.
+
+Functions:
+    player_profile: Player Profile functionality.
+    validate_player_names: Validate Player Names functionality.
+"""
+
 r"""Comprehensive configuration system for strategic Monopoly gameplay and real
 estate management.
 

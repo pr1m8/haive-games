@@ -1,3 +1,12 @@
+"""Engines engine module.
+
+This module provides engines functionality for the Haive framework.
+
+Functions:
+    generate_move_prompt: Generate Move Prompt functionality.
+    generate_analysis_prompt: Generate Analysis Prompt functionality.
+"""
+
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate

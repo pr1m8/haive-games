@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    PokerStateManager: PokerStateManager implementation.
+    provides: provides implementation.
+
+Functions:
+    initialize_game: Initialize Game functionality.
+    start_new_hand: Start New Hand functionality.
+"""
+
 import logging
 from datetime import datetime
 from typing import TYPE_CHECKING, Any

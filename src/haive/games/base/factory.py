@@ -1,3 +1,17 @@
+"""Factory core module.
+
+This module provides factory functionality for the Haive framework.
+
+Classes:
+    for: for implementation.
+    GameAgentFactory: GameAgentFactory implementation.
+    provides: provides implementation.
+
+Functions:
+    create_game_agent: Create Game Agent functionality.
+    make_player1_move: Make Player1 Move functionality.
+"""
+
 # src/haive/agents/agent_games/framework/factory.py
 """Factory module for creating game agents.
 

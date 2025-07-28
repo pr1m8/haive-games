@@ -1,3 +1,18 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    Direction: Direction implementation.
+    CrosswordCell: CrosswordCell implementation.
+    CrosswordClue: CrosswordClue implementation.
+
+Functions:
+    is_block: Is Block functionality.
+    is_letter_cell: Is Letter Cell functionality.
+    current_letter: Current Letter functionality.
+"""
+
 from __future__ import annotations
 
 import uuid

@@ -1,3 +1,16 @@
+"""Fixed_Runner core module.
+
+This module provides fixed runner functionality for the Haive framework.
+
+Classes:
+    FixedFoxAndGeeseAgent: FixedFoxAndGeeseAgent implementation.
+
+Functions:
+    run_fixed_game: Run Fixed Game functionality.
+    parse_arguments: Parse Arguments functionality.
+    main: Main functionality.
+"""
+
 #!/usr/bin/env python3
 """Fixed runner for Fox and Geese game without LangGraph streaming issues."""
 

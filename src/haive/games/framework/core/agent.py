@@ -1,3 +1,14 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    BasePlayerAgent: BasePlayerAgent implementation.
+
+Functions:
+    setup_workflow: Setup Workflow functionality.
+"""
+
 from haive.core.engine.agent.config import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.graph.state_graph.base_graph2 import BaseGraph

@@ -1,3 +1,18 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    PropertyType: PropertyType implementation.
+    PropertyColor: PropertyColor implementation.
+    CardType: CardType implementation.
+
+Functions:
+    validate_property_action: Validate Property Action functionality.
+    is_auction_participant: Is Auction Participant functionality.
+    validate_jail_action: Validate Jail Action functionality.
+"""
+
 r"""Comprehensive data models for strategic Monopoly gameplay and real estate
 management.
 

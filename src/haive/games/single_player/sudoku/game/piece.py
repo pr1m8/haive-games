@@ -1,3 +1,15 @@
+"""Piece core module.
+
+This module provides piece functionality for the Haive framework.
+
+Classes:
+    SudokuDigit: SudokuDigit implementation.
+
+Functions:
+    validate_value: Validate Value functionality.
+    can_move_to: Can Move To functionality.
+"""
+
 # ======================================================
 # SUDOKU COMPONENTS
 # ======================================================

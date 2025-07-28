@@ -1,3 +1,16 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    MarkType: MarkType implementation.
+    LogicGridPosition: LogicGridPosition implementation.
+    LogicGridMark: LogicGridMark implementation.
+
+Functions:
+    validate_indices: Validate Indices functionality.
+"""
+
 from __future__ import annotations
 
 import uuid

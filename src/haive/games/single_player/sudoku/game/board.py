@@ -1,3 +1,16 @@
+"""Board core module.
+
+This module provides board functionality for the Haive framework.
+
+Classes:
+    SudokuBoard: SudokuBoard implementation.
+
+Functions:
+    initialize_board: Initialize Board functionality.
+    load_puzzle: Load Puzzle functionality.
+    get_row_values: Get Row Values functionality.
+"""
+
 # ======================================================
 # SUDOKU BOARD
 # ======================================================

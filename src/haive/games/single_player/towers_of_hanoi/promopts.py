@@ -1,3 +1,8 @@
+"""Promopts core module.
+
+This module provides promopts functionality for the Haive framework.
+"""
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 # Analysis prompt

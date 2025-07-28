@@ -1,3 +1,16 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    NimState: NimState implementation.
+
+Functions:
+    board_string: Board String functionality.
+    is_game_over: Is Game Over functionality.
+    stones_left: Stones Left functionality.
+"""
+
 from typing import Literal
 
 from pydantic import BaseModel, Field

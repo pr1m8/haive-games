@@ -527,7 +527,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
     def _prepare_opponent_context(self, game_state, opponents) -> dict[str, str]:
         """Prepare context dictionary for opponent analysis with error
-        handling."""
+        handling.
+        """
 
         # Helper to safely get position info
         def _get_position_info(game_state):

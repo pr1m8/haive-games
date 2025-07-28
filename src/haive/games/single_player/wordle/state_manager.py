@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    WordConnectionsStateManager: WordConnectionsStateManager implementation.
+
+Functions:
+    initialize: Initialize functionality.
+    apply_move: Apply Move functionality.
+    check_game_status: Check Game Status functionality.
+"""
+
 import random
 
 from haive.games.framework.base import GameStateManager

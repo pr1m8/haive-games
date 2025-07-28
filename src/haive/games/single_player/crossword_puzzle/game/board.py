@@ -1,3 +1,17 @@
+"""Board core module.
+
+This module provides board functionality for the Haive framework.
+
+Classes:
+    CrosswordBoard: CrosswordBoard implementation.
+
+Functions:
+    initialize_grid: Initialize Grid functionality.
+    set_cell_type: Set Cell Type functionality.
+    add_clue: Add Clue functionality.
+"""
+
+
 class CrosswordBoard(
     GridBoard[CrosswordCell[CrosswordLetter], GridPosition, CrosswordLetter]
 ):

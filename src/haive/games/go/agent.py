@@ -323,8 +323,9 @@ def run_go_game(agent: GoAgent) -> None:
         . . . . . . . . .
 
         🎮 Current Player: Black
+
         📌 Game Status: ongoing
-        --------------------------------------------------
+        ----------------------
     """
     # ✅ Initialize the game state
     initial_state = {

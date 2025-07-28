@@ -1,3 +1,16 @@
+"""Ui core module.
+
+This module provides ui functionality for the Haive framework.
+
+Classes:
+    AmongUsUI: AmongUsUI implementation.
+    provides: provides implementation.
+
+Functions:
+    display_game: Display Game functionality.
+    display_player_view: Display Player View functionality.
+"""
+
 # among_us_ui.py
 
 from rich import box

@@ -1,3 +1,12 @@
+"""Factory core module.
+
+This module provides factory functionality for the Haive framework.
+
+Functions:
+    create_blackjack_agent: Create Blackjack Agent functionality.
+    run_blackjack_game: Run Blackjack Game functionality.
+"""
+
 import time
 
 from haive.games.cards.blackjack.agent import BlackjackAgent

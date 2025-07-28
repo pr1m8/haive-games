@@ -1,3 +1,8 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+"""
+
 #!/usr/bin/env python3
 """Example of playing a Mancala game.
 

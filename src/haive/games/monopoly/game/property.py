@@ -1,3 +1,14 @@
+"""Property core module.
+
+This module provides property functionality for the Haive framework.
+
+Classes:
+    Property: Property implementation.
+
+Functions:
+    get_rent: Get Rent functionality.
+"""
+
 from haive.games.monopoly.game.types import PropertyType, SpecialSquareType
 
 

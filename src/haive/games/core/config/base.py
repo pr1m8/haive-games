@@ -152,7 +152,8 @@ class BaseGameConfig(AgentConfig, ABC):
 
     def determine_config_mode(self) -> ConfigMode:
         """Automatically determine configuration mode based on provided
-        fields."""
+        fields.
+        """
         if self.config_mode != ConfigMode.AUTO:
             return self.config_mode
 

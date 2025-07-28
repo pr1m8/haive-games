@@ -1,3 +1,17 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    CheckersMove: CheckersMove implementation.
+    CheckersPlayerDecision: CheckersPlayerDecision implementation.
+    CheckersAnalysis: CheckersAnalysis implementation.
+
+Functions:
+    validate_position_format: Validate Position Format functionality.
+    validate_captured_position: Validate Captured Position functionality.
+"""
+
 r"""Comprehensive data models for strategic Checkers gameplay and analysis.
 
 This module provides sophisticated data models for the classic game of Checkers

@@ -1,3 +1,11 @@
+"""Factory core module.
+
+This module provides factory functionality for the Haive framework.
+
+Functions:
+    run_connect4_game: Run Connect4 Game functionality.
+"""
+
 # Standard library imports
 import logging
 import time

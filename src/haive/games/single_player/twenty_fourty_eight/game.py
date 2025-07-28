@@ -1,3 +1,18 @@
+"""Game core module.
+
+This module provides game functionality for the Haive framework.
+
+Classes:
+    Direction: Direction implementation.
+    NumberTile: NumberTile implementation.
+    TwentyFortyEightSquare: TwentyFortyEightSquare implementation.
+
+Functions:
+    validate_value: Validate Value functionality.
+    can_move_to: Can Move To functionality.
+    merge_with: Merge With functionality.
+"""
+
 from __future__ import annotations
 
 import uuid

@@ -1,3 +1,17 @@
+"""Space core module.
+
+This module provides space functionality for the Haive framework.
+
+Classes:
+    Space: Space implementation.
+    Config: Config implementation.
+
+Functions:
+    place_piece: Place Piece functionality.
+    remove_piece: Remove Piece functionality.
+    is_occupied: Is Occupied functionality.
+"""
+
 # game_framework/core/space.py
 from __future__ import annotations
 

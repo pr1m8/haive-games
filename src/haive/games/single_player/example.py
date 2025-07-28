@@ -1,3 +1,13 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    run_interactive_game: Run Interactive Game functionality.
+    run_auto_game: Run Auto Game functionality.
+"""
+
+
 def run_interactive_game(agent: SinglePlayerGameAgent, commands: List[str] = None):
     """Run an interactive single-player game.
 

@@ -1,3 +1,15 @@
+"""Piece core module.
+
+This module provides piece functionality for the Haive framework.
+
+Classes:
+    CrosswordLetter: CrosswordLetter implementation.
+
+Functions:
+    validate_letter: Validate Letter functionality.
+    can_move_to: Can Move To functionality.
+"""
+
 from pydantic import field_validator
 
 from haive.games.core.piece.base import GamePiece

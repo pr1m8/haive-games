@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    DominoesStateManager: DominoesStateManager implementation.
+
+Functions:
+    initialize: Initialize functionality.
+    apply_move: Apply Move functionality.
+    check_game_status: Check Game Status functionality.
+"""
+
 import copy
 import logging
 import random

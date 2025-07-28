@@ -1,3 +1,16 @@
+"""Cell core module.
+
+This module provides cell functionality for the Haive framework.
+
+Classes:
+    SudokuCell: SudokuCell implementation.
+
+Functions:
+    value: Value functionality.
+    is_fixed: Is Fixed functionality.
+    place_digit: Place Digit functionality.
+"""
+
 from pydantic import Field, computed_field
 
 from haive.games.core.position.base import GridSpace

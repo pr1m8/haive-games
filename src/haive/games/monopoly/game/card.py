@@ -1,3 +1,13 @@
+"""Card core module.
+
+This module provides card functionality for the Haive framework.
+
+Classes:
+    Card: Card implementation.
+
+Functions:
+"""
+
 from typing import Any
 
 

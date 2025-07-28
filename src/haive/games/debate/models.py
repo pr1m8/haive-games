@@ -1,3 +1,18 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    Statement: Statement implementation.
+    Topic: Topic implementation.
+    Participant: Participant implementation.
+
+Functions:
+    validate_content: Validate Content functionality.
+    validate_timestamp: Validate Timestamp functionality.
+    validate_title: Validate Title functionality.
+"""
+
 # src/haive/games/debate/models.py
 """Pydantic models for debate game components.
 

@@ -1,3 +1,16 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    WordConnectionsAgent: WordConnectionsAgent implementation.
+
+Functions:
+    setup_workflow: Setup Workflow functionality.
+    play_turn: Play Turn functionality.
+    should_continue: Should Continue functionality.
+"""
+
 from typing import Any, Dict
 
 from haive.core.engine.agent.agent import register_agent

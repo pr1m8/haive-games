@@ -1,3 +1,17 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    CellState: CellState implementation.
+    MinePiece: MinePiece implementation.
+    MinesweeperCell: MinesweeperCell implementation.
+
+Functions:
+    can_move_to: Can Move To functionality.
+    place_mine: Place Mine functionality.
+"""
+
 from __future__ import annotations
 
 import random

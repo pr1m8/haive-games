@@ -1,3 +1,13 @@
+"""Simple_Test core module.
+
+This module provides simple test functionality for the Haive framework.
+
+Functions:
+    test_agent_creation: Test Agent Creation functionality.
+    test_topic_handling: Test Topic Handling functionality.
+    test_game_features: Test Game Features functionality.
+"""
+
 #!/usr/bin/env python3
 """Simple test to verify the gamified debate works without DynamicGraph issues.
 
@@ -21,7 +31,8 @@ logger = logging.getLogger(__name__)
 
 def test_agent_creation() -> bool:
     """Test that GameDebateAgent can be created without abstract method
-    errors."""
+    errors.
+    """
     try:
         # Create gamified debate - this should NOT raise abstract method errors
         GameDebateAgent.create_tournament_match(

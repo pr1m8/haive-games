@@ -1,3 +1,16 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    Position: Position implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    validate_coordinates: Validate Coordinates functionality.
+"""
+
 from __future__ import annotations
 
 import uuid
@@ -83,7 +96,8 @@ class HexPosition(Position):
 
 class PointPosition(Position):
     """Position using floating point coordinates (e.g., Go, graph-based
-    games)."""
+    games).
+    """
 
     x: float
     y: float

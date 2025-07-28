@@ -1,3 +1,18 @@
+"""Container core module.
+
+This module provides container functionality for the Haive framework.
+
+Classes:
+    GamePieceContainer: GamePieceContainer implementation.
+    Deck: Deck implementation.
+    TileBag: TileBag implementation.
+
+Functions:
+    add: Add functionality.
+    remove: Remove functionality.
+    count: Count functionality.
+"""
+
 import random
 import uuid
 from typing import Callable, Generic, TypeVar

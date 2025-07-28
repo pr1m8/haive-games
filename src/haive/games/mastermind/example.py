@@ -1,3 +1,12 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    parse_args: Parse Args functionality.
+    main: Main functionality.
+"""
+
 #!/usr/bin/env python3
 """Example script for running the Mastermind game.
 

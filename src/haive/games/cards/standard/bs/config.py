@@ -1,3 +1,17 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    BullshitAgentConfig: BullshitAgentConfig implementation.
+    Config: Config implementation.
+
+Functions:
+    generate_claim_prompt: Generate Claim Prompt functionality.
+    generate_challenge_prompt: Generate Challenge Prompt functionality.
+    build_bullshit_aug_llms: Build Bullshit Aug Llms functionality.
+"""
+
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -37,7 +51,8 @@ def generate_claim_prompt() -> ChatPromptTemplate:
 
 def generate_challenge_prompt() -> ChatPromptTemplate:
     """Create a prompt for players to decide whether to challenge another
-    player."""
+    player.
+    """
     return ChatPromptTemplate.from_messages(
         [
             (

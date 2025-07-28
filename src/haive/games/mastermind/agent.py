@@ -1,3 +1,16 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    MastermindAgent: MastermindAgent implementation.
+    implements: implements implementation.
+
+Functions:
+    ensure_game_state: Ensure Game State functionality.
+    initialize_game: Initialize Game functionality.
+"""
+
 import logging
 import time
 from typing import Any

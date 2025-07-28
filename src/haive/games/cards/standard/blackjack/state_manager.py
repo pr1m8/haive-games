@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    BlackjackStateManager: BlackjackStateManager implementation.
+
+Functions:
+    create_deck: Create Deck functionality.
+    initialize_game: Initialize Game functionality.
+    place_bet: Place Bet functionality.
+"""
+
 import copy
 import random
 

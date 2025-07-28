@@ -1,3 +1,13 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    create_custom_game: Create Custom Game functionality.
+    run_example_game: Run Example Game functionality.
+    analyze_game_results: Analyze Game Results functionality.
+"""
+
 #!/usr/bin/env python3
 """Example usage of the Texas Hold'em poker implementation.
 

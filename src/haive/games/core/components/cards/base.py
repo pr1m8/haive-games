@@ -1,3 +1,16 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    Card: Card implementation.
+    Config: Config implementation.
+    CardContainer: CardContainer implementation.
+
+Functions:
+    flip: Flip functionality.
+"""
+
 # haive/games/core/components/cards/models.py
 
 from __future__ import annotations

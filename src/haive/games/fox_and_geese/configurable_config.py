@@ -256,7 +256,8 @@ def create_advanced_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseCon
 
 def create_experimental_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseConfig:
     """Create an experimental FoxAndGeese configuration with mixed
-    providers."""
+    providers.
+    """
     return create_fox_and_geese_config_from_example("mixed", **kwargs)
 
 

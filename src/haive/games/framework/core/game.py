@@ -1,3 +1,18 @@
+"""Game core module.
+
+This module provides game functionality for the Haive framework.
+
+Classes:
+    GameStatus: GameStatus implementation.
+    Player: Player implementation.
+    Game: Game implementation.
+
+Functions:
+    current_turn: Current Turn functionality.
+    turn_number: Turn Number functionality.
+    start_game: Start Game functionality.
+"""
+
 # game_framework/core/game.py
 from __future__ import annotations
 

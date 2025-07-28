@@ -202,7 +202,8 @@ def create_generic_battleship_config_from_example(
 
 def create_naval_battleship_engines(**kwargs) -> Dict[str, AugLLMConfig]:
     """Create naval commander-style Battleship engines with high-powered
-    models."""
+    models.
+    """
     return create_generic_battleship_config_from_example("naval_commanders", **kwargs)
 
 

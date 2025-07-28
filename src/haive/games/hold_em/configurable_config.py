@@ -257,7 +257,8 @@ def create_budget_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
 
 def create_poker_pro_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
     """Create a poker professional-style Hold'em configuration with powerful
-    models."""
+    models.
+    """
     return create_holdem_config_from_example("poker_pros", **kwargs)
 
 

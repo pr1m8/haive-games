@@ -1,3 +1,14 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    DominoesAgentConfig: DominoesAgentConfig implementation.
+
+Functions:
+    default_config: Default Config functionality.
+"""
+
 # src/haive/agents/agent_games/dominoes/config.py
 
 

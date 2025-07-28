@@ -1,3 +1,14 @@
+"""Agent core module.
+
+This module provides agent functionality for the Haive framework.
+
+Classes:
+    BasePlayerAgent: BasePlayerAgent implementation.
+    for: for implementation.
+
+Functions:
+"""
+
 from abc import ABC
 
 from haive.agents.simple.config import SimpleAgentConfig

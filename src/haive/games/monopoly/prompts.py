@@ -1,3 +1,13 @@
+"""Prompts core module.
+
+This module provides prompts functionality for the Haive framework.
+
+Functions:
+    generate_move_decision_prompt: Generate Move Decision Prompt functionality.
+    generate_property_decision_prompt: Generate Property Decision Prompt functionality.
+    generate_strategy_analysis_prompt: Generate Strategy Analysis Prompt functionality.
+"""
+
 from langchain_core.prompts import ChatPromptTemplate
 
 

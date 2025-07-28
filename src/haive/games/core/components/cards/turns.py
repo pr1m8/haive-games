@@ -1,3 +1,18 @@
+"""Turns core module.
+
+This module provides turns functionality for the Haive framework.
+
+Classes:
+    TurnPhase: TurnPhase implementation.
+    CardGameTurn: CardGameTurn implementation.
+    Config: Config implementation.
+
+Functions:
+    add_action: Add Action functionality.
+    is_complete: Is Complete functionality.
+    get_next_phase: Get Next Phase functionality.
+"""
+
 # haive/games/core/components/cards/turns.py
 
 from enum import Enum

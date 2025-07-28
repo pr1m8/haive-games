@@ -1,3 +1,13 @@
+"""Engines engine module.
+
+This module provides engines functionality for the Haive framework.
+
+Functions:
+    generate_moderator_prompt: Generate Moderator Prompt functionality.
+    generate_debater_prompt: Generate Debater Prompt functionality.
+    generate_judge_prompt: Generate Judge Prompt functionality.
+"""
+
 # src/haive/games/debate/engines.py
 
 from haive.core.engine.aug_llm import AugLLMConfig

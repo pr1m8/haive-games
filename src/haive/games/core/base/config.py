@@ -1,3 +1,12 @@
+"""Config configuration module.
+
+This module provides config functionality for the Haive framework.
+
+Classes:
+    GameAgentConfig: GameAgentConfig implementation.
+    for: for implementation.
+"""
+
 from abc import ABC
 
 from haive.core.engine.agent.config import AgentConfig

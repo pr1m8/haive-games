@@ -1,3 +1,17 @@
+"""Models model module.
+
+This module provides models functionality for the Haive framework.
+
+Classes:
+    CardSuit: CardSuit implementation.
+    Card: Card implementation.
+    PlayerAction: PlayerAction implementation.
+
+Functions:
+    point_value: Point Value functionality.
+    total_value: Total Value functionality.
+"""
+
 from enum import Enum
 from typing import Literal
 

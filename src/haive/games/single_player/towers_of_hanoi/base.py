@@ -1,3 +1,18 @@
+"""Base core module.
+
+This module provides base functionality for the Haive framework.
+
+Classes:
+    Game: Game implementation.
+    for: for implementation.
+    GameStatus: GameStatus implementation.
+
+Functions:
+    start_game: Start Game functionality.
+    is_valid_move: Is Valid Move functionality.
+    make_move: Make Move functionality.
+"""
+
 from __future__ import annotations
 
 import uuid

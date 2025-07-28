@@ -1,3 +1,14 @@
+"""Ui core module.
+
+This module provides ui functionality for the Haive framework.
+
+Classes:
+    PokerUI: PokerUI implementation.
+
+Functions:
+    assign_ai_models: Assign Ai Models functionality.
+"""
+
 from rich.align import Align
 from rich.box import SIMPLE
 from rich.layout import Layout

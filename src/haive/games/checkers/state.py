@@ -1,3 +1,18 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    PieceType: PieceType implementation.
+    GamePhase: GamePhase implementation.
+    CheckersState: CheckersState implementation.
+
+Functions:
+    validate_turn_number: Validate Turn Number functionality.
+    game_phase: Game Phase functionality.
+    material_balance: Material Balance functionality.
+"""
+
 r"""Comprehensive state management system for Checkers gameplay and strategic
 analysis.
 

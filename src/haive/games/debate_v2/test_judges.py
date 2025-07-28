@@ -1,3 +1,13 @@
+"""Test_Judges core module.
+
+This module provides test judges functionality for the Haive framework.
+
+Functions:
+    test_judge_creation: Test Judge Creation functionality.
+    test_judged_agent_creation: Test Judged Agent Creation functionality.
+    test_judge_evaluation_simulation: Test Judge Evaluation Simulation functionality.
+"""
+
 #!/usr/bin/env python3
 """Test the AI judge system for gamified debates."""
 

@@ -1,3 +1,16 @@
+"""Demo core module.
+
+This module provides demo functionality for the Haive framework.
+
+Classes:
+    ColorCode: ColorCode implementation.
+    Feedback: Feedback implementation.
+    MastermindState: MastermindState implementation.
+
+Functions:
+    initialize: Initialize functionality.
+"""
+
 #!/usr/bin/env python3
 """Standalone demo for the Mastermind game with Rich UI.
 

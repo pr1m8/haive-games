@@ -1,3 +1,16 @@
+"""Factory core module.
+
+This module provides factory functionality for the Haive framework.
+
+Classes:
+    DebateFactory: DebateFactory implementation.
+
+Functions:
+    create_presidential_debate: Create Presidential Debate functionality.
+    create_legal_trial: Create Legal Trial functionality.
+    create_panel_discussion: Create Panel Discussion functionality.
+"""
+
 # src/haive/games/debate/factory.py
 from typing import Any
 

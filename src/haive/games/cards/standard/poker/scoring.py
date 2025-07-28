@@ -1,3 +1,16 @@
+"""Scoring core module.
+
+This module provides scoring functionality for the Haive framework.
+
+Classes:
+    PokerHandType: PokerHandType implementation.
+    PokerHandRank: PokerHandRank implementation.
+    PokerHandEvaluator: PokerHandEvaluator implementation.
+
+Functions:
+    evaluate: Evaluate functionality.
+"""
+
 # haive/packages/haive-games/src/haive/games/card/poker/scoring.py
 
 from collections import Counter

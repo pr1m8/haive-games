@@ -410,7 +410,8 @@ def get_role_color(role):
 
 def process_player_turn(agent, state, player_id, console, interactive, speed):
     """Process a single player's turn with enhanced visibility into AI
-    thoughts."""
+    thoughts.
+    """
     # Skip dead players during task phase
     player_state = state.player_states.get(player_id)
     if (

@@ -1,3 +1,13 @@
+"""Benchmark core module.
+
+This module provides benchmark functionality for the Haive framework.
+
+Functions:
+    run_monopoly_benchmark: Run Monopoly Benchmark functionality.
+    run_poker_benchmark: Run Poker Benchmark functionality.
+    main: Main functionality.
+"""
+
 #!/usr/bin/env python3
 """Benchmark script for testing game agents.
 

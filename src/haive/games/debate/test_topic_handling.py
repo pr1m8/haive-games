@@ -1,3 +1,13 @@
+"""Test_Topic_Handling core module.
+
+This module provides test topic handling functionality for the Haive framework.
+
+Functions:
+    test_explicit_topic: Test Explicit Topic functionality.
+    test_none_topic: Test None Topic functionality.
+    test_empty_state: Test Empty State functionality.
+"""
+
 #!/usr/bin/env python3
 """Test to verify Debate game properly handles provided topics vs fallback."""
 

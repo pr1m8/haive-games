@@ -1,3 +1,18 @@
+"""Standard core module.
+
+This module provides standard functionality for the Haive framework.
+
+Classes:
+    StandardSuit: StandardSuit implementation.
+    StandardRank: StandardRank implementation.
+    StandardCard: StandardCard implementation.
+
+Functions:
+    set_value: Set Value functionality.
+    set_face_card: Set Face Card functionality.
+    set_color: Set Color functionality.
+"""
+
 # haive/games/core/components/cards/standard.py
 
 from enum import Enum

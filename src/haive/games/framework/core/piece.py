@@ -1,3 +1,18 @@
+"""Piece core module.
+
+This module provides piece functionality for the Haive framework.
+
+Classes:
+    GamePiece: GamePiece implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    can_move_to: Can Move To functionality.
+    assign_to_player: Assign To Player functionality.
+    place_at: Place At functionality.
+"""
+
 # game_framework/core/piece.py
 from __future__ import annotations
 

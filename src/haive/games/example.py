@@ -1,3 +1,18 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Classes:
+    NumberGameState: NumberGameState implementation.
+    NumberGameConfig: NumberGameConfig implementation.
+    NumberGameStateManager: NumberGameStateManager implementation.
+
+Functions:
+    example_quick_game: Example Quick Game functionality.
+    example_advanced_chess: Example Advanced Chess functionality.
+    example_poker_tournament: Example Poker Tournament functionality.
+"""
+
 #!/usr/bin/env python3
 """From typing import Any, Dict Haive Games Examples.
 

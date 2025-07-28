@@ -1,3 +1,11 @@
+"""Example core module.
+
+This module provides example functionality for the Haive framework.
+
+Functions:
+    run_dominoes_game: Run Dominoes Game functionality.
+"""
+
 #!/usr/bin/env python3
 """Example runner for Dominoes game with rich UI visualization."""
 

@@ -1,3 +1,14 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    DebateState: DebateState implementation.
+
+Functions:
+    current_speaker: Current Speaker functionality.
+"""
+
 # src/haive/games/debate/state.py
 from pydantic import Field
 

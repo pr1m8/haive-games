@@ -1,3 +1,18 @@
+"""Actions core module.
+
+This module provides actions functionality for the Haive framework.
+
+Classes:
+    PokerActionType: PokerActionType implementation.
+    PokerAction: PokerAction implementation.
+    for: for implementation.
+
+Functions:
+    can_execute: Can Execute functionality.
+    can_execute: Can Execute functionality.
+    execute: Execute functionality.
+"""
+
 # haive/packages/haive-games/src/haive/games/card/poker/actions.py
 
 from enum import Enum

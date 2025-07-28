@@ -1,3 +1,16 @@
+"""State_Manager core module.
+
+This module provides state manager functionality for the Haive framework.
+
+Classes:
+    DebateStateManager: DebateStateManager implementation.
+
+Functions:
+    initialize: Initialize functionality.
+    apply_move: Apply Move functionality.
+    get_legal_moves: Get Legal Moves functionality.
+"""
+
 # src/haive/games/debate/state_manager.py
 import copy
 from datetime import datetime

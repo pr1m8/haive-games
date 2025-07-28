@@ -1,3 +1,17 @@
+"""Turn core module.
+
+This module provides turn functionality for the Haive framework.
+
+Classes:
+    TurnPhase: TurnPhase implementation.
+    Turn: Turn implementation.
+
+Functions:
+    add_move: Add Move functionality.
+    get_move_count: Get Move Count functionality.
+    set_phase: Set Phase functionality.
+"""
+
 # game_framework/core/turn.py
 from __future__ import annotations
 

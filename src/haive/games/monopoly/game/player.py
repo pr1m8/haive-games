@@ -1,3 +1,15 @@
+"""Player core module.
+
+This module provides player functionality for the Haive framework.
+
+Classes:
+    Player: Player implementation.
+
+Functions:
+    own_property: Own Property functionality.
+    lose_property: Lose Property functionality.
+"""
+
 from haive.games.monopoly.game.property import Property
 
 

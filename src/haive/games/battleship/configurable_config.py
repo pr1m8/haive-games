@@ -254,7 +254,8 @@ def create_budget_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
 
 def create_naval_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
     """Create a naval commander-style Battleship configuration with powerful
-    models."""
+    models.
+    """
     return create_battleship_config_from_example("naval_commanders", **kwargs)
 
 

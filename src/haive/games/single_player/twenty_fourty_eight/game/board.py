@@ -1,3 +1,17 @@
+"""Board core module.
+
+This module provides board functionality for the Haive framework.
+
+Classes:
+    TwentyFortyEightBoard: TwentyFortyEightBoard implementation.
+
+Functions:
+    initialize_board: Initialize Board functionality.
+    spawn_random_tile: Spawn Random Tile functionality.
+    move_tiles: Move Tiles functionality.
+"""
+
+
 class TwentyFortyEightBoard(
     GridBoard[TwentyFortyEightSquare, GridPosition, NumberTile]
 ):

@@ -1,3 +1,18 @@
+"""Board core module.
+
+This module provides board functionality for the Haive framework.
+
+Classes:
+    Board: Board implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    add_space: Add Space functionality.
+    connect_spaces: Connect Spaces functionality.
+    get_space_at_position: Get Space At Position functionality.
+"""
+
 # game_framework/core/board.py
 from __future__ import annotations
 

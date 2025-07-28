@@ -1,3 +1,17 @@
+"""Game_Config configuration module.
+
+This module provides game config functionality for the Haive framework.
+
+Classes:
+    GamePlayerType: GamePlayerType implementation.
+    PlayerType: PlayerType implementation.
+    GameAgentConfig: GameAgentConfig implementation.
+
+Functions:
+    num_players: Num Players functionality.
+    validate_players: Validate Players functionality.
+"""
+
 from abc import ABC
 from enum import Enum
 from typing import Any, TypeVar

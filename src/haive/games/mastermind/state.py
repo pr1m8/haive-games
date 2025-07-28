@@ -1,3 +1,17 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    MastermindState: MastermindState implementation.
+    manages: manages implementation.
+
+Functions:
+    initialize: Initialize functionality.
+    current_turn_number: Current Turn Number functionality.
+    turns_remaining: Turns Remaining functionality.
+"""
+
 import operator
 import random
 from typing import Annotated, Literal

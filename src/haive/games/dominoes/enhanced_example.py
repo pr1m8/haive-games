@@ -1,3 +1,12 @@
+"""Enhanced_Example core module.
+
+This module provides enhanced example functionality for the Haive framework.
+
+Functions:
+    run_dominoes_game: Run Dominoes Game functionality.
+    demo_ui_features: Demo Ui Features functionality.
+"""
+
 #!/usr/bin/env python3
 """Example runner for Dominoes game with enhanced Rich UI visualization."""
 

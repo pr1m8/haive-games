@@ -1,3 +1,16 @@
+"""Scoring core module.
+
+This module provides scoring functionality for the Haive framework.
+
+Classes:
+    HandRank: HandRank implementation.
+    HandEvaluator: HandEvaluator implementation.
+    Config: Config implementation.
+
+Functions:
+    evaluate: Evaluate functionality.
+"""
+
 # haive/games/core/components/cards/scoring.py
 
 

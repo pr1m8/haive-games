@@ -1,3 +1,18 @@
+"""State core module.
+
+This module provides state functionality for the Haive framework.
+
+Classes:
+    PlayerState: PlayerState implementation.
+    maintains: maintains implementation.
+    BattleshipState: BattleshipState implementation.
+
+Functions:
+    get_player_state: Get Player State functionality.
+    get_opponent: Get Opponent functionality.
+    is_setup_complete: Is Setup Complete functionality.
+"""
+
 r"""Comprehensive state management system for Battleship game mechanics and
 player tracking.
 

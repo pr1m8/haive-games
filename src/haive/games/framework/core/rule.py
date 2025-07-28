@@ -1,3 +1,18 @@
+"""Rule core module.
+
+This module provides rule functionality for the Haive framework.
+
+Classes:
+    Rule: Rule implementation.
+    for: for implementation.
+    Config: Config implementation.
+
+Functions:
+    validate: Validate functionality.
+    apply: Apply functionality.
+    add_rule: Add Rule functionality.
+"""
+
 # game_framework/core/rule.py
 from __future__ import annotations
 

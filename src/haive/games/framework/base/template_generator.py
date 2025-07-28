@@ -1,3 +1,16 @@
+"""Template_Generator core module.
+
+This module provides template generator functionality for the Haive framework.
+
+Classes:
+    GameTemplateGenerator: GameTemplateGenerator implementation.
+    automates: automates implementation.
+    is: is implementation.
+
+Functions:
+    generate_templates: Generate Templates functionality.
+"""
+
 # src/haive/agents/agent_games/framework/template_generator.py
 """Template generator for game agents (EXPERIMENTAL).
 
