@@ -32,6 +32,16 @@ lint:
     - taplo@0.9.3
     - trufflehog@3.89.2
     - yamllint@1.37.1
+  ignore:
+    - linters: [ALL]
+      paths:
+        - tests/**
+        - tmp/**
+        - plugins/**
+        - tools/**
+        - logs/**
+        - actions/**
+        - notifications/**
 actions:
   enabled:
     - trunk-announce
