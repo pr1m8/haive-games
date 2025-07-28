@@ -10,7 +10,6 @@ import logging
 
 from haive.games.risk.agent import RiskAgent
 from haive.games.risk.models import MoveType
-from haive.games.risk.state import RiskState
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

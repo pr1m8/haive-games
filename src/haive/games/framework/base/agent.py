@@ -177,7 +177,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...     new_state = self.state_manager.apply_move(state, move)
             ...     return Command(update=new_state.dict())
         """
-        engine = self.engines.get(f"{player}_player")
+        engine = self.engines.get(f"{player}_playef")
         if not engine:
             return Command(
                 update={"error_message": f"No engine found for {player}_player"}
@@ -219,11 +219,11 @@ class GameAgent(Agent[GameConfig], Generic[T]):
 
         Example:
             >>> def analyze_position(self, state, player):
-            ...     analyzer = self.engines.get(f"{player}_analyzer")
+            ...     analyzer = self.engines.get(f"{player}_analyzef")
             ...     analysis = analyzer.invoke({"position": state.board})
             ...     return Command(update={f"{player}_analysis": analysis})
         """
-        analyzer = self.engines.get(f"{player}_analyzer")
+        analyzer = self.engines.get(f"{player}_analyzef")
         if not analyzer:
             return Command(update={})
 

@@ -19,7 +19,7 @@ from haive.games.single_player.crossword_puzzle.game.cell import CrosswordCell
 
 
 class CrosswordLetter(GamePiece[GridPosition]):
-    """A letter in a crossword puzzle."""
+    """A letter in a cross puzzle."""
 
     letter: str
     is_filled: bool = False  # Whether it's been filled by player

@@ -535,7 +535,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         player_role = self.get_player_role(state, player_id)
 
         # Get the move engine for this role
-        move_engine = self.get_engine_for_player(player_role, "player")
+        move_engine = self.get_engine_for_player(player_role, "playef")
         if not move_engine:
             return {
                 "error_message": f"No move engine found for player {player_id} with role {player_role}"

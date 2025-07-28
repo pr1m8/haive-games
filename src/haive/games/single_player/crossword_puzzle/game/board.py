@@ -15,13 +15,13 @@ Functions:
 class CrosswordBoard(
     GridBoard[CrosswordCell[CrosswordLetter], GridPosition, CrosswordLetter]
 ):
-    """A crossword puzzle board."""
+    """A cross puzzle board."""
 
     words: Dict[str, CrosswordWord] = Field(default_factory=dict)
     clues: Dict[str, CrosswordClue] = Field(default_factory=dict)
 
     def initialize_grid(self) -> None:
-        """Initialize an empty crossword grid."""
+        """Initialize an empty cross grid."""
         # Create empty cells for each position
         for row in range(self.rows):
             for col in range(self.cols):
@@ -64,7 +64,7 @@ class CrosswordBoard(
         answer: str,
         start_position: GridPosition,
     ) -> Optional[str]:
-        """Add a clue to the crossword."""
+        """Add a clue to the cross."""
         # Check if the clue can be placed on the board
         if not self._validate_word_placement(answer, start_position, direction):
             return None
@@ -199,7 +199,7 @@ class CrosswordBoard(
     @computed_field
     @property
     def is_complete(self) -> bool:
-        """Check if the crossword is complete and correct."""
+        """Check if the cross is complete and correct."""
         # Check each letter cell has a letter
         for space in self.spaces.values():
             if isinstance(space, CrosswordCell) and space.is_letter_cell:

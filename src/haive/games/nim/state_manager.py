@@ -22,7 +22,7 @@ class NimStateManager(GameStateManager[NimState]):
         """Initialize a new Nim game with the given pile sizes.
 
         Args:
-            **kwargs: Keyword arguments for game initialization.
+            **kwargs: Key arguments for game initialization.
                 pile_sizes: Optional list of pile sizes. Defaults to [3, 5, 7].
 
         Returns:

@@ -57,7 +57,7 @@ class GameStateManager(Generic[T]):
         with initial values set appropriately for the start of a game.
 
         Args:
-            **kwargs: Additional keyword arguments for game-specific initialization.
+            **kwargs: Additional key arguments for game-specific initialization.
 
         Returns:
             T: A new instance of the game state.

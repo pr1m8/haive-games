@@ -19,7 +19,6 @@ Example:
 """
 
 import logging
-from typing import Any
 
 from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.constants import END, START

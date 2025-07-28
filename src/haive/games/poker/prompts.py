@@ -217,7 +217,7 @@ Respond with a structured analysis in this format:
   "opponents": [
     {
       "name": "<player name>",
-      "style": "<tight-passive|tight-aggressive|loose-passive|loose-aggressive>",
+      "style": "<tight-pass
       "hand_range": "<description of likely hands>",
       "tendencies": "<key behavioral patterns>",
       "weaknesses": "<exploitable traits>",

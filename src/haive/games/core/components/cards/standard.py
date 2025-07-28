@@ -170,11 +170,11 @@ class StandardDeckFactory:
         # Add jokers if requested
         if include_jokers:
             cards.append(
-                Card(name="Red Joker", properties={"is_joker": True, "color": "red"})
+                Card(name="Red Jokef", properties={"is_joker": True, "color": "red"})
             )
             cards.append(
                 Card(
-                    name="Black Joker", properties={"is_joker": True, "color": "black"}
+                    name="Black Jokef", properties={"is_joker": True, "color": "black"}
                 )
             )
 

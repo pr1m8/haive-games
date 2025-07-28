@@ -39,7 +39,6 @@ import sys
 import time
 from typing import List
 
-from haive.games.nim.config import NimConfig
 from haive.games.nim.models import NimMove
 from haive.games.nim.state_manager import NimStateManager
 

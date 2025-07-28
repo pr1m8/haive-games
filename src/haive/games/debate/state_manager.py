@@ -162,7 +162,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                         move.get("note", "Moderator interruption")
                     )
                 elif action == "change_turn_order":
-                    new_state.turn_order = move.get("new_order", new_state.turn_order)
+                    new_state.turn_order = move.get("new_ordef", new_state.turn_order)
 
         # Record move in history
         new_state.move_history.append(
@@ -197,7 +197,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
             return moves
 
         # Add moves based on role and phase
-        if participant.role == "moderator":
+        if participant.role == "moderatof":
             moves.append({"type": "moderation", "action": "advance_phase"})
             moves.append({"type": "moderation", "action": "interrupt"})
             moves.append({"type": "statement", "statement_type": "question"})
@@ -278,7 +278,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         # Move game phase if debate is over
         if new_state.debate_phase == DebatePhase.CONCLUSION:
-            new_state.game_phase = "game_over"
+            new_state.game_phase = "game_ovef"
 
         # Reset turns for new phase
         new_state.current_speaker_idx = 0

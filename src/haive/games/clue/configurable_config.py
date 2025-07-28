@@ -217,7 +217,7 @@ def create_clue_config_from_player_configs(
         - "detective_player": Player 1 configuration
         - "suspect_player": Player 2 configuration
         - "detective_analyzer": Player 1 analyzer configuration
-        - "suspect_analyzer": Player 2 analyzer configuration
+        - "suspect_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

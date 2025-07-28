@@ -116,7 +116,7 @@ class PokerAgentConfig(AgentConfig):
 
         This class method generates a default configuration with reasonable
         starting values for all parameters. Any parameter can be overridden
-        by passing it as a keyword argument.
+        by passing it as a key argument.
 
         Args:
             **kwargs: Override default configuration parameters. Valid keys

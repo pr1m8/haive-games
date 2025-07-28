@@ -456,7 +456,7 @@ class SinglePlayerGameAgent:
         Returns:
             Command with the updated game state including analysis
         """
-        analyzer = self.engines.get("game_analyzer")
+        analyzer = self.engines.get("game_analyzef")
         if not analyzer:
             return Command(update={})
 

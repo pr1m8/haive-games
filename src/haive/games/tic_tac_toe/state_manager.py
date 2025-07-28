@@ -18,7 +18,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
         """Initialize a new Tic Tac Toe game.
 
         Args:
-            **kwargs: Keyword arguments for game initialization.
+            **kwargs: Key arguments for game initialization.
                 first_player: Which player goes first ('X' or 'O'). Default is 'X'.
                 player_X: Which player is X ('player1' or 'player2'). Default is 'player1'.
                 player_O: Which player is O ('player1' or 'player2'). Default is 'player2'.

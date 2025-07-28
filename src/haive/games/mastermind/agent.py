@@ -121,7 +121,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         secret_code = self.config.secret_code
         if not secret_code:
             # Use the codemaker engine to generate a code
-            codemaker_engine = self.engines["codemaker"]  # .create_runnable()
+            codemaker_engine = self.engines["codemakef"]  # .create_runnable()
             secret_code = codemaker_engine.invoke({})
 
         # Initialize the game state
@@ -661,7 +661,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
             secret_code = self.config.secret_code
         else:
             try:
-                response = self.engines["codemaker"].invoke({})
+                response = self.engines["codemakef"].invoke({})
                 logger.debug(f"Codemaker engine response: {response!r}")
 
                 if isinstance(response, dict) and "code" in response:

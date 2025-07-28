@@ -234,7 +234,7 @@ async def stream_game(game_id: str, background_tasks: BackgroundTasks):
                     break
 
         except Exception as e:
-            game["status"] = "error"
+            game["status"] = "errof"
             error_data = {
                 "event": "error",
                 "message": str(e),

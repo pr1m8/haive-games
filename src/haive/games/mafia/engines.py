@@ -285,7 +285,7 @@ def generate_narrator_prompt() -> ChatPromptTemplate:
 
 # Define the AugLLM configurations for each role
 aug_llm_configs = {
-    "villager": {
+    "villagef": {
         "player": AugLLMConfig(
             name="villager_player",
             llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -309,7 +309,7 @@ aug_llm_configs = {
             structured_output_model=MafiaPlayerDecisionSchema,
         )
     },
-    "doctor": {
+    "doctof": {
         "player": AugLLMConfig(
             name="doctor_player",
             llm_config=AzureLLMConfig(model="gpt-4o"),

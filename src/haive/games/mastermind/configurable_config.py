@@ -222,7 +222,7 @@ def create_mastermind_config_from_player_configs(
         - "codemaker_player": Player 1 configuration
         - "codebreaker_player": Player 2 configuration
         - "codemaker_analyzer": Player 1 analyzer configuration
-        - "codebreaker_analyzer": Player 2 analyzer configuration
+        - "codebreaker_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

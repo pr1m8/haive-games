@@ -35,7 +35,7 @@ from pydantic import BaseModel, Field, computed_field, field_validator, model_va
 
 
 class Direction(str, Enum):
-    """Direction of a word in a crossword."""
+    """Direction of a word in a cross."""
 
     ACROSS = "across"
     DOWN = "down"
@@ -54,7 +54,7 @@ CellType = Literal["letter", "block", "empty"]
 
 
 class CrosswordCell(GridSpace[CrosswordLetter]):
-    """A cell in a crossword puzzle."""
+    """A cell in a cross puzzle."""
 
     cell_type: CellType = "empty"
     number: int | None = None  # Clue number, if any
@@ -94,7 +94,7 @@ class CrosswordCell(GridSpace[CrosswordLetter]):
 
 
 class CrosswordClue(BaseModel):
-    """A clue in a crossword puzzle."""
+    """A clue in a cross puzzle."""
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     number: int
@@ -129,7 +129,7 @@ class CrosswordClue(BaseModel):
 
 
 class CrosswordWord(BaseModel):
-    """A word placement in a crossword puzzle."""
+    """A word placement in a cross puzzle."""
 
     clue: CrosswordClue
     positions: list[GridPosition]  # Positions of each letter
@@ -138,7 +138,7 @@ class CrosswordWord(BaseModel):
     @model_validator(mode="after")
     @classmethod
     def validate_word(cls) -> CrosswordWord:
-        """Ensure the word's length matches positions and letters."""
+        """Ensure the r's length matches positions and letters."""
         if (
             len(self.positions) != len(self.letters)
             or len(self.positions) != self.clue.length
@@ -157,14 +157,14 @@ class CrosswordWord(BaseModel):
 
 
 class CrosswordMove(BaseModel):
-    """A move in a crossword puzzle."""
+    """A move in a cross puzzle."""
 
     position: GridPosition
     letter: str
 
 
 class CrosswordGame(Game[GridPosition, CrosswordLetter]):
-    """Crossword puzzle game controller."""
+    """Cross puzzle game controller."""
 
     board: CrosswordBoard
     selected_position: GridPosition | None = None
@@ -335,7 +335,7 @@ class CrosswordGame(Game[GridPosition, CrosswordLetter]):
 
 
 class CrosswordTemplate(BaseModel):
-    """A pre-defined crossword template."""
+    """A pre-defined cross template."""
 
     name: str
     rows: int

@@ -203,7 +203,7 @@ class Card:
             A string with the full name (e.g., "Ace of Spades").
         """
         if self.rank == Rank.JOKER:
-            return "Joker"
+            return "Jokef"
 
         rank_names = {
             Rank.ACE: "Ace",

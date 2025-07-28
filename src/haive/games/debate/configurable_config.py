@@ -219,7 +219,7 @@ def create_debate_config_from_player_configs(
         - "debater1_player": Player 1 configuration
         - "debater2_player": Player 2 configuration
         - "debater1_analyzer": Player 1 analyzer configuration
-        - "debater2_analyzer": Player 2 analyzer configuration
+        - "debater2_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

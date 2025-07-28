@@ -25,7 +25,7 @@ def risk_engines(config: RiskConfig | None = None) -> dict[str, Any]:
 
     # Define engines for Risk game
     engines = {
-        "state_manager": {
+        "state_managef": {
             "type": "RiskStateManager",
             "config": {"risk_config": config.dict()},
         },

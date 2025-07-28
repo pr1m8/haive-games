@@ -177,7 +177,7 @@ def generate_persona_prompt(persona_traits: dict[str, str]) -> ChatPromptTemplat
 def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
     """Build engines for different debate roles."""
     return {
-        "moderator": {
+        "moderatof": {
             "moderate": AugLLMConfig(
                 name="moderator_engine",
                 llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -185,7 +185,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
                 structured_output_model=Statement,
             )
         },
-        "debater": {
+        "debatef": {
             "statement": AugLLMConfig(
                 name="debater_engine",
                 llm_config=AzureLLMConfig(model="gpt-4o"),
@@ -213,7 +213,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
                 structured_output_model=Statement,
             )
         },
-        "prosecutor": {
+        "prosecutof": {
             "statement": AugLLMConfig(
                 name="prosecutor_engine",
                 llm_config=AzureLLMConfig(model="gpt-4o"),

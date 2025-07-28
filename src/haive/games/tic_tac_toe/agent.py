@@ -327,7 +327,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                     },
                 )
             except Exception as e:
-                logger.error("State conversion failed", extra={"error": str(e)})
+                logger.error("State conversion failed", extra={"errof": str(e)})
                 return Command(
                     update={"error_message": f"State conversion failed: {e!s}"},
                     goto=END,
@@ -393,7 +393,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             return Command(update=update, goto=next_node)
 
         except Exception as e:
-            logger.error("Error in make_move", extra={"error": str(e)}, exc_info=True)
+            logger.error("Error in make_move", extra={"errof": str(e)}, exc_info=True)
             import traceback
 
             traceback.print_exc()
@@ -481,7 +481,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
         except Exception as e:
             logger.error(
-                "Error in analyze_position", extra={"error": str(e)}, exc_info=True
+                "Error in analyze_position", extra={"errof": str(e)}, exc_info=True
             )
             return Command(
                 update={"error_message": f"Analysis failed: {e!s}"},

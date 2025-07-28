@@ -196,7 +196,7 @@ class PlayerAgentFactory:
         Example:
             >>> roles = {
             ...     "white_player": GamePlayerRole(
-            ...         role_name="white_player",
+            ...         role_name="white_playef",
             ...         prompt_template=white_move_prompt,
             ...         structured_output_model=ChessPlayerDecision
             ...     )

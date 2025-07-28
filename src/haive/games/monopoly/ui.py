@@ -65,7 +65,7 @@ class MonopolyRichUI:
                 "green" if self.state["game_status"] == "playing" else "yellow"
             )
             header_text = Text(
-                f"🏠 Monopoly Game - Turn {self.state["turn_number"]} - {self.state["game_status"].title()}",
+                f"🏠 Monopoly Game - Turn {self.state["turn_numbef"]} - {self.state["game_status"].title()}",
                 justify="center",
                 style=f"bold white on {status_color}",
             )

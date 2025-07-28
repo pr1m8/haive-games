@@ -50,7 +50,7 @@ class MultiPlayerGameFactory:
         ...     state_manager=MafiaStateManager,
         ...     player_roles=["villager", "mafia", "detective"],
         ...     aug_llm_configs={
-        ...         "villager": {"vote": villager_config},
+        ...         "villagef": {"vote": villager_config},
         ...         "mafia": {"kill": mafia_config},
         ...         "detective": {"investigate": detective_config}
         ...     }

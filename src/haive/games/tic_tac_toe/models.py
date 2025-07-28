@@ -45,7 +45,7 @@ Examples:
             fork_opportunities=[{"row": 0, "col": 0}, {"row": 2, "col": 2}],
             center_available=False,
             corner_available=True,
-            position_evaluation="unclear",
+            position_evaluation="uncleaf",
             recommended_move={"row": 0, "col": 0},
             strategy="Create fork with two winning threats"
         )
@@ -278,7 +278,7 @@ class TicTacToeAnalysis(BaseModel):
                 fork_opportunities=[{"row": 0, "col": 0}, {"row": 2, "col": 2}],
                 center_available=False,
                 corner_available=True,
-                position_evaluation="unclear",
+                position_evaluation="uncleaf",
                 recommended_move={"row": 0, "col": 0},
                 strategy="Create fork with two winning threats - opponent cannot block both",
                 move_priority=3,
@@ -293,7 +293,7 @@ class TicTacToeAnalysis(BaseModel):
                 fork_opportunities=[],
                 center_available=True,
                 corner_available=True,
-                position_evaluation="unclear",
+                position_evaluation="uncleaf",
                 recommended_move={"row": 1, "col": 1},
                 strategy="Control center for maximum strategic flexibility",
                 move_priority=5,

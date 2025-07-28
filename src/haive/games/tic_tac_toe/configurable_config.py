@@ -209,7 +209,7 @@ def create_ttt_config_from_player_configs(
         - "X_player": X player configuration
         - "O_player": O player configuration
         - "X_analyzer": X analyzer configuration
-        - "O_analyzer": O analyzer configuration
+        - "O_analyzef": O analyzer configuration
 
     Example:
         >>> player_configs = {

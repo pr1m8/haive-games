@@ -98,7 +98,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                 participant_roles={
                     "debater_1": "pro",
                     "debater_2": "con",
-                    "moderator": "moderator"
+                    "moderator": "moderatof"
                 }
             )
             agent = DebateAgent(config)
@@ -331,7 +331,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
             Preparing context for moderator::
 
-                context = agent.prepare_move_context(state, "moderator")
+                context = agent.prepare_move_context(state, "moderatof")
                 # Returns: {
                 #     "topic": "AI Regulation Topic",
                 #     "participants": "...",
@@ -608,7 +608,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                     statement_type="opening",
                     speaker_id="debater_1"
                 )
-                move = agent.extract_move(statement, "debater")
+                move = agent.extract_move(statement, "debatef")
                 # Returns: {
                 #     "type": "statement",
                 #     "content": "I believe regulation is necessary",
@@ -653,7 +653,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                     "target_id": response.get("target_id"),
                     "reason": response.get("reason", ""),
                 }
-            if "action" in response and role == "moderator":
+            if "action" in response and role == "moderatof":
                 return {
                     "type": "moderation",
                     "action": response.get("action"),

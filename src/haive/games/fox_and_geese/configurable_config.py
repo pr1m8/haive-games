@@ -211,7 +211,7 @@ def create_fox_and_geese_config_from_player_configs(
         - "fox_player": Player 1 configuration
         - "geese_player": Player 2 configuration
         - "fox_analyzer": Player 1 analyzer configuration
-        - "geese_analyzer": Player 2 analyzer configuration
+        - "geese_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

@@ -226,7 +226,7 @@ class MancalaState(GameState):
 
         Args:
             stones_per_pit: Number of stones to place in each pit initially
-            **kwargs: Additional keyword arguments for customization
+            **kwargs: Additional key arguments for customization
 
         Returns:
             MancalaState: A new initialized game state

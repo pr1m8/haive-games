@@ -211,7 +211,7 @@ def create_mafia_config_from_player_configs(
         - "mafia_player": Player 1 configuration
         - "town_player": Player 2 configuration
         - "mafia_analyzer": Player 1 analyzer configuration
-        - "town_analyzer": Player 2 analyzer configuration
+        - "town_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

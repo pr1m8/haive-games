@@ -147,7 +147,7 @@ What's your first move?"""
 
         try:
             # Get player action
-            action = self.engines["player"].invoke(context)
+            action = self.engines["playef"].invoke(context)
 
             # Store action for routing
             return Command(

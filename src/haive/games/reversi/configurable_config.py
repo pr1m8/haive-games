@@ -213,7 +213,7 @@ def create_reversi_config_from_player_configs(
         - "black_player": Player 1 configuration
         - "white_player": Player 2 configuration
         - "black_analyzer": Player 1 analyzer configuration
-        - "white_analyzer": Player 2 analyzer configuration
+        - "white_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {

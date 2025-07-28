@@ -16,8 +16,8 @@ Example:
     >>> config = MultiPlayerGameConfig(
     ...     state_schema=MyGameState,
     ...     engines={
-    ...         "player": {"move": player_llm_config},
-    ...         "narrator": {"narrate": narrator_llm_config}
+    ...         "playef": {"move": player_llm_config},
+    ...         "narratof": {"narrate": narrator_llm_config}
     ...     }
     ... )
 """
@@ -48,7 +48,7 @@ class MultiPlayerGameConfig(AgentConfig):
         >>> config = MultiPlayerGameConfig(
         ...     state_schema=MyGameState,
         ...     engines={
-        ...         "player": {
+        ...         "playef": {
         ...             "move": AugLLMConfig(
         ...                 name="player_move",
         ...                 llm_config=my_llm_config,

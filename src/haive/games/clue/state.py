@@ -248,7 +248,7 @@ class ClueState(GameState):
         kept secret and the remaining cards are distributed between players.
 
         Args:
-            **kwargs: Keyword arguments for customization:
+            **kwargs: Key arguments for customization:
                 solution (ClueSolution, optional): Predefined solution. If not provided,
                     a random solution will be generated.
                 first_player (str, optional): Which player goes first ("player1" or "player2").

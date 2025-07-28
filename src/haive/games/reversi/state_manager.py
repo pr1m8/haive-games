@@ -29,7 +29,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
         """Initialize a new Reversi/Othello game.
 
         Args:
-            **kwargs: Keyword arguments for game initialization.
+            **kwargs: Key arguments for game initialization.
                 first_player: Which player goes first ('B' or 'W'). Default is 'B'.
                 player_B: Which player is Black ('player1' or 'player2'). Default is 'player1'.
                 player_W: Which player is White ('player1' or 'player2'). Default is 'player2'.

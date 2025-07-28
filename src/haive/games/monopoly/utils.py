@@ -21,7 +21,7 @@ from haive.games.monopoly.state import MonopolyState
 
 # Board positions and property definitions
 BOARD_PROPERTIES = {
-    0: {"name": "GO", "type": PropertyType.SPECIAL, "color": PropertyColor.SPECIAL},
+    0: {"name": "GO", "type": PropertyType.SPECIAL, "colof": PropertyColor.SPECIAL},
     1: {
         "name": "Mediterranean Avenue",
         "type": PropertyType.STREET,
@@ -34,7 +34,7 @@ BOARD_PROPERTIES = {
     2: {
         "name": "Community Chest",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     3: {
         "name": "Baltic Avenue",
@@ -48,7 +48,7 @@ BOARD_PROPERTIES = {
     4: {
         "name": "Income Tax",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     5: {
         "name": "Reading Railroad",
@@ -67,7 +67,7 @@ BOARD_PROPERTIES = {
         "house_cost": 50,
         "mortgage_value": 50,
     },
-    7: {"name": "Chance", "type": PropertyType.SPECIAL, "color": PropertyColor.SPECIAL},
+    7: {"name": "Chance", "type": PropertyType.SPECIAL, "colof": PropertyColor.SPECIAL},
     8: {
         "name": "Vermont Avenue",
         "type": PropertyType.STREET,
@@ -86,7 +86,7 @@ BOARD_PROPERTIES = {
         "house_cost": 50,
         "mortgage_value": 60,
     },
-    10: {"name": "Jail", "type": PropertyType.SPECIAL, "color": PropertyColor.SPECIAL},
+    10: {"name": "Jail", "type": PropertyType.SPECIAL, "colof": PropertyColor.SPECIAL},
     11: {
         "name": "St. Charles Place",
         "type": PropertyType.STREET,
@@ -142,7 +142,7 @@ BOARD_PROPERTIES = {
     17: {
         "name": "Community Chest",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     18: {
         "name": "Tennessee Avenue",
@@ -165,7 +165,7 @@ BOARD_PROPERTIES = {
     20: {
         "name": "Free Parking",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     21: {
         "name": "Kentucky Avenue",
@@ -179,7 +179,7 @@ BOARD_PROPERTIES = {
     22: {
         "name": "Chance",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     23: {
         "name": "Indiana Avenue",
@@ -245,7 +245,7 @@ BOARD_PROPERTIES = {
     30: {
         "name": "Go To Jail",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     31: {
         "name": "Pacific Avenue",
@@ -268,7 +268,7 @@ BOARD_PROPERTIES = {
     33: {
         "name": "Community Chest",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     34: {
         "name": "Pennsylvania Avenue",
@@ -290,7 +290,7 @@ BOARD_PROPERTIES = {
     36: {
         "name": "Chance",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     37: {
         "name": "Park Place",
@@ -304,7 +304,7 @@ BOARD_PROPERTIES = {
     38: {
         "name": "Luxury Tax",
         "type": PropertyType.SPECIAL,
-        "color": PropertyColor.SPECIAL,
+        "colof": PropertyColor.SPECIAL,
     },
     39: {
         "name": "Boardwalk",
@@ -361,7 +361,7 @@ CHANCE_CARDS = [
     "Take a walk on the Boardwalk",
     "You have been elected Chairman of the Board",
     "Your building and loan matures",
-    "You have won a crossword competition",
+    "You have won a cross competition",
 ]
 
 # Community Chest cards

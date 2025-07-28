@@ -206,7 +206,7 @@ class DebateAgentConfig(AgentConfig):
         default_factory=dict,
         description="Mapping of participant IDs to their debate roles",
         examples=[
-            {"debater_1": "pro", "debater_2": "con", "moderator": "moderator"},
+            {"debater_1": "pro", "debater_2": "con", "moderator": "moderatof"},
             {"prosecutor": "prosecutor", "defense": "defense", "judge": "judge"},
             {"panelist_1": "expert", "panelist_2": "expert", "host": "moderator"},
         ],

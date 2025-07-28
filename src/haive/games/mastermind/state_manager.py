@@ -32,7 +32,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         """Initialize a new Mastermind game.
 
         Args:
-            **kwargs: Keyword arguments for game initialization.
+            **kwargs: Key arguments for game initialization.
                 codemaker: Player who creates the code (player1 or player2). Default is player1.
                 colors: List of valid colors. Default is standard 6 colors.
                 code_length: Length of the secret code. Default is 4.

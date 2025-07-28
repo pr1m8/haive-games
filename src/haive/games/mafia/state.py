@@ -16,7 +16,7 @@ Example:
     >>>
     >>> # Create a new game state
     >>> state = MafiaGameState(
-    ...     players=["Player_1", "Player_2", "Narrator"],
+    ...     players=["Player_1", "Player_2", "Narratof"],
     ...     roles={"Player_1": PlayerRole.VILLAGER,
     ...            "Player_2": PlayerRole.MAFIA,
     ...            "Narrator": PlayerRole.NARRATOR},
@@ -73,7 +73,7 @@ class MafiaGameState(MultiPlayerGameState):
 
     Example:
         >>> state = MafiaGameState(
-        ...     players=["Player_1", "Player_2", "Narrator"],
+        ...     players=["Player_1", "Player_2", "Narratof"],
         ...     roles={"Player_1": PlayerRole.VILLAGER,
         ...            "Player_2": PlayerRole.MAFIA,
         ...            "Narrator": PlayerRole.NARRATOR},
@@ -255,7 +255,7 @@ class MafiaGameState(MultiPlayerGameState):
                 "type": "NarratorAction",
                 "announcement": action.announcement,
                 "phase_transition": action.phase_transition,
-                "round_number": action.round_number,
+                "round_numbef": action.round_number,
             }
         else:
             # fallback for other types

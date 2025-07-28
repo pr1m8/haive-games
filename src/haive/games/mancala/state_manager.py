@@ -31,16 +31,9 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         settings.
 
         Args:
-            **kwargs: Keyword arguments for game initialization.
+            **kwargs: Key arguments for game initialization.
                 stones_per_pit: Number of stones per pit initially. Defaults to 4.
-                Other keyword arguments are passed to the MancalaState constructor.
-
-        Returns:
-            MancalaState: A new Mancala game state ready to play.
-
-        Note:
-            The board is initialized with the following layout:
-            - Indices 0-5: Player 1's pits (bottom row, left to right)
+                Other key arguments are pass
             - Index 6: Player 1's store (right)
             - Indices 7-12: Player 2's pits (top row, right to left)
             - Index 13: Player 2's store (left)

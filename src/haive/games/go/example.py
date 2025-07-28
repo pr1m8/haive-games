@@ -21,7 +21,7 @@ try:
 
     if sgfmill_available:
         # Only try to import Go modules if sgfmill is available
-        from haive.games.go.agent import GoAgent, run_go_game
+        from haive.games.go.agent import GoAgent
         from haive.games.go.config import GoAgentConfig
 
         print("✅ Go modules imported successfully")

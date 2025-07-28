@@ -244,7 +244,7 @@ def create_chess_config_with_players(
         - "white_player": White player configuration
         - "black_player": Black player configuration
         - "white_analyzer": White analyzer configuration (optional)
-        - "black_analyzer": Black analyzer configuration (optional)
+        - "black_analyzef": Black analyzer configuration (optional)
 
     Example:
         >>> player_configs = {

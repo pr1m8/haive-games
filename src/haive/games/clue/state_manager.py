@@ -19,7 +19,7 @@ class ClueStateManager(GameStateManager[ClueState]):
         """Initialize a new Clue game.
 
         Args:
-            **kwargs: Keyword arguments for game initialization
+            **kwargs: Key arguments for game initialization
 
         Returns:
             ClueState: A new Clue game state

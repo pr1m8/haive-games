@@ -215,7 +215,7 @@ def create_nim_config_from_player_configs(
         - "player1_player": Player 1 configuration
         - "player2_player": Player 2 configuration
         - "player1_analyzer": Player 1 analyzer configuration
-        - "player2_analyzer": Player 2 analyzer configuration
+        - "player2_analyzef": Player 2 analyzer configuration
 
     Example:
         >>> player_configs = {
