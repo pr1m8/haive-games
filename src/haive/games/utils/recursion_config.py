@@ -104,7 +104,8 @@ class RecursionConfig:
         num_players: int = 2,
         thread_id: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Configure or update a runnable config with appropriate recursion limit.
+        """Configure or update a runnable config with appropriate recursion
+        limit.
 
         Args:
             runnable_config: Existing config to update (creates new if None)

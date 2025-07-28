@@ -1,7 +1,7 @@
 """Test helpers for bypassing LLM factory issues during testing.
 
-This module provides temporary workarounds for testing game functionality
-while the LLM factory registry issues are being resolved.
+This module provides temporary workarounds for testing game
+functionality while the LLM factory registry issues are being resolved.
 """
 
 from typing import Any
