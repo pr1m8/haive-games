@@ -22,6 +22,7 @@ pytest = "^8.3.5"
 black = "^25.1.0"
 isort = "^6.0.1"
 mypy = "^1.15.0"
+monkeytype = "^23.3.0"
 
 
 [tool.poetry.group.games-chess.dependencies]
