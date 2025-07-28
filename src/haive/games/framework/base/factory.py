@@ -1,5 +1,4 @@
 # src/haive/agents/agent_games/framework/factory.py
-
 """Factory module for creating game agents.
 
 This module provides a factory class for creating game agents with standardized

@@ -15,14 +15,16 @@ C = TypeVar("C", bound=Card)
 class Deck(GamePieceContainer[C]):
     """A deck of cards.
 
-    This represents a collection of cards that can be drawn, shuffled, and dealt.
+    This represents a collection of cards that can be drawn, shuffled,
+    and dealt.
     """
 
     face_down: bool = True  # Whether cards are hidden by default
     discard_pile: list[C] = Field(default_factory=list)
 
     def draw(self) -> C | None:
-        """Draw the top card and set its face up/down based on deck configuration.
+        """Draw the top card and set its face up/down based on deck
+        configuration.
 
         Returns:
             The drawn card, or None if deck is empty

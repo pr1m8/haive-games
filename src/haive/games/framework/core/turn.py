@@ -21,8 +21,8 @@ class TurnPhase(str, Enum):
 class Turn(BaseModel, Generic[M]):
     """Represents a player's turn in a game.
 
-    A turn tracks who is active, what phase the turn is in,
-    and what moves have been made.
+    A turn tracks who is active, what phase the turn is in, and what
+    moves have been made.
     """
 
     player_id: str

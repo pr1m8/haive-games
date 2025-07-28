@@ -135,7 +135,8 @@ class MultiPlayerGameStateManager(Generic[T]):
 
     @classmethod
     def filter_state_for_player(cls, state: T, player_id: str) -> dict[str, Any]:
-        """Filter the state to include only information visible to a specific player.
+        """Filter the state to include only information visible to a specific
+        player.
 
         This method should implement information hiding, ensuring players
         only see game information they should have access to.

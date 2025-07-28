@@ -1,5 +1,4 @@
 # src/haive/agents/agent_games/framework/template_generator.py
-
 """Template generator for game agents (EXPERIMENTAL).
 
 This experimental module provides a template generator for creating new game

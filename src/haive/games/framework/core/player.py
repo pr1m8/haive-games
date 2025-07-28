@@ -16,8 +16,8 @@ S = TypeVar("S", bound=BaseModel)
 class Player(BaseModel, ABC):
     """Base class for all player types in games.
 
-    This is an abstract base class that defines the common interface
-    for all player types (human, AI, etc.).
+    This is an abstract base class that defines the common interface for
+    all player types (human, AI, etc.).
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -44,8 +44,8 @@ class Player(BaseModel, ABC):
 class HumanPlayer(Player):
     """A human player that requires external input for moves.
 
-    Human players don't automatically generate moves; they receive
-    them through UI interactions.
+    Human players don't automatically generate moves; they receive them
+    through UI interactions.
     """
 
     def get_move(self, game_state: S, valid_moves: list[M]) -> M | None:
@@ -100,8 +100,8 @@ class AIPlayer(Player, Generic[S, M]):
 class RandomAIPlayer(AIPlayer[S, M]):
     """An AI player that selects random valid moves.
 
-    This is the simplest form of AI player, useful for testing
-    or for games where random play is appropriate.
+    This is the simplest form of AI player, useful for testing or for
+    games where random play is appropriate.
     """
 
     def get_move(self, game_state: S, valid_moves: list[M]) -> M | None:

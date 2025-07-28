@@ -21,6 +21,7 @@ class Position(BaseModel):
 
     def __eq__(self, other: object) -> bool:
         """Equality check must be implemented by subclasses.
+
         The base implementation just checks if the IDs match.
         """
         if not isinstance(other, Position):
@@ -29,6 +30,7 @@ class Position(BaseModel):
 
     def __hash__(self) -> int:
         """Hash implementation must be consistent with __eq__.
+
         The base implementation uses the ID.
         """
         return hash(self.id)

@@ -36,7 +36,8 @@ M = TypeVar("M", bound=Move)
 class Game(BaseModel, Generic[S, M]):
     """Base class for all games.
 
-    A Game represents a complete playable game with turns, moves, and state.
+    A Game represents a complete playable game with turns, moves, and
+    state.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

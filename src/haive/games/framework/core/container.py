@@ -15,8 +15,8 @@ T = TypeVar("T", bound=GamePiece)
 class GamePieceContainer(BaseModel, Generic[T]):
     """Base container for game pieces.
 
-    This represents a collection of game pieces like a deck of cards,
-    a bag of tiles, or a player's hand.
+    This represents a collection of game pieces like a deck of cards, a
+    bag of tiles, or a player's hand.
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))

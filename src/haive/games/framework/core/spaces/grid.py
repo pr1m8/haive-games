@@ -12,7 +12,8 @@ T = TypeVar("T", bound=GamePiece)
 class GridSpace(Space[GridPosition, T]):
     """A space on a grid-based board.
 
-    This represents a single cell in a grid-based board, like a square on a chess board.
+    This represents a single cell in a grid-based board, like a square
+    on a chess board.
     """
 
     position: GridPosition

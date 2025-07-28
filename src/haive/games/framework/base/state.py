@@ -54,7 +54,8 @@ class GameState(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def initialize(cls, **kwargs) -> "GameState":
-        """Abstract method that all subclasses must implement to initialize the game state.
+        """Abstract method that all subclasses must implement to initialize the
+        game state.
 
         Returns:
             GameState: A fully initialized game state object.

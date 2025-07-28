@@ -45,8 +45,9 @@ class GridPosition(Position):
     def display_coords(self) -> str:
         """Return human-readable coordinates.
 
-        For chess-style notation, this returns coordinates like 'A1', 'B2', etc.
-        where the column is a letter (A-Z) and the row is a number (1-based).
+        For chess-style notation, this returns coordinates like 'A1',
+        'B2', etc. where the column is a letter (A-Z) and the row is a
+        number (1-based).
         """
         col_letter = chr(ord("A") + self.col)
         return f"{col_letter}{self.row + 1}"

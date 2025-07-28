@@ -10,7 +10,8 @@ from pydantic import BaseModel, Field
 class Rule(BaseModel):
     """Base class for game rules.
 
-    Rules define what actions are valid in a game and how they affect the game state.
+    Rules define what actions are valid in a game and how they affect
+    the game state.
     """
 
     name: str
