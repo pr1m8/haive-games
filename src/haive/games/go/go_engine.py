@@ -21,7 +21,7 @@ except ImportError:
     class DummySgfmill:
         def __getattr__(self, name):
             raise ImportError(
-                f"sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
+                "sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
             )
 
     sgfmill = DummySgfmill()

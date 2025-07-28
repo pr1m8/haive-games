@@ -523,7 +523,7 @@ async def example_6_performance_analysis():
         # Find optimal move manually
         nim_sum = calculate_nim_sum(piles)
         if nim_sum != 0:
-            for pile_idx, pile_size in enumerate(piles):
+            for _pile_idx, pile_size in enumerate(piles):
                 target_size = pile_size ^ nim_sum
                 if target_size < pile_size:
                     break
