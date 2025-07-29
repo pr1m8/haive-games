@@ -4,7 +4,7 @@ This module provides utilities for setting up game APIs using the
 standardized GameAPI system from haive-dataflow.
 """
 
-from typing import Any, Dict, Optional, Type
+from typing import Any
 
 from fastapi import FastAPI
 from haive.core.engine.agent.agent import Agent
@@ -22,15 +22,15 @@ class GameAPIConfig(BaseModel):
     )
     enable_cors: bool = Field(default=True, description="Enable CORS middleware")
     cors_origins: list[str] = Field(default=["*"], description="Allowed CORS origins")
-    default_config_overrides: Optional[Dict[str, Any]] = Field(
+    default_config_overrides: dict[str, Any] | None = Field(
         default=None, description="Default configuration overrides for game instances"
     )
 
 
 def create_game_api(
     app: FastAPI,
-    agent_class: Type[Agent],
-    api_config: Optional[GameAPIConfig] = None,
+    agent_class: type[Agent],
+    api_config: GameAPIConfig | None = None,
     **kwargs,
 ) -> GameAPI:
     """Create a game API with the standardized system.
@@ -84,7 +84,7 @@ def create_game_api(
 
 
 def create_chess_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Chess game API.
 
@@ -120,7 +120,7 @@ def create_chess_api(
 
 
 def create_connect4_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Connect4 game API.
 
@@ -156,7 +156,7 @@ def create_connect4_api(
 
 
 def create_tic_tac_toe_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Tic-Tac-Toe game API.
 
