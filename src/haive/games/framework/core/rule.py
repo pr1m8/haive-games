@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Rule core module.
 
 This module provides rule functionality for the Haive framework.
@@ -14,7 +16,6 @@ Functions:
 """
 
 # game_framework/core/rule.py
-from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any

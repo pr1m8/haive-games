@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Container core module.
 
 This module provides container functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
 """
 
 # game_framework/core/container.py
-from __future__ import annotations
 
 import random
 import uuid

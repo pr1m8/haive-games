@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Game core module.
 
 This module provides game functionality for the Haive framework.
@@ -14,7 +16,6 @@ Functions:
 """
 
 # game_framework/core/game.py
-from __future__ import annotations
 
 import uuid
 from enum import Enum

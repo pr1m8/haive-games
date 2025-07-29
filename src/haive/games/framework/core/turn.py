@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Turn core module.
 
 This module provides turn functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
 """
 
 # game_framework/core/turn.py
-from __future__ import annotations
 
 from enum import Enum
 from typing import Any, Generic, TypeVar

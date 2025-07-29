@@ -8,10 +8,10 @@ from haive.games.framework.multi_player.state import MultiPlayerGameState
 from haive.games.framework.multi_player.state_manager import MultiPlayerGameStateManager
 
 __all__ = [
+    "GamePhase",
     "MultiPlayerGameAgent",
     "MultiPlayerGameConfig",
     "MultiPlayerGameFactory",
-    "GamePhase",
     "MultiPlayerGameState",
     "MultiPlayerGameStateManager",
 ]

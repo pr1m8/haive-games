@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Grid core module.
 
 This module provides grid functionality for the Haive framework.
@@ -10,7 +12,6 @@ Functions:
 """
 
 # game_framework/positions/grid.py
-from __future__ import annotations
 
 from pydantic import computed_field, field_validator
 

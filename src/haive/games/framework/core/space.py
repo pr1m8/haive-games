@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Space core module.
 
 This module provides space functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
 """
 
 # game_framework/core/space.py
-from __future__ import annotations
 
 import uuid
 from typing import Any, Generic, TypeVar

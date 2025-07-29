@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Board core module.
 
 This module provides board functionality for the Haive framework.
@@ -14,7 +16,6 @@ Functions:
 """
 
 # game_framework/core/board.py
-from __future__ import annotations
 
 import uuid
 from abc import abstractmethod

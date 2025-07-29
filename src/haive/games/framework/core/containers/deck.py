@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Deck core module.
 
 This module provides deck functionality for the Haive framework.
@@ -12,7 +14,6 @@ Functions:
 """
 
 # game_framework/containers/deck.py
-from __future__ import annotations
 
 from typing import TypeVar
 

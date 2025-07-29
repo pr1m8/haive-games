@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Piece core module.
 
 This module provides piece functionality for the Haive framework.
@@ -14,7 +16,6 @@ Functions:
 """
 
 # game_framework/core/piece.py
-from __future__ import annotations
 
 import uuid
 from typing import Any, Generic, TypeVar

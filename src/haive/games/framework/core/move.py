@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Move core module.
 
 This module provides move functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
 """
 
 # game_framework/core/move.py
-from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Generic, TypeVar

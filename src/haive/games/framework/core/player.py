@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Player core module.
 
 This module provides player functionality for the Haive framework.
@@ -14,7 +16,6 @@ Functions:
 """
 
 # game_framework/core/player.py
-from __future__ import annotations
 
 import uuid
 from abc import ABC, abstractmethod

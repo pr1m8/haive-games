@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Position core module.
 
 This module provides position functionality for the Haive framework.
@@ -12,7 +14,6 @@ Functions:
 """
 
 # game_framework/core/position.py
-from __future__ import annotations
 
 import uuid
 from typing import Any
