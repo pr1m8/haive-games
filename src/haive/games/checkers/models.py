@@ -71,7 +71,7 @@ Note:
     and integration with LLM-based strategic analysis systems.
 """
 
-from typing import Dict, List, Literal, Optional, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -179,7 +179,7 @@ class CheckersMove(BaseModel):
         examples=[True, False],
     )
 
-    captured_position: Optional[str] = Field(
+    captured_position: str | None = Field(
         default=None,
         min_length=2,
         max_length=2,
@@ -214,7 +214,7 @@ class CheckersMove(BaseModel):
 
     @field_validator("captured_position")
     @classmethod
-    def validate_captured_position(cls, v: Optional[str], values) -> Optional[str]:
+    def validate_captured_position(cls, v: str | None, values) -> str | None:
         """Validate captured position is provided when move is a jump.
 
         Args:
@@ -373,7 +373,7 @@ class CheckersPlayerDecision(BaseModel):
         ],
     )
 
-    alternatives: List[str] = Field(
+    alternatives: list[str] = Field(
         default_factory=list,
         description="List of alternative moves considered in algebraic notation",
         examples=[
@@ -385,7 +385,7 @@ class CheckersPlayerDecision(BaseModel):
 
     @field_validator("alternatives")
     @classmethod
-    def validate_alternatives(cls, v: List[str]) -> List[str]:
+    def validate_alternatives(cls, v: list[str]) -> list[str]:
         """Validate alternative moves use proper algebraic notation.
 
         Args:
@@ -492,7 +492,7 @@ class CheckersAnalysis(BaseModel):
         ],
     )
 
-    suggested_moves: List[str] = Field(
+    suggested_moves: list[str] = Field(
         default_factory=list,
         description="Prioritized list of recommended moves in algebraic notation",
         examples=[
@@ -516,7 +516,7 @@ class CheckersAnalysis(BaseModel):
 
     @computed_field
     @property
-    def analysis_summary(self) -> Dict[str, Union[str, int]]:
+    def analysis_summary(self) -> dict[str, str | int]:
         """Generate a concise summary of the analysis.
 
         Returns:

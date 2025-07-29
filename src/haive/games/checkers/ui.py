@@ -15,7 +15,6 @@ that makes the game more engaging and easier to follow.
 
 import time
 from datetime import datetime
-from typing import List, Optional
 
 from rich import box
 from rich.align import Align
@@ -76,7 +75,7 @@ class CheckersUI:
         """
         self.console = Console()
         self.layout = Layout()
-        self.game_log: List[str] = []
+        self.game_log: list[str] = []
         self.move_count = 0
         self.start_time = datetime.now()
 
@@ -142,7 +141,7 @@ class CheckersUI:
         )
 
     def _create_board_display(
-        self, state: CheckersState, last_move: Optional[CheckersMove] = None
+        self, state: CheckersState, last_move: CheckersMove | None = None
     ) -> Panel:
         """Create a beautiful board visualization.
 
@@ -253,23 +252,23 @@ class CheckersUI:
             # Red piece that was just moved
             if piece_value == 1:  # Regular piece
                 return f"[{self.colors['last_move_red']}]{self.pieces['red']}[/{self.colors['last_move_red']}]"
-            else:  # King
-                return f"[{self.colors['last_move_red']}]{self.pieces['red_king']}[/{self.colors['last_move_red']}]"
-        elif last_move_player == "black" and piece_value in [3, 4]:
+            # King
+            return f"[{self.colors['last_move_red']}]{self.pieces['red_king']}[/{self.colors['last_move_red']}]"
+        if last_move_player == "black" and piece_value in [3, 4]:
             # Black piece that was just moved
             if piece_value == 3:  # Regular piece
                 return f"[{self.colors['last_move_black']}]{self.pieces['black']}[/{self.colors['last_move_black']}]"
-            else:  # King
-                return f"[{self.colors['last_move_black']}]{self.pieces['black_king']}[/{self.colors['last_move_black']}]"
+            # King
+            return f"[{self.colors['last_move_black']}]{self.pieces['black_king']}[/{self.colors['last_move_black']}]"
 
         # Normal piece styling
-        elif piece_value == 1:  # Red piece
+        if piece_value == 1:  # Red piece
             return f"[{self.colors['red_piece']}]{self.pieces['red']}[/{self.colors['red_piece']}]"
-        elif piece_value == 2:  # Red king
+        if piece_value == 2:  # Red king
             return f"[{self.colors['red_king']}]{self.pieces['red_king']}[/{self.colors['red_king']}]"
-        elif piece_value == 3:  # Black piece
+        if piece_value == 3:  # Black piece
             return f"[{self.colors['black_piece']}]{self.pieces['black']}[/{self.colors['black_piece']}]"
-        elif piece_value == 4:  # Black king
+        if piece_value == 4:  # Black king
             return f"[{self.colors['black_king']}]{self.pieces['black_king']}[/{self.colors['black_king']}]"
 
         return " "
