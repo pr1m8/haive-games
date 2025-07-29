@@ -4,7 +4,7 @@ This module provides configurable Mafia game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -36,12 +36,12 @@ class ConfigurableMafiaConfig(MafiaConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    mafia_model: Optional[str] = Field(default=None, description="Model for mafia")
-    town_model: Optional[str] = Field(default=None, description="Model for town")
-    example_config: Optional[str] = Field(
+    mafia_model: str | None = Field(default=None, description="Model for mafia")
+    town_model: str | None = Field(default=None, description="Model for town")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -118,17 +118,16 @@ class ConfigurableMafiaConfig(MafiaConfig):
         def model_to_name(model: str) -> str:
             if "gpt" in model.lower():
                 return "GPT"
-            elif "claude" in model.lower():
+            if "claude" in model.lower():
                 return "Claude"
-            elif "gemini" in model.lower():
+            if "gemini" in model.lower():
                 return "Gemini"
-            elif "llama" in model.lower():
+            if "llama" in model.lower():
                 return "Llama"
-            else:
-                # Extract provider or model name
-                if ":" in model:
-                    return model.split(":")[0].title()
-                return model.split("-")[0].title()
+            # Extract provider or model name
+            if ":" in model:
+                return model.split(":")[0].title()
+            return model.split("-")[0].title()
 
         self.mafia_name = (
             getattr(self, "mafia_name", None) or f"{model_to_name(mafia_model)} Mafia"
@@ -195,7 +194,7 @@ def create_mafia_config_from_example(
 
 
 def create_mafia_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMafiaConfig:
     """Create a configurable Mafia configuration from detailed player
     configurations.
@@ -300,7 +299,7 @@ def get_example_config(name: str) -> ConfigurableMafiaConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:
