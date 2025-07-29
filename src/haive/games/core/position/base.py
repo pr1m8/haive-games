@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Base core module.
 
 This module provides base functionality for the Haive framework.
@@ -11,7 +13,6 @@ Functions:
     validate_coordinates: Validate Coordinates functionality.
 """
 
-from __future__ import annotations
 
 import uuid
 

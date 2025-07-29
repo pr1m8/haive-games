@@ -11,7 +11,7 @@ The system supports:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Protocol, Union
+from typing import Any, Protocol
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
@@ -32,13 +32,12 @@ def create_llm_config(model: str, **kwargs) -> LLMConfig:
     # Simple provider detection based on model name
     if "gpt" in model.lower() or kwargs.get("model_provider") == "openai":
         return OpenAILLMConfig(model=model, **kwargs)
-    elif "claude" in model.lower() or kwargs.get("model_provider") == "anthropic":
+    if "claude" in model.lower() or kwargs.get("model_provider") == "anthropic":
         return AnthropicLLMConfig(model=model, **kwargs)
-    elif kwargs.get("model_provider") == "azure":
+    if kwargs.get("model_provider") == "azure":
         return AzureLLMConfig(model=model, **kwargs)
-    else:
-        # Default to OpenAI
-        return OpenAILLMConfig(model=model, **kwargs)
+    # Default to OpenAI
+    return OpenAILLMConfig(model=model, **kwargs)
 
 
 class PlayerRole(Protocol):
@@ -52,7 +51,7 @@ class PlayerRole(Protocol):
         """Get the prompt template for this role."""
         ...
 
-    def get_structured_output_model(self) -> Optional[type]:
+    def get_structured_output_model(self) -> type | None:
         """Get the structured output model for this role."""
         ...
 
@@ -66,10 +65,10 @@ class GamePlayerRole(BaseModel):
 
     role_name: str = Field(description="Name of the role (e.g., 'white_player')")
     prompt_template: Any = Field(description="Prompt template for this role")
-    structured_output_model: Optional[type] = Field(
+    structured_output_model: type | None = Field(
         default=None, description="Expected output model"
     )
-    temperature: Optional[float] = Field(
+    temperature: float | None = Field(
         default=None, description="Default temperature for this role"
     )
     description: str = Field(default="", description="Description of this role")
@@ -86,20 +85,18 @@ class PlayerAgentConfig(BaseModel):
     """
 
     # LLM Configuration - can be string, LLMConfig, or dict
-    llm_config: Union[str, LLMConfig, Dict[str, Any]] = Field(
+    llm_config: str | LLMConfig | dict[str, Any] = Field(
         description="LLM configuration - can be model string, LLMConfig instance, or config dict"
     )
 
     # Optional overrides
-    temperature: Optional[float] = Field(
-        default=None, description="Temperature override"
-    )
-    model_provider: Optional[str] = Field(
+    temperature: float | None = Field(default=None, description="Temperature override")
+    model_provider: str | None = Field(
         default=None, description="Model provider override"
     )
 
     # Player metadata
-    player_name: Optional[str] = Field(
+    player_name: str | None = Field(
         default=None, description="Human-readable player name"
     )
 
@@ -181,8 +178,8 @@ class PlayerAgentFactory:
 
     @staticmethod
     def create_engines_from_player_configs(
-        roles: Dict[str, GamePlayerRole], player_configs: Dict[str, PlayerAgentConfig]
-    ) -> Dict[str, AugLLMConfig]:
+        roles: dict[str, GamePlayerRole], player_configs: dict[str, PlayerAgentConfig]
+    ) -> dict[str, AugLLMConfig]:
         """Create a complete set of engines from role definitions and player
         configs.
 
@@ -228,18 +225,17 @@ class ConfigurableGameAgent(ABC):
     """
 
     @abstractmethod
-    def get_role_definitions(self) -> Dict[str, GamePlayerRole]:
+    def get_role_definitions(self) -> dict[str, GamePlayerRole]:
         """Get the role definitions for this game.
 
         Returns:
             Dict[str, GamePlayerRole]: Dictionary of role name to role definition
         """
-        pass
 
     @abstractmethod
     def create_engines_from_player_configs(
-        self, player_configs: Dict[str, PlayerAgentConfig]
-    ) -> Dict[str, AugLLMConfig]:
+        self, player_configs: dict[str, PlayerAgentConfig]
+    ) -> dict[str, AugLLMConfig]:
         """Create engines from player configurations.
 
         Args:
@@ -258,9 +254,9 @@ class ConfigurableGameAgent(ABC):
 
 
 def create_player_config(
-    model: Union[str, LLMConfig],
-    temperature: Optional[float] = None,
-    player_name: Optional[str] = None,
+    model: str | LLMConfig,
+    temperature: float | None = None,
+    player_name: str | None = None,
     **kwargs,
 ) -> PlayerAgentConfig:
     """Create a player agent configuration.
@@ -285,11 +281,11 @@ def create_player_config(
 
 
 def create_simple_player_configs(
-    white_model: Union[str, LLMConfig] = "gpt-4",
-    black_model: Union[str, LLMConfig] = "claude-3-opus",
-    temperature: Optional[float] = None,
+    white_model: str | LLMConfig = "gpt-4",
+    black_model: str | LLMConfig = "claude-3-opus",
+    temperature: float | None = None,
     **kwargs,
-) -> Dict[str, PlayerAgentConfig]:
+) -> dict[str, PlayerAgentConfig]:
     """Create simple player configurations for two-player games.
 
     Args:

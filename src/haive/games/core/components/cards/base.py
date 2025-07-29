@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Base core module.
 
 This module provides base functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
 
 # haive/games/core/components/cards/models.py
 
-from __future__ import annotations
 
 import random
 import uuid

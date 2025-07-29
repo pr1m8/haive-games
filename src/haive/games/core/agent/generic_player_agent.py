@@ -13,7 +13,7 @@ The generic system supports:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Generic, TypeVar
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
@@ -46,20 +46,19 @@ class GamePlayerIdentifiers(BaseModel, Generic[PlayerType, PlayerType2]):
     class Config:
         arbitrary_types_allowed = True
 
-    def get_players(self) -> Tuple[PlayerType, PlayerType2]:
+    def get_players(self) -> tuple[PlayerType, PlayerType2]:
         """Get both player identifiers as a tuple."""
         return (self.player1, self.player2)
 
     def get_opponent(
-        self, player: Union[PlayerType, PlayerType2]
-    ) -> Union[PlayerType, PlayerType2]:
+        self, player: PlayerType | PlayerType2
+    ) -> PlayerType | PlayerType2:
         """Get the opponent of the given player."""
         if player == self.player1:
             return self.player2
-        elif player == self.player2:
+        if player == self.player2:
             return self.player1
-        else:
-            raise ValueError(f"Unknown player: {player}")
+        raise ValueError(f"Unknown player: {player}")
 
 
 class GenericGameRole(BaseModel, Generic[PlayerType]):
@@ -74,12 +73,10 @@ class GenericGameRole(BaseModel, Generic[PlayerType]):
     player_identifier: PlayerType = Field(description="Player this role belongs to")
     role_type: str = Field(description="Type of role ('player' or 'analyzer')")
     prompt_template: Any = Field(description="Prompt template for this role")
-    structured_output_model: Optional[Type] = Field(
+    structured_output_model: type | None = Field(
         default=None, description="Expected output model"
     )
-    temperature: Optional[float] = Field(
-        default=None, description="Default temperature"
-    )
+    temperature: float | None = Field(default=None, description="Default temperature")
     description: str = Field(default="", description="Description of this role")
 
     class Config:
@@ -98,22 +95,22 @@ class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
 
     @abstractmethod
     def create_move_prompt(
-        self, player: Union[PlayerType, PlayerType2]
+        self, player: PlayerType | PlayerType2
     ) -> ChatPromptTemplate:
         """Create a move generation prompt for the specified player."""
 
     @abstractmethod
     def create_analysis_prompt(
-        self, player: Union[PlayerType, PlayerType2]
+        self, player: PlayerType | PlayerType2
     ) -> ChatPromptTemplate:
         """Create a position analysis prompt for the specified player."""
 
     @abstractmethod
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for moves."""
 
     @abstractmethod
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for analysis."""
 
 
@@ -139,7 +136,7 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
 
     def create_role_definitions(
         self,
-    ) -> Dict[str, GenericGameRole[Union[PlayerType, PlayerType2]]]:
+    ) -> dict[str, GenericGameRole[PlayerType | PlayerType2]]:
         """Create generic role definitions for the game.
 
         Returns:
@@ -178,8 +175,8 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
         return roles
 
     def create_engines_from_player_configs(
-        self, player_configs: Dict[str, PlayerAgentConfig]
-    ) -> Dict[str, AugLLMConfig]:
+        self, player_configs: dict[str, PlayerAgentConfig]
+    ) -> dict[str, AugLLMConfig]:
         """Create engines from player configurations using generics.
 
         Args:
@@ -211,10 +208,10 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
 
     def create_engines_from_simple_configs(
         self,
-        player1_model: Union[str, LLMConfig],
-        player2_model: Union[str, LLMConfig],
+        player1_model: str | LLMConfig,
+        player2_model: str | LLMConfig,
         **kwargs,
-    ) -> Dict[str, AugLLMConfig]:
+    ) -> dict[str, AugLLMConfig]:
         """Create engines from simple model configurations.
 
         Args:
@@ -429,10 +426,10 @@ class RiskPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
 
 def create_engines_from_simple_configs(
     factory: GenericGameEngineFactory,
-    player1_model: Union[str, LLMConfig],
-    player2_model: Union[str, LLMConfig],
+    player1_model: str | LLMConfig,
+    player2_model: str | LLMConfig,
     temperature: float = 0.3,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create engines from simple model configurations using a factory.
 
     Args:
@@ -456,10 +453,10 @@ def create_generic_game_config(
     game_name: str,
     players: GamePlayerIdentifiers,
     prompt_generator: GenericPromptGenerator,
-    player1_model: Union[str, LLMConfig] = "gpt-4o",
-    player2_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    player1_model: str | LLMConfig = "gpt-4o",
+    player2_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     **kwargs,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create a generic game configuration for any two-player game.
 
     Args:
@@ -510,10 +507,10 @@ def example_chess_usage():
                 ]
             )
 
-        def get_move_output_model(self) -> Type:
+        def get_move_output_model(self) -> type:
             return ChessPlayerDecision
 
-        def get_analysis_output_model(self) -> Type:
+        def get_analysis_output_model(self) -> type:
             return SegmentedAnalysis
 
     # Usage
@@ -547,10 +544,10 @@ def example_custom_game_usage():
                 ]
             )
 
-        def get_move_output_model(self) -> Type:
+        def get_move_output_model(self) -> type:
             return dict  # Simplified for example
 
-        def get_analysis_output_model(self) -> Type:
+        def get_analysis_output_model(self) -> type:
             return dict  # Simplified for example
 
     sps_prompt_gen = SPSPromptGenerator(sps_players)
