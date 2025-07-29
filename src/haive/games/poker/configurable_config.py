@@ -4,7 +4,7 @@ This module provides configurable Poker game configurations that replace
 hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -36,12 +36,12 @@ class ConfigurablePokerConfig(PokerAgentConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    player1_model: Optional[str] = Field(default=None, description="Model for player1")
-    player2_model: Optional[str] = Field(default=None, description="Model for player2")
-    example_config: Optional[str] = Field(
+    player1_model: str | None = Field(default=None, description="Model for player1")
+    player2_model: str | None = Field(default=None, description="Model for player2")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -120,17 +120,16 @@ class ConfigurablePokerConfig(PokerAgentConfig):
         def model_to_name(model: str) -> str:
             if "gpt" in model.lower():
                 return "GPT"
-            elif "claude" in model.lower():
+            if "claude" in model.lower():
                 return "Claude"
-            elif "gemini" in model.lower():
+            if "gemini" in model.lower():
                 return "Gemini"
-            elif "llama" in model.lower():
+            if "llama" in model.lower():
                 return "Llama"
-            else:
-                # Extract provider or model name
-                if ":" in model:
-                    return model.split(":")[0].title()
-                return model.split("-")[0].title()
+            # Extract provider or model name
+            if ":" in model:
+                return model.split(":")[0].title()
+            return model.split("-")[0].title()
 
         self.player1_name = (
             getattr(self, "player1_name", None)
@@ -199,7 +198,7 @@ def create_poker_config_from_example(
 
 
 def create_poker_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurablePokerConfig:
     """Create a configurable Poker configuration from detailed player
     configurations.
@@ -304,7 +303,7 @@ def get_example_config(name: str) -> ConfigurablePokerConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:

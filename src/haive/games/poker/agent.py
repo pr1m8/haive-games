@@ -7,11 +7,12 @@ This module implements a robust poker agent with improved:
 - Enhanced prompts for LLM decisions
 """
 
-# Standard library imports
 import logging
 import os
 import time
 import traceback
+
+# Standard library imports
 from datetime import datetime
 from typing import Any
 
@@ -78,7 +79,8 @@ class PokerAgent(Agent[PokerAgentConfig]):
 
     def _setup_agent_runnables(self) -> None:
         """Set up LLM runnables for all players with improved error
-        handling."""
+        handling.
+        """
         logger.debug("Setting up agent runnables")
 
         try:
@@ -158,7 +160,8 @@ class PokerAgent(Agent[PokerAgentConfig]):
 
     def setup_workflow(self):
         """Set up the poker game workflow graph with enhanced error
-        handling."""
+        handling.
+        """
         logger.info("Setting up poker game workflow")
 
         try:
@@ -263,7 +266,8 @@ class PokerAgent(Agent[PokerAgentConfig]):
 
     def setup_hand(self, state: PokerState) -> PokerState:
         """Set up a new poker hand with enhanced error handling and
-        debugging."""
+        debugging.
+        """
         logger.info(f"Setting up hand #{self.hands_played + 1}")
 
         try:
@@ -459,7 +463,8 @@ class PokerAgent(Agent[PokerAgentConfig]):
         self, runnable, messages, context, legal_actions, max_retries=3
     ):
         """Get player decision with retry logic for handling invalid
-        outputs."""
+        outputs.
+        """
         decision = None
         retries = 0
 
