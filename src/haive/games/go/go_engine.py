@@ -5,7 +5,6 @@ sgfmill, which is compatible with Python 3.12.
 """
 
 import logging
-from typing import Optional, Tuple
 
 # Handle optional sgfmill dependency
 try:
@@ -45,7 +44,7 @@ class GoGame:
         self.current_player = "b"  # 'b' for black, 'w' for white
         self.captured = {"b": 0, "w": 0}
 
-    def play_move(self, color: str, move: Optional[Tuple[int, int]]):
+    def play_move(self, color: str, move: tuple[int, int] | None):
         """Play a move on the board.
 
         Args:
@@ -156,11 +155,10 @@ class sgf:
         """Save game to SGF."""
         if isinstance(game, GoGame):
             return dumps_sgf(game)
-        elif hasattr(game, "to_sgf"):
+        if hasattr(game, "to_sgf"):
             return game.to_sgf()
-        else:
-            # Assume it's already an SGF string
-            return str(game)
+        # Assume it's already an SGF string
+        return str(game)
 
 
 def Game(board_size: int = 19) -> GoGame:

@@ -12,12 +12,12 @@ from haive.games.go.state import GoGameState
 from haive.games.go.state_manager import GoGameStateManager
 
 __all__ = [
-    "build_go_aug_llms",
-    "get_analyzer_engine",
-    "get_black_engine",
-    "get_white_engine",
     "GoAgent",
     "GoAgentConfig",
     "GoGameState",
     "GoGameStateManager",
+    "build_go_aug_llms",
+    "get_analyzer_engine",
+    "get_black_engine",
+    "get_white_engine",
 ]

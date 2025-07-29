@@ -10,7 +10,6 @@ print("Running Go quick demo...")
 try:
     # First check if sgfmill is available directly
     try:
-        import sgfmill.boards
 
         print("✅ sgfmill dependency found")
         sgfmill_available = True
