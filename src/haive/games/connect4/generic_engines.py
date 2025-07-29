@@ -5,8 +5,6 @@ Connect4, showing the same pattern working with red/yellow player
 identifiers.
 """
 
-from typing import Type, Union
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -100,11 +98,11 @@ class Connect4PromptGenerator(GenericPromptGenerator[str, str]):
             ]
         )
 
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for Connect4 moves."""
         return Connect4PlayerDecision
 
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for Connect4 analysis."""
         return Connect4Analysis
 
@@ -147,8 +145,8 @@ def create_generic_connect4_engines(
 
 
 def create_generic_connect4_engines_simple(
-    red_model: Union[str, LLMConfig] = "gpt-4o",
-    yellow_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    red_model: str | LLMConfig = "gpt-4o",
+    yellow_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     temperature: float = 0.7,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:

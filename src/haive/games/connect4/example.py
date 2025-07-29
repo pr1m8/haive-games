@@ -49,7 +49,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean, stdev
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Add the package to the path if running directly
 if __name__ == "__main__":
@@ -90,7 +90,7 @@ logger = logging.getLogger(__name__)
 class GameResult:
     """Data class to store game results."""
 
-    winner: Optional[str]
+    winner: str | None
     moves: int
     duration: float
     status: str
@@ -991,7 +991,7 @@ def example_6_tournament_mode():
                     duration = time.time() - start_time
 
                     # Collect detailed game statistics
-                    column_usage = {i: 0 for i in range(7)}
+                    column_usage = dict.fromkeys(range(7), 0)
                     for move in state.move_history:
                         column_usage[move.column] += 1
 
@@ -1292,7 +1292,7 @@ def example_7_custom_ai_configuration():
             "Tournament play",
         ]
 
-        for custom, use_case in zip(custom_configs, use_cases):
+        for custom, use_case in zip(custom_configs, use_cases, strict=False):
             config = custom["config"]
             comparison_table.add_row(
                 custom["name"],
@@ -1361,7 +1361,7 @@ async def example_8_async_batch_processing():
 
         async def run_single_game(
             game_id: int, config: Connect4AgentConfig
-        ) -> Dict[str, Any]:
+        ) -> dict[str, Any]:
             """Run a single game asynchronously."""
             start_time = time.time()
 
