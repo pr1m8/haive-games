@@ -5,8 +5,6 @@ allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -110,8 +108,7 @@ class NimEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return NimAnalysis
-        else:
-            return NimMove
+        return NimMove
 
 
 # Factory instance
@@ -119,8 +116,8 @@ nim_factory = NimEngineFactory()
 
 
 def create_generic_nim_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Nim engines from detailed player configurations.
 
     Args:
@@ -140,7 +137,7 @@ def create_generic_nim_engines(
 
 def create_generic_nim_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Nim engines with simple model specifications.
 
     Args:
@@ -158,7 +155,7 @@ def create_generic_nim_engines_simple(
 
 def create_generic_nim_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Nim engines from a predefined example configuration.
 
     Args:
@@ -196,16 +193,16 @@ def create_generic_nim_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_nim_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_nim_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Nim engines with high-powered models."""
     return create_generic_nim_config_from_example("advanced", **kwargs)
 
 
-def create_budget_nim_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_nim_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Nim engines."""
     return create_generic_nim_config_from_example("budget", **kwargs)
 
 
-def create_mixed_nim_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_nim_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Nim engines."""
     return create_generic_nim_config_from_example("mixed", **kwargs)

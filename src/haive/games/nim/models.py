@@ -73,7 +73,7 @@ Note:
 """
 
 from enum import Enum
-from typing import Dict, List, Literal, Optional, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -223,7 +223,7 @@ class NimMove(BaseModel):
         examples=["Player1", "AliceAI", "BobBot", "Human"],
     )
 
-    reasoning: Optional[str] = Field(
+    reasoning: str | None = Field(
         default=None,
         max_length=500,
         description="Strategic reasoning behind the move choice for analysis and learning",
@@ -234,13 +234,13 @@ class NimMove(BaseModel):
         ],
     )
 
-    move_quality: Optional[Literal["optimal", "good", "poor", "blunder"]] = Field(
+    move_quality: Literal["optimal", "good", "poor", "blunder"] | None = Field(
         default=None,
         description="Assessment of move quality for strategic analysis",
         examples=["optimal", "good", "poor", "blunder"],
     )
 
-    alternative_moves: List[Dict[str, int]] = Field(
+    alternative_moves: list[dict[str, int]] = Field(
         default_factory=list,
         description="Other moves considered during decision-making process",
         examples=[
@@ -252,7 +252,7 @@ class NimMove(BaseModel):
         ],
     )
 
-    time_taken: Optional[float] = Field(
+    time_taken: float | None = Field(
         default=None,
         ge=0.0,
         description="Time taken to make the move in seconds",
@@ -262,8 +262,8 @@ class NimMove(BaseModel):
     @field_validator("alternative_moves")
     @classmethod
     def validate_alternative_moves(
-        cls, v: List[Dict[str, int]]
-    ) -> List[Dict[str, int]]:
+        cls, v: list[dict[str, int]]
+    ) -> list[dict[str, int]]:
         """Validate alternative moves have required fields.
 
         Args:
@@ -466,7 +466,7 @@ class NimAnalysis(BaseModel):
         ],
     )
 
-    mathematical_proof: Optional[str] = Field(
+    mathematical_proof: str | None = Field(
         default=None,
         max_length=800,
         description="Mathematical justification or theorem application supporting the analysis",
@@ -477,7 +477,7 @@ class NimAnalysis(BaseModel):
         ],
     )
 
-    alternative_moves: List[NimMove] = Field(
+    alternative_moves: list[NimMove] = Field(
         default_factory=list,
         description="Other strong moves considered during analysis showing strategic depth",
     )
@@ -487,7 +487,7 @@ class NimAnalysis(BaseModel):
         description="Categorization of position difficulty for analysis depth guidance",
     )
 
-    variant_considerations: Optional[str] = Field(
+    variant_considerations: str | None = Field(
         default=None,
         max_length=300,
         description="Special considerations for game variants (misère, fibonacci, etc.)",
@@ -521,14 +521,13 @@ class NimAnalysis(BaseModel):
             PositionType.TRIVIAL,
         ]:
             return "high"
-        elif self.position_complexity == PositionType.COMPLEX:
+        if self.position_complexity == PositionType.COMPLEX:
             return "medium"
-        else:
-            return "low"
+        return "low"
 
     @computed_field
     @property
-    def strategic_summary(self) -> Dict[str, Union[str, int, bool]]:
+    def strategic_summary(self) -> dict[str, str | int | bool]:
         """Generate concise strategic summary.
 
         Returns:

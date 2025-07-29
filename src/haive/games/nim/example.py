@@ -37,7 +37,6 @@ import operator
 import random
 import sys
 import time
-from typing import List
 
 from haive.games.nim.models import NimMove
 from haive.games.nim.state_manager import NimStateManager
@@ -61,12 +60,12 @@ def print_subsection(title: str) -> None:
     print(f"\n--- {title} ---")
 
 
-def calculate_nim_sum(piles: List[int]) -> int:
+def calculate_nim_sum(piles: list[int]) -> int:
     """Calculate the nim-sum (XOR) of pile sizes."""
     return functools.reduce(operator.xor, piles, 0)
 
 
-def binary_representation(piles: List[int]) -> None:
+def binary_representation(piles: list[int]) -> None:
     """Display binary representation of piles for educational purposes."""
     print("\nBinary Analysis:")
     for i, pile in enumerate(piles):
