@@ -41,7 +41,7 @@ import json
 import logging
 import random
 import traceback
-from typing import Any, Dict, List, Literal
+from typing import Any, Literal
 
 from haive.core.engine.agent.agent import Agent, AgentConfig, register_agent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -86,12 +86,12 @@ class HoldemGameAgentConfig(AgentConfig):
     max_hands: int = Field(default=50, description="Maximum hands to play")
 
     # Player configurations
-    player_configs: List[HoldemPlayerAgentConfig] = Field(
+    player_configs: list[HoldemPlayerAgentConfig] = Field(
         default_factory=list, description="Configurations for each player agent"
     )
 
     # Game engines (for dealing, evaluation, etc.)
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="Game management engines"
     )
 
@@ -383,7 +383,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         except Exception as e:
             logger.error(f"❌ Hand setup error: {e}")
             logger.error(traceback.format_exc())
-            raise RuntimeError(f"Hand setup failed: {str(e)}")
+            raise RuntimeError(f"Hand setup failed: {e!s}")
 
     def post_blinds(self, state: HoldemState) -> Command[Literal["deal_hole_cards"]]:
         """Post small and big blinds to start the betting.
@@ -476,7 +476,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         except Exception as e:
             logger.error(f"❌ Posting blinds error: {e}")
             logger.error(traceback.format_exc())
-            raise RuntimeError(f"Posting blinds failed: {str(e)}")
+            raise RuntimeError(f"Posting blinds failed: {e!s}")
 
     def deal_hole_cards(
         self, state: HoldemState
@@ -541,7 +541,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         except Exception as e:
             logger.error(f"❌ Dealing hole cards error: {e}")
             logger.error(traceback.format_exc())
-            raise RuntimeError(f"Dealing hole cards failed: {str(e)}")
+            raise RuntimeError(f"Dealing hole cards failed: {e!s}")
 
     def get_player_decision(self, state: HoldemState) -> Command:
         """Get decision from current player using their subgraph agent.
@@ -571,7 +571,6 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         Raises:
             RuntimeError: If player lookup fails or decision-making fails
         """
-
         # Ensure we have proper state object
         if isinstance(state, dict):
             state = HoldemState.model_validate(state)
@@ -798,7 +797,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             }
 
             logger.error(
-                f"❌ Critical error in get_player_decision for {current_player.name}: {str(e)}"
+                f"❌ Critical error in get_player_decision for {current_player.name}: {e!s}"
             )
             logger.error(f"   Stack trace: {traceback.format_exc()}")
 
@@ -806,11 +805,11 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
             # Re-raise the error with enhanced context
             raise RuntimeError(
-                f"Player decision failed for {current_player.name}: {str(e)}"
+                f"Player decision failed for {current_player.name}: {e!s}"
             )
 
     def _apply_player_action(
-        self, state: HoldemState, player: PlayerState, decision: Dict[str, Any]
+        self, state: HoldemState, player: PlayerState, decision: dict[str, Any]
     ) -> Command:
         """Apply a player's action to the game state and update chips and pot.
 
@@ -959,10 +958,10 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         except Exception as e:
             logger.error(f"❌ Error applying action: {e}")
             logger.error(traceback.format_exc())
-            raise RuntimeError(f"Applying action failed: {str(e)}")
+            raise RuntimeError(f"Applying action failed: {e!s}")
 
     # Helper methods (keeping the existing implementations)
-    def _create_deck(self) -> List[str]:
+    def _create_deck(self) -> list[str]:
         """Create a standard 52-card deck."""
         ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
         suits = ["h", "d", "c", "s"]
@@ -1010,7 +1009,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         state.min_raise = bet_amount
 
     def _advance_or_complete_betting_with_action(
-        self, state: HoldemState, action_record: Dict[str, Any]
+        self, state: HoldemState, action_record: dict[str, Any]
     ) -> Command:
         """Advance betting after applying an action."""
         # Check if betting is complete
@@ -1048,9 +1047,8 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         if next_player_index is None or state.is_betting_complete():
             # Betting complete
             return Command(update={"betting_round_complete": True})
-        else:
-            # Continue with next player
-            return Command(update={"current_player_index": next_player_index})
+        # Continue with next player
+        return Command(update={"current_player_index": next_player_index})
 
     # Rest of the methods (abbreviated for space but same as original)
     def preflop_betting(self, state: HoldemState) -> Command:
@@ -1178,7 +1176,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         except Exception as e:
             logger.error(f"❌ Dealing community cards error: {e}")
-            raise RuntimeError(f"Dealing community cards failed: {str(e)}")
+            raise RuntimeError(f"Dealing community cards failed: {e!s}")
 
     def showdown(self, state: HoldemState) -> Command[Literal["award_pot"]]:
         """Handle showdown - evaluate player hands and determine the winner.
@@ -1239,7 +1237,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         except Exception as e:
             logger.error(f"❌ Showdown error: {e}")
-            raise RuntimeError(f"Showdown failed: {str(e)}")
+            raise RuntimeError(f"Showdown failed: {e!s}")
 
     def award_pot(self, state: HoldemState) -> Command[Literal["check_game_end"]]:
         """Award the pot to the winner and record hand history.
@@ -1297,7 +1295,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         except Exception as e:
             logger.error(f"❌ Awarding pot error: {e}")
-            raise RuntimeError(f"Awarding pot failed: {str(e)}")
+            raise RuntimeError(f"Awarding pot failed: {e!s}")
 
     def check_game_end(self, state: HoldemState) -> Command:
         """Check if the game should end."""
@@ -1323,7 +1321,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         except Exception as e:
             logger.error(f"❌ Game end check error: {e}")
-            raise RuntimeError(f"Game end check failed: {str(e)}")
+            raise RuntimeError(f"Game end check failed: {e!s}")
 
     def route_after_betting(self, state: HoldemState) -> str:
         """Route game flow after a betting round completes.
@@ -1370,15 +1368,14 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             if state.current_phase == GamePhase.PREFLOP:
                 logger.info("   → Routing to deal_flop")
                 return "deal_flop"
-            elif state.current_phase == GamePhase.FLOP:
+            if state.current_phase == GamePhase.FLOP:
                 logger.info("   → Routing to deal_turn")
                 return "deal_turn"
-            elif state.current_phase == GamePhase.TURN:
+            if state.current_phase == GamePhase.TURN:
                 logger.info("   → Routing to deal_river")
                 return "deal_river"
-            else:
-                logger.info("   → Routing to showdown")
-                return "showdown"
+            logger.info("   → Routing to showdown")
+            return "showdown"
         except Exception as e:
             logger.error(f"❌ Routing error: {e}")
             return "award_pot"
@@ -1393,7 +1390,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             return "END"
 
     def _evaluate_hand_simple(
-        self, hole_cards: List[str], community_cards: List[str]
+        self, hole_cards: list[str], community_cards: list[str]
     ) -> float:
         """Simple hand evaluation method (placeholder for production
         evaluator).
