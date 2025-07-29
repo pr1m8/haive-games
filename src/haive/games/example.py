@@ -344,10 +344,10 @@ def example_game_with_observers() -> None:
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
 
-        def on_move(self, state: Dict[str, Any], move, player):
+        def on_move(self, state: dict[str, Any], move, player):
             pass
 
-        def on_game_end(self, state: Dict[str, Any], winner):
+        def on_game_end(self, state: dict[str, Any], winner):
             pass
 
     class StatisticsObserver(GameObserver):
@@ -357,11 +357,11 @@ def example_game_with_observers() -> None:
             self.move_count = 0
             self.player_moves = {}
 
-        def on_move(self, state: Dict[str, Any], move, player):
+        def on_move(self, state: dict[str, Any], move, player):
             self.move_count += 1
             self.player_moves[player] = self.player_moves.get(player, 0) + 1
 
-        def on_game_end(self, state: Dict[str, Any], winner):
+        def on_game_end(self, state: dict[str, Any], winner):
             for _player, _count in self.player_moves.items():
                 pass
 
