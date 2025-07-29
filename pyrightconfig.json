@@ -1,0 +1,31 @@
+{
+  "include": ["src", "tests"],
+
+  "exclude": [
+    "**/__pycache__",
+    "**/.pytest_cache",
+    "**/.mypy_cache",
+    "**/node_modules",
+    "**/build",
+    "**/dist",
+    "**/*.egg-info"
+  ],
+
+  "ignore": ["**/test_data", "**/fixtures/**", "**/mock_data/**"],
+
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": "warning",
+  "reportUnknownParameterType": "warning",
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownVariableType": "warning",
+  "reportUnknownMemberType": "warning",
+
+  "useLibraryCodeForTypes": false,
+  "typeCheckingMode": "basic",
+  "strictListInference": true,
+  "strictDictionaryInference": true,
+  "strictSetInference": true,
+
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Linux"
+}
