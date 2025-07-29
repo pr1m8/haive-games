@@ -5,7 +5,7 @@ sophisticated winner determination and performance evaluation.
 """
 
 import logging
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal
 
 from haive.agents.conversation.debate.state import DebateState
 from langchain_core.messages import SystemMessage
@@ -50,7 +50,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
         description="Number of judges in the panel (odd numbers recommended to avoid ties)",
     )
 
-    custom_judges: Optional[DebateJudgingPanel] = Field(
+    custom_judges: DebateJudgingPanel | None = Field(
         default=None, description="Custom judge panel if using custom type"
     )
 
@@ -69,7 +69,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
     )
 
     # Judgment storage
-    final_judgment: Optional[DebateJudgment] = Field(
+    final_judgment: DebateJudgment | None = Field(
         default=None, description="Final judgment from AI judge panel"
     )
 
@@ -95,18 +95,16 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
         if self.judge_panel_type == "tournament":
             return create_tournament_judges(self.num_judges)
-        elif self.judge_panel_type == "academic":
+        if self.judge_panel_type == "academic":
             return create_academic_judges(self.num_judges)
-        elif self.judge_panel_type == "public":
+        if self.judge_panel_type == "public":
             return create_public_judges(self.num_judges)
-        else:  # custom
-            if self.custom_judges:
-                return self.custom_judges
-            else:
-                logger.warning(
-                    "Custom judge panel requested but not provided, using tournament panel"
-                )
-                return create_tournament_judges(self.num_judges)
+        if self.custom_judges:
+            return self.custom_judges
+        logger.warning(
+            "Custom judge panel requested but not provided, using tournament panel"
+        )
+        return create_tournament_judges(self.num_judges)
 
     async def conclude_conversation(self, state: DebateState) -> Command:
         """Enhanced conclusion with AI judge evaluation."""
@@ -206,7 +204,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
     def _combine_scoring_methods(
         self, state: DebateState, judgment: DebateJudgment
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Combine automatic scoring with AI judge scores."""
         auto_scores = getattr(state, "player_scores", {})
         judge_scores = self._extract_judge_scores(judgment)
@@ -234,7 +232,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
         return combined_scores
 
-    def _extract_judge_scores(self, judgment: DebateJudgment) -> Dict[str, float]:
+    def _extract_judge_scores(self, judgment: DebateJudgment) -> dict[str, float]:
         """Extract average judge scores for each player."""
         player_scores = {}
 
@@ -249,7 +247,6 @@ class JudgedGameDebateAgent(GameDebateAgent):
         self, state: DebateState, judgment: DebateJudgment
     ) -> SystemMessage:
         """Create enhanced conclusion message with judge evaluation."""
-
         # Get final scores (either combined or judge-only)
         final_scores = getattr(state, "player_scores", {})
 
@@ -329,7 +326,6 @@ class JudgedGameDebateAgent(GameDebateAgent):
         **kwargs,
     ) -> "JudgedGameDebateAgent":
         """Create a tournament debate match with AI judge evaluation."""
-
         # Use the base factory method and enhance with judge configuration
         base_kwargs = {
             **kwargs,
@@ -356,7 +352,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
         return agent
 
-    def get_judge_panel_info(self) -> Dict[str, Any]:
+    def get_judge_panel_info(self) -> dict[str, Any]:
         """Get information about the current judge panel."""
         if not self.custom_judges:
             return {"status": "No judge panel configured"}

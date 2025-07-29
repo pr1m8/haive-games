@@ -6,7 +6,6 @@ debates using different criteria and scoring methodologies.
 
 import logging
 from enum import Enum
-from typing import Dict, List, Optional
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -43,7 +42,7 @@ class JudgeScore(BaseModel):
 
     judge_name: str
     judge_type: JudgeType
-    criteria_scores: Dict[JudgingCriteria, int] = Field(
+    criteria_scores: dict[JudgingCriteria, int] = Field(
         description="Scores per criteria (1-10)"
     )
     total_score: int = Field(description="Total score for this player")
@@ -58,8 +57,8 @@ class DebateJudgment(BaseModel):
     """Complete judgment of a debate by multiple judges."""
 
     topic: str
-    players: List[str]
-    judge_scores: Dict[str, List[JudgeScore]] = Field(
+    players: list[str]
+    judge_scores: dict[str, list[JudgeScore]] = Field(
         description="Judge scores for each player"
     )
     overall_winner: str
@@ -75,7 +74,7 @@ class AIDebateJudge:
         self,
         name: str,
         judge_type: JudgeType = JudgeType.BALANCED,
-        expertise_area: Optional[str] = None,
+        expertise_area: str | None = None,
         strictness_level: float = 0.5,
     ):
         self.name = name
@@ -88,7 +87,6 @@ class AIDebateJudge:
 
     def _create_judge_agent(self) -> SimpleAgent:
         """Create the AI agent for this judge."""
-
         # Base personality traits
         personalities = {
             JudgeType.ACADEMIC: {
@@ -181,7 +179,6 @@ Be {personality['style']} in your evaluation. Consider your {self.judge_type.val
         self, player_name: str, player_position: str, debate_transcript: str, topic: str
     ) -> JudgeScore:
         """Judge a single player's performance in the debate."""
-
         judgment_prompt = f"""🏛️ JUDGE EVALUATION REQUEST 🏛️
 
 DEBATE DETAILS:
@@ -228,9 +225,8 @@ Provide your evaluation in the specified JSON format."""
                     winner_vote=score_data["winner_vote"],
                     confidence=score_data["confidence"],
                 )
-            else:
-                # Fallback if JSON parsing fails
-                return self._create_fallback_score(player_name, response)
+            # Fallback if JSON parsing fails
+            return self._create_fallback_score(player_name, response)
 
         except Exception as e:
             logger.error(f"Judge {self.name} failed to evaluate {player_name}: {e}")
@@ -259,7 +255,7 @@ Provide your evaluation in the specified JSON format."""
 class DebateJudgingPanel:
     """Panel of multiple AI judges for comprehensive debate evaluation."""
 
-    def __init__(self, judges: List[AIDebateJudge]):
+    def __init__(self, judges: list[AIDebateJudge]):
         self.judges = judges
 
     @classmethod
@@ -340,18 +336,17 @@ class DebateJudgingPanel:
     async def judge_debate(
         self,
         topic: str,
-        players: List[str],
-        positions: Dict[str, str],
+        players: list[str],
+        positions: dict[str, str],
         debate_transcript: str,
     ) -> DebateJudgment:
         """Get comprehensive judgment from all judges."""
-
         logger.info(f"🏛️ Judging panel evaluating debate: '{topic}'")
         logger.info(f"👥 Players: {', '.join(players)}")
         logger.info(f"⚖️ Judges: {', '.join([j.name for j in self.judges])}")
 
         # Get scores from all judges for all players
-        all_scores: Dict[str, List[JudgeScore]] = {player: [] for player in players}
+        all_scores: dict[str, list[JudgeScore]] = {player: [] for player in players}
 
         for judge in self.judges:
             logger.info(
@@ -384,10 +379,9 @@ class DebateJudgingPanel:
         )
 
     def _calculate_winner(
-        self, all_scores: Dict[str, List[JudgeScore]]
+        self, all_scores: dict[str, list[JudgeScore]]
     ) -> tuple[str, float, float]:
         """Calculate overall winner from all judge scores."""
-
         # Calculate average scores per player
         player_averages = {}
         player_votes = {}
@@ -425,13 +419,12 @@ class DebateJudgingPanel:
     def _create_judgment_summary(
         self,
         topic: str,
-        players: List[str],
-        all_scores: Dict[str, List[JudgeScore]],
+        players: list[str],
+        all_scores: dict[str, list[JudgeScore]],
         winner: str,
         margin: float,
     ) -> str:
         """Create a comprehensive summary of the judging results."""
-
         summary_parts = [
             "🏛️ **JUDICIAL PANEL DECISION** 🏛️",
             "",
