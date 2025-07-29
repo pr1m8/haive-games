@@ -8,7 +8,6 @@ from haive.games.monopoly.game import (
     SpecialSquareType,
 )
 from haive.games.monopoly.models import (
-    ActionType,
     BuildingDecision,
     DiceRoll,
     JailDecision,
