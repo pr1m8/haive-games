@@ -5,8 +5,6 @@ games, allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -110,8 +108,7 @@ class ReversiEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return ReversiAnalysis
-        else:
-            return ReversiMove
+        return ReversiMove
 
 
 # Factory instance
@@ -119,8 +116,8 @@ reversi_factory = ReversiEngineFactory()
 
 
 def create_generic_reversi_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Reversi engines from detailed player configurations.
 
     Args:
@@ -140,7 +137,7 @@ def create_generic_reversi_engines(
 
 def create_generic_reversi_engines_simple(
     black_model: str, white_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Reversi engines with simple model specifications.
 
     Args:
@@ -158,7 +155,7 @@ def create_generic_reversi_engines_simple(
 
 def create_generic_reversi_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Reversi engines from a predefined example configuration.
 
     Args:
@@ -196,16 +193,16 @@ def create_generic_reversi_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_reversi_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_reversi_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Reversi engines with high-powered models."""
     return create_generic_reversi_config_from_example("advanced", **kwargs)
 
 
-def create_budget_reversi_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_reversi_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Reversi engines."""
     return create_generic_reversi_config_from_example("budget", **kwargs)
 
 
-def create_mixed_reversi_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_reversi_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Reversi engines."""
     return create_generic_reversi_config_from_example("mixed", **kwargs)
