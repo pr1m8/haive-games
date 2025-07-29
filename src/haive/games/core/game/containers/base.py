@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Container models for game pieces in the game framework.
 
 This module defines containers for game pieces like decks of cards, bags
 of tiles, and player hands.
 """
 
-from __future__ import annotations
 
 import random
 import uuid

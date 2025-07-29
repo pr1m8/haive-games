@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Board models for the game framework.
 
 This module defines the base Board class and specific implementations
 for different types of game boards.
 """
 
-from __future__ import annotations
 
 import uuid
 from abc import abstractmethod

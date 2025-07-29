@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Game engine for the game framework.
 
 This module defines the base Game class that serves as the central point
 for game logic, integrating all framework components.
 """
 
-from __future__ import annotations
 
 import uuid
 from abc import abstractmethod

@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Space models for the game framework.
 
 This module defines the base Space class and specific implementations
 for different types of board spaces.
 """
 
-from __future__ import annotations
 
 import uuid
 from typing import Any, Generic, Protocol, TypeVar

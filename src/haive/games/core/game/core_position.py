@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Position models for the game framework.
 
 This module defines the base Position class and its specific
 implementations for different coordinate systems used in games.
 """
 
-from __future__ import annotations
 
 import uuid
 from typing import Any

@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 """Deck classes for card games in the game framework.
 
 This module defines the Deck container type and related classes for card
 games.
 """
 
-from __future__ import annotations
 
 from enum import Enum
 from typing import TypeVar
