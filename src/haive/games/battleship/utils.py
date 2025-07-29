@@ -11,11 +11,11 @@ from typing import Any
 from haive.games.battleship.models import ShipType
 
 __all__ = [
-    "visualize_board",
-    "format_coordinates_list",
-    "format_ship_types",
     "calculate_game_stats",
     "check_all_ships_placed",
+    "format_coordinates_list",
+    "format_ship_types",
+    "visualize_board",
 ]
 
 

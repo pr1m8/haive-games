@@ -490,7 +490,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
             return Command(update=updated_state.model_dump(), goto=next_node)
         except Exception as e:
-            pass
 
             logger.error(
                 "Ship placement error for playef",
