@@ -52,7 +52,7 @@ Note:
 """
 
 import time
-from typing import Any, Dict
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -148,7 +148,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         self.state_manager = DebateStateManager
         super().__init__(config)
 
-    def initialize_game(self, state: Dict[str, Any]) -> Command:
+    def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize the debate with topic, participants, and configuration.
 
         Sets up the initial debate state including topic validation, participant
@@ -278,7 +278,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
     def prepare_move_context(
         self, state: DebateState, player_id: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare contextual information for a participant's move.
 
         Generates role-specific context that provides participants with relevant
@@ -565,7 +565,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         return "\n".join(witness_stmts)
 
-    def extract_move(self, response: Any, role: str) -> Dict[str, Any]:
+    def extract_move(self, response: Any, role: str) -> dict[str, Any]:
         """Extract and structure move data from engine response.
 
         Processes responses from AI engines or other participants, converting
@@ -667,7 +667,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         return {"type": "statement", "content": content, "statement_type": "general"}
 
-    def debate_setup(self, state: Dict[str, Any]) -> Command:
+    def debate_setup(self, state: dict[str, Any]) -> Command:
         """Handle the initial debate setup and configuration phase.
 
         Configures participant roles, assigns moderator if specified, and
@@ -727,7 +727,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             )
         return Command(update=updated_state.dict(), goto="handle_participant_turn")
 
-    def handle_participant_turn(self, state: Dict[str, Any]) -> Command:
+    def handle_participant_turn(self, state: dict[str, Any]) -> Command:
         """Handle individual participant turns within the debate.
 
         Manages the core debate loop by processing each participant's turn,
