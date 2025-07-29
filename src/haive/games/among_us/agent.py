@@ -15,7 +15,7 @@ Functions:
 # among_us_agent.py
 
 import re
-from typing import Any, Optional
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 
@@ -72,7 +72,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
     # Add this method to the AmongUsAgent class
 
-    def get_engine_for_player(self, role: str, engine_key: str) -> Optional[Any]:
+    def get_engine_for_player(self, role: str, engine_key: str) -> Any | None:
         """Get the appropriate engine for a player based on their role and the
         current phase.
 

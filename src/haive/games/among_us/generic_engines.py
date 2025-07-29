@@ -5,8 +5,6 @@ games, allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -66,40 +64,40 @@ class AmongUsPromptGenerator(GenericPromptGenerator[str, str]):
                     ),
                 ]
             )
-        else:  # impostor
-            return ChatPromptTemplate.from_messages(
-                [
-                    (
-                        "system",
-                        "You are playing Among Us as an IMPOSTOR. Your goal is to eliminate enough crewmates to win.\n\n"
-                        "As an impostor:\n"
-                        "- Sabotage systems to create chaos and opportunities\n"
-                        "- Eliminate crewmates when you have the chance\n"
-                        "- Use vents to move quickly and escape detection\n"
-                        "- Blend in by pretending to do tasks\n"
-                        "- Mislead crewmates during meetings\n"
-                        "- Vote strategically to eliminate innocent players\n\n"
-                        "Key strategies:\n"
-                        "- Don't be too aggressive early on\n"
-                        "- Create alibis by being seen in public areas\n"
-                        "- Use sabotage to separate players\n"
-                        "- Coordinate with other impostors if applicable\n"
-                        "- Be convincing in your deception",
-                    ),
-                    (
-                        "human",
-                        "Current Game State:\n"
-                        "{game_state}\n\n"
-                        "Available Actions:\n"
-                        "{available_actions}\n\n"
-                        "Recent Events:\n"
-                        "{recent_events}\n\n"
-                        "Other Impostors: {other_impostors}\n\n"
-                        "As an impostor, what action do you want to take? "
-                        "Explain your reasoning and strategy.",
-                    ),
-                ]
-            )
+        # impostor
+        return ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are playing Among Us as an IMPOSTOR. Your goal is to eliminate enough crewmates to win.\n\n"
+                    "As an impostor:\n"
+                    "- Sabotage systems to create chaos and opportunities\n"
+                    "- Eliminate crewmates when you have the chance\n"
+                    "- Use vents to move quickly and escape detection\n"
+                    "- Blend in by pretending to do tasks\n"
+                    "- Mislead crewmates during meetings\n"
+                    "- Vote strategically to eliminate innocent players\n\n"
+                    "Key strategies:\n"
+                    "- Don't be too aggressive early on\n"
+                    "- Create alibis by being seen in public areas\n"
+                    "- Use sabotage to separate players\n"
+                    "- Coordinate with other impostors if applicable\n"
+                    "- Be convincing in your deception",
+                ),
+                (
+                    "human",
+                    "Current Game State:\n"
+                    "{game_state}\n\n"
+                    "Available Actions:\n"
+                    "{available_actions}\n\n"
+                    "Recent Events:\n"
+                    "{recent_events}\n\n"
+                    "Other Impostors: {other_impostors}\n\n"
+                    "As an impostor, what action do you want to take? "
+                    "Explain your reasoning and strategy.",
+                ),
+            ]
+        )
 
     def create_analyzer_prompt(self, player: str) -> ChatPromptTemplate:
         """Create analysis prompt for Among Us game state."""
@@ -143,8 +141,7 @@ class AmongUsEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return AmongUsAnalysis
-        else:
-            return AmongUsPlayerDecision
+        return AmongUsPlayerDecision
 
 
 # Factory instance
@@ -152,8 +149,8 @@ among_us_factory = AmongUsEngineFactory()
 
 
 def create_generic_among_us_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Among Us engines from detailed player configurations.
 
     Args:
@@ -173,7 +170,7 @@ def create_generic_among_us_engines(
 
 def create_generic_among_us_engines_simple(
     crewmate_model: str, impostor_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Among Us engines with simple model specifications.
 
     Args:
@@ -191,7 +188,7 @@ def create_generic_among_us_engines_simple(
 
 def create_generic_among_us_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Among Us engines from a predefined example configuration.
 
     Args:
@@ -231,18 +228,18 @@ def create_generic_among_us_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_detective_among_us_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_detective_among_us_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create detective-style Among Us engines with high-powered models."""
     return create_generic_among_us_config_from_example(
         "detective_vs_mastermind", **kwargs
     )
 
 
-def create_budget_among_us_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_among_us_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Among Us engines."""
     return create_generic_among_us_config_from_example("budget", **kwargs)
 
 
-def create_mixed_among_us_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_among_us_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Among Us engines."""
     return create_generic_among_us_config_from_example("mixed", **kwargs)

@@ -77,7 +77,6 @@ Note:
 """
 
 from enum import Enum
-from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -229,10 +228,9 @@ class Task(BaseModel):
         """
         if self.status == TaskStatus.NOT_STARTED:
             return 0.0
-        elif self.status == TaskStatus.IN_PROGRESS:
+        if self.status == TaskStatus.IN_PROGRESS:
             return 0.5
-        else:
-            return 1.0
+        return 1.0
 
 
 class VentConnection(BaseModel):
@@ -333,7 +331,7 @@ class Vent(BaseModel):
         examples=["electrical", "medbay", "reactor"],
     )
 
-    connections: List[VentConnection] = Field(
+    connections: list[VentConnection] = Field(
         default_factory=list,
         description="List of connected vents forming the vent network",
     )
@@ -472,11 +470,11 @@ class Room(BaseModel):
         examples=["Cafeteria", "Electrical", "Reactor", "MedBay"],
     )
 
-    connections: List[RoomConnection] = Field(
+    connections: list[RoomConnection] = Field(
         default_factory=list, description="List of connections to adjacent rooms"
     )
 
-    vents: List[str] = Field(
+    vents: list[str] = Field(
         default_factory=list, description="List of vent IDs present in this room"
     )
 
@@ -497,7 +495,7 @@ class Room(BaseModel):
         """
         return any(conn.target_room == room_id for conn in self.connections)
 
-    def get_connection(self, room_id: str) -> Optional[RoomConnection]:
+    def get_connection(self, room_id: str) -> RoomConnection | None:
         """Get the connection to another room if it exists.
 
         Args:
@@ -575,7 +573,7 @@ class PlayerMemory(BaseModel):
             }
     """
 
-    observations: List[str] = Field(
+    observations: list[str] = Field(
         default_factory=list,
         description="Chronological list of observations and events witnessed",
         examples=[
@@ -587,19 +585,19 @@ class PlayerMemory(BaseModel):
         ],
     )
 
-    player_suspicions: Dict[str, float] = Field(
+    player_suspicions: dict[str, float] = Field(
         default_factory=dict,
         description="Suspicion level (0.0-1.0) for each playef",
         examples=[{"Red": 0.9, "Blue": 0.3, "Green": 0.1}],
     )
 
-    player_alibis: Dict[str, str] = Field(
+    player_alibis: dict[str, str] = Field(
         default_factory=dict,
         description="Last known location for each playef",
         examples=[{"Red": "electrical", "Blue": "medbay", "Green": "cafeteria"}],
     )
 
-    location_history: List[str] = Field(
+    location_history: list[str] = Field(
         default_factory=list,
         description="Recent locations visited by this player",
         examples=[
@@ -609,7 +607,7 @@ class PlayerMemory(BaseModel):
 
     @field_validator("player_suspicions")
     @classmethod
-    def validate_suspicion_levels(cls, v: Dict[str, float]) -> Dict[str, float]:
+    def validate_suspicion_levels(cls, v: dict[str, float]) -> dict[str, float]:
         """Ensure suspicion levels are within valid range.
 
         Args:
@@ -630,7 +628,7 @@ class PlayerMemory(BaseModel):
 
     @computed_field
     @property
-    def most_suspicious(self) -> Optional[str]:
+    def most_suspicious(self) -> str | None:
         """Identify the most suspicious player.
 
         Returns:
@@ -642,7 +640,7 @@ class PlayerMemory(BaseModel):
 
     @computed_field
     @property
-    def trusted_players(self) -> List[str]:
+    def trusted_players(self) -> list[str]:
         """List players with low suspicion (< 0.3).
 
         Returns:
@@ -727,7 +725,7 @@ class PlayerState(BaseModel):
         examples=["cafeteria", "electrical", "reactor"],
     )
 
-    tasks: List[Task] = Field(
+    tasks: list[Task] = Field(
         default_factory=list, description="List of assigned tasks (empty for impostors)"
     )
 
@@ -735,14 +733,14 @@ class PlayerState(BaseModel):
         default=True, description="Whether player is still alive and active"
     )
 
-    last_action: Optional[str] = Field(
+    last_action: str | None = Field(
         default=None,
         max_length=200,
         description="Description of most recent action taken",
         examples=["Completed wiring task", "Moved to electrical", "Killed Blue"],
     )
 
-    observations: List[str] = Field(
+    observations: list[str] = Field(
         default_factory=list,
         description="List of observations made this turn",
         examples=[["Saw Red vent", "Found body in electrical"]],
@@ -752,7 +750,7 @@ class PlayerState(BaseModel):
         default=False, description="Whether player is currently hiding in a vent"
     )
 
-    current_vent: Optional[str] = Field(
+    current_vent: str | None = Field(
         default=None,
         description="ID of vent currently occupied (if in_vent is True)",
         examples=["electrical_vent", "medbay_vent"],
@@ -853,7 +851,7 @@ class PlayerState(BaseModel):
 
     @computed_field
     @property
-    def incomplete_tasks(self) -> List[Task]:
+    def incomplete_tasks(self) -> list[Task]:
         """Get list of uncompleted tasks.
 
         Returns:
@@ -967,7 +965,7 @@ class SabotageResolutionPoint(BaseModel):
         default=False, description="Whether this point has been activated"
     )
 
-    resolver_id: Optional[str] = Field(
+    resolver_id: str | None = Field(
         default=None,
         description="ID of player who resolved this point",
         examples=["Blue", "Green", None],
@@ -1053,7 +1051,7 @@ class SabotageEvent(BaseModel):
         default=False, description="Whether sabotage has been fully resolved"
     )
 
-    resolution_points: List[SabotageResolutionPoint] = Field(
+    resolution_points: list[SabotageResolutionPoint] = Field(
         default_factory=list,
         description="Points that must be activated to resolve sabotage",
     )
@@ -1106,12 +1104,11 @@ class SabotageEvent(BaseModel):
         """
         if self.is_critical() and self.timer < 10:
             return "emergency"
-        elif self.is_critical():
+        if self.is_critical():
             return "critical"
-        elif self.type == "lights":
+        if self.type == "lights":
             return "moderate"
-        else:
-            return "low"
+        return "low"
 
     @computed_field
     @property
@@ -1231,7 +1228,7 @@ class AmongUsPlayerDecision(BaseModel):
         ..., description="Type of action to take this turn"
     )
 
-    target_location: Optional[str] = Field(
+    target_location: str | None = Field(
         default=None,
         min_length=1,
         max_length=50,
@@ -1239,7 +1236,7 @@ class AmongUsPlayerDecision(BaseModel):
         examples=["electrical", "medbay", "reactor", None],
     )
 
-    target_player: Optional[str] = Field(
+    target_player: str | None = Field(
         default=None,
         min_length=1,
         max_length=50,
@@ -1247,7 +1244,7 @@ class AmongUsPlayerDecision(BaseModel):
         examples=["Red", "Blue", "Green", None],
     )
 
-    target_task: Optional[str] = Field(
+    target_task: str | None = Field(
         default=None,
         min_length=1,
         max_length=50,
@@ -1277,7 +1274,7 @@ class AmongUsPlayerDecision(BaseModel):
 
     @field_validator("target_location")
     @classmethod
-    def validate_location_for_action(cls, v: Optional[str], info) -> Optional[str]:
+    def validate_location_for_action(cls, v: str | None, info) -> str | None:
         """Ensure target location is provided for movement actions.
 
         Args:
@@ -1399,19 +1396,19 @@ class AmongUsAnalysis(BaseModel):
         examples=[0.0, 25.5, 50.0, 75.0, 95.0],
     )
 
-    suspected_impostors: List[str] = Field(
+    suspected_impostors: list[str] = Field(
         default_factory=list,
         description="Player IDs with high impostor probability",
         examples=[["Red"], ["Red", "Purple"], []],
     )
 
-    trusted_players: List[str] = Field(
+    trusted_players: list[str] = Field(
         default_factory=list,
         description="Player IDs confirmed or likely crewmates",
         examples=[["Blue", "Green"], ["Yellow"], []],
     )
 
-    active_sabotages: List[str] = Field(
+    active_sabotages: list[str] = Field(
         default_factory=list,
         description="Currently active sabotage types",
         examples=[["reactor"], ["lights", "doors"], []],
@@ -1441,7 +1438,7 @@ class AmongUsAnalysis(BaseModel):
         ],
     )
 
-    priority_actions: List[str] = Field(
+    priority_actions: list[str] = Field(
         default_factory=list,
         max_length=5,
         description="Ordered list of most important immediate actions",
@@ -1454,7 +1451,7 @@ class AmongUsAnalysis(BaseModel):
 
     @field_validator("priority_actions")
     @classmethod
-    def validate_priority_actions(cls, v: List[str]) -> List[str]:
+    def validate_priority_actions(cls, v: list[str]) -> list[str]:
         """Ensure priority actions list is reasonable length.
 
         Args:
@@ -1484,7 +1481,7 @@ class AmongUsAnalysis(BaseModel):
 
     @computed_field
     @property
-    def win_probability(self) -> Dict[str, float]:
+    def win_probability(self) -> dict[str, float]:
         """Estimate win probability for each team.
 
         Returns:
@@ -1504,9 +1501,8 @@ class AmongUsAnalysis(BaseModel):
         """
         if self.task_completion_percentage < 30:
             return "early"
-        elif self.task_completion_percentage < 70:
+        if self.task_completion_percentage < 70:
             return "mid"
-        else:
-            return "late"
+        return "late"
 
     model_config = {"arbitrary_types_allowed": True}

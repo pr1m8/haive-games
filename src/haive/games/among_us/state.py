@@ -55,7 +55,7 @@ Note:
     LangGraph for distributed game session management.
 """
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import Field, computed_field, field_validator
 
@@ -151,7 +151,7 @@ class AmongUsState(MultiPlayerGameState):
             state.votes["player2"] = "skip"     # Voting to skip
     """
 
-    map_locations: List[str] = Field(
+    map_locations: list[str] = Field(
         default_factory=list,
         description="List of valid room IDs for movement validation",
         examples=[["cafeteria", "admin", "electrical", "reactor"]],
@@ -161,27 +161,27 @@ class AmongUsState(MultiPlayerGameState):
         description="Current map name determining layout and tasks",
         examples=["skeld", "polus", "mira_hq"],
     )
-    rooms: Dict[str, Room] = Field(
+    rooms: dict[str, Room] = Field(
         default_factory=dict,
         description="Spatial layout mapping room IDs to Room objects",
     )
-    vents: Dict[str, Vent] = Field(
+    vents: dict[str, Vent] = Field(
         default_factory=dict,
         description="Vent network mapping vent IDs to Vent objects",
     )
-    player_states: Dict[str, PlayerState] = Field(
+    player_states: dict[str, PlayerState] = Field(
         default_factory=dict,
         description="Player information mapping IDs to PlayerState objects",
     )
-    tasks: Dict[str, Task] = Field(
+    tasks: dict[str, Task] = Field(
         default_factory=dict,
         description="Task registry mapping task IDs to Task objects",
     )
-    sabotages: List[SabotageEvent] = Field(
+    sabotages: list[SabotageEvent] = Field(
         default_factory=list,
         description="History of sabotage events including active ones",
     )
-    eliminated_players: List[str] = Field(
+    eliminated_players: list[str] = Field(
         default_factory=list,
         description="IDs of eliminated players for ghost mechanics",
         examples=[["player3", "player7"]],
@@ -189,13 +189,13 @@ class AmongUsState(MultiPlayerGameState):
     meeting_active: bool = Field(
         default=False, description="Whether emergency meeting is currently in progress"
     )
-    meeting_caller: Optional[str] = Field(
+    meeting_caller: str | None = Field(
         default=None, description="ID of player who called current meeting"
     )
-    reported_body: Optional[str] = Field(
+    reported_body: str | None = Field(
         default=None, description="ID of body that triggered current meeting"
     )
-    votes: Dict[str, str] = Field(
+    votes: dict[str, str] = Field(
         default_factory=dict,
         description="Current meeting votes mapping voter to target",
     )
@@ -209,14 +209,14 @@ class AmongUsState(MultiPlayerGameState):
     crewmate_count: int = Field(
         default=0, ge=0, description="Number of living crewmates for win conditions"
     )
-    discussion_history: List[Dict[str, Any]] = Field(
+    discussion_history: list[dict[str, Any]] = Field(
         default_factory=list, description="Meeting discussions and chat for AI context"
     )
-    kill_cooldowns: Dict[str, int] = Field(
+    kill_cooldowns: dict[str, int] = Field(
         default_factory=dict, description="Impostor kill cooldowns in seconds"
     )
 
-    def get_alive_players(self) -> List[str]:
+    def get_alive_players(self) -> list[str]:
         """Get list of alive player IDs.
 
         Returns only players who have not been eliminated, useful for
@@ -273,7 +273,7 @@ class AmongUsState(MultiPlayerGameState):
         )
         return (completed / total) * 100
 
-    def check_win_condition(self) -> Optional[Literal["crewmates", "impostors"]]:
+    def check_win_condition(self) -> Literal["crewmates", "impostors"] | None:
         """Check if either side has achieved victory.
 
         Evaluates all win conditions for both teams:
@@ -343,7 +343,7 @@ class AmongUsState(MultiPlayerGameState):
 
         return None
 
-    def get_room(self, room_id: str) -> Optional[Room]:
+    def get_room(self, room_id: str) -> Room | None:
         """Get a room by its unique identifier.
 
         Args:
@@ -361,7 +361,7 @@ class AmongUsState(MultiPlayerGameState):
         """
         return self.rooms.get(room_id)
 
-    def get_vent(self, vent_id: str) -> Optional[Vent]:
+    def get_vent(self, vent_id: str) -> Vent | None:
         """Get a vent by its unique identifier.
 
         Args:
@@ -380,7 +380,7 @@ class AmongUsState(MultiPlayerGameState):
         """
         return self.vents.get(vent_id)
 
-    def get_vents_in_room(self, room_id: str) -> List[Vent]:
+    def get_vents_in_room(self, room_id: str) -> list[Vent]:
         """Get all vents located in a specific room.
 
         Used for impostor movement options and vent camping detection.
@@ -402,7 +402,7 @@ class AmongUsState(MultiPlayerGameState):
             vent for vent_id, vent in self.vents.items() if vent.location == room_id
         ]
 
-    def get_connected_rooms(self, room_id: str) -> List[str]:
+    def get_connected_rooms(self, room_id: str) -> list[str]:
         """Get all rooms directly connected to the given room.
 
         Returns only accessible connections (not blocked by sabotage).
@@ -432,7 +432,7 @@ class AmongUsState(MultiPlayerGameState):
             return []
         return [conn.target_room for conn in room.connections if not conn.is_blocked]
 
-    def get_connected_vents(self, vent_id: str) -> List[str]:
+    def get_connected_vents(self, vent_id: str) -> list[str]:
         """Get all vents connected to the given vent.
 
         Used for impostor movement through the vent network.
@@ -495,7 +495,7 @@ class AmongUsState(MultiPlayerGameState):
         self,
         room_id: str,
         observation: str,
-        exclude_players: Optional[List[str]] = None,
+        exclude_players: list[str] | None = None,
     ) -> None:
         """Add an observation to all players in a specific room.
 
@@ -533,7 +533,7 @@ class AmongUsState(MultiPlayerGameState):
             ):
                 self.add_observation(pid, observation)
 
-    def get_active_sabotage(self) -> Optional[SabotageEvent]:
+    def get_active_sabotage(self) -> SabotageEvent | None:
         """Get the currently active sabotage event.
 
         Only one sabotage can be active at a time. This method returns
@@ -932,7 +932,7 @@ class AmongUsState(MultiPlayerGameState):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Any]:
+    def game_statistics(self) -> dict[str, Any]:
         """Calculate comprehensive game statistics.
 
         Returns:

@@ -12,7 +12,7 @@ Functions:
 
 # among_us_config.py
 
-from typing import Any, Dict, Literal
+from typing import Any, Literal
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
@@ -195,7 +195,7 @@ class AmongUsAgentConfig(GameConfig):
 
     @computed_field
     @property
-    def game_balance(self) -> Dict[str, Any]:
+    def game_balance(self) -> dict[str, Any]:
         """Calculate game balance metrics and recommendations.
 
         Returns:

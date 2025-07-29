@@ -1,11 +1,11 @@
-"""Among Us social deduction game demo using the Haive framework.
+"""Among Us social deduction game example using the Haive framework.
 
 This module demonstrates an implementation of the popular social deduction game
 Among Us, where crewmates try to complete tasks while impostors attempt to
 eliminate them. The game features AI-powered players that engage in discussion,
 voting, and strategic deception.
 
-The demo showcases:
+The example showcases:
     - Multi-player social deduction gameplay with AI agents
     - Task completion and sabotage mechanics
     - Emergency meetings and discussion phases
@@ -23,21 +23,21 @@ Game Flow:
 
 Usage:
     Basic game (5 players, 1 impostor):
-        $ python demo.py
+        $ python example.py
 
     Custom configuration:
-        $ python demo.py --players 8 --impostors 2 --difficulty hard
+        $ python example.py --players 8 --impostors 2 --difficulty hard
 
     With specific map:
-        $ python demo.py --map skeld --tasks 10
+        $ python example.py --map skeld --tasks 10
 
 Example:
     >>> # Run a standard Among Us game
-    >>> from haive.games.among_us.demo import run_among_us_demo
-    >>> run_among_us_demo(num_players=7, num_impostors=2)
+    >>> from haive.games.among_us.example import run_among_us_example
+    >>> run_among_us_example(num_players=7, num_impostors=2)
 """
 
-# demo_among_us.py
+# example_among_us.py
 
 import argparse
 import os
@@ -46,14 +46,16 @@ import time
 
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn
 from rich.table import Table
+from rich.text import Text
 
 from haive.games.among_us.enhanced_ui import EnhancedAmongUsUI
 from haive.games.among_us.factory import create_among_us_game
 from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
 
 
-def run_among_us_demo(
+def run_among_us_example(
     player_count: int = 6,
     impostor_count: int = 1,
     map_name: str = "skeld",
@@ -64,7 +66,7 @@ def run_among_us_demo(
     speed: float = 1.0,
     use_enhanced_ui: bool = True,
 ):
-    """Run a demo of the Among Us game with AI agents and enhanced visibility.
+    """Run an example of the Among Us game with AI agents and enhanced visibility.
 
     Args:
         player_count: Number of players (4-10)
@@ -86,8 +88,8 @@ def run_among_us_demo(
     else:
         console.print(
             Panel.fit(
-                "[bold magenta]Among Us AI Game Demo[/bold magenta]\n\n"
-                "This demo simulates an Among Us game with AI agents and enhanced visibility.",
+                "[bold magenta]Among Us AI Game Example[/bold magenta]\n\n"
+                "This example simulates an Among Us game with AI agents and enhanced visibility.",
                 title="Welcome",
             )
         )
@@ -1223,7 +1225,7 @@ def process_random_events_enhanced(agent, state, ui, interactive, speed):
                             justify="center",
                         ),
                         title="[bold red]BODY REPORTED[/bold red]",
-                        border_style=ui.colors["dangef"],
+                        border_style=ui.colors["danger"],
                         padding=(1, 2),
                     )
                 )
@@ -1339,7 +1341,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    run_among_us_demo(
+    run_among_us_example(
         player_count=args.players,
         impostor_count=args.impostors,
         map_name=args.map,

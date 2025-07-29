@@ -40,7 +40,7 @@ Note:
 """
 
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 
 from haive.games.among_us.models import (
     AmongUsGamePhase,
@@ -114,7 +114,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     """
 
     @classmethod
-    def initialize(cls, player_names: List[str], **kwargs) -> AmongUsState:
+    def initialize(cls, player_names: list[str], **kwargs) -> AmongUsState:
         """Initialize a new Among Us game state with intelligent defaults.
 
         Creates a complete game state with role assignments, task generation,
@@ -352,7 +352,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def apply_move(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Apply a player's move to the game state with comprehensive
         validation.
@@ -457,7 +457,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     # Action handlers for different game actions
     @classmethod
     def _handle_move_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle player movement with connection and sabotage validation.
 
@@ -535,7 +535,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_complete_task_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle task completion with role validation and visual task
         detection.
@@ -624,7 +624,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_kill_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle impostor elimination with cooldown and witness validation.
 
@@ -729,7 +729,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_report_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle body reporting with meeting initiation and vent management.
 
@@ -801,7 +801,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_emergency_meeting_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle emergency meeting calls with location validation.
 
@@ -864,7 +864,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_discussion_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle discussion contributions with automatic phase progression.
 
@@ -922,7 +922,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_vote_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle voting with ejection processing and phase transition.
 
@@ -1036,7 +1036,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_sabotage_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle sabotage actions with complex resolution system management.
 
@@ -1230,7 +1230,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_resolve_sabotage_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle sabotage resolution with multi-point validation.
 
@@ -1336,7 +1336,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_vent_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle impostor vent usage with connection validation.
 
@@ -1416,7 +1416,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
 
     @classmethod
     def _handle_exit_vent_action(
-        cls, state: AmongUsState, player_id: str, move: Dict[str, Any]
+        cls, state: AmongUsState, player_id: str, move: dict[str, Any]
     ) -> AmongUsState:
         """Handle impostor vent exit with location validation.
 
@@ -1468,7 +1468,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def get_legal_moves(
         cls, state: AmongUsState, player_id: str
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Generate comprehensive legal moves for a player based on game state.
 
         Analyzes the current game state and player situation to generate
@@ -1637,7 +1637,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         return legal_moves
 
     @classmethod
-    def _get_potential_targets(cls, state: AmongUsState, player_id: str) -> List[str]:
+    def _get_potential_targets(cls, state: AmongUsState, player_id: str) -> list[str]:
         """Get potential kill targets for an impostor with witness validation.
 
         Analyzes the current game state to find valid kill targets for an
@@ -1793,7 +1793,7 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
     @classmethod
     def filter_state_for_player(
         cls, state: AmongUsState, player_id: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Filter game state to include only information visible to a specific
         player.
 
