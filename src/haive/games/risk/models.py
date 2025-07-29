@@ -39,7 +39,6 @@ Examples:
 """
 
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -140,7 +139,7 @@ class Card(BaseModel):
         ],
     )
 
-    territory_name: Optional[str] = Field(
+    territory_name: str | None = Field(
         None,
         max_length=50,
         description="Name of the territory depicted on the card, if any",
@@ -263,7 +262,7 @@ class Territory(BaseModel):
         ],
     )
 
-    owner: Optional[str] = Field(
+    owner: str | None = Field(
         None,
         description="Player ID who currently controls this territory",
         examples=["player_1", "player_2", "red_player", "blue_player", None],
@@ -277,7 +276,7 @@ class Territory(BaseModel):
         examples=[1, 5, 12, 25, 3],
     )
 
-    adjacent: List[str] = Field(
+    adjacent: list[str] = Field(
         default_factory=list,
         description="List of territory names that border this territory",
         examples=[
@@ -442,7 +441,7 @@ class Continent(BaseModel):
         examples=[2, 3, 5, 7],  # Australia=2, Europe=5, Asia=7
     )
 
-    territories: List[str] = Field(
+    territories: list[str] = Field(
         default_factory=list,
         min_length=1,
         description="Names of all territories that belong to this continent",
@@ -465,7 +464,7 @@ class Continent(BaseModel):
 
     @field_validator("territories")
     @classmethod
-    def validate_territories(cls, v: List[str]) -> List[str]:
+    def validate_territories(cls, v: list[str]) -> list[str]:
         """Validate territory list is not empty and contains valid names.
 
         Args:
@@ -592,7 +591,7 @@ class Player(BaseModel):
         ],
     )
 
-    cards: List[Card] = Field(
+    cards: list[Card] = Field(
         default_factory=list,
         description="Risk cards in the player's hand available for trading",
         examples=[
@@ -819,19 +818,19 @@ class RiskMove(BaseModel):
         examples=["player_1", "player_2", "red_player", "General Patton"],
     )
 
-    from_territory: Optional[str] = Field(
+    from_territory: str | None = Field(
         None,
         description="Source territory for attacks and fortifications",
         examples=["Ukraine", "Alaska", "Brazil", "Egypt", None],
     )
 
-    to_territory: Optional[str] = Field(
+    to_territory: str | None = Field(
         None,
         description="Target territory for army placement, attacks, and fortifications",
         examples=["Middle East", "Greenland", "Argentina", "Libya", None],
     )
 
-    armies: Optional[int] = Field(
+    armies: int | None = Field(
         None,
         ge=1,
         le=100,
@@ -839,7 +838,7 @@ class RiskMove(BaseModel):
         examples=[1, 3, 5, 8, 12, None],
     )
 
-    cards: Optional[List[Card]] = Field(
+    cards: list[Card] | None = Field(
         None,
         min_length=3,
         max_length=5,
@@ -854,7 +853,7 @@ class RiskMove(BaseModel):
         ],
     )
 
-    attack_dice: Optional[int] = Field(
+    attack_dice: int | None = Field(
         None,
         ge=1,
         le=3,
@@ -864,7 +863,7 @@ class RiskMove(BaseModel):
 
     @field_validator("armies")
     @classmethod
-    def validate_armies(cls, v: Optional[int]) -> Optional[int]:
+    def validate_armies(cls, v: int | None) -> int | None:
         """Validate army count is positive if provided.
 
         Args:
@@ -882,7 +881,7 @@ class RiskMove(BaseModel):
 
     @field_validator("attack_dice")
     @classmethod
-    def validate_attack_dice(cls, v: Optional[int]) -> Optional[int]:
+    def validate_attack_dice(cls, v: int | None) -> int | None:
         """Validate attack dice count is within valid range.
 
         Args:
@@ -913,11 +912,11 @@ class RiskMove(BaseModel):
         """
         if self.move_type == MoveType.PLACE_ARMIES:
             return f"{self.player} places {self.armies} armies on {self.to_territory}"
-        elif self.move_type == MoveType.ATTACK:
+        if self.move_type == MoveType.ATTACK:
             return f"{self.player} attacks from {self.from_territory} to {self.to_territory} with {self.attack_dice} dice"
-        elif self.move_type == MoveType.FORTIFY:
+        if self.move_type == MoveType.FORTIFY:
             return f"{self.player} fortifies {self.to_territory} with {self.armies} armies from {self.from_territory}"
-        elif self.move_type == MoveType.TRADE_CARDS:
+        if self.move_type == MoveType.TRADE_CARDS:
             cards_str = (
                 ", ".join(str(card) for card in self.cards)
                 if self.cards
@@ -1088,7 +1087,7 @@ class RiskAnalysis(BaseModel):
         examples=["player_1", "player_2", "red_player", "General Patton"],
     )
 
-    controlled_continents: List[str] = Field(
+    controlled_continents: list[str] = Field(
         default_factory=list,
         description="Names of continents fully controlled by this player",
         examples=[

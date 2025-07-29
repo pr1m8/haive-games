@@ -5,8 +5,6 @@ allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -110,8 +108,7 @@ class RiskEngineFactory(GenericGameEngineFactory[str, str]):
         """Get the structured output model for a specific role."""
         if "analyzer" in role:
             return RiskAnalysis
-        else:
-            return MoveType
+        return MoveType
 
 
 # Factory instance
@@ -119,8 +116,8 @@ risk_factory = RiskEngineFactory()
 
 
 def create_generic_risk_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Risk engines from detailed player configurations.
 
     Args:
@@ -140,7 +137,7 @@ def create_generic_risk_engines(
 
 def create_generic_risk_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Risk engines with simple model specifications.
 
     Args:
@@ -158,7 +155,7 @@ def create_generic_risk_engines_simple(
 
 def create_generic_risk_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Risk engines from a predefined example configuration.
 
     Args:
@@ -196,16 +193,16 @@ def create_generic_risk_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_risk_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_risk_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Risk engines with high-powered models."""
     return create_generic_risk_config_from_example("advanced", **kwargs)
 
 
-def create_budget_risk_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_risk_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Risk engines."""
     return create_generic_risk_config_from_example("budget", **kwargs)
 
 
-def create_mixed_risk_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_risk_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Risk engines."""
     return create_generic_risk_config_from_example("mixed", **kwargs)

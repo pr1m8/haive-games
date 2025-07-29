@@ -49,8 +49,6 @@ Note:
     territorial strategy, army management, and diplomatic considerations.
 """
 
-from typing import Dict, List, Optional, Union
-
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 from haive.games.risk.models import MoveType, RiskAnalysis, RiskMove, Territory
@@ -146,7 +144,7 @@ class RiskAgent(BaseModel):
         examples=["General_Patton", "Strategic_AI", "Risk_Master_3000"],
     )
 
-    state: Optional[RiskState] = Field(
+    state: RiskState | None = Field(
         default=None,
         description="Current Risk game state for strategic analysis and decision-making",
     )
@@ -171,12 +169,12 @@ class RiskAgent(BaseModel):
         examples=["aggressive", "neutral", "cooperative"],
     )
 
-    analysis_history: List[RiskAnalysis] = Field(
+    analysis_history: list[RiskAnalysis] = Field(
         default_factory=list,
         description="Complete history of strategic analyses for learning and adaptation",
     )
 
-    preferred_continents: List[str] = Field(
+    preferred_continents: list[str] = Field(
         default_factory=list,
         description="Priority continents for expansion focus and bonus acquisition",
         examples=[
@@ -401,7 +399,7 @@ class RiskAgent(BaseModel):
         return move
 
     def _generate_strategic_move(
-        self, controlled_territories: List[Territory], position_evaluation: str
+        self, controlled_territories: list[Territory], position_evaluation: str
     ) -> RiskMove:
         """Generate strategic move recommendation based on position analysis.
 
@@ -423,17 +421,14 @@ class RiskAgent(BaseModel):
         ]:
             # Look for attack opportunities
             return self._generate_attack_move(controlled_territories)
-        elif self.strategy == "defensive" or position_evaluation == "losing":
+        if self.strategy == "defensive" or position_evaluation == "losing":
             # Focus on fortification and consolidation
             return self._generate_defensive_move(controlled_territories)
-        else:
-            # Balanced approach - army placement or opportunistic attack
-            return self._generate_balanced_move(
-                controlled_territories, position_evaluation
-            )
+        # Balanced approach - army placement or opportunistic attack
+        return self._generate_balanced_move(controlled_territories, position_evaluation)
 
     def _generate_attack_move(
-        self, controlled_territories: List[Territory]
+        self, controlled_territories: list[Territory]
     ) -> RiskMove:
         """Generate aggressive attack move targeting expansion opportunities.
 
@@ -456,12 +451,11 @@ class RiskAgent(BaseModel):
                 to_territory="Adjacent_Enemy_Territory",  # Would be calculated from game state
                 attack_dice=min(3, strongest_territory.armies - 1),
             )
-        else:
-            # Not enough armies to attack safely
-            return self._generate_defensive_move(controlled_territories)
+        # Not enough armies to attack safely
+        return self._generate_defensive_move(controlled_territories)
 
     def _generate_defensive_move(
-        self, controlled_territories: List[Territory]
+        self, controlled_territories: list[Territory]
     ) -> RiskMove:
         """Generate defensive move focusing on consolidation and fortification.
 
@@ -482,7 +476,7 @@ class RiskAgent(BaseModel):
         )
 
     def _generate_balanced_move(
-        self, controlled_territories: List[Territory], position_evaluation: str
+        self, controlled_territories: list[Territory], position_evaluation: str
     ) -> RiskMove:
         """Generate balanced move considering both offensive and defensive
         needs.
@@ -497,9 +491,8 @@ class RiskAgent(BaseModel):
         if position_evaluation == "strong" and self.risk_tolerance > 0.6:
             # Position allows for calculated aggression
             return self._generate_attack_move(controlled_territories)
-        else:
-            # Focus on strengthening position
-            return self._generate_defensive_move(controlled_territories)
+        # Focus on strengthening position
+        return self._generate_defensive_move(controlled_territories)
 
     def _refine_move_with_strategy(
         self, base_move: RiskMove, analysis: RiskAnalysis
@@ -640,7 +633,7 @@ class RiskAgent(BaseModel):
 
     @computed_field
     @property
-    def analysis_summary(self) -> Dict[str, Union[int, float, str]]:
+    def analysis_summary(self) -> dict[str, int | float | str]:
         """Get summary statistics from analysis history.
 
         Returns:
