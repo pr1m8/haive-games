@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Base core module.
 
 This module provides base functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
     can_move_to: Can Move To functionality.
 """
 
-from __future__ import annotations
 
 import uuid
 from enum import Enum
@@ -97,7 +98,8 @@ class FlowPipe(FlowPiece):
 
     def can_move_to(self, position: GridPosition, board: FlowBoard) -> bool:
         """Check if this pipe segment can be placed at the specified
-        position."""
+        position.
+        """
         # Get the target space
         space = board.get_space_at_position(position)
         if not space:

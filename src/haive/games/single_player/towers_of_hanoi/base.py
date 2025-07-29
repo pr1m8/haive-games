@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Base core module.
 
 This module provides base functionality for the Haive framework.
@@ -13,7 +15,6 @@ Functions:
     make_move: Make Move functionality.
 """
 
-from __future__ import annotations
 
 import uuid
 from enum import Enum
@@ -283,7 +284,8 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
 
     def initialize_board(self) -> None:
         """Initialize the Tower of Hanoi board with all disks on the first
-        peg."""
+        peg.
+        """
         # Create spaces for each peg and level
         self.num_disks - 1
         for peg in range(1, self.num_pegs + 1):

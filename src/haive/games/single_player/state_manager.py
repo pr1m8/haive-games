@@ -98,7 +98,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
         raise NotImplementedError("Must be implemented by subclass")
 
     @classmethod
-    def get_legal_moves(cls, state: T) -> List[Any]:
+    def get_legal_moves(cls, state: T) -> list[Any]:
         """Get all legal moves for the current state.
 
         Args:

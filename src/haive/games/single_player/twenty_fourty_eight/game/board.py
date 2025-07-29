@@ -29,7 +29,7 @@ class TwentyFortyEightBoard(
                 square = TwentyFortyEightSquare(position=position)
                 self.add_space(square)
 
-    def spawn_random_tile(self) -> Optional[NumberTile]:
+    def spawn_random_tile(self) -> NumberTile | None:
         """Spawn a new tile (2 or 4) in a random empty space."""
         # Find all empty spaces
         empty_spaces = []
@@ -230,7 +230,7 @@ class TwentyFortyEightBoard(
             space.remove_piece()
         self.score = 0
 
-    def get_board_state(self) -> List[List[int]]:
+    def get_board_state(self) -> list[list[int]]:
         """Get the current board state as a 2D array of values."""
         state = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
         for row in range(self.rows):

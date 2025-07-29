@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Base core module.
 
 This module provides base functionality for the Haive framework.
@@ -12,7 +14,6 @@ Functions:
     place_mine: Place Mine functionality.
 """
 
-from __future__ import annotations
 
 import random
 import uuid

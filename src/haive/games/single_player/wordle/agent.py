@@ -11,7 +11,7 @@ Functions:
     should_continue: Should Continue functionality.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from langgraph.graph import END, START
@@ -41,7 +41,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
         # Compile the graph (this sets self.graph internally)
         self.compile()
 
-    def play_turn(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    def play_turn(self, state: dict[str, Any]) -> dict[str, Any]:
         """Play one turn of the game."""
         game_state = WordConnectionsState(**state)
 
@@ -134,7 +134,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
 
         return game_state.model_dump()
 
-    def should_continue(self, state: Dict[str, Any]) -> bool:
+    def should_continue(self, state: dict[str, Any]) -> bool:
         """Check if game should continue."""
         return state["game_status"] == "playing"
 
