@@ -5,8 +5,6 @@ chess, providing a clean, type-safe implementation that eliminates
 hardcoded LLM configurations.
 """
 
-from typing import Type, Union
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -108,11 +106,11 @@ Analyze this position strategically from {player.upper()}'s perspective.""",
             ]
         )
 
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for chess moves."""
         return ChessPlayerDecision
 
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for chess analysis."""
         return SegmentedAnalysis
 
@@ -155,8 +153,8 @@ def create_generic_chess_engines(
 
 
 def create_generic_chess_engines_simple(
-    white_model: Union[str, LLMConfig] = "gpt-4o",
-    black_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    white_model: str | LLMConfig = "gpt-4o",
+    black_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     temperature: float = 0.7,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:

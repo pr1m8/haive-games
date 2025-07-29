@@ -7,7 +7,7 @@ with configurable LLM providers and models.
 import json
 import uuid
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -29,15 +29,15 @@ app = FastAPI(
 )
 
 # Store active games
-active_games: Dict[str, Dict[str, Any]] = {}
+active_games: dict[str, dict[str, Any]] = {}
 
 
 class LLMConfig(BaseModel):
     """LLM configuration for a player."""
 
     provider: str = Field(default="anthropic", description="LLM provider")
-    model: Optional[str] = Field(default=None, description="Model name")
-    temperature: Optional[float] = Field(default=None, description="Temperature")
+    model: str | None = Field(default=None, description="Model name")
+    temperature: float | None = Field(default=None, description="Temperature")
 
 
 class CreateGameRequest(BaseModel):
@@ -55,7 +55,7 @@ class GameResponse(BaseModel):
     game_id: str
     status: str
     created_at: str
-    config: Dict[str, Any]
+    config: dict[str, Any]
 
 
 class GameStateResponse(BaseModel):
@@ -64,9 +64,9 @@ class GameStateResponse(BaseModel):
     game_id: str
     status: str
     board_fen: str
-    move_history: List[tuple[str, str]]
+    move_history: list[tuple[str, str]]
     current_player: str
-    game_result: Optional[str]
+    game_result: str | None
     move_count: int
 
 
@@ -74,7 +74,7 @@ class MoveStreamEvent(BaseModel):
     """Event streamed during game execution."""
 
     event: str
-    data: Dict[str, Any]
+    data: dict[str, Any]
 
 
 @app.get("/")

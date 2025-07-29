@@ -4,7 +4,6 @@ This shows how to interact with the chess API to create and play games.
 """
 
 import json
-from typing import Optional
 
 import requests
 
@@ -23,9 +22,9 @@ class ChessAPIClient:
     def create_game(
         self,
         white_provider: str = "anthropic",
-        white_model: Optional[str] = None,
+        white_model: str | None = None,
         black_provider: str = "anthropic",
-        black_model: Optional[str] = None,
+        black_model: str | None = None,
         enable_analysis: bool = True,
         max_moves: int = 200,
     ):

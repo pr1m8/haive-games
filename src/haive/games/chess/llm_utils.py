@@ -5,7 +5,7 @@ configuring LLMs for chess gameplay, building on the core LLM factory
 system.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 
@@ -18,11 +18,11 @@ from haive.games.llm_config_factory import GameLLMFactory
 
 
 def create_chess_engines_from_config(
-    white_config: Dict[str, Any],
-    black_config: Dict[str, Any],
+    white_config: dict[str, Any],
+    black_config: dict[str, Any],
     enable_analysis: bool = True,
-    analyzer_configs: Optional[Dict[str, Dict[str, Any]]] = None,
-) -> Dict[str, AugLLMConfig]:
+    analyzer_configs: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, AugLLMConfig]:
     """Create chess engines from simple configuration dictionaries.
 
     Args:
@@ -128,12 +128,12 @@ def create_chess_engines_from_config(
 
 def create_chess_engines_simple(
     white_provider: str = "anthropic",
-    white_model: Optional[str] = None,
+    white_model: str | None = None,
     black_provider: str = "anthropic",
-    black_model: Optional[str] = None,
-    temperature: Optional[float] = None,
+    black_model: str | None = None,
+    temperature: float | None = None,
     enable_analysis: bool = True,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with simple provider/model specification.
 
     Args:
@@ -193,7 +193,7 @@ def get_available_chess_providers() -> list[str]:
     return GameLLMFactory.get_available_providers()
 
 
-def get_recommended_chess_models() -> Dict[str, str]:
+def get_recommended_chess_models() -> dict[str, str]:
     """Get recommended models for chess gameplay.
 
     Returns:

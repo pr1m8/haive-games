@@ -5,8 +5,6 @@ player agents instead of hardcoded LLM configurations, making it easy to
 switch LLMs for different players.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -106,7 +104,7 @@ Analyze this position strategically from {color.title()}'s perspective.""",
     )
 
 
-def get_chess_role_definitions() -> Dict[str, GamePlayerRole]:
+def get_chess_role_definitions() -> dict[str, GamePlayerRole]:
     """Get role definitions for chess players and analyzers.
 
     Returns:
@@ -145,8 +143,8 @@ def get_chess_role_definitions() -> Dict[str, GamePlayerRole]:
 
 
 def create_configurable_chess_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create chess engines from configurable player agents.
 
     Args:
@@ -175,7 +173,7 @@ def create_anthropic_vs_openai_engines(
     white_model: str = "claude-3-5-sonnet-20240620",
     black_model: str = "gpt-4o",
     temperature: float = 0.7,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with Anthropic vs OpenAI models.
 
     Args:
@@ -196,7 +194,7 @@ def create_anthropic_vs_openai_engines(
 
 def create_same_model_engines(
     model: str = "gpt-4o", temperature: float = 0.7
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines using the same model for all roles.
 
     Args:
@@ -213,8 +211,8 @@ def create_same_model_engines(
 
 
 def create_mixed_provider_engines(
-    providers: Dict[str, str] = None, temperature: float = 0.7
-) -> Dict[str, AugLLMConfig]:
+    providers: dict[str, str] = None, temperature: float = 0.7
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with different providers for each role.
 
     Args:
@@ -261,7 +259,7 @@ EXAMPLE_CONFIGS = {
 }
 
 
-def get_example_engines(config_name: str) -> Dict[str, AugLLMConfig]:
+def get_example_engines(config_name: str) -> dict[str, AugLLMConfig]:
     """Get example engine configuration by name.
 
     Args:
