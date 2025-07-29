@@ -55,7 +55,7 @@ Note:
     and integration with LLM-based strategic analysis systems for perfect play.
 """
 
-from typing import Dict, List, Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
@@ -305,19 +305,19 @@ class TicTacToeAnalysis(BaseModel):
         With optimal strategy, the game always ends in a draw.
     """
 
-    winning_moves: List[Dict[str, int]] = Field(
+    winning_moves: list[dict[str, int]] = Field(
         default_factory=list,
         description="List of winning moves (row, col) for immediate victory",
         examples=[[{"row": 0, "col": 2}], [{"row": 1, "col": 0}, {"row": 2, "col": 1}]],
     )
 
-    blocking_moves: List[Dict[str, int]] = Field(
+    blocking_moves: list[dict[str, int]] = Field(
         default_factory=list,
         description="Critical defensive moves to prevent opponent's immediate win",
         examples=[[{"row": 1, "col": 1}], [{"row": 0, "col": 0}]],
     )
 
-    fork_opportunities: List[Dict[str, int]] = Field(
+    fork_opportunities: list[dict[str, int]] = Field(
         default_factory=list,
         description="Moves creating multiple winning threats simultaneously",
         examples=[[{"row": 0, "col": 0}, {"row": 2, "col": 2}]],
@@ -341,7 +341,7 @@ class TicTacToeAnalysis(BaseModel):
         examples=["winning", "losing", "drawing", "unclear"],
     )
 
-    recommended_move: Optional[Dict[str, int]] = Field(
+    recommended_move: dict[str, int] | None = Field(
         default=None,
         description="Optimal move computed by perfect play algorithm",
         examples=[{"row": 1, "col": 1}, {"row": 0, "col": 0}],
@@ -360,7 +360,7 @@ class TicTacToeAnalysis(BaseModel):
         ],
     )
 
-    move_priority: Optional[int] = Field(
+    move_priority: int | None = Field(
         default=None,
         ge=1,
         le=5,
@@ -368,7 +368,7 @@ class TicTacToeAnalysis(BaseModel):
         examples=[1, 2, 3, 4, 5],
     )
 
-    optimal_outcome: Optional[Literal["win", "draw", "loss"]] = Field(
+    optimal_outcome: Literal["win", "draw", "loss"] | None = Field(
         default=None,
         description="Expected game outcome with perfect play from this position",
         examples=["win", "draw", "loss"],
@@ -376,7 +376,7 @@ class TicTacToeAnalysis(BaseModel):
 
     @field_validator("winning_moves", "blocking_moves", "fork_opportunities")
     @classmethod
-    def validate_move_coordinates(cls, v: List[Dict[str, int]]) -> List[Dict[str, int]]:
+    def validate_move_coordinates(cls, v: list[dict[str, int]]) -> list[dict[str, int]]:
         """Validate that all move coordinates are within bounds.
 
         Args:
@@ -417,16 +417,15 @@ class TicTacToeAnalysis(BaseModel):
         """
         if self.winning_moves:
             return "critical-win"
-        elif self.blocking_moves:
+        if self.blocking_moves:
             return "critical-defense"
-        elif self.fork_opportunities:
+        if self.fork_opportunities:
             return "strategic-advantage"
-        else:
-            return "positional-play"
+        return "positional-play"
 
     @computed_field
     @property
-    def move_count(self) -> Dict[str, int]:
+    def move_count(self) -> dict[str, int]:
         """Count available moves by category.
 
         Returns:

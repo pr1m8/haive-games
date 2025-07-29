@@ -49,7 +49,7 @@ Note:
     serialization and integration with the game agent framework.
 """
 
-from typing import Any, Dict, Literal
+from typing import Any, Literal
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field, computed_field, field_validator
@@ -216,16 +216,15 @@ class TicTacToeConfig(GameConfig):
         """
         if self.enable_analysis and self.visualize:
             return "educational"
-        elif not self.enable_analysis and not self.visualize:
+        if not self.enable_analysis and not self.visualize:
             return "competitive"
-        elif self.visualize and not self.enable_analysis:
+        if self.visualize and not self.enable_analysis:
             return "spectator"
-        else:
-            return "analysis"
+        return "analysis"
 
     @computed_field
     @property
-    def performance_profile(self) -> Dict[str, Any]:
+    def performance_profile(self) -> dict[str, Any]:
         """Generate performance profile based on settings.
 
         Returns:

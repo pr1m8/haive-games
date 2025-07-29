@@ -4,8 +4,6 @@ This module provides Tic Tac Toe engine configurations that use
 configurable player agents instead of hardcoded LLM configurations.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -90,7 +88,7 @@ def create_tic_tac_toe_analysis_prompt(player_symbol: str) -> ChatPromptTemplate
     )
 
 
-def get_tic_tac_toe_role_definitions() -> Dict[str, GamePlayerRole]:
+def get_tic_tac_toe_role_definitions() -> dict[str, GamePlayerRole]:
     """Get role definitions for Tic Tac Toe players and analyzers.
 
     Returns:
@@ -129,8 +127,8 @@ def get_tic_tac_toe_role_definitions() -> Dict[str, GamePlayerRole]:
 
 
 def create_configurable_tic_tac_toe_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Tic Tac Toe engines from configurable player agents.
 
     Args:
@@ -159,7 +157,7 @@ def create_simple_tic_tac_toe_player_configs(
     x_model: str = "gpt-4o",
     o_model: str = "claude-3-5-sonnet-20240620",
     temperature: float = 0.3,
-) -> Dict[str, PlayerAgentConfig]:
+) -> dict[str, PlayerAgentConfig]:
     """Create simple player configurations for Tic Tac Toe.
 
     Args:
@@ -190,7 +188,7 @@ def create_tic_tac_toe_engines_from_models(
     x_model: str = "gpt-4o",
     o_model: str = "claude-3-5-sonnet-20240620",
     temperature: float = 0.3,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Tic Tac Toe engines using simple model strings.
 
     Args:
@@ -235,7 +233,7 @@ EXAMPLE_TTT_CONFIGS = {
 }
 
 
-def get_example_tic_tac_toe_engines(config_name: str) -> Dict[str, AugLLMConfig]:
+def get_example_tic_tac_toe_engines(config_name: str) -> dict[str, AugLLMConfig]:
     """Get example Tic Tac Toe engine configuration by name.
 
     Args:

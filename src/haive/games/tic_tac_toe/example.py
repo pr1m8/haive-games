@@ -45,7 +45,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add the package to the path if running directly
 if __name__ == "__main__":
@@ -503,7 +503,7 @@ def example_6_tournament_mode():
 
                 return self.analyze_results()
 
-            def _update_stats(self, result: Dict[str, Any]):
+            def _update_stats(self, result: dict[str, Any]):
                 """Update tournament statistics."""
                 status = result.get("game_status", "unknown")
                 self.stats["total_games"] += 1
@@ -600,7 +600,7 @@ async def example_7_async_execution():
             first_player="X",
         )
 
-        async def run_single_game(game_id: int) -> Dict[str, Any]:
+        async def run_single_game(game_id: int) -> dict[str, Any]:
             """Run a single game asynchronously."""
             try:
                 agent = TicTacToeAgent(config)
@@ -906,7 +906,7 @@ def main():
         else:
             console.print(f"[red]Unknown example: {example_name}[/red]")
             console.print("[yellow]Available examples:[/yellow]")
-            for name in example_map.keys():
+            for name in example_map:
                 console.print(f"  • {name}")
     else:
         # Run all examples
