@@ -55,7 +55,7 @@ Note:
     serialization and integration with LangGraph for distributed gameplay.
 """
 
-from typing import Any, Dict, List, Literal, Optional, Set, Union
+from typing import Any, Literal
 
 from pydantic import (
     ConfigDict,
@@ -180,14 +180,14 @@ class FoxAndGeeseState(GameState):
 
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
 
-    players: List[str] = Field(
+    players: list[str] = Field(
         default=["fox", "geese"],
         description="Fixed list of players in the asymmetric game",
     )
     fox_position: FoxAndGeesePosition = Field(
         ..., description="Current position of the fox piece with coordinate validation"
     )
-    geese_positions: Set[FoxAndGeesePosition] = Field(
+    geese_positions: set[FoxAndGeesePosition] = Field(
         ...,
         description="Current positions of all geese pieces (set for efficient queries)",
     )
@@ -198,21 +198,21 @@ class FoxAndGeeseState(GameState):
         default="ongoing",
         description="Current game state with victory condition detection",
     )
-    move_history: List[FoxAndGeeseMove] = Field(
+    move_history: list[FoxAndGeeseMove] = Field(
         default_factory=list,
         description="Complete chronological history of all moves made",
     )
-    winner: Optional[str] = Field(
+    winner: str | None = Field(
         default=None, description="Winner identifier if game completed, None if ongoing"
     )
     num_geese: int = Field(
         default=0, ge=0, description="Current number of geese remaining on the board"
     )
-    fox_analysis: List[str] = Field(
+    fox_analysis: list[str] = Field(
         default_factory=list,
         description="Strategic analysis history for fox player with reasoning patterns",
     )
-    geese_analysis: List[str] = Field(
+    geese_analysis: list[str] = Field(
         default_factory=list,
         description="Strategic analysis history for geese player with reasoning patterns",
     )
@@ -426,7 +426,7 @@ class FoxAndGeeseState(GameState):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Union[int, float, str]]:
+    def game_statistics(self) -> dict[str, int | float | str]:
         """Generate comprehensive game statistics.
 
         Returns:
@@ -456,7 +456,7 @@ class FoxAndGeeseState(GameState):
 
     @computed_field
     @property
-    def position_evaluation(self) -> Dict[str, Union[str, float]]:
+    def position_evaluation(self) -> dict[str, str | float]:
         """Generate strategic position evaluation.
 
         Returns:
@@ -485,7 +485,7 @@ class FoxAndGeeseState(GameState):
             "capture_threat": self.total_captures / 8.0,
         }
 
-    def get_latest_fox_analysis(self) -> Optional[str]:
+    def get_latest_fox_analysis(self) -> str | None:
         """Get the latest strategic analysis for fox player.
 
         Returns:
@@ -493,7 +493,7 @@ class FoxAndGeeseState(GameState):
         """
         return self.fox_analysis[-1] if self.fox_analysis else None
 
-    def get_latest_geese_analysis(self) -> Optional[str]:
+    def get_latest_geese_analysis(self) -> str | None:
         """Get the latest strategic analysis for geese player.
 
         Returns:
@@ -501,7 +501,7 @@ class FoxAndGeeseState(GameState):
         """
         return self.geese_analysis[-1] if self.geese_analysis else None
 
-    def get_recent_moves(self, count: int) -> List[FoxAndGeeseMove]:
+    def get_recent_moves(self, count: int) -> list[FoxAndGeeseMove]:
         """Get the most recent moves from the game history.
 
         Args:

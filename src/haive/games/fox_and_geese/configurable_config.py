@@ -5,7 +5,7 @@ This module provides configurable FoxAndGeese game configurations that
 replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -37,12 +37,12 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    fox_model: Optional[str] = Field(default=None, description="Model for fox")
-    geese_model: Optional[str] = Field(default=None, description="Model for geese")
-    example_config: Optional[str] = Field(
+    fox_model: str | None = Field(default=None, description="Model for fox")
+    geese_model: str | None = Field(default=None, description="Model for geese")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -119,17 +119,16 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
         def model_to_name(model: str) -> str:
             if "gpt" in model.lower():
                 return "GPT"
-            elif "claude" in model.lower():
+            if "claude" in model.lower():
                 return "Claude"
-            elif "gemini" in model.lower():
+            if "gemini" in model.lower():
                 return "Gemini"
-            elif "llama" in model.lower():
+            if "llama" in model.lower():
                 return "Llama"
-            else:
-                # Extract provider or model name
-                if ":" in model:
-                    return model.split(":")[0].title()
-                return model.split("-")[0].title()
+            # Extract provider or model name
+            if ":" in model:
+                return model.split(":")[0].title()
+            return model.split("-")[0].title()
 
         self.fox_name = (
             getattr(self, "fox_name", None) or f"{model_to_name(fox_model)} Fox"
@@ -195,7 +194,7 @@ def create_fox_and_geese_config_from_example(
 
 
 def create_fox_and_geese_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
     """Create a configurable FoxAndGeese configuration from detailed player
     configurations.
@@ -302,7 +301,7 @@ def get_example_config(name: str) -> ConfigurableFoxAndGeeseConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:
