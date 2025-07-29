@@ -73,7 +73,6 @@ try:
     import uuid
 
     from haive.core.config.runnable import RunnableConfigManager
-    from langchain_core.runnables import RunnableConfig
 
     # Create a runnable config with higher recursion limit
     runnable_config = RunnableConfigManager.create(
