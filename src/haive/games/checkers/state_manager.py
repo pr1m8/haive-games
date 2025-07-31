@@ -60,7 +60,8 @@ class CheckersStateManager:
             0
         """
         # Create initial board
-        # 0 = empty, 1 = red piece, 2 = red king, 3 = black piece, 4 = black king
+        # 0 = empty, 1 = red piece, 2 = red king, 3 = black piece, 4 = black
+        # king
         board = [
             [0, 3, 0, 3, 0, 3, 0, 3],
             [3, 0, 3, 0, 3, 0, 3, 0],
@@ -124,7 +125,7 @@ class CheckersStateManager:
         rows = []
         for i in range(cls.BOARD_SIZE):
             row = " ".join(symbols[board[i][j]] for j in range(cls.BOARD_SIZE))
-            rows.append(f"{8-i} | {row}")
+            rows.append(f"{8 - i} | {row}")
 
         # Add column labels
         col_labels = "    " + " ".join("abcdefgh")

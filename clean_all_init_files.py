@@ -30,7 +30,7 @@ def get_module_contents(module_path):
 def clean_init_file(init_path):
     """Clean an __init__.py file to only import what exists."""
     try:
-        with open(init_path, "r") as f:
+        with open(init_path) as f:
             content = f.read()
 
         # Parse the AST

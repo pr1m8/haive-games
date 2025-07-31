@@ -172,15 +172,21 @@ async def example_custom_judge_panel():
             else (
                 "🏛️"
                 if "Policy" in judge.expertise_area
-                else "🔍" if "Critical" in judge.name else "👥"
+                else "🔍"
+                if "Critical" in judge.name
+                else "👥"
             )
         )
         print(
-            f"  {expertise_icon} {judge.name} - {judge.expertise_area} (strictness: {judge.strictness_level:.1f})"
+            f"  {expertise_icon} {judge.name} - {judge.expertise_area} (strictness: {
+                judge.strictness_level:.1f
+            })"
         )
 
     print(
-        f"\n✨ This custom panel with {len(custom_judges)} judges (odd number) would provide specialized evaluation"
+        f"\n✨ This custom panel with {
+            len(custom_judges)
+        } judges (odd number) would provide specialized evaluation"
     )
     print("🎯 Each judge brings unique perspective to complex ethical questions")
     print("⚖️ Odd number of judges prevents tie votes in winner determination")
@@ -212,11 +218,15 @@ async def example_judge_comparison():
                 else (
                     "🎭"
                     if judge.judge_type == JudgeType.RHETORICAL
-                    else "👥" if judge.judge_type == JudgeType.AUDIENCE else "⚖️"
+                    else "👥"
+                    if judge.judge_type == JudgeType.AUDIENCE
+                    else "⚖️"
                 )
             )
             print(
-                f"  {focus_icon} {judge.name} ({judge.judge_type.value}) - {judge.expertise_area or 'General'}"
+                f"  {focus_icon} {judge.name} ({judge.judge_type.value}) - {
+                    judge.expertise_area or 'General'
+                }"
             )
 
     print("\n📊 KEY DIFFERENCES:")

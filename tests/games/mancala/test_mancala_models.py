@@ -4,8 +4,8 @@ This module tests the Pydantic models used in the mancala game,
 including move validation and analysis models.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 

@@ -11,6 +11,7 @@ This is intended as a basic demonstration of the chess module's capabilities
 and can be used as a starting point for more complex implementations.
 """
 
+import traceback
 import uuid
 
 from haive.games.chess.agent import ChessAgent
@@ -82,7 +83,6 @@ def run_chess_game(thread_id: str = None):
 
     except Exception as e:
         print(f"❌ Error during game: {e}")
-        import traceback
 
         traceback.print_exc()
 

@@ -171,8 +171,8 @@ def check_all_ships_placed(
     Returns:
         Tuple of (is_complete, error_message)
     """
-    required_ships = set([t.value for t in ShipType])
-    placed_ships = set([p.get("ship_type") for p in ship_placements])
+    required_ships = {t.value for t in ShipType}
+    placed_ships = {p.get("ship_type") for p in ship_placements}
 
     if placed_ships == required_ships:
         return True, None

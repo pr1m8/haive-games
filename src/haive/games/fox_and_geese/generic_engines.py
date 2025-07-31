@@ -5,8 +5,6 @@ games, allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -17,10 +15,7 @@ from haive.games.core.agent.generic_player_agent import (
     create_engines_from_simple_configs,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.fox_and_geese.models import (
-    FoxAndGeeseAnalysis,
-    FoxAndGeeseMove,
-)
+from haive.games.fox_and_geese.models import FoxAndGeeseAnalysis, FoxAndGeeseMove
 
 
 class FoxAndGeesePlayerIdentifiers(GamePlayerIdentifiers[str, str]):
@@ -119,8 +114,8 @@ fox_and_geese_factory = FoxAndGeeseEngineFactory()
 
 
 def create_generic_fox_and_geese_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create FoxAndGeese engines from detailed player configurations.
 
     Args:
@@ -140,7 +135,7 @@ def create_generic_fox_and_geese_engines(
 
 def create_generic_fox_and_geese_engines_simple(
     fox_model: str, geese_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create FoxAndGeese engines with simple model specifications.
 
     Args:
@@ -158,7 +153,7 @@ def create_generic_fox_and_geese_engines_simple(
 
 def create_generic_fox_and_geese_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create FoxAndGeese engines from a predefined example configuration.
 
     Args:
@@ -198,16 +193,16 @@ def create_generic_fox_and_geese_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_fox_and_geese_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_fox_and_geese_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced FoxAndGeese engines with high-powered models."""
     return create_generic_fox_and_geese_config_from_example("advanced", **kwargs)
 
 
-def create_budget_fox_and_geese_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_fox_and_geese_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly FoxAndGeese engines."""
     return create_generic_fox_and_geese_config_from_example("budget", **kwargs)
 
 
-def create_mixed_fox_and_geese_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_fox_and_geese_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider FoxAndGeese engines."""
     return create_generic_fox_and_geese_config_from_example("mixed", **kwargs)

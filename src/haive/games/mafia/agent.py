@@ -25,12 +25,14 @@ Example:
 """
 
 # Standard library imports
+
 import contextlib
 import copy
 import logging
+import random
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from typing import Any
 
-# Local imports
 from haive.core.engine.agent.agent import register_agent
 
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
@@ -46,6 +48,8 @@ from haive.games.mafia.models import (
 )
 from haive.games.mafia.state import MafiaGameState
 from haive.games.mafia.state_manager import MafiaStateManager
+
+# Local imports
 
 # Third-party imports
 
@@ -96,7 +100,8 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         super().__init__(config)
         self.state_manager = MafiaStateManager
 
-        # Create a direct mapping between PlayerRole enum values and engine keys
+        # Create a direct mapping between PlayerRole enum values and engine
+        # keys
         self.role_enum_mapping = {
             PlayerRole.VILLAGER: "villager",
             PlayerRole.MAFIA: "mafia",
@@ -241,7 +246,8 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         # Recent actions visible to the player
         visible_actions = []
         for action in state.action_history[-10:]:  # Last 10 actions
-            # Night actions are private except to narrator and the player who did the action
+            # Night actions are private except to narrator and the player who
+            # did the action
             if (
                 isinstance(action, dict)
                 and action.get("phase") == GamePhase.NIGHT.value
@@ -695,7 +701,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             player_id = state.players[current_idx]
         except IndexError:
             logger.exception(
-                f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
+                f"Invalid player index: {current_idx}, max: {len(state.players) - 1}"
             )
             # Default to first player
             player_id = state.players[0] if state.players else "Player_1"
@@ -725,7 +731,8 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             logger.info(f"Handling narrator turn for {player_id}")
             return self.handle_narrator_turn(state)
 
-        # Skip villagers during the night (but NOT doctors or other special roles)
+        # Skip villagers during the night (but NOT doctors or other special
+        # roles)
         if state.game_phase == GamePhase.NIGHT and player_role == PlayerRole.VILLAGER:
             logger.info(f"Skipping villager {player_id} during night phase")
             # Advance to next player
@@ -753,7 +760,6 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             logger.debug(f"Prepared context for {player_id}: {list(context.keys())}")
 
             # CRITICAL CHANGE: Set a default timeout to prevent hanging
-            from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 
             # Set a timeout for engine invocation
             with ThreadPoolExecutor() as executor:
@@ -768,7 +774,8 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                     response = future.result()
                     logger.info(f"Got response from engine for player {player_id}")
                 else:
-                    # Engine took too long, create a default response and move on
+                    # Engine took too long, create a default response and move
+                    # on
                     logger.warning(
                         f"Engine for player {player_id} timed out, using default action"
                     )
@@ -779,7 +786,6 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                 # Create default action based on role
                 if player_role == PlayerRole.MAFIA:
                     # Pick random target for mafia
-                    import random
 
                     targets = [
                         pid
@@ -802,10 +808,10 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                             f"Created default kill action for {player_id} targeting {target}"
                         )
 
-                # Other default responses could be added for doctor/detective roles
+                # Other default responses could be added for doctor/detective
+                # roles
                 elif player_role == PlayerRole.DOCTOR:
                     # Pick random target for doctor
-                    import random
 
                     targets = [
                         pid
@@ -1024,7 +1030,6 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
                             and action_phase == GamePhase.NIGHT.value
                             and action_round == state.round_number
                         ):
-
                             has_acted = True
                             break
 
@@ -1054,7 +1059,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             player_id = state.players[current_idx]
         except IndexError:
             logger.exception(
-                f"Invalid player index: {current_idx}, max: {len(state.players)-1}"
+                f"Invalid player index: {current_idx}, max: {len(state.players) - 1}"
             )
             player_id = state.players[0] if state.players else "Player_1"
 

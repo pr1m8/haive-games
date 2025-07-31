@@ -4,8 +4,8 @@
 This bypasses the conftest.py dependency issues and runs the tests directly.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add haive-games source to path
 haive_games_src = Path(__file__).parent / "packages" / "haive-games" / "src"

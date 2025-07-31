@@ -506,7 +506,7 @@ class SinglePlayerGameAgent:
 
                 if hasattr(analysis, "hint") and analysis.hint:
                     hint_text = analysis.hint
-            except:
+            except BaseException:
                 # Fall back to basic hint
                 pass
 

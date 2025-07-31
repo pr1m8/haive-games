@@ -5,7 +5,7 @@ This module provides configurable Tic-Tac-Toe game configurations that
 replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -37,14 +37,14 @@ class ConfigurableTicTacToeConfig(TicTacToeConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    x_model: Optional[str] = Field(default=None, description="Model for X player")
-    o_model: Optional[str] = Field(default=None, description="Model for O player")
-    x_player_name: Optional[str] = Field(default=None, description="Name for X player")
-    o_player_name: Optional[str] = Field(default=None, description="Name for O player")
-    example_config: Optional[str] = Field(
+    x_model: str | None = Field(default=None, description="Model for X player")
+    o_model: str | None = Field(default=None, description="Model for O player")
+    x_player_name: str | None = Field(default=None, description="Name for X player")
+    o_player_name: str | None = Field(default=None, description="Name for O player")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -193,7 +193,7 @@ def create_ttt_config_from_example(
 
 
 def create_ttt_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableTicTacToeConfig:
     """Create a configurable Tic-Tac-Toe configuration from detailed player
     configurations.
@@ -299,7 +299,7 @@ def get_example_config(name: str) -> ConfigurableTicTacToeConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:

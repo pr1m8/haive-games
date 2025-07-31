@@ -20,7 +20,7 @@ def run_simple_demo():
 
     # Create player names
     player_count = 5
-    player_names = [f"Player_{i+1}" for i in range(player_count - 1)]
+    player_names = [f"Player_{i + 1}" for i in range(player_count - 1)]
     player_names.append("Narrator")
     print(f"Players: {', '.join(player_names[:-1])} + Narrator")
 

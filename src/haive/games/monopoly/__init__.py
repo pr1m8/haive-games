@@ -2,13 +2,8 @@
 
 from haive.games.monopoly.agent import MonopolyAgent, MonopolyAgentConfig
 from haive.games.monopoly.engines import build_monopoly_player_aug_llms
-from haive.games.monopoly.game import (
-    Card,
-    MonopolyGame,
-    SpecialSquareType,
-)
+from haive.games.monopoly.game import Card, MonopolyGame, SpecialSquareType
 from haive.games.monopoly.models import (
-    ActionType,
     BuildingDecision,
     DiceRoll,
     JailDecision,

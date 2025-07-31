@@ -4,8 +4,8 @@ This module tests all the data models and classes used in the Mastermind game,
 ensuring they behave correctly and validate input properly.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.mastermind.models import (
     ColorCode,

@@ -11,10 +11,18 @@ import uuid
 
 from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.aug_llm import AugLLMConfig
+from haive.core.models.llm.base import AzureLLMConfig
+from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
 from haive.games.hold_em.engines import build_holdem_game_engines, build_player_engines
 from haive.games.hold_em.game_agent import HoldemGameAgentConfig
+from haive.games.hold_em.models import (
+    BettingDecision,
+    GameSituationAnalysis,
+    OpponentModel,
+    PokerAnalysis,
+)
 from haive.games.hold_em.player_agent import HoldemPlayerAgentConfig
 from haive.games.hold_em.state import HoldemState
 
@@ -265,7 +273,8 @@ def create_heads_up_config(
                 name=f"player_{name.lower()}",
                 player_name=name,
                 player_style=style,
-                risk_tolerance=0.6 + (i * 0.2),  # Higher risk tolerance for heads-up
+                # Higher risk tolerance for heads-up
+                risk_tolerance=0.6 + (i * 0.2),
                 engines=player_engines,
                 state_schema=HoldemState,
                 runnable_config=RunnableConfigManager.create(
@@ -413,15 +422,6 @@ def create_fallback_engines(
     player_name: str, player_style: str
 ) -> dict[str, AugLLMConfig]:
     """Create minimal fallback engines if the main engine creation fails."""
-    from haive.core.models.llm.base import AzureLLMConfig
-    from langchain_core.prompts import ChatPromptTemplate
-
-    from haive.games.hold_em.models import (
-        BettingDecision,
-        GameSituationAnalysis,
-        OpponentModel,
-        PokerAnalysis,
-    )
 
     logger.info(f"🔄 Creating fallback engines for {player_name}")
 
@@ -485,8 +485,6 @@ def create_fallback_engines(
 
 def create_fallback_game_engines() -> dict[str, AugLLMConfig]:
     """Create minimal fallback game engines."""
-    from haive.core.models.llm.base import AzureLLMConfig
-    from langchain_core.prompts import ChatPromptTemplate
 
     logger.info("🔄 Creating fallback game engines")
 

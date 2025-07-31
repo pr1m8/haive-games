@@ -1,10 +1,13 @@
+from pydantic import Field
+
+
 class CrosswordBoard(
     GridBoard[CrosswordCell[CrosswordLetter], GridPosition, CrosswordLetter]
 ):
     """A crossword puzzle board."""
 
-    words: Dict[str, CrosswordWord] = Field(default_factory=dict)
-    clues: Dict[str, CrosswordClue] = Field(default_factory=dict)
+    words: dict[str, CrosswordWord] = Field(default_factory=dict)
+    clues: dict[str, CrosswordClue] = Field(default_factory=dict)
 
     def initialize_grid(self) -> None:
         """Initialize an empty crossword grid."""
@@ -49,7 +52,7 @@ class CrosswordBoard(
         text: str,
         answer: str,
         start_position: GridPosition,
-    ) -> Optional[str]:
+    ) -> str | None:
         """Add a clue to the crossword."""
         # Check if the clue can be placed on the board
         if not self._validate_word_placement(answer, start_position, direction):
@@ -168,7 +171,7 @@ class CrosswordBoard(
 
     def _get_word_positions(
         self, word: str, start_position: GridPosition, direction: Direction
-    ) -> List[GridPosition]:
+    ) -> list[GridPosition]:
         """Calculate the positions for each letter of a word."""
         positions = []
 

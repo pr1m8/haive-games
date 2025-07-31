@@ -9,7 +9,9 @@ This module implements the main agent for the Battleship game, including:
 """
 
 import logging
+import random
 import time
+import traceback
 from typing import Any
 
 from haive.core.engine.agent.agent import Agent, register_agent
@@ -252,7 +254,8 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         # Switch to player 1
         state_obj.current_player = "player1"
 
-        # If enable_analysis is True, go to player1_analysis, otherwise to player1_move
+        # If enable_analysis is True, go to player1_analysis, otherwise to
+        # player1_move
         next_node = (
             "player1_analysis" if self.config.enable_analysis else "player1_move"
         )
@@ -288,7 +291,8 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         # Switch to player 2
         state_obj.current_player = "player2"
 
-        # If enable_analysis is True, go to player2_analysis, otherwise to player2_move
+        # If enable_analysis is True, go to player2_analysis, otherwise to
+        # player2_move
         next_node = (
             "player2_analysis" if self.config.enable_analysis else "player2_move"
         )
@@ -591,7 +595,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
             return Command(update=updated_state.model_dump(), goto=next_node)
         except Exception as e:
-
             logger.error(
                 "Move error for player",
                 extra={"player": player, "error": str(e)},
@@ -622,7 +625,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         player_state = state.get_player_state(player)
 
         # Get all previously attacked positions
-        attacked = set((c.row, c.col) for c in player_state.board.attacks)
+        attacked = {(c.row, c.col) for c in player_state.board.attacks}
 
         # First, check for partially hit ships and target adjacent cells
         for hit in player_state.board.successful_hits:
@@ -643,8 +646,8 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
                 if (row, col) not in attacked:
                     return MoveCommand(row=row, col=col)
 
-        # If all positions have been attacked (shouldn't happen), return a random one
-        import random
+        # If all positions have been attacked (shouldn't happen), return a
+        # random one
 
         return MoveCommand(row=random.randint(0, 9), col=random.randint(0, 9))
 
@@ -921,10 +924,14 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
                         p1_state = step.get("player1_state", {})
                         p2_state = step.get("player2_state", {})
                         print(
-                            f"Player 1 placed ships: {p1_state.get('has_placed_ships', False)}"
+                            f"Player 1 placed ships: {
+                                p1_state.get('has_placed_ships', False)
+                            }"
                         )
                         print(
-                            f"Player 2 placed ships: {p2_state.get('has_placed_ships', False)}"
+                            f"Player 2 placed ships: {
+                                p2_state.get('has_placed_ships', False)
+                            }"
                         )
 
                     time.sleep(0.5)
@@ -937,8 +944,6 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
                 return final_state
             except Exception as e:
-                import traceback
-
                 print(f"Game run error: {e}")
                 traceback.print_exc()
                 return {}

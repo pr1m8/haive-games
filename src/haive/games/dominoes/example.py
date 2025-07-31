@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Example runner for Dominoes game with rich UI visualization."""
 
+import traceback
 import uuid
 
 from rich.console import Console
@@ -46,7 +47,6 @@ def run_dominoes_game(agent: DominoesAgent, delay: float = 1.5):
 
     except Exception as e:
         console.print(f"[bold red]Error running game: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(
@@ -82,7 +82,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         console.print(f"[bold red]Critical error: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(

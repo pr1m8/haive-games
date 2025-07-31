@@ -19,6 +19,8 @@ Example:
     >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
 """
 
+import chess
+
 from haive.games.chess.state import ChessState
 
 
@@ -60,7 +62,6 @@ class ChessGameStateManager:
             >>> assert state.game_status == "ongoing"
             >>> assert state.board_fen.startswith("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
         """
-        import chess
 
         return ChessState(
             board_fen=chess.Board().fen(),
@@ -110,7 +111,6 @@ class ChessGameStateManager:
             >>> new_state = ChessGameStateManager.apply_move(state, "e2e1")
             >>> assert new_state.game_status == "checkmate"
         """
-        import chess
 
         board = chess.Board(state.board_fen)
         move = chess.Move.from_uci(move_uci)

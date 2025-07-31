@@ -9,12 +9,12 @@ performance, including:
 """
 
 # Standard library imports
+
 import logging
 import time
 import traceback
 from typing import Any
 
-# Local imports
 from haive.games.poker.models import (
     AgentDecision,
     AgentDecisionSchema,
@@ -24,6 +24,8 @@ from haive.games.poker.models import (
     PlayerAction,
     Suit,
 )
+
+# Local imports
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +104,7 @@ class StructuredOutputTester:
     def run_batch_test(self, iterations: int = 10) -> dict[str, Any]:
         """Run multiple tests and collect statistics."""
         for i in range(iterations):
-            logger.info(f"Running test iteration {i+1}/{iterations}")
+            logger.info(f"Running test iteration {i + 1}/{iterations}")
             self.run_test()
 
         # Compile statistics
@@ -143,16 +145,18 @@ class StructuredOutputTester:
         logger.info("STRUCTURED OUTPUT TEST REPORT")
         logger.info("=" * 60)
         logger.info(f"Total tests: {stats['total_tests']}")
-        logger.info(f"Success rate: {stats['success_rate']*100:.2f}%")
-        logger.info(f"Structured output rate: {stats['structured_rate']*100:.2f}%")
+        logger.info(f"Success rate: {stats['success_rate'] * 100:.2f}%")
+        logger.info(f"Structured output rate: {stats['structured_rate'] * 100:.2f}%")
         logger.info(f"Average duration: {stats['avg_duration']:.2f}s")
         logger.info("Action distribution:")
         for action, count in stats["action_distribution"].items():
-            logger.info(f"  {action}: {count} ({count/stats['total_tests']*100:.2f}%)")
+            logger.info(
+                f"  {action}: {count} ({count / stats['total_tests'] * 100:.2f}%)"
+            )
 
         logger.info("\nDetailed results:")
         for i, result in enumerate(self.results):
-            logger.info(f"\nTest #{i+1}:")
+            logger.info(f"\nTest #{i + 1}:")
             logger.info(f"  Success: {result['success']}")
             if result["success"]:
                 logger.info(f"  Structured: {result.get('structured', False)}")
@@ -342,7 +346,9 @@ class DecisionAnalyzer:
             if current_bet > player_bet:
                 validation["legal"] = False
                 validation["warnings"].append(
-                    f"Cannot check when there's a bet to call (${current_bet - player_bet})"
+                    f"Cannot check when there's a bet to call (${
+                        current_bet - player_bet
+                    })"
                 )
             if decision.amount != 0:
                 validation["warnings"].append(
@@ -374,14 +380,20 @@ class DecisionAnalyzer:
             elif decision.amount > player.chips:
                 validation["legal"] = False
                 validation["warnings"].append(
-                    f"Bet amount ({decision.amount}) exceeds available chips ({player.chips})"
+                    f"Bet amount ({decision.amount}) exceeds available chips ({
+                        player.chips
+                    })"
                 )
             elif decision.amount < game_state.big_blind:
                 validation["warnings"].append(
-                    f"Bet less than big blind (${decision.amount} < ${game_state.big_blind})"
+                    f"Bet less than big blind (${decision.amount} < ${
+                        game_state.big_blind
+                    })"
                 )
                 validation["suggestions"].append(
-                    f"Minimum bet should be at least the big blind (${game_state.big_blind})"
+                    f"Minimum bet should be at least the big blind (${
+                        game_state.big_blind
+                    })"
                 )
 
         # RAISE validation
@@ -395,7 +407,9 @@ class DecisionAnalyzer:
                 min_raise = current_bet + game_state.min_raise - player_bet
                 if decision.amount < min_raise:
                     validation["warnings"].append(
-                        f"Raise amount less than minimum ({decision.amount} < {min_raise})"
+                        f"Raise amount less than minimum ({decision.amount} < {
+                            min_raise
+                        })"
                     )
                     validation["suggestions"].append(
                         f"Minimum raise should be {min_raise}"
@@ -403,7 +417,9 @@ class DecisionAnalyzer:
                 if decision.amount > player.chips:
                     validation["legal"] = False
                     validation["warnings"].append(
-                        f"Raise amount exceeds available chips ({decision.amount} > {player.chips})"
+                        f"Raise amount exceeds available chips ({decision.amount} > {
+                            player.chips
+                        })"
                     )
 
         # ALL_IN validation

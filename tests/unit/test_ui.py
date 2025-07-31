@@ -31,7 +31,7 @@ except ImportError:
             for i, (guess, feedback) in enumerate(
                 zip(state.guesses, state.feedback, strict=False)
             ):
-                print(f"  {i+1}. {guess} -> {feedback}")
+                print(f"  {i + 1}. {guess} -> {feedback}")
 
 
 def create_test_state():

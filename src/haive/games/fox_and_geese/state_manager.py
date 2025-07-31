@@ -7,13 +7,15 @@ Fox and Geese game.
 """
 
 # Standard library imports
+
 import copy
 import logging
 
-# Local imports
 from haive.games.fox_and_geese.models import FoxAndGeeseMove, FoxAndGeesePosition
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.framework.base.state_manager import GameStateManager
+
+# Local imports
 
 logger = logging.getLogger(__name__)
 
@@ -169,7 +171,6 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
                 and 0 <= land_row < 7
                 and 0 <= land_col < 7
             ):
-
                 capture_pos = FoxAndGeesePosition(row=capture_row, col=capture_col)
                 land_pos = FoxAndGeesePosition(row=land_row, col=land_col)
 
@@ -178,7 +179,6 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
                     capture_pos in state.geese_positions
                     and land_pos not in state.geese_positions
                 ):
-
                     moves.append(
                         FoxAndGeeseMove(
                             from_pos=state.fox_position,

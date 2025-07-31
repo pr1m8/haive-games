@@ -1,11 +1,10 @@
 """Comprehensive tests for TicTacToeAgent."""
 
-from typing import Dict
 from unittest.mock import Mock, patch
 
-import pytest
 from langchain_core.runnables import Runnable
 from langgraph.types import Command
+import pytest
 
 from haive.games.framework.base.agent import GameAgent
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
@@ -18,7 +17,7 @@ class TestTicTacToeAgent:
     """Test suite for TicTacToeAgent functionality."""
 
     @pytest.fixture
-    def mock_engines(self) -> Dict[str, Mock]:
+    def mock_engines(self) -> dict[str, Mock]:
         """Create mock LLM engines for testing."""
         x_engine = Mock(spec=Runnable)
         o_engine = Mock(spec=Runnable)
@@ -33,7 +32,7 @@ class TestTicTacToeAgent:
         }
 
     @pytest.fixture
-    def agent_config(self, mock_engines: Dict[str, Mock]) -> TicTacToeConfig:
+    def agent_config(self, mock_engines: dict[str, Mock]) -> TicTacToeConfig:
         """Create a test agent configuration with mock engines."""
         config = TicTacToeConfig(
             player_X="player1",
@@ -46,7 +45,7 @@ class TestTicTacToeAgent:
 
     @pytest.fixture
     def tic_tac_toe_agent(
-        self, agent_config: TicTacToeConfig, mock_engines: Dict[str, Mock]
+        self, agent_config: TicTacToeConfig, mock_engines: dict[str, Mock]
     ) -> TicTacToeAgent:
         """Create a test TicTacToeAgent instance with mock engines."""
         agent = TicTacToeAgent(agent_config)

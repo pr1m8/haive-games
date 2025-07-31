@@ -55,7 +55,10 @@ def test_battleship():
 
     # Create configuration with debugging enabled
     config = BattleshipAgentConfig(
-        name="battleship_debug", enable_analysis=True, visualize_board=True, debug=True
+        name="battleship_debug",
+        enable_analysis=True,
+        visualize_board=True,
+        debug=True,
     )
 
     try:
@@ -66,7 +69,10 @@ def test_battleship():
         # Run the game step by step
         step_count = 0
         for state in agent.app.stream(
-            {}, stream_mode="values", debug=True, config=agent.runnable_config
+            {},
+            stream_mode="values",
+            debug=True,
+            config=agent.runnable_config,
         ):
             step_count += 1
 
@@ -97,16 +103,18 @@ def test_battleship():
                         f"[bold red]{state['error_message']}[/bold red]",
                         title="ERROR",
                         border_style="red",
-                    )
+                    ),
                 )
 
             # Phase-specific displays
             if phase == "setup":
                 player1_placed = state.get("player1_state", {}).get(
-                    "has_placed_ships", False
+                    "has_placed_ships",
+                    False,
                 )
                 player2_placed = state.get("player2_state", {}).get(
-                    "has_placed_ships", False
+                    "has_placed_ships",
+                    False,
                 )
 
                 setup_status = Table(title="Setup Status")
@@ -131,7 +139,8 @@ def test_battleship():
 
                     if player1_placed:
                         placements = state.get("player1_state", {}).get(
-                            "ship_placements", []
+                            "ship_placements",
+                            [],
                         )
                         for placement in placements:
                             ships_table.add_row(
@@ -141,13 +150,14 @@ def test_battleship():
                                     [
                                         f"({c.get('row', '?')},{c.get('col', '?')})"
                                         for c in placement.get("coordinates", [])
-                                    ]
+                                    ],
                                 ),
                             )
 
                     if player2_placed:
                         placements = state.get("player2_state", {}).get(
-                            "ship_placements", []
+                            "ship_placements",
+                            [],
                         )
                         for placement in placements:
                             ships_table.add_row(
@@ -157,7 +167,7 @@ def test_battleship():
                                     [
                                         f"({c.get('row', '?')},{c.get('col', '?')})"
                                         for c in placement.get("coordinates", [])
-                                    ]
+                                    ],
                                 ),
                             )
 
@@ -192,10 +202,12 @@ def test_battleship():
 
                 # Display strategic analysis if available
                 player1_analysis = state.get("player1_state", {}).get(
-                    "strategic_analysis", []
+                    "strategic_analysis",
+                    [],
                 )
                 player2_analysis = state.get("player2_state", {}).get(
-                    "strategic_analysis", []
+                    "strategic_analysis",
+                    [],
                 )
 
                 if player1_analysis or player2_analysis:
@@ -226,7 +238,7 @@ def test_battleship():
                         f"[bold green]Game Over! Winner: {winner}[/bold green]",
                         title="🏆 VICTORY 🏆",
                         border_style="green",
-                    )
+                    ),
                 )
 
             # Brief pause between steps

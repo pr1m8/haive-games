@@ -51,8 +51,6 @@ Note:
     Custom engine configurations can be provided to override defaults.
 """
 
-from typing import Dict, Optional, Type
-
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import BaseModel, Field, field_validator
@@ -167,7 +165,7 @@ class DebateAgentConfig(AgentConfig):
         ],
     )
 
-    time_limit: Optional[int] = Field(
+    time_limit: int | None = Field(
         default=None,
         ge=30,
         le=3600,
@@ -175,7 +173,7 @@ class DebateAgentConfig(AgentConfig):
         examples=[60, 120, 300, 600, None],
     )
 
-    max_statements: Optional[int] = Field(
+    max_statements: int | None = Field(
         default=None,
         ge=1,
         le=20,
@@ -196,13 +194,13 @@ class DebateAgentConfig(AgentConfig):
     )
 
     # Role configurations
-    moderator_role: Optional[str] = Field(
+    moderator_role: str | None = Field(
         default=None,
         description="Specific role identifier for the debate moderator (None for no moderator)",
         examples=["moderator", "judge", "chair", "speaker", None],
     )
 
-    participant_roles: Dict[str, str] = Field(
+    participant_roles: dict[str, str] = Field(
         default_factory=dict,
         description="Mapping of participant IDs to their debate roles",
         examples=[
@@ -213,13 +211,13 @@ class DebateAgentConfig(AgentConfig):
     )
 
     # State schema
-    state_schema: Type[BaseModel] = Field(
+    state_schema: type[BaseModel] = Field(
         default=DebateState,
         description="Pydantic model class for managing debate state and transitions",
     )
 
     # Engine configurations
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=build_debate_engines,
         description="LLM engine configurations for different participant roles",
     )
@@ -256,7 +254,7 @@ class DebateAgentConfig(AgentConfig):
 
     @field_validator("participant_roles")
     @classmethod
-    def validate_participant_roles(cls, v: Dict[str, str]) -> Dict[str, str]:
+    def validate_participant_roles(cls, v: dict[str, str]) -> dict[str, str]:
         """Validate participant role assignments.
 
         Args:
@@ -294,7 +292,9 @@ class DebateAgentConfig(AgentConfig):
             role_lower = role.lower().strip()
             if role_lower not in valid_roles:
                 raise ValueError(
-                    f"Role '{role}' not recognized. Valid roles: {', '.join(valid_roles)}"
+                    f"Role '{role}' not recognized. Valid roles: {
+                        ', '.join(valid_roles)
+                    }"
                 )
 
         return {pid: role.lower().strip() for pid, role in v.items()}

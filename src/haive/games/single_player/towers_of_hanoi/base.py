@@ -2,13 +2,8 @@ from __future__ import annotations
 
 import uuid
 from enum import Enum
-from typing import (
-    Any,
-    Generic,
-    Literal,
-    TypeVar,
-    cast,
-)
+from re import T
+from typing import Any, Generic, Literal, TypeVar, cast
 
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
@@ -502,11 +497,13 @@ class HanoiSolver(BaseModel):
             n: int, source: PegNumber, target: PegNumber, auxiliary: PegNumber
         ) -> None:
             if n > 0:
-                # Move n-1 disks from source to auxiliary using target as auxiliary
+                # Move n-1 disks from source to auxiliary using target as
+                # auxiliary
                 move_tower(n - 1, source, auxiliary, target)
                 # Move the largest disk from source to target
                 moves.append(HanoiMove(from_peg=source, to_peg=target))
-                # Move n-1 disks from auxiliary to target using source as auxiliary
+                # Move n-1 disks from auxiliary to target using source as
+                # auxiliary
                 move_tower(n - 1, auxiliary, target, source)
 
         # Call the recursive function to generate moves

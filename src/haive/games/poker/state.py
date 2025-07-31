@@ -412,7 +412,9 @@ class PokerState(BaseModel):
 
         elif decision.action == PlayerAction.CHECK:
             if self.game.current_bet > player.current_bet:
-                self.error = f"Player {player_id} cannot check, must call {self.game.current_bet - player.current_bet}"
+                self.error = f"Player {player_id} cannot check, must call {
+                    self.game.current_bet - player.current_bet
+                }"
                 return
             self.log_event(f"{player.name} checks")
 
@@ -458,7 +460,8 @@ class PokerState(BaseModel):
                 self.game.last_aggressor = player_id
                 self.log_event(f"{player.name} raises to ${player.current_bet}")
             else:
-                # This happens if player doesn't have enough chips to make the min raise
+                # This happens if player doesn't have enough chips to make the
+                # min raise
                 self.log_event(
                     f"{player.name} calls ${actual_bet} (not enough for min raise)"
                 )
@@ -555,7 +558,8 @@ class PokerState(BaseModel):
         ):
             last_aggressor = self.game.last_aggressor
 
-            # If there's no last aggressor, or if the current player index has reached the last aggressor
+            # If there's no last aggressor, or if the current player index has
+            # reached the last aggressor
             if not last_aggressor or self._player_has_acted_after_last_aggressor():
                 self.game.round_complete = True
                 return True
@@ -778,7 +782,8 @@ class PokerState(BaseModel):
 
             for player_id in best_players:
                 player = next(p for p in self.game.players if p.id == player_id)
-                # Give this player their share plus any remainder if they're first
+                # Give this player their share plus any remainder if they're
+                # first
                 winnings = split_amount + (
                     remainder if player_id == best_players[0] else 0
                 )
@@ -869,7 +874,7 @@ class PokerState(BaseModel):
         else:
             # Check normal straights
             unique_values = sorted(
-                set(card.numeric_value for card in sorted_cards), reverse=True
+                {card.numeric_value for card in sorted_cards}, reverse=True
             )
             for i in range(len(unique_values) - 4):
                 if unique_values[i] - unique_values[i + 4] == 4:  # 5 consecutive values
@@ -891,7 +896,7 @@ class PokerState(BaseModel):
         if flush_cards and straight_high_card:
             # Check if the flush includes a straight
             flush_values = sorted(
-                set(card.numeric_value for card in flush_cards), reverse=True
+                {card.numeric_value for card in flush_cards}, reverse=True
             )
 
             # Handle A-5 straight flush
@@ -1066,7 +1071,7 @@ class PokerState(BaseModel):
             elif i == len(self.game.players) - 1:
                 position_names[i] = "Cutoff"
             else:
-                position_names[i] = f"Middle Position {i-2}"
+                position_names[i] = f"Middle Position {i - 2}"
 
         position_name = position_names.get(
             player.position, f"Position {player.position}"

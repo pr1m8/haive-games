@@ -1,42 +1,35 @@
-from typing import Any
+"""Battleship game agent configuration.
 
-r"""Comprehensive configuration system for Battleship game agents and gameplay customization.
+This module defines comprehensive configuration classes for Battleship game agents,
+providing extensive customization options for game rules, AI behavior, UI preferences,
+and performance settings.
 
-This module provides extensive configuration options for Battleship game agents,
-supporting various game modes, strategic analysis settings, visualization options,
-and LLM engine configurations. The configuration system enables fine-tuned control
-over game mechanics, player behavior, and performance optimization.
+The configuration system supports:
+    - Board size and ship placement customization
+    - Multiple difficulty levels and AI strategies
+    - Turn time limits and timeout handling
+    - Analysis and logging capabilities
+    - UI themes and display preferences
+    - Performance optimization settings
 
-The configuration classes use Pydantic for validation and provide factory methods
-for common Battleship game scenarios including competitive play, training modes,
-and analysis-focused configurations.
+Classes:
+    BattleshipAgentConfig: Main configuration class for Battleship agents
+    ShipConfiguration: Configuration for ship types and placement rules
+    GameRuleConfiguration: Game rule and validation settings
+    UIConfiguration: User interface and display settings
+    PerformanceConfiguration: Performance and optimization settings
 
-Examples:
-    Creating a basic Battleship agent configuration::\n
-
-        config = BattleshipAgentConfig()
-        agent = BattleshipAgent(config)
-
-    Creating a configuration with custom player names::\n
+Example:
+    Creating a basic Battleship agent configuration:
 
         config = BattleshipAgentConfig(
-            player1_name="Admiral_Nelson",
-            player2_name="Captain_Ahab",
-            enable_analysis=True
+            player_name="Admiral Hayes",
+            difficulty="intermediate",
+            board_size=10,
+            enable_analysis=True,
+            turn_timeout=30.0,
         )
-        agent = BattleshipAgent(config)
 
-    Creating a competitive configuration::\n
-
-        config = BattleshipAgentConfig.competitive()
-        config.visualize_board = False  # Silent mode for tournaments
-        agent = BattleshipAgent(config)
-
-    Creating a training configuration::\n
-
-        config = BattleshipAgentConfig.training()
-        config.enable_analysis = True
-        config.visualize_board = True
         agent = BattleshipAgent(config)
 
 Note:
@@ -46,6 +39,7 @@ Note:
 """
 
 import uuid
+from typing import Any
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -178,7 +172,7 @@ class BattleshipAgentConfig(AgentConfig):
             "configurable": {
                 "recursion_limit": 10000,
                 "thread_id": None,  # Will be set to UUID in model_validator
-            }
+            },
         },
         description="LangChain runnable configuration with execution parameters and thread management",
     )
@@ -259,7 +253,7 @@ class BattleshipAgentConfig(AgentConfig):
                 "configurable": {
                     "recursion_limit": 8000,
                     "thread_id": f"competitive_{str(uuid.uuid4())[:8]}",
-                }
+                },
             },
         )
 
@@ -293,7 +287,7 @@ class BattleshipAgentConfig(AgentConfig):
                 "configurable": {
                     "recursion_limit": 15000,
                     "thread_id": f"training_{str(uuid.uuid4())[:8]}",
-                }
+                },
             },
         )
 
@@ -327,7 +321,7 @@ class BattleshipAgentConfig(AgentConfig):
                 "configurable": {
                     "recursion_limit": 5000,
                     "thread_id": f"performance_{str(uuid.uuid4())[:8]}",
-                }
+                },
             },
         )
 
@@ -353,12 +347,14 @@ class BattleshipAgentConfig(AgentConfig):
             "visualization_enabled": "Yes" if self.visualize_board else "No",
             "recursion_limit": str(
                 self.runnable_config.get("configurable", {}).get(
-                    "recursion_limit", "Unknown"
-                )
+                    "recursion_limit",
+                    "Unknown",
+                ),
             ),
             "thread_id": (
                 self.runnable_config.get("configurable", {}).get(
-                    "thread_id", "Not set"
+                    "thread_id",
+                    "Not set",
                 )[:8]
                 + "..."
                 if self.runnable_config.get("configurable", {}).get("thread_id")

@@ -40,6 +40,7 @@ Example:
 # demo_among_us.py
 
 import argparse
+import json
 import os
 import random
 import time
@@ -51,6 +52,7 @@ from rich.table import Table
 from haive.games.among_us.enhanced_ui import EnhancedAmongUsUI
 from haive.games.among_us.factory import create_among_us_game
 from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
+from haive.games.among_us.state import AmongUsState
 
 
 def run_among_us_demo(
@@ -95,13 +97,12 @@ def run_among_us_demo(
     # Load game if specified
     if load_path and os.path.exists(load_path):
         console.print(f"Loading game from {load_path}...")
-        import json
 
         with open(load_path) as f:
             saved_game = json.load(f)
 
         player_names = saved_game.get(
-            "players", [f"Player{i+1}" for i in range(player_count)]
+            "players", [f"Player{i + 1}" for i in range(player_count)]
         )
         game_config = saved_game.get("game_config", {})
     else:
@@ -173,11 +174,15 @@ def run_among_us_demo(
     # Create the game agent
     if use_enhanced_ui:
         ui.console.print(
-            f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
+            f"Creating game with {len(player_names)} players and {
+                impostor_count
+            } impostors..."
         )
     else:
         console.print(
-            f"Creating game with {len(player_names)} players and {impostor_count} impostors..."
+            f"Creating game with {len(player_names)} players and {
+                impostor_count
+            } impostors..."
         )
 
     agent = create_among_us_game(player_names=player_names, game_config=game_config)
@@ -191,7 +196,6 @@ def run_among_us_demo(
         state = saved_game.get("state")
 
         # Convert to state object
-        from haive.games.among_us.state import AmongUsState
 
         state = AmongUsState(**state)
     else:
@@ -345,8 +349,6 @@ def run_among_us_demo(
         if dir_path and not os.path.exists(dir_path):
             os.makedirs(dir_path)
 
-        import json
-
         with open(save_path, "w") as f:
             json.dump(
                 {
@@ -421,7 +423,9 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
         return state
 
     console.print(
-        f"\n[bold {get_role_color(player_state.role)}]{player_id}'s turn[/bold {get_role_color(player_state.role)}]"
+        f"\n[bold {get_role_color(player_state.role)}]{player_id}'s turn[/bold {
+            get_role_color(player_state.role)
+        }]"
     )
 
     # Display player status first
@@ -454,7 +458,9 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
             else ""
         )
         console.print(
-            f"{i+1}. [{style}]{status} {task.description} (in {task.location}){highlight}[/{style}]"
+            f"{i + 1}. [{style}]{status} {task.description} (in {task.location}){
+                highlight
+            }[/{style}]"
         )
 
     # Show observations
@@ -468,9 +474,9 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
     legal_moves = agent.get_legal_moves(state, player_id)
     for i, move in enumerate(legal_moves[:5]):  # Show first 5 actions for brevity
         action_str = format_action(move)
-        console.print(f"{i+1}. {action_str}")
+        console.print(f"{i + 1}. {action_str}")
     if len(legal_moves) > 5:
-        console.print(f"...and {len(legal_moves)-5} more actions")
+        console.print(f"...and {len(legal_moves) - 5} more actions")
 
     # Get player's move
     move_context = agent.prepare_move_context(state, player_id)
@@ -542,7 +548,8 @@ def process_player_turn(agent, state, player_id, console, interactive, speed):
             console.print("[bold cyan]Press Enter to continue...[/bold cyan]")
             input()
     else:
-        time.sleep(min(0.5, delay))  # Cap at 0.5 seconds for non-interactive mode
+        # Cap at 0.5 seconds for non-interactive mode
+        time.sleep(min(0.5, delay))
 
     return new_state
 
@@ -638,7 +645,8 @@ def process_player_turn_enhanced(agent, state, player_id, ui, interactive, speed
             ui.console.print("[bold cyan]Press Enter to continue...[/bold cyan]")
             input()
     else:
-        time.sleep(min(0.5, delay))  # Cap at 0.5 seconds for non-interactive mode
+        # Cap at 0.5 seconds for non-interactive mode
+        time.sleep(min(0.5, delay))
 
     return new_state
 
@@ -660,7 +668,9 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
     if state.reported_body:
         console.print("\n[bold red]BODY REPORTED![/bold red]")
         console.print(
-            f"[bold]{state.meeting_caller}[/bold] found the body of [bold]{state.reported_body}[/bold]"
+            f"[bold]{state.meeting_caller}[/bold] found the body of [bold]{
+                state.reported_body
+            }[/bold]"
         )
     else:
         console.print("\n[bold yellow]EMERGENCY MEETING CALLED![/bold yellow]")
@@ -669,7 +679,6 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
         )
 
     # Create a table for player positions
-    from rich.table import Table
 
     location_table = Table(title="Player Locations at Time of Meeting")
     location_table.add_column("Player", style="cyan")
@@ -940,7 +949,6 @@ def process_voting_phase_enhanced(agent, state, ui, interactive, speed):
         vote_counts[target] = vote_counts.get(target, 0) + 1
 
     # Create vote results table
-    from rich.table import Table
 
     vote_table = Table(title="Vote Results")
     vote_table.add_column("Player", style="cyan")
@@ -1218,7 +1226,9 @@ def process_random_events_enhanced(agent, state, ui, interactive, speed):
                 ui.console.print(
                     Panel(
                         Text(
-                            f"{caller} found {body_name}'s body in {caller_location.capitalize()}!",
+                            f"{caller} found {body_name}'s body in {
+                                caller_location.capitalize()
+                            }!",
                             justify="center",
                         ),
                         title="[bold red]BODY REPORTED[/bold red]",

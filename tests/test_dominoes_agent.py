@@ -6,8 +6,8 @@ game initialization, move generation, and visualization.
 
 from unittest.mock import Mock, patch
 
-import pytest
 from langgraph.types import Command
+import pytest
 
 from haive.games.dominoes.agent import DominoesAgent
 from haive.games.dominoes.config import DominoesConfig

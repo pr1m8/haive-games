@@ -4,8 +4,8 @@ This module tests the ReversiState class and its properties and methods
 for managing the game board and player information.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.reversi.models import ReversiMove
 from haive.games.reversi.state import ReversiState

@@ -216,7 +216,8 @@ class DominoesStateManager(GameStateManager[DominoesState]):
                 state.game_status = f"{winner}_win"
                 state.winner = winner
 
-                # Calculate score (difference between winner's pips and sum of others)
+                # Calculate score (difference between winner's pips and sum of
+                # others)
                 total_pips = sum(player_pips.values())
                 winner_score = total_pips - player_pips[winner]
                 state.scores[winner] += winner_score

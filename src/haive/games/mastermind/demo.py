@@ -11,6 +11,11 @@ import random
 import sys
 
 from pydantic import BaseModel, Field
+from rich.console import Console
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
@@ -34,7 +39,9 @@ class Feedback(BaseModel):
     correct_color: int = 0
 
     def __str__(self) -> str:
-        return f"Correct position: {self.correct_position}, Correct color: {self.correct_color}"
+        return f"Correct position: {self.correct_position}, Correct color: {
+            self.correct_color
+        }"
 
 
 class MastermindState(BaseModel):
@@ -121,11 +128,6 @@ def calculate_feedback(secret_code: list[str], guess: list[str]) -> dict[str, in
 
 # Rich UI Implementation
 try:
-    from rich.console import Console
-    from rich.layout import Layout
-    from rich.panel import Panel
-    from rich.table import Table
-    from rich.text import Text
 
     class MastermindUI:
         """Rich terminal UI for the Mastermind game."""
@@ -299,7 +301,7 @@ except ImportError:
             for i, (guess, feedback) in enumerate(
                 zip(state.guesses, state.feedback, strict=False)
             ):
-                print(f"  {i+1}. {guess} -> {feedback}")
+                print(f"  {i + 1}. {guess} -> {feedback}")
 
             if state.is_game_over():
                 if state.game_status == "won":

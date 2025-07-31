@@ -13,7 +13,7 @@ from haive.games.chess.state import ChessState
 
 def debug_field(field_name, model_class):
     """Debug a specific field in a model class."""
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print(f"Field: {field_name}")
 
     if hasattr(model_class, "__annotations__"):

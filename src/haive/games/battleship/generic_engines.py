@@ -5,15 +5,10 @@ games, allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.battleship.models import (
-    Analysis,
-    MoveCommand,
-)
+from haive.games.battleship.models import Analysis, MoveCommand
 from haive.games.core.agent.generic_player_agent import (
     GamePlayerIdentifiers,
     GenericGameEngineFactory,
@@ -65,7 +60,7 @@ class BattleshipPromptGenerator(GenericPromptGenerator[str, str]):
                     "{attack_history}\n\n"
                     "Make your next attack. Choose coordinates to attack and explain your strategy.",
                 ),
-            ]
+            ],
         )
 
     def create_analyzer_prompt(self, player: str) -> ChatPromptTemplate:
@@ -96,7 +91,7 @@ class BattleshipPromptGenerator(GenericPromptGenerator[str, str]):
                     "Provide a comprehensive analysis of the position, "
                     "including target priorities and strategic recommendations.",
                 ),
-            ]
+            ],
         )
 
 
@@ -121,8 +116,8 @@ battleship_factory = BattleshipEngineFactory()
 
 
 def create_generic_battleship_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Battleship engines from detailed player configurations.
 
     Args:
@@ -141,8 +136,10 @@ def create_generic_battleship_engines(
 
 
 def create_generic_battleship_engines_simple(
-    player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+    player1_model: str,
+    player2_model: str,
+    temperature: float = 0.3,
+) -> dict[str, AugLLMConfig]:
     """Create Battleship engines with simple model specifications.
 
     Args:
@@ -154,13 +151,17 @@ def create_generic_battleship_engines_simple(
         Dict[str, AugLLMConfig]: Dictionary of Battleship engines
     """
     return create_engines_from_simple_configs(
-        battleship_factory, player1_model, player2_model, temperature
+        battleship_factory,
+        player1_model,
+        player2_model,
+        temperature,
     )
 
 
 def create_generic_battleship_config_from_example(
-    example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+    example_name: str,
+    temperature: float = 0.3,
+) -> dict[str, AugLLMConfig]:
     """Create Battleship engines from a predefined example configuration.
 
     Args:
@@ -193,24 +194,26 @@ def create_generic_battleship_config_from_example(
 
     player1_model, player2_model = examples[example_name]
     return create_generic_battleship_engines_simple(
-        player1_model, player2_model, temperature
+        player1_model,
+        player2_model,
+        temperature,
     )
 
 
 # Convenience functions for common configurations
 
 
-def create_naval_battleship_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_naval_battleship_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create naval commander-style Battleship engines with high-powered
     models."""
     return create_generic_battleship_config_from_example("naval_commanders", **kwargs)
 
 
-def create_budget_battleship_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_battleship_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Battleship engines."""
     return create_generic_battleship_config_from_example("budget", **kwargs)
 
 
-def create_mixed_battleship_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_battleship_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Battleship engines."""
     return create_generic_battleship_config_from_example("mixed", **kwargs)

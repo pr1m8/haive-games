@@ -3,8 +3,8 @@
 # Standard library imports
 
 # Third-party imports
-import pytest
 from pydantic import ValidationError
+import pytest
 
 # Local imports
 from haive.games.mafia.models import (

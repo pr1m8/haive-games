@@ -242,7 +242,7 @@ def play_test_game() -> None:
 
     # Play the moves
     for i, pit in enumerate(moves):
-        print(f"\n--- Move {i+1} ---")
+        print(f"\n--- Move {i + 1} ---")
         valid_moves = game.get_valid_moves()
 
         # Adjust move if it's not valid

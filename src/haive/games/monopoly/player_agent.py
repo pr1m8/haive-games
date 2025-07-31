@@ -22,6 +22,7 @@ from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field, computed_field
 
+from haive.games.monopoly.engines import build_monopoly_player_aug_llms
 from haive.games.monopoly.models import (
     BuildingDecision,
     JailDecision,
@@ -29,8 +30,14 @@ from haive.games.monopoly.models import (
     PropertyDecision,
     TradeResponse,
 )
+from haive.games.monopoly.player_agent import MonopolyPlayerAgent
 from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
+from haive.games.monopoly.utils import (
+    create_board,
+    create_players,
+    get_properties_by_color,
+    shuffle_cards,
+)
 
 
 class PlayerDecisionState(MessagesState):
@@ -146,7 +153,8 @@ class MonopolyGameAgentConfig(AgentConfig):
         default=True, description="Whether to visualize the game workflow graph"
     )
 
-    # Player agent configuration - using composition instead of direct reference
+    # Player agent configuration - using composition instead of direct
+    # reference
     player_agent_config: MonopolyPlayerAgentConfig = Field(
         default_factory=lambda: MonopolyPlayerAgentConfig(name="monopoly_player_agent"),
         description="Configuration for player decision agent",
@@ -201,8 +209,6 @@ class MonopolyGameAgentConfig(AgentConfig):
     def create_player_agent(self) -> Any:
         """Create the player decision agent."""
         # Import here to avoid circular dependency
-        from haive.games.monopoly.engines import build_monopoly_player_aug_llms
-        from haive.games.monopoly.player_agent import MonopolyPlayerAgent
 
         # Set up the engines for the player agent
         if not self.player_agent_config.engines:
@@ -216,8 +222,6 @@ class MonopolyGameAgentConfig(AgentConfig):
         configured.
         """
         if not self.player_agent_config.engines:
-            from haive.games.monopoly.engines import build_monopoly_player_aug_llms
-
             self.player_agent_config.engines = build_monopoly_player_aug_llms()
 
     class Config:
@@ -283,7 +287,8 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
 
             # Map simplified decision types to PlayerActionType values
             decision_type_mapping = {
-                "property": PlayerActionType.BUY_PROPERTY.value,  # Default to buy for property decisions
+                # Default to buy for property decisions
+                "property": PlayerActionType.BUY_PROPERTY.value,
                 "jail": PlayerActionType.PAY_JAIL_FINE.value,  # Default to pay fine for jail
                 "building": "building",  # Keep as is
                 "trade": PlayerActionType.TRADE_OFFER.value,  # Default to offer for trade
@@ -487,11 +492,11 @@ class MonopolyPlayerAgent(Agent[MonopolyPlayerAgentConfig]):
         # Check for color group completion potential
         color_group_info = ""
         if property_obj:
-            from haive.games.monopoly.utils import get_properties_by_color
-
             color_props = get_properties_by_color(property_obj.color)
             owned_in_group = [prop for prop in owned_properties if prop in color_props]
-            color_group_info = f"Color group {property_obj.color.value}: {len(owned_in_group)}/{len(color_props)} owned"
+            color_group_info = f"Color group {property_obj.color.value}: {
+                len(owned_in_group)
+            }/{len(color_props)} owned"
 
         return {
             "player_name": decision_state.player_name,

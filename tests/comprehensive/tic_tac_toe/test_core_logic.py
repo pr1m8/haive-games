@@ -5,8 +5,8 @@ dependencies or frameworks. They test pure game rules, state management,
 and validation logic.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add source to path for direct testing
 src_path = Path(__file__).parent.parent.parent.parent / "src"

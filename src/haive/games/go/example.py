@@ -5,12 +5,16 @@ Haive framework.
 """
 
 # Quick demo for testing - check for sgfmill dependency
+
+from haive.games.go.agent import GoAgent
+from haive.games.go.config import GoAgentConfig
+
 print("Running Go quick demo...")
 
 try:
     # First check if sgfmill is available directly
     try:
-        import sgfmill.boards
+        pass
 
         print("✅ sgfmill dependency found")
         sgfmill_available = True
@@ -21,8 +25,6 @@ try:
 
     if sgfmill_available:
         # Only try to import Go modules if sgfmill is available
-        from haive.games.go.agent import GoAgent, run_go_game
-        from haive.games.go.config import GoAgentConfig
 
         print("✅ Go modules imported successfully")
 

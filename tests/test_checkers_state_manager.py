@@ -133,7 +133,7 @@ class TestBoardStringCreation:
 
         expected_symbols = ["r", "R", "b", "B"]
 
-        for board, expected_symbol in zip(test_boards, expected_symbols):
+        for board, expected_symbol in zip(test_boards, expected_symbols, strict=False):
             board_string = CheckersStateManager._create_board_string(board)
             assert expected_symbol in board_string
 

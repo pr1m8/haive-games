@@ -1,5 +1,6 @@
 # haive/games/core/components/cards/standard.py
 
+import functools
 from enum import Enum
 from typing import ClassVar
 
@@ -136,7 +137,9 @@ class StandardCard(Card):
             StandardSuit.SPADES: "♠",
         }
 
-        return f"{rank_display.get(self.rank, self.rank.value)}{suit_display.get(self.suit, '')}"
+        return f"{rank_display.get(self.rank, self.rank.value)}{
+            suit_display.get(self.suit, '')
+        }"
 
 
 class StandardDeckFactory:

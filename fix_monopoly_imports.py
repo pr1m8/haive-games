@@ -46,7 +46,7 @@ for root, _dirs, files in os.walk(monopoly_dir):
         if file.endswith(".py"):
             filepath = os.path.join(root, file)
             try:
-                with open(filepath, "r") as f:
+                with open(filepath) as f:
                     content = f.read()
 
                 original_content = content

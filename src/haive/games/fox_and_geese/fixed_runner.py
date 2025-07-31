@@ -4,6 +4,7 @@
 import argparse
 import logging
 import time
+import traceback
 import uuid
 
 from rich.console import Console
@@ -69,7 +70,8 @@ class FixedFoxAndGeeseAgent(FoxAndGeeseAgent):
                             hasattr(analysis_command, "update")
                             and analysis_command.update
                         ):
-                            # Extract fox_analysis from the command and update state
+                            # Extract fox_analysis from the command and update
+                            # state
                             if "fox_analysis" in analysis_command.update:
                                 state = state.model_copy(deep=True)
                                 state.fox_analysis = analysis_command.update[
@@ -89,7 +91,8 @@ class FixedFoxAndGeeseAgent(FoxAndGeeseAgent):
                             hasattr(analysis_command, "update")
                             and analysis_command.update
                         ):
-                            # Extract geese_analysis from the command and update state
+                            # Extract geese_analysis from the command and
+                            # update state
                             if "geese_analysis" in analysis_command.update:
                                 state = state.model_copy(deep=True)
                                 state.geese_analysis = analysis_command.update[
@@ -187,7 +190,6 @@ def main():
 
     except Exception as e:
         console.print(f"[bold red]Error running game: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(traceback.format_exc(), title="Error Details", border_style="red")

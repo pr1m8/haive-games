@@ -16,6 +16,8 @@ Example:
     ...         self.state_manager = ChessStateManager
 """
 
+import logging
+import traceback
 from typing import Any, Generic, TypeVar
 
 from haive.core.engine.agent.agent import Agent
@@ -95,8 +97,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                             # If it already looks like a runnable, store as is
                             self.engines[role][engine_name] = engine_config
                     except Exception as e:
-                        import logging
-
                         logging.exception(
                             f"Error creating runnable for {role}.{engine_name}: {e}"
                         )
@@ -105,7 +105,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                         ] = engine_config  # Store config for debugging
 
         # Log the available engines for debugging
-        import logging
 
         logging.info(f"Initialized engines for {list(self.engines.keys())} roles")
         for role, engines in self.engines.items():
@@ -138,7 +137,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         graph_builder.add_node("end_game", self.handle_end_game)
 
         # Standard flow:
-        # Start -> Initialize -> Setup -> Player Turns -> Phase Transitions -> End
+        # Start -> Initialize -> Setup -> Player Turns -> Phase Transitions ->
+        # End
         graph_builder.add_edge(START, "initialize_game")
         graph_builder.add_edge("initialize_game", "setup_phase")
 
@@ -149,7 +149,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             {True: "player_turn", False: "end_game"},
         )
 
-        # Player turn can continue with next player, go to phase transition, or end
+        # Player turn can continue with next player, go to phase transition, or
+        # end
         graph_builder.add_conditional_edges(
             "player_turn",
             self.determine_next_step_after_player_turn,
@@ -257,7 +258,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                     "DOCTOR",
                     "DETECTIVE",
                 ]:
-
                     has_acted = False
                     for action in reversed(state.action_history):
                         if (
@@ -268,7 +268,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
                             and state.round_number
                             == getattr(action, "round_number", -1)
                         ):
-
                             has_acted = True
                             break
 
@@ -441,7 +440,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             # BaseModel with players attribute case
             player_list = state.players
 
-        # If no players were found or the list is empty, generate default player names
+        # If no players were found or the list is empty, generate default
+        # player names
         if not player_list:
             player_list = [
                 f"player_{i}" for i in range(self.config.initial_player_count)
@@ -477,7 +477,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             if isinstance(new_state, dict):
                 return new_state
             # Handle unexpected state type
-            import logging
 
             logging.warning(
                 f"Unexpected state type in handle_setup_phase: {type(new_state)}"
@@ -495,8 +494,6 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             }
         except Exception as e:
             # Handle any exceptions during setup
-            import logging
-            import traceback
 
             logging.exception(f"Error in handle_setup_phase: {e}")
             logging.exception(traceback.format_exc())

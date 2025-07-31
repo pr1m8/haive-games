@@ -56,7 +56,8 @@ class DominoesUI:
                 logger.debug("State appears to be a Command object")
                 command_update = state_data.update
 
-                # Handle Command objects where update is already a DominoesState
+                # Handle Command objects where update is already a
+                # DominoesState
                 if isinstance(command_update, DominoesState):
                     logger.debug("Command.update is already a DominoesState")
                     return command_update
@@ -75,10 +76,13 @@ class DominoesUI:
                             )
                     else:
                         logger.debug(
-                            f"Command.update dict doesn't have required fields: {list(command_update.keys())}"
+                            f"Command.update dict doesn't have required fields: {
+                                list(command_update.keys())
+                            }"
                         )
 
-            # For direct dict output from langgraph stream - simple dict from command.update
+            # For direct dict output from langgraph stream - simple dict from
+            # command.update
             if isinstance(state_data, dict) and self._is_valid_game_state_dict(
                 state_data
             ):
@@ -94,7 +98,8 @@ class DominoesUI:
             if isinstance(state_data, dict):
                 logger.debug(f"State is dict with keys: {list(state_data.keys())}")
 
-                # First check for 'values' key which is used in langgraph stream output
+                # First check for 'values' key which is used in langgraph
+                # stream output
                 if "values" in state_data and isinstance(state_data["values"], dict):
                     values_dict = state_data["values"]
                     if self._is_valid_game_state_dict(values_dict):
@@ -107,7 +112,9 @@ class DominoesUI:
                             )
                     else:
                         logger.debug(
-                            f"'values' dict doesn't have required fields: {list(values_dict.keys())}"
+                            f"'values' dict doesn't have required fields: {
+                                list(values_dict.keys())
+                            }"
                         )
 
                 # First, try to find a DominoesState object in the dict values
@@ -116,7 +123,8 @@ class DominoesUI:
                         logger.debug(f"Found DominoesState in key: {key}")
                         return value
 
-                # Next, try to find a dict that can be converted to DominoesState
+                # Next, try to find a dict that can be converted to
+                # DominoesState
                 for key, value in state_data.items():
                     if isinstance(value, dict) and self._is_valid_game_state_dict(
                         value
@@ -130,9 +138,12 @@ class DominoesUI:
                             )
                             continue
 
-                # If all else fails, try to get at least some state dict we can work with
+                # If all else fails, try to get at least some state dict we can
+                # work with
                 logger.warning(
-                    f"Could not find valid game state in dict with keys: {list(state_data.keys())}"
+                    f"Could not find valid game state in dict with keys: {
+                        list(state_data.keys())
+                    }"
                 )
 
                 # Create a minimal game state if nothing else works

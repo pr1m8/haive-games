@@ -24,6 +24,7 @@ import asyncio
 import contextlib
 import json
 import logging
+import os
 import time
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -221,12 +222,10 @@ async def example_3_tournament_play():
 
     # Run tournament
     for _matchup_idx, (player1, player2) in enumerate(matchups):
-
         matchup_wins = {"player1": 0, "player2": 0, "draws": 0}
         matchup_times = []
 
         for _game_num in range(games_per_matchup):
-
             # Create configuration for this matchup
             config = create_tournament_config(player1, player2)
             config.time_per_move = 15  # Faster moves
@@ -327,7 +326,6 @@ async def example_4_position_analysis():
 
     # Analyze for both players
     for player in ["player1", "player2"]:
-
         try:
             # Get position analysis
             analysis = state_manager.analyze_position(current_state, player)
@@ -456,12 +454,10 @@ async def example_6_performance_testing():
     games_per_config = 5
 
     for config_name, config in configs.items():
-
         times = []
         outcomes = []
 
         for _game_num in range(games_per_config):
-
             agent = CheckersAgent(config)
 
             try:
@@ -637,7 +633,6 @@ async def example_7_custom_strategy():
 
     # Test each strategy
     for _name, strategy in strategies.items():
-
         # Evaluate position
         strategy.evaluate_position(test_state, "player1")
 
@@ -677,7 +672,6 @@ async def example_8_game_state_management():
         )
 
         if current_state:
-
             # Serialize state to JSON
             state_dict = current_state.model_dump()
 
@@ -715,11 +709,9 @@ async def example_8_game_state_management():
 
     # Clean up
     try:
-        import os
-
         if os.path.exists("checkers_game_state.json"):
             os.remove("checkers_game_state.json")
-    except:
+    except BaseException:
         pass
 
 

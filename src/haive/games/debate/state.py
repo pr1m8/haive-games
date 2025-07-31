@@ -1,4 +1,5 @@
 # src/haive/games/debate/state.py
+
 from pydantic import Field
 
 from haive.games.debate.models import DebatePhase, Participant, Statement, Topic, Vote

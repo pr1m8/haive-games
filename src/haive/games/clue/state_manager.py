@@ -172,10 +172,11 @@ class ClueStateManager(GameStateManager[ClueState]):
             "Study",
         ]
 
-        # Filter out known invalid combinations based on player cards and guesses
+        # Filter out known invalid combinations based on player cards and
+        # guesses
         player_cards = set(state.player1_cards + state.player2_cards)
 
-        possible_solutions = set(
+        possible_solutions = {
             (suspect, weapon, room)
             for suspect in all_suspects
             for weapon in all_weapons
@@ -185,6 +186,6 @@ class ClueStateManager(GameStateManager[ClueState]):
                 and weapon not in player_cards
                 and room not in player_cards
             )
-        )
+        }
 
         return possible_solutions

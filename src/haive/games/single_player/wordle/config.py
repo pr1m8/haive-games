@@ -4,9 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
 from haive.games.framework.base import GameConfig
-from haive.games.single_player.wordle.models import (
-    WordConnectionsState,
-)
+from haive.games.single_player.wordle.models import WordConnectionsState
 
 
 class WordConnectionsGuess(BaseModel):
@@ -45,7 +43,7 @@ STRATEGY:
 
 PREVIOUS GAME EXAMPLES:
 - "FINE PRINT": ASTERISK, CATCH, CONDITION, STRINGS
-- "CHARACTERS WITH GREEN SKIN": ELPHABA, GRINCH, HULK, SHREK  
+- "CHARACTERS WITH GREEN SKIN": ELPHABA, GRINCH, HULK, SHREK
 - "THINGS THAT OPEN LIKE A CLAM": CLAM, COMPACT, LAPTOP, WAFFLE IRON
 - "MOTHER ___": EARTH, GOOSE, MAY I, SUPERIOR""",
             ),

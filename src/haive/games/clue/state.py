@@ -233,8 +233,14 @@ class ClueState(GameState):
         for i, (guess, response) in enumerate(
             zip(self.guesses, self.responses, strict=False)
         ):
-            turn_str = f"Turn {i+1}: {guess.suspect.value}, {guess.weapon.value}, {guess.room.value}"
-            response_str = f"Response: {response.responding_player if response.responding_player else 'No card shown'}"
+            turn_str = f"Turn {i + 1}: {guess.suspect.value}, {guess.weapon.value}, {
+                guess.room.value
+            }"
+            response_str = f"Response: {
+                response.responding_player
+                if response.responding_player
+                else 'No card shown'
+            }"
             lines.append(f"{turn_str} | {response_str}")
 
         return "\n".join(lines) if lines else "No guesses yet."

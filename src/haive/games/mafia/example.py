@@ -22,17 +22,20 @@ Example:
 """
 
 # Standard library imports
+
+import argparse
 import logging
 import time
 import traceback
 import uuid
 
-# Local imports
 from haive.games.mafia.agent import MafiaAgent
 from haive.games.mafia.config import MafiaAgentConfig, aug_llm_configs
 from haive.games.mafia.models import GamePhase
 from haive.games.mafia.state import MafiaGameState
 from haive.games.mafia.state_manager import MafiaStateManager
+
+# Local imports
 
 # Third-party imports
 
@@ -95,7 +98,7 @@ def run_mafia_game(
         agent = MafiaAgent(config)
 
         # Generate player names
-        player_names = [f"Player_{i+1}" for i in range(player_count - 1)]
+        player_names = [f"Player_{i + 1}" for i in range(player_count - 1)]
         player_names.append("Narrator")  # Add narrator as the last player
 
         # Dump engine keys for debugging
@@ -103,7 +106,9 @@ def run_mafia_game(
             logger.debug("🔧 Available Engines in Agent:")
             for key, value in agent.engines.items():
                 logger.debug(
-                    f"  {key}: {list(value.keys()) if isinstance(value, dict) else 'None'}"
+                    f"  {key}: {
+                        list(value.keys()) if isinstance(value, dict) else 'None'
+                    }"
                 )
 
             logger.debug("🔑 Role to Engine Mapping:")
@@ -185,7 +190,8 @@ def run_mafia_game(
                     # Convert dict to MafiaGameState for visualization
                     try:
                         if isinstance(step, dict) and "players" in step:
-                            # Create a MafiaGameState from the dict for visualization
+                            # Create a MafiaGameState from the dict for
+                            # visualization
                             state_for_viz = MafiaGameState.model_validate(step)
                             agent.visualize_state(state_for_viz)
                         else:
@@ -265,7 +271,6 @@ def run_mafia_game(
 
 def main():
     """Main entry point for command-line execution."""
-    import argparse
 
     parser = argparse.ArgumentParser(description="Run a Mafia game simulation")
     parser.add_argument(

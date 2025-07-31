@@ -19,19 +19,17 @@ Example:
 """
 
 import logging
-from typing import Any
 
 from haive.core.engine.agent.agent import Agent, register_agent
 from langgraph.constants import END, START
 from langgraph.types import Command
 
+from haive.games.go import go_engine as sente
 from haive.games.go.config import GoAgentConfig
 from haive.games.go.state import GoGameState
 from haive.games.go.state_manager import GoGameStateManager
 
 logger = logging.getLogger(__name__)
-
-from haive.games.go import go_engine as sente
 
 
 @register_agent(GoAgentConfig)
@@ -329,7 +327,8 @@ def run_go_game(agent: GoAgent) -> None:
     # ✅ Initialize the game state
     initial_state = {
         "board_size": 19,
-        "board_sgf": sente.sgf.dumps(sente.Game(19)),  # Start with an empty board
+        # Start with an empty board
+        "board_sgf": sente.sgf.dumps(sente.Game(19)),
         "turn": "black",
         "move_history": [],
         "captured_stones": {"black": 0, "white": 0},

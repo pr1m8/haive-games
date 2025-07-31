@@ -5,6 +5,7 @@ Monopoly games unfold in real-time using Rich.
 """
 
 import time
+import traceback
 
 from rich.align import Align
 from rich.box import SIMPLE
@@ -18,6 +19,7 @@ from rich.text import Text
 from haive.games.monopoly.config import MonopolyGameAgentConfig
 from haive.games.monopoly.main_agent import MonopolyAgent
 from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import get_property_at_position
 
 
 class MonopolyRichUI:
@@ -280,7 +282,6 @@ class MonopolyRichUI:
 
     def _get_position_name(self, position: int) -> str:
         """Get the name of a board position."""
-        from haive.games.monopoly.utils import get_property_at_position
 
         pos_data = get_property_at_position(position)
         if pos_data:
@@ -340,7 +341,6 @@ class MonopolyRichUI:
 
         except Exception as e:
             self.console.print(f"\n[bold red]Error during game: {e!s}[/bold red]")
-            import traceback
 
             self.console.print(traceback.format_exc())
 

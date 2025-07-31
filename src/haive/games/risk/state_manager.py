@@ -283,7 +283,8 @@ class RiskStateManager(BaseModel):
             if card not in player.cards:
                 raise ValueError(f"Player {move.player} does not have {card}")
 
-        # Check if the set is valid (3 of a kind, 1 of each, or includes a wild)
+        # Check if the set is valid (3 of a kind, 1 of each, or includes a
+        # wild)
         card_types = [card.card_type for card in move.cards]
         has_wild = CardType.WILD in card_types
 
@@ -319,7 +320,8 @@ class RiskStateManager(BaseModel):
         if self.state.phase == PhaseType.SETUP and player.unplaced_armies == 0:
             self._advance_to_next_player()
 
-        # If all players have placed initial armies, transition to reinforcement phase
+        # If all players have placed initial armies, transition to
+        # reinforcement phase
         if self.state.phase == PhaseType.SETUP and all(
             p.unplaced_armies == 0 for p in self.state.players.values()
         ):
@@ -391,7 +393,8 @@ class RiskStateManager(BaseModel):
 
                 # Force attacker to trade cards if they have too many
                 if len(self.state.players[move.player].cards) >= 5:
-                    # This would trigger a card trade prompt in a real implementation
+                    # This would trigger a card trade prompt in a real
+                    # implementation
                     pass
 
     def _apply_fortify(self, move: RiskMove) -> None:

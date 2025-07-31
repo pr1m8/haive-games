@@ -14,6 +14,7 @@ from haive.core.models.llm.base import (
     LLMConfig,
     OpenAILLMConfig,
 )
+from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 
@@ -123,7 +124,6 @@ def create_test_engines_simple(
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of test engines
     """
-    from langchain_core.prompts import ChatPromptTemplate
 
     # Simple prompt template for testing
     test_prompt = ChatPromptTemplate.from_messages(
@@ -238,7 +238,6 @@ def test_basic_game_structure(
         bool: True if test passed
     """
     try:
-
         # Create engines
         engines = create_engines_func()
 

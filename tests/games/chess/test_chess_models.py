@@ -4,8 +4,8 @@ This module tests the Pydantic models used in the chess game,
 including move validation, position analysis, and game state tracking.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.chess.models import (
     ChessAnalysisResult,

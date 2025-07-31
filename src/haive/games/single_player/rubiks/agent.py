@@ -221,7 +221,7 @@ Moves: {state.move_count + 1}"""
 You solved the Rubik's Cube in {state.move_count} moves!
 
 Difficulty: {self.config.difficulty}
-Move sequence: {' '.join(state.move_history)}
+Move sequence: {" ".join(state.move_history)}
 
 Type 'reset' for a new game or 'quit' to exit."""
                         )

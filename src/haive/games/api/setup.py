@@ -4,12 +4,17 @@ This module provides utilities for setting up game APIs using the
 standardized GameAPI system from haive-dataflow.
 """
 
-from typing import Any, Dict, Optional, Type
+from typing import Any
 
+import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from haive.core.engine.agent.agent import Agent
 from haive.dataflow.api.game_api import GameAPI
 from pydantic import BaseModel, Field
+
+from haive.games.connect4.agent import Connect4Agent
+from haive.games.tic_tac_toe.agent import TicTacToeAgent
 
 
 class GameAPIConfig(BaseModel):
@@ -22,15 +27,15 @@ class GameAPIConfig(BaseModel):
     )
     enable_cors: bool = Field(default=True, description="Enable CORS middleware")
     cors_origins: list[str] = Field(default=["*"], description="Allowed CORS origins")
-    default_config_overrides: Optional[Dict[str, Any]] = Field(
+    default_config_overrides: dict[str, Any] | None = Field(
         default=None, description="Default configuration overrides for game instances"
     )
 
 
 def create_game_api(
     app: FastAPI,
-    agent_class: Type[Agent],
-    api_config: Optional[GameAPIConfig] = None,
+    agent_class: type[Agent],
+    api_config: GameAPIConfig | None = None,
     **kwargs,
 ) -> GameAPI:
     """Create a game API with the standardized system.
@@ -67,8 +72,6 @@ def create_game_api(
 
     # Enable CORS if requested
     if api_config.enable_cors:
-        from fastapi.middleware.cors import CORSMiddleware
-
         app.add_middleware(
             CORSMiddleware,
             allow_origins=api_config.cors_origins,
@@ -84,7 +87,7 @@ def create_game_api(
 
 
 def create_chess_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Chess game API.
 
@@ -107,7 +110,8 @@ def create_chess_api(
         ...     }
         ... )
     """
-    # from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
+    # from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not
+    # implemented
 
     api_config = GameAPIConfig(
         app_name="Chess",
@@ -120,7 +124,7 @@ def create_chess_api(
 
 
 def create_connect4_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Connect4 game API.
 
@@ -143,7 +147,6 @@ def create_connect4_api(
         ...     }
         ... )
     """
-    from haive.games.connect4.agent import Connect4Agent
 
     api_config = GameAPIConfig(
         app_name="Connect4",
@@ -156,7 +159,7 @@ def create_connect4_api(
 
 
 def create_tic_tac_toe_api(
-    app: FastAPI, config_overrides: Optional[Dict[str, Any]] = None, **kwargs
+    app: FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs
 ) -> GameAPI:
     """Create a Tic-Tac-Toe game API.
 
@@ -179,7 +182,6 @@ def create_tic_tac_toe_api(
         ...     }
         ... )
     """
-    from haive.games.tic_tac_toe.agent import TicTacToeAgent
 
     api_config = GameAPIConfig(
         app_name="TicTacToe",
@@ -193,8 +195,6 @@ def create_tic_tac_toe_api(
 
 # Example usage script
 if __name__ == "__main__":
-    import uvicorn
-
     # Create FastAPI app
     app = FastAPI(title="Haive Games API")
 

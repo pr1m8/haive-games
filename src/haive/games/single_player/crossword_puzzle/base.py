@@ -2,17 +2,12 @@ from __future__ import annotations
 
 import uuid
 from enum import Enum
-from typing import (
-    Literal,
-)
+from typing import Literal
+
+from game_framework_base import Game, GridPosition, GridSpace
+from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
 # Import from our base framework
-from game_framework_base import (
-    Game,
-    GridPosition,
-    GridSpace,
-)
-from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 
 # ======================================================
 # CROSSWORD TYPES AND CONSTANTS

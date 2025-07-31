@@ -352,7 +352,9 @@ class ReversiAgent(GameAgent[ReversiConfig]):
                 game_state.player_B if winner_symbol == "B" else game_state.player_W
             )
             print(
-                f"🏆 Winner: {winner_symbol} ({'Black' if winner_symbol == 'B' else 'White'} - {winner_player})"
+                f"🏆 Winner: {winner_symbol} ({
+                    'Black' if winner_symbol == 'B' else 'White'
+                } - {winner_player})"
             )
 
         # Print disc count
@@ -379,10 +381,14 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             print("\n🔍 Previous Player's Analysis:")
             print(f"Position evaluation: {last_analysis['position_evaluation']}")
             print(
-                f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}"
+                f"Mobility: {last_analysis['mobility']}, Corner discs: {
+                    last_analysis['corner_discs']
+                }"
             )
             print(
-                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}"
+                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {
+                    last_analysis['frontier_discs']
+                }"
             )
             print(f"Positional score: {last_analysis['positional_score']}")
             print(f"Strategy: {last_analysis['strategy']}")
@@ -397,10 +403,14 @@ class ReversiAgent(GameAgent[ReversiConfig]):
             print("\n🔍 Previous Player's Analysis:")
             print(f"Position evaluation: {last_analysis['position_evaluation']}")
             print(
-                f"Mobility: {last_analysis['mobility']}, Corner discs: {last_analysis['corner_discs']}"
+                f"Mobility: {last_analysis['mobility']}, Corner discs: {
+                    last_analysis['corner_discs']
+                }"
             )
             print(
-                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {last_analysis['frontier_discs']}"
+                f"Stable discs: {last_analysis['stable_discs']}, Frontier discs: {
+                    last_analysis['frontier_discs']
+                }"
             )
             print(f"Positional score: {last_analysis['positional_score']}")
             print(f"Strategy: {last_analysis['strategy']}")

@@ -7,14 +7,18 @@ This module provides the corrected main agent implementation that:
 """
 
 # Standard library imports
+
 import logging
+from datetime import datetime
 from typing import Any
 
-# Local imports
 from haive.core.engine.agent.agent import Agent, register_agent
 
 from haive.games.monopoly.config import MonopolyGameAgentConfig
+from haive.games.monopoly.game_agent import MonopolyGameAgent, MonopolyGameAgentConfig
 from haive.games.monopoly.state import MonopolyState
+
+# Local imports
 
 logger = logging.getLogger(__name__)
 
@@ -61,10 +65,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         properly.
         """
         # Import the game agent here to avoid circular dependency
-        from haive.games.monopoly.game_agent import (
-            MonopolyGameAgent,
-            MonopolyGameAgentConfig,
-        )
 
         # Create game agent config with the player agent reference
         game_config = MonopolyGameAgentConfig(
@@ -107,7 +107,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
             return final_state
 
         except Exception:
-
             raise
 
     def _display_final_results(self, final_state: MonopolyState) -> None:
@@ -126,7 +125,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         players_by_worth.sort(key=lambda x: x[1], reverse=True)
 
         for i, (name, net_worth, _money, _prop_count) in enumerate(players_by_worth):
-            "👑" if name == final_state.winner else f"{i+1}."
+            "👑" if name == final_state.winner else f"{i + 1}."
 
         # Display bankrupted players
         bankrupt_players = [p for p in final_state.players if p.bankrupt]
@@ -148,7 +147,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
     def save_game_history(self, filename: str | None = None) -> None:
         """Save game history to a file."""
         if filename is None:
-            from datetime import datetime
 
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"monopoly_game_{timestamp}.json"

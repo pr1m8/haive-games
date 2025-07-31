@@ -18,13 +18,14 @@ Typical usage:
 
 from typing import Any, Generic, TypeVar
 
-# from haive.games.framework.base.state import GameState
 from haive.core.engine.agent.agent import Agent
 from langgraph.graph import END, START
 from langgraph.types import Command
 from pydantic import BaseModel
 
 from haive.games.framework.base.config import GameConfig
+
+# from haive.games.framework.base.state import GameState
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -441,7 +442,6 @@ Typical usage:
     - Monitor game progress through visualization and status updates
 """
 
-from typing import Any
 
 # from .agent import GameAgent
 

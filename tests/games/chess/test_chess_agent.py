@@ -5,8 +5,8 @@ move generation, and game flow management.
 """
 
 import pytest
-from haive.core.engine.aug_llm import AugLLMConfig
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.games.chess.agent import ChessAgent
 from haive.games.chess.config import ChessConfig
 from haive.games.chess.state import ChessState

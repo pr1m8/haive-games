@@ -5,6 +5,8 @@ that supports configurable player agents instead of hardcoded engine
 configurations.
 """
 
+from typing import Any
+
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
@@ -16,9 +18,7 @@ from haive.games.connect4.generic_engines import (
     create_generic_connect4_engines_simple,
 )
 from haive.games.connect4.state import Connect4State
-from haive.games.core.agent.player_agent import (
-    PlayerAgentConfig,
-)
+from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 
 class ConfigurableConnect4Config(AgentConfig):

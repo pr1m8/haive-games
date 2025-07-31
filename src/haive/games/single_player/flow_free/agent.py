@@ -247,7 +247,9 @@ class FlowFreeAgent(SinglePlayerGameAgent):
             board_panel = Panel(
                 table,
                 title=f"Flow Free [{game_state.rows}x{game_state.cols}]",
-                subtitle=f"Moves: {game_state.move_count} | Hints: {game_state.hint_count}",
+                subtitle=f"Moves: {game_state.move_count} | Hints: {
+                    game_state.hint_count
+                }",
                 border_style="green" if game_state.game_status == "victory" else "blue",
             )
 

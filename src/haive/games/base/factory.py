@@ -142,21 +142,21 @@ class GameAgentFactory:
         )
 
         # Define methods for the agent class
-        def __init__(self, config: Dict[str, Any]):
+        def __init__(self, config: dict[str, Any]):
             # Initialize as GameAgent
             GameAgent.__init__(self, config)
             self.state_manager = state_manager
 
-        def make_player1_move(self, state: Dict[str, Any]):
+        def make_player1_move(self, state: dict[str, Any]):
             return self.make_move(state, player1_name)
 
-        def make_player2_move(self, state: Dict[str, Any]):
+        def make_player2_move(self, state: dict[str, Any]):
             return self.make_move(state, player2_name)
 
-        def analyze_player1(self, state: Dict[str, Any]):
+        def analyze_player1(self, state: dict[str, Any]):
             return self.analyze_position(state, player1_name)
 
-        def analyze_player2(self, state: Dict[str, Any]):
+        def analyze_player2(self, state: dict[str, Any]):
             return self.analyze_position(state, player2_name)
 
         def setup_workflow(self) -> None:

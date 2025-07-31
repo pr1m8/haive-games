@@ -144,7 +144,7 @@ class WordConnectionsState(GameState):
         if self.incorrect_attempts:
             display += "\nIncorrect Attempts:\n"
             for i, attempt in enumerate(self.incorrect_attempts):
-                display += f"{i+1}. {', '.join(attempt)}\n"
+                display += f"{i + 1}. {', '.join(attempt)}\n"
 
         # Add attempts information
         display += f"\nIncorrect submissions: {self.incorrect_submissions}/4"

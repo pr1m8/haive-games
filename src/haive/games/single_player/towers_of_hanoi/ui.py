@@ -132,7 +132,9 @@ class HanoiUI:
         for i, move in enumerate(self.game.moves[-5:], 1):
             move_num = len(self.game.moves) - 5 + i
             lines.append(
-                f"{move_num}. Move disk {move['disk']} from peg {move['from_peg']} to peg {move['to_peg']}"
+                f"{move_num}. Move disk {move['disk']} from peg {
+                    move['from_peg']
+                } to peg {move['to_peg']}"
             )
 
         return "\n".join(lines)
@@ -159,7 +161,9 @@ class HanoiUI:
         console.print("\n[yellow]Valid moves:[/yellow]")
         for i, move in enumerate(valid_moves, 1):
             console.print(
-                f"{i}. Move disk {move['disk']} from peg {move['from_peg']} to peg {move['to_peg']}"
+                f"{i}. Move disk {move['disk']} from peg {move['from_peg']} to peg {
+                    move['to_peg']
+                }"
             )
 
         choice = IntPrompt.ask(

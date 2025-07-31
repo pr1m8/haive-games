@@ -36,9 +36,9 @@ Examples:
             expertise=["AI ethics", "technology policy"]
         )
 """
+
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -119,7 +119,7 @@ class Statement(BaseModel):
         examples=["pro_debater_1", "con_debater_2", "moderator", "judge_1"],
     )
 
-    target_id: Optional[str] = Field(
+    target_id: str | None = Field(
         None,
         description="ID of targeted participant for directed statements or questions",
         examples=["pro_debater_1", "con_debater_2", None],
@@ -140,7 +140,7 @@ class Statement(BaseModel):
         ],
     )
 
-    references: List[str] = Field(
+    references: list[str] = Field(
         default_factory=list,
         description="Citations, sources, or evidence supporting the statement",
         examples=[
@@ -150,7 +150,7 @@ class Statement(BaseModel):
         ],
     )
 
-    sentiment: Optional[float] = Field(
+    sentiment: float | None = Field(
         None,
         ge=-1.0,
         le=1.0,
@@ -285,7 +285,7 @@ class Topic(BaseModel):
         ],
     )
 
-    keywords: List[str] = Field(
+    keywords: list[str] = Field(
         default_factory=list,
         description="Key terms, concepts, and research areas related to the topic",
         examples=[
@@ -300,7 +300,7 @@ class Topic(BaseModel):
         ],
     )
 
-    constraints: Optional[Dict[str, str]] = Field(
+    constraints: dict[str, str] | None = Field(
         None,
         description="Format-specific rules, time limits, or debate constraints",
         examples=[
@@ -335,7 +335,7 @@ class Topic(BaseModel):
 
     @field_validator("keywords")
     @classmethod
-    def validate_keywords(cls, v: List[str]) -> List[str]:
+    def validate_keywords(cls, v: list[str]) -> list[str]:
         """Validate and clean keyword list.
 
         Args:
@@ -457,13 +457,13 @@ class Participant(BaseModel):
         ],
     )
 
-    position: Optional[str] = Field(
+    position: str | None = Field(
         None,
         description="Stance on the debate topic (pro supports, con opposes, neutral abstains)",
         examples=["pro", "con", "neutral", None],
     )
 
-    persona: Optional[Dict[str, str]] = Field(
+    persona: dict[str, str] | None = Field(
         None,
         description="Personality traits, debating style, and behavioral characteristics",
         examples=[
@@ -481,7 +481,7 @@ class Participant(BaseModel):
         ],
     )
 
-    expertise: List[str] = Field(
+    expertise: list[str] = Field(
         default_factory=list,
         description="Subject matter areas where participant has knowledge or credentials",
         examples=[
@@ -491,7 +491,7 @@ class Participant(BaseModel):
         ],
     )
 
-    bias: Optional[float] = Field(
+    bias: float | None = Field(
         None,
         ge=-1.0,
         le=1.0,
@@ -528,7 +528,7 @@ class Participant(BaseModel):
 
     @field_validator("position")
     @classmethod
-    def validate_position(cls, v: Optional[str]) -> Optional[str]:
+    def validate_position(cls, v: str | None) -> str | None:
         """Validate debate position if provided.
 
         Args:
@@ -617,13 +617,13 @@ class Vote(BaseModel):
         examples=["judge_1", "audience_member_3", "moderator", "pro_debater_1"],
     )
 
-    vote_value: Union[str, int, float] = Field(
+    vote_value: str | int | float = Field(
         ...,
         description="The actual vote value: binary (yes/no), categorical (pro/con), or numeric (1-10)",
         examples=["pro", "con", "abstain", "yes", "no", 1, 2, 5, 8, 10, 7.5, 8.2, 9.1],
     )
 
-    target_id: Optional[str] = Field(
+    target_id: str | None = Field(
         None,
         description="Identifier of what/who is being voted on (topic, participant, statement)",
         examples=[
@@ -635,7 +635,7 @@ class Vote(BaseModel):
         ],
     )
 
-    reason: Optional[str] = Field(
+    reason: str | None = Field(
         None,
         max_length=1000,
         description="Explanation, justification, or commentary supporting the vote decision",
@@ -649,7 +649,7 @@ class Vote(BaseModel):
 
     @field_validator("vote_value")
     @classmethod
-    def validate_vote_value(cls, v: Union[str, int, float]) -> Union[str, int, float]:
+    def validate_vote_value(cls, v: str | int | float) -> str | int | float:
         """Validate vote value is reasonable.
 
         Args:
@@ -751,7 +751,7 @@ class DebatePhase(str, Enum):
     CONCLUSION = "conclusion"  #: Final wrap-up, analysis, and documentation
 
     @classmethod
-    def get_parliamentary_flow(cls) -> List["DebatePhase"]:
+    def get_parliamentary_flow(cls) -> list["DebatePhase"]:
         """Get standard parliamentary debate phase sequence.
 
         Returns:
@@ -766,7 +766,7 @@ class DebatePhase(str, Enum):
         ]
 
     @classmethod
-    def get_oxford_flow(cls) -> List["DebatePhase"]:
+    def get_oxford_flow(cls) -> list["DebatePhase"]:
         """Get standard Oxford-style debate phase sequence.
 
         Returns:
@@ -783,7 +783,7 @@ class DebatePhase(str, Enum):
         ]
 
     @classmethod
-    def get_lincoln_douglas_flow(cls) -> List["DebatePhase"]:
+    def get_lincoln_douglas_flow(cls) -> list["DebatePhase"]:
         """Get standard Lincoln-Douglas debate phase sequence.
 
         Returns:
@@ -821,7 +821,7 @@ class DebateAnalysis(BaseModel):
         recommendations (List[str]): Suggestions for future debates.
     """
 
-    participant_scores: Dict[str, float] = Field(
+    participant_scores: dict[str, float] = Field(
         default_factory=dict,
         description="Individual performance scores by participant ID (0.0-10.0)",
         examples=[{"pro_debater_1": 8.5, "con_debater_1": 7.2, "moderator": 9.0}],
@@ -859,13 +859,13 @@ class DebateAnalysis(BaseModel):
         examples=[7.8, 8.5, 6.2],
     )
 
-    winner: Optional[str] = Field(
+    winner: str | None = Field(
         None,
         description="Determined winner of the debate (participant ID or side)",
         examples=["pro_debater_1", "con_side", "draw", None],
     )
 
-    key_arguments: List[str] = Field(
+    key_arguments: list[str] = Field(
         default_factory=list,
         description="Most significant or impactful arguments presented",
         examples=[
@@ -880,7 +880,7 @@ class DebateAnalysis(BaseModel):
         ],
     )
 
-    strengths: List[str] = Field(
+    strengths: list[str] = Field(
         default_factory=list,
         description="Notable strengths demonstrated in the debate",
         examples=[
@@ -897,7 +897,7 @@ class DebateAnalysis(BaseModel):
         ],
     )
 
-    weaknesses: List[str] = Field(
+    weaknesses: list[str] = Field(
         default_factory=list,
         description="Areas needing improvement or weaknesses observed",
         examples=[
@@ -906,7 +906,7 @@ class DebateAnalysis(BaseModel):
         ],
     )
 
-    recommendations: List[str] = Field(
+    recommendations: list[str] = Field(
         default_factory=list,
         description="Suggestions for improvement in future debates",
         examples=[

@@ -49,12 +49,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean, stdev
-from typing import Any, Dict, Optional
-
-# Add the package to the path if running directly
-if __name__ == "__main__":
-    package_root = Path(__file__).parent.parent.parent.parent
-    sys.path.insert(0, str(package_root))
+from typing import Any
 
 from rich.console import Console
 from rich.layout import Layout
@@ -74,6 +69,12 @@ from haive.games.connect4.models import Connect4Analysis, Connect4Move
 from haive.games.connect4.state_manager import Connect4StateManager
 from haive.games.connect4.ui import Connect4UI
 
+# Add the package to the path if running directly
+if __name__ == "__main__":
+    package_root = Path(__file__).parent.parent.parent.parent
+    sys.path.insert(0, str(package_root))
+
+
 # Initialize Rich console for beautiful output
 console = Console()
 
@@ -90,7 +91,7 @@ logger = logging.getLogger(__name__)
 class GameResult:
     """Data class to store game results."""
 
-    winner: Optional[str]
+    winner: str | None
     moves: int
     duration: float
     status: str
@@ -148,7 +149,9 @@ def example_1_basic_game():
         for i, move in enumerate(moves):
             current_player = "red" if i % 2 == 0 else "yellow"
             console.print(
-                f"\n[{current_player}]{current_player.upper()} plays: {move}[/{current_player}]"
+                f"\n[{current_player}]{current_player.upper()} plays: {move}[/{
+                    current_player
+                }]"
             )
 
             # Show move
@@ -261,7 +264,9 @@ def example_2_rich_ui_game():
 
             # Show thinking animation
             console.print(
-                f"\n[{current_player}]{current_player.upper()} is thinking...[/{current_player}]"
+                f"\n[{current_player}]{current_player.upper()} is thinking...[/{
+                    current_player
+                }]"
             )
             ui.show_thinking(current_player)
             time.sleep(1.5)
@@ -289,7 +294,9 @@ def example_2_rich_ui_game():
 
             # Show move
             console.print(
-                f"\n[{current_player}]{current_player.upper()} plays: {move}[/{current_player}]"
+                f"\n[{current_player}]{current_player.upper()} plays: {move}[/{
+                    current_player
+                }]"
             )
             ui.show_move(move, current_player)
             time.sleep(0.8)
@@ -417,7 +424,7 @@ def example_3_strategic_analysis():
             for i, move in enumerate(scenario["moves"]):
                 current_player = "red" if i % 2 == 0 else "yellow"
                 console.print(
-                    f"[{current_player}]Move {i+1}: {move}[/{current_player}]"
+                    f"[{current_player}]Move {i + 1}: {move}[/{current_player}]"
                 )
                 demo_state = Connect4StateManager.apply_move(demo_state, move)
 
@@ -459,7 +466,9 @@ def example_3_strategic_analysis():
                 (
                     "Excellent"
                     if analysis.center_control >= 8
-                    else "Good" if analysis.center_control >= 6 else "Fair"
+                    else "Good"
+                    if analysis.center_control >= 6
+                    else "Fair"
                 ),
             )
             scores_table.add_row(
@@ -468,7 +477,9 @@ def example_3_strategic_analysis():
                 (
                     "Strong"
                     if analysis.winning_chances >= 70
-                    else "Favorable" if analysis.winning_chances >= 55 else "Even"
+                    else "Favorable"
+                    if analysis.winning_chances >= 55
+                    else "Even"
                 ),
             )
 
@@ -608,7 +619,6 @@ def example_4_performance_testing():
             TimeRemainingColumn(),
             console=console,
         ) as progress:
-
             for config_name, config in configs:
                 console.print(
                     f"\n[yellow]Testing configuration: {config_name}[/yellow]"
@@ -635,7 +645,9 @@ def example_4_performance_testing():
                     for j, col in enumerate(test_moves):
                         if state.game_status != "ongoing":
                             break
-                        move = Connect4Move(column=col, explanation=f"Test move {j+1}")
+                        move = Connect4Move(
+                            column=col, explanation=f"Test move {j + 1}"
+                        )
                         state = Connect4StateManager.apply_move(state, move)
 
                     duration = time.time() - start_time
@@ -708,8 +720,12 @@ def example_4_performance_testing():
 
         insights = [
             f"Analysis adds ~{overhead:.1f}% overhead to game execution",
-            f"Basic configuration processes {basic_result['games_per_second']:.1f} games/second",
-            f"Analysis configuration processes {analysis_result['games_per_second']:.1f} games/second",
+            f"Basic configuration processes {
+                basic_result['games_per_second']:.1f
+            } games/second",
+            f"Analysis configuration processes {
+                analysis_result['games_per_second']:.1f
+            } games/second",
             "Consider disabling analysis for high-throughput scenarios",
         ]
 
@@ -778,7 +794,9 @@ def example_5_error_handling():
             for i in range(6):
                 move = Connect4Move(column=0, explanation=f"Fill row {i}")
                 state = Connect4StateManager.apply_move(state, move)
-                console.print(f"[green]Move {i+1}: Placed piece at row {5-i}[/green]")
+                console.print(
+                    f"[green]Move {i + 1}: Placed piece at row {5 - i}[/green]"
+                )
 
             # Display full column
             ui.display_state(state)
@@ -802,9 +820,9 @@ def example_5_error_handling():
             assert state.turn == "red", "Initial turn should be red"
             assert state.game_status == "ongoing", "Initial status should be ongoing"
             assert len(state.move_history) == 0, "Initial history should be empty"
-            assert all(
-                all(cell is None for cell in row) for row in state.board
-            ), "Initial board should be empty"
+            assert all(all(cell is None for cell in row) for row in state.board), (
+                "Initial board should be empty"
+            )
 
             console.print("[green]✓ Initial state consistency verified[/green]")
 
@@ -835,7 +853,7 @@ def example_5_error_handling():
 
             for i, config in enumerate(valid_configs):
                 Connect4Agent(config)
-                console.print(f"[green]✓ Config {i+1} valid: {config.name}[/green]")
+                console.print(f"[green]✓ Config {i + 1} valid: {config.name}[/green]")
 
         except Exception as e:
             console.print(f"[red]✗ Configuration validation failed: {e}[/red]")
@@ -949,7 +967,6 @@ def example_6_tournament_mode():
             TimeRemainingColumn(),
             console=console,
         ) as progress:
-
             for strategy_name, config in strategies:
                 console.print(f"\n[cyan]Testing strategy: {strategy_name}[/cyan]")
 
@@ -984,14 +1001,14 @@ def example_6_tournament_mode():
                         if state.game_status != "ongoing":
                             break
                         move = Connect4Move(
-                            column=col, explanation=f"Opening move {i+1}"
+                            column=col, explanation=f"Opening move {i + 1}"
                         )
                         state = Connect4StateManager.apply_move(state, move)
 
                     duration = time.time() - start_time
 
                     # Collect detailed game statistics
-                    column_usage = {i: 0 for i in range(7)}
+                    column_usage = dict.fromkeys(range(7), 0)
                     for move in state.move_history:
                         column_usage[move.column] += 1
 
@@ -1200,7 +1217,7 @@ def example_7_custom_ai_configuration():
         # Demonstrate each configuration
         for i, custom in enumerate(custom_configs):
             console.print(
-                f"\n[bold cyan]Configuration {i+1}: {custom['name']}[/bold cyan]"
+                f"\n[bold cyan]Configuration {i + 1}: {custom['name']}[/bold cyan]"
             )
             console.print(f"[dim]{custom['description']}[/dim]")
 
@@ -1256,7 +1273,7 @@ def example_7_custom_ai_configuration():
             for j, col in enumerate(quick_moves):
                 if state.game_status != "ongoing":
                     break
-                move = Connect4Move(column=col, explanation=f"Test move {j+1}")
+                move = Connect4Move(column=col, explanation=f"Test move {j + 1}")
                 state = Connect4StateManager.apply_move(state, move)
 
             duration = time.time() - start_time
@@ -1292,7 +1309,7 @@ def example_7_custom_ai_configuration():
             "Tournament play",
         ]
 
-        for custom, use_case in zip(custom_configs, use_cases):
+        for custom, use_case in zip(custom_configs, use_cases, strict=False):
             config = custom["config"]
             comparison_table.add_row(
                 custom["name"],
@@ -1361,7 +1378,7 @@ async def example_8_async_batch_processing():
 
         async def run_single_game(
             game_id: int, config: Connect4AgentConfig
-        ) -> Dict[str, Any]:
+        ) -> dict[str, Any]:
             """Run a single game asynchronously."""
             start_time = time.time()
 
@@ -1383,7 +1400,7 @@ async def example_8_async_batch_processing():
                 if state.game_status != "ongoing":
                     break
 
-                move = Connect4Move(column=col, explanation=f"Async move {i+1}")
+                move = Connect4Move(column=col, explanation=f"Async move {i + 1}")
                 state = Connect4StateManager.apply_move(state, move)
 
                 # Simulate some processing time
@@ -1425,7 +1442,6 @@ async def example_8_async_batch_processing():
                 TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
                 console=console,
             ) as progress:
-
                 batch_task = progress.add_task(
                     f"Processing batch of {batch_size} games...", total=batch_size
                 )
@@ -1463,10 +1479,14 @@ async def example_8_async_batch_processing():
             # Display batch results
             console.print(f"[green]Batch completed in {batch_duration:.3f}s[/green]")
             console.print(
-                f"[blue]Throughput: {batch_size / batch_duration:.2f} games/second[/blue]"
+                f"[blue]Throughput: {
+                    batch_size / batch_duration:.2f
+                } games/second[/blue]"
             )
             console.print(
-                f"[magenta]Concurrency efficiency: {batch_analysis['concurrency_efficiency']:.1f}%[/magenta]"
+                f"[magenta]Concurrency efficiency: {
+                    batch_analysis['concurrency_efficiency']:.1f
+                }%[/magenta]"
             )
 
         # Comprehensive batch analysis
@@ -1509,7 +1529,9 @@ async def example_8_async_batch_processing():
                 scaling_efficiency = (throughput_ratio / size_ratio) * 100
 
                 scaling_insights.append(
-                    f"Batch size {result['batch_size']}: {scaling_efficiency:.1f}% scaling efficiency"
+                    f"Batch size {result['batch_size']}: {
+                        scaling_efficiency:.1f
+                    }% scaling efficiency"
                 )
 
             # Performance insights
@@ -1520,8 +1542,12 @@ async def example_8_async_batch_processing():
 
             scaling_insights.extend(
                 [
-                    f"Best throughput: {best_throughput['games_per_second']:.2f} games/s at batch size {best_throughput['batch_size']}",
-                    f"Best efficiency: {best_efficiency['concurrency_efficiency']:.1f}% at batch size {best_efficiency['batch_size']}",
+                    f"Best throughput: {
+                        best_throughput['games_per_second']:.2f
+                    } games/s at batch size {best_throughput['batch_size']}",
+                    f"Best efficiency: {
+                        best_efficiency['concurrency_efficiency']:.1f
+                    }% at batch size {best_efficiency['batch_size']}",
                     "Async processing provides significant performance benefits",
                     "Larger batches show economies of scale up to optimal size",
                 ]
@@ -1615,7 +1641,7 @@ def main():
             Panel.fit(
                 f"[bold green]Examples Complete[/bold green]\n"
                 f"Successfully completed: {successful}/{total} examples\n"
-                f"Success rate: {(successful/total)*100:.1f}%\n"
+                f"Success rate: {(successful / total) * 100:.1f}%\n"
                 "\nConnect4 module demonstration complete!",
                 border_style="green",
             )

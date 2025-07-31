@@ -1,5 +1,7 @@
 # among_us_ui.py
 
+import math
+
 from rich import box
 from rich.align import Align
 from rich.console import Console
@@ -604,7 +606,6 @@ class AmongUsUI:
             ]
 
         # For other maps or custom locations, create a balanced grid
-        import math
 
         cols = math.ceil(math.sqrt(len(locations)))
 
@@ -709,7 +710,9 @@ class AmongUsUI:
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             if state.reported_body:
-                footer_text = f"BODY REPORTED: {state.reported_body} was found by {state.meeting_caller}!"
+                footer_text = f"BODY REPORTED: {state.reported_body} was found by {
+                    state.meeting_caller
+                }!"
             else:
                 footer_text = f"EMERGENCY MEETING called by {state.meeting_caller}!"
 

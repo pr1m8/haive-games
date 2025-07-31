@@ -196,7 +196,8 @@ class TestConnect4EndToEndGameplay:
     def test_analysis_mode_integration(self):
         """Test integration with analysis mode."""
         config = Connect4AgentConfig(
-            name="analysis_test", enable_analysis=True  # Enable analysis
+            name="analysis_test",
+            enable_analysis=True,  # Enable analysis
         )
         agent = Connect4Agent(config)
 

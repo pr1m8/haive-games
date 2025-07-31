@@ -105,13 +105,7 @@ from .core_space import (
     remove_piece,
     set_property,
 )
-from .piece import (
-    GamePiece,
-    GamePieceProtocol,
-    assign_to_player,
-    can_move_to,
-    place_at,
-)
+from .piece import GamePiece, GamePieceProtocol, assign_to_player, can_move_to, place_at
 
 __all__ = [
     "Board",

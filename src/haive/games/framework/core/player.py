@@ -1,6 +1,8 @@
 # game_framework/core/player.py
+
 from __future__ import annotations
 
+import random
 import uuid
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
@@ -114,7 +116,6 @@ class RandomAIPlayer(AIPlayer[S, M]):
         Returns:
             A randomly selected valid move, or None if no valid moves
         """
-        import random
 
         if not valid_moves:
             return None
@@ -141,7 +142,6 @@ class RuleBasedAIPlayer(AIPlayer[S, M]):
         """
         # Subclasses should implement rule-based logic
         # Default implementation falls back to random
-        import random
 
         if not valid_moves:
             return None

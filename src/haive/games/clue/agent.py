@@ -340,7 +340,9 @@ class ClueAgent(GameAgent[ClueConfig]):
         # Only show solution if game is over
         if game_state.game_status != "ongoing":
             logger.info(
-                f"🔑 Solution: {game_state.solution.suspect.value}, {game_state.solution.weapon.value}, {game_state.solution.room.value}"
+                f"🔑 Solution: {game_state.solution.suspect.value}, {
+                    game_state.solution.weapon.value
+                }, {game_state.solution.room.value}"
             )
 
         logger.info("=" * 50)
@@ -443,9 +445,11 @@ class ClueAgent(GameAgent[ClueConfig]):
                     final_state = step
                     break
 
-                # Detect if we're stuck in an infinite loop by comparing with last state
+                # Detect if we're stuck in an infinite loop by comparing with
+                # last state
                 if last_state:
-                    # If we've seen the same guesses twice, we might be in a loop
+                    # If we've seen the same guesses twice, we might be in a
+                    # loop
                     if (
                         len(current_state.guesses) == len(last_state.guesses)
                         and len(current_state.guesses) > 0

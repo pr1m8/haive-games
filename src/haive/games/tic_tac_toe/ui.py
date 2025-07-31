@@ -5,6 +5,7 @@ games using the Rich library for enhanced terminal displays.
 """
 
 import time
+import traceback
 from typing import Any
 
 from rich import box
@@ -330,7 +331,6 @@ class RichTicTacToeRunner:
                 console=self.console,
                 refresh_per_second=4,
             ) as live:
-
                 step_count = 0
                 for step in self.agent.stream(initial_dict, stream_mode="values"):
                     step_count += 1
@@ -381,7 +381,9 @@ class RichTicTacToeRunner:
                         # Game is over, show final state longer
                         if debug:
                             self.console.print(
-                                f"[yellow]DEBUG: Game ended with status: {self.current_state.game_status}[/yellow]"
+                                f"[yellow]DEBUG: Game ended with status: {
+                                    self.current_state.game_status
+                                }[/yellow]"
                             )
                         time.sleep(step_delay * 2)
                         break
@@ -390,7 +392,6 @@ class RichTicTacToeRunner:
             self.console.print("\n[yellow]Game interrupted by user[/yellow]")
         except Exception as e:
             self.console.print(f"\n[red]Game error: {e}[/red]")
-            import traceback
 
             self.console.print(f"[dim]{traceback.format_exc()}[/dim]")
             final_state = self.current_state

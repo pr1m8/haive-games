@@ -1,15 +1,17 @@
 # Standard library imports
+
 import logging
 import time
 import uuid
 
-# Local imports
 from haive.core.engine.agent.persistence.postgres_config import (
     PostgresCheckpointerConfig,
 )
 
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
+
+# Local imports
 
 # Third-party imports
 

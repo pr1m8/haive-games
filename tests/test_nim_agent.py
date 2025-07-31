@@ -518,10 +518,10 @@ class TestNimAgentGameExecution:
             {"step": 3, "piles": [0, 0, 0]},
         ]
 
-        with patch.object(
-            agent, "stream", return_value=iter(mock_states)
-        ), patch.object(agent, "visualize_state") as mock_visualize:
-
+        with (
+            patch.object(agent, "stream", return_value=iter(mock_states)),
+            patch.object(agent, "visualize_state") as mock_visualize,
+        ):
             result = agent.run_game(visualize=True)
 
             # Should have visualized each state
@@ -560,10 +560,10 @@ class TestNimAgentGameExecution:
 
         mock_states = [{"final": "state"}]
 
-        with patch("haive.games.nim.agent.RICH_AVAILABLE", True), patch.object(
-            agent, "stream", return_value=iter(mock_states)
+        with (
+            patch("haive.games.nim.agent.RICH_AVAILABLE", True),
+            patch.object(agent, "stream", return_value=iter(mock_states)),
         ):
-
             # Run with analysis enabled
             agent.run_game_with_ui(show_analysis=True)
 

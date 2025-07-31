@@ -335,7 +335,9 @@ class MastermindFeedback(BaseModel):
                 feedback = MastermindFeedback(correct_position=2, correct_color=1)
                 print(feedback)  # "🌟 Correct position: 2, 🔄 Correct color: 1"
         """
-        return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {self.correct_color}"
+        return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {
+            self.correct_color
+        }"
 
     def is_winning(self) -> bool:
         """Check if this feedback indicates a winning guess.

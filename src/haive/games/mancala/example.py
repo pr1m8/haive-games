@@ -18,9 +18,14 @@ Options:
 import argparse
 import logging
 import traceback
+import uuid
 
+from haive.core.config.runnable import RunnableConfigManager
 from rich.console import Console
 from rich.panel import Panel
+
+from haive.games.mancala.agent import MancalaAgent
+from haive.games.mancala.config import MancalaConfig
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Run a Mancala game demo")
@@ -51,8 +56,6 @@ console.print(
 
 try:
     # Import the MancalaAgent
-    from haive.games.mancala.agent import MancalaAgent
-    from haive.games.mancala.config import MancalaConfig
 
     # Display configuration
     console.print("[bold]Game Configuration:[/bold]")
@@ -65,10 +68,6 @@ try:
     console.print()
 
     # Initialize the agent with configuration and increased recursion limit
-    import uuid
-
-    from haive.core.config.runnable import RunnableConfigManager
-    from langchain_core.runnables import RunnableConfig
 
     # Create a runnable config with higher recursion limit
     runnable_config = RunnableConfigManager.create(
@@ -96,7 +95,9 @@ try:
         console.print(
             Panel.fit(
                 f"[bold green]Game Complete![/bold green]\n"
-                f"Final Score: Player 1: {final_state.player1_score}, Player 2: {final_state.player2_score}\n"
+                f"Final Score: Player 1: {final_state.player1_score}, Player 2: {
+                    final_state.player2_score
+                }\n"
                 f"Winner: {final_state.winner or 'Draw'}",
                 border_style="green",
             )

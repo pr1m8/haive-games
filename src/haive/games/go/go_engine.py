@@ -5,14 +5,13 @@ sgfmill, which is compatible with Python 3.12.
 """
 
 import logging
-from typing import Optional, Tuple
+
+import sgfmill.boards
+import sgfmill.common
+import sgfmill.sgf
 
 # Handle optional sgfmill dependency
 try:
-    import sgfmill.boards
-    import sgfmill.common
-    import sgfmill.sgf
-
     SGFMILL_AVAILABLE = True
 except ImportError:
     SGFMILL_AVAILABLE = False
@@ -21,7 +20,7 @@ except ImportError:
     class DummySgfmill:
         def __getattr__(self, name):
             raise ImportError(
-                f"sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
+                "sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
             )
 
     sgfmill = DummySgfmill()
@@ -45,7 +44,7 @@ class GoGame:
         self.current_player = "b"  # 'b' for black, 'w' for white
         self.captured = {"b": 0, "w": 0}
 
-    def play_move(self, color: str, move: Optional[Tuple[int, int]]):
+    def play_move(self, color: str, move: tuple[int, int] | None):
         """Play a move on the board.
 
         Args:

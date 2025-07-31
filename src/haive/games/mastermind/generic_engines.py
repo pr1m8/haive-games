@@ -15,10 +15,7 @@ from haive.games.core.agent.generic_player_agent import (
     create_engines_from_simple_configs,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.mastermind.models import (
-    MastermindAnalysis,
-    MastermindGuess,
-)
+from haive.games.mastermind.models import MastermindAnalysis, MastermindGuess
 
 
 class MastermindPlayerIdentifiers(GamePlayerIdentifiers[str, str]):

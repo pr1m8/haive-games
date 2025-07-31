@@ -12,6 +12,7 @@ Run this script directly to see a Hold'em game in action.
 
 import argparse
 import logging
+import traceback
 
 from haive.games.hold_em import HoldemGameAgent, HoldemGameAgentConfig
 from haive.games.hold_em.aug_llms import get_complete_llm_suite
@@ -165,7 +166,6 @@ def run_example_game(game_type: str = "default", delay: float = 1.5):
 
     except Exception as e:
         logger.error(f"Error running game: {e}")
-        import traceback
 
         logger.error(traceback.format_exc())
 
@@ -208,7 +208,9 @@ def analyze_game_results(agent: HoldemGameAgent):
                     winner_name = player.name
                     break
             logger.info(
-                f"Hand #{hand.get('hand_number')}: {winner_name} won {hand.get('pot_size')} chips"
+                f"Hand #{hand.get('hand_number')}: {winner_name} won {
+                    hand.get('pot_size')
+                } chips"
             )
 
 
@@ -220,7 +222,7 @@ def main():
         epilog="""
 Examples:
   python example.py                   # Run default game
-  python example.py --type heads-up   # Run heads-up game  
+  python example.py --type heads-up   # Run heads-up game
   python example.py --type tournament # Run tournament
   python example.py --type custom     # Run custom game
         """,

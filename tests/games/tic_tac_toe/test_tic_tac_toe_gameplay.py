@@ -3,8 +3,8 @@
 import os
 
 import pytest
-from haive.core.engine.aug_llm import AugLLMConfig
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
 

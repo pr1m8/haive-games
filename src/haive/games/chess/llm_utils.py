@@ -5,24 +5,21 @@ configuring LLMs for chess gameplay, building on the core LLM factory
 system.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 
-from haive.games.chess.aug_llms import (
-    generate_analysis_prompt,
-    generate_move_prompt,
-)
+from haive.games.chess.aug_llms import generate_analysis_prompt, generate_move_prompt
 from haive.games.chess.models import ChessAnalysis, ChessPlayerDecision
 from haive.games.llm_config_factory import GameLLMFactory
 
 
 def create_chess_engines_from_config(
-    white_config: Dict[str, Any],
-    black_config: Dict[str, Any],
+    white_config: dict[str, Any],
+    black_config: dict[str, Any],
     enable_analysis: bool = True,
-    analyzer_configs: Optional[Dict[str, Dict[str, Any]]] = None,
-) -> Dict[str, AugLLMConfig]:
+    analyzer_configs: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, AugLLMConfig]:
     """Create chess engines from simple configuration dictionaries.
 
     Args:
@@ -65,7 +62,8 @@ def create_chess_engines_from_config(
     """
     # Create player LLM configs using the factory
     white_llm = GameLLMFactory.create_llm_config(
-        game_type="strategic", **white_config  # Chess is strategic
+        game_type="strategic",
+        **white_config,  # Chess is strategic
     )
 
     black_llm = GameLLMFactory.create_llm_config(game_type="strategic", **black_config)
@@ -88,7 +86,8 @@ def create_chess_engines_from_config(
 
     # Add analyzers if enabled
     if enable_analysis:
-        # Use separate analyzer configs if provided, otherwise use player configs
+        # Use separate analyzer configs if provided, otherwise use player
+        # configs
         white_analyzer_config = white_config
         black_analyzer_config = black_config
 
@@ -128,12 +127,12 @@ def create_chess_engines_from_config(
 
 def create_chess_engines_simple(
     white_provider: str = "anthropic",
-    white_model: Optional[str] = None,
+    white_model: str | None = None,
     black_provider: str = "anthropic",
-    black_model: Optional[str] = None,
-    temperature: Optional[float] = None,
+    black_model: str | None = None,
+    temperature: float | None = None,
     enable_analysis: bool = True,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with simple provider/model specification.
 
     Args:
@@ -193,7 +192,7 @@ def get_available_chess_providers() -> list[str]:
     return GameLLMFactory.get_available_providers()
 
 
-def get_recommended_chess_models() -> Dict[str, str]:
+def get_recommended_chess_models() -> dict[str, str]:
     """Get recommended models for chess gameplay.
 
     Returns:

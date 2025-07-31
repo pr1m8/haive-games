@@ -137,7 +137,9 @@ class MastermindUI:
         )
         info_text.append(f"Codemaker: {state.codemaker}\n", style="bold yellow")
         info_text.append(
-            f"Codebreaker: {'player2' if state.codemaker == 'player1' else 'player1'}\n",
+            f"Codebreaker: {
+                'player2' if state.codemaker == 'player1' else 'player1'
+            }\n",
             style="bold green",
         )
         info_text.append(f"Game Status: {state.game_status}\n", style="bold magenta")

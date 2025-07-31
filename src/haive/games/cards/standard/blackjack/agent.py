@@ -217,10 +217,10 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         # Show each player's state
         for i, player in enumerate(game_state.players):
-            print(f"\n💰 Player {i+1} (Chips: ${player.total_chips:.2f}):")
+            print(f"\n💰 Player {i + 1} (Chips: ${player.total_chips:.2f}):")
             for j, hand in enumerate(player.hands):
                 hand_cards = [str(card) for card in hand.cards]
-                print(f"  Hand {j+1}: {', '.join(hand_cards)}")
+                print(f"  Hand {j + 1}: {', '.join(hand_cards)}")
                 print(f"  Total: {hand.total_value()}")
                 print(f"  Bet: ${hand.bet:.2f}")
                 print(f"  Status: {'Active' if hand.is_active else 'Inactive'}")

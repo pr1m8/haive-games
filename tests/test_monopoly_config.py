@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test script for MonopolyAgentConfig validation"""
 
-import sys
 from pathlib import Path
+import sys
 
 # Add the project root to the path
 sys.path.insert(0, str(Path(__file__).resolve().parent))

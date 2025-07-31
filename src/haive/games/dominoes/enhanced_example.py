@@ -3,6 +3,7 @@
 
 import argparse
 import time
+import traceback
 import uuid
 
 from rich.console import Console
@@ -10,8 +11,10 @@ from rich.panel import Panel
 
 from haive.games.dominoes.agent import DominoesAgent
 from haive.games.dominoes.config import DominoesAgentConfig
+from haive.games.dominoes.models import DominoMove, DominoTile
 from haive.games.dominoes.rich_ui import DominoesRichUI
 from haive.games.dominoes.state import DominoesState
+from haive.games.dominoes.ui import DominoesUI
 
 # Set up logging - uncomment to see detailed debug logs
 # logging.basicConfig(level=logging.DEBUG)
@@ -33,7 +36,9 @@ def run_dominoes_game(
     console = Console()
     console.print(
         Panel(
-            f"Starting Dominoes game with {'Enhanced' if use_rich_ui else 'Basic'} Rich UI visualization",
+            f"Starting Dominoes game with {
+                'Enhanced' if use_rich_ui else 'Basic'
+            } Rich UI visualization",
             title="🎲 Dominoes Game 🎲",
             border_style="magenta",
         )
@@ -42,12 +47,8 @@ def run_dominoes_game(
     try:
         # Create the appropriate UI
         if use_rich_ui:
-            from haive.games.dominoes.rich_ui import DominoesRichUI
-
             ui = DominoesRichUI(console=console)
         else:
-            from haive.games.dominoes.ui import DominoesUI
-
             ui = DominoesUI(console=console)
 
         # Display welcome message
@@ -75,7 +76,6 @@ def run_dominoes_game(
 
     except Exception as e:
         console.print(f"[bold red]Error running game: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(
@@ -126,7 +126,6 @@ def demo_ui_features(delay: float = 0.5):
     time.sleep(delay * 2)
 
     # Create some sample moves
-    from haive.games.dominoes.models import DominoMove, DominoTile
 
     move1 = DominoMove(tile=DominoTile(left=6, right=6), location="left")
     move2 = DominoMove(tile=DominoTile(left=6, right=3), location="right")
@@ -198,7 +197,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         console.print(f"[bold red]Critical error: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(

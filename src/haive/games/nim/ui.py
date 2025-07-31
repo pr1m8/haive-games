@@ -8,23 +8,24 @@ of the game state, piles, and game information.
 import logging
 from typing import Any
 
+from rich import box
+from rich.console import Console
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+
+from haive.games.nim.models import NimMove
+from haive.games.nim.state import NimState
+
 # Import Rich components
 try:
-    from rich import box
-    from rich.console import Console
-    from rich.layout import Layout
-    from rich.panel import Panel
-    from rich.table import Table
-    from rich.text import Text
-
     RICH_AVAILABLE = True
 except ImportError:
     RICH_AVAILABLE = False
     logging.warning("Rich library not available. Using fallback text UI.")
 
 # Import the game models
-from haive.games.nim.models import NimMove
-from haive.games.nim.state import NimState
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
@@ -300,7 +301,9 @@ class NimUI:
             print(f"Nim Sum: {latest_analysis.nim_sum}")
             print(f"Evaluation: {latest_analysis.position_evaluation}")
             print(
-                f"Recommended Move: Take {latest_analysis.recommended_move.stones_taken} "
+                f"Recommended Move: Take {
+                    latest_analysis.recommended_move.stones_taken
+                } "
                 f"stone(s) from pile {latest_analysis.recommended_move.pile_index}"
             )
             print(f"Explanation: {latest_analysis.explanation}")
@@ -330,7 +333,7 @@ class NimUI:
                 # Validate pile index
                 if pile_idx < 0 or pile_idx >= len(state.piles):
                     print(
-                        f"Invalid pile index. Please choose between 0 and {len(state.piles)-1}."
+                        f"Invalid pile index. Please choose between 0 and {len(state.piles) - 1}."
                     )
                     continue
 
@@ -354,7 +357,9 @@ class NimUI:
                 # Validate stones
                 if stones < 1 or stones > state.piles[pile_idx]:
                     print(
-                        f"Invalid number of stones. Please choose between 1 and {state.piles[pile_idx]}."
+                        f"Invalid number of stones. Please choose between 1 and {
+                            state.piles[pile_idx]
+                        }."
                     )
                     continue
 

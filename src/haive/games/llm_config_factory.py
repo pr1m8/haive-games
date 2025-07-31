@@ -5,14 +5,16 @@ configurations for game agents, leveraging the new haive.core.models.llm
 factory system.
 """
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
+
+from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 
 from haive.games.models.llm import LLMConfig
 
 
 # Note: These functions don't exist in the current core module
 # We'll implement simplified versions for games until core API is available
-def get_model_info(model: str) -> Dict[str, Any]:
+def get_model_info(model: str) -> dict[str, Any]:
     """Placeholder for model info - not yet implemented in core."""
     return {"model": model, "status": "placeholder"}
 
@@ -31,7 +33,7 @@ class GameLLMFactory:
     """
 
     # Game-optimized temperature defaults
-    GAME_TEMPERATURES: Dict[str, float] = {
+    GAME_TEMPERATURES: dict[str, float] = {
         "strategic": 0.7,  # For strategic thinking (chess, checkers)
         "creative": 0.8,  # For creative play (storytelling games)
         "precise": 0.5,  # For rule-following (card games)
@@ -40,7 +42,7 @@ class GameLLMFactory:
     }
 
     # Game-specific model recommendations
-    GAME_RECOMMENDATIONS: Dict[str, Dict[str, str]] = {
+    GAME_RECOMMENDATIONS: dict[str, dict[str, str]] = {
         "chess": {
             "default": "gpt-4",
             "fast": "gpt-3.5-turbo",
@@ -62,9 +64,9 @@ class GameLLMFactory:
     def create_llm_config(
         cls,
         model: str,
-        temperature: Optional[float] = None,
+        temperature: float | None = None,
         game_type: str = "default",
-        **kwargs
+        **kwargs,
     ) -> LLMConfig:
         """Create an LLM configuration for a game.
 
@@ -104,13 +106,11 @@ class GameLLMFactory:
 
         # Use core factory with game defaults
         # Note: create_llm returns an LLM instance, not LLMConfig
-        # For now, create a basic LLMConfig - this needs to be updated when proper factory is available
-        from haive.core.models.llm.base import OpenAILLMConfig
+        # For now, create a basic LLMConfig - this needs to be updated when
+        # proper factory is available
 
         # Simple provider detection - enhance this as needed
         if "claude" in model.lower():
-            from haive.core.models.llm.base import AnthropicLLMConfig
-
             return AnthropicLLMConfig(model=model, temperature=temperature, **kwargs)
         else:
             return OpenAILLMConfig(model=model, temperature=temperature, **kwargs)
@@ -121,8 +121,8 @@ class GameLLMFactory:
         player1_model: str = "gpt-4",
         player2_model: str = "gpt-4",
         game_type: str = "strategic",
-        temperature: Optional[float] = None,
-    ) -> Tuple[LLMConfig, LLMConfig]:
+        temperature: float | None = None,
+    ) -> tuple[LLMConfig, LLMConfig]:
         """Create a pair of LLM configs for two-player games.
 
         Args:
@@ -190,7 +190,7 @@ class GameLLMFactory:
         return recommendations.get(performance, recommendations["default"])
 
     @classmethod
-    def list_game_models(cls, game_type: Optional[str] = None) -> Dict[str, Any]:
+    def list_game_models(cls, game_type: str | None = None) -> dict[str, Any]:
         """List available models for games.
 
         Args:
@@ -208,7 +208,7 @@ class GameLLMFactory:
 
         result = {
             "total_models": len(all_models),
-            "providers": list(set(m.provider for m in all_models)),
+            "providers": list({m.provider for m in all_models}),
         }
 
         if game_type and game_type in cls.GAME_RECOMMENDATIONS:

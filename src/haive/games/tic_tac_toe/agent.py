@@ -48,6 +48,7 @@ Note:
 
 import logging
 import time
+import traceback
 from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
@@ -394,7 +395,6 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
         except Exception as e:
             logger.error("Error in make_move", extra={"error": str(e)}, exc_info=True)
-            import traceback
 
             traceback.print_exc()
             return Command(update={"error_message": f"Move failed: {e!s}"}, goto=END)
@@ -589,8 +589,10 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
         # Add explicit edges
         builder.add_edge("initialize", "make_move")
-        builder.add_edge("make_move", "make_move")  # Self-loop for continuous play
-        builder.add_edge("make_move", "analyze")  # For when analysis is enabled
+        # Self-loop for continuous play
+        builder.add_edge("make_move", "make_move")
+        # For when analysis is enabled
+        builder.add_edge("make_move", "analyze")
         builder.add_edge("analyze", "make_move")  # Back to move after analysis
 
         self.graph = builder.build()

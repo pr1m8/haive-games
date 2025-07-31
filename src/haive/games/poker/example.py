@@ -28,6 +28,7 @@ Example:
 """
 
 # Standard library imports
+
 import argparse
 import logging
 import os
@@ -36,17 +37,19 @@ import subprocess
 import sys
 import time
 
-# Third-party imports
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
 
-# Local imports
 from haive.games.poker.config import PokerAgentConfig
 from haive.games.poker.engines import poker_agent_configs
 from haive.games.poker.models import Card, GamePhase, PlayerAction
 from haive.games.poker.state_manager import PokerStateManager
 from haive.games.poker.ui import PokerUI
+
+# Third-party imports
+
+# Local imports
 
 # Configure logging
 logging.basicConfig(
@@ -98,7 +101,7 @@ def main():
 
     # Ensure we have enough names for the requested players
     while len(ai_player_names) < args.players:
-        ai_player_names.append(f"Player-{len(ai_player_names)+1}")
+        ai_player_names.append(f"Player-{len(ai_player_names) + 1}")
 
     # Shuffle the names and take the required number
     random.shuffle(ai_player_names)
@@ -171,7 +174,7 @@ def launch_in_separate_window(args, player_names):
         elif sys.platform.startswith("darwin"):
             # macOS: use Terminal.app
             os.system(
-                f"osascript -e 'tell app \"Terminal\" to do script \"{' '.join(cmd)}\"'"
+                f'osascript -e \'tell app "Terminal" to do script "{" ".join(cmd)}"\''
             )
         else:
             # Linux/Unix: try common terminals
@@ -324,7 +327,7 @@ def run_rich_ui_game(config, player_names, delay, max_hands=None):
         state_manager.state.game.players, key=lambda p: p.chips, reverse=True
     )
     for i, player in enumerate(sorted_players):
-        print(f"{i+1}. {player.name}: ${player.chips}")
+        print(f"{i + 1}. {player.name}: ${player.chips}")
 
 
 def update_ui():
@@ -439,7 +442,7 @@ def run_text_game(config, delay):
         state_manager.state.game.players, key=lambda p: p.chips, reverse=True
     )
     for i, player in enumerate(sorted_players):
-        print(f"{i+1}. {player.name}: ${player.chips}")
+        print(f"{i + 1}. {player.name}: ${player.chips}")
 
 
 def format_card(card: Card) -> str:
@@ -461,7 +464,7 @@ def get_position_name(position: int, num_players: int) -> str:
         return "UTG"  # Under the Gun
     if position == num_players - 1:
         return "Cutoff"
-    return f"MP{position-2}"  # Middle Position
+    return f"MP{position - 2}"  # Middle Position
 
 
 def visualize_game_state(game_state):
@@ -512,7 +515,9 @@ def visualize_game_state(game_state):
         highlight = ">" if is_current else " "
 
         print(
-            f"{highlight} {is_dealer}{player.name} ({position_name}): ${player.chips} {status}"
+            f"{highlight} {is_dealer}{player.name} ({position_name}): ${player.chips} {
+                status
+            }"
         )
 
         if player.is_active and player.hand and player.hand.cards:
@@ -543,8 +548,6 @@ if __name__ == "__main__":
 
     try:
         # Create a minimal config
-        from haive.games.poker.config import PokerAgentConfig
-        from haive.games.poker.engines import poker_agent_configs
 
         player_names = ["Alice", "Bob"]
         config = PokerAgentConfig(

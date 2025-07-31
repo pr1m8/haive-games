@@ -2,6 +2,7 @@
 """Simple runner for Fox and Geese game."""
 
 import logging
+import traceback
 import uuid
 
 from rich.console import Console
@@ -150,7 +151,6 @@ if __name__ == "__main__":
 
     except Exception as e:
         console.print(f"[bold red]Critical error: {e}[/bold red]")
-        import traceback
 
         console.print(
             Panel(traceback.format_exc(), title="Error Details", border_style="red")

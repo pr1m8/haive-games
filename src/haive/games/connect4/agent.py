@@ -5,15 +5,13 @@ generate moves and analyze positions in the game.
 """
 
 # Standard library imports
+
 import copy
 import logging
 import time
 from typing import Any
 
-# Local imports
 from haive.core.engine.agent.agent import register_agent
-
-# Third-party imports
 from langgraph.types import Command
 
 from haive.games.connect4.config import Connect4AgentConfig
@@ -21,6 +19,10 @@ from haive.games.connect4.models import Connect4Move, Connect4PlayerDecision
 from haive.games.connect4.state import Connect4State
 from haive.games.connect4.state_manager import Connect4StateManager
 from haive.games.framework.base.agent import GameAgent
+
+# Third-party imports
+
+# Local imports
 
 logger = logging.getLogger(__name__)
 
@@ -65,12 +67,14 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             "color": player,
             "legal_moves": formatted_legal_moves,
             "move_history": [
-                f"{i+1}. {state.turn}: Column {move.column}"
+                f"{i + 1}. {state.turn}: Column {move.column}"
                 for i, move in enumerate(state.move_history[-5:])
             ],
             "player_analysis": player_analysis,
-            "threats_winning_moves": threats["winning_moves"],  # Explicitly named
-            "threats_blocking_moves": threats["blocking_moves"],  # Explicitly named
+            # Explicitly named
+            "threats_winning_moves": threats["winning_moves"],
+            # Explicitly named
+            "threats_blocking_moves": threats["blocking_moves"],
         }
 
     def _calculate_threats(
@@ -132,7 +136,7 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
             "turn": state.turn,
             "color": player,
             "move_history": [
-                f"{i+1}. {state.turn}: Column {move.column}"
+                f"{i + 1}. {state.turn}: Column {move.column}"
                 for i, move in enumerate(state.move_history[-5:])
             ],
             "threats_winning_moves": threats_winning_moves,

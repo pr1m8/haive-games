@@ -18,10 +18,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.dominoes.models import (
-    DominoMove,
-    DominoTile,
-)
+from haive.games.dominoes.models import DominoMove, DominoTile
 from haive.games.dominoes.state import DominoesState
 
 logger = logging.getLogger(__name__)
@@ -100,7 +97,8 @@ class DominoesRichUI:
             if hasattr(state_data, "update"):
                 command_update = state_data.update
 
-                # Handle Command objects where update is already a DominoesState
+                # Handle Command objects where update is already a
+                # DominoesState
                 if isinstance(command_update, DominoesState):
                     return command_update
 
@@ -127,7 +125,8 @@ class DominoesRichUI:
 
             # If it's a dict, try to extract from nested structure
             if isinstance(state_data, dict):
-                # First check for 'values' key which is used in langgraph stream output
+                # First check for 'values' key which is used in langgraph
+                # stream output
                 if "values" in state_data and isinstance(state_data["values"], dict):
                     values_dict = state_data["values"]
                     if self._is_valid_game_state_dict(values_dict):
@@ -143,7 +142,8 @@ class DominoesRichUI:
                     if isinstance(value, DominoesState):
                         return value
 
-                # Next, try to find a dict that can be converted to DominoesState
+                # Next, try to find a dict that can be converted to
+                # DominoesState
                 for key, value in state_data.items():
                     if isinstance(value, dict) and self._is_valid_game_state_dict(
                         value
@@ -447,12 +447,16 @@ class DominoesRichUI:
             if game_state.left_value is not None:
                 info_table.add_row(
                     "  Left End",
-                    f"[bold {self.colors['open_end']}]{game_state.left_value}[/bold {self.colors['open_end']}]",
+                    f"[bold {self.colors['open_end']}]{game_state.left_value}[/bold {
+                        self.colors['open_end']
+                    }]",
                 )
             if game_state.right_value is not None:
                 info_table.add_row(
                     "  Right End",
-                    f"[bold {self.colors['open_end']}]{game_state.right_value}[/bold {self.colors['open_end']}]",
+                    f"[bold {self.colors['open_end']}]{game_state.right_value}[/bold {
+                        self.colors['open_end']
+                    }]",
                 )
 
         return Panel(

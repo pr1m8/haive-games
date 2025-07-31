@@ -53,8 +53,10 @@ class Property:
             return self.rent_values[0]  # Will be updated by the game engine
 
         if self.property_type == PropertyType.UTILITY:
-            # Utility rent based on dice roll and how many utilities the owner has
-            multiplier = self.rent_values[0]  # Will be updated by the game engine
+            # Utility rent based on dice roll and how many utilities the owner
+            # has
+            # Will be updated by the game engine
+            multiplier = self.rent_values[0]
             return (
                 dice_roll or 7
             ) * multiplier  # Default to 7 if no dice roll provided

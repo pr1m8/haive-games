@@ -2,9 +2,9 @@
 """Diagnose haive.games import issues."""
 
 import importlib
+from pathlib import Path
 import sys
 import traceback
-from pathlib import Path
 
 # Add package paths
 project_root = Path(__file__).parent

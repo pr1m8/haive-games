@@ -5,7 +5,10 @@ performance across different game types using AI judges with specialized
 perspectives.
 """
 
+import json
 import logging
+import random
+import re
 from enum import Enum
 from typing import Any, Protocol
 
@@ -120,9 +123,9 @@ You are {self.name}, a professional game judge{expertise_text}.
 
 JUDGE PROFILE:
 • Personality: {self.personality.value.title()}
-• Focus: {personality_info['focus']}
-• Style: {personality_info['style']}
-• Approach: {personality_info['bias']}
+• Focus: {personality_info["focus"]}
+• Style: {personality_info["style"]}
+• Approach: {personality_info["bias"]}
 • Focus Weight: {self.focus_weight:.1f}/1.0
 
 JUDGING METHODOLOGY:
@@ -144,7 +147,7 @@ Provide your evaluation as JSON:
     }}
 }}
 
-Be {personality_info['style']} in your evaluation. Focus on {personality_info['focus']}."""
+Be {personality_info["style"]} in your evaluation. Focus on {personality_info["focus"]}."""
 
         engine = AugLLMConfig(
             name=f"{self.name.lower()}_judge_engine",
@@ -184,8 +187,6 @@ in the specified JSON format."""
             response = await self.agent.arun(evaluation_prompt)
 
             # Parse JSON response
-            import json
-            import re
 
             json_match = re.search(r"\{.*\}", response, re.DOTALL)
             if json_match:
@@ -231,12 +232,13 @@ class GameVotingSystem:
             num_judges: Number of judges to create (default: 3 to avoid ties)
                        Odd numbers recommended to prevent tie votes.
         """
-        import random
 
         # Warn about even numbers that can cause ties
         if num_judges % 2 == 0:
             logger.warning(
-                f"Even number of judges ({num_judges}) can cause tie votes. Consider using {num_judges + 1} judges."
+                f"Even number of judges ({
+                    num_judges
+                }) can cause tie votes. Consider using {num_judges + 1} judges."
             )
 
         # Pool of possible judge names and traits
@@ -318,11 +320,12 @@ class GameVotingSystem:
             game_type: Type of game to create judges for
             num_judges: Number of judges to create (default: 3)
         """
-        import random
 
         if num_judges % 2 == 0:
             logger.warning(
-                f"Even number of judges ({num_judges}) can cause tie votes. Consider using {num_judges + 1} judges."
+                f"Even number of judges ({
+                    num_judges
+                }) can cause tie votes. Consider using {num_judges + 1} judges."
             )
 
         # Base judge profiles for each game type
@@ -541,7 +544,9 @@ class GameVotingSystem:
         for judge_name, vote in judge_votes.items():
             winner_mark = "👑" if vote.choice == winner else "  "
             summary_parts.append(
-                f"  {winner_mark} {judge_name}: {vote.choice} (confidence: {vote.confidence:.1%})"
+                f"  {winner_mark} {judge_name}: {vote.choice} (confidence: {
+                    vote.confidence:.1%
+                })"
             )
 
         # Add judge reasoning snippets

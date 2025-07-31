@@ -96,7 +96,7 @@ class TurnManager(BaseModel, Generic[TCard, TAction, TState]):
 
     def process_action(
         self, action: TAction, state: TState
-    ) -> Tuple[ActionResult, TState]:
+    ) -> tuple[ActionResult, TState]:
         """Process an action within the current turn."""
         # Validate the action is allowed
         if state.rules.validate_action(action, state):

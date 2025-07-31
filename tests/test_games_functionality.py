@@ -9,8 +9,8 @@ These tests validate that games can be:
 No mocks - real integration tests.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -19,7 +19,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import the key components we need
 from haive.core.models.llm.factory import create_llm_config
-
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 

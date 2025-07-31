@@ -36,7 +36,9 @@ def run_fox_and_geese_game(
     console = Console()
     console.print(
         Panel(
-            f"Starting Fox and Geese game with {'Enhanced' if use_rich_ui else 'Basic'} Rich UI visualization",
+            f"Starting Fox and Geese game with {
+                'Enhanced' if use_rich_ui else 'Basic'
+            } Rich UI visualization",
             title="🦊 Fox and Geese Game 🪿",
             border_style="magenta",
         )
@@ -266,3 +268,5 @@ if __name__ == "__main__":
                 border_style="red",
             )
         )
+
+import traceback

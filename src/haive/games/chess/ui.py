@@ -1,6 +1,7 @@
 """Chess game UI using Rich for beautiful terminal display."""
 
 import time
+import traceback
 
 import chess
 from rich.align import Align
@@ -140,7 +141,7 @@ class ChessRichUI:
                             move = chess.Move.from_uci(self.last_move)
                             if square in [move.from_square, move.to_square]:
                                 bg_color = "on yellow4" if is_light else "on yellow3"
-                        except:
+                        except BaseException:
                             pass
 
                     if piece:
@@ -484,7 +485,8 @@ class ChessRichUI:
                             last_update_time = current_time
                         except (AttributeError, TypeError) as e:
                             if "Row" in str(e):
-                                # We already fixed the render_move_history, but in case there are other issues
+                                # We already fixed the render_move_history, but
+                                # in case there are other issues
                                 self.console.print(
                                     f"\n[yellow]Row rendering issue: {e}[/yellow]"
                                 )
@@ -522,7 +524,6 @@ class ChessRichUI:
             self.console.print("\n[yellow]Game interrupted by user[/yellow]")
         except Exception as e:
             self.console.print(f"\n[bold red]Error during game: {e}[/bold red]")
-            import traceback
 
             traceback.print_exc()
 

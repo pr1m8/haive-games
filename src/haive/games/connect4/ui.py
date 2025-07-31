@@ -131,7 +131,9 @@ class Connect4UI:
                 if state.winner
                 else self.colors["info"]
             )
-            turn_text = f"Winner: [bold {winner_color}]{state.winner.upper() if state.winner else 'DRAW'}[/]"
+            turn_text = f"Winner: [bold {winner_color}]{
+                state.winner.upper() if state.winner else 'DRAW'
+            }[/]"
 
         return Panel(
             Align.center(
@@ -300,7 +302,9 @@ class Connect4UI:
         chances_style = (
             "green"
             if winning_chances > 70
-            else "yellow" if winning_chances > 40 else "red"
+            else "yellow"
+            if winning_chances > 40
+            else "red"
         )
         analysis_table.add_row(
             "Winning Chances", f"[{chances_style}]{winning_chances}%[/]"

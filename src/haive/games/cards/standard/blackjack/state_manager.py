@@ -35,7 +35,7 @@ class BlackjackStateManager:
         """
         # Create deck and players
         deck = cls.create_deck()
-        players = [PlayerState(name=f"Player_{i+1}") for i in range(num_players)]
+        players = [PlayerState(name=f"Player_{i + 1}") for i in range(num_players)]
 
         # Create game state
         game_state = BlackjackGameState(

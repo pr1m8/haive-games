@@ -4,7 +4,7 @@ This module provides configurable Reversi game configurations that
 replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -36,12 +36,12 @@ class ConfigurableReversiConfig(ReversiConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    black_model: Optional[str] = Field(default=None, description="Model for black")
-    white_model: Optional[str] = Field(default=None, description="Model for white")
-    example_config: Optional[str] = Field(
+    black_model: str | None = Field(default=None, description="Model for black")
+    white_model: str | None = Field(default=None, description="Model for white")
+    example_config: str | None = Field(
         default=None, description="Example configuration name"
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
         default=None, description="Detailed player configurations"
     )
 
@@ -197,7 +197,7 @@ def create_reversi_config_from_example(
 
 
 def create_reversi_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableReversiConfig:
     """Create a configurable Reversi configuration from detailed player
     configurations.
@@ -302,7 +302,7 @@ def get_example_config(name: str) -> ConfigurableReversiConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:

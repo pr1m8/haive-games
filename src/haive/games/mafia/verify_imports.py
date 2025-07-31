@@ -4,16 +4,11 @@ This script checks that we can import all essential models from the
 Mafia module without requiring external dependencies.
 """
 
+from models import ActionType, GamePhase, MafiaAction, PlayerRole
+
 print("Attempting to import models from Mafia module...")
 
 try:
-    from models import (
-        ActionType,
-        GamePhase,
-        MafiaAction,
-        PlayerRole,
-    )
-
     print("✅ Successfully imported models module classes")
 
     # Test model creation
@@ -37,7 +32,6 @@ except Exception as e:
 print("\nVerifying imports from the aug_llms module...")
 
 try:
-
     print("✅ Successfully imported aug_llms module functions and objects")
 
 except Exception as e:

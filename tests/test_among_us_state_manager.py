@@ -496,7 +496,7 @@ class TestAmongUsStateManagerMixin:
         # Move all players to different locations
         locations = ["cafeteria", "electrical", "storage", "admin", "medbay"]
         for _i, (player_id, location) in enumerate(
-            zip(state.players.keys(), locations)
+            zip(state.players.keys(), locations, strict=False)
         ):
             action = PlayerAction(
                 type="move", player_id=player_id, target_location=location

@@ -13,7 +13,8 @@ from langchain_core.prompts import (
     SystemMessagePromptTemplate,
 )
 
-# System prompts - define agent personalities and strategies with clear output format instructions
+# System prompts - define agent personalities and strategies with clear
+# output format instructions
 
 CONSERVATIVE_SYSTEM_PROMPT = """
 You are a conservative poker player in a Texas Hold'em game. You:

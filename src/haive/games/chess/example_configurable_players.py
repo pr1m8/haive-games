@@ -13,9 +13,7 @@ from haive.games.chess.configurable_config import (
     create_chess_config_from_example,
     create_chess_config_from_player_configs,
 )
-from haive.games.core.agent.player_agent import (
-    create_player_config,
-)
+from haive.games.core.agent.player_agent import create_player_config
 
 
 def example_1_simple_models():
@@ -54,7 +52,8 @@ def example_3_example_configs():
     """Example 3: Using predefined example configurations."""
     print("\n=== Example 3: Example Configurations ===")
 
-    # Available: anthropic_vs_openai, gpt4_only, claude_only, mixed_providers, budget_friendly
+    # Available: anthropic_vs_openai, gpt4_only, claude_only, mixed_providers,
+    # budget_friendly
     config = create_chess_config_from_example("mixed_providers")
 
     print(f"White Player: {config.white_player_name}")

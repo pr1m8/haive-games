@@ -7,7 +7,6 @@ AI agents playing against each other.
 """
 
 import asyncio
-from typing import Optional
 
 from haive.agents.simple import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -40,7 +39,7 @@ class TicTacToeGame:
             return True
         return False
 
-    def check_winner(self) -> Optional[str]:
+    def check_winner(self) -> str | None:
         """Check if there's a winner."""
         # Winning combinations
         lines = [
@@ -104,9 +103,9 @@ async def get_agent_move(agent: SimpleAgent, game: TicTacToeGame, symbol: str) -
     """Get move from agent."""
     board_state = f"""
 Current board:
-{' | '.join([str(i+1) if game.board[i] == ' ' else game.board[i] for i in range(3)])}
-{' | '.join([str(i+1) if game.board[i] == ' ' else game.board[i] for i in range(3, 6)])}
-{' | '.join([str(i+1) if game.board[i] == ' ' else game.board[i] for i in range(6, 9)])}
+{" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(3)])}
+{" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(3, 6)])}
+{" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(6, 9)])}
 
 Available positions: {game.get_available_moves()}
 Your symbol: {symbol}

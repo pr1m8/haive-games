@@ -13,9 +13,16 @@ from langgraph.graph import END
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.games.monopoly.models import GameEvent, PlayerActionType
+from haive.games.monopoly.models import (
+    GameEvent,
+    PlayerActionType,
+    Property,
+    PropertyColor,
+    PropertyType,
+)
 from haive.games.monopoly.state import MonopolyState
 from haive.games.monopoly.utils import (
+    BOARD_PROPERTIES,
     check_game_end,
     get_property_at_position,
     move_player,
@@ -193,7 +200,8 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         if monopoly_state.players and 0 <= monopoly_state.current_player_index < len(
             monopoly_state.players
         ):
-            # Update the player in the players list using safe update_player method
+            # Update the player in the players list using safe update_player
+            # method
             updated_state = monopoly_state.update_player(
                 monopoly_state.current_player_index, current_player
             )
@@ -307,22 +315,16 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
         property_obj = state.get_property_by_name(property_name)
 
         if not property_obj:
-            # Handle the case where property isn't found - log error but don't crash
+            # Handle the case where property isn't found - log error but don't
+            # crash
 
             # Try to get property info from utils.BOARD_PROPERTIES
-            from haive.games.monopoly.utils import BOARD_PROPERTIES
 
             position = current_player.position
             position_data = BOARD_PROPERTIES.get(position)
 
             if position_data and position_data["name"] == property_name:
                 # Create the property on the fly based on board data
-                from haive.games.monopoly.models import (
-                    Property,
-                    PropertyColor,
-                    PropertyType,
-                )
-
                 property_obj = Property(
                     name=position_data["name"],
                     position=position,
@@ -599,7 +601,6 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
 
         # Check turn limit
         if monopoly_state.turn_number >= self.config.max_turns:
-
             # Determine winner by net worth
             best_player = None
             best_worth = -1
@@ -748,12 +749,13 @@ class MonopolyGameAgent(Agent[MonopolyGameAgentConfig]):
                         )
                     )
             else:
-
                 events.append(
                     GameEvent(
                         event_type="jail_stay",
                         player=current_player.name,
-                        description=f"Stays in jail (turn {current_player.jail_turns}/3)",
+                        description=f"Stays in jail (turn {
+                            current_player.jail_turns
+                        }/3)",
                     )
                 )
 

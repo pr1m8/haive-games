@@ -1,6 +1,5 @@
 # src/haive/agents/agent_games/dominoes/config.py
 
-
 from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig

@@ -20,6 +20,7 @@ Example:
 # Standard library imports
 
 # Third-party imports
+
 from pydantic import BaseModel, Field, field_validator
 
 

@@ -70,7 +70,8 @@ class FoxAndGeeseUI:
             if isinstance(state_data, dict):
                 logger.debug(f"State is dict with keys: {list(state_data.keys())}")
 
-                # First check for 'values' key which is used in langgraph stream output
+                # First check for 'values' key which is used in langgraph
+                # stream output
                 if "values" in state_data and isinstance(state_data["values"], dict):
                     values_dict = state_data["values"]
                     if self._is_valid_game_state_dict(values_dict):
@@ -82,13 +83,15 @@ class FoxAndGeeseUI:
                                 f"Failed to create FoxAndGeeseState from 'values': {e}"
                             )
 
-                # First, try to find a FoxAndGeeseState object in the dict values
+                # First, try to find a FoxAndGeeseState object in the dict
+                # values
                 for key, value in state_data.items():
                     if isinstance(value, FoxAndGeeseState):
                         logger.debug(f"Found FoxAndGeeseState in key: {key}")
                         return value
 
-                # Next, try to find a dict that can be converted to FoxAndGeeseState
+                # Next, try to find a dict that can be converted to
+                # FoxAndGeeseState
                 for key, value in state_data.items():
                     if isinstance(value, dict) and self._is_valid_game_state_dict(
                         value
@@ -104,7 +107,8 @@ class FoxAndGeeseUI:
                             )
                             continue
 
-                # Try to create directly from the dict if it has the right structure
+                # Try to create directly from the dict if it has the right
+                # structure
                 if isinstance(state_data, dict) and self._is_valid_game_state_dict(
                     state_data
                 ):
@@ -119,7 +123,9 @@ class FoxAndGeeseUI:
                         )
 
                 logger.warning(
-                    f"Could not find valid game state in dict with keys: {list(state_data.keys())}"
+                    f"Could not find valid game state in dict with keys: {
+                        list(state_data.keys())
+                    }"
                 )
                 return None
 

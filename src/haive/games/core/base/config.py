@@ -1,6 +1,7 @@
 from abc import ABC
 
 from haive.core.engine.agent.config import AgentConfig
+from pydantic import Field
 
 from haive.games.core.base.state import GameState
 

@@ -15,7 +15,6 @@ that makes the game more engaging and easier to follow.
 
 import time
 from datetime import datetime
-from typing import List, Optional
 
 from rich import box
 from rich.align import Align
@@ -76,7 +75,7 @@ class CheckersUI:
         """
         self.console = Console()
         self.layout = Layout()
-        self.game_log: List[str] = []
+        self.game_log: list[str] = []
         self.move_count = 0
         self.start_time = datetime.now()
 
@@ -142,7 +141,7 @@ class CheckersUI:
         )
 
     def _create_board_display(
-        self, state: CheckersState, last_move: Optional[CheckersMove] = None
+        self, state: CheckersState, last_move: CheckersMove | None = None
     ) -> Panel:
         """Create a beautiful board visualization.
 
@@ -161,7 +160,7 @@ class CheckersUI:
 
         # Column headers with style
         col_header = "     " + "  ".join(
-            f"[bold cyan]{chr(97+i)}[/bold cyan]" for i in range(8)
+            f"[bold cyan]{chr(97 + i)}[/bold cyan]" for i in range(8)
         )
         board_lines.append(col_header)
         board_lines.append("   " + "─" * 33)
@@ -174,7 +173,7 @@ class CheckersUI:
 
         # Build board rows
         for row in range(8):
-            row_display = f"[bold cyan]{8-row}[/bold cyan] │"
+            row_display = f"[bold cyan]{8 - row}[/bold cyan] │"
 
             for col in range(8):
                 # Determine square color
@@ -191,7 +190,8 @@ class CheckersUI:
                 if (row, col) == last_from or (row, col) == last_to:
                     square_style = self.colors["last_move"]
 
-                    # We'll set a flag to apply special styling to the piece later
+                    # We'll set a flag to apply special styling to the piece
+                    # later
                     if last_move and (row, col) == last_to:
                         is_last_move_highlight = last_move.player
 
@@ -206,7 +206,7 @@ class CheckersUI:
                 styled_cell = f"[{square_style}]{cell}[/{square_style}]"
                 row_display += styled_cell
 
-            row_display += f" │ [bold cyan]{8-row}[/bold cyan]"
+            row_display += f" │ [bold cyan]{8 - row}[/bold cyan]"
             board_lines.append(row_display)
 
         # Bottom border and column labels
@@ -534,7 +534,8 @@ class CheckersUI:
 
             # Process moves in pairs (Red & Black)
             moves = state.move_history
-            total_pairs = (len(moves) + 1) // 2  # Round up to include incomplete pairs
+            # Round up to include incomplete pairs
+            total_pairs = (len(moves) + 1) // 2
 
             # Show last 8 move pairs (16 moves) at most
             start_pair = max(0, total_pairs - 8)
@@ -653,7 +654,9 @@ class CheckersUI:
             transient=True,
         ) as progress:
             progress.add_task(
-                f"[{self.colors[f'player_{player}']}]{player.capitalize()} is thinking...",
+                f"[{self.colors[f'player_{player}']}]{
+                    player.capitalize()
+                } is thinking...",
                 total=None,
             )
             time.sleep(0.5)

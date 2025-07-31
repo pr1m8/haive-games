@@ -101,7 +101,7 @@ class TestCheckersState:
 
         # Check that each board row starts with a number
         for i in range(8):
-            assert lines[i].startswith(f"{8-i} |")
+            assert lines[i].startswith(f"{8 - i} |")
 
     def test_checkers_state_custom_board_string(self) -> None:
         """Test board string with custom board configuration."""

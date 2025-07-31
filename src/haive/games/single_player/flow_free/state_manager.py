@@ -475,7 +475,9 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
         else:
             hint = (
                 f"Continue the {hint_flow.color} flow from its current end. "
-                f"Valid next positions: {', '.join(str(p) for p in potential_positions)}."
+                f"Valid next positions: {
+                    ', '.join(str(p) for p in potential_positions)
+                }."
             )
 
         return new_state, hint
@@ -558,7 +560,9 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
             for flow_id, flow in new_state.flows.items():
                 status = "✓" if flow.completed else " "
                 flow_list.append(
-                    f" {status} {flow.color}: {flow.start.position} → {flow.end.position}"
+                    f" {status} {flow.color}: {flow.start.position} → {
+                        flow.end.position
+                    }"
                 )
 
             new_state.error_message = "Flows:\n" + "\n".join(flow_list)

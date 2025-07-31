@@ -4,7 +4,6 @@ import uuid
 from enum import Enum
 from typing import Literal
 
-# Import from our base framework
 from game_framework_base import (
     Board,
     Game,
@@ -14,6 +13,8 @@ from game_framework_base import (
     GridSpace,
 )
 from pydantic import BaseModel, Field, computed_field, field_validator
+
+# Import from our base framework
 
 # ======================================================
 # FLOW FREE TYPES AND CONSTANTS
@@ -92,7 +93,8 @@ class FlowPipe(FlowPiece):
         if space.is_occupied():
             return False
 
-        # Must be adjacent to either an endpoint or another pipe of the same flow
+        # Must be adjacent to either an endpoint or another pipe of the same
+        # flow
         adjacent_positions = board.get_adjacent_positions(position)
         for adj_pos in adjacent_positions:
             adj_space = board.get_space_at_position(adj_pos)
@@ -529,7 +531,8 @@ class FlowFreeLevel(BaseModel):
 
     rows: int
     cols: int
-    flows: list[tuple[str, tuple[int, int], tuple[int, int]]]  # color, start, end
+    # color, start, end
+    flows: list[tuple[str, tuple[int, int], tuple[int, int]]]
 
     def create_game(self) -> FlowFreeGame:
         """Create a game from this level."""

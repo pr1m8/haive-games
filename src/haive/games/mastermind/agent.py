@@ -12,11 +12,10 @@ from haive.games.mastermind.config import MastermindConfig
 from haive.games.mastermind.models import ColorCode, MastermindGuess
 from haive.games.mastermind.state import MastermindState
 from haive.games.mastermind.state_manager import MastermindStateManager
+from haive.games.mastermind.ui import MastermindUI
 
 # Import the UI module
 try:
-    from haive.games.mastermind.ui import MastermindUI
-
     UI_AVAILABLE = True
 except ImportError:
     UI_AVAILABLE = False
@@ -52,7 +51,9 @@ def ensure_game_state(
     if isinstance(state_input, dict):
         try:
             logger.info(
-                f"ensure_game_state: Converting dict to MastermindState, keys: {list(state_input.keys())}"
+                f"ensure_game_state: Converting dict to MastermindState, keys: {
+                    list(state_input.keys())
+                }"
             )
             return MastermindState.model_validate(state_input)
         except Exception as e:
@@ -148,7 +149,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         for i, (guess, feedback) in enumerate(
             zip(state.guesses, state.feedback, strict=False)
         ):
-            guess_str = f"Turn {i+1}: {', '.join(guess.colors)}"
+            guess_str = f"Turn {i + 1}: {', '.join(guess.colors)}"
             feedback_str = (
                 f"🎯 {feedback.correct_position}, 🔄 {feedback.correct_color}"
             )
@@ -192,7 +193,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         for i, (guess, feedback) in enumerate(
             zip(state.guesses, state.feedback, strict=False)
         ):
-            guess_str = f"Turn {i+1}: {', '.join(guess.colors)}"
+            guess_str = f"Turn {i + 1}: {', '.join(guess.colors)}"
             feedback_str = (
                 f"🎯 {feedback.correct_position}, 🔄 {feedback.correct_color}"
             )
@@ -417,7 +418,9 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                     f"📊 Turn: {game_state.current_turn_number}/{game_state.max_turns}"
                 )
                 logger.info(
-                    f"🎭 Codemaker: {game_state.codemaker}, Codebreaker: {'player2' if game_state.codemaker == 'player1' else 'player1'}"
+                    f"🎭 Codemaker: {game_state.codemaker}, Codebreaker: {
+                        'player2' if game_state.codemaker == 'player1' else 'player1'
+                    }"
                 )
                 logger.info(f"📝 Status: {game_state.game_status}")
 
@@ -443,10 +446,16 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
                     if isinstance(last_analysis, dict):
                         logger.info(
-                            f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
+                            f"Possible combinations: {
+                                last_analysis.get('possible_combinations', '?')
+                            }"
                         )
                         logger.info(
-                            f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
+                            f"High probability colors: {
+                                ', '.join(
+                                    last_analysis.get('high_probability_colors', [])
+                                )
+                            }"
                         )
                         logger.info(
                             f"Strategy: {last_analysis.get('strategy', 'Unknown')}"
@@ -456,10 +465,14 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                         )
                     else:
                         logger.info(
-                            f"Possible combinations: {last_analysis.possible_combinations}"
+                            f"Possible combinations: {
+                                last_analysis.possible_combinations
+                            }"
                         )
                         logger.info(
-                            f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
+                            f"High probability colors: {
+                                ', '.join(last_analysis.high_probability_colors)
+                            }"
                         )
                         logger.info(f"Strategy: {last_analysis.strategy}")
                         logger.info(f"Confidence: {last_analysis.confidence}/10")
@@ -470,10 +483,16 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
                     if isinstance(last_analysis, dict):
                         logger.info(
-                            f"Possible combinations: {last_analysis.get('possible_combinations', '?')}"
+                            f"Possible combinations: {
+                                last_analysis.get('possible_combinations', '?')
+                            }"
                         )
                         logger.info(
-                            f"High probability colors: {', '.join(last_analysis.get('high_probability_colors', []))}"
+                            f"High probability colors: {
+                                ', '.join(
+                                    last_analysis.get('high_probability_colors', [])
+                                )
+                            }"
                         )
                         logger.info(
                             f"Strategy: {last_analysis.get('strategy', 'Unknown')}"
@@ -483,10 +502,14 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                         )
                     else:
                         logger.info(
-                            f"Possible combinations: {last_analysis.possible_combinations}"
+                            f"Possible combinations: {
+                                last_analysis.possible_combinations
+                            }"
                         )
                         logger.info(
-                            f"High probability colors: {', '.join(last_analysis.high_probability_colors)}"
+                            f"High probability colors: {
+                                ', '.join(last_analysis.high_probability_colors)
+                            }"
                         )
                         logger.info(f"Strategy: {last_analysis.strategy}")
                         logger.info(f"Confidence: {last_analysis.confidence}/10")
@@ -709,9 +732,11 @@ class MastermindAgent(GameAgent[MastermindConfig]):
                             final_state = step
                             break
 
-                        # Detect if we're stuck in an infinite loop by comparing with last state
+                        # Detect if we're stuck in an infinite loop by
+                        # comparing with last state
                         if last_state:
-                            # If we've seen the same guesses twice, we might be in a loop
+                            # If we've seen the same guesses twice, we might be
+                            # in a loop
                             if (
                                 len(current_state.guesses) == len(last_state.guesses)
                                 and len(current_state.guesses) > 0

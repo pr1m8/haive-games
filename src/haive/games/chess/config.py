@@ -160,7 +160,8 @@ class ChessConfig(BaseGameConfig):
 
     def create_simple_player_configs(self) -> dict[str, PlayerAgentConfig]:
         """Create player configs from simple model strings."""
-        # Use white_model/black_model if provided, otherwise use base class defaults
+        # Use white_model/black_model if provided, otherwise use base class
+        # defaults
         white_model = self.white_model or self.player1_model or "gpt-4o"
         black_model = (
             self.black_model or self.player2_model or "claude-3-5-sonnet-20240620"

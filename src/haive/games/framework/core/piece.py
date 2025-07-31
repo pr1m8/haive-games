@@ -1,4 +1,5 @@
 # game_framework/core/piece.py
+
 from __future__ import annotations
 
 import uuid

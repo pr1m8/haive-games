@@ -4,8 +4,8 @@ This module tests the Pydantic models used in the Go game,
 including move validation and analysis models.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.go.models import GoAnalysis, GoMove
 

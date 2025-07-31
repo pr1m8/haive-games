@@ -37,11 +37,12 @@ Implementation details:
     - Fixed player lookup and identification
 """
 
+import datetime
 import json
 import logging
 import random
 import traceback
-from typing import Any, Dict, List, Literal
+from typing import Any, Literal
 
 from haive.core.engine.agent.agent import Agent, AgentConfig, register_agent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -50,12 +51,7 @@ from langgraph.types import Command
 from pydantic import Field
 
 from haive.games.hold_em.player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
-from haive.games.hold_em.state import (
-    GamePhase,
-    HoldemState,
-    PlayerState,
-    PlayerStatus,
-)
+from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
 
 # Setup detailed logging
 logging.basicConfig(level=logging.DEBUG)
@@ -86,12 +82,12 @@ class HoldemGameAgentConfig(AgentConfig):
     max_hands: int = Field(default=50, description="Maximum hands to play")
 
     # Player configurations
-    player_configs: List[HoldemPlayerAgentConfig] = Field(
+    player_configs: list[HoldemPlayerAgentConfig] = Field(
         default_factory=list, description="Configurations for each player agent"
     )
 
     # Game engines (for dealing, evaluation, etc.)
-    engines: Dict[str, AugLLMConfig] = Field(
+    engines: dict[str, AugLLMConfig] = Field(
         default_factory=dict, description="Game management engines"
     )
 
@@ -170,7 +166,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 )
                 logger.error(traceback.format_exc())
                 raise RuntimeError(
-                    f"Failed to create required player agent for {player_config.player_name}: {e}"
+                    f"Failed to create required player agent for {
+                        player_config.player_name
+                    }: {e}"
                 )
 
     def log_agent_config(self, player_config: HoldemPlayerAgentConfig):
@@ -419,7 +417,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 raise RuntimeError("Could not find blind players")
 
             logger.debug(
-                f"Small blind: {small_blind_player.name}, Big blind: {big_blind_player.name}"
+                f"Small blind: {small_blind_player.name}, Big blind: {
+                    big_blind_player.name
+                }"
             )
 
             # Post blinds
@@ -533,7 +533,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 attempts += 1
 
             logger.debug(
-                f"First to act: {state.players[first_to_act].name} (position {first_to_act})"
+                f"First to act: {state.players[first_to_act].name} (position {
+                    first_to_act
+                })"
             )
 
             return Command(update={"deck": deck, "current_player_index": first_to_act})
@@ -586,7 +588,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         logger.info("   All players:")
         for i, player in enumerate(state.players):
             logger.info(
-                f"     [{i}] Name: '{player.name}', ID: '{player.player_id}', Status: {player.status}"
+                f"     [{i}] Name: '{player.name}', ID: '{player.player_id}', Status: {
+                    player.status
+                }"
             )
 
         # Get current player with better error handling
@@ -665,7 +669,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         # Log decision context
         logger.info(
-            f"🎯 Getting decision from {current_player.name} (ID: {current_player.player_id})"
+            f"🎯 Getting decision from {current_player.name} (ID: {
+                current_player.player_id
+            })"
         )
         logger.info(f"   Position: {current_player.position}")
         logger.info(f"   Chips: {current_player.chips}")
@@ -696,7 +702,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             # Final validation of the input
             if not player_input["player_id"] or player_input["player_id"].strip() == "":
                 raise RuntimeError(
-                    f"Player ID is still empty for {current_player.name} after all fixes"
+                    f"Player ID is still empty for {
+                        current_player.name
+                    } after all fixes"
                 )
 
             # Enhanced logging of invocation details
@@ -722,7 +730,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
             logger.info(f"🤖 Invoking player agent for {current_player.name}")
             logger.debug(
-                f"Invocation details: {json.dumps(invocation_details, indent=2, default=str)}"
+                f"Invocation details: {
+                    json.dumps(invocation_details, indent=2, default=str)
+                }"
             )
 
             self.invocation_log.append(invocation_details)
@@ -767,7 +777,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             }
 
             logger.info(
-                f"🎯 {current_player.name} decision: {decision.get('action', 'unknown')}"
+                f"🎯 {current_player.name} decision: {
+                    decision.get('action', 'unknown')
+                }"
             )
             if decision.get("amount", 0) > 0:
                 logger.info(f"   Amount: {decision['amount']}")
@@ -798,7 +810,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             }
 
             logger.error(
-                f"❌ Critical error in get_player_decision for {current_player.name}: {str(e)}"
+                f"❌ Critical error in get_player_decision for {current_player.name}: {
+                    str(e)
+                }"
             )
             logger.error(f"   Stack trace: {traceback.format_exc()}")
 
@@ -810,7 +824,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             )
 
     def _apply_player_action(
-        self, state: HoldemState, player: PlayerState, decision: Dict[str, Any]
+        self, state: HoldemState, player: PlayerState, decision: dict[str, Any]
     ) -> Command:
         """Apply a player's action to the game state and update chips and pot.
 
@@ -867,7 +881,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                         action_record["amount"] = amount
                         self._apply_call(player, state, call_amount)
                         logger.info(
-                            f"   ☎️ {player.name} calls {call_amount} (forced from check)"
+                            f"   ☎️ {player.name} calls {
+                                call_amount
+                            } (forced from check)"
                         )
                     else:
                         # Force fold
@@ -962,7 +978,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             raise RuntimeError(f"Applying action failed: {str(e)}")
 
     # Helper methods (keeping the existing implementations)
-    def _create_deck(self) -> List[str]:
+    def _create_deck(self) -> list[str]:
         """Create a standard 52-card deck."""
         ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
         suits = ["h", "d", "c", "s"]
@@ -1010,7 +1026,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         state.min_raise = bet_amount
 
     def _advance_or_complete_betting_with_action(
-        self, state: HoldemState, action_record: Dict[str, Any]
+        self, state: HoldemState, action_record: dict[str, Any]
     ) -> Command:
         """Advance betting after applying an action."""
         # Check if betting is complete
@@ -1276,7 +1292,9 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
                 if winner:
                     winner.chips += state.total_pot
                     logger.info(
-                        f"💰 {winner.name} wins {state.total_pot} chips (now has {winner.chips})"
+                        f"💰 {winner.name} wins {state.total_pot} chips (now has {
+                            winner.chips
+                        })"
                     )
 
             # Record hand in history
@@ -1393,7 +1411,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             return "END"
 
     def _evaluate_hand_simple(
-        self, hole_cards: List[str], community_cards: List[str]
+        self, hole_cards: list[str], community_cards: list[str]
     ) -> float:
         """Simple hand evaluation method (placeholder for production
         evaluator).
@@ -1427,9 +1445,6 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _save_debug_logs(self):
         """Save debug logs to files."""
         try:
-            import datetime
-            import json
-
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
             # Save decision log

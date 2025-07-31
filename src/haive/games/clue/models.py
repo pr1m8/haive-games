@@ -606,8 +606,10 @@ class ClueResponse:
     """
 
     is_correct: bool  # True if the guess matched the solution
-    responding_player: str | None = None  # Name of the player who responded (if any)
-    refuting_card: ClueCard | None = None  # The card shown to refute the guess (if any)
+    # Name of the player who responded (if any)
+    responding_player: str | None = None
+    # The card shown to refute the guess (if any)
+    refuting_card: ClueCard | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the response to a dictionary.

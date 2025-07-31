@@ -9,8 +9,8 @@ This module provides comprehensive tests for Connect4 models including:
 All tests use real components without mocks, following the no-mocks methodology.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.connect4.models import (
     Connect4Analysis,

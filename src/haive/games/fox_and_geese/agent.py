@@ -5,17 +5,15 @@ models to generate moves and analyze positions in the game.
 """
 
 # Standard library imports
+
 import json
 import logging
 import re
 import time
 from typing import Any
 
-# Local imports
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
-
-# Third-party imports
 from langgraph.constants import END, START
 from langgraph.types import Command
 from rich.console import Console
@@ -29,12 +27,15 @@ from haive.games.fox_and_geese.models import (
 )
 from haive.games.fox_and_geese.state import FoxAndGeeseState
 from haive.games.fox_and_geese.state_manager import FoxAndGeeseStateManager
+from haive.games.fox_and_geese.ui import FoxAndGeeseUI
 from haive.games.framework.base.agent import GameAgent
+
+# Third-party imports
+
+# Local imports
 
 # Import the UI module
 try:
-    from haive.games.fox_and_geese.ui import FoxAndGeeseUI
-
     UI_AVAILABLE = True
 except ImportError:
     UI_AVAILABLE = False
@@ -67,10 +68,11 @@ def ensure_game_state(
         # Initialize a new state as fallback
         return FoxAndGeeseState.initialize()
     if isinstance(state_input, dict):
-
         try:
             logger.info(
-                f"ensure_game_state: Converting dict to FoxAndGeeseState, keys: {list(state_input.keys())}"
+                f"ensure_game_state: Converting dict to FoxAndGeeseState, keys: {
+                    list(state_input.keys())
+                }"
             )
             return FoxAndGeeseState.model_validate(state_input)
         except Exception as e:
@@ -109,9 +111,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         # Ensure recursion_limit is in runnable_config
         if hasattr(self, "runnable_config") and self.runnable_config:
             if "configurable" in self.runnable_config:
-                self.runnable_config["configurable"][
-                    "recursion_limit"
-                ] = config.recursion_limit
+                self.runnable_config["configurable"]["recursion_limit"] = (
+                    config.recursion_limit
+                )
 
         # Initialize UI if available
         self.ui = FoxAndGeeseUI(self.console) if UI_AVAILABLE else None
@@ -130,10 +132,13 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         logger.info("Initializing new Fox and Geese game")
         game_state = self.state_manager.initialize()
         logger.debug(
-            f"Initialized game state: fox at {game_state.fox_position}, {game_state.num_geese} geese"
+            f"Initialized game state: fox at {game_state.fox_position}, {
+                game_state.num_geese
+            } geese"
         )
 
-        # Return the state as a Command with properly serialized dictionary update
+        # Return the state as a Command with properly serialized dictionary
+        # update
         return Command(
             update={
                 "fox_position": game_state.fox_position.model_dump(),
@@ -328,7 +333,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         """
         legal_moves = self.state_manager.get_legal_moves(game_state)
         if not legal_moves:
-            raise ValueError(f"No legal moves available for {piece_type}")
+            raise TypeError(f"No legal moves available for {piece_type}")
 
         # Return the first legal move as fallback
         logger.info(
@@ -461,7 +466,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                         new_state = self.state_manager.apply_move(game_state, move)
                         return new_state
                     logger.warning(
-                        f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                        f"Attempt {attempt + 1}/{max_attempts}: LLM move {
+                            move
+                        } not in legal moves"
                     )
                     if attempt == max_attempts - 1:
                         # Last attempt, use fallback
@@ -472,7 +479,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
                 except Exception as e:
                     logger.error(
-                        f"Attempt {attempt+1}/{max_attempts}: Error calling fox engine: {e}"
+                        f"Attempt {attempt + 1}/{
+                            max_attempts
+                        }: Error calling fox engine: {e}"
                     )
                     if attempt == max_attempts - 1:
                         # Last attempt, use fallback
@@ -509,7 +518,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             # Ensure it's the geese's turn
             if game_state.turn != "geese":
                 logger.warning(
-                    f"Not geese's turn (current: {game_state.turn}), skipping geese move"
+                    f"Not geese's turn (current: {
+                        game_state.turn
+                    }), skipping geese move"
                 )
                 return game_state
 
@@ -543,7 +554,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
                         new_state = self.state_manager.apply_move(game_state, move)
                         return new_state
                     logger.warning(
-                        f"Attempt {attempt+1}/{max_attempts}: LLM move {move} not in legal moves"
+                        f"Attempt {attempt + 1}/{max_attempts}: LLM move {
+                            move
+                        } not in legal moves"
                     )
                     if attempt == max_attempts - 1:
                         # Last attempt, use fallback
@@ -554,7 +567,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
                 except Exception as e:
                     logger.error(
-                        f"Attempt {attempt+1}/{max_attempts}: Error calling geese engine: {e}"
+                        f"Attempt {attempt + 1}/{
+                            max_attempts
+                        }: Error calling geese engine: {e}"
                     )
                     if attempt == max_attempts - 1:
                         # Last attempt, use fallback
@@ -672,8 +687,6 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         Returns:
             String representation of the analysis
         """
-        import json
-        import re
 
         # Try to extract structured data
         try:
@@ -950,7 +963,8 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             # Prepare config with recursion_limit explicitly set
             stream_config = {"recursion_limit": self.config.recursion_limit}
 
-            # Use the stream method from the base Agent class with explicit recursion limit
+            # Use the stream method from the base Agent class with explicit
+            # recursion limit
             for state_update in self.stream(
                 initial_state, stream_mode="values", debug=True, **stream_config
             ):
@@ -1015,7 +1029,8 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             The final game state as a dictionary
         """
         try:
-            # Initialize state from input if provided, otherwise create new game
+            # Initialize state from input if provided, otherwise create new
+            # game
             if input_data is None:
                 initial_state = self.state_manager.initialize()
             elif isinstance(input_data, FoxAndGeeseState):

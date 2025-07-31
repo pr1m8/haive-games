@@ -25,11 +25,12 @@ from rich.panel import Panel
 from rich.progress import Progress
 from rich.table import Table
 
-# Import battleship components
 from haive.games.battleship.agent import BattleshipAgent
 from haive.games.battleship.config import BattleshipAgentConfig
 from haive.games.battleship.models import GamePhase
 from haive.games.battleship.utils import visualize_board
+
+# Import battleship components
 
 # Create console for rich output
 console = Console()
@@ -64,13 +65,16 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
     """
     console.print(
         Panel.fit(
-            "🚢 [bold blue]Battleship Game[/bold blue] 🚢", border_style="bold blue"
-        )
+            "🚢 [bold blue]Battleship Game[/bold blue] 🚢",
+            border_style="bold blue",
+        ),
     )
 
     # Create configuration
     config = BattleshipAgentConfig(
-        enable_analysis=analysis, visualize_board=visualize, debug=debug
+        enable_analysis=analysis,
+        visualize_board=visualize,
+        debug=debug,
     )
 
     # Create and initialize agent
@@ -92,7 +96,10 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
         console.print("[cyan]Starting game...[/cyan]")
 
         for step in agent.app.stream(
-            {}, stream_mode="values", debug=debug, config=agent.runnable_config
+            {},
+            stream_mode="values",
+            debug=debug,
+            config=agent.runnable_config,
         ):
             step_counter += 1
             current_player = step.get("current_player")
@@ -108,7 +115,7 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
             # Show error if any
             if error:
                 console.print(
-                    Panel(f"[bold red]ERROR:[/bold red] {error}", border_style="red")
+                    Panel(f"[bold red]ERROR:[/bold red] {error}", border_style="red"),
                 )
 
             # Show boards if in playing phase and visualization is enabled
@@ -124,10 +131,12 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
 
                 # Visualize boards
                 p1_board = visualize_board(
-                    player1_state.get("board", {}), is_opponent=False
+                    player1_state.get("board", {}),
+                    is_opponent=False,
                 )
                 p2_board = visualize_board(
-                    player2_state.get("board", {}), is_opponent=True
+                    player2_state.get("board", {}),
+                    is_opponent=True,
                 )
 
                 table.add_row(p1_board, p2_board)
@@ -144,7 +153,7 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
                                 p1_analysis[-1],
                                 title="Player 1 Analysis",
                                 border_style="cyan",
-                            )
+                            ),
                         )
                     elif p2_analysis and current_player == "player2":
                         console.print(
@@ -152,7 +161,7 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
                                 p2_analysis[-1],
                                 title="Player 2 Analysis",
                                 border_style="cyan",
-                            )
+                            ),
                         )
 
             # Check if game is over
@@ -181,12 +190,12 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
             p1_hits = len(
                 final_state.get("player1_state", {})
                 .get("board", {})
-                .get("successful_hits", [])
+                .get("successful_hits", []),
             )
             p2_hits = len(
                 final_state.get("player2_state", {})
                 .get("board", {})
-                .get("successful_hits", [])
+                .get("successful_hits", []),
             )
             console.print(f"Player 1 Hits: {p1_hits}")
             console.print(f"Player 2 Hits: {p2_hits}")
@@ -203,10 +212,12 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
                 table.add_column("Player 2 Board")
                 # Visualize final boards
                 p1_board = visualize_board(
-                    player1_state.get("board", {}), is_opponent=False
+                    player1_state.get("board", {}),
+                    is_opponent=False,
                 )
                 p2_board = visualize_board(
-                    player2_state.get("board", {}), is_opponent=False
+                    player2_state.get("board", {}),
+                    is_opponent=False,
                 )
                 table.add_row(p1_board, p2_board)
                 console.print(table)
@@ -215,7 +226,7 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
         console.print("[bold red]Game interrupted by user.[/bold red]")
     except Exception as e:
         console.print(
-            Panel(f"[bold red]Unexpected error:[/bold red] {e}", border_style="red")
+            Panel(f"[bold red]Unexpected error:[/bold red] {e}", border_style="red"),
         )
 
 
@@ -236,14 +247,21 @@ def main():
     """
     parser = argparse.ArgumentParser(description="Run a Battleship LLM agent match.")
     parser.add_argument(
-        "--no-visual", action="store_true", help="Disable board visualization."
+        "--no-visual",
+        action="store_true",
+        help="Disable board visualization.",
     )
     parser.add_argument(
-        "--no-analysis", action="store_true", help="Disable strategic analysis."
+        "--no-analysis",
+        action="store_true",
+        help="Disable strategic analysis.",
     )
     parser.add_argument("--debug", action="store_true", help="Enable debug mode.")
     parser.add_argument(
-        "--delay", type=float, default=0.5, help="Delay between steps (default: 0.5s)"
+        "--delay",
+        type=float,
+        default=0.5,
+        help="Delay between steps (default: 0.5s)",
     )
 
     args = parser.parse_args()

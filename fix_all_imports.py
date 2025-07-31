@@ -39,7 +39,7 @@ def fix_init_file(init_file_path):
     print(f"\n🔧 Fixing {init_file_path}")
 
     try:
-        with open(init_file_path, "r") as f:
+        with open(init_file_path) as f:
             content = f.read()
 
         tree = ast.parse(content)

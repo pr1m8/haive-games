@@ -17,11 +17,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
-from haive.games.among_us.models import (
-    AmongUsGamePhase,
-    PlayerRole,
-    TaskStatus,
-)
+from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
 from haive.games.among_us.state import AmongUsState
 
 logger = logging.getLogger(__name__)
@@ -166,7 +162,8 @@ class EnhancedAmongUsUI:
 
             # If it's a dict, try to extract from nested structure
             if isinstance(state_data, dict):
-                # First check for 'values' key which is used in langgraph stream output
+                # First check for 'values' key which is used in langgraph
+                # stream output
                 if "values" in state_data and isinstance(state_data["values"], dict):
                     values_dict = state_data["values"]
                     if self._is_valid_game_state_dict(values_dict):
@@ -182,7 +179,8 @@ class EnhancedAmongUsUI:
                     if isinstance(value, AmongUsState):
                         return value
 
-                # Next, try to find a dict that can be converted to AmongUsState
+                # Next, try to find a dict that can be converted to
+                # AmongUsState
                 for key, value in state_data.items():
                     if isinstance(value, dict) and self._is_valid_game_state_dict(
                         value
@@ -306,12 +304,20 @@ class EnhancedAmongUsUI:
                     # Add player indicators
                     if players_in_room:
                         player_count = len(players_in_room)
-                        cell_content += f"\n[{self.colors['info']}]{self.map_symbols['player']} {player_count} player{'s' if player_count > 1 else ''}[/{self.colors['info']}]"
+                        cell_content += f"\n[{self.colors['info']}]{
+                            self.map_symbols['player']
+                        } {player_count} player{'s' if player_count > 1 else ''}[/{
+                            self.colors['info']
+                        }]"
 
                     # Add dead body indicators
                     if bodies_in_room:
                         body_count = len(bodies_in_room)
-                        cell_content += f"\n[{self.colors['dead']}]{self.map_symbols['dead_body']} {body_count} bod{'ies' if body_count > 1 else 'y'}[/{self.colors['dead']}]"
+                        cell_content += f"\n[{self.colors['dead']}]{
+                            self.map_symbols['dead_body']
+                        } {body_count} bod{'ies' if body_count > 1 else 'y'}[/{
+                            self.colors['dead']
+                        }]"
 
                     # Add vent indicator
                     if has_vents:
@@ -422,7 +428,9 @@ class EnhancedAmongUsUI:
         )
         header_table.add_row(
             "Location",
-            f"[{self.colors.get(player_state.location, 'white')}]{player_state.location.capitalize()}[/{self.colors.get(player_state.location, 'white')}]",
+            f"[{self.colors.get(player_state.location, 'white')}]{
+                player_state.location.capitalize()
+            }[/{self.colors.get(player_state.location, 'white')}]",
         )
 
         if player_state.in_vent:
@@ -480,7 +488,8 @@ class EnhancedAmongUsUI:
         # Recent observations
         if player_state.observations:
             obs_text = ""
-            for obs in player_state.observations[-5:]:  # Show last 5 observations
+            # Show last 5 observations
+            for obs in player_state.observations[-5:]:
                 obs_text += f"• {obs}\n"
 
             observations_panel = Panel(
@@ -591,7 +600,7 @@ class EnhancedAmongUsUI:
                     "[green]FIXED[/green]" if point.resolved else "[red]NOT FIXED[/red]"
                 )
                 info_table.add_row(
-                    f"Fix Point {i+1}", f"{point.location.capitalize()} - {status}"
+                    f"Fix Point {i + 1}", f"{point.location.capitalize()} - {status}"
                 )
 
         # Create the panel
@@ -1046,7 +1055,9 @@ class EnhancedAmongUsUI:
             # For door locks or other sabotages without resolution points
             effects_text = ""
             if active_sabotage.type == "doors":
-                effects_text = f"The doors to {active_sabotage.location.capitalize()} have been locked.\n\nDoors will automatically unlock after the timer expires."
+                effects_text = f"The doors to {
+                    active_sabotage.location.capitalize()
+                } have been locked.\n\nDoors will automatically unlock after the timer expires."
             elif active_sabotage.type == "lights":
                 effects_text = "Lights have been sabotaged. Crewmate vision is reduced.\n\nFix the lights panel in Electrical to restore vision."
             elif active_sabotage.type == "comms":
@@ -1143,7 +1154,7 @@ class EnhancedAmongUsUI:
                 moves_table.add_row("Vote", details)
 
             elif action_type == "sabotage":
-                sabotage_types = set(move.get("sabotage_type") for move in moves)
+                sabotage_types = {move.get("sabotage_type") for move in moves}
                 details = f"Types: {', '.join(sabotage_types)}"
                 moves_table.add_row(
                     f"[{self.colors['danger']}]Sabotage[/{self.colors['danger']}]",
@@ -1493,7 +1504,9 @@ The game will be played by AI agents with enhanced visualization!
 
         if action_type == "move":
             location = move.get("location", "unknown")
-            description += f"moved to [{self.colors.get(location, 'white')}]{location.capitalize()}[/{self.colors.get(location, 'white')}]"
+            description += f"moved to [{self.colors.get(location, 'white')}]{
+                location.capitalize()
+            }[/{self.colors.get(location, 'white')}]"
 
         elif action_type == "complete_task":
             task_id = move.get("task_id", "unknown")
@@ -1502,7 +1515,9 @@ The game will be played by AI agents with enhanced visualization!
                 None,
             )
             if task:
-                description += f"completed task: [{self.colors['task']}]{task.description}[/{self.colors['task']}] in {task.location.capitalize()}"
+                description += f"completed task: [{self.colors['task']}]{
+                    task.description
+                }[/{self.colors['task']}] in {task.location.capitalize()}"
             else:
                 description += f"completed task ID: {task_id}"
 

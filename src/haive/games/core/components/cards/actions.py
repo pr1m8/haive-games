@@ -1,17 +1,11 @@
 # haive/games/core/components/cards/actions.py
 
 from abc import abstractmethod
-from typing import (
-    Any,
-    Generic,
-)
+from typing import Any, Generic
 
 from pydantic import BaseModel, Field, model_validator
 
-from haive.games.core.components.cards.base import (
-    TCard,
-    TState,
-)
+from haive.games.core.components.cards.base import TCard, TState
 
 
 class ActionResult(BaseModel):

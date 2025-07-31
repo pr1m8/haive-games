@@ -5,11 +5,7 @@ from __future__ import annotations
 import random
 import uuid
 from collections.abc import Sequence
-from typing import (
-    Generic,
-    Protocol,
-    TypeVar,
-)
+from typing import Generic, Protocol, TypeVar
 
 from pydantic import BaseModel, Field
 

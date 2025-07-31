@@ -197,6 +197,6 @@ class MastermindState(GameState):
             feedback_str = (
                 f"🎯 {feedback.correct_position} | 🔄 {feedback.correct_color}"
             )
-            result.append(f"{i+1:4d} | {guess_str:25s} | {feedback_str}")
+            result.append(f"{i + 1:4d} | {guess_str:25s} | {feedback_str}")
 
         return "\n".join(result)

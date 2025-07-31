@@ -27,9 +27,7 @@ import operator
 import random
 import sys
 import time
-from typing import List
 
-from haive.games.nim.config import NimConfig
 from haive.games.nim.models import NimMove
 from haive.games.nim.state_manager import NimStateManager
 
@@ -52,12 +50,12 @@ def print_subsection(title: str) -> None:
     print(f"\n--- {title} ---")
 
 
-def calculate_nim_sum(piles: List[int]) -> int:
+def calculate_nim_sum(piles: list[int]) -> int:
     """Calculate the nim-sum (XOR) of pile sizes."""
     return functools.reduce(operator.xor, piles, 0)
 
 
-def binary_representation(piles: List[int]) -> None:
+def binary_representation(piles: list[int]) -> None:
     """Display binary representation of piles for educational purposes."""
     print("\nBinary Analysis:")
     for i, pile in enumerate(piles):
@@ -66,7 +64,9 @@ def binary_representation(piles: List[int]) -> None:
     nim_sum = calculate_nim_sum(piles)
     print(f"  Nim-sum: {nim_sum:2d} = {bin(nim_sum)[2:]:>8s}")
     print(
-        f"  Position: {'Winning (N-position)' if nim_sum != 0 else 'Losing (P-position)'}"
+        f"  Position: {
+            'Winning (N-position)' if nim_sum != 0 else 'Losing (P-position)'
+        }"
     )
 
 
@@ -147,7 +147,9 @@ async def example_1_basic_standard_nim():
 
         if optimal_move:
             print(
-                f"  Optimal move: Take {optimal_move.stones_taken} from pile {optimal_move.pile_index}"
+                f"  Optimal move: Take {optimal_move.stones_taken} from pile {
+                    optimal_move.pile_index
+                }"
             )
 
             # Show nim-sum before and after
@@ -514,7 +516,7 @@ async def example_6_performance_analysis():
         # Find optimal move manually
         nim_sum = calculate_nim_sum(piles)
         if nim_sum != 0:
-            for pile_idx, pile_size in enumerate(piles):
+            for _pile_idx, pile_size in enumerate(piles):
                 target_size = pile_size ^ nim_sum
                 if target_size < pile_size:
                     break
@@ -525,8 +527,6 @@ async def example_6_performance_analysis():
 
     # Memory usage analysis
     print_subsection("Memory Usage Analysis")
-
-    import sys
 
     # Test memory usage for different data structures
     small_piles = [1, 2, 3]
@@ -639,7 +639,7 @@ async def example_7_educational_tutorial():
             print(f"   Move: Take {stones_to_take} from pile {pile_idx}")
             print(f"   Calculation: {pile_size} ⊕ {nim_sum} = {target_size}")
             print(
-                f"   New position: {winning_example[:pile_idx] + [target_size] + winning_example[pile_idx+1:]}"
+                f"   New position: {winning_example[:pile_idx] + [target_size] + winning_example[pile_idx + 1 :]}"
             )
             break
 
@@ -660,7 +660,9 @@ async def example_7_educational_tutorial():
         print(f"\nMove {move_num}: Position {current_piles}")
         print(f"  Nim-sum: {nim_sum}")
         print(
-            f"  Position type: {'N-position (winning)' if nim_sum != 0 else 'P-position (losing)'}"
+            f"  Position type: {
+                'N-position (winning)' if nim_sum != 0 else 'P-position (losing)'
+            }"
         )
 
         if nim_sum != 0:
@@ -685,7 +687,9 @@ async def example_7_educational_tutorial():
                 move = legal_moves[0]
                 move.player = current_player
                 print(
-                    f"  Forced move: Take {move.stones_taken} from pile {move.pile_index}"
+                    f"  Forced move: Take {move.stones_taken} from pile {
+                        move.pile_index
+                    }"
                 )
                 state = NimStateManager.apply_move(state, move)
 
@@ -1001,7 +1005,9 @@ if __name__ == "__main__":
     # Show a few moves
     for i, move in enumerate(legal_moves[:3]):
         print(
-            f"  Move {i+1}: {move.player} takes {move.stones_taken} from pile {move.pile_index}"
+            f"  Move {i + 1}: {move.player} takes {move.stones_taken} from pile {
+                move.pile_index
+            }"
         )
 
     # Test applying a move

@@ -4,8 +4,8 @@ This module tests all the data models and classes used in the Dominoes game,
 ensuring they behave correctly and validate input properly.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.dominoes.models import (
     DominoesAnalysis,
@@ -444,7 +444,9 @@ class TestDominoesPlayerDecision:
             move=move2, pass_turn=False, reasoning="Test"
         )
         decision3 = DominoesPlayerDecision(
-            move=move1, pass_turn=True, reasoning="Test"  # Different
+            move=move1,
+            pass_turn=True,
+            reasoning="Test",  # Different
         )
 
         assert decision1 == decision2

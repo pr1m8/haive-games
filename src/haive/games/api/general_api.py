@@ -7,10 +7,13 @@ each one, with OpenAPI documentation and game selection capabilities.
 
 import importlib
 import logging
+import uuid
 from pathlib import Path
 from typing import Any
 
+import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from haive.core.engine.agent.agent import Agent
 from haive.dataflow.api.game_api import GameAPI
@@ -224,7 +227,9 @@ class GeneralGameAPI:
             if game_id not in self.discovered_games:
                 raise HTTPException(
                     status_code=404,
-                    detail=f"Game '{game_id}' not found. Available games: {list(self.discovered_games.keys())}",
+                    detail=f"Game '{game_id}' not found. Available games: {
+                        list(self.discovered_games.keys())
+                    }",
                 )
 
             game_info = self.discovered_games[game_id]
@@ -292,7 +297,6 @@ class GeneralGameAPI:
                 self._create_game_api(game_id, game_info)
 
             # Generate thread ID
-            import uuid
 
             thread_id = str(uuid.uuid4())
 
@@ -446,7 +450,6 @@ def create_general_game_api(
         )
 
     # Enable CORS
-    from fastapi.middleware.cors import CORSMiddleware
 
     app.add_middleware(
         CORSMiddleware,
@@ -474,8 +477,6 @@ def create_general_game_api(
 
 # Example usage
 if __name__ == "__main__":
-    import uvicorn
-
     # Create the general API
     app, game_api = create_general_game_api()
 

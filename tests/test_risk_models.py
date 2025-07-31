@@ -4,8 +4,8 @@ This module tests all the data models and enums used in the Risk game,
 ensuring they behave correctly and validate input properly.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.risk.models import (
     Card,

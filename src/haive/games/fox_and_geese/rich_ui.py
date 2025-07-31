@@ -101,7 +101,8 @@ class FoxAndGeeseRichUI:
             if hasattr(state_data, "update"):
                 command_update = state_data.update
 
-                # Handle Command objects where update is already a FoxAndGeeseState
+                # Handle Command objects where update is already a
+                # FoxAndGeeseState
                 if isinstance(command_update, FoxAndGeeseState):
                     return command_update
 
@@ -128,7 +129,8 @@ class FoxAndGeeseRichUI:
 
             # If it's a dict, try to extract from nested structure
             if isinstance(state_data, dict):
-                # First check for 'values' key which is used in langgraph stream output
+                # First check for 'values' key which is used in langgraph
+                # stream output
                 if "values" in state_data and isinstance(state_data["values"], dict):
                     values_dict = state_data["values"]
                     if self._is_valid_game_state_dict(values_dict):
@@ -139,12 +141,14 @@ class FoxAndGeeseRichUI:
                                 f"Failed to create FoxAndGeeseState from 'values': {e}"
                             )
 
-                # First, try to find a FoxAndGeeseState object in the dict values
+                # First, try to find a FoxAndGeeseState object in the dict
+                # values
                 for key, value in state_data.items():
                     if isinstance(value, FoxAndGeeseState):
                         return value
 
-                # Next, try to find a dict that can be converted to FoxAndGeeseState
+                # Next, try to find a dict that can be converted to
+                # FoxAndGeeseState
                 for key, value in state_data.items():
                     if isinstance(value, dict) and self._is_valid_game_state_dict(
                         value
@@ -217,23 +221,23 @@ class FoxAndGeeseRichUI:
         # Place the fox
         if game_state.fox_position:
             row, col = game_state.fox_position.row, game_state.fox_position.col
-            board[row][
-                col
-            ] = f"[{self.colors['fox']}]{self.board_symbols['fox']}[/{self.colors['fox']}]"
+            board[row][col] = (
+                f"[{self.colors['fox']}]{self.board_symbols['fox']}[/{self.colors['fox']}]"
+            )
 
         # Place the geese
         for goose in game_state.geese_positions:
             row, col = goose.row, goose.col
-            board[row][
-                col
-            ] = f"[{self.colors['geese']}]{self.board_symbols['goose']}[/{self.colors['geese']}]"
+            board[row][col] = (
+                f"[{self.colors['geese']}]{self.board_symbols['goose']}[/{self.colors['geese']}]"
+            )
 
         # Apply highlights for possible moves
         for pos in highlight_positions:
             if 0 <= pos.row < 7 and 0 <= pos.col < 7:  # Ensure position is valid
-                board[pos.row][
-                    pos.col
-                ] = f"[{self.colors['highlight']}]{self.board_symbols['highlight']}[/{self.colors['highlight']}]"
+                board[pos.row][pos.col] = (
+                    f"[{self.colors['highlight']}]{self.board_symbols['highlight']}[/{self.colors['highlight']}]"
+                )
 
         # Apply highlight for capture
         if (
@@ -241,9 +245,9 @@ class FoxAndGeeseRichUI:
             and 0 <= capture_position.row < 7
             and 0 <= capture_position.col < 7
         ):
-            board[capture_position.row][
-                capture_position.col
-            ] = f"[{self.colors['capture']}]{self.board_symbols['capture']}[/{self.colors['capture']}]"
+            board[capture_position.row][capture_position.col] = (
+                f"[{self.colors['capture']}]{self.board_symbols['capture']}[/{self.colors['capture']}]"
+            )
 
         # Add header row with column numbers
         header_row = [""] + [f"[bold blue]{i}[/bold blue]" for i in range(7)]
@@ -517,9 +521,13 @@ class FoxAndGeeseRichUI:
 
             # Set title based on whose turn it is
             if game_state.turn == "fox":
-                title = f"[bold {self.colors['fox']}]Legal Moves for Fox[/bold {self.colors['fox']}]"
+                title = f"[bold {self.colors['fox']}]Legal Moves for Fox[/bold {
+                    self.colors['fox']
+                }]"
             else:
-                title = f"[bold {self.colors['geese']}]Legal Moves for Geese[/bold {self.colors['geese']}]"
+                title = f"[bold {self.colors['geese']}]Legal Moves for Geese[/bold {
+                    self.colors['geese']
+                }]"
 
             return Panel(
                 moves_text,
@@ -566,9 +574,13 @@ class FoxAndGeeseRichUI:
 
         # Set the title based on whose turn it is
         if game_state.turn == "fox":
-            title = f"[bold {self.colors['fox']}]Legal Moves for Fox[/bold {self.colors['fox']}]"
+            title = f"[bold {self.colors['fox']}]Legal Moves for Fox[/bold {
+                self.colors['fox']
+            }]"
         else:
-            title = f"[bold {self.colors['geese']}]Legal Moves for Geese[/bold {self.colors['geese']}]"
+            title = f"[bold {self.colors['geese']}]Legal Moves for Geese[/bold {
+                self.colors['geese']
+            }]"
 
         return Panel(
             moves_table,
@@ -842,7 +854,9 @@ The game will be played by AI agents with real-time visualization!
 
             # Create title based on result
             if game_state.game_status == "fox_win":
-                title = f"[bold {self.colors['fox']}]🦊 Fox Wins the Game! 🦊[/bold {self.colors['fox']}]"
+                title = f"[bold {self.colors['fox']}]🦊 Fox Wins the Game! 🦊[/bold {
+                    self.colors['fox']
+                }]"
                 border_style = self.colors["fox"]
                 winner_text = Text(
                     "The fox has captured enough geese to secure victory!",
@@ -850,7 +864,9 @@ The game will be played by AI agents with real-time visualization!
                     justify="center",
                 )
             elif game_state.game_status == "geese_win":
-                title = f"[bold {self.colors['geese']}]🪿 Geese Win the Game! 🪿[/bold {self.colors['geese']}]"
+                title = f"[bold {self.colors['geese']}]🪿 Geese Win the Game! 🪿[/bold {
+                    self.colors['geese']
+                }]"
                 border_style = self.colors["geese"]
                 winner_text = Text(
                     "The geese have successfully trapped the fox!",

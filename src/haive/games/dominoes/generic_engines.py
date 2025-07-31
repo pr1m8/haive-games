@@ -15,10 +15,7 @@ from haive.games.core.agent.generic_player_agent import (
     create_engines_from_simple_configs,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.dominoes.models import (
-    DominoesAnalysis,
-    DominoMove,
-)
+from haive.games.dominoes.models import DominoesAnalysis, DominoMove
 
 
 class DominoesPlayerIdentifiers(GamePlayerIdentifiers[str, str]):

@@ -4,13 +4,10 @@ This script demonstrates how to configure and run the Flow Free game
 agent in different modes and difficulty levels.
 """
 
+import argparse
 import sys
+import traceback
 from pathlib import Path
-
-# Add the package to the path if running directly
-if __name__ == "__main__":
-    package_root = Path(__file__).parent.parent.parent.parent.parent
-    sys.path.insert(0, str(package_root))
 
 from rich.console import Console
 
@@ -18,6 +15,11 @@ from haive.games.single_player.base import GameDifficulty, GameMode, PlayerType
 from haive.games.single_player.flow_free.agent import FlowFreeAgent
 from haive.games.single_player.flow_free.config import FlowFreeConfig
 from haive.games.single_player.flow_free.state_manager import FlowFreeStateManager
+
+# Add the package to the path if running directly
+if __name__ == "__main__":
+    package_root = Path(__file__).parent.parent.parent.parent.parent
+    sys.path.insert(0, str(package_root))
 
 
 def main():
@@ -37,7 +39,9 @@ def main():
         config = create_config(args)
 
         console.print(
-            f"[yellow]⚙️ Creating a {config.difficulty.value} Flow Free puzzle...[/yellow]"
+            f"[yellow]⚙️ Creating a {
+                config.difficulty.value
+            } Flow Free puzzle...[/yellow]"
         )
         console.print(f"[yellow]🎮 Game mode: {config.game_mode.value}[/yellow]")
         console.print(f"[yellow]🧮 Grid size: {config.rows}x{config.cols}[/yellow]")
@@ -58,7 +62,6 @@ def main():
         console.print("\n[yellow]👋 Game interrupted by user. Goodbye![/yellow]")
     except Exception as e:
         console.print(f"\n[red]❌ Game failed: {e}[/red]")
-        import traceback
 
         console.print(traceback.format_exc())
 
@@ -69,7 +72,6 @@ def parse_arguments():
     Returns:
         Namespace with parsed arguments.
     """
-    import argparse
 
     parser = argparse.ArgumentParser(description="Flow Free Puzzle Game")
 

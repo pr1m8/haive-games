@@ -1,4 +1,5 @@
 # src/haive/games/debate/state_manager.py
+
 import copy
 from datetime import datetime
 from typing import Any
@@ -63,7 +64,10 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
                 position = "pro" if idx % 2 == 0 else "con"
 
             participants[player_id] = Participant(
-                id=player_id, name=f"Participant {idx+1}", role=role, position=position
+                id=player_id,
+                name=f"Participant {idx + 1}",
+                role=role,
+                position=position,
             )
 
         state.participants = participants

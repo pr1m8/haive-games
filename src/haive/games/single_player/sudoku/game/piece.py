@@ -1,6 +1,7 @@
 # ======================================================
 # SUDOKU COMPONENTS
 # ======================================================
+
 from pydantic import Field, field_validator
 
 from haive.games.core.piece.base import GamePiece

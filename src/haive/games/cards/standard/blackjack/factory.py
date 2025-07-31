@@ -2,6 +2,7 @@ import time
 
 from haive.games.cards.blackjack.agent import BlackjackAgent
 from haive.games.cards.blackjack.config import BlackjackAgentConfig
+from haive.games.cards.blackjack.models import BlackjackGameState
 
 
 def create_blackjack_agent(
@@ -91,16 +92,17 @@ if __name__ == "__main__":
 
     # Print final game summary
     print("\n=== Game Summary ===")
-    from haive.games.cards.blackjack.models import BlackjackGameState
 
     final_game_state = BlackjackGameState(**final_state)
 
     print("Final Chip Stacks:")
     for i, player in enumerate(final_game_state.players):
-        print(f"Player {i+1}: ${player.total_chips:.2f}")
+        print(f"Player {i + 1}: ${player.total_chips:.2f}")
 
     print(
-        f"\nDealer's Final Hand: {' '.join(str(card) for card in final_game_state.dealer_hand)}"
+        f"\nDealer's Final Hand: {
+            ' '.join(str(card) for card in final_game_state.dealer_hand)
+        }"
     )
     print(
         f"Dealer Total: {sum(card.point_value() for card in final_game_state.dealer_hand)}"

@@ -1,8 +1,8 @@
 """Integration tests for Connect4Agent with real LLMs - NO MOCKS."""
 
 import pytest
-from haive.core.engine.aug_llm import AugLLMConfig
 
+from haive.core.engine.aug_llm import AugLLMConfig
 from haive.games.connect4.agent import Connect4Agent
 from haive.games.connect4.config import Connect4AgentConfig
 from haive.games.connect4.models import Connect4Move

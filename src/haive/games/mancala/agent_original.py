@@ -4,17 +4,20 @@ This module defines the Mancala game agent, which uses language models
 to generate moves and analyze positions in the game.
 """
 
+import json
 import logging
 import time
+import traceback
 from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langchain_core.messages import AIMessage
 from langgraph.types import Command
 
 from haive.games.framework.base.agent import GameAgent
 from haive.games.mancala.config import MancalaConfig
-from haive.games.mancala.models import MancalaMove
+from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 from haive.games.mancala.state import MancalaState
 from haive.games.mancala.state_manager import MancalaStateManager
 
@@ -49,7 +52,9 @@ def ensure_game_state(
     if isinstance(state_input, dict):
         try:
             logger.info(
-                f"ensure_game_state: Converting dict to MancalaState, keys: {list(state_input.keys())}"
+                f"ensure_game_state: Converting dict to MancalaState, keys: {
+                    list(state_input.keys())
+                }"
             )
             return MancalaState.model_validate(state_input)
         except Exception as e:
@@ -228,9 +233,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             MancalaMove: Parsed move object.
         """
         # Handle different response types
-        import json
-
-        from langchain_core.messages import AIMessage
 
         # If it's an AIMessage (from LLM tool call)
         if isinstance(response, AIMessage):
@@ -246,7 +248,8 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                         pit_index=args.get("pit_index"), player=args.get("player")
                     )
 
-            # Check additional_kwargs for tool_calls (this is the common pattern)
+            # Check additional_kwargs for tool_calls (this is the common
+            # pattern)
             if (
                 hasattr(response, "additional_kwargs")
                 and "tool_calls" in response.additional_kwargs
@@ -324,7 +327,8 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
             # Check if game is over
             if game_state.game_status != "ongoing":
-                return Command(stop=True)  # Stop the graph execution if game is over
+                # Stop the graph execution if game is over
+                return Command(stop=True)
 
             try:
                 # Prepare context for the move
@@ -348,7 +352,9 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     logger.error(f"Failed to extract move: {extract_error}")
                     return Command(
                         update={
-                            "error_message": f"Failed to extract move: {extract_error!s}\nResponse: {response}"
+                            "error_message": f"Failed to extract move: {
+                                extract_error!s
+                            }\nResponse: {response}"
                         }
                     )
 
@@ -388,11 +394,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             Any: Parsed analysis object.
         """
         # Handle different response types
-        import json
-
-        from langchain_core.messages import AIMessage
-
-        from haive.games.mancala.models import MancalaAnalysis
 
         # If it's an AIMessage (from LLM tool call)
         if isinstance(response, AIMessage):
@@ -488,7 +489,8 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
             # Stop graph execution if game is over
             if game_state.game_status != "ongoing":
-                return Command(stop=True)  # Stop the graph execution if game is over
+                # Stop the graph execution if game is over
+                return Command(stop=True)
 
             try:
                 # Prepare context for analysis
@@ -506,7 +508,9 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                     logger.error(f"Failed to extract analysis: {extract_error}")
                     return Command(
                         update={
-                            "error_message": f"Failed to extract analysis: {extract_error!s}\nResponse: {response}"
+                            "error_message": f"Failed to extract analysis: {
+                                extract_error!s
+                            }\nResponse: {response}"
                         }
                     )
 
@@ -639,8 +643,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
                 # Return the final state
                 return final_state
             except Exception as e:
-                import traceback
-
                 print(f"Error during game execution: {e!s}")
                 traceback.print_exc()
 
@@ -656,8 +658,6 @@ class MancalaAgent(GameAgent[MancalaConfig]):
             try:
                 return super().run(initial_state, debug=debug)
             except Exception as e:
-                import traceback
-
                 print(f"Error running game: {e!s}")
                 traceback.print_exc()
                 return initial_state  # Return initial state as fallback

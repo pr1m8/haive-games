@@ -1,0 +1,42 @@
+default_language_version:
+  python: python3.12
+
+repos:
+  # Use ruff for both linting and formatting
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: "Ruff Linter"
+        entry: ruff check --fix
+        language: system
+        types: [python]
+        stages: [pre-commit]
+        pass_filenames: true
+
+      - id: ruff-format
+        name: "Ruff Formatter"
+        entry: ruff format
+        language: system
+        types: [python]
+        stages: [pre-commit]
+        pass_filenames: true
+
+  # Type checking on pre-push (slower)
+  - repo: local
+    hooks:
+      - id: mypy
+        name: "MyPy Type Checker"
+        entry: mypy
+        language: system
+        types: [python]
+        stages: [pre-push]
+        pass_filenames: true
+
+  # File quality checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: trailing-whitespace
+      - id: end-of-file-fixer

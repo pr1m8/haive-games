@@ -44,13 +44,9 @@ import asyncio
 import logging
 import sys
 import time
+import traceback
 from pathlib import Path
-from typing import Any, Dict
-
-# Add the package to the path if running directly
-if __name__ == "__main__":
-    package_root = Path(__file__).parent.parent.parent.parent
-    sys.path.insert(0, str(package_root))
+from typing import Any
 
 from rich.console import Console
 from rich.panel import Panel
@@ -60,7 +56,14 @@ from rich.table import Table
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
 from haive.games.tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
+from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager
 from haive.games.tic_tac_toe.ui import RichTicTacToeRunner
+
+# Add the package to the path if running directly
+if __name__ == "__main__":
+    package_root = Path(__file__).parent.parent.parent.parent
+    sys.path.insert(0, str(package_root))
+
 
 # Initialize Rich console for beautiful output
 console = Console()
@@ -204,7 +207,9 @@ def example_3_strategic_analysis():
         console.print("\n[bold]Sample Position Analysis:[/bold]")
         console.print(f"[green]Winning moves: {sample_analysis.winning_moves}[/green]")
         console.print(
-            f"[yellow]Position evaluation: {sample_analysis.position_evaluation}[/yellow]"
+            f"[yellow]Position evaluation: {
+                sample_analysis.position_evaluation
+            }[/yellow]"
         )
         console.print(f"[blue]Strategy: {sample_analysis.strategy}[/blue]")
         console.print(f"[cyan]Threat level: {sample_analysis.threat_level}[/cyan]")
@@ -312,7 +317,7 @@ def example_4_performance_testing():
         )
         table.add_row(
             "Speedup",
-            f"{slow_time/fast_time:.1f}x faster",
+            f"{slow_time / fast_time:.1f}x faster",
             "Minimal features",
             "Batch processing",
         )
@@ -398,7 +403,6 @@ def example_5_error_handling():
         except Exception as e:
             console.print(f"[red]✗ Game execution failed: {e}[/red]")
             # In production, you'd log this and possibly retry
-            import traceback
 
             console.print(f"[dim]Traceback: {traceback.format_exc()}[/dim]")
 
@@ -503,7 +507,7 @@ def example_6_tournament_mode():
 
                 return self.analyze_results()
 
-            def _update_stats(self, result: Dict[str, Any]):
+            def _update_stats(self, result: dict[str, Any]):
                 """Update tournament statistics."""
                 status = result.get("game_status", "unknown")
                 self.stats["total_games"] += 1
@@ -600,7 +604,7 @@ async def example_7_async_execution():
             first_player="X",
         )
 
-        async def run_single_game(game_id: int) -> Dict[str, Any]:
+        async def run_single_game(game_id: int) -> dict[str, Any]:
             """Run a single game asynchronously."""
             try:
                 agent = TicTacToeAgent(config)
@@ -664,11 +668,11 @@ async def example_7_async_execution():
         comparison_table.add_row(
             "Async",
             f"{async_time:.2f}s",
-            f"{20/async_time:.1f}",
+            f"{20 / async_time:.1f}",
             f"{speedup:.1f}x faster",
         )
         comparison_table.add_row(
-            "Sync", f"{sync_time:.2f}s", f"{20/sync_time:.1f}", "1.0x (baseline)"
+            "Sync", f"{sync_time:.2f}s", f"{20 / sync_time:.1f}", "1.0x (baseline)"
         )
 
         console.print(comparison_table)
@@ -754,7 +758,7 @@ def example_8_custom_ai_configuration():
             """
         # Example of custom engine configuration
         from haive.core.engine.aug_llm import AugLLMConfig
-        
+
         custom_engine = AugLLMConfig(
             name="strategic_tictactoe",
             model="gpt-4",
@@ -762,7 +766,7 @@ def example_8_custom_ai_configuration():
             max_tokens=500,
             system_prompt="You are a strategic Tic Tac Toe master..."
         )
-        
+
         config = TicTacToeConfig(
             name="custom_strategic_ai",
             engines={"move_generator": custom_engine}
@@ -812,7 +816,7 @@ def run_all_examples():
     results = {}
 
     for name, example_func in examples:
-        console.print(f"\n{'='*60}")
+        console.print(f"\n{'=' * 60}")
 
         try:
             if name == "async":
@@ -836,7 +840,7 @@ def run_all_examples():
             console.print(f"[red]❌ {name.title()} example failed: {e}[/red]")
             results[name] = None
 
-        console.print(f"{'='*60}")
+        console.print(f"{'=' * 60}")
 
     # Final summary
     console.print("\n" + "=" * 60)
@@ -933,8 +937,6 @@ if __name__ == "__main__":
 
     try:
         # Import required components
-        from haive.games.tic_tac_toe.agent import TicTacToeAgent
-        from haive.games.tic_tac_toe.state_manager import TicTacToeStateManager
 
         # Test agent creation
         try:

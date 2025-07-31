@@ -4,8 +4,8 @@ This module tests all data models, enumerations, and data structures
 used in the Battleship game implementation.
 """
 
-import pytest
 from pydantic import ValidationError
+import pytest
 
 from haive.games.battleship.models import (
     Coordinates,

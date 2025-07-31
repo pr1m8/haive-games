@@ -1,4 +1,5 @@
 # src/haive/games/debate/factory.py
+
 from typing import Any
 
 from haive.games.debate.agent import DebateAgent

@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import random
+import time
 import uuid
 from collections import deque
 from enum import Enum
+from typing import Any
 
-# Import base framework classes
 from game_framework_base import GamePiece, GridBoard, GridPosition, GridSpace
 from pydantic import BaseModel, Field, model_validator
+
+# Import base framework classes
 
 # ======================================================
 # MINESWEEPER COMPONENTS
@@ -274,7 +277,8 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         if hit_mine:
             return True, revealed_count
 
-        # If it's an empty cell (0 adjacent mines), reveal neighbors recursively
+        # If it's an empty cell (0 adjacent mines), reveal neighbors
+        # recursively
         if cell.adjacent_mines == 0:
             # Use breadth-first search to reveal connected empty cells
             queue = deque([(row, col)])
@@ -368,7 +372,8 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
                         elif not adj_cell.is_revealed():
                             neighbors.append((adj_row, adj_col))
 
-        # If flagged neighbors equals the cell's value, reveal all unflagged neighbors
+        # If flagged neighbors equals the cell's value, reveal all unflagged
+        # neighbors
         if flagged_neighbors == cell.adjacent_mines:
             hit_mine = False
             revealed_count = 0
@@ -462,7 +467,6 @@ class MinesweeperGame(BaseModel):
         game = cls(board=board, difficulty=difficulty)
 
         # Set start time
-        import time
 
         game.start_time = time.time()
 
@@ -490,7 +494,6 @@ class MinesweeperGame(BaseModel):
             self.board.reveal_all_mines()
 
             # Set end time
-            import time
 
             self.end_time = time.time()
 
@@ -502,7 +505,6 @@ class MinesweeperGame(BaseModel):
             self.win = True
 
             # Set end time
-            import time
 
             self.end_time = time.time()
 
@@ -544,7 +546,6 @@ class MinesweeperGame(BaseModel):
             self.board.reveal_all_mines()
 
             # Set end time
-            import time
 
             self.end_time = time.time()
 
@@ -556,7 +557,6 @@ class MinesweeperGame(BaseModel):
             self.win = True
 
             # Set end time
-            import time
 
             self.end_time = time.time()
 
@@ -583,14 +583,12 @@ class MinesweeperGame(BaseModel):
         self.win = False
 
         # Reset times
-        import time
 
         self.start_time = time.time()
         self.end_time = None
 
     def get_elapsed_time(self) -> int:
         """Get the elapsed time in seconds."""
-        import time
 
         if self.start_time is None:
             return 0

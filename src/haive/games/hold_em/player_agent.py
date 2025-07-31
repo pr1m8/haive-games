@@ -32,6 +32,7 @@ Example:
     >>> player_agent = HoldemPlayerAgent(player_config)
 """
 
+import datetime
 import json
 import logging
 import traceback
@@ -43,11 +44,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-from haive.games.hold_em.state import (
-    HoldemState,
-    PlayerState,
-    PlayerStatus,
-)
+from haive.games.hold_em.state import HoldemState, PlayerState, PlayerStatus
 
 # Setup detailed logging for player agents
 logger = logging.getLogger(__name__)
@@ -191,7 +188,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
         if missing_engines:
             raise ValueError(
-                f"Missing required engines for {self.config.player_name}: {missing_engines}"
+                f"Missing required engines for {self.config.player_name}: {
+                    missing_engines
+                }"
             )
 
         # Validate engine configurations
@@ -201,12 +200,16 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 or engine.structured_output_model is None
             ):
                 raise ValueError(
-                    f"Engine {engine_name} for {self.config.player_name} missing structured_output_model"
+                    f"Engine {engine_name} for {
+                        self.config.player_name
+                    } missing structured_output_model"
                 )
 
             if not hasattr(engine, "prompt_template") or engine.prompt_template is None:
                 raise ValueError(
-                    f"Engine {engine_name} for {self.config.player_name} missing prompt_template"
+                    f"Engine {engine_name} for {
+                        self.config.player_name
+                    } missing prompt_template"
                 )
 
         logger.info(f"✅ All required engines validated for {self.config.player_name}")
@@ -280,7 +283,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 raise RuntimeError(f"Player {state.player_id} not found in game state")
 
             logger.debug(
-                f"   Player found: {player.name}, chips: {player.chips}, position: {player.position}"
+                f"   Player found: {player.name}, chips: {player.chips}, position: {
+                    player.position
+                }"
             )
 
             # Get situation analyzer engine
@@ -301,7 +306,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             }
 
             logger.debug(
-                f"   Context prepared: pot={context['pot_size']}, bet={context['current_bet']}"
+                f"   Context prepared: pot={context['pot_size']}, bet={
+                    context['current_bet']
+                }"
             )
 
             # Get analysis - no fallbacks, let it fail if it will
@@ -320,7 +327,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                     analysis_dict = dict(analysis)
                 except Exception:
                     raise RuntimeError(
-                        f"Cannot convert analysis result to dict. Type: {type(analysis)}, Value: {analysis}"
+                        f"Cannot convert analysis result to dict. Type: {
+                            type(analysis)
+                        }, Value: {analysis}"
                     )
 
             logger.info(f"✅ {self.config.player_name}: Situation analysis complete")
@@ -420,7 +429,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             }
 
             logger.debug(
-                f"   Hand context: phase={context['game_phase']}, opponents={context['num_opponents']}"
+                f"   Hand context: phase={context['game_phase']}, opponents={
+                    context['num_opponents']
+                }"
             )
 
             # Get analysis - no fallbacks
@@ -438,7 +449,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                     analysis_dict = dict(analysis)
                 except Exception:
                     raise RuntimeError(
-                        f"Cannot convert hand analysis result to dict. Type: {type(analysis)}, Value: {analysis}"
+                        f"Cannot convert hand analysis result to dict. Type: {
+                            type(analysis)
+                        }, Value: {analysis}"
                     )
 
             logger.info(f"✅ {self.config.player_name}: Hand analysis complete")
@@ -513,7 +526,8 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 p for p in all_players if getattr(p, "name", str(p)) != self.player_name
             ]
 
-            # Prepare context using the helper function that handles missing attributes
+            # Prepare context using the helper function that handles missing
+            # attributes
             context = self._prepare_opponent_context(state, opponents)
 
             # Call the analyzer
@@ -667,7 +681,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                     f"'{p.name}' (ID: '{p.player_id}')" for p in game_state.players
                 ]
                 error_msg = (
-                    f"Player lookup failed for ID '{state.player_id}' and name '{self.config.player_name}'. "
+                    f"Player lookup failed for ID '{state.player_id}' and name '{
+                        self.config.player_name
+                    }'. "
                     f"Available players: {available_players}"
                 )
                 raise RuntimeError(error_msg)
@@ -715,7 +731,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             ]
             if missing_fields:
                 raise RuntimeError(
-                    f"Decision missing required fields: {missing_fields}. Got: {list(decision_dict.keys())}"
+                    f"Decision missing required fields: {missing_fields}. Got: {
+                        list(decision_dict.keys())
+                    }"
                 )
 
             # Validate decision against available actions
@@ -729,7 +747,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             if validated_decision.get("amount", 0) > 0:
                 logger.info(f"   Amount: {validated_decision['amount']}")
             logger.debug(
-                f"   Reasoning: {validated_decision.get('reasoning', 'No reasoning')[:100]}..."
+                f"   Reasoning: {
+                    validated_decision.get('reasoning', 'No reasoning')[:100]
+                }..."
             )
 
             return Command(
@@ -782,7 +802,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 decision_dict = dict(decision)
             except Exception:
                 raise RuntimeError(
-                    f"Cannot convert decision result to dict. Type: {type(decision)}, Value: {decision}"
+                    f"Cannot convert decision result to dict. Type: {
+                        type(decision)
+                    }, Value: {decision}"
                 )
 
         logger.debug(f"   Original decision fields: {list(decision_dict.keys())}")
@@ -803,7 +825,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             }
 
             logger.debug(
-                f"   Converted to: action={normalized['action']}, amount={normalized['amount']}"
+                f"   Converted to: action={normalized['action']}, amount={
+                    normalized['amount']
+                }"
             )
             return normalized
 
@@ -965,7 +989,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
         # If action not available, this is an error - don't fallback
         if action not in available:
             raise RuntimeError(
-                f"Invalid action '{action}' for {player.name}. Available actions: {available}"
+                f"Invalid action '{action}' for {player.name}. Available actions: {
+                    available
+                }"
             )
 
         # Validate amounts
@@ -1033,8 +1059,6 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 player_errors_{player_name}_{timestamp}.json
         """
         if timestamp is None:
-            import datetime
-
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
         try:
@@ -1055,7 +1079,9 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
                 json.dump(self.error_log, f, indent=2, default=str)
 
             logger.info(
-                f"✅ Debug logs saved for {self.config.player_name} with timestamp {timestamp}"
+                f"✅ Debug logs saved for {self.config.player_name} with timestamp {
+                    timestamp
+                }"
             )
 
         except Exception as e:

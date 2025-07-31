@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from typing import Any, Literal
@@ -17,12 +18,11 @@ from haive.games.dominoes.models import (
 )
 from haive.games.dominoes.state import DominoesState
 from haive.games.dominoes.state_manager import DominoesStateManager
+from haive.games.dominoes.ui import DominoesUI
 from haive.games.framework.base.agent import GameAgent
 
 # Import the UI module
 try:
-    from haive.games.dominoes.ui import DominoesUI
-
     UI_AVAILABLE = True
 except ImportError:
     UI_AVAILABLE = False
@@ -168,7 +168,8 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         # Make sure it's the player's turn
         if state.turn != player:
-            # If it's not this player's turn, just pass through to the appropriate next node
+            # If it's not this player's turn, just pass through to the
+            # appropriate next node
             goto = f"analyze_{player}"
             return Command(update=state, goto=goto)
 
@@ -187,7 +188,8 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
             # Validate the move
             legal_moves = self.state_manager.get_legal_moves(state)
 
-            # If move is "pass", it's always valid if returned by get_legal_moves
+            # If move is "pass", it's always valid if returned by
+            # get_legal_moves
             if move == "pass" and "pass" in legal_moves:
                 updated_state = self.state_manager.apply_move(state, move)
             # Otherwise, need to find a matching legal move
@@ -243,7 +245,6 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def extract_move(self, response: Any) -> DominoMove | Literal["pass"]:
         """Extract move from engine response."""
-        import json
 
         # If the response is already a DominoesPlayerDecision
         if isinstance(response, DominoesPlayerDecision):
@@ -448,7 +449,6 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def _extract_analysis(self, response: Any) -> DominoesAnalysis:
         """Extract analysis from engine response."""
-        import json
 
         # If the response is already a DominoesAnalysis
         if isinstance(response, DominoesAnalysis):
@@ -678,7 +678,9 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
                             # Check if game is over
                             if game_state.game_status != "ongoing":
                                 logger.info(
-                                    f"Game completed with status: {game_state.game_status}"
+                                    f"Game completed with status: {
+                                        game_state.game_status
+                                    }"
                                 )
                                 time.sleep(delay * 2)  # Show final state longer
                                 break
@@ -760,8 +762,6 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
 # For direct script execution
 if __name__ == "__main__":
-    import logging
-
     logging.basicConfig(level=logging.INFO)
 
     # Create and run the game agent

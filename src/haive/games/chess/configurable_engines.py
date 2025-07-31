@@ -5,8 +5,6 @@ player agents instead of hardcoded LLM configurations, making it easy to
 switch LLMs for different players.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -36,17 +34,17 @@ def create_chess_move_prompt(color: str) -> ChatPromptTemplate:
 
 CRITICAL MOVE FORMAT RULES:
 - You MUST provide moves in UCI format: start square + end square (e.g., 'e2e4', 'g1f3')
-- Castling: {'e1g1' if color == 'white' else 'e8g8'} (kingside), {'e1c1' if color == 'white' else 'e8c8'} (queenside)
+- Castling: {"e1g1" if color == "white" else "e8g8"} (kingside), {"e1c1" if color == "white" else "e8c8"} (queenside)
 - Promotion: add piece letter at end (e.g., 'a7a8q' for queen promotion)
 - Do NOT use algebraic notation (e.g., 'Nf3', 'Bxe5')
 - Do NOT include piece symbols or capture notation
 
 EXAMPLES OF CORRECT MOVES:
-- Pawn move: {'e2e4' if color == 'white' else 'e7e5'} ({'e2' if color == 'white' else 'e7'} to {'e4' if color == 'white' else 'e5'})
-- Knight move: {'g1f3' if color == 'white' else 'g8f6'} (knight from {'g1' if color == 'white' else 'g8'} to {'f3' if color == 'white' else 'f6'})
+- Pawn move: {"e2e4" if color == "white" else "e7e5"} ({"e2" if color == "white" else "e7"} to {"e4" if color == "white" else "e5"})
+- Knight move: {"g1f3" if color == "white" else "g8f6"} (knight from {"g1" if color == "white" else "g8"} to {"f3" if color == "white" else "f6"})
 - Capture: 'd4e5' (piece on d4 captures on e5)
-- Castle kingside: {'e1g1' if color == 'white' else 'e8g8'}
-- Promotion: {'h7h8q' if color == 'white' else 'b2b1n'} (pawn promotes to {'queen' if color == 'white' else 'knight'})
+- Castle kingside: {"e1g1" if color == "white" else "e8g8"}
+- Promotion: {"h7h8q" if color == "white" else "b2b1n"} (pawn promotes to {"queen" if color == "white" else "knight"})
 
 {{error_context}}
 
@@ -82,7 +80,9 @@ def create_chess_analysis_prompt(color: str) -> ChatPromptTemplate:
         [
             (
                 "system",
-                f"""You are analyzing the chess position from {color.upper()}'s perspective.
+                f"""You are analyzing the chess position from {
+                    color.upper()
+                }'s perspective.
 
 Provide strategic insights including:
 1. Position score from -10 to +10 (positive favors White, negative favors Black)
@@ -106,7 +106,7 @@ Analyze this position strategically from {color.title()}'s perspective.""",
     )
 
 
-def get_chess_role_definitions() -> Dict[str, GamePlayerRole]:
+def get_chess_role_definitions() -> dict[str, GamePlayerRole]:
     """Get role definitions for chess players and analyzers.
 
     Returns:
@@ -145,8 +145,8 @@ def get_chess_role_definitions() -> Dict[str, GamePlayerRole]:
 
 
 def create_configurable_chess_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create chess engines from configurable player agents.
 
     Args:
@@ -175,7 +175,7 @@ def create_anthropic_vs_openai_engines(
     white_model: str = "claude-3-5-sonnet-20240620",
     black_model: str = "gpt-4o",
     temperature: float = 0.7,
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with Anthropic vs OpenAI models.
 
     Args:
@@ -196,7 +196,7 @@ def create_anthropic_vs_openai_engines(
 
 def create_same_model_engines(
     model: str = "gpt-4o", temperature: float = 0.7
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create chess engines using the same model for all roles.
 
     Args:
@@ -213,8 +213,8 @@ def create_same_model_engines(
 
 
 def create_mixed_provider_engines(
-    providers: Dict[str, str] = None, temperature: float = 0.7
-) -> Dict[str, AugLLMConfig]:
+    providers: dict[str, str] = None, temperature: float = 0.7
+) -> dict[str, AugLLMConfig]:
     """Create chess engines with different providers for each role.
 
     Args:
@@ -261,7 +261,7 @@ EXAMPLE_CONFIGS = {
 }
 
 
-def get_example_engines(config_name: str) -> Dict[str, AugLLMConfig]:
+def get_example_engines(config_name: str) -> dict[str, AugLLMConfig]:
     """Get example engine configuration by name.
 
     Args:

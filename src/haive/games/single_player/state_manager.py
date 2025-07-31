@@ -1,3 +1,7 @@
+import copy
+from re import T
+from typing import Any
+
 from haive.games.base.state import WordConnectionsState
 from haive.games.framework.base.state_manager import GameStateManager
 
@@ -50,7 +54,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
         raise NotImplementedError("Must be implemented by subclass")
 
     @classmethod
-    def generate_hint(cls, state: T) -> Tuple[T, str]:
+    def generate_hint(cls, state: T) -> tuple[T, str]:
         """Generate a hint for the current game state.
 
         Args:
@@ -83,7 +87,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
         raise NotImplementedError("Must be implemented by subclass")
 
     @classmethod
-    def get_legal_moves(cls, state: T) -> List[Any]:
+    def get_legal_moves(cls, state: T) -> list[Any]:
         """Get all legal moves for the current state.
 
         Args:

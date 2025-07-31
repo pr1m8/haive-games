@@ -1,4 +1,5 @@
 # game_framework/core/rule.py
+
 from __future__ import annotations
 
 from abc import abstractmethod

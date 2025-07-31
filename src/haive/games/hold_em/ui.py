@@ -10,7 +10,8 @@ Texas Hold'em games in real-time, showing:
 
 import logging
 import time
-from typing import Any, Dict, Optional
+import traceback
+from typing import Any
 
 from rich.align import Align
 from rich.box import ROUNDED, SIMPLE
@@ -21,8 +22,10 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from haive.games.hold_em.config import create_default_holdem_config
 from haive.games.hold_em.game_agent import HoldemGameAgent
 from haive.games.hold_em.state import GamePhase, HoldemState, PlayerState, PlayerStatus
+from haive.games.hold_em.utils import create_standard_deck, shuffle_deck
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +36,8 @@ class HoldemRichUI:
     def __init__(self):
         self.console = Console()
         self.layout = Layout()
-        self.state: Optional[Dict[str, Any]] = None
-        self.last_action: Optional[Dict[str, Any]] = None
+        self.state: dict[str, Any] | None = None
+        self.last_action: dict[str, Any] | None = None
         self._setup_layout()
 
     def _setup_layout(self):
@@ -299,7 +302,8 @@ class HoldemRichUI:
             )
 
         log_text = Text()
-        recent_actions = game_state.actions_this_round[-8:]  # Show last 8 actions
+        # Show last 8 actions
+        recent_actions = game_state.actions_this_round[-8:]
 
         for action in recent_actions:
             player_name = self._get_player_name_by_id(
@@ -426,7 +430,6 @@ class HoldemRichUI:
 
         except Exception as e:
             self.console.print(f"\n[bold red]Error during game: {str(e)}[/bold red]")
-            import traceback
 
             self.console.print(traceback.format_exc())
 
@@ -459,11 +462,11 @@ class HoldemRichUI:
 
     def _create_initial_state(self, agent: HoldemGameAgent) -> HoldemState:
         """Create initial game state from agent config."""
-        from haive.games.hold_em.utils import create_standard_deck, shuffle_deck
 
         players = []
         for i, player_config in enumerate(agent.config.player_configs):
-            # FIXED: Ensure player_id matches the expected format and is not empty
+            # FIXED: Ensure player_id matches the expected format and is not
+            # empty
             player_id = f"player_{i}"
 
             # Validate the player_id is not empty
@@ -524,7 +527,7 @@ class HoldemRichUI:
 
     def _get_player_at_position(
         self, game_state: HoldemState, position: int
-    ) -> Optional[PlayerState]:
+    ) -> PlayerState | None:
         """Get player at specific position."""
         for player in game_state.players:
             if player.position == position:
@@ -534,7 +537,7 @@ class HoldemRichUI:
     def _format_player_short(self, player: PlayerState, game_state: HoldemState) -> str:
         """Format player for table display."""
         name = player.name[:5]  # Truncate long names
-        f"{player.chips//1000}k" if player.chips >= 1000 else str(player.chips)
+        f"{player.chips // 1000}k" if player.chips >= 1000 else str(player.chips)
 
         if player.status == PlayerStatus.FOLDED:
             return f"[dim]{name}[/dim]"
@@ -584,8 +587,6 @@ class HoldemRichUI:
 
 def main():
     """Main function to run the UI demo."""
-    from haive.games.hold_em.config import create_default_holdem_config
-    from haive.games.hold_em.game_agent import HoldemGameAgent
 
     # Create a demo game
     config = create_default_holdem_config(num_players=4, starting_chips=1000)

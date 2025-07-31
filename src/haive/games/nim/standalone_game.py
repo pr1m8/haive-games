@@ -12,6 +12,11 @@ import sys
 import time
 
 from pydantic import BaseModel, Field
+from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
@@ -19,13 +24,6 @@ logger = logging.getLogger(__name__)
 
 # Try to import Rich for UI
 try:
-    from rich import box
-    from rich.console import Console
-    from rich.layout import Layout
-    from rich.panel import Panel
-    from rich.table import Table
-    from rich.text import Text
-
     RICH_AVAILABLE = True
     logger.info("Rich UI available for visualization")
 except ImportError:
@@ -169,7 +167,11 @@ class NimUI:
         print(f"NIM GAME - {state.turn}'s Turn")
         print(f"Game Status: {state.game_status}")
         print(
-            f"Game Mode: {'Misère (last takes loses)' if state.misere_mode else 'Standard (last takes wins)'}"
+            f"Game Mode: {
+                'Misère (last takes loses)'
+                if state.misere_mode
+                else 'Standard (last takes wins)'
+            }"
         )
         print("=" * 50)
 
@@ -199,13 +201,13 @@ class NimUI:
                 print("\nCurrent piles:", state.piles)
 
                 # Get pile index
-                pile_idx_input = input(f"Enter pile index (0-{len(state.piles)-1}): ")
+                pile_idx_input = input(f"Enter pile index (0-{len(state.piles) - 1}): ")
                 pile_idx = int(pile_idx_input)
 
                 # Validate pile index
                 if pile_idx < 0 or pile_idx >= len(state.piles):
                     print(
-                        f"Invalid pile index! Please choose between 0 and {len(state.piles)-1}."
+                        f"Invalid pile index! Please choose between 0 and {len(state.piles) - 1}."
                     )
                     continue
 
@@ -223,7 +225,9 @@ class NimUI:
                 # Validate stones
                 if stones < 1 or stones > state.piles[pile_idx]:
                     print(
-                        f"Invalid number of stones! Please choose between 1 and {state.piles[pile_idx]}."
+                        f"Invalid number of stones! Please choose between 1 and {
+                            state.piles[pile_idx]
+                        }."
                     )
                     continue
 
@@ -247,7 +251,8 @@ class NimUI:
         # Calculate nim-sum for optimal play
         nim_sum = state.nim_sum
 
-        # If the nim-sum is 0, we're in a losing position, so make a random move
+        # If the nim-sum is 0, we're in a losing position, so make a random
+        # move
         if nim_sum == 0:
             move = random.choice(legal_moves)
             return move
@@ -440,7 +445,9 @@ def main():
                 print(f"\n{state.turn}'s turn (Computer)")
                 move = ui.get_computer_move(state)
                 print(
-                    f"Computer chooses: Take {move.stones_taken} stone(s) from pile {move.pile_index}"
+                    f"Computer chooses: Take {move.stones_taken} stone(s) from pile {
+                        move.pile_index
+                    }"
                 )
                 time.sleep(1)  # Brief pause for computer move
 

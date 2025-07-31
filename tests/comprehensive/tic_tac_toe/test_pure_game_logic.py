@@ -5,9 +5,9 @@ external dependencies. It serves as both a reference implementation and
 comprehensive test suite for the core game mechanics.
 """
 
-import sys
 from dataclasses import dataclass
 from enum import Enum
+import sys
 from typing import Literal
 
 
@@ -402,7 +402,6 @@ class TestTicTacToeGame:
         ]
 
         for i, move in enumerate(moves):
-
             # Verify move is legal
             legal_moves = TicTacToeGame.get_legal_moves(state)
             legal_positions = {(m.row, m.col) for m in legal_moves}

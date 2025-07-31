@@ -4,7 +4,8 @@ This module provides utilities to properly configure recursion limits
 for game agents to prevent recursion errors during gameplay.
 """
 
-from typing import Any, Dict, Optional
+import uuid
+from typing import Any
 
 
 class RecursionConfig:
@@ -34,11 +35,11 @@ class RecursionConfig:
     @classmethod
     def get_recursion_limit(
         cls,
-        game_name: Optional[str] = None,
+        game_name: str | None = None,
         game_type: str = "standard",
         enable_analysis: bool = False,
         num_players: int = 2,
-        custom_limit: Optional[int] = None,
+        custom_limit: int | None = None,
     ) -> int:
         """Get the appropriate recursion limit for a game.
 
@@ -97,13 +98,13 @@ class RecursionConfig:
     @classmethod
     def configure_runnable(
         cls,
-        runnable_config: Optional[Dict[str, Any]] = None,
-        game_name: Optional[str] = None,
+        runnable_config: dict[str, Any] | None = None,
+        game_name: str | None = None,
         game_type: str = "standard",
         enable_analysis: bool = False,
         num_players: int = 2,
-        thread_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        thread_id: str | None = None,
+    ) -> dict[str, Any]:
         """Configure or update a runnable config with appropriate recursion
         limit.
 
@@ -159,8 +160,6 @@ class RecursionConfig:
         if "thread_id" not in configurable and thread_id:
             configurable["thread_id"] = thread_id
         elif "thread_id" not in configurable:
-            import uuid
-
             configurable["thread_id"] = str(uuid.uuid4())
 
         # Add other common settings if not present
@@ -173,7 +172,7 @@ class RecursionConfig:
     def validate_recursion_limit(
         cls,
         limit: int,
-        game_name: Optional[str] = None,
+        game_name: str | None = None,
         game_type: str = "standard",
     ) -> tuple[bool, str]:
         """Validate if a recursion limit is appropriate.

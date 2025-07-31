@@ -5,8 +5,6 @@ chess, providing a clean, type-safe implementation that eliminates
 hardcoded LLM configurations.
 """
 
-from typing import Type, Union
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
@@ -40,17 +38,17 @@ class ChessPromptGenerator(GenericPromptGenerator[str, str]):
 
 CRITICAL MOVE FORMAT RULES:
 - You MUST provide moves in UCI format: start square + end square (e.g., 'e2e4', 'g1f3')
-- Castling: {'e1g1' if player == 'white' else 'e8g8'} (kingside), {'e1c1' if player == 'white' else 'e8c8'} (queenside)
+- Castling: {"e1g1" if player == "white" else "e8g8"} (kingside), {"e1c1" if player == "white" else "e8c8"} (queenside)
 - Promotion: add piece letter at end (e.g., 'a7a8q' for queen promotion)
 - Do NOT use algebraic notation (e.g., 'Nf3', 'Bxe5')
 - Do NOT include piece symbols or capture notation
 
 EXAMPLES OF CORRECT MOVES:
-- Pawn move: {'e2e4' if player == 'white' else 'e7e5'} ({'e2' if player == 'white' else 'e7'} to {'e4' if player == 'white' else 'e5'})
-- Knight move: {'g1f3' if player == 'white' else 'g8f6'} (knight from {'g1' if player == 'white' else 'g8'} to {'f3' if player == 'white' else 'f6'})
+- Pawn move: {"e2e4" if player == "white" else "e7e5"} ({"e2" if player == "white" else "e7"} to {"e4" if player == "white" else "e5"})
+- Knight move: {"g1f3" if player == "white" else "g8f6"} (knight from {"g1" if player == "white" else "g8"} to {"f3" if player == "white" else "f6"})
 - Capture: 'd4e5' (piece on d4 captures on e5)
-- Castle kingside: {'e1g1' if player == 'white' else 'e8g8'}
-- Promotion: {'h7h8q' if player == 'white' else 'b2b1n'} (pawn promotes to {'queen' if player == 'white' else 'knight'})
+- Castle kingside: {"e1g1" if player == "white" else "e8g8"}
+- Promotion: {"h7h8q" if player == "white" else "b2b1n"} (pawn promotes to {"queen" if player == "white" else "knight"})
 
 {{error_context}}
 
@@ -85,7 +83,9 @@ You MUST select one of the legal moves listed above. Analyze the position and ch
             [
                 (
                     "system",
-                    f"""You are analyzing the chess position from {player.upper()}'s perspective.
+                    f"""You are analyzing the chess position from {
+                        player.upper()
+                    }'s perspective.
 
 Provide strategic insights including:
 1. Position score from -10 to +10 (positive favors White, negative favors Black)
@@ -97,22 +97,22 @@ Be specific and focus on the current position's tactical and strategic elements.
                 ),
                 (
                     "human",
-                    f"""Position (FEN): {{current_board_fen}}
+                    f"""Position (FEN): {current_board_fen}
 
-Recent moves: {{recent_moves}}
+Recent moves: {recent_moves}
 
-Captured pieces: {{captured_pieces}}
+Captured pieces: {captured_pieces}
 
 Analyze this position strategically from {player.upper()}'s perspective.""",
                 ),
             ]
         )
 
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for chess moves."""
         return ChessPlayerDecision
 
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for chess analysis."""
         return SegmentedAnalysis
 
@@ -155,8 +155,8 @@ def create_generic_chess_engines(
 
 
 def create_generic_chess_engines_simple(
-    white_model: Union[str, LLMConfig] = "gpt-4o",
-    black_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    white_model: str | LLMConfig = "gpt-4o",
+    black_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     temperature: float = 0.7,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:
@@ -249,7 +249,8 @@ def create_typed_chess_engines() -> dict[str, AugLLMConfig]:
     players = ChessPlayerIdentifiers()  # player1="white", player2="black"
 
     # This would cause a type error if we used wrong player names:
-    # players = ChessPlayerIdentifiers(player1="red", player2="yellow")  # Type error!
+    # players = ChessPlayerIdentifiers(player1="red", player2="yellow")  #
+    # Type error!
 
     factory = GenericGameEngineFactory(players, chess_prompt_generator)
 

@@ -19,10 +19,16 @@ sgfmill = "^1.1.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
-black = "^25.1.0"
-isort = "^6.0.1"
 mypy = "^1.15.0"
 monkeytype = "^23.3.0"
+ruff = "^0.12.5"
+autoflake = "^2.3.1"
+docformatter = "^1.7.7"
+autopep8 = "^2.3.2"
+pyupgrade = "^3.20.0"
+poetry-plugin-export = "^1.9.0"
+add-trailing-comma = "^3.2.0"
+rope = "^1.14.0"
 
 
 [tool.poetry.group.games-chess.dependencies]
@@ -39,3 +45,24 @@ sgfmill = "^1.1.1"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# Ruff configuration for linting and formatting
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "W",      # pycodestyle errors and warnings
+  "F",      # Pyflakes
+  "I",      # isort
+  "B",      # flake8-bugbear
+  "C4",     # flake8-comprehensions
+  "UP",     # pyupgrade
+  "TID251", # Banned relative imports -> absolute imports
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["haive"]
+force-sort-within-sections = true

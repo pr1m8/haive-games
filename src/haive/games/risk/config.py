@@ -58,8 +58,6 @@ Note:
     break gameplay mechanics.
 """
 
-from typing import Dict, List, Optional
-
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 
@@ -263,7 +261,7 @@ class RiskConfig(BaseModel):
     )
 
     # Custom map and territories
-    custom_territories: Optional[Dict[str, List[str]]] = Field(
+    custom_territories: dict[str, list[str]] | None = Field(
         default=None,
         description="Custom map definition with continent-territory mappings",
         examples=[
@@ -272,7 +270,7 @@ class RiskConfig(BaseModel):
         ],
     )
 
-    custom_continent_bonuses: Dict[str, int] = Field(
+    custom_continent_bonuses: dict[str, int] = Field(
         default_factory=dict,
         description="Bonus armies awarded for controlling entire continents",
         examples=[
@@ -282,7 +280,7 @@ class RiskConfig(BaseModel):
     )
 
     # Timing and tournament settings
-    time_limit_per_turn: Optional[int] = Field(
+    time_limit_per_turn: int | None = Field(
         default=None,
         ge=30,
         le=1800,
@@ -290,7 +288,7 @@ class RiskConfig(BaseModel):
         examples=[60, 120, 300, 600, None],
     )
 
-    max_game_duration: Optional[int] = Field(
+    max_game_duration: int | None = Field(
         default=None,
         ge=600,
         le=21600,
@@ -346,8 +344,8 @@ class RiskConfig(BaseModel):
     @field_validator("custom_territories")
     @classmethod
     def validate_custom_territories(
-        cls, v: Optional[Dict[str, List[str]]]
-    ) -> Optional[Dict[str, List[str]]]:
+        cls, v: dict[str, list[str]] | None
+    ) -> dict[str, list[str]] | None:
         """Validate custom territory configuration.
 
         Args:
@@ -392,7 +390,7 @@ class RiskConfig(BaseModel):
 
     @field_validator("custom_continent_bonuses")
     @classmethod
-    def validate_continent_bonuses(cls, v: Dict[str, int]) -> Dict[str, int]:
+    def validate_continent_bonuses(cls, v: dict[str, int]) -> dict[str, int]:
         """Validate continent bonus configuration.
 
         Args:
@@ -729,7 +727,7 @@ class RiskConfig(BaseModel):
         else:
             return "Expert"
 
-    def validate_configuration(self) -> List[str]:
+    def validate_configuration(self) -> list[str]:
         """Validate configuration for internal consistency and game balance.
 
         Returns:
@@ -776,7 +774,9 @@ class RiskConfig(BaseModel):
             if territory_count < expected_min:
                 issues.append(
                     f"Custom map may be too small: {territory_count} territories "
-                    f"for {self.player_count} players (minimum recommended: {expected_min})"
+                    f"for {self.player_count} players (minimum recommended: {
+                        expected_min
+                    })"
                 )
 
         # Check blitz mode compatibility

@@ -5,12 +5,11 @@ Tic Tac Toe, showing the same pattern working across different games
 with different player identifiers.
 """
 
-from typing import Type, Union
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
+from haive.games.chess.generic_engines import create_generic_chess_engines_simple
 from haive.games.core.agent.generic_player_agent import (
     GenericGameEngineFactory,
     GenericPromptGenerator,
@@ -96,11 +95,11 @@ class TicTacToePromptGenerator(GenericPromptGenerator[str, str]):
             ]
         )
 
-    def get_move_output_model(self) -> Type:
+    def get_move_output_model(self) -> type:
         """Get the structured output model for Tic Tac Toe moves."""
         return TicTacToeMove
 
-    def get_analysis_output_model(self) -> Type:
+    def get_analysis_output_model(self) -> type:
         """Get the structured output model for Tic Tac Toe analysis."""
         return TicTacToeAnalysis
 
@@ -140,8 +139,8 @@ def create_generic_ttt_engines(
 
 
 def create_generic_ttt_engines_simple(
-    x_model: Union[str, LLMConfig] = "gpt-4o",
-    o_model: Union[str, LLMConfig] = "claude-3-5-sonnet-20240620",
+    x_model: str | LLMConfig = "gpt-4o",
+    o_model: str | LLMConfig = "claude-3-5-sonnet-20240620",
     temperature: float = 0.3,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:
@@ -280,7 +279,6 @@ def create_multi_game_comparison():
     model2 = "anthropic:claude-3-5-sonnet-20240620"
 
     # Chess engines
-    from haive.games.chess.generic_engines import create_generic_chess_engines_simple
 
     chess_engines = create_generic_chess_engines_simple(model1, model2)
 

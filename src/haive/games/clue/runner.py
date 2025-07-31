@@ -5,10 +5,11 @@ This script demonstrates how to initialize and run a Clue game.
 
 import asyncio
 import json
+import random
 from typing import Any
 
 from haive.games.clue.controller import ClueGameController
-from haive.games.clue.models import ClueGuess
+from haive.games.clue.models import ClueGuess, ValidRoom, ValidSuspect, ValidWeapon
 
 
 async def run_clue_game(
@@ -54,7 +55,9 @@ async def run_clue_game(
                 print(f"Correct guess! {current_player.name} wins!")
             elif response.responding_player:
                 print(
-                    f"Player {response.responding_player} refutes with card: {response.refuting_card.name}"
+                    f"Player {response.responding_player} refutes with card: {
+                        response.refuting_card.name
+                    }"
                 )
             else:
                 print("No player could refute this guess.")
@@ -75,14 +78,13 @@ async def run_clue_game(
             # For this example, we'll simulate the player seeing their cards
             player_view = controller.get_player_view(current_player_idx)
             print(
-                f"Player cards: {', '.join(card.name for card in player_view['player_cards'])}"
+                f"Player cards: {
+                    ', '.join(card.name for card in player_view['player_cards'])
+                }"
             )
 
             # Here you would get input from the user to make a guess
             # For this example, we'll just make a random guess
-            import random
-
-            from haive.games.clue.models import ValidRoom, ValidSuspect, ValidWeapon
 
             # Make all choices from the enums
             guess = ClueGuess(
@@ -103,7 +105,9 @@ async def run_clue_game(
                 print(f"Correct guess! {current_player.name} wins!")
             elif response.responding_player:
                 print(
-                    f"Player {response.responding_player} refutes with card: {response.refuting_card.name}"
+                    f"Player {response.responding_player} refutes with card: {
+                        response.refuting_card.name
+                    }"
                 )
             else:
                 print("No player could refute this guess.")

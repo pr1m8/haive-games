@@ -15,14 +15,13 @@ Example:
 import argparse
 import logging
 import time
+import traceback
 import uuid
 
 from haive.games.mafia.agent import MafiaAgent
 from haive.games.mafia.config import MafiaAgentConfig
-from haive.games.mafia.models import (
-    GamePhase,
-    PlayerRole,
-)
+from haive.games.mafia.engines import aug_llm_configs
+from haive.games.mafia.models import GamePhase, PlayerRole
 from haive.games.mafia.state_manager import MafiaStateManager
 
 # Set up logging
@@ -56,8 +55,6 @@ def run_mafia_game_simple(
     try:
         # Print available configs for debugging
         if debug:
-            from haive.games.mafia.engines import aug_llm_configs
-
             for role, _engines in aug_llm_configs.items():
                 pass
 
@@ -73,7 +70,7 @@ def run_mafia_game_simple(
         agent = MafiaAgent(config)
 
         # Generate player names
-        player_names = [f"Player_{i+1}" for i in range(player_count - 1)]
+        player_names = [f"Player_{i + 1}" for i in range(player_count - 1)]
         player_names.append("Narrator")  # Add narrator as the last player
 
         # Dump engine keys for debugging
@@ -205,7 +202,6 @@ def run_mafia_game_simple(
                         and pid in game_state.player_states
                         and game_state.player_states[pid].is_alive
                     ):
-
                         # Check if this player has acted this round
                         has_acted = False
                         for action in reversed(game_state.action_history):
@@ -237,7 +233,8 @@ def run_mafia_game_simple(
                             all_night_actions_complete = False
                             break
 
-                # If narrator's turn and all night actions are complete, transition to day
+                # If narrator's turn and all night actions are complete,
+                # transition to day
                 if all_night_actions_complete and player_id.lower() == "narrator":
                     game_state = MafiaStateManager.advance_phase(game_state)
 
@@ -277,14 +274,10 @@ def run_mafia_game_simple(
             agent.save_state_history()
         except Exception:
             if debug:
-                import traceback
-
                 traceback.print_exc()
 
     except Exception:
         if debug:
-            import traceback
-
             traceback.print_exc()
 
 

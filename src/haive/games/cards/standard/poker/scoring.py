@@ -51,11 +51,15 @@ class PokerHandRank(HandRank[StandardCard]):
         elif self.hand_type == PokerHandType.PAIR and self.hand_cards:
             description += f" of {self.hand_cards[0].rank.value}s"
         elif self.hand_type == PokerHandType.TWO_PAIR and len(self.hand_cards) >= 4:
-            description += f" of {self.hand_cards[0].rank.value}s and {self.hand_cards[2].rank.value}s"
+            description += f" of {self.hand_cards[0].rank.value}s and {
+                self.hand_cards[2].rank.value
+            }s"
         elif self.hand_type == PokerHandType.THREE_OF_A_KIND and self.hand_cards:
             description += f" of {self.hand_cards[0].rank.value}s"
         elif self.hand_type == PokerHandType.FULL_HOUSE and len(self.hand_cards) >= 5:
-            description += f" {self.hand_cards[0].rank.value}s full of {self.hand_cards[3].rank.value}s"
+            description += f" {self.hand_cards[0].rank.value}s full of {
+                self.hand_cards[3].rank.value
+            }s"
         elif self.hand_type == PokerHandType.FOUR_OF_A_KIND and self.hand_cards:
             description += f" of {self.hand_cards[0].rank.value}s"
 

@@ -3,15 +3,16 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from haive.games.poker.models import (
+    AgentDecision,
     GamePhase,
     PlayerAction,
     PlayerObservation,
 )
+from haive.games.poker.state import PokerState
 
 if TYPE_CHECKING:
     from haive.games.poker.config import PokerAgentConfig
 
-from haive.games.poker.state import PokerState
 
 # from haive.games.poker.config import PokerAgentConfig
 logger = logging.getLogger(__name__)
@@ -81,7 +82,6 @@ class PokerStateManager:
         Returns:
             Tuple of (success, message)
         """
-        from haive.games.poker.models import AgentDecision
 
         # Create decision object
         decision = AgentDecision(action=action, amount=amount, reasoning="")

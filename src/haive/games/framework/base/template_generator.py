@@ -148,7 +148,7 @@ class GameTemplateGenerator:
             # Add game-specific move fields here
             # Example:
             # position: Tuple[int, int] = Field(..., description="Position to play (row, col)")
-            
+
             def __str__(self):
                 # Provide a string representation of the move
                 return f"Move description"
@@ -159,7 +159,7 @@ class GameTemplateGenerator:
         if self.enable_analysis:
             content += dedent(
                 f'''
-            
+
             class {self.game_class_name}Analysis(BaseModel):
                 """Analysis of a {self.game_name} position."""
                 # Add game-specific analysis fields here
@@ -172,7 +172,7 @@ class GameTemplateGenerator:
         # Add the game state class
         content += dedent(
             f'''
-        
+
         class {self.game_class_name}State(GameState):
             """State for a {self.game_name} game."""
             # Add game-specific state fields here
@@ -207,7 +207,7 @@ class GameTemplateGenerator:
             winner: Optional[str] = Field(
                 default=None, description="Winner of the game, if any"
             )
-            
+
             @property
             def board_string(self) -> str:
                 """Get a string representation of the board."""
@@ -240,14 +240,14 @@ class GameTemplateGenerator:
 
         class {self.game_class_name}StateManager(GameStateManager[{self.game_class_name}State]):
             """Manager for {self.game_name} game state."""
-            
+
             @classmethod
             def initialize(cls) -> {self.game_class_name}State:
                 """Initialize a new {self.game_name} game."""
                 # Implement game initialization logic here
                 # Example:
                 # board = [[None for _ in range(width)] for _ in range(height)]
-                
+
                 # Create and return the initial state
                 return {self.game_class_name}State(
                     # Add required state fields here
@@ -255,47 +255,47 @@ class GameTemplateGenerator:
                     game_status="ongoing",
                     move_history=[]
                 )
-            
+
             @classmethod
             def apply_move(cls, state: {self.game_class_name}State, move: {self.game_class_name}Move) -> {self.game_class_name}State:
                 """Apply a move to the {self.game_name} state."""
                 # Create a deep copy of the state to avoid modifying the original
                 new_state = copy.deepcopy(state)
-                
+
                 # Extract move details and apply to the state
                 # ...
-                
+
                 # Update move history
                 new_state.move_history.append(move)
-                
+
                 # Check for win/draw conditions
                 # ...
-                
+
                 # Switch turns if game continues
                 new_state.turn = "{self.player2_name}" if state.turn == "{self.player1_name}" else "{self.player1_name}"
-                
+
                 # Update game status if needed
                 new_state = cls.check_game_status(new_state)
-                
+
                 return new_state
-            
+
             @classmethod
             def get_legal_moves(cls, state: {self.game_class_name}State) -> List[{self.game_class_name}Move]:
                 """Get all legal moves for the current state."""
                 # Implement move generation logic here
                 moves = []
-                
+
                 # Logic to determine valid moves
                 # ...
-                
+
                 return moves
-            
+
             @classmethod
             def check_game_status(cls, state: {self.game_class_name}State) -> {self.game_class_name}State:
                 """Check and update game status."""
                 # Implement win/loss/draw detection logic
                 # ...
-                
+
                 return state
         '''
         )
@@ -342,10 +342,10 @@ class GameTemplateGenerator:
         def generate_move_prompt(player: str) -> ChatPromptTemplate:
             """Generate a prompt for making a move in {self.game_name}."""
             return ChatPromptTemplate.from_messages([
-                ('system', 
+                ('system',
                     f"You are the {{player}} player in a game of {self.game_name}. Your goal is to win by [game objective]."
                 ),
-                ('human', 
+                ('human',
                     "Game State:\\n"
                     "{{board}}\\n\\n"
                     f"You are playing as {{player}}. It's your turn.\\n\\n"
@@ -365,10 +365,10 @@ class GameTemplateGenerator:
             def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
                 """Generate a prompt for analyzing a {self.game_name} position."""
                 return ChatPromptTemplate.from_messages([
-                    ('system', 
+                    ('system',
                         f"You are a {self.game_name} strategy expert. Analyze the position from {{player}}'s perspective."
                     ),
-                    ('human', 
+                    ('human',
                         "Game State:\\n"
                         "{{board}}\\n\\n"
                         f"Analyze the position for {{player}}.\\n\\n"
@@ -498,15 +498,15 @@ class GameTemplateGenerator:
                     "move_history": [str(move) for move in state.move_history[-5:]],  # Last 5 moves
                     "player_analysis": player_analysis
                 }}
-            
+
             def extract_move(self, response: {self.game_class_name}PlayerDecision) -> {self.game_class_name}Move:
                 """Extract move from engine response."""
                 return response.move
-            
+
             def make_player1_move(self, state: {self.game_class_name}State) -> Command:
                 """Make a move for {self.player1_name}."""
                 return self.make_move(state, "{self.player1_name}")
-            
+
             def make_player2_move(self, state: {self.game_class_name}State) -> Command:
                 """Make a move for {self.player2_name}."""
                 return self.make_move(state, "{self.player2_name}")
@@ -517,7 +517,7 @@ class GameTemplateGenerator:
         if self.enable_analysis:
             content += dedent(
                 f'''
-            
+
             def prepare_analysis_context(self, state: {self.game_class_name}State, player: str) -> Dict[str, Any]:
                 """Prepare context for position analysis."""
                 return {{
@@ -526,11 +526,11 @@ class GameTemplateGenerator:
                     "player": player,
                     "move_history": [str(move) for move in state.move_history[-5:]]
                 }}
-            
+
             def analyze_player1(self, state: {self.game_class_name}State) -> Command:
                 """Analyze position for {self.player1_name}."""
                 return self.analyze_position(state, "{self.player1_name}")
-            
+
             def analyze_player2(self, state: {self.game_class_name}State) -> Command:
                 """Analyze position for {self.player2_name}."""
                 return self.analyze_position(state, "{self.player2_name}")
@@ -539,20 +539,20 @@ class GameTemplateGenerator:
 
         content += dedent(
             f'''
-            
+
             def visualize_state(self, state: Dict[str, Any]) -> None:
                 """Visualize the current game state."""
                 # Create a {self.game_class_name}State from the dict
                 game_state = {self.game_class_name}State(**state)
-                
+
                 print("\\n" + "=" * 50)
                 print(f"🎮 Current Player: {{game_state.turn}}")
                 print(f"📌 Game Status: {{game_state.game_status}}")
                 print("=" * 50)
-                
+
                 # Print the board
                 print("\\n" + game_state.board_string)
-                
+
                 # Print last move if available
                 if game_state.move_history:
                     last_move = game_state.move_history[-1]
@@ -564,13 +564,13 @@ class GameTemplateGenerator:
         if self.enable_analysis:
             content += dedent(
                 f"""
-                
+
                 # Print analyses if available
                 if game_state.{self.player1_name}_analysis and game_state.turn == "{self.player2_name}":
                     last_analysis = game_state.{self.player1_name}_analysis[-1]
                     print(f"\\n�� {self.player1_name.capitalize()}'s Analysis:")
                     # Print key analysis points here based on your analysis model structure
-                    
+
                 if game_state.{self.player2_name}_analysis and game_state.turn == "{self.player1_name}":
                     last_analysis = game_state.{self.player2_name}_analysis[-1]
                     print(f"\\n🔍 {self.player2_name.capitalize()}'s Analysis:")
@@ -580,7 +580,7 @@ class GameTemplateGenerator:
 
         content += dedent(
             """
-                
+
                 # Add a short delay for readability
                 time.sleep(0.5)
         """
@@ -610,7 +610,7 @@ class GameTemplateGenerator:
             """Run a {self.game_name} game with visualization."""
             # Create agent with default config
             agent = {self.game_class_name}Agent({self.game_class_name}AgentConfig.default_config())
-            
+
             # Initialize game state
             initial_state = {{
                 # Add required state fields for initialization
@@ -632,11 +632,11 @@ class GameTemplateGenerator:
         content += dedent(
             f"""
             }}
-            
+
             # Run the game
             print("\\n🎮 Starting {self.game_name} Game")
             print("=" * 50)
-            
+
             for step in agent.app.stream(
                 initial_state,
                 config=agent.runnable_config,
@@ -645,13 +645,13 @@ class GameTemplateGenerator:
             ):
                 # Visualize the game state
                 agent.visualize_state(step)
-                
+
                 # Check for game over
                 if step.get("game_status") != "ongoing":
                     print(f"\\n🏆 Game Status: {{step['game_status'].upper()}}")
                     if step.get("winner"):
                         print(f"🎖️ Winner: {{step['winner']}}")
-            
+
             # Save game history
             agent.save_state_history()
             print("\\n✅ Game Complete!")

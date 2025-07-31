@@ -5,7 +5,7 @@ sophisticated winner determination and performance evaluation.
 """
 
 import logging
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal
 
 from haive.agents.conversation.debate.state import DebateState
 from langchain_core.messages import SystemMessage
@@ -50,7 +50,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
         description="Number of judges in the panel (odd numbers recommended to avoid ties)",
     )
 
-    custom_judges: Optional[DebateJudgingPanel] = Field(
+    custom_judges: DebateJudgingPanel | None = Field(
         default=None, description="Custom judge panel if using custom type"
     )
 
@@ -69,7 +69,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
     )
 
     # Judgment storage
-    final_judgment: Optional[DebateJudgment] = Field(
+    final_judgment: DebateJudgment | None = Field(
         default=None, description="Final judgment from AI judge panel"
     )
 
@@ -90,7 +90,9 @@ class JudgedGameDebateAgent(GameDebateAgent):
         # Warn about even numbers
         if self.num_judges % 2 == 0:
             logger.warning(
-                f"Even number of judges ({self.num_judges}) can cause tie votes. Consider using {self.num_judges + 1} judges."
+                f"Even number of judges ({
+                    self.num_judges
+                }) can cause tie votes. Consider using {self.num_judges + 1} judges."
             )
 
         if self.judge_panel_type == "tournament":
@@ -206,7 +208,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
     def _combine_scoring_methods(
         self, state: DebateState, judgment: DebateJudgment
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Combine automatic scoring with AI judge scores."""
         auto_scores = getattr(state, "player_scores", {})
         judge_scores = self._extract_judge_scores(judgment)
@@ -234,7 +236,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
         return combined_scores
 
-    def _extract_judge_scores(self, judgment: DebateJudgment) -> Dict[str, float]:
+    def _extract_judge_scores(self, judgment: DebateJudgment) -> dict[str, float]:
         """Extract average judge scores for each player."""
         player_scores = {}
 
@@ -292,7 +294,8 @@ class JudgedGameDebateAgent(GameDebateAgent):
             summary_parts.extend(["👨‍⚖️ **INDIVIDUAL JUDGE INSIGHTS**:"])
 
             # Get a sample of judge reasoning
-            for player in judgment.players[:2]:  # Show reasoning for first 2 players
+            # Show reasoning for first 2 players
+            for player in judgment.players[:2]:
                 player_scores = judgment.judge_scores.get(player, [])
                 if player_scores:
                     best_reasoning = max(player_scores, key=lambda x: x.confidence)
@@ -310,7 +313,9 @@ class JudgedGameDebateAgent(GameDebateAgent):
                     f"  • Match ID: {self.match_id or 'Unknown'}",
                     f"  • Bracket: {self.bracket_position or 'Unknown'}",
                     f"  • Advancing Player: {judgment.overall_winner}",
-                    f"  • Victory Type: {'Decisive' if judgment.margin_of_victory > 0.3 else 'Close'}",
+                    f"  • Victory Type: {
+                        'Decisive' if judgment.margin_of_victory > 0.3 else 'Close'
+                    }",
                 ]
             )
 
@@ -356,7 +361,7 @@ class JudgedGameDebateAgent(GameDebateAgent):
 
         return agent
 
-    def get_judge_panel_info(self) -> Dict[str, Any]:
+    def get_judge_panel_info(self) -> dict[str, Any]:
         """Get information about the current judge panel."""
         if not self.custom_judges:
             return {"status": "No judge panel configured"}

@@ -8,6 +8,8 @@ Usage:
 """
 
 import random
+import time
+import traceback
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -393,7 +395,6 @@ def print_player_status(state: GameState):
         table.insert(0, current)
 
     for player in table:
-
         if player.properties:
             ", ".join(player.properties)
 
@@ -492,7 +493,6 @@ def handle_property_landing(state: GameState, position: int) -> list[GameEvent]:
     property_obj = state.properties.get(property_name)
 
     if not property_obj:
-
         # Create property from board data
         property_obj = Property(
             name=property_name,
@@ -698,7 +698,9 @@ def run_demo(turns: int = 10):
                         GameEvent(
                             event_type="jail_stay",
                             player=current_player.name,
-                            description=f"Stays in jail (turn {current_player.jail_turns}/3)",
+                            description=f"Stays in jail (turn {
+                                current_player.jail_turns
+                            }/3)",
                         )
                     )
                     state.next_player()
@@ -731,7 +733,6 @@ def run_demo(turns: int = 10):
         state.next_player()
 
         # Brief pause between turns for readability
-        import time
 
         time.sleep(1)
 
@@ -777,8 +778,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     except Exception:
-        import traceback
-
         traceback.print_exc()
     finally:
         pass

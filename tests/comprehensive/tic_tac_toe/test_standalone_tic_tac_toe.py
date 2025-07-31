@@ -5,8 +5,8 @@ This script will test the basic functionality of the Tic Tac Toe game
 to ensure we can get at least a working implementation.
 """
 
-import sys
 from pathlib import Path
+import sys
 
 # Add the source directory to Python path
 project_root = Path(__file__).parent.parent.parent.parent

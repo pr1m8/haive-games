@@ -157,7 +157,8 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         for color in guess:
             guess_counts[color] = guess_counts.get(color, 0) + 1
 
-        # Count colors that appear in both lists (take minimum count for each color)
+        # Count colors that appear in both lists (take minimum count for each
+        # color)
         correct_color_total = sum(
             min(secret_counts.get(color, 0), guess_counts.get(color, 0))
             for color in set(secret_code + guess)

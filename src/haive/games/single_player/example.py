@@ -1,4 +1,4 @@
-def run_interactive_game(agent: SinglePlayerGameAgent, commands: List[str] = None):
+def run_interactive_game(agent: SinglePlayerGameAgent, commands: list[str] = None):
     """Run an interactive single-player game.
 
     Args:

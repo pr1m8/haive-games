@@ -74,7 +74,9 @@ class WordConnectionsUI:
         # Show mistakes
         print("\n" + "-" * 60)
         print(
-            f"Mistakes Remaining: {'❌' * state.mistakes_remaining}{'⭕' * (4 - state.mistakes_remaining)}"
+            f"Mistakes Remaining: {'❌' * state.mistakes_remaining}{
+                '⭕' * (4 - state.mistakes_remaining)
+            }"
         )
 
         # Show incorrect guesses

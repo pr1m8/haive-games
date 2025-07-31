@@ -95,7 +95,7 @@ def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
     # Add rank coordinates on the left
     lines = board_str.split("\n")
     for i, line in enumerate(lines):
-        lines[i] = f"{8-i} {line}"
+        lines[i] = f"{8 - i} {line}"
 
     # Join the lines and add the file coordinates
     return "\n".join(lines) + "\n" + file_coords

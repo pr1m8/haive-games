@@ -43,7 +43,9 @@ def print_property(property_obj: Property):
     color_style = property_obj.color.value
 
     console.print(
-        f"[bold]{property_obj.name}[/bold] - [bold {color_style}]■[/bold {color_style}] - {owner_text}"
+        f"[bold]{property_obj.name}[/bold] - [bold {color_style}]■[/bold {
+            color_style
+        }] - {owner_text}"
     )
     console.print(f"  Price: ${property_obj.price} | Rent: ${property_obj.rent[0]}")
 
@@ -123,7 +125,9 @@ def print_recent_events(events: list[GameEvent], count: int = 5):
             money_indicator = f" [red](${event.money_change})[/red]"
 
         console.print(
-            f"• [bold]{event.player}[/bold]: [{style}]{event.description}[/{style}]{money_indicator}"
+            f"• [bold]{event.player}[/bold]: [{style}]{event.description}[/{style}]{
+                money_indicator
+            }"
         )
 
 
@@ -441,7 +445,9 @@ def run_demo(turns: int = 20):
                         GameEvent(
                             event_type="jail_stay",
                             player=current_player.name,
-                            description=f"Stays in jail (turn {current_player.jail_turns}/3)",
+                            description=f"Stays in jail (turn {
+                                current_player.jail_turns
+                            }/3)",
                         )
                     )
                     state.next_player()
@@ -504,7 +510,9 @@ def run_demo(turns: int = 20):
 
         if best_player:
             console.print(
-                f"[bold green]Highest net worth: {best_player.name} with ${best_worth}[/bold green]"
+                f"[bold green]Highest net worth: {best_player.name} with ${
+                    best_worth
+                }[/bold green]"
             )
 
     # Print final player status

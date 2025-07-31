@@ -169,7 +169,9 @@ def example_2_ai_regulation_tournament():
         if winner:
             print(f"\n🎉 Advancing to Finals: {winner}")
             print(
-                f"🎯 {winner} will represent '{debate.debate_positions.get(winner, 'Unknown')}' in the final round"
+                f"🎯 {winner} will represent '{
+                    debate.debate_positions.get(winner, 'Unknown')
+                }' in the final round"
             )
 
         # Show performance stats
@@ -180,7 +182,9 @@ def example_2_ai_regulation_tournament():
         print(f"  • Total Arguments: {total_args}")
         print(f"  • Total Rebuttals: {total_rebuttals}")
         print(
-            f"  • Match Quality: {'High' if total_args + total_rebuttals > 10 else 'Standard'}"
+            f"  • Match Quality: {
+                'High' if total_args + total_rebuttals > 10 else 'Standard'
+            }"
         )
 
         return result

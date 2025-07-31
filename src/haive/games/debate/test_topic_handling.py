@@ -6,6 +6,7 @@ import sys
 
 from haive.games.debate.agent import DebateAgent
 from haive.games.debate.config import DebateAgentConfig
+from haive.games.debate.input_schema import DebateInputSchema
 
 # Configure logging to see topic handling
 logging.basicConfig(
@@ -45,7 +46,6 @@ def test_explicit_topic():
     logger.info(f"Input state: {input_state}")
 
     # Test schema validation directly
-    from haive.games.debate.input_schema import DebateInputSchema
 
     logger.info("Testing DebateInputSchema validation directly...")
     try:

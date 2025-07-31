@@ -3,9 +3,10 @@ from __future__ import annotations
 import uuid
 from enum import Enum
 
-# Import from our base framework
 from game_framework_base import Board, Game, GamePiece, Position, Space
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
+
+# Import from our base framework
 
 # ======================================================
 # LOGIC GRID TYPES AND CONSTANTS
@@ -142,7 +143,7 @@ class LogicGridClue(BaseModel):
         elif self.clue_type in (ClueType.RELATIVE, ClueType.ORDERING):
             # Should have 2 categories and at least 1 item per category
             if len(self.categories) != 2 or len(self.items) != 2:
-                raise ValueError(f"{self.clue_type} clue must have 2 categories")
+                raise TypeError(f"{self.clue_type} clue must have 2 categories")
 
         return self
 
@@ -234,7 +235,8 @@ class LogicGrid(Board[LogicGridSpace[LogicGridMark], LogicGridPosition, LogicGri
         for i, category1 in enumerate(self.categories):
             for j, category2 in enumerate(self.categories):
                 if i < j:  # Only create grids for unique category pairs
-                    # Create spaces for all combinations of items in these categories
+                    # Create spaces for all combinations of items in these
+                    # categories
                     for item1_idx in range(len(self.category_items[i])):
                         for item2_idx in range(len(self.category_items[j])):
                             position = LogicGridPosition(
@@ -396,7 +398,8 @@ class LogicGridPuzzle(Game[LogicGridPosition, LogicGridMark]):
     def propagate_constraints(self) -> int:
         """Propagate constraints from currently placed marks."""
         # This would implement basic constraint propagation for logic grids
-        # For example, if a cell is marked YES, all other cells in its row and column should be NO
+        # For example, if a cell is marked YES, all other cells in its row and
+        # column should be NO
 
         changes = 0
 

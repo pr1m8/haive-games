@@ -1,3 +1,19 @@
+from enum import Enum
+from typing import Annotated, Any, Union
+
+from langchain_core.messages import BaseMessage
+from pydantic import BaseModel, Field, computed_field, field_validator
+
+from haive.games.monopoly.models import (
+    DiceRoll,
+    GameEvent,
+    Player,
+    Property,
+    PropertyColor,
+    PropertyType,
+)
+from haive.games.monopoly.utils import calculate_rent, get_properties_by_color
+
 r"""Comprehensive state management system for Monopoly gameplay and real estate
 economics.
 
@@ -65,21 +81,6 @@ Note:
     All state models use Pydantic for validation and support both JSON serialization
     and integration with LangGraph for distributed tournament systems.
 """
-
-from enum import Enum
-from typing import Annotated, Any, Union
-
-from langchain_core.messages import BaseMessage
-from pydantic import BaseModel, Field, computed_field, field_validator
-
-from haive.games.monopoly.models import (
-    DiceRoll,
-    GameEvent,
-    Player,
-    Property,
-    PropertyColor,
-    PropertyType,
-)
 
 
 class GameStatus(str, Enum):
@@ -649,7 +650,8 @@ class MonopolyState(BaseModel):
             "houses_built": 32 - self.houses_remaining,
             "hotels_built": 12 - self.hotels_remaining,
             "average_turns_per_round": self.turn_number / max(self.round_number, 1),
-            "game_progression": min(self.turn_number / 100, 1.0),  # Normalized progress
+            # Normalized progress
+            "game_progression": min(self.turn_number / 100, 1.0),
             "economic_activity": len(self.game_events) / max(self.turn_number, 1),
         }
 
@@ -674,7 +676,6 @@ class MonopolyState(BaseModel):
 
     def player_owns_monopoly(self, player_name: str, color: str) -> bool:
         """Check if player owns all properties of a color group."""
-        from haive.games.monopoly.utils import get_properties_by_color
 
         color_group = get_properties_by_color(color)
         owned_in_group = [
@@ -687,7 +688,6 @@ class MonopolyState(BaseModel):
 
     def get_rent_amount(self, property_name: str, dice_roll: int = 0) -> int:
         """Calculate rent amount for a property."""
-        from haive.games.monopoly.utils import calculate_rent
 
         property_obj = self.get_property_by_name(property_name)
         if not property_obj:
@@ -743,7 +743,7 @@ class MonopolyState(BaseModel):
         if isinstance(state, BaseModel):
             # Convert BaseModel to dict then to MonopolyState
             return cls.from_dict(state.model_dump())
-        raise ValueError(f"Cannot convert {type(state)} to MonopolyState")
+        raise TypeError(f"Cannot convert {type(state)} to MonopolyState")
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "MonopolyState":
@@ -814,7 +814,7 @@ class MonopolyState(BaseModel):
 
         if player_index < 0 or player_index >= len(self.players):
             raise ValueError(
-                f"Player index {player_index} out of bounds (0-{len(self.players)-1})"
+                f"Player index {player_index} out of bounds (0-{len(self.players) - 1})"
             )
 
         # Create a copy of the players list
@@ -850,7 +850,7 @@ class MonopolyState(BaseModel):
                 self.players
             ):
                 issues.append(
-                    f"current_player_index {self.current_player_index} out of bounds (0-{len(self.players)-1})"
+                    f"current_player_index {self.current_player_index} out of bounds (0-{len(self.players) - 1})"
                 )
         elif self.current_player_index != 0:
             issues.append("current_player_index should be 0 when no players exist")

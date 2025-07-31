@@ -1,3 +1,14 @@
+from typing import Annotated, Any, Literal
+
+from pydantic import BaseModel, Field, computed_field
+
+from haive.games.battleship.models import (
+    GamePhase,
+    MoveOutcome,
+    PlayerBoard,
+    ShipPlacement,
+)
+
 r"""Comprehensive state management system for Battleship game mechanics and
 player tracking.
 
@@ -46,17 +57,6 @@ Note:
     All state models use Pydantic for validation and serialization, ensuring
     type safety and data integrity throughout the game lifecycle.
 """
-
-from typing import Annotated, Any, Dict, List, Literal, Optional, Union
-
-from pydantic import BaseModel, Field, computed_field
-
-from haive.games.battleship.models import (
-    GamePhase,
-    MoveOutcome,
-    PlayerBoard,
-    ShipPlacement,
-)
 
 
 class PlayerState(BaseModel):
@@ -129,16 +129,17 @@ class PlayerState(BaseModel):
         description="Player's game board with ship positions and attack history",
     )
 
-    strategic_analysis: List[str] = Field(
+    strategic_analysis: list[str] = Field(
         default_factory=list,
         description="Complete history of strategic analyses for decision-making and learning",
     )
 
     has_placed_ships: bool = Field(
-        default=False, description="Flag indicating completion of ship placement phase"
+        default=False,
+        description="Flag indicating completion of ship placement phase",
     )
 
-    ship_placements: List[ShipPlacement] = Field(
+    ship_placements: list[ShipPlacement] = Field(
         default_factory=list,
         description="Complete record of all ship placement commands executed",
     )
@@ -260,19 +261,19 @@ class BattleshipState(BaseModel):
         default=GamePhase.SETUP,
         description="Current phase of the game (SETUP, PLAYING, ENDED)",
     )
-    winner: Optional[Literal["player1", "player2"]] = Field(
+    winner: Literal["player1", "player2"] | None = Field(
         default=None,
         description="Identifier of the winning player, or None if game is in progress",
     )
 
     # Move tracking and history
-    move_history: List[tuple[str, MoveOutcome]] = Field(
+    move_history: list[tuple[str, MoveOutcome]] = Field(
         default_factory=list,
         description="Complete chronological record of all moves made in the game",
     )
 
     # Error handling
-    error_message: Optional[str] = Field(
+    error_message: str | None = Field(
         default=None,
         description="Error message from the last operation, or None if no error occurred",
     )
@@ -318,7 +319,7 @@ class BattleshipState(BaseModel):
         if player == "player2":
             return self.player2_state
         raise ValueError(
-            f"Invalid player identifier: {player}. Must be 'player1' or 'player2'."
+            f"Invalid player identifier: {player}. Must be 'player1' or 'player2'.",
         )
 
     def get_opponent(self, player: str) -> str:
@@ -446,7 +447,7 @@ class BattleshipState(BaseModel):
             or self.player2_state.board.all_ships_sunk()
         )
 
-    def get_public_state_for_player(self, player: str) -> Dict[str, Any]:
+    def get_public_state_for_player(self, player: str) -> dict[str, Any]:
         r"""Generate a secure public view of the game state for AI decision-
         making.
 
@@ -569,7 +570,7 @@ class BattleshipState(BaseModel):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Union[int, float, str]]:
+    def game_statistics(self) -> dict[str, int | float | str]:
         r"""Calculate comprehensive game statistics and metrics.
 
         Returns:

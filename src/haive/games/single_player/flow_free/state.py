@@ -9,10 +9,7 @@ from uuid import uuid4
 from pydantic import BaseModel, Field, computed_field
 
 from haive.games.single_player.base import SinglePlayerGameState
-from haive.games.single_player.flow_free.models import (
-    PipeDirection,
-    Position,
-)
+from haive.games.single_player.flow_free.models import PipeDirection, Position
 
 
 class FlowEndpoint(BaseModel):

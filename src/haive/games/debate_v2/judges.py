@@ -4,9 +4,11 @@ This module provides sophisticated AI judge agents that can evaluate
 debates using different criteria and scoring methodologies.
 """
 
+import json
 import logging
+import random
+import re
 from enum import Enum
-from typing import Dict, List, Optional
 
 from haive.agents.simple.agent import SimpleAgent
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -43,7 +45,7 @@ class JudgeScore(BaseModel):
 
     judge_name: str
     judge_type: JudgeType
-    criteria_scores: Dict[JudgingCriteria, int] = Field(
+    criteria_scores: dict[JudgingCriteria, int] = Field(
         description="Scores per criteria (1-10)"
     )
     total_score: int = Field(description="Total score for this player")
@@ -58,8 +60,8 @@ class DebateJudgment(BaseModel):
     """Complete judgment of a debate by multiple judges."""
 
     topic: str
-    players: List[str]
-    judge_scores: Dict[str, List[JudgeScore]] = Field(
+    players: list[str]
+    judge_scores: dict[str, list[JudgeScore]] = Field(
         description="Judge scores for each player"
     )
     overall_winner: str
@@ -75,7 +77,7 @@ class AIDebateJudge:
         self,
         name: str,
         judge_type: JudgeType = JudgeType.BALANCED,
-        expertise_area: Optional[str] = None,
+        expertise_area: str | None = None,
         strictness_level: float = 0.5,
     ):
         self.name = name
@@ -129,15 +131,15 @@ You are {self.name}, a professional debate judge{expertise_text}.
 
 JUDGE PROFILE:
 • Type: {self.judge_type.value.title()} Judge
-• Focus: {personality['focus']}
-• Style: {personality['style']}
-• Approach: {personality['bias']}
+• Focus: {personality["focus"]}
+• Style: {personality["style"]}
+• Approach: {personality["bias"]}
 • Strictness: {self.strictness_level:.1f}/1.0
 
 JUDGING METHODOLOGY:
 You evaluate debates using these criteria (score 1-10 each):
 1. 🧠 Logical Strength - How sound are the arguments?
-2. 📊 Evidence Quality - How well-researched and credible?  
+2. 📊 Evidence Quality - How well-researched and credible?
 3. 🎯 Persuasiveness - How convincing to the target audience?
 4. 💭 Clarity - How clear and well-organized?
 5. 🔄 Consistency - How consistent throughout the debate?
@@ -145,7 +147,7 @@ You evaluate debates using these criteria (score 1-10 each):
 
 SCORING GUIDELINES:
 • 1-3: Poor/Weak performance
-• 4-6: Average/Adequate performance  
+• 4-6: Average/Adequate performance
 • 7-8: Good/Strong performance
 • 9-10: Excellent/Outstanding performance
 
@@ -166,7 +168,7 @@ Provide scores as JSON with this structure:
     "confidence": 0.X
 }}
 
-Be {personality['style']} in your evaluation. Consider your {self.judge_type.value} perspective."""
+Be {personality["style"]} in your evaluation. Consider your {self.judge_type.value} perspective."""
 
         engine = AugLLMConfig(
             name=f"{self.name.lower()}_judge_engine",
@@ -207,9 +209,8 @@ Provide your evaluation in the specified JSON format."""
         try:
             response = await self.agent.arun(judgment_prompt)
 
-            # Parse JSON response (would need proper JSON parsing in production)
-            import json
-            import re
+            # Parse JSON response (would need proper JSON parsing in
+            # production)
 
             # Extract JSON from response
             json_match = re.search(r"\{.*\}", response, re.DOTALL)
@@ -259,7 +260,7 @@ Provide your evaluation in the specified JSON format."""
 class DebateJudgingPanel:
     """Panel of multiple AI judges for comprehensive debate evaluation."""
 
-    def __init__(self, judges: List[AIDebateJudge]):
+    def __init__(self, judges: list[AIDebateJudge]):
         self.judges = judges
 
     @classmethod
@@ -271,12 +272,13 @@ class DebateJudgingPanel:
             num_judges: Number of judges to include (default: 3 to avoid ties)
                        Must be odd number for proper tie-breaking.
         """
-        import random
 
         # Ensure odd number for tie-breaking
         if num_judges % 2 == 0:
             logger.warning(
-                f"Even number of judges ({num_judges}) can cause ties. Consider using {num_judges + 1} judges."
+                f"Even number of judges ({num_judges}) can cause ties. Consider using {
+                    num_judges + 1
+                } judges."
             )
 
         # Pool of judge profiles for debates
@@ -297,9 +299,12 @@ class DebateJudgingPanel:
 
         # Ensure we have enough profiles for the requested number
         if num_judges > len(judge_profiles):
-            # If we need more judges than profiles, we'll reuse with different strictness
+            # If we need more judges than profiles, we'll reuse with different
+            # strictness
             logger.info(
-                f"Requested {num_judges} judges but only have {len(judge_profiles)} profiles. Will reuse profiles with different configurations."
+                f"Requested {num_judges} judges but only have {
+                    len(judge_profiles)
+                } profiles. Will reuse profiles with different configurations."
             )
             selected_profiles = []
             available_profiles = judge_profiles.copy()
@@ -340,8 +345,8 @@ class DebateJudgingPanel:
     async def judge_debate(
         self,
         topic: str,
-        players: List[str],
-        positions: Dict[str, str],
+        players: list[str],
+        positions: dict[str, str],
         debate_transcript: str,
     ) -> DebateJudgment:
         """Get comprehensive judgment from all judges."""
@@ -351,7 +356,7 @@ class DebateJudgingPanel:
         logger.info(f"⚖️ Judges: {', '.join([j.name for j in self.judges])}")
 
         # Get scores from all judges for all players
-        all_scores: Dict[str, List[JudgeScore]] = {player: [] for player in players}
+        all_scores: dict[str, list[JudgeScore]] = {player: [] for player in players}
 
         for judge in self.judges:
             logger.info(
@@ -384,7 +389,7 @@ class DebateJudgingPanel:
         )
 
     def _calculate_winner(
-        self, all_scores: Dict[str, List[JudgeScore]]
+        self, all_scores: dict[str, list[JudgeScore]]
     ) -> tuple[str, float, float]:
         """Calculate overall winner from all judge scores."""
 
@@ -425,8 +430,8 @@ class DebateJudgingPanel:
     def _create_judgment_summary(
         self,
         topic: str,
-        players: List[str],
-        all_scores: Dict[str, List[JudgeScore]],
+        players: list[str],
+        all_scores: dict[str, list[JudgeScore]],
         winner: str,
         margin: float,
     ) -> str:
@@ -492,11 +497,12 @@ def create_academic_judges(num_judges: int = 3) -> DebateJudgingPanel:
     Args:
         num_judges: Number of judges (default: 3)
     """
-    import random
 
     if num_judges % 2 == 0:
         logger.warning(
-            f"Even number of judges ({num_judges}) can cause ties. Consider using {num_judges + 1} judges."
+            f"Even number of judges ({num_judges}) can cause ties. Consider using {
+                num_judges + 1
+            } judges."
         )
 
     academic_profiles = [
@@ -542,11 +548,12 @@ def create_public_judges(num_judges: int = 3) -> DebateJudgingPanel:
     Args:
         num_judges: Number of judges (default: 3)
     """
-    import random
 
     if num_judges % 2 == 0:
         logger.warning(
-            f"Even number of judges ({num_judges}) can cause ties. Consider using {num_judges + 1} judges."
+            f"Even number of judges ({num_judges}) can cause ties. Consider using {
+                num_judges + 1
+            } judges."
         )
 
     public_profiles = [

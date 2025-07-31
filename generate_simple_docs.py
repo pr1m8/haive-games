@@ -10,12 +10,13 @@ This script generates:
 No external dependencies required - uses only Python standard library.
 """
 
-# Standard library imports
 import json
 import sys
+
+# Standard library imports
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class SimpleGameDocumentationGenerator:
@@ -37,7 +38,7 @@ class SimpleGameDocumentationGenerator:
         self.games = self._discover_games()
         print(f"Discovered {len(self.games)} games: {list(self.games.keys())}")
 
-    def _discover_games(self) -> Dict[str, Dict[str, Any]]:
+    def _discover_games(self) -> dict[str, dict[str, Any]]:
         """Discover all available games."""
         games_dir = Path("src/haive/games")
         games = {}
@@ -74,7 +75,7 @@ class SimpleGameDocumentationGenerator:
         else:
             return "low"
 
-    def generate_text_architecture(self, game_name: str) -> Optional[Path]:
+    def generate_text_architecture(self, game_name: str) -> Path | None:
         """Generate text-based architecture diagram for a game."""
         print(f"Generating architecture diagram for {game_name}")
 
@@ -93,7 +94,7 @@ class SimpleGameDocumentationGenerator:
         return output_path
 
     def _create_architecture_text(
-        self, game_name: str, game_info: Dict[str, Any]
+        self, game_name: str, game_info: dict[str, Any]
     ) -> str:
         """Create text-based architecture diagram."""
         game_path = game_info["path"]
@@ -211,7 +212,7 @@ Complexity: {complexity.upper()}
 
         return architecture
 
-    def _get_game_features(self, game_name: str) -> List[str]:
+    def _get_game_features(self, game_name: str) -> list[str]:
         """Get game-specific features."""
         feature_map = {
             "chess": [
@@ -267,7 +268,7 @@ Complexity: {complexity.upper()}
             ],
         )
 
-    def generate_example_template(self, game_name: str) -> Optional[Path]:
+    def generate_example_template(self, game_name: str) -> Path | None:
         """Generate example run template for a game."""
         print(f"Generating example template for {game_name}")
 
@@ -308,9 +309,9 @@ sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 def main():
     """Main example execution."""
-    print(f"\\n{'=' * 60}")
+    print(f"\\n{"=" * 60}")
     print(f"{game_name.upper()} GAME EXAMPLE")
-    print(f"{'=' * 60}")
+    print(f"{"=" * 60}")
     
     # Initialize state history tracking
     state_history = []
@@ -400,11 +401,11 @@ def main():
         # Save state history
         save_state_history(state_history, game_name)
         
-        print(f"\\n{'=' * 60}")
+        print(f"\\n{"=" * 60}")
         print("EXAMPLE COMPLETED SUCCESSFULLY")
         print(f"Total moves: {{len(state_history) - 1}}")
         print(f"Check docs/simple_generated/state_history/ for detailed logs")
-        print(f"{'=' * 60}\\n")
+        print(f"{"=" * 60}\\n")
         
     except Exception as e:
         print(f"❌ Error running example: {{e}}")
@@ -457,7 +458,7 @@ if __name__ == "__main__":
 '''
         return template
 
-    def generate_state_history_template(self, game_name: str) -> Optional[Path]:
+    def generate_state_history_template(self, game_name: str) -> Path | None:
         """Generate state history template."""
         print(f"Generating state history template for {game_name}")
 
@@ -548,12 +549,12 @@ if __name__ == "__main__":
 
         return results
 
-    def _generate_summary_index(self, results: Dict[str, Any]):
+    def _generate_summary_index(self, results: dict[str, Any]):
         """Generate summary index."""
         index_content = f"""# Simple Game Documentation Index
 
 Generated: {datetime.now().isoformat()}
-Total Games: {results['total_games']}
+Total Games: {results["total_games"]}
 
 ## Architecture Diagrams (Text-based)
 

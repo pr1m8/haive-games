@@ -74,7 +74,9 @@ class BattleshipStateManager:
 
     @staticmethod
     def place_ships(
-        state: BattleshipState, player: str, placements: list[ShipPlacement]
+        state: BattleshipState,
+        player: str,
+        placements: list[ShipPlacement],
     ) -> BattleshipState:
         """Place ships for a player.
 
@@ -132,7 +134,9 @@ class BattleshipStateManager:
                 )
             else:
                 duplicates = [t for t in ship_types if ship_types.count(t) > 1]
-                new_state.error_message = f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}"
+                new_state.error_message = f"Duplicate ship types: {
+                    ', '.join(t.value for t in set(duplicates))
+                }"
             return new_state
 
         # Clear existing ships (just in case)
@@ -162,7 +166,9 @@ class BattleshipStateManager:
 
     @staticmethod
     def make_move(
-        state: BattleshipState, player: str, move: MoveCommand
+        state: BattleshipState,
+        player: str,
+        move: MoveCommand,
     ) -> BattleshipState:
         """Make a move for a player.
 
@@ -234,7 +240,9 @@ class BattleshipStateManager:
 
     @staticmethod
     def add_analysis(
-        state: BattleshipState, player: str, analysis: str
+        state: BattleshipState,
+        player: str,
+        analysis: str,
     ) -> BattleshipState:
         """Add strategic analysis for a player.
 

@@ -1,9 +1,12 @@
 # among_us_agent.py
 
+import json
 import re
-from typing import Any, Optional
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
+from langchain_core.messages import HumanMessage
+from rich.console import Console
 
 from haive.games.among_us.config import AmongUsAgentConfig
 from haive.games.among_us.models import AmongUsGamePhase, PlayerRole, TaskStatus
@@ -37,8 +40,6 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
         """
         # Ensure state is in the right format
         if isinstance(state, dict):
-            from haive.games.among_us.state import AmongUsState
-
             try:
                 state_obj = AmongUsState(**state)
             except Exception as e:
@@ -51,14 +52,13 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
         display = self.ui.display_game(state_obj)
 
         # Print the display
-        from rich.console import Console
 
         console = Console()
         console.print(display)
 
     # Add this method to the AmongUsAgent class
 
-    def get_engine_for_player(self, role: str, engine_key: str) -> Optional[Any]:
+    def get_engine_for_player(self, role: str, engine_key: str) -> Any | None:
         """Get the appropriate engine for a player based on their role and the
         current phase.
 
@@ -174,7 +174,8 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                 filtered_state["discussion_summary"] = "\n".join(
                     [
                         f"{msg['player_id']}: {msg['message']}"
-                        for msg in state.discussion_history[-10:]  # Last 10 messages
+                        # Last 10 messages
+                        for msg in state.discussion_history[-10:]
                     ]
                 )
 
@@ -203,17 +204,21 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
             filtered_state["observations"] = "None"
 
         # CRITICAL FIX: Add 'messages' field for the prompt template
-        # Create a list with a single HumanMessage containing a formatted situation description
-        from langchain_core.messages import HumanMessage
+        # Create a list with a single HumanMessage containing a formatted
+        # situation description
 
         # Create a concise situation message based on the game phase
         if state.game_phase == AmongUsGamePhase.TASKS:
-            situation = f"I am in {filtered_state['location']}. My tasks: {filtered_state['tasks']}."
+            situation = f"I am in {filtered_state['location']}. My tasks: {
+                filtered_state['tasks']
+            }."
             if player_state.role == PlayerRole.IMPOSTOR:
                 fellow = ", ".join(filtered_state.get("fellow_impostors", []))
                 situation += f" I am an impostor. Fellow impostors: {fellow or 'none'}."
             else:
-                situation += f" Overall task completion: {filtered_state.get('task_completion', 0)}%."
+                situation += f" Overall task completion: {
+                    filtered_state.get('task_completion', 0)
+                }%."
 
         elif state.game_phase == AmongUsGamePhase.MEETING:
             situation = (
@@ -246,12 +251,10 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
         if isinstance(response, str):
             # Try to parse as JSON
             try:
-                import json
-
                 parsed = json.loads(response)
                 if isinstance(parsed, dict) and "action" in parsed:
                     return parsed
-            except:
+            except BaseException:
                 pass
 
             # Try to extract based on simple patterns
@@ -307,7 +310,8 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
                             "location": value,
                         }
 
-            # If we couldn't parse a specific action, but we're in discussion phase
+            # If we couldn't parse a specific action, but we're in discussion
+            # phase
             if "discuss" in response.lower() or len(response) > 20:
                 return {"action": "discuss", "message": response}
 

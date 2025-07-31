@@ -52,7 +52,7 @@ Note:
 """
 
 import time
-from typing import Any, Dict
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
@@ -148,7 +148,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         self.state_manager = DebateStateManager
         super().__init__(config)
 
-    def initialize_game(self, state: Dict[str, Any]) -> Command:
+    def initialize_game(self, state: dict[str, Any]) -> Command:
         """Initialize the debate with topic, participants, and configuration.
 
         Sets up the initial debate state including topic validation, participant
@@ -278,7 +278,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
     def prepare_move_context(
         self, state: DebateState, player_id: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare contextual information for a participant's move.
 
         Generates role-specific context that provides participants with relevant
@@ -400,7 +400,12 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         if participant.role == "judge":
             # For trial format
             all_statements = [
-                f"{state.participants.get(s.speaker_id, Participant(id=s.speaker_id, name=s.speaker_id, role='unknown')).name}: {s.content}"
+                f"{
+                    state.participants.get(
+                        s.speaker_id,
+                        Participant(id=s.speaker_id, name=s.speaker_id, role='unknown'),
+                    ).name
+                }: {s.content}"
                 for s in state.statements
             ]
 
@@ -565,7 +570,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         return "\n".join(witness_stmts)
 
-    def extract_move(self, response: Any, role: str) -> Dict[str, Any]:
+    def extract_move(self, response: Any, role: str) -> dict[str, Any]:
         """Extract and structure move data from engine response.
 
         Processes responses from AI engines or other participants, converting
@@ -667,7 +672,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         return {"type": "statement", "content": content, "statement_type": "general"}
 
-    def debate_setup(self, state: Dict[str, Any]) -> Command:
+    def debate_setup(self, state: dict[str, Any]) -> Command:
         """Handle the initial debate setup and configuration phase.
 
         Configures participant roles, assigns moderator if specified, and
@@ -713,7 +718,8 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
 
         # Set moderator if configured
         if self.config.moderator_role and state_obj.players:
-            moderator_id = state_obj.players[0]  # Default first player as moderator
+            # Default first player as moderator
+            moderator_id = state_obj.players[0]
             if moderator_id in state_obj.participants:
                 state_obj.participants[moderator_id].role = "moderator"
                 state_obj.moderator_id = moderator_id
@@ -727,7 +733,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             )
         return Command(update=updated_state.dict(), goto="handle_participant_turn")
 
-    def handle_participant_turn(self, state: Dict[str, Any]) -> Command:
+    def handle_participant_turn(self, state: dict[str, Any]) -> Command:
         """Handle individual participant turns within the debate.
 
         Manages the core debate loop by processing each participant's turn,
@@ -1072,9 +1078,9 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
                     ),
                 )
                 print(
-                    f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content[:100]}..."
+                    f"{i + 1}. [{participant.role.upper()}] {participant.name}: {stmt.content[:100]}..."
                     if len(stmt.content) > 100
-                    else f"{i+1}. [{participant.role.upper()}] {participant.name}: {stmt.content}"
+                    else f"{i + 1}. [{participant.role.upper()}] {participant.name}: {stmt.content}"
                 )
 
         # Show votes in voting phase

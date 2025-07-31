@@ -63,19 +63,18 @@ def test_state_basic():
 
     try:
         # Create a minimal state implementation
-        from typing import List, Optional
 
         from pydantic import BaseModel
 
         class SimpleTicTacToeState(BaseModel):
             """Simplified state for testing."""
 
-            board: List[List[Optional[str]]]
+            board: list[list[str | None]]
             turn: str
             game_status: str
             player_X: str
             player_O: str
-            winner: Optional[str] = None
+            winner: str | None = None
 
             @property
             def board_string(self) -> str:

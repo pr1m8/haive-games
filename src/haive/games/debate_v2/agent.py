@@ -10,6 +10,8 @@ from typing import Any, Literal
 
 from haive.agents.conversation.debate.agent import DebateConversation
 from haive.agents.conversation.debate.state import DebateState
+from haive.agents.simple.agent import SimpleAgent
+from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langgraph.types import Command
 from pydantic import BaseModel, Field, model_validator
@@ -158,7 +160,9 @@ class GameDebateAgent(DebateConversation):
         game_features = []
         if self.scoring_enabled:
             game_features.append(
-                f"📊 Scoring: {self.points_per_argument} pts per argument, {self.points_per_rebuttal} pts per rebuttal"
+                f"📊 Scoring: {self.points_per_argument} pts per argument, {
+                    self.points_per_rebuttal
+                } pts per rebuttal"
             )
             if self.bonus_for_evidence > 0:
                 game_features.append(
@@ -205,7 +209,7 @@ class GameDebateAgent(DebateConversation):
 • Stay consistent with your position
 • Engage with respect and intellectual honesty
 
-🎲 **Let the game begin!** {next(iter(positions.keys())) if positions else 'Players'}, present your opening move!"""
+🎲 **Let the game begin!** {next(iter(positions.keys())) if positions else "Players"}, present your opening move!"""
         )
 
     def process_response(self, state: DebateState) -> Command:
@@ -481,8 +485,6 @@ class GameDebateAgent(DebateConversation):
         **kwargs,
     ) -> "GameDebateAgent":
         """Create a tournament debate match."""
-        from haive.agents.simple.agent import SimpleAgent
-        from haive.core.engine.aug_llm import AugLLMConfig
 
         name_a, pos_a = player_a
         name_b, pos_b = player_b

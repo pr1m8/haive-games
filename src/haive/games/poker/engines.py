@@ -216,7 +216,8 @@ def create_poker_agent_configs() -> dict[str, AugLLMConfig]:
     }
 
 
-# Updated version of create_default_agent_configs to work with various providers
+# Updated version of create_default_agent_configs to work with various
+# providers
 def create_default_agent_configs(config):
     """Create default configurations for poker agents based on config."""
     # The issue is here - we need to properly handle LLMProvider instances

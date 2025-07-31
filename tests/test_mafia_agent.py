@@ -3,8 +3,8 @@
 # Standard library imports
 
 # Third-party imports
-import pytest
 from langgraph.types import Command
+import pytest
 
 # Local imports
 from haive.games.mafia.agent import (

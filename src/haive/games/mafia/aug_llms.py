@@ -163,7 +163,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
             structured_output_model=MafiaAnalysis,
         )
 
-    raise ValueError(f"Unknown analyzer type: {analyzer_type}")
+    raise TypeError(f"Unknown analyzer type: {analyzer_type}")
 
 
 # Pre-configured analyzers

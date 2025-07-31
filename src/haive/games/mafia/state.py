@@ -29,7 +29,6 @@ from typing import Any
 
 from pydantic import Field
 
-# Import the actual MultiPlayerGameState class
 from haive.games.framework.multi_player.state import MultiPlayerGameState
 from haive.games.mafia.models import (
     GamePhase,
@@ -38,6 +37,8 @@ from haive.games.mafia.models import (
     PlayerRole,
     PlayerState,
 )
+
+# Import the actual MultiPlayerGameState class
 
 
 class MafiaGameState(MultiPlayerGameState):
@@ -151,7 +152,8 @@ class MafiaGameState(MultiPlayerGameState):
     # Game progression tracking
     day_number: int = Field(default=0, description="Current day number")
 
-    # Winner tracking - declared explicitly even though it's in the parent class
+    # Winner tracking - declared explicitly even though it's in the parent
+    # class
     winner: str | None = Field(default=None, description="Winner (village or mafia)")
 
     class Config:

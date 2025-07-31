@@ -14,6 +14,7 @@ import argparse
 import logging
 import random
 import time
+import traceback
 import uuid
 from typing import Any
 
@@ -383,7 +384,7 @@ def run_mafia_game_mock(
         print("\n✓ Replaced LLM engines with mock engines")
 
         # Generate player names
-        player_names = [f"Player_{i+1}" for i in range(player_count - 1)]
+        player_names = [f"Player_{i + 1}" for i in range(player_count - 1)]
         player_names.append("Narrator")  # Add narrator as the last player
 
         # Initialize game state
@@ -417,7 +418,6 @@ def run_mafia_game_mock(
             and current_day <= max_days
             and execution_counter < max_executions
         ):
-
             execution_counter += 1
 
             # Visualize current state
@@ -528,7 +528,6 @@ def run_mafia_game_mock(
                         and pid in game_state.player_states
                         and game_state.player_states[pid].is_alive
                     ):
-
                         # Check if this player has acted this round
                         has_acted = False
                         for action in reversed(game_state.action_history):
@@ -563,7 +562,8 @@ def run_mafia_game_mock(
                             all_night_actions_complete = False
                             break
 
-                # If narrator's turn and all night actions are complete, transition to day
+                # If narrator's turn and all night actions are complete,
+                # transition to day
                 if all_night_actions_complete and player_role == PlayerRole.NARRATOR:
                     game_state = MafiaStateManager.advance_phase(game_state)
 
@@ -615,15 +615,11 @@ def run_mafia_game_mock(
         except Exception as save_error:
             print(f"⚠️ Could not save game history: {save_error}")
             if debug:
-                import traceback
-
                 traceback.print_exc()
 
     except Exception as e:
         print(f"\n❌ ERROR: {e}")
         if debug:
-            import traceback
-
             traceback.print_exc()
 
     print("\n✅ Game Complete!")

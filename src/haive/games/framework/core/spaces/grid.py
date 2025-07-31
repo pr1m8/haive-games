@@ -1,4 +1,5 @@
 # game_framework/spaces/grid.py
+
 from typing import TypeVar
 
 from haive.games.framework.core.piece import GamePiece

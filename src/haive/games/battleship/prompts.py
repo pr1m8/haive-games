@@ -56,7 +56,7 @@ def generate_ship_placement_prompt(player: str) -> ChatPromptTemplate:
                 "\n"
                 "🎯 Return a JSON list of ship placements.\n",
             ),
-        ]
+        ],
     )
 
 
@@ -107,7 +107,7 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
                 "# YOUR TASK\n"
                 "Choose your next attack coordinate. Remember to avoid previously targeted positions.\n",
             ),
-        ]
+        ],
     )
 
 
@@ -151,5 +151,5 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
                 "# YOUR TASK\n"
                 "Analyze the game state and provide strategic targeting advice.",
             ),
-        ]
+        ],
     )

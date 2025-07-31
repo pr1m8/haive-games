@@ -5,9 +5,9 @@ providers and models, showing the flexibility of the new configuration
 system.
 """
 
+import traceback
 import uuid
 
-# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
 from haive.games.chess.config import ChessConfig
 from haive.games.chess.llm_utils import (
     create_chess_engines_from_config,
@@ -16,6 +16,9 @@ from haive.games.chess.llm_utils import (
     get_recommended_chess_models,
 )
 from haive.games.chess.state import ChessState
+
+# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not
+# implemented
 
 
 def run_chess_with_custom_llms(
@@ -97,7 +100,6 @@ def run_chess_with_custom_llms(
 
     except Exception as e:
         print(f"\n❌ Error during game: {e}")
-        import traceback
 
         traceback.print_exc()
 

@@ -10,11 +10,7 @@ import uuid
 from abc import abstractmethod
 from collections.abc import Callable
 from enum import Enum
-from typing import (
-    Any,
-    Generic,
-    TypeVar,
-)
+from typing import Any, Generic, TypeVar
 
 from game.core.board import Board
 from game.core.container import GamePieceContainer
@@ -122,7 +118,9 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         # Validate player count
         if not self.config.is_valid_player_count(len(self.players)):
             raise ValueError(
-                f"Invalid player count. This game requires {self.config.min_players}-{self.config.max_players} players."
+                f"Invalid player count. This game requires {self.config.min_players}-{
+                    self.config.max_players
+                } players."
             )
 
         # Initialize scores
@@ -360,7 +358,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Returns:
             Dictionary with game state information
         """
-        # Base implementation - subclasses should override for game-specific visibility
+        # Base implementation - subclasses should override for game-specific
+        # visibility
         return {
             "game_id": self.id,
             "name": self.name,
@@ -411,7 +410,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Returns:
             Position object, or None if invalid
         """
-        # Base implementation - subclasses should override for specific position types
+        # Base implementation - subclasses should override for specific
+        # position types
         raise NotImplementedError
 
     def register_callback(self, event: str, callback: Callable) -> None:
@@ -576,7 +576,9 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
             return MoveResult(
                 move=move,
                 status=MoveStatus.ILLEGAL,
-                message=f"Maximum actions per turn ({self.max_actions_per_turn}) reached",
+                message=f"Maximum actions per turn ({
+                    self.max_actions_per_turn
+                }) reached",
             )
 
         # Execute the parent's move processing
@@ -697,7 +699,8 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
         # Set cooldown if move was successful
         if result.status == MoveStatus.SUCCESS:
-            # Default cooldown of 1 tick, can be overridden in specific move types
+            # Default cooldown of 1 tick, can be overridden in specific move
+            # types
             cooldown = move.get_property("cooldown", 1)
             if cooldown > 0:
                 self.set_cooldown(move.player_id, move.move_type, cooldown)

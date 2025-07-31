@@ -1,3 +1,11 @@
+from collections.abc import Sequence
+from enum import Enum
+from typing import ClassVar, Literal
+
+from pydantic import BaseModel, Field, computed_field, field_validator
+
+from haive.games.checkers.models import CheckersAnalysis, CheckersMove
+
 r"""Comprehensive state management system for Checkers gameplay and strategic
 analysis.
 
@@ -56,14 +64,6 @@ Note:
     All state models use Pydantic for validation and support both JSON
     serialization and integration with LangGraph for distributed gameplay.
 """
-
-from collections.abc import Sequence
-from enum import Enum
-from typing import ClassVar, Dict, List, Literal, Optional, Union
-
-from pydantic import BaseModel, Field, computed_field, field_validator
-
-from haive.games.checkers.models import CheckersAnalysis, CheckersMove
 
 
 class PieceType(int, Enum):
@@ -219,7 +219,7 @@ class CheckersState(BaseModel):
         and integration with LangGraph for distributed game systems.
     """
 
-    board: List[List[Literal[0, 1, 2, 3, 4]]] = Field(
+    board: list[list[Literal[0, 1, 2, 3, 4]]] = Field(
         default_factory=lambda: CheckersState._default_board(),
         description="2D grid representation of the board using PieceType enum values",
     )
@@ -246,7 +246,7 @@ class CheckersState(BaseModel):
         description="Current game status with automatic terminal position detection",
     )
 
-    winner: Optional[Literal["red", "black"]] = Field(
+    winner: Literal["red", "black"] | None = Field(
         default=None,
         description="Winner of the game if completed, None if game is still in progress",
     )
@@ -261,7 +261,7 @@ class CheckersState(BaseModel):
         description="Complete history of strategic analyses from black's perspective",
     )
 
-    captured_pieces: Dict[str, List[str]] = Field(
+    captured_pieces: dict[str, list[str]] = Field(
         default_factory=lambda: {"red": [], "black": []},
         description="Comprehensive tracking of pieces captured by each player",
     )
@@ -272,15 +272,15 @@ class CheckersState(BaseModel):
         description="Current turn number starting from 1 for game tracking",
     )
 
-    last_capture_turn: Optional[int] = Field(
+    last_capture_turn: int | None = Field(
         default=None,
         description="Turn number of the last capture for draw rule enforcement",
     )
 
     # Class constants for board representation
     __board_size: ClassVar[int] = 8
-    __symbols: ClassVar[Dict[int, str]] = {0: ".", 1: "r", 2: "R", 3: "b", 4: "B"}
-    __piece_symbols: ClassVar[Dict[int, str]] = {
+    __symbols: ClassVar[dict[int, str]] = {0: ".", 1: "r", 2: "R", 3: "b", 4: "B"}
+    __piece_symbols: ClassVar[dict[int, str]] = {
         PieceType.EMPTY: "Empty",
         PieceType.RED_PIECE: "Red Piece",
         PieceType.RED_KING: "Red King",
@@ -331,7 +331,7 @@ class CheckersState(BaseModel):
 
     @computed_field
     @property
-    def material_balance(self) -> Dict[str, Union[int, float]]:
+    def material_balance(self) -> dict[str, int | float]:
         """Calculate material balance and piece distribution.
 
         Returns:
@@ -369,7 +369,7 @@ class CheckersState(BaseModel):
 
     @computed_field
     @property
-    def king_count(self) -> Dict[str, int]:
+    def king_count(self) -> dict[str, int]:
         """Count kings for each player.
 
         Returns:
@@ -388,7 +388,7 @@ class CheckersState(BaseModel):
 
     @computed_field
     @property
-    def center_control_score(self) -> Dict[str, Union[int, float]]:
+    def center_control_score(self) -> dict[str, int | float]:
         """Calculate center control score for strategic evaluation.
 
         Returns:
@@ -425,7 +425,7 @@ class CheckersState(BaseModel):
 
     @computed_field
     @property
-    def position_evaluation(self) -> Dict[str, Union[int, float, str]]:
+    def position_evaluation(self) -> dict[str, int | float | str]:
         """Generate comprehensive position evaluation.
 
         Returns:
@@ -458,7 +458,7 @@ class CheckersState(BaseModel):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Union[int, float, str]]:
+    def game_statistics(self) -> dict[str, int | float | str]:
         """Generate comprehensive game statistics.
 
         Returns:
@@ -540,7 +540,7 @@ class CheckersState(BaseModel):
         else:
             raise ValueError(f"Invalid player: {player}")
 
-    def get_latest_analysis(self, player: str) -> Optional[CheckersAnalysis]:
+    def get_latest_analysis(self, player: str) -> CheckersAnalysis | None:
         """Get the latest analysis for a player.
 
         Args:
@@ -556,7 +556,7 @@ class CheckersState(BaseModel):
         else:
             raise ValueError(f"Invalid player: {player}")
 
-    def get_recent_moves(self, count: int) -> List[CheckersMove]:
+    def get_recent_moves(self, count: int) -> list[CheckersMove]:
         """Get the most recent moves from the game history.
 
         Args:
@@ -576,7 +576,7 @@ class CheckersState(BaseModel):
         return self.game_status == "game_over"
 
     @classmethod
-    def _default_board(cls) -> List[List[int]]:
+    def _default_board(cls) -> list[list[int]]:
         """Create the default starting board for checkers.
 
         Creates an 8x8 checkers board with the standard starting positions:
@@ -607,7 +607,7 @@ class CheckersState(BaseModel):
         ]
 
     @classmethod
-    def _create_board_string(cls, board: List[List[int]]) -> str:
+    def _create_board_string(cls, board: list[list[int]]) -> str:
         r"""Create a string representation of the board for display.
 
         Converts the 2D grid representation to a human-readable string with

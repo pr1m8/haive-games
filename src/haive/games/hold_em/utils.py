@@ -139,7 +139,7 @@ def evaluate_hand_simple(
             break
 
     # Check for A-2-3-4-5 straight (wheel)
-    if not has_straight and set([14, 2, 3, 4, 5]).issubset(set(rank_values)):
+    if not has_straight and {14, 2, 3, 4, 5}.issubset(set(rank_values)):
         has_straight = True
         straight_high = 5  # 5-high straight
 

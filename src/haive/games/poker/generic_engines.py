@@ -5,8 +5,6 @@ allowing for configurable LLM models and game-specific player
 identifiers.
 """
 
-from typing import Dict
-
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -17,10 +15,7 @@ from haive.games.core.agent.generic_player_agent import (
     create_engines_from_simple_configs,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.poker.models import (
-    Card,
-    PlayerAction,
-)
+from haive.games.poker.models import Card, PlayerAction
 
 
 class PokerPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
@@ -119,8 +114,8 @@ poker_factory = PokerEngineFactory()
 
 
 def create_generic_poker_engines(
-    player_configs: Dict[str, PlayerAgentConfig],
-) -> Dict[str, AugLLMConfig]:
+    player_configs: dict[str, PlayerAgentConfig],
+) -> dict[str, AugLLMConfig]:
     """Create Poker engines from detailed player configurations.
 
     Args:
@@ -140,7 +135,7 @@ def create_generic_poker_engines(
 
 def create_generic_poker_engines_simple(
     player1_model: str, player2_model: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Poker engines with simple model specifications.
 
     Args:
@@ -158,7 +153,7 @@ def create_generic_poker_engines_simple(
 
 def create_generic_poker_config_from_example(
     example_name: str, temperature: float = 0.3
-) -> Dict[str, AugLLMConfig]:
+) -> dict[str, AugLLMConfig]:
     """Create Poker engines from a predefined example configuration.
 
     Args:
@@ -198,16 +193,16 @@ def create_generic_poker_config_from_example(
 # Convenience functions for common configurations
 
 
-def create_advanced_poker_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_advanced_poker_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create advanced Poker engines with high-powered models."""
     return create_generic_poker_config_from_example("advanced", **kwargs)
 
 
-def create_budget_poker_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_budget_poker_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create budget-friendly Poker engines."""
     return create_generic_poker_config_from_example("budget", **kwargs)
 
 
-def create_mixed_poker_engines(**kwargs) -> Dict[str, AugLLMConfig]:
+def create_mixed_poker_engines(**kwargs) -> dict[str, AugLLMConfig]:
     """Create mixed-provider Poker engines."""
     return create_generic_poker_config_from_example("mixed", **kwargs)

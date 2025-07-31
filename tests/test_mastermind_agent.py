@@ -6,8 +6,8 @@ game initialization, move generation, feedback, and visualization.
 
 from unittest.mock import Mock, patch
 
-import pytest
 from langgraph.types import Command
+import pytest
 
 from haive.games.mastermind.agent import MastermindAgent, ensure_game_state
 from haive.games.mastermind.config import MastermindConfig

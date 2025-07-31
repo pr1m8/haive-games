@@ -6,16 +6,15 @@ to identify and fix any issues.
 """
 
 import logging
+from pathlib import Path
 import sys
 import time
 import traceback
-from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 from haive.core.engine.aug_llm import AugLLMConfig
-
 from haive.games.poker.agent import PokerAgent
 from haive.games.poker.config import PokerAgentConfig
 from haive.games.poker.debug import StructuredOutputTester
@@ -159,7 +158,7 @@ class PokerAgentTester:
 
             # Check results
             if not isinstance(result, PokerState):
-                raise ValueError(f"Expected PokerState, got {type(result)}")
+                raise TypeError(f"Expected PokerState, got {type(result)}")
 
             if not result.game or not result.game.players:
                 raise ValueError("Game not properly initialized")
@@ -199,7 +198,7 @@ class PokerAgentTester:
 
             # Check results
             if not isinstance(result, PokerState):
-                raise ValueError(f"Expected PokerState, got {type(result)}")
+                raise TypeError(f"Expected PokerState, got {type(result)}")
 
             game = result.game
 
@@ -247,7 +246,7 @@ class PokerAgentTester:
 
             # Check results
             if not isinstance(result, PokerState):
-                raise ValueError(f"Expected PokerState, got {type(result)}")
+                raise TypeError(f"Expected PokerState, got {type(result)}")
 
             # Check if a decision was made
             game = result.game
@@ -299,7 +298,7 @@ class PokerAgentTester:
 
             # Check results
             if not isinstance(result, PokerState):
-                raise ValueError(f"Expected PokerState, got {type(result)}")
+                raise TypeError(f"Expected PokerState, got {type(result)}")
 
             # Check that the phase was updated
             if result.game.phase == GamePhase.PRE_FLOP:
@@ -416,7 +415,7 @@ class PokerAgentTester:
 
             # Check results
             if not isinstance(result, PokerState):
-                raise ValueError(f"Expected PokerState, got {type(result)}")
+                raise TypeError(f"Expected PokerState, got {type(result)}")
 
             # Check that a winner was determined
             if not any(player.is_winner for player in result.game.players):

@@ -119,7 +119,8 @@ class TestMastermindStateManagerMakeGuess:
             game_status="ongoing",
         )
         guess = MastermindGuess(
-            colors=["red", "red", "red", "red"], player="player1"  # Wrong player
+            colors=["red", "red", "red", "red"],
+            player="player1",  # Wrong player
         )
 
         with pytest.raises(ValueError, match="Codemaker cannot make guesses"):

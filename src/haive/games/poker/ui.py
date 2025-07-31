@@ -278,7 +278,8 @@ class PokerUI:
                 style=row_style,
             )
 
-            # Show cards for active players (in a real game, this would only show for the human player)
+            # Show cards for active players (in a real game, this would only
+            # show for the human player)
             if (
                 player.is_active
                 and hasattr(player, "hand")
@@ -362,4 +363,4 @@ class PokerUI:
             return "UTG"  # Under the Gun
         if position == num_players - 1:
             return "Cutoff"
-        return f"MP{position-2}"  # Middle Position
+        return f"MP{position - 2}"  # Middle Position

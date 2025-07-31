@@ -51,7 +51,8 @@ class CheckAction(PokerAction):
         if not super().can_execute(state):
             return False
 
-        # Can only check if no one has bet yet or player has matched the current bet
+        # Can only check if no one has bet yet or player has matched the
+        # current bet
         current_player_bet = state.current_bets.get(self.player_id, 0)
         return state.current_bet in (0, current_player_bet)
 

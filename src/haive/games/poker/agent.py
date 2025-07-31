@@ -8,34 +8,30 @@ This module implements a robust poker agent with improved:
 """
 
 # Standard library imports
+
+import json
 import logging
 import os
+import re
 import time
 import traceback
 from datetime import datetime
 from typing import Any
 
-# Local imports
 from haive.core.engine.agent.agent import Agent, register_agent
 from haive.core.engine.aug_llm import compose_runnable
-
-# Third-party imports
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import END, START
 
 from haive.games.poker.config import PokerAgentConfig
-from haive.games.poker.models import (
-    AgentDecision,
-    GamePhase,
-    Player,
-    PlayerAction,
-)
-from haive.games.poker.prompts import (
-    decision_prompt,
-    get_system_prompt,
-)
+from haive.games.poker.models import AgentDecision, GamePhase, Player, PlayerAction
+from haive.games.poker.prompts import decision_prompt, get_system_prompt
 from haive.games.poker.state import PokerState
 from haive.games.poker.state_manager import PokerStateManager
+
+# Third-party imports
+
+# Local imports
 
 # Get logger for this module
 logger = logging.getLogger(__name__)
@@ -228,14 +224,18 @@ class PokerAgent(Agent[PokerAgentConfig]):
             # Log initialization
             state.log_event(f"Game initialized with {len(state.game.players)} players")
             state.log_event(
-                f"Small blind: ${state.game.small_blind}, Big blind: ${state.game.big_blind}"
+                f"Small blind: ${state.game.small_blind}, Big blind: ${
+                    state.game.big_blind
+                }"
             )
 
             # Debug log all player details
             logger.debug("Players initialized:")
             for player in state.game.players:
                 logger.debug(
-                    f"  {player.id}: {player.name}, ${player.chips}, Position: {player.position}"
+                    f"  {player.id}: {player.name}, ${player.chips}, Position: {
+                        player.position
+                    }"
                 )
 
             # Reset stats
@@ -367,7 +367,9 @@ class PokerAgent(Agent[PokerAgentConfig]):
 
         # Log player turn
         logger.info(
-            f"Player {current_player_idx} ({current_player.name}) turn - {agent_info['style']} agent"
+            f"Player {current_player_idx} ({current_player.name}) turn - {
+                agent_info['style']
+            } agent"
         )
 
         # Calculate legal actions for this player
@@ -409,7 +411,9 @@ class PokerAgent(Agent[PokerAgentConfig]):
             # Decision received successfully
             if decision:
                 logger.info(
-                    f"Player {current_player_idx} decision: {decision.action} {decision.amount if hasattr(decision, 'amount') else ''}"
+                    f"Player {current_player_idx} decision: {decision.action} {
+                        decision.amount if hasattr(decision, 'amount') else ''
+                    }"
                 )
 
                 # Apply the decision
@@ -485,8 +489,6 @@ class PokerAgent(Agent[PokerAgentConfig]):
                     # Try to parse JSON from content
                     try:
                         # Extract JSON if it exists
-                        import json
-                        import re
 
                         # Look for JSON pattern
                         json_match = re.search(r"\{.*\}", content, re.DOTALL)
@@ -536,7 +538,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
             retries += 1
 
             if decision is None and retries < max_retries:
-                logger.info(f"Retrying decision, attempt {retries+1}/{max_retries}")
+                logger.info(f"Retrying decision, attempt {retries + 1}/{max_retries}")
                 time.sleep(1)  # Brief delay before retry
 
         return decision
@@ -628,7 +630,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
             try:
                 player_num = int(player_id.split("_")[1]) + 1
                 return f"P{player_num}"
-            except:
+            except BaseException:
                 pass
         return player_id
 

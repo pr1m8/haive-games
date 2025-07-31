@@ -74,7 +74,8 @@ class ShipType(str, Enum):
     """
 
     CARRIER = "Carrier"  #: Aircraft carrier, largest ship (5 squares)
-    BATTLESHIP = "Battleship"  #: Heavy battleship, major combat vessel (4 squares)
+    #: Heavy battleship, major combat vessel (4 squares)
+    BATTLESHIP = "Battleship"
     CRUISER = "Cruiser"  #: Medium cruiser, balanced warship (3 squares)
     SUBMARINE = "Submarine"  #: Submarine, stealth vessel (3 squares)
     DESTROYER = "Destroyer"  #: Destroyer, smallest escort ship (2 squares)
@@ -354,13 +355,13 @@ class Ship(BaseModel):
         expected_size = SHIP_SIZES.get(self.ship_type)
         if expected_size and self.size != expected_size:
             raise ValueError(
-                f"{self.ship_type} must have size {expected_size}, got {self.size}"
+                f"{self.ship_type} must have size {expected_size}, got {self.size}",
             )
 
         # Validate coordinate count matches size
         if len(self.coordinates) != self.size:
             raise ValueError(
-                f"Ship has {len(self.coordinates)} coordinates but size is {self.size}"
+                f"Ship has {len(self.coordinates)} coordinates but size is {self.size}",
             )
 
         # Validate coordinates form a straight line
@@ -380,7 +381,7 @@ class Ship(BaseModel):
                     raise ValueError("Vertical ship coordinates must be contiguous")
             else:
                 raise ValueError(
-                    "Ship coordinates must form a horizontal or vertical line"
+                    "Ship coordinates must form a horizontal or vertical line",
                 )
 
         return self
@@ -544,7 +545,8 @@ class ShipPlacement(BaseModel):
     @field_validator("coordinates")
     @classmethod
     def validate_coordinates(
-        cls, coords: list[Coordinates | dict]
+        cls,
+        coords: list[Coordinates | dict],
     ) -> list[Coordinates]:
         """Validate and normalize coordinate list.
 
@@ -585,7 +587,7 @@ class ShipPlacement(BaseModel):
         expected_size = SHIP_SIZES[self.ship_type]
         if len(self.coordinates) != expected_size:
             raise ValueError(
-                f"{self.ship_type} requires {expected_size} coordinates, got {len(self.coordinates)}"
+                f"{self.ship_type} requires {expected_size} coordinates, got {len(self.coordinates)}",
             )
 
         # Validate coordinates form a straight line
@@ -708,7 +710,7 @@ class ShipPlacementWrapper(BaseModel):
                     ship_type=ShipType.DESTROYER,
                     coordinates=[Coordinates(row=4, col=0), Coordinates(row=4, col=1)],
                 ),
-            ]
+            ],
         ],
     )
 
@@ -732,21 +734,23 @@ class ShipPlacementWrapper(BaseModel):
 
         if len(ship_types) != len(all_ship_types):
             raise ValueError(
-                f"Fleet must contain exactly {len(all_ship_types)} ships, got {len(ship_types)}"
+                f"Fleet must contain exactly {len(all_ship_types)} ships, got {
+                    len(ship_types)
+                }",
             )
 
         # Find missing ship types
         missing_types = set(all_ship_types) - set(ship_types)
         if missing_types:
             raise ValueError(
-                f"Missing ship types: {', '.join(t.value for t in missing_types)}"
+                f"Missing ship types: {', '.join(t.value for t in missing_types)}",
             )
 
         # Find duplicate ship types
         duplicates = [t for t in ship_types if ship_types.count(t) > 1]
         if duplicates:
             raise ValueError(
-                f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}"
+                f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}",
             )
 
         # Check for coordinate overlaps
@@ -933,7 +937,11 @@ class MoveOutcome(BaseModel):
     """
 
     row: int = Field(
-        ..., ge=0, le=9, description="Row coordinate of the attack", examples=[3, 5, 7]
+        ...,
+        ge=0,
+        le=9,
+        description="Row coordinate of the attack",
+        examples=[3, 5, 7],
     )
 
     col: int = Field(
@@ -1073,7 +1081,8 @@ class Analysis(BaseModel):
     @field_validator("priority_targets")
     @classmethod
     def validate_targets(
-        cls, targets: list[Coordinates | dict] | None
+        cls,
+        targets: list[Coordinates | dict] | None,
     ) -> list[Coordinates]:
         """Validate and normalize priority target list.
 
@@ -1161,7 +1170,7 @@ class PlayerBoard(BaseModel):
                     ship_type=ShipType.DESTROYER,
                     size=2,
                     coordinates=[Coordinates(row=0, col=0), Coordinates(row=0, col=1)],
-                )
+                ),
             ],  # Single destroyer
         ],
     )

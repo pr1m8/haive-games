@@ -6,14 +6,14 @@ import logging
 import random
 from typing import Any
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from haive.games.monopoly.game.card import Card
 from haive.games.monopoly.game.player import Player
 from haive.games.monopoly.game.property import Property
 from haive.games.monopoly.game.types import ActionType, PropertyType, SpecialSquareType
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class MonopolyGame:
@@ -736,7 +736,8 @@ class MonopolyGame:
         if prop.property_type == PropertyType.PROPERTY and prop.houses > 0:
             return False
 
-        # Check if any property in the group has houses (can't mortgage if any have houses)
+        # Check if any property in the group has houses (can't mortgage if any
+        # have houses)
         if prop.property_type == PropertyType.PROPERTY:
             group_props = self.get_properties_by_group(prop.color_group)
             if any(p.houses > 0 for p in group_props):
@@ -887,7 +888,8 @@ class MonopolyGame:
         # Mark as having rolled
         self.has_rolled = True
 
-        # If not doubles, player's turn is essentially over after handling the landing
+        # If not doubles, player's turn is essentially over after handling the
+        # landing
         return True
 
     def _handle_buy_action(self, player: Player, property_position: int) -> bool:
@@ -1250,7 +1252,8 @@ class MonopolyGame:
             return False
 
         # For simplicity, just assign it to the highest bidder at minimum price
-        # In a real implementation, this would be a more complex auction process
+        # In a real implementation, this would be a more complex auction
+        # process
 
         # Find the player with the most money
         eligible_players = [
@@ -1713,7 +1716,9 @@ class MonopolyGame:
             # If third turn in jail, force payment
             if current_player.jail_turns >= 3:
                 self.log_event(
-                    f"This is {current_player.name}'s third turn in jail and must pay to get out."
+                    f"This is {
+                        current_player.name
+                    }'s third turn in jail and must pay to get out."
                 )
                 self._handle_pay_jail_fee_action(current_player)
 
@@ -1750,7 +1755,9 @@ class MonopolyGame:
                 active_players, key=lambda p: p.net_worth(self.properties)
             )
             self.log_event(
-                f"Game over! {self.winner.name} wins with net worth ${self.winner.net_worth(self.properties)}!"
+                f"Game over! {self.winner.name} wins with net worth ${
+                    self.winner.net_worth(self.properties)
+                }!"
             )
         else:
             self.winner = None
@@ -1811,7 +1818,6 @@ class MonopolyGame:
             pass
 
         for player in self.players:
-
             # Print properties
             if player.properties:
                 [self.properties[pos].name for pos in player.properties]

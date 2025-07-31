@@ -10,7 +10,6 @@ import logging
 
 from haive.games.risk.agent import RiskAgent
 from haive.games.risk.models import MoveType
-from haive.games.risk.state import RiskState
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -66,7 +65,9 @@ def main():
         diplomatic_stance="aggressive",
     )
     logger.info(
-        f"Aggressive agent: {aggressive_agent.name} (tolerance: {aggressive_agent.risk_tolerance})"
+        f"Aggressive agent: {aggressive_agent.name} (tolerance: {
+            aggressive_agent.risk_tolerance
+        })"
     )
 
     defensive_agent = RiskAgent(
@@ -76,7 +77,9 @@ def main():
         diplomatic_stance="cooperative",
     )
     logger.info(
-        f"Defensive agent: {defensive_agent.name} (tolerance: {defensive_agent.risk_tolerance})"
+        f"Defensive agent: {defensive_agent.name} (tolerance: {
+            defensive_agent.risk_tolerance
+        })"
     )
 
     logger.info("\n=== Risk Game Example Complete ===")

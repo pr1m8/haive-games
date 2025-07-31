@@ -214,8 +214,12 @@ class FoxAndGeeseMove(BaseModel):
 
     def __str__(self) -> str:
         if self.capture:
-            return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {self.to_pos}, capturing at {self.capture}"
-        return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {self.to_pos}"
+            return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {
+                self.to_pos
+            }, capturing at {self.capture}"
+        return f"{self.piece_type.capitalize()} moves from {self.from_pos} to {
+            self.to_pos
+        }"
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, FoxAndGeeseMove):

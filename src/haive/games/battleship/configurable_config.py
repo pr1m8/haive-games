@@ -4,7 +4,7 @@ This module provides configurable Battleship game configurations that
 replace hardcoded LLM settings with dynamic, configurable player agents.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -36,18 +36,21 @@ class ConfigurableBattleshipConfig(BattleshipAgentConfig):
         recursion_limit: Python recursion limit for game execution
     """
 
-    player1_model: Optional[str] = Field(default=None, description="Model for player 1")
-    player2_model: Optional[str] = Field(default=None, description="Model for player 2")
-    example_config: Optional[str] = Field(
-        default=None, description="Example configuration name"
+    player1_model: str | None = Field(default=None, description="Model for player 1")
+    player2_model: str | None = Field(default=None, description="Model for player 2")
+    example_config: str | None = Field(
+        default=None,
+        description="Example configuration name",
     )
-    player_configs: Optional[Dict[str, PlayerAgentConfig]] = Field(
-        default=None, description="Detailed player configurations"
+    player_configs: dict[str, PlayerAgentConfig] | None = Field(
+        default=None,
+        description="Detailed player configurations",
     )
 
     # Game configuration
     temperature: float = Field(
-        default=0.3, description="Temperature for LLM generation"
+        default=0.3,
+        description="Temperature for LLM generation",
     )
     recursion_limit: int = Field(default=500, description="Python recursion limit")
 
@@ -64,7 +67,8 @@ class ConfigurableBattleshipConfig(BattleshipAgentConfig):
         elif self.example_config:
             # Method 2: Use example configuration
             self.engines = create_generic_battleship_config_from_example(
-                self.example_config, temperature=self.temperature
+                self.example_config,
+                temperature=self.temperature,
             )
             self._generate_player_names_from_example()
 
@@ -74,7 +78,9 @@ class ConfigurableBattleshipConfig(BattleshipAgentConfig):
             player2_model = self.player2_model or "claude-3-5-sonnet-20240620"
 
             self.engines = create_generic_battleship_engines_simple(
-                player1_model, player2_model, temperature=self.temperature
+                player1_model,
+                player2_model,
+                temperature=self.temperature,
             )
             self._generate_player_names_from_models(player1_model, player2_model)
 
@@ -113,7 +119,9 @@ class ConfigurableBattleshipConfig(BattleshipAgentConfig):
             self.player2_name = f"{self.example_config} Player 2"
 
     def _generate_player_names_from_models(
-        self, player1_model: str, player2_model: str
+        self,
+        player1_model: str,
+        player2_model: str,
     ):
         """Generate player names based on model names."""
 
@@ -165,12 +173,15 @@ def create_battleship_config(
         ... )
     """
     return ConfigurableBattleshipConfig(
-        player1_model=player1_model, player2_model=player2_model, **kwargs
+        player1_model=player1_model,
+        player2_model=player2_model,
+        **kwargs,
     )
 
 
 def create_battleship_config_from_example(
-    example_name: str, **kwargs
+    example_name: str,
+    **kwargs,
 ) -> ConfigurableBattleshipConfig:
     """Create a configurable Battleship configuration from a predefined
     example.
@@ -198,7 +209,8 @@ def create_battleship_config_from_example(
 
 
 def create_battleship_config_from_player_configs(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig],
+    **kwargs,
 ) -> ConfigurableBattleshipConfig:
     """Create a configurable Battleship configuration from detailed player
     configurations.
@@ -304,7 +316,7 @@ def get_example_config(name: str) -> ConfigurableBattleshipConfig:
     return EXAMPLE_CONFIGURATIONS[name]["config"]()
 
 
-def list_example_configurations() -> Dict[str, str]:
+def list_example_configurations() -> dict[str, str]:
     """List all available example configurations.
 
     Returns:
@@ -340,13 +352,19 @@ if __name__ == "__main__":
     print("3️⃣ Custom Player Configuration:")
     player_configs = {
         "player1_player": PlayerAgentConfig(
-            llm_config="gpt-4o", player_name="Admiral Nelson", temperature=0.8
+            llm_config="gpt-4o",
+            player_name="Admiral Nelson",
+            temperature=0.8,
         ),
         "player2_player": PlayerAgentConfig(
-            llm_config="claude-3-opus", player_name="Captain Ahab", temperature=0.4
+            llm_config="claude-3-opus",
+            player_name="Captain Ahab",
+            temperature=0.4,
         ),
         "player1_analyzer": PlayerAgentConfig(
-            llm_config="gpt-4o", player_name="Strategic Command", temperature=0.2
+            llm_config="gpt-4o",
+            player_name="Strategic Command",
+            temperature=0.2,
         ),
         "player2_analyzer": PlayerAgentConfig(
             llm_config="claude-3-opus",

@@ -1,13 +1,13 @@
-from typing import Any, Dict
+import random
+from typing import Any
 
 from haive.core.engine.agent.agent import register_agent
 from langgraph.graph import END, START
+from rich.table import Table
 
 from haive.games.framework.base import GameAgent
 from haive.games.single_player.wordle.config import WordConnectionsAgentConfig
-from haive.games.single_player.wordle.models import (
-    WordConnectionsState,
-)
+from haive.games.single_player.wordle.models import WordConnectionsState
 
 
 @register_agent(WordConnectionsAgentConfig)
@@ -28,7 +28,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
         # Compile the graph (this sets self.graph internally)
         self.compile()
 
-    def play_turn(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    def play_turn(self, state: dict[str, Any]) -> dict[str, Any]:
         """Play one turn of the game."""
         game_state = WordConnectionsState(**state)
 
@@ -121,7 +121,7 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
 
         return game_state.model_dump()
 
-    def should_continue(self, state: Dict[str, Any]) -> bool:
+    def should_continue(self, state: dict[str, Any]) -> bool:
         """Check if game should continue."""
         return state["game_status"] == "playing"
 
@@ -160,7 +160,6 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
             }
 
         # Create grid (shuffle all words)
-        import random
 
         all_words = []
         for words in puzzle_data["categories"].values():
@@ -179,14 +178,16 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
 
     def setup_routing(self) -> None:
         """Set up the routing for the game."""
-        # Build routing map - CRITICAL FIX: ValidationNodeConfig returns Send objects, not strings
+        # Build routing map - CRITICAL FIX: ValidationNodeConfig returns Send
+        # objects, not strings
         console.print("\n[bold yellow]Building routing map...[/bold yellow]")
 
         # IMPORTANT: ValidationNodeConfig primarily returns Send objects for routing
         # The routing_map only handles edge cases where strings are returned
         routing_map = {
             "has_errors": "agent_node"  # Only for fallback error cases
-            # Removed 'tool_node' and 'parse_output' - these are handled via Send objects
+            # Removed 'tool_node' and 'parse_output' - these are handled via
+            # Send objects
         }
 
         console.print(f"  [cyan]Routing map (for string returns): {routing_map}[/cyan]")
@@ -195,7 +196,6 @@ class WordConnectionsAgent(GameAgent[WordConnectionsAgentConfig]):
         )
 
         # Show routing explanation
-        from rich.table import Table
 
         routing_table = Table(
             title="ValidationNodeConfig Routing Behavior",

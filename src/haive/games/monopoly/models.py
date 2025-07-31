@@ -1,3 +1,8 @@
+from enum import Enum
+from typing import Any
+
+from pydantic import BaseModel, Field, computed_field, field_validator
+
 r"""Comprehensive data models for strategic Monopoly gameplay and real estate
 management.
 
@@ -58,11 +63,6 @@ Note:
     All models use Pydantic for validation and support both JSON serialization
     and integration with LLM-based strategic analysis systems for advanced gameplay.
 """
-
-from enum import Enum
-from typing import Any
-
-from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class PropertyType(str, Enum):
@@ -1332,7 +1332,8 @@ class Property(BaseModel):
         ge=0,
         le=39,
         description="Board position (0-39) for movement and location tracking",
-        examples=[0, 5, 16, 39],  # GO, Reading Railroad, St. James Place, Boardwalk
+        # GO, Reading Railroad, St. James Place, Boardwalk
+        examples=[0, 5, 16, 39],
     )
 
     property_type: PropertyType = Field(
@@ -1348,7 +1349,8 @@ class Property(BaseModel):
         ge=0,
         le=1000,
         description="Base purchase price of the property",
-        examples=[60, 180, 200, 400],  # Mediterranean, St. James, Railroad, Boardwalk
+        # Mediterranean, St. James, Railroad, Boardwalk
+        examples=[60, 180, 200, 400],
     )
 
     rent: list[int] = Field(
@@ -1555,7 +1557,8 @@ class Player(BaseModel):
         ge=0,
         le=39,
         description="Current board position (0-39) for movement and location tracking",
-        examples=[0, 5, 10, 16, 39],  # GO, Railroad, Jail, St. James, Boardwalk
+        # GO, Railroad, Jail, St. James, Boardwalk
+        examples=[0, 5, 10, 16, 39],
     )
 
     properties: list[str] = Field(

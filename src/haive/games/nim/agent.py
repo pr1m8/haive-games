@@ -9,6 +9,7 @@ import time
 from typing import Any
 
 from haive.core.graph.dynamic_graph_builder import DynamicGraph
+from langgraph.graph import START
 from langgraph.types import Command
 
 from haive.games.framework.base.agent import GameAgent
@@ -55,7 +56,9 @@ def ensure_game_state(
     if isinstance(state_input, dict):
         try:
             logger.info(
-                f"ensure_game_state: Converting dict to NimState, keys: {list(state_input.keys())}"
+                f"ensure_game_state: Converting dict to NimState, keys: {
+                    list(state_input.keys())
+                }"
             )
             return NimState.model_validate(state_input)
         except Exception as e:
@@ -101,7 +104,9 @@ class NimAgent(GameAgent[NimConfig]):
         )
 
         logger.info(
-            f"Initialized game with pile sizes {game_state.piles} and misere_mode={game_state.misere_mode}"
+            f"Initialized game with pile sizes {game_state.piles} and misere_mode={
+                game_state.misere_mode
+            }"
         )
 
         return Command(
@@ -344,7 +349,11 @@ class NimAgent(GameAgent[NimConfig]):
             print(f"🎮 Current Player: {game_state.turn}")
             print(f"📌 Game Status: {game_state.game_status}")
             print(
-                f"🎲 Game Mode: {'Misere (last takes loses)' if game_state.misere_mode else 'Standard (last takes wins)'}"
+                f"🎲 Game Mode: {
+                    'Misere (last takes loses)'
+                    if game_state.misere_mode
+                    else 'Standard (last takes wins)'
+                }"
             )
             print("=" * 50)
 
@@ -437,7 +446,6 @@ class NimAgent(GameAgent[NimConfig]):
         builder.add_node("analyze_player2", self.analyze_player2)
 
         # Set up the game flow
-        from langgraph.constants import START  # Import the START constant
 
         # Add START edge to initialize
         builder.add_edge(START, "initialize")

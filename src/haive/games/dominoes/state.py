@@ -62,7 +62,7 @@ Note:
 """
 
 import random
-from typing import Dict, List, Literal, Optional, Union
+from typing import Literal
 
 from pydantic import Field, computed_field
 
@@ -186,20 +186,20 @@ class DominoesState(GameState):
         operations maintain game rule consistency and strategic context.
     """
 
-    players: List[str] = Field(
+    players: list[str] = Field(
         ...,
         min_items=2,
         max_items=4,
         description="List of player names in turn order (2-4 players supported)",
     )
-    hands: Dict[str, List[DominoTile]] = Field(
+    hands: dict[str, list[DominoTile]] = Field(
         ..., description="Current tiles in each player's hand (private information)"
     )
-    board: List[DominoTile] = Field(
+    board: list[DominoTile] = Field(
         default_factory=list,
         description="Tiles currently placed on the board in connection order",
     )
-    boneyard: List[DominoTile] = Field(
+    boneyard: list[DominoTile] = Field(
         default_factory=list,
         description="Undealt tiles available for drawing when players cannot play",
     )
@@ -210,7 +210,7 @@ class DominoesState(GameState):
         default="ongoing",
         description="Current game state: ongoing play, player victory, or draw",
     )
-    move_history: List[Union[DominoMove, Literal["pass"]]] = Field(
+    move_history: list[DominoMove | Literal["pass"]] = Field(
         default_factory=list,
         description="Complete chronological history of moves and passes",
     )
@@ -219,25 +219,25 @@ class DominoesState(GameState):
         ge=0,
         description="Number of consecutive passes (for block detection)",
     )
-    scores: Dict[str, int] = Field(
+    scores: dict[str, int] = Field(
         default_factory=dict,
         description="Current scores for each player (updated by game variant rules)",
     )
-    winner: Optional[str] = Field(
+    winner: str | None = Field(
         default=None, description="Winner identifier if game completed, None if ongoing"
     )
-    player1_analysis: List[DominoesAnalysis] = Field(
+    player1_analysis: list[DominoesAnalysis] = Field(
         default_factory=list,
         description="Strategic analysis history for player1 with reasoning patterns",
     )
-    player2_analysis: List[DominoesAnalysis] = Field(
+    player2_analysis: list[DominoesAnalysis] = Field(
         default_factory=list,
         description="Strategic analysis history for player2 with reasoning patterns",
     )
 
     @computed_field
     @property
-    def left_value(self) -> Optional[int]:
+    def left_value(self) -> int | None:
         """Get the value on the left end of the board that can be matched.
 
         Returns:
@@ -249,7 +249,7 @@ class DominoesState(GameState):
 
     @computed_field
     @property
-    def right_value(self) -> Optional[int]:
+    def right_value(self) -> int | None:
         """Get the value on the right end of the board that can be matched.
 
         Returns:
@@ -281,7 +281,7 @@ class DominoesState(GameState):
 
     @computed_field
     @property
-    def hand_sizes(self) -> Dict[str, int]:
+    def hand_sizes(self) -> dict[str, int]:
         """Get the current hand sizes for all players."""
         return {player: len(self.hands[player]) for player in self.players}
 
@@ -308,7 +308,7 @@ class DominoesState(GameState):
 
     @computed_field
     @property
-    def game_statistics(self) -> Dict[str, Union[int, float, str]]:
+    def game_statistics(self) -> dict[str, int | float | str]:
         """Generate comprehensive game statistics."""
         total_moves = len(self.move_history)
         pass_count = sum(1 for move in self.move_history if move == "pass")
@@ -332,7 +332,7 @@ class DominoesState(GameState):
 
     @computed_field
     @property
-    def position_evaluation(self) -> Dict[str, Union[str, int, float]]:
+    def position_evaluation(self) -> dict[str, str | int | float]:
         """Generate strategic position evaluation."""
         hand_sizes = self.hand_sizes
         min_hand_size = min(hand_sizes.values())
@@ -359,7 +359,7 @@ class DominoesState(GameState):
         elif player == "player2":
             self.player2_analysis = list(self.player2_analysis) + [analysis]
 
-    def get_latest_analysis(self, player: str) -> Optional[DominoesAnalysis]:
+    def get_latest_analysis(self, player: str) -> DominoesAnalysis | None:
         """Get the latest analysis for a player."""
         if player == "player1":
             return self.player1_analysis[-1] if self.player1_analysis else None
@@ -367,7 +367,7 @@ class DominoesState(GameState):
             return self.player2_analysis[-1] if self.player2_analysis else None
         return None
 
-    def get_playable_tiles(self, player: str) -> List[DominoTile]:
+    def get_playable_tiles(self, player: str) -> list[DominoTile]:
         """Get tiles that a player can currently play."""
         if player not in self.players:
             return []
@@ -400,7 +400,7 @@ class DominoesState(GameState):
 
     @classmethod
     def initialize(
-        cls, player_names: Optional[List[str]] = None, tiles_per_hand: int = 7
+        cls, player_names: list[str] | None = None, tiles_per_hand: int = 7
     ) -> "DominoesState":
         """Initialize a new dominoes game with proper tile distribution.
 

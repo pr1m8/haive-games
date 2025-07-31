@@ -1,3 +1,18 @@
+import uuid
+from enum import Enum
+from typing import Any, Literal
+
+from haive.core.config.runnable import RunnableConfigManager
+from haive.core.engine.agent.config import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+from langchain_core.runnables import RunnableConfig
+from pydantic import BaseModel, Field, ValidationInfo, computed_field, field_validator
+
+from haive.games.monopoly.engines import build_monopoly_player_aug_llms
+from haive.games.monopoly.player_agent import MonopolyPlayerAgent, PlayerDecisionState
+from haive.games.monopoly.state import MonopolyState
+from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
+
 r"""Comprehensive configuration system for strategic Monopoly gameplay and real
 estate management.
 
@@ -47,20 +62,6 @@ Note:
     All configurations use Pydantic for validation and support both JSON serialization
     and integration with distributed game systems for multiplayer online play.
 """
-
-import uuid
-from enum import Enum
-from typing import Any, Literal
-
-from haive.core.config.runnable import RunnableConfigManager
-from haive.core.engine.agent.config import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
-from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, Field, ValidationInfo, computed_field, field_validator
-
-from haive.games.monopoly.player_agent import PlayerDecisionState
-from haive.games.monopoly.state import MonopolyState
-from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
 
 class GameDifficulty(str, Enum):
@@ -704,8 +705,6 @@ class MonopolyGameAgentConfig(AgentConfig):
                 # Agent has advanced AI capabilities
         """
         # Import here to avoid circular dependency
-        from haive.games.monopoly.engines import build_monopoly_player_aug_llms
-        from haive.games.monopoly.player_agent import MonopolyPlayerAgent
 
         # Set up the engines for the player agent
         if not self.player_agent_config.engines:
@@ -722,8 +721,6 @@ class MonopolyGameAgentConfig(AgentConfig):
         trading, building, etc.).
         """
         if not self.player_agent_config.engines:
-            from haive.games.monopoly.engines import build_monopoly_player_aug_llms
-
             self.player_agent_config.engines = build_monopoly_player_aug_llms()
 
     @classmethod

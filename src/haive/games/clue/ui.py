@@ -244,7 +244,8 @@ class ClueUI:
         # Get all weapons
         all_weapons = [weapon.value for weapon in ValidWeapon]
 
-        # Get weapons from player cards (if in hand, they're not the murder weapon)
+        # Get weapons from player cards (if in hand, they're not the murder
+        # weapon)
         player1_cards = set(state.player1_cards)
         player2_cards = set(state.player2_cards)
 
@@ -486,7 +487,9 @@ class ClueUI:
             card_type = (
                 "suspect"
                 if card in [s.value for s in ValidSuspect]
-                else "weapon" if card in [w.value for w in ValidWeapon] else "room"
+                else "weapon"
+                if card in [w.value for w in ValidWeapon]
+                else "room"
             )
             player1_cards_text += f"[{self.colors[card_type]}]{card}[/], "
         player1_cards_text = player1_cards_text.rstrip(", ")
@@ -497,7 +500,9 @@ class ClueUI:
             card_type = (
                 "suspect"
                 if card in [s.value for s in ValidSuspect]
-                else "weapon" if card in [w.value for w in ValidWeapon] else "room"
+                else "weapon"
+                if card in [w.value for w in ValidWeapon]
+                else "room"
             )
             player2_cards_text += f"[{self.colors[card_type]}]{card}[/], "
         player2_cards_text = player2_cards_text.rstrip(", ")
@@ -732,7 +737,9 @@ class ClueUI:
                     "Room": self.colors["room"],
                 }.get(response.refuting_card.card_type.value, "white")
 
-                response_text += f" by showing:\n\n[{card_type_color}]{response.refuting_card.name}[/]"
+                response_text += f" by showing:\n\n[{card_type_color}]{
+                    response.refuting_card.name
+                }[/]"
 
             response_panel = Panel(
                 response_text,

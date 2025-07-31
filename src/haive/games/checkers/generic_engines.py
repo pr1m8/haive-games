@@ -9,6 +9,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.checkers.models import CheckersAnalysis, CheckersPlayerDecision
+from haive.games.chess.generic_engines import create_generic_chess_engines_simple
 from haive.games.core.agent.generic_player_agent import (
     CheckersPlayerIdentifiers,
     GenericGameEngineFactory,
@@ -16,6 +17,7 @@ from haive.games.core.agent.generic_player_agent import (
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
 from haive.games.models.llm import LLMConfig
+from haive.games.tic_tac_toe.generic_engines import create_generic_ttt_engines_simple
 
 
 class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
@@ -255,7 +257,7 @@ def compare_checkers_with_other_games() -> None:
         "black_analyzer": "Black position analysis",
     }
     for _role, _desc in chess_engines.items():
-        pass
+        pass  # Example usage
 
     # Checkers pattern
     checkers_engines = {
@@ -265,7 +267,7 @@ def compare_checkers_with_other_games() -> None:
         "black_analyzer": "Black position analysis",
     }
     for _role, _desc in checkers_engines.items():
-        pass
+        pass  # Example usage
 
     # Tic Tac Toe pattern
     ttt_engines = {
@@ -275,7 +277,7 @@ def compare_checkers_with_other_games() -> None:
         "O_analyzer": "O position analysis",
     }
     for _role, _desc in ttt_engines.items():
-        pass
+        pass  # Example usage
 
 
 # Advanced example: Multi-game configuration
@@ -293,20 +295,12 @@ def create_multi_game_checkers_demo() -> Any:
 
     # Import other game engines for comparison
     try:
-        from haive.games.chess.generic_engines import (
-            create_generic_chess_engines_simple,
-        )
-
         chess_engines = create_generic_chess_engines_simple(model1, model2)
         has_chess = True
     except ImportError:
         has_chess = False
 
     try:
-        from haive.games.tic_tac_toe.generic_engines import (
-            create_generic_ttt_engines_simple,
-        )
-
         ttt_engines = create_generic_ttt_engines_simple(model1, model2)
         has_ttt = True
     except ImportError:

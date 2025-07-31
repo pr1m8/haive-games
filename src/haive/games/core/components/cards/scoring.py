@@ -1,5 +1,6 @@
 # haive/games/core/components/cards/scoring.py
 
+from typing import Generic
 
 from pydantic import BaseModel, Field
 

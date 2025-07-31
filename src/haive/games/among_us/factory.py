@@ -2,13 +2,13 @@
 
 from typing import Any
 
-# from haive.games.framework.multi_player.factory import MultiPlayerGameFactory
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from haive.games.among_us.agent import AmongUsAgent
+from haive.games.among_us.config import AmongUsAgentConfig
 from haive.games.among_us.prompts import (
     CREWMATE_PROMPT,
     IMPOSTOR_PROMPT,
@@ -16,6 +16,8 @@ from haive.games.among_us.prompts import (
     VOTING_PROMPT,
 )
 from haive.games.among_us.state import AmongUsState
+
+# from haive.games.framework.multi_player.factory import MultiPlayerGameFactory
 
 
 def create_among_us_game(
@@ -70,7 +72,8 @@ def create_among_us_game(
     azure_llm_config = AzureLLMConfig(**final_llm_config)
 
     # Create prompt templates with placeholders instead of formatting them now
-    # This prevents the KeyError because we're not attempting to format the prompts yet
+    # This prevents the KeyError because we're not attempting to format the
+    # prompts yet
     crewmate_template = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content=CREWMATE_PROMPT),
@@ -141,7 +144,6 @@ def create_among_us_game(
     }
 
     # Create config for the agent
-    from haive.games.among_us.config import AmongUsAgentConfig
 
     agent_config = AmongUsAgentConfig(
         state_schema=AmongUsState,

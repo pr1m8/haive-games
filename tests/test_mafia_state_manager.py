@@ -151,7 +151,7 @@ class TestMafiaStateManager:
 
         # Add 6 players
         for i in range(6):
-            manager.add_player(f"Player{i+1}")
+            manager.add_player(f"Player{i + 1}")
 
         # Start game
         success = manager.start_game()
@@ -178,7 +178,7 @@ class TestMafiaStateManager:
 
         # Add 6 players
         for i in range(6):
-            manager.add_player(f"Player{i+1}")
+            manager.add_player(f"Player{i + 1}")
 
         # Start game
         success = manager.start_game()
@@ -394,7 +394,7 @@ class TestMafiaStateManager:
 
         # Add players
         for i in range(6):
-            manager.add_player(f"Player{i+1}")
+            manager.add_player(f"Player{i + 1}")
 
         # Start multiple games and check role distribution
         role_sets = []
@@ -405,7 +405,7 @@ class TestMafiaStateManager:
             manager.reset_game()
             # Re-add players
             for i in range(6):
-                manager.add_player(f"Player{i+1}")
+                manager.add_player(f"Player{i + 1}")
 
         # Should have some variation in role assignment order
         # (This test might rarely fail due to random chance)

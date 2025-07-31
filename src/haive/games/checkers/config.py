@@ -1,3 +1,11 @@
+from haive.core.engine.agent.agent import AgentConfig
+from haive.core.engine.aug_llm import AugLLMConfig
+from langchain_core.runnables import RunnableConfig
+from pydantic import BaseModel, Field, computed_field, field_validator
+
+from haive.games.checkers.engines import build_checkers_aug_llms
+from haive.games.checkers.state import CheckersState
+
 r"""Comprehensive configuration system for strategic Checkers gameplay and AI
 agents.
 
@@ -50,14 +58,6 @@ Note:
     All configurations use Pydantic for validation and support both JSON serialization
     and integration with distributed game systems for tournament play.
 """
-
-from haive.core.engine.agent.agent import AgentConfig
-from haive.core.engine.aug_llm import AugLLMConfig
-from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, Field, computed_field, field_validator
-
-from haive.games.checkers.engines import build_checkers_aug_llms
-from haive.games.checkers.state import CheckersState
 
 
 class CheckersAgentConfig(AgentConfig):
@@ -264,7 +264,9 @@ class CheckersAgentConfig(AgentConfig):
             return board_size - 1
 
         if not (0 <= v < board_size):
-            raise ValueError(f"King promotion row must be between 0 and {board_size-1}")
+            raise ValueError(
+                f"King promotion row must be between 0 and {board_size - 1}"
+            )
 
         return v
 

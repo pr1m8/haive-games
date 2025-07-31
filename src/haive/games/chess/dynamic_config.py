@@ -7,7 +7,7 @@ This module provides a flexible configuration system for chess that supports:
 - Advanced PlayerAgentConfig configuration
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import Field
 
@@ -41,18 +41,14 @@ class ChessConfig(BaseGameConfig):
     state_schema: type[ChessState] = Field(default=ChessState)
 
     # Simple mode fields (override base class generics)
-    white_model: Optional[str] = Field(
-        default=None, description="Model for white player"
-    )
-    black_model: Optional[str] = Field(
-        default=None, description="Model for black player"
-    )
+    white_model: str | None = Field(default=None, description="Model for white player")
+    black_model: str | None = Field(default=None, description="Model for black player")
 
     # Player names
-    white_player_name: Optional[str] = Field(
+    white_player_name: str | None = Field(
         default=None, description="Name for white player"
     )
-    black_player_name: Optional[str] = Field(
+    black_player_name: str | None = Field(
         default=None, description="Name for black player"
     )
 
@@ -65,7 +61,7 @@ class ChessConfig(BaseGameConfig):
         default=600, description="Python recursion limit for chess"
     )
 
-    def get_role_definitions(self) -> Dict[str, GamePlayerRole]:
+    def get_role_definitions(self) -> dict[str, GamePlayerRole]:
         """Define chess player roles."""
         return {
             "white_player": GamePlayerRole(
@@ -92,7 +88,7 @@ class ChessConfig(BaseGameConfig):
             ),
         }
 
-    def get_example_configs(self) -> Dict[str, Dict[str, Any]]:
+    def get_example_configs(self) -> dict[str, dict[str, Any]]:
         """Define example chess configurations."""
         return {
             "gpt_vs_claude": {
@@ -134,13 +130,14 @@ class ChessConfig(BaseGameConfig):
             },
         }
 
-    def build_legacy_engines(self) -> List[Any]:
+    def build_legacy_engines(self) -> list[Any]:
         """Build legacy hardcoded engines."""
         return build_chess_aug_llms()
 
-    def create_simple_player_configs(self) -> Dict[str, PlayerAgentConfig]:
+    def create_simple_player_configs(self) -> dict[str, PlayerAgentConfig]:
         """Create player configs from simple model strings."""
-        # Use white_model/black_model if provided, otherwise use base class defaults
+        # Use white_model/black_model if provided, otherwise use base class
+        # defaults
         white_model = self.white_model or self.player1_model or "gpt-4o"
         black_model = (
             self.black_model or self.player2_model or "claude-3-5-sonnet-20240620"
@@ -168,8 +165,8 @@ class ChessConfig(BaseGameConfig):
         }
 
     def create_engines_from_player_configs(
-        self, player_configs: Dict[str, PlayerAgentConfig]
-    ) -> List[Any]:
+        self, player_configs: dict[str, PlayerAgentConfig]
+    ) -> list[Any]:
         """Create engines from player configurations."""
         return create_generic_chess_engines(player_configs)
 
@@ -180,7 +177,7 @@ class ChessConfig(BaseGameConfig):
 def create_chess_config(
     white_model: str = "gpt-4o",
     black_model: str = "claude-3-5-sonnet-20240620",
-    **kwargs
+    **kwargs,
 ) -> ChessConfig:
     """Create a chess configuration with simple model strings.
 
@@ -229,7 +226,7 @@ def create_chess_config_from_example(example_name: str, **kwargs) -> ChessConfig
 
 
 def create_chess_config_with_players(
-    player_configs: Dict[str, PlayerAgentConfig], **kwargs
+    player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ChessConfig:
     """Create a chess configuration with detailed player configs.
 

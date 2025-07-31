@@ -26,7 +26,8 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                 # Connect to cells in same row, column, and box
                 for r in range(self.rows):
                     for c in range(self.cols):
-                        # Skip self or cells that aren't in same row, column, or box
+                        # Skip self or cells that aren't in same row, column,
+                        # or box
                         if r == row and c == col:
                             continue
 
@@ -39,7 +40,6 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
                                 and c // self.box_size == col // self.box_size
                             )
                         ):
-
                             adj_pos = GridPosition(row=r, col=c)
                             adj_cell = self.get_space_at_position(adj_pos)
                             if adj_cell:

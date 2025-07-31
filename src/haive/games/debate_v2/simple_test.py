@@ -11,6 +11,7 @@ This test demonstrates that:
 
 import logging
 import sys
+from typing import Any
 
 from haive.games.debate_v2.agent import GameDebateAgent
 

@@ -94,7 +94,7 @@ class ClueGameController:
         # Create players with engines
         players = []
         for i, name in enumerate(self.player_names):
-            engine_prefix = f"player{i+1}"
+            engine_prefix = f"player{i + 1}"
             player = CluePlayer(
                 name=name,
                 cards=[],
@@ -140,7 +140,6 @@ class ClueGameController:
             and guess.weapon == self.game_state.solution.weapon
             and guess.room == self.game_state.solution.room
         ):
-
             # Player wins
             self.game_state.status = GameStatus.FINISHED
             self.game_state.winner = self.game_state.players[player_idx].name
@@ -264,7 +263,7 @@ class ClueGameController:
 
         # Make sure the returned value is a ClueGuess
         if not isinstance(guess, ClueGuess):
-            raise ValueError(f"AI engine returned {type(guess)} instead of ClueGuess")
+            raise TypeError(f"AI engine returned {type(guess)} instead of ClueGuess")
 
         return guess
 

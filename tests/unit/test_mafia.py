@@ -34,7 +34,7 @@ def test_game_initialization():
         return False
 
     # Generate player names
-    player_names = [f"Player_{i+1}" for i in range(4)]
+    player_names = [f"Player_{i + 1}" for i in range(4)]
     player_names.append("Narrator")  # Add narrator as the last player
 
     # Initialize game state

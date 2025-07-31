@@ -1,8 +1,8 @@
 """Debug test for LLM factory issues."""
 
 import contextlib
-import sys
 from pathlib import Path
+import sys
 
 # Add packages to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))

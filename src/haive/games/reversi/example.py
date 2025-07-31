@@ -36,6 +36,7 @@ Example:
 """
 
 from haive.games.reversi.agent import ReversiAgent
+from haive.games.reversi.state_manager import ReversiStateManager
 
 # Quick demo for testing - avoid full game run
 print("Running Reversi quick demo...")
@@ -46,7 +47,6 @@ try:
     print("✅ Reversi agent created successfully")
 
     # Test state initialization
-    from haive.games.reversi.state_manager import ReversiStateManager
 
     initial_state = ReversiStateManager.initialize()
     print(f"✅ Initial state created: {initial_state.turn} player's turn")

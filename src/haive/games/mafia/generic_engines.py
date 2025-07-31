@@ -15,9 +15,7 @@ from haive.games.core.agent.generic_player_agent import (
     create_engines_from_simple_configs,
 )
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.mafia.models import (
-    MafiaAction,
-)
+from haive.games.mafia.models import MafiaAction
 
 
 class MafiaPlayerIdentifiers(GamePlayerIdentifiers[str, str]):

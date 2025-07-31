@@ -38,9 +38,6 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
     )
 
 
-from langchain_core.prompts import ChatPromptTemplate
-
-
 def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for analyzing a Nim position with structured output.
 

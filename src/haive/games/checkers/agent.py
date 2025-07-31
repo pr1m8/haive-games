@@ -22,7 +22,11 @@ from langgraph.graph import END
 from langgraph.types import Command
 
 from haive.games.checkers.config import CheckersAgentConfig
-from haive.games.checkers.models import CheckersMove, CheckersPlayerDecision
+from haive.games.checkers.models import (
+    CheckersAnalysis,
+    CheckersMove,
+    CheckersPlayerDecision,
+)
 from haive.games.checkers.state import CheckersState
 from haive.games.checkers.state_manager import CheckersStateManager
 from haive.games.checkers.ui import CheckersUI
@@ -420,7 +424,6 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             updated_state = self.state_manager.update_analysis(state, analysis, player)
         except Exception:
             # Create a default analysis to keep the game going
-            from haive.games.checkers.models import CheckersAnalysis
 
             default_analysis = CheckersAnalysis(
                 material_advantage="Error occurred during analysis",

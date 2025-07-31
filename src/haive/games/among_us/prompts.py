@@ -1,5 +1,6 @@
 # among_us_prompts.py
 
+
 CREWMATE_PROMPT = """You are playing a social deduction game called 'Among Us' as a CREWMATE.
 
 Your Goals:

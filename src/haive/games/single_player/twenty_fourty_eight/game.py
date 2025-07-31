@@ -4,9 +4,10 @@ import uuid
 from enum import Enum
 from typing import Any
 
-# Import base framework classes
 from game_framework_base import GamePiece, GridPosition, GridSpace
 from pydantic import BaseModel, Field, field_validator, model_validator
+
+# Import base framework classes
 
 # ======================================================
 # 2048 GAME COMPONENTS
@@ -90,7 +91,6 @@ class TwentyFortyEightSquare(GridSpace[NumberTile]):
             and existing_tile.value == tile.value
             and not existing_tile.merged_this_turn
         ):
-
             # Create merged tile
             merged_tile = tile.merge_with(existing_tile)
 

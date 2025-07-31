@@ -128,7 +128,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
             if not self.state_manager.validate_claim(game_state, player_claim):
                 # If claim seems impossible, modify to be more realistic
                 current_player = game_state.players[game_state.current_player_index]
-                available_values = list(set(card.value for card in current_player.hand))
+                available_values = list({card.value for card in current_player.hand})
                 player_claim = PlayerClaimAction(
                     claimed_value=random.choice(available_values),
                     number_of_cards=min(
@@ -267,7 +267,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         # Show each player's state
         for i, player in enumerate(game_state.players):
-            print(f"\n🃏 Player {i+1}:")
+            print(f"\n🃏 Player {i + 1}:")
             print(f"  Hand Size: {len(player.hand)} cards")
             print(f"  Played Cards: {len(player.cards_played)} cards")
 
@@ -276,7 +276,9 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
             print("\n🕵️ Recent Challenges:")
             for challenge in game_state.challenge_history[-3:]:
                 print(
-                    f"  {challenge['challenger']} challenged {challenge['challenged_player']}"
+                    f"  {challenge['challenger']} challenged {
+                        challenge['challenged_player']
+                    }"
                 )
                 print(f"  Result: {challenge['result']}")
 
@@ -377,13 +379,12 @@ if __name__ == "__main__":
 
     # Print final game summary
     print("\n=== Game Summary ===")
-    from haive.games.cards.bs.state import BullshitGameState
 
     final_game_state = BullshitGameState(**final_state)
 
     print("Players' Hand Sizes:")
     for i, player in enumerate(final_game_state.players):
-        print(f"Player {i+1}: {len(player.hand)} cards")
+        print(f"Player {i + 1}: {len(player.hand)} cards")
 
     if final_game_state.winner:
         print(f"\nWinner: {final_game_state.winner}")

@@ -18,7 +18,7 @@ import sys
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Third-party imports
 try:
@@ -63,7 +63,7 @@ class GameDocumentationGenerator:
         self.games = self._discover_games()
         logger.info(f"Discovered {len(self.games)} games: {list(self.games.keys())}")
 
-    def _discover_games(self) -> Dict[str, Dict[str, Any]]:
+    def _discover_games(self) -> dict[str, dict[str, Any]]:
         """Discover all available games in the haive-games package."""
         games_dir = Path("src/haive/games")
         games = {}
@@ -91,7 +91,7 @@ class GameDocumentationGenerator:
 
         return games
 
-    def generate_agent_graph(self, game_name: str) -> Optional[Path]:
+    def generate_agent_graph(self, game_name: str) -> Path | None:
         """Generate agent graph visualization for a specific game.
 
         Args:
@@ -130,7 +130,7 @@ class GameDocumentationGenerator:
             logger.debug(traceback.format_exc())
             return None
 
-    def _import_game_agent(self, game_name: str) -> Optional[Any]:
+    def _import_game_agent(self, game_name: str) -> Any | None:
         """Import the agent module for a game."""
         try:
             module_name = f"haive.games.{game_name}.agent"
@@ -140,7 +140,7 @@ class GameDocumentationGenerator:
             logger.warning(f"Could not import {game_name} agent: {e}")
             return None
 
-    def _get_agent_class(self, module: Any, game_name: str) -> Optional[Any]:
+    def _get_agent_class(self, module: Any, game_name: str) -> Any | None:
         """Get the main agent class from a module."""
         # Common agent class name patterns
         possible_names = [
@@ -170,7 +170,7 @@ class GameDocumentationGenerator:
 
     def _extract_agent_graph(
         self, agent_class: Any, game_name: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Extract graph structure from an agent class."""
         try:
             # Try to instantiate the agent with minimal config
@@ -186,7 +186,7 @@ class GameDocumentationGenerator:
             logger.warning(f"Could not extract graph for {game_name}: {e}")
             return self._create_fallback_graph(game_name)
 
-    def _create_agent_instance(self, agent_class: Any, game_name: str) -> Optional[Any]:
+    def _create_agent_instance(self, agent_class: Any, game_name: str) -> Any | None:
         """Create an agent instance with default configuration."""
         try:
             # Try with no arguments
@@ -204,7 +204,7 @@ class GameDocumentationGenerator:
         logger.debug(f"Could not instantiate agent for {game_name}")
         return None
 
-    def _find_config_class(self, game_name: str) -> Optional[Any]:
+    def _find_config_class(self, game_name: str) -> Any | None:
         """Find the configuration class for a game."""
         try:
             config_module_name = f"haive.games.{game_name}.config"
@@ -228,7 +228,7 @@ class GameDocumentationGenerator:
 
         return None
 
-    def _get_graph_info(self, agent: Any) -> Dict[str, Any]:
+    def _get_graph_info(self, agent: Any) -> dict[str, Any]:
         """Extract graph information from an agent instance."""
         graph_info = {"nodes": [], "edges": [], "type": "unknown"}
 
@@ -265,7 +265,7 @@ class GameDocumentationGenerator:
 
         return graph_info
 
-    def _create_fallback_graph(self, game_name: str) -> Dict[str, Any]:
+    def _create_fallback_graph(self, game_name: str) -> dict[str, Any]:
         """Create a fallback graph structure for games without extractable graphs."""
         return {
             "nodes": ["initialize", "process_move", "update_state", "check_end"],
@@ -280,7 +280,7 @@ class GameDocumentationGenerator:
         }
 
     def _create_graph_visualization(
-        self, graph_data: Dict[str, Any], output_path: Path, game_name: str
+        self, graph_data: dict[str, Any], output_path: Path, game_name: str
     ):
         """Create a PNG visualization of the graph."""
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
@@ -352,7 +352,7 @@ class GameDocumentationGenerator:
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
         plt.close()
 
-    def generate_example_run(self, game_name: str) -> Optional[Path]:
+    def generate_example_run(self, game_name: str) -> Path | None:
         """Generate an example run with state history for a game.
 
         Args:
@@ -572,17 +572,17 @@ class {game_name.title()}ExampleRunner:
 
 def main():
     """Main function to run the example."""
-    print(f"\\n{'=' * 60}")
+    print(f"\\n{"=" * 60}")
     print(f"{game_name.upper()} GAME EXAMPLE RUN")
-    print(f"{'=' * 60}")
+    print(f"{"=" * 60}")
     
     runner = {game_name.title()}ExampleRunner()
     runner.run_example()
     
-    print(f"\\n{'=' * 60}")
+    print(f"\\n{"=" * 60}")
     print("EXAMPLE RUN COMPLETED")
     print(f"Check state_history/ directory for detailed logs")
-    print(f"{'=' * 60}\\n")
+    print(f"{"=" * 60}\\n")
 
 
 if __name__ == "__main__":
@@ -616,7 +616,7 @@ if __name__ == "__main__":
 
         return results
 
-    def _generate_master_index(self, results: Dict[str, Any]):
+    def _generate_master_index(self, results: dict[str, Any]):
         """Generate master index documentation."""
         index_content = self._create_master_index_content(results)
         index_path = self.output_dir / "README.md"
@@ -626,14 +626,14 @@ if __name__ == "__main__":
 
         logger.info(f"Master index created: {index_path}")
 
-    def _create_master_index_content(self, results: Dict[str, Any]) -> str:
+    def _create_master_index_content(self, results: dict[str, Any]) -> str:
         """Create master index markdown content."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         content = f"""# Haive Games Documentation
 
 **Generated on:** {timestamp}
-**Total Games:** {results['total_games']}
+**Total Games:** {results["total_games"]}
 
 This documentation provides comprehensive coverage of all games in the haive-games package, including agent graph visualizations, example runs, and state history tracking.
 

@@ -69,6 +69,7 @@ all necessary parameters for consistent and customizable gameplay experiences.
 
 from pydantic import Field
 
+from haive.games.clue.models import ValidRoom, ValidSuspect, ValidWeapon
 from haive.games.clue.state import ClueState
 from haive.games.framework.base.config import GameConfig
 
@@ -291,7 +292,6 @@ class ClueConfig(GameConfig):
                 config = ClueConfig.tutorial_game(solution_dict=custom_solution)
                 assert config.solution == custom_solution
         """
-        from haive.games.clue.models import ValidRoom, ValidSuspect, ValidWeapon
 
         if solution_dict is None:
             solution_dict = {

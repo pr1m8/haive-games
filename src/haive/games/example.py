@@ -7,19 +7,27 @@ patterns.
 """
 
 import asyncio
+import json
+import random
+from pathlib import Path
+from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
 from pydantic import Field
 
-# Import various game implementations
-# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not implemented
 from haive.games.chess.config import ChessConfig
+from haive.games.framework import GameAgent, GameConfig, GameState, GameStateManager
 from haive.games.poker.agent import PokerAgent
 from haive.games.poker.config import PokerConfig
 from haive.games.single_player.wordle.agent import WordleAgent
 from haive.games.single_player.wordle.config import WordleConfig
 from haive.games.tic_tac_toe.agent import TicTacToeAgent
 from haive.games.tic_tac_toe.config import TicTacToeConfig
+from haive.games.utils.observers import GameObserver, MoveLogger
+
+# Import various game implementations
+# from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not
+# implemented
 
 
 def example_quick_game() -> None:
@@ -83,10 +91,15 @@ async def example_poker_tournament():
             name=f"player_{i}",
             temperature=0.4,
             system_message=f"""You are a {style} poker player.
-            {'Fold often, play premium hands' if style == 'tight' else
-             'Play many hands, see flops' if style == 'loose' else
-             'Bet and raise frequently' if style == 'aggressive' else
-             'Adapt to opponents and situations'}""",
+            {
+                "Fold often, play premium hands"
+                if style == "tight"
+                else "Play many hands, see flops"
+                if style == "loose"
+                else "Bet and raise frequently"
+                if style == "aggressive"
+                else "Adapt to opponents and situations"
+            }""",
         )
         players.append(
             {
@@ -117,7 +130,6 @@ async def example_poker_tournament():
 
 def example_custom_game() -> Any:
     """Example 4: Creating a custom game - Number Guessing."""
-    from haive.games.framework import GameAgent, GameConfig, GameState, GameStateManager
 
     # Define custom game state
     class NumberGameState(GameState):
@@ -136,7 +148,6 @@ def example_custom_game() -> Any:
     class NumberGameStateManager(GameStateManager):
         def __init__(self, config: NumberGameConfig):
             super().__init__(config)
-            import random
 
             self.target = random.randint(config.min_number, config.max_number)
 
@@ -181,8 +192,8 @@ def example_custom_game() -> Any:
                 # Get hint for agent
                 hint = state.hints[-1] if state.hints else "No hints yet"
 
-                # Get agent's guess (simplified - real implementation would parse response)
-                import random
+                # Get agent's guess (simplified - real implementation would
+                # parse response)
 
                 if not state.guesses:
                     guess = random.randint(
@@ -289,7 +300,7 @@ def example_game_visualization() -> Any:
         # Add coordinates
         result = "  a b c d e f g h\n"
         for i, row in enumerate(board):
-            result += f"{8-i} {' '.join(row)} {8-i}\n"
+            result += f"{8 - i} {' '.join(row)} {8 - i}\n"
         result += "  a b c d e f g h"
 
         return result
@@ -310,7 +321,8 @@ def example_wordle_with_strategy() -> None:
             Use the feedback to eliminate possibilities.
             Green = correct position, Yellow = wrong position, Gray = not in word.""",
         ),
-        starting_words_hint=["ADIEU", "ROAST", "LYNCH"],  # Strategic starting words
+        starting_words_hint=["ADIEU", "ROAST", "LYNCH"],
+        # Strategic starting words
     )
 
     game = WordleAgent(config)
@@ -324,15 +336,14 @@ def example_wordle_with_strategy() -> None:
 
 def example_game_with_observers() -> None:
     """Example 8: Games with observer pattern."""
-    from haive.games.utils.observers import GameObserver, MoveLogger
 
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
 
-        def on_move(self, state: Dict[str, Any], move, player):
+        def on_move(self, state: dict[str, Any], move, player):
             pass
 
-        def on_game_end(self, state: Dict[str, Any], winner):
+        def on_game_end(self, state: dict[str, Any], winner):
             pass
 
     class StatisticsObserver(GameObserver):
@@ -342,11 +353,11 @@ def example_game_with_observers() -> None:
             self.move_count = 0
             self.player_moves = {}
 
-        def on_move(self, state: Dict[str, Any], move, player):
+        def on_move(self, state: dict[str, Any], move, player):
             self.move_count += 1
             self.player_moves[player] = self.player_moves.get(player, 0) + 1
 
-        def on_game_end(self, state: Dict[str, Any], winner):
+        def on_game_end(self, state: dict[str, Any], winner):
             for _player, _count in self.player_moves.items():
                 pass
 
@@ -396,8 +407,6 @@ def example_parallel_games() -> Any:
 
 def example_save_and_load() -> None:
     """Example 10: Saving and loading game states."""
-    import json
-    from pathlib import Path
 
     # Start a game
     config = ChessConfig(player_names=["White", "Black"])

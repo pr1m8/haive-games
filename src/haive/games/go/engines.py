@@ -14,10 +14,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.go.models import (
-    GoAnalysis,
-    GoPlayerDecision,
-)
+from haive.games.go.models import GoAnalysis, GoPlayerDecision
 
 
 def generate_black_prompt() -> ChatPromptTemplate:

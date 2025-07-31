@@ -80,7 +80,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             new_state.round_number += 1
 
             new_state.add_public_announcement(
-                f"Night {new_state.day_number} falls upon the village. The residents go to sleep."
+                f"Night {
+                    new_state.day_number
+                } falls upon the village. The residents go to sleep."
             )
 
         elif current_phase == GamePhase.NIGHT:
@@ -310,7 +312,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                 error_state.error_message = error_msg
                 error_state.game_status = "ended"
                 return error_state
-            except:
+            except BaseException:
                 # If we can't even copy the state, create a minimal error state
                 return MafiaGameState(
                     players=state.players if hasattr(state, "players") else [],
@@ -389,9 +391,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         if not hasattr(
                             new_state.player_states[player_id], "investigation_results"
                         ):
-                            new_state.player_states[player_id].investigation_results = (
-                                {}
-                            )
+                            new_state.player_states[
+                                player_id
+                            ].investigation_results = {}
 
                         new_state.player_states[player_id].investigation_results[
                             target_id
@@ -465,7 +467,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             # Add default players to reach minimum count
             current_count = len(player_names)
             for i in range(current_count, 4):
-                player_names.append(f"Player_{i+1}")
+                player_names.append(f"Player_{i + 1}")
             # Ensure the last player is the narrator
             if "Narrator" not in player_names:
                 player_names[-1] = "Narrator"
@@ -715,7 +717,8 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
             elif player_role == PlayerRole.DETECTIVE:
                 # Detective can investigate during the night
                 for target_id, target_state in state.player_states.items():
-                    # Can investigate any alive player other than themselves and narrator
+                    # Can investigate any alive player other than themselves
+                    # and narrator
                     if (
                         target_state.is_alive
                         and target_id != player_id

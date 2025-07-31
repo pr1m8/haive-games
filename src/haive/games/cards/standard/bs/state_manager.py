@@ -40,7 +40,7 @@ class BullshitStateManager:
             else:
                 player_cards = deck[start_index:end_index]
 
-            players.append(PlayerState(name=f"Player_{i+1}", hand=player_cards))
+            players.append(PlayerState(name=f"Player_{i + 1}", hand=player_cards))
 
         # Create game state
         game_state = BullshitGameState(players=players, game_status="ongoing")

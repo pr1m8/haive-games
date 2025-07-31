@@ -5,6 +5,7 @@ board, turn, game status, move history, free turn, winner, and player
 analyses.
 """
 
+import json
 import logging
 from typing import Any, Literal
 
@@ -161,8 +162,6 @@ class MancalaState(GameState):
                         and "tool_calls" in analysis.additional_kwargs
                     ):
                         try:
-                            import json
-
                             tool_calls = analysis.additional_kwargs["tool_calls"]
                             if tool_calls and len(tool_calls) > 0:
                                 tool_call = tool_calls[0]
@@ -196,8 +195,6 @@ class MancalaState(GameState):
                         and "tool_calls" in analysis.additional_kwargs
                     ):
                         try:
-                            import json
-
                             tool_calls = analysis.additional_kwargs["tool_calls"]
                             if tool_calls and len(tool_calls) > 0:
                                 tool_call = tool_calls[0]
@@ -287,7 +284,9 @@ class MancalaState(GameState):
             result += f"{self.board[i]:2d} "
         result += "\n\n"
 
-        result += f"Player 1 (bottom): {self.player1_score}  |  Player 2 (top): {self.player2_score}"
+        result += f"Player 1 (bottom): {self.player1_score}  |  Player 2 (top): {
+            self.player2_score
+        }"
         return result
 
     def is_game_over(self) -> bool:
@@ -364,7 +363,9 @@ class MancalaState(GameState):
 
     def __str__(self) -> str:
         """String representation of the state."""
-        return f"MancalaState(turn={self.turn}, status={self.game_status}, score=({self.player1_score}, {self.player2_score}))"
+        return f"MancalaState(turn={self.turn}, status={self.game_status}, score=({
+            self.player1_score
+        }, {self.player2_score}))"
 
     def __repr__(self) -> str:
         """Detailed representation of the state."""

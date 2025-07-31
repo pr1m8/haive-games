@@ -8,10 +8,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.fox_and_geese.models import (
-    FoxAndGeeseAnalysis,
-    FoxAndGeeseMove,
-)
+from haive.games.fox_and_geese.models import FoxAndGeeseAnalysis, FoxAndGeeseMove
 
 
 def generate_fox_move_prompt() -> ChatPromptTemplate:

@@ -10,19 +10,17 @@ from enum import Enum
 from typing import Any
 
 from haive.core.engine.agent.agent import AgentConfig
+from haive.core.models.llm.base import OpenAILLMConfig
+from pydantic import BaseModel, Field, model_validator
+
+from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 
 # Note: create_llm_config doesn't exist - using placeholder
 def create_llm_config(model: str, **kwargs):
     """Placeholder function until core factory is available."""
-    from haive.core.models.llm.base import OpenAILLMConfig
 
     return OpenAILLMConfig(model=model, **kwargs)
-
-
-from pydantic import BaseModel, Field, model_validator
-
-from haive.games.core.agent.player_agent import PlayerAgentConfig
 
 
 class ConfigMode(str, Enum):
@@ -70,7 +68,8 @@ class BaseGameConfig(AgentConfig, ABC):
         default=False, description="Use hardcoded engines for backward compatibility"
     )
 
-    # Simple mode - games override with specific fields like white_model, red_model, etc.
+    # Simple mode - games override with specific fields like white_model,
+    # red_model, etc.
     player1_model: str | None = Field(default=None, description="Model for player 1")
     player2_model: str | None = Field(default=None, description="Model for player 2")
 
