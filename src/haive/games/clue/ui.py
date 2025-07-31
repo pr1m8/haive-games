@@ -496,9 +496,7 @@ class ClueUI:
             card_type = (
                 "suspect"
                 if card in [s.value for s in ValidSuspect]
-                else "weapon"
-                if card in [w.value for w in ValidWeapon]
-                else "room"
+                else "weapon" if card in [w.value for w in ValidWeapon] else "room"
             )
             player1_cards_text += f"[{self.colors[card_type]}]{card}[/], "
         player1_cards_text = player1_cards_text.rstrip(", ")
@@ -509,9 +507,7 @@ class ClueUI:
             card_type = (
                 "suspect"
                 if card in [s.value for s in ValidSuspect]
-                else "weapon"
-                if card in [w.value for w in ValidWeapon]
-                else "room"
+                else "weapon" if card in [w.value for w in ValidWeapon] else "room"
             )
             player2_cards_text += f"[{self.colors[card_type]}]{card}[/], "
         player2_cards_text = player2_cards_text.rstrip(", ")

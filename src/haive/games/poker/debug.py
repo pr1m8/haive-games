@@ -321,7 +321,7 @@ class DecisionAnalyzer:
                 return validation
 
         # Check if amount is a valid number
-        if not isinstance(decision.amount, (int, float)):
+        if not isinstance(decision.amount, int | float):
             validation["warnings"].append(f"Amount is not a number: {decision.amount}")
             try:
                 decision.amount = int(decision.amount)

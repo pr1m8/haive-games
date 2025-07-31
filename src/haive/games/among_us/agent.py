@@ -1,6 +1,7 @@
 # among_us_agent.py
 
 import json
+import logging
 import re
 from typing import Any
 
@@ -14,6 +15,8 @@ from haive.games.among_us.state import AmongUsState
 from haive.games.among_us.state_manager import AmongUsStateManagerMixin
 from haive.games.among_us.ui import AmongUsUI
 from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
+
+logger = logging.getLogger(__name__)
 
 
 @register_agent(AmongUsAgentConfig)

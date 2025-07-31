@@ -345,7 +345,7 @@ class GameDocumentationGenerator:
             metadata_text,
             transform=ax.transAxes,
             verticalalignment="top",
-            bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.8),
+            bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.8},
         )
 
         plt.tight_layout()
@@ -424,21 +424,21 @@ logger = logging.getLogger(__name__)
 
 class {game_name.title()}ExampleRunner:
     """Example runner for {game_name.title()} game with comprehensive state tracking."""
-    
+
     def __init__(self):
         """Initialize the example runner."""
         self.state_history = []
         self.move_count = 0
         self.start_time = datetime.now()
-        
+
     def save_state_history(self, output_dir: str = "state_history"):
         """Save complete state history to JSON file."""
         Path(output_dir).mkdir(parents=True, exist_ok=True)
-        
+
         timestamp = self.start_time.strftime("%Y%m%d_%H%M%S")
         filename = f"{game_name}_example_run_{{timestamp}}.json"
         filepath = Path(output_dir) / filename
-        
+
         history_data = {{
             "game": "{game_name}",
             "start_time": self.start_time.isoformat(),
@@ -446,27 +446,27 @@ class {game_name.title()}ExampleRunner:
             "total_moves": self.move_count,
             "state_history": self.state_history
         }}
-        
+
         with open(filepath, 'w') as f:
             json.dump(history_data, f, indent=2, default=str)
-        
+
         logger.info(f"State history saved to: {{filepath}}")
         return filepath
-    
+
     def log_state(self, state: Any, move_description: str = ""):
         """Log current state to history."""
         self.move_count += 1
-        
+
         state_entry = {{
             "move_number": self.move_count,
             "timestamp": datetime.now().isoformat(),
             "description": move_description,
             "state": self._serialize_state(state)
         }}
-        
+
         self.state_history.append(state_entry)
         logger.info(f"Move {{self.move_count}}: {{move_description}}")
-    
+
     def _serialize_state(self, state: Any) -> Dict[str, Any]:
         """Serialize state to JSON-compatible format."""
         if hasattr(state, 'model_dump'):
@@ -477,31 +477,31 @@ class {game_name.title()}ExampleRunner:
             return state
         else:
             return str(state)
-    
+
     def run_example(self):
         """Run a complete example game."""
         logger.info("Starting {game_name.title()} example run")
-        
+
         try:
             # Initialize agent (this will vary by game)
             agent = self._initialize_agent()
             if not agent:
                 logger.error("Failed to initialize agent")
                 return
-            
+
             # Run example game
             self._run_game_loop(agent)
-            
+
             # Save results
             self.save_state_history()
-            
+
             logger.info("Example run completed successfully")
-            
+
         except Exception as e:
             logger.error(f"Example run failed: {{e}}")
             import traceback
             logger.error(traceback.format_exc())
-    
+
     def _initialize_agent(self):
         """Initialize the game agent with default configuration."""
         try:
@@ -513,7 +513,7 @@ class {game_name.title()}ExampleRunner:
                 return agent
             except Exception:
                 pass
-            
+
             # Pattern 2: Config class available
             try:
                 config_class = globals().get(f'{game_name.title()}Config') or globals().get(f'{game_name.title()}AgentConfig')
@@ -524,46 +524,46 @@ class {game_name.title()}ExampleRunner:
                     return agent
             except Exception:
                 pass
-            
+
             logger.warning("Could not initialize agent with standard patterns")
             return None
-            
+
         except Exception as e:
             logger.error(f"Agent initialization failed: {{e}}")
             return None
-    
+
     def _run_game_loop(self, agent):
         """Run the main game loop with state tracking."""
         logger.info("Starting game loop")
-        
+
         # Initialize game state
         initial_state = {{}}
         self.log_state(initial_state, "Game initialized")
-        
+
         # Run a few example moves (this is game-specific)
         for move_num in range(1, 6):  # 5 example moves
             try:
                 # This is a simplified example - real games would have proper move logic
                 result = agent.invoke(initial_state)
-                
+
                 if isinstance(result, Command) and result.update:
                     initial_state.update(result.update)
                     self.log_state(initial_state, f"Move {{move_num}} completed")
                 else:
                     self.log_state(initial_state, f"Move {{move_num}} - no state change")
-                
+
                 # Check for game end conditions (game-specific)
                 if self._check_game_end(initial_state):
                     self.log_state(initial_state, "Game ended")
                     break
-                    
+
             except Exception as e:
                 logger.warning(f"Move {{move_num}} failed: {{e}}")
                 self.log_state(initial_state, f"Move {{move_num}} failed: {{e}}")
                 break
-        
+
         logger.info(f"Game loop completed after {{self.move_count}} moves")
-    
+
     def _check_game_end(self, state: Dict[str, Any]) -> bool:
         """Check if game has ended (game-specific logic)."""
         # This is a placeholder - each game would have its own end conditions
@@ -575,10 +575,10 @@ def main():
     print(f"\\n{"=" * 60}")
     print(f"{game_name.upper()} GAME EXAMPLE RUN")
     print(f"{"=" * 60}")
-    
+
     runner = {game_name.title()}ExampleRunner()
     runner.run_example()
-    
+
     print(f"\\n{"=" * 60}")
     print("EXAMPLE RUN COMPLETED")
     print(f"Check state_history/ directory for detailed logs")

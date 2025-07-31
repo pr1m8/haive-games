@@ -165,11 +165,11 @@ def demo_factory_pattern_enhancement():
     enhanced_factory_code = '''
 class ConfigurableGameAPIFactory:
     """Enhanced factory supporting configurable agents."""
-    
+
     @staticmethod
     def create_configurable_chess_api(
         white_model: str = "gpt-4o",
-        black_model: str = "claude-3-opus", 
+        black_model: str = "claude-3-opus",
         **kwargs
     ) -> GameAPI:
         """Create Chess API with configurable models."""
@@ -179,14 +179,14 @@ class ConfigurableGameAPIFactory:
             if config_overrides:
                 config = apply_overrides(config, config_overrides)
             return ChessAgent(config)
-        
+
         return GameAPI(
             app_name="Chess",
             agent_factory=create_agent,
             state_schema=ChessState,
         )
-    
-    @staticmethod  
+
+    @staticmethod
     def create_configurable_connect4_api(
         red_model: str = "gpt-4o",
         yellow_model: str = "claude-3-opus",
@@ -198,9 +198,9 @@ class ConfigurableGameAPIFactory:
             if config_overrides:
                 config = apply_overrides(config, config_overrides)
             return Connect4Agent(config)
-        
+
         return GameAPI(
-            app_name="Connect4", 
+            app_name="Connect4",
             agent_factory=create_agent,
             state_schema=Connect4State,
         )

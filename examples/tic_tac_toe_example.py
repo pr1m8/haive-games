@@ -75,7 +75,7 @@ async def create_game_agent(
 
     if strategy == "smart":
         system_message = f"""You are an expert Tic-Tac-Toe player using symbol '{symbol}'.
-        
+
 Rules:
 - The board has positions 1-9 (left to right, top to bottom)
 - You must choose an available position (1-9)

@@ -467,9 +467,7 @@ def example_3_strategic_analysis():
                 (
                     "Excellent"
                     if analysis.center_control >= 8
-                    else "Good"
-                    if analysis.center_control >= 6
-                    else "Fair"
+                    else "Good" if analysis.center_control >= 6 else "Fair"
                 ),
             )
             scores_table.add_row(
@@ -478,9 +476,7 @@ def example_3_strategic_analysis():
                 (
                     "Strong"
                     if analysis.winning_chances >= 70
-                    else "Favorable"
-                    if analysis.winning_chances >= 55
-                    else "Even"
+                    else "Favorable" if analysis.winning_chances >= 55 else "Even"
                 ),
             )
 
@@ -821,9 +817,9 @@ def example_5_error_handling():
             assert state.turn == "red", "Initial turn should be red"
             assert state.game_status == "ongoing", "Initial status should be ongoing"
             assert len(state.move_history) == 0, "Initial history should be empty"
-            assert all(all(cell is None for cell in row) for row in state.board), (
-                "Initial board should be empty"
-            )
+            assert all(
+                all(cell is None for cell in row) for row in state.board
+            ), "Initial board should be empty"
 
             console.print("[green]✓ Initial state consistency verified[/green]")
 

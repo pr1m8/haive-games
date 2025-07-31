@@ -457,9 +457,7 @@ class FoxAndGeeseState(GameState):
             "game_phase": (
                 "endgame"
                 if self.num_geese < 4
-                else "midgame"
-                if self.num_geese < 6
-                else "opening"
+                else "midgame" if self.num_geese < 6 else "opening"
             ),
         }
 

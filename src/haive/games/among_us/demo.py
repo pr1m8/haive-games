@@ -49,6 +49,7 @@ import time
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich.text import Text
 
 from haive.games.among_us.enhanced_ui import EnhancedAmongUsUI
 from haive.games.among_us.factory import create_among_us_game

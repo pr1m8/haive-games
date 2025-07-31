@@ -131,7 +131,7 @@ def generate_module_docstring(module_name: str, module_path: str) -> str:
         if module_path_parts[-2] in game_types:
             docstring = f"""{display_name} {game_type} implementation.
 
-This module provides a complete implementation of {display_name} for the Haive 
+This module provides a complete implementation of {display_name} for the Haive
 games framework, including game state management, rules enforcement, move validation,
 and agent integration.
 

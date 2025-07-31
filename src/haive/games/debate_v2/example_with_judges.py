@@ -173,9 +173,7 @@ async def example_custom_judge_panel():
             else (
                 "🏛️"
                 if "Policy" in judge.expertise_area
-                else "🔍"
-                if "Critical" in judge.name
-                else "👥"
+                else "🔍" if "Critical" in judge.name else "👥"
             )
         )
         print(
@@ -219,9 +217,7 @@ async def example_judge_comparison():
                 else (
                     "🎭"
                     if judge.judge_type == JudgeType.RHETORICAL
-                    else "👥"
-                    if judge.judge_type == JudgeType.AUDIENCE
-                    else "⚖️"
+                    else "👥" if judge.judge_type == JudgeType.AUDIENCE else "⚖️"
                 )
             )
             print(

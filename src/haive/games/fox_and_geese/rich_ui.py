@@ -226,23 +226,23 @@ class FoxAndGeeseRichUI:
         # Place the fox
         if game_state.fox_position:
             row, col = game_state.fox_position.row, game_state.fox_position.col
-            board[row][col] = (
-                f"[{self.colors['fox']}]{self.board_symbols['fox']}[/{self.colors['fox']}]"
-            )
+            board[row][
+                col
+            ] = f"[{self.colors['fox']}]{self.board_symbols['fox']}[/{self.colors['fox']}]"
 
         # Place the geese
         for goose in game_state.geese_positions:
             row, col = goose.row, goose.col
-            board[row][col] = (
-                f"[{self.colors['geese']}]{self.board_symbols['goose']}[/{self.colors['geese']}]"
-            )
+            board[row][
+                col
+            ] = f"[{self.colors['geese']}]{self.board_symbols['goose']}[/{self.colors['geese']}]"
 
         # Apply highlights for possible moves
         for pos in highlight_positions:
             if 0 <= pos.row < 7 and 0 <= pos.col < 7:  # Ensure position is valid
-                board[pos.row][pos.col] = (
-                    f"[{self.colors['highlight']}]{self.board_symbols['highlight']}[/{self.colors['highlight']}]"
-                )
+                board[pos.row][
+                    pos.col
+                ] = f"[{self.colors['highlight']}]{self.board_symbols['highlight']}[/{self.colors['highlight']}]"
 
         # Apply highlight for capture
         if (
@@ -250,9 +250,9 @@ class FoxAndGeeseRichUI:
             and 0 <= capture_position.row < 7
             and 0 <= capture_position.col < 7
         ):
-            board[capture_position.row][capture_position.col] = (
-                f"[{self.colors['capture']}]{self.board_symbols['capture']}[/{self.colors['capture']}]"
-            )
+            board[capture_position.row][
+                capture_position.col
+            ] = f"[{self.colors['capture']}]{self.board_symbols['capture']}[/{self.colors['capture']}]"
 
         # Add header row with column numbers
         header_row = [""] + [f"[bold blue]{i}[/bold blue]" for i in range(7)]

@@ -675,7 +675,7 @@ class Vote(BaseModel):
         """
         if isinstance(v, str):
             return v.strip().lower()
-        elif isinstance(v, (int, float)):
+        elif isinstance(v, int | float):
             if not -100 <= v <= 100:  # Reasonable numeric range
                 raise ValueError("Numeric votes should be between -100 and 100")
             return v

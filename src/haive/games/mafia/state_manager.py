@@ -397,9 +397,9 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
                         if not hasattr(
                             new_state.player_states[player_id], "investigation_results"
                         ):
-                            new_state.player_states[
-                                player_id
-                            ].investigation_results = {}
+                            new_state.player_states[player_id].investigation_results = (
+                                {}
+                            )
 
                         new_state.player_states[player_id].investigation_results[
                             target_id

@@ -312,25 +312,25 @@ def main():
     print(f"\\n{"=" * 60}")
     print(f"{game_name.upper()} GAME EXAMPLE")
     print(f"{"=" * 60}")
-    
+
     # Initialize state history tracking
     state_history = []
     move_count = 0
-    
+
     try:
         # Import game components
         print("Importing game components...")
         # Note: Actual imports would depend on the specific game structure
         # from haive.games.{game_name}.agent import {game_name.title()}Agent
         # from haive.games.{game_name}.models import *
-        
+
         print("✅ Game components imported successfully")
-        
+
         # Initialize game
         print("\\nInitializing game...")
         # agent = {game_name.title()}Agent()
         # initial_state = agent.initialize_game()
-        
+
         # For template purposes, create a mock initial state
         initial_state = {{
             "game": "{game_name}",
@@ -339,48 +339,48 @@ def main():
             "game_over": False,
             "move_number": 0
         }}
-        
+
         state_history.append({{
             "move": 0,
             "timestamp": datetime.now().isoformat(),
             "description": "Game initialized",
             "state": initial_state.copy()
         }})
-        
+
         print(f"✅ Game initialized with {{len(initial_state.get('players', []))}} players")
-        
+
         # Simulate game moves
         print("\\nStarting game simulation...")
         current_state = initial_state.copy()
-        
+
         for move_num in range(1, 6):  # Simulate 5 moves
             print(f"\\n--- Move {{move_num}} ---")
-            
+
             current_player = current_state.get("current_player")
             print(f"Current player: {{current_player}}")
-            
+
             # Simulate move processing
             # In a real implementation, this would call:
             # move = get_player_move(current_player)
             # result = agent.process_move(current_state, move)
             # current_state = result.update
-            
+
             # Mock move for template
             mock_move = {{
                 "player": current_player,
                 "action": f"move_{{move_num}}",
                 "timestamp": datetime.now().isoformat()
             }}
-            
+
             # Update state
             current_state["move_number"] = move_num
             current_state["current_player"] = "Player2" if current_player == "Player1" else "Player1"
-            
+
             # Check for game end (mock logic)
             if move_num >= 4:
                 current_state["game_over"] = True
                 current_state["winner"] = "Player1"
-            
+
             # Record state
             state_history.append({{
                 "move": move_num,
@@ -389,30 +389,30 @@ def main():
                 "move_details": mock_move,
                 "state": current_state.copy()
             }})
-            
+
             print(f"✅ Move {{move_num}} completed")
-            
+
             # Check if game ended
             if current_state.get("game_over"):
                 winner = current_state.get("winner")
                 print(f"\\n🎉 Game Over! Winner: {{winner}}")
                 break
-        
+
         # Save state history
         save_state_history(state_history, game_name)
-        
+
         print(f"\\n{"=" * 60}")
         print("EXAMPLE COMPLETED SUCCESSFULLY")
         print(f"Total moves: {{len(state_history) - 1}}")
         print(f"Check docs/simple_generated/state_history/ for detailed logs")
         print(f"{"=" * 60}\\n")
-        
+
     except Exception as e:
         print(f"❌ Error running example: {{e}}")
         import traceback
         traceback.print_exc()
         return 1
-    
+
     return 0
 
 
@@ -421,12 +421,12 @@ def save_state_history(history: List[Dict[str, Any]], game_name: str):
     # Create state history directory
     history_dir = Path("docs/simple_generated/state_history")
     history_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Generate filename with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{{game_name}}_example_{{timestamp}}.json"
     filepath = history_dir / filename
-    
+
     # Prepare history data
     history_data = {{
         "game": game_name,
@@ -435,11 +435,11 @@ def save_state_history(history: List[Dict[str, Any]], game_name: str):
         "total_moves": len(history) - 1,
         "history": history
     }}
-    
+
     # Save to file
     with open(filepath, 'w') as f:
         json.dump(history_data, f, indent=2, default=str)
-    
+
     print(f"📁 State history saved: {{filepath}}")
 
 

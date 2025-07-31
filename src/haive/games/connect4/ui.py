@@ -308,9 +308,7 @@ class Connect4UI:
         chances_style = (
             "green"
             if winning_chances > 70
-            else "yellow"
-            if winning_chances > 40
-            else "red"
+            else "yellow" if winning_chances > 40 else "red"
         )
         analysis_table.add_row(
             "Winning Chances", f"[{chances_style}]{winning_chances}%[/]"

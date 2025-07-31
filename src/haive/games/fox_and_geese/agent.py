@@ -115,9 +115,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
         # Ensure recursion_limit is in runnable_config
         if hasattr(self, "runnable_config") and self.runnable_config:
             if "configurable" in self.runnable_config:
-                self.runnable_config["configurable"]["recursion_limit"] = (
-                    config.recursion_limit
-                )
+                self.runnable_config["configurable"][
+                    "recursion_limit"
+                ] = config.recursion_limit
 
         # Initialize UI if available
         self.ui = FoxAndGeeseUI(self.console) if UI_AVAILABLE else None

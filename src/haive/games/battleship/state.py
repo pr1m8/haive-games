@@ -8,6 +8,7 @@ from haive.games.battleship.models import (
     PlayerBoard,
     ShipPlacement,
 )
+
 r"""Comprehensive state management system for Battleship game mechanics and
 player tracking.
 
