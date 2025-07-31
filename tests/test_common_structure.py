@@ -34,9 +34,9 @@ class TestCommonGameStructure:
             actual_files = os.listdir(game_path)
 
             for required_file in required_files:
-                assert required_file in actual_files, (
-                    f"Game {game} missing required file: {required_file}"
-                )
+                assert (
+                    required_file in actual_files
+                ), f"Game {game} missing required file: {required_file}"
 
             print(f"✅ {game}: All required files present")
 
@@ -158,9 +158,9 @@ class TestCommonGameStructure:
                     ]
 
                 for func_name in required_functions:
-                    assert hasattr(module, func_name), (
-                        f"{game_name} missing function: {func_name}"
-                    )
+                    assert hasattr(
+                        module, func_name
+                    ), f"{game_name} missing function: {func_name}"
 
                 print(f"✅ {game_name}: Generic engine functions present")
 
@@ -197,9 +197,9 @@ class TestCommonGameStructure:
                 module = __import__(module_path, fromlist=[""])
 
                 # Check for config class
-                assert hasattr(module, config_class_name), (
-                    f"{game_name} missing config class: {config_class_name}"
-                )
+                assert hasattr(
+                    module, config_class_name
+                ), f"{game_name} missing config class: {config_class_name}"
 
                 # Check for creation functions
                 game_prefix = game_name.lower().replace("-", "_")
@@ -213,9 +213,9 @@ class TestCommonGameStructure:
                 ]
 
                 for func_name in required_functions:
-                    assert hasattr(module, func_name), (
-                        f"{game_name} missing function: {func_name}"
-                    )
+                    assert hasattr(
+                        module, func_name
+                    ), f"{game_name} missing function: {func_name}"
 
                 print(
                     f"✅ {game_name}: Configurable config class and functions present"
@@ -267,15 +267,15 @@ class TestCommonGameStructure:
             try:
                 # Test agent class
                 agent_mod = __import__(agent_module, fromlist=[""])
-                assert hasattr(agent_mod, agent_class), (
-                    f"{game_name} missing agent class: {agent_class}"
-                )
+                assert hasattr(
+                    agent_mod, agent_class
+                ), f"{game_name} missing agent class: {agent_class}"
 
                 # Test state class
                 state_mod = __import__(state_module, fromlist=[""])
-                assert hasattr(state_mod, state_class), (
-                    f"{game_name} missing state class: {state_class}"
-                )
+                assert hasattr(
+                    state_mod, state_class
+                ), f"{game_name} missing state class: {state_class}"
 
                 print(f"✅ {game_name}: Agent and state classes present")
 
@@ -334,31 +334,31 @@ class TestCommonGameStructure:
 
                 # Check engine count
                 expected_count = expected_engine_counts[game_name]
-                assert len(engines) == expected_count, (
-                    f"{game_name} has {len(engines)} engines, expected {expected_count}"
-                )
+                assert (
+                    len(engines) == expected_count
+                ), f"{game_name} has {len(engines)} engines, expected {expected_count}"
 
                 # Check role patterns
                 expected_roles = set(expected_role_patterns[game_name])
                 actual_roles = set(engines.keys())
-                assert actual_roles == expected_roles, (
-                    f"{game_name} role mismatch. Expected: {expected_roles}, Got: {actual_roles}"
-                )
+                assert (
+                    actual_roles == expected_roles
+                ), f"{game_name} role mismatch. Expected: {expected_roles}, Got: {actual_roles}"
 
                 # Check engine structure
                 for role, engine in engines.items():
-                    assert hasattr(engine, "llm_config"), (
-                        f"{game_name} engine {role} missing llm_config"
-                    )
-                    assert hasattr(engine, "prompt_template"), (
-                        f"{game_name} engine {role} missing prompt_template"
-                    )
-                    assert hasattr(engine, "name"), (
-                        f"{game_name} engine {role} missing name"
-                    )
-                    assert engine.name == role, (
-                        f"{game_name} engine name mismatch: {engine.name} != {role}"
-                    )
+                    assert hasattr(
+                        engine, "llm_config"
+                    ), f"{game_name} engine {role} missing llm_config"
+                    assert hasattr(
+                        engine, "prompt_template"
+                    ), f"{game_name} engine {role} missing prompt_template"
+                    assert hasattr(
+                        engine, "name"
+                    ), f"{game_name} engine {role} missing name"
+                    assert (
+                        engine.name == role
+                    ), f"{game_name} engine name mismatch: {engine.name} != {role}"
 
                 print(f"✅ {game_name}: Engine structure validation passed")
 
@@ -414,17 +414,17 @@ class TestCommonGameStructure:
                 state_class = getattr(state_mod, state_class_name)
 
                 # Check agent API requirements
-                assert hasattr(agent_class, "__init__"), (
-                    f"{game_name} agent missing __init__"
-                )
-                assert hasattr(agent_class, "run"), (
-                    f"{game_name} agent missing run method"
-                )
+                assert hasattr(
+                    agent_class, "__init__"
+                ), f"{game_name} agent missing __init__"
+                assert hasattr(
+                    agent_class, "run"
+                ), f"{game_name} agent missing run method"
 
                 # Check state API requirements
-                assert hasattr(state_class, "model_dump"), (
-                    f"{game_name} state missing model_dump method"
-                )
+                assert hasattr(
+                    state_class, "model_dump"
+                ), f"{game_name} state missing model_dump method"
 
                 print(f"✅ {game_name}: API compatibility validation passed")
 

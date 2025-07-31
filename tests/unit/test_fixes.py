@@ -110,9 +110,9 @@ def test_dict_input():
     # Verify result is a Command
     assert isinstance(result, Command), "Result should be a Command"
     # Verify fox_analysis field is in the update
-    assert "fox_analysis" in result.update, (
-        "fox_analysis should be in the Command update"
-    )
+    assert (
+        "fox_analysis" in result.update
+    ), "fox_analysis should be in the Command update"
 
     logger.info("Dictionary input test passed!")
 
@@ -131,9 +131,9 @@ def test_foxandgeesestate_input():
     # Verify result is a Command
     assert isinstance(result, Command), "Result should be a Command"
     # Verify fox_analysis field is in the update
-    assert "fox_analysis" in result.update, (
-        "fox_analysis should be in the Command update"
-    )
+    assert (
+        "fox_analysis" in result.update
+    ), "fox_analysis should be in the Command update"
 
     logger.info("FoxAndGeeseState input test passed!")
 
