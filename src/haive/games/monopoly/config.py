@@ -75,6 +75,7 @@ class GameDifficulty(str, Enum):
         MEDIUM: Balanced strategy with moderate complexity
         HARD: Advanced strategic analysis and complex negotiations
         EXPERT: Maximum strategic depth with economic optimization
+
     """
 
     EASY = "easy"
@@ -95,6 +96,7 @@ class GameVariant(str, Enum):
         CITY: Modern urban-focused property themes
         ELECTRONIC: Digital banking and modern features
         CUSTOM: User-defined rule combinations
+
     """
 
     CLASSIC = "classic"
@@ -152,6 +154,7 @@ class MonopolyPlayerAgentConfig(AgentConfig):
                 negotiation_aggressiveness=0.9,
                 trading_willingness=0.9
             )
+
     """
 
     # Override base fields with enhanced descriptions
@@ -226,6 +229,7 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
         Returns:
             Dict[str, Union[str, float, bool]]: Player characteristics and preferences.
+
         """
         return {
             "personality": self.strategic_personality,
@@ -242,6 +246,7 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
         Returns:
             str: Player type classification.
+
         """
         if self.risk_tolerance < 0.3 and self.cash_reserve_preference > 0.6:
             return "Conservative Saver"
@@ -257,8 +262,8 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
 
 class MonopolyGameAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Monopoly game agents with
-    comprehensive rule support.
+    r"""Advanced configuration system for Monopoly game agents with comprehensive rule
+    support.
 
     This class provides complete configuration management for Monopoly gameplay,
     supporting multiple rule variants, economic simulation parameters, and strategic
@@ -340,6 +345,7 @@ class MonopolyGameAgentConfig(AgentConfig):
     Note:
         All configurations use Pydantic for validation and support both JSON
         serialization and integration with distributed tournament systems.
+
     """
 
     # Override base agent config fields
@@ -506,6 +512,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Raises:
             ValueError: If player names are not unique or invalid.
+
         """
         if len(v) != len(set(v)):
             raise ValueError("All player names must be unique")
@@ -529,6 +536,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             int: Validated max turns value.
+
         """
         player_count = len(info.data.get("player_names", []))
         if player_count > 0:
@@ -546,6 +554,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             Dict[str, Union[str, int, float, bool]]: Game characteristics and settings.
+
         """
         return {
             "variant": self.game_variant.value,
@@ -574,6 +583,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             Dict[str, Union[int, float]]: Economic settings and derived values.
+
         """
         total_starting_money = self.starting_money * len(self.player_names)
 
@@ -593,6 +603,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             str: Estimated game duration category.
+
         """
         base_duration = self.max_turns / len(self.player_names)
 
@@ -609,6 +620,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             float: Economic velocity multiplier.
+
         """
         velocity = 1.0
 
@@ -629,8 +641,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         return round(velocity, 2)
 
     def create_initial_state(self) -> MonopolyState:
-        r"""Create the initial game state with all required fields and proper
-        validation.
+        r"""Create the initial game state with all required fields and proper validation.
 
         Returns:
             MonopolyState: Fully initialized game state ready for gameplay.
@@ -652,6 +663,7 @@ class MonopolyGameAgentConfig(AgentConfig):
                 state = config.create_initial_state()
                 issues = state.validate_state_consistency()
                 assert len(issues) == 0  # No validation issues
+
         """
         # Create board and players
         properties = create_board()
@@ -703,6 +715,7 @@ class MonopolyGameAgentConfig(AgentConfig):
                 config = MonopolyGameAgentConfig.tournament()
                 agent = config.create_player_agent()
                 # Agent has advanced AI capabilities
+
         """
         # Import here to avoid circular dependency
 
@@ -716,9 +729,9 @@ class MonopolyGameAgentConfig(AgentConfig):
     def setup_player_agent_engines(self) -> None:
         """Set up the engines for the player agent if not already configured.
 
-        This method ensures that the player agent has the necessary LLM
-        engines configured for different types of decisions (property,
-        trading, building, etc.).
+        This method ensures that the player agent has the necessary LLM engines
+        configured for different types of decisions (property, trading, building, etc.).
+
         """
         if not self.player_agent_config.engines:
             self.player_agent_config.engines = build_monopoly_player_aug_llms()
@@ -742,6 +755,7 @@ class MonopolyGameAgentConfig(AgentConfig):
                 config = MonopolyGameAgentConfig.family_game()
                 agent = MonopolyGameAgent(config)
                 result = agent.run_game()
+
         """
         return cls(
             name="family_monopoly",
@@ -772,6 +786,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             MonopolyGameAgentConfig: Configuration for competitive tournament play.
+
         """
         return cls(
             name="tournament_monopoly",
@@ -803,6 +818,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             MonopolyGameAgentConfig: Configuration for speed gameplay.
+
         """
         return cls(
             name="speed_monopoly",
@@ -833,6 +849,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             MonopolyGameAgentConfig: Configuration for economic simulation.
+
         """
         return cls(
             name="economic_monopoly",
@@ -872,6 +889,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             MonopolyGameAgentConfig: Configuration for casual gameplay.
+
         """
         return cls(
             name="casual_monopoly",
@@ -897,6 +915,7 @@ class MonopolyGameAgentConfig(AgentConfig):
 
         Returns:
             MonopolyGameAgentConfig: Default configuration for standard gameplay.
+
         """
         return cls.family_game()
 

@@ -35,6 +35,7 @@ Examples:
             position="pro",
             expertise=["AI ethics", "technology policy"]
         )
+
 """
 
 from datetime import datetime
@@ -98,6 +99,7 @@ class Statement(BaseModel):
         Statement types should follow debate format conventions. Common types
         include: "opening", "rebuttal", "question", "answer", "closing",
         "point_of_information", "point_of_order".
+
     """
 
     content: str = Field(
@@ -177,6 +179,7 @@ class Statement(BaseModel):
 
         Raises:
             ValueError: If content is empty or contains only whitespace.
+
         """
         content = v.strip()
         if not content:
@@ -196,6 +199,7 @@ class Statement(BaseModel):
 
         Raises:
             ValueError: If timestamp format is invalid.
+
         """
         try:
             datetime.fromisoformat(v.replace("Z", "+00:00"))
@@ -260,6 +264,7 @@ class Topic(BaseModel):
         Topic titles should be clear, debatable propositions. For formal debates,
         use standard resolution formats like "This House Believes..." or
         "Resolved: ..." depending on the debate format.
+
     """
 
     title: str = Field(
@@ -327,6 +332,7 @@ class Topic(BaseModel):
 
         Raises:
             ValueError: If title is too short or improperly formatted.
+
         """
         title = v.strip()
         if len(title) < 5:
@@ -343,6 +349,7 @@ class Topic(BaseModel):
 
         Returns:
             List[str]: Cleaned list of non-empty keywords.
+
         """
         return [kw.strip().lower() for kw in v if kw.strip()]
 
@@ -416,6 +423,7 @@ class Participant(BaseModel):
         to +1.0 (strongly biased toward pro position), with 0.0 being
         perfectly neutral. Small bias values (±0.1 to ±0.3) create
         realistic human-like tendencies without compromising debate quality.
+
     """
 
     id: str = Field(
@@ -512,6 +520,7 @@ class Participant(BaseModel):
 
         Raises:
             ValueError: If role is not supported.
+
         """
         valid_roles = {
             "debater",
@@ -539,6 +548,7 @@ class Participant(BaseModel):
 
         Raises:
             ValueError: If position is not valid.
+
         """
         if v is None:
             return None
@@ -608,6 +618,7 @@ class Vote(BaseModel):
         Vote values should be consistent within each voting context. Use
         strings for categorical votes ("pro", "con", "abstain"), numbers
         for ratings (1-10 scales), and structured data for ranked choices.
+
     """
 
     voter_id: str = Field(
@@ -660,6 +671,7 @@ class Vote(BaseModel):
 
         Raises:
             ValueError: If vote value is invalid.
+
         """
         if isinstance(v, str):
             return v.strip().lower()
@@ -732,6 +744,7 @@ class DebatePhase(str, Enum):
         Phase transitions should be managed by the debate agent to ensure
         proper timing and participant readiness. Some phases may be repeated
         (e.g., multiple rebuttal rounds) or skipped based on debate format.
+
     """
 
     SETUP = "setup"  #: Initial preparation, rule establishment, and participant introduction
@@ -756,6 +769,7 @@ class DebatePhase(str, Enum):
 
         Returns:
             List[DebatePhase]: Ordered phases for parliamentary format.
+
         """
         return [
             cls.SETUP,
@@ -771,6 +785,7 @@ class DebatePhase(str, Enum):
 
         Returns:
             List[DebatePhase]: Ordered phases for Oxford format.
+
         """
         return [
             cls.SETUP,
@@ -788,6 +803,7 @@ class DebatePhase(str, Enum):
 
         Returns:
             List[DebatePhase]: Ordered phases for Lincoln-Douglas format.
+
         """
         return [
             cls.SETUP,
@@ -819,6 +835,7 @@ class DebateAnalysis(BaseModel):
         strengths (List[str]): Notable strengths in the debate.
         weaknesses (List[str]): Areas needing improvement.
         recommendations (List[str]): Suggestions for future debates.
+
     """
 
     participant_scores: dict[str, float] = Field(

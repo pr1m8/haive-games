@@ -9,6 +9,7 @@ This module defines the state schema for chess games, including:
 
 The state schema provides a complete representation of a chess game state
 that can be used by the agent and state manager.
+
 """
 
 from typing import Any, Literal
@@ -47,6 +48,7 @@ class ChessState(StateSchema):
         >>> board = state.get_board()
         >>> board.is_check()
         False
+
     """
 
     # Board state
@@ -110,6 +112,7 @@ class ChessState(StateSchema):
 
         Returns:
             str: The FEN representation of the current board position.
+
         """
         return self.board_fens[-1] if self.board_fens else chess.Board().fen()
 
@@ -120,6 +123,7 @@ class ChessState(StateSchema):
 
         Returns:
             str: The FEN representation of the current board position.
+
         """
         return self.board_fen
 
@@ -139,6 +143,7 @@ class ChessState(StateSchema):
             >>> board = state.get_board()
             >>> board.is_game_over()
             False
+
         """
         try:
             return chess.Board(self.board_fen)

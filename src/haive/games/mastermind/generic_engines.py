@@ -1,8 +1,8 @@
 """Generic Mastermind engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Mastermind
-games, allowing for configurable LLM models and game-specific player
-identifiers.
+This module provides generic engine creation functions for Mastermind games, allowing
+for configurable LLM models and game-specific player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -128,6 +128,7 @@ def create_generic_mastermind_engines(
         - "codebreaker_player": Player 2 configuration
         - "codemaker_analyzer": Player 1 analyzer configuration
         - "codebreaker_analyzer": Player 2 analyzer configuration
+
     """
     return mastermind_factory.create_engines(player_configs)
 
@@ -144,6 +145,7 @@ def create_generic_mastermind_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of Mastermind engines
+
     """
     return create_engines_from_simple_configs(
         mastermind_factory, codemaker_model, codebreaker_model, temperature
@@ -169,6 +171,7 @@ def create_generic_mastermind_config_from_example(
         - "budget": Cost-effective models
         - "mixed": Different provider per role
         - "advanced": High-powered models for strategic gameplay
+
     """
     examples = {
         "gpt_vs_claude": ("gpt-4o", "claude-3-5-sonnet-20240620"),

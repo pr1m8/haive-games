@@ -20,8 +20,9 @@ from haive.games.framework.multi_player.agent import MultiPlayerGameAgent
 class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentConfig]):
     """Agent implementation for the Among Us game.
 
-    This class inherits state management from AmongUsStateManagerMixin
-    and agent behavior from MultiPlayerGameAgent.
+    This class inherits state management from AmongUsStateManagerMixin and agent
+    behavior from MultiPlayerGameAgent.
+
     """
 
     def __init__(self, config):
@@ -37,6 +38,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
         Args:
             state: Current game state (dict or AmongUsState object)
+
         """
         # Ensure state is in the right format
         if isinstance(state, dict):
@@ -59,8 +61,8 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
     # Add this method to the AmongUsAgent class
 
     def get_engine_for_player(self, role: str, engine_key: str) -> Any | None:
-        """Get the appropriate engine for a player based on their role and the
-        current phase.
+        """Get the appropriate engine for a player based on their role and the current
+        phase.
 
         Args:
             role: Player role (CREWMATE or IMPOSTOR)
@@ -68,6 +70,7 @@ class AmongUsAgent(AmongUsStateManagerMixin, MultiPlayerGameAgent[AmongUsAgentCo
 
         Returns:
             The appropriate engine runnable
+
         """
         # Convert PlayerRole enum to string if needed
         if isinstance(role, PlayerRole):

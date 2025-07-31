@@ -82,8 +82,7 @@ class HexPosition(Position):
 
 
 class PointPosition(Position):
-    """Position using floating point coordinates (e.g., Go, graph-based
-    games)."""
+    """Position using floating point coordinates (e.g., Go, graph-based games)."""
 
     x: float
     y: float

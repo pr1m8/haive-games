@@ -4,6 +4,7 @@ This module provides the corrected main agent implementation that:
     - Ensures BaseModel consistency throughout (no dict conversions)
     - Properly handles state schema compatibility
     - Fixes the validation error by maintaining BaseModel state
+
 """
 
 # Standard library imports
@@ -32,6 +33,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
         - Player decision delegation to subgraphs
         - Complete game state management
         - Game end detection and winner determination
+
     """
 
     def __init__(self, config: MonopolyGameAgentConfig):
@@ -61,8 +63,8 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
     def setup_workflow(self) -> None:
         """Set up the complete monopoly workflow.
 
-        This creates the main game workflow nodes and connects them
-        properly.
+        This creates the main game workflow nodes and connects them properly.
+
         """
         # Import the game agent here to avoid circular dependency
 
@@ -88,6 +90,7 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
 
         Returns:
             Final game state as MonopolyState BaseModel
+
         """
         # CRITICAL FIX: Pass the BaseModel directly, no conversion to dict
 

@@ -1,8 +1,8 @@
 """Generic chess engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for
-chess, providing a clean, type-safe implementation that eliminates
-hardcoded LLM configurations.
+This module demonstrates how to use the generic player agent system for chess, providing
+a clean, type-safe implementation that eliminates hardcoded LLM configurations.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -29,6 +29,7 @@ class ChessPromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for move generation
+
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -78,6 +79,7 @@ You MUST select one of the legal moves listed above. Analyze the position and ch
 
         Returns:
             ChatPromptTemplate: Prompt template for position analysis
+
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -150,6 +152,7 @@ def create_generic_chess_engines(
         ...     "black_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_generic_chess_engines(configs)
+
     """
     return chess_engine_factory.create_engines_from_player_configs(player_configs)
 
@@ -178,6 +181,7 @@ def create_generic_chess_engines_simple(
         ...     "openai:gpt-4o",
         ...     temperature=0.8
         ... )
+
     """
     return chess_engine_factory.create_engines_from_simple_configs(
         white_model, black_model, temperature=temperature, **kwargs
@@ -202,6 +206,7 @@ def create_generic_chess_config_from_example(
         - "claude_only": Claude for all roles
         - "mixed_providers": Different provider per role
         - "budget_friendly": Cost-effective models
+
     """
     example_configs = {
         "anthropic_vs_openai": {
@@ -244,6 +249,7 @@ def create_typed_chess_engines() -> dict[str, AugLLMConfig]:
 
     Returns:
         dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     # The generic system ensures type safety
     players = ChessPlayerIdentifiers()  # player1="white", player2="black"
@@ -269,6 +275,7 @@ def create_role_specific_chess_engines() -> dict[str, AugLLMConfig]:
 
     Returns:
         dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     player_configs = {
         "white_player": PlayerAgentConfig(
@@ -302,8 +309,9 @@ def create_role_specific_chess_engines() -> dict[str, AugLLMConfig]:
 def demonstrate_generic_pattern():
     """Demonstrate how the generic pattern works across different games.
 
-    This function shows how the same generic system can be used for any
-    two-player game with just different player identifiers and prompts.
+    This function shows how the same generic system can be used for any two-player game
+    with just different player identifiers and prompts.
+
     """
     print("🎯 Generic Player Agent System Demonstration")
     print("=" * 50)

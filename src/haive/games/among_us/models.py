@@ -74,6 +74,7 @@ Examples:
 Note:
     All models use Pydantic for validation and support both JSON serialization
     and integration with LLM-based strategic decision systems.
+
 """
 
 from enum import Enum
@@ -91,6 +92,7 @@ class PlayerRole(str, Enum):
     Values:
         CREWMATE: Innocent crew member focused on tasks
         IMPOSTOR: Deceptive player who can kill and sabotage
+
     """
 
     CREWMATE = "crewmate"
@@ -110,6 +112,7 @@ class TaskType(str, Enum):
         COMMON: Tasks assigned to all crewmates
         SHORT: Quick tasks (1-3 seconds)
         LONG: Extended tasks (5-10 seconds)
+
     """
 
     VISUAL = "visual"
@@ -125,6 +128,7 @@ class TaskStatus(str, Enum):
         NOT_STARTED: Task not yet attempted
         IN_PROGRESS: Task partially completed
         COMPLETED: Task fully finished
+
     """
 
     NOT_STARTED = "not_started"
@@ -166,6 +170,7 @@ class Task(BaseModel):
                 location="electrical",
                 description="Fix wiring"
             )
+
     """
 
     id: str = Field(
@@ -215,6 +220,7 @@ class Task(BaseModel):
 
         Returns:
             bool: True if task status is COMPLETED.
+
         """
         return self.status == TaskStatus.COMPLETED
 
@@ -225,6 +231,7 @@ class Task(BaseModel):
 
         Returns:
             float: 0.0 for not started, 0.5 for in progress, 1.0 for completed.
+
         """
         if self.status == TaskStatus.NOT_STARTED:
             return 0.0
@@ -259,6 +266,7 @@ class VentConnection(BaseModel):
                 target_vent_id="reactor_vent",
                 travel_time=4
             )
+
     """
 
     target_vent_id: str = Field(
@@ -314,6 +322,7 @@ class Vent(BaseModel):
                     )
                 ]
             )
+
     """
 
     id: str = Field(
@@ -344,6 +353,7 @@ class Vent(BaseModel):
 
         Returns:
             bool: True if vent connects to other vents.
+
         """
         return len(self.connections) > 0
 
@@ -354,6 +364,7 @@ class Vent(BaseModel):
 
         Returns:
             int: Total number of vent connections.
+
         """
         return len(self.connections)
 
@@ -392,6 +403,7 @@ class RoomConnection(BaseModel):
                 distance=1,
                 is_blocked=True
             )
+
     """
 
     target_room: str = Field(
@@ -453,6 +465,7 @@ class Room(BaseModel):
                 ],
                 vents=["electrical_vent"]
             )
+
     """
 
     id: str = Field(
@@ -493,6 +506,7 @@ class Room(BaseModel):
             True
             >>> cafeteria.is_connected_to("reactor")
             False
+
         """
         return any(conn.target_room == room_id for conn in self.connections)
 
@@ -509,6 +523,7 @@ class Room(BaseModel):
             >>> conn = cafeteria.get_connection("medbay")
             >>> conn.distance
             1
+
         """
         for conn in self.connections:
             if conn.target_room == room_id:
@@ -522,6 +537,7 @@ class Room(BaseModel):
 
         Returns:
             bool: True if room has vents for impostor use.
+
         """
         return len(self.vents) > 0
 
@@ -532,6 +548,7 @@ class Room(BaseModel):
 
         Returns:
             int: Total adjacent rooms.
+
         """
         return len(self.connections)
 
@@ -572,6 +589,7 @@ class PlayerMemory(BaseModel):
                 "Blue": "medbay",
                 "Green": "cafeteria"
             }
+
     """
 
     observations: list[str] = Field(
@@ -619,6 +637,7 @@ class PlayerMemory(BaseModel):
 
         Raises:
             ValueError: If suspicion level outside 0-1 range.
+
         """
         for player, level in v.items():
             if not 0.0 <= level <= 1.0:
@@ -634,6 +653,7 @@ class PlayerMemory(BaseModel):
 
         Returns:
             Optional[str]: Player ID with highest suspicion or None.
+
         """
         if not self.player_suspicions:
             return None
@@ -646,6 +666,7 @@ class PlayerMemory(BaseModel):
 
         Returns:
             List[str]: IDs of trusted players.
+
         """
         return [p for p, s in self.player_suspicions.items() if s < 0.3]
 
@@ -704,6 +725,7 @@ class PlayerState(BaseModel):
                 tasks=[],
                 is_alive=False
             )
+
     """
 
     id: str = Field(
@@ -772,6 +794,7 @@ class PlayerState(BaseModel):
             >>> impostor = PlayerState(id="Red", role=PlayerRole.IMPOSTOR, location="cafeteria")
             >>> impostor.is_impostor()
             True
+
         """
         return self.role == PlayerRole.IMPOSTOR
 
@@ -785,6 +808,7 @@ class PlayerState(BaseModel):
             >>> crew = PlayerState(id="Blue", role=PlayerRole.CREWMATE, location="cafeteria")
             >>> crew.is_crewmate()
             True
+
         """
         return self.role == PlayerRole.CREWMATE
 
@@ -810,6 +834,7 @@ class PlayerState(BaseModel):
             True
             >>> impostor.can_kill(kill_cooldown=10)
             False
+
         """
         return (
             self.is_impostor()
@@ -833,6 +858,7 @@ class PlayerState(BaseModel):
             ...                        location="electrical", is_alive=True)
             >>> impostor.can_use_vent()
             True
+
         """
         return self.is_impostor() and self.is_alive
 
@@ -843,6 +869,7 @@ class PlayerState(BaseModel):
 
         Returns:
             float: Completion percentage (0.0-100.0).
+
         """
         if not self.tasks:
             return 100.0 if self.is_impostor() else 0.0
@@ -857,6 +884,7 @@ class PlayerState(BaseModel):
 
         Returns:
             List[Task]: Tasks that still need completion.
+
         """
         return [task for task in self.tasks if not task.is_completed]
 
@@ -867,6 +895,7 @@ class PlayerState(BaseModel):
 
         Returns:
             bool: True if player is dead.
+
         """
         return not self.is_alive
 
@@ -883,6 +912,7 @@ class SabotageType(str, Enum):
         OXYGEN: Critical - requires two-point fix within time limit
         REACTOR: Critical - requires two-point fix within time limit
         DOORS: Locks specific room doors temporarily
+
     """
 
     LIGHTS = "lights"  # Reduces visibility
@@ -899,6 +929,7 @@ class SabotageStatus(str, Enum):
         ACTIVE: Sabotage in effect, needs resolution
         RESOLVED: Successfully fixed by crewmates
         FAILED: Timer expired on critical sabotage (impostor win)
+
     """
 
     ACTIVE = "active"
@@ -936,6 +967,7 @@ class SabotageResolutionPoint(BaseModel):
                 location="admin",
                 description="Enter O2 code in admin"
             )
+
     """
 
     id: str = Field(
@@ -1022,6 +1054,7 @@ class SabotageEvent(BaseModel):
                     )
                 ]
             )
+
     """
 
     type: str = Field(
@@ -1073,6 +1106,7 @@ class SabotageEvent(BaseModel):
             >>> lights = SabotageEvent(type="lights", location="electrical", timer=0)
             >>> lights.is_critical()
             False
+
         """
         return self.type in ["o2", "reactor"]
 
@@ -1092,6 +1126,7 @@ class SabotageEvent(BaseModel):
             >>> sabotage.resolved = True
             >>> sabotage.is_resolved()
             True
+
         """
         return self.resolved or all(point.resolved for point in self.resolution_points)
 
@@ -1102,6 +1137,7 @@ class SabotageEvent(BaseModel):
 
         Returns:
             str: Urgency classification.
+
         """
         if self.is_critical() and self.timer < 10:
             return "emergency"
@@ -1119,6 +1155,7 @@ class SabotageEvent(BaseModel):
 
         Returns:
             int: Number of points still needing activation.
+
         """
         return sum(1 for point in self.resolution_points if not point.resolved)
 
@@ -1133,6 +1170,7 @@ class AmongUsGamePhase(str, Enum):
         MEETING: Discussion phase after body report or emergency
         VOTING: Active voting to eject a player
         GAME_OVER: Game concluded with winner determined
+
     """
 
     TASKS = "tasks"
@@ -1160,6 +1198,7 @@ class AmongUsActionType(str, Enum):
         CALL_MEETING: Call emergency meeting
         VOTE: Vote to eject a player
         SKIP_VOTE: Vote to skip ejection
+
     """
 
     MOVE = "move"
@@ -1224,6 +1263,7 @@ class AmongUsPlayerDecision(BaseModel):
                 reasoning="Red was seen venting by Green",
                 confidence=0.95
             )
+
     """
 
     action_type: AmongUsActionType = Field(
@@ -1288,6 +1328,7 @@ class AmongUsPlayerDecision(BaseModel):
 
         Raises:
             ValueError: If location missing for movement.
+
         """
         if "action_type" in info.data:
             action = info.data["action_type"]
@@ -1302,6 +1343,7 @@ class AmongUsPlayerDecision(BaseModel):
 
         Returns:
             bool: True for kill/sabotage actions.
+
         """
         return self.action_type in [AmongUsActionType.KILL, AmongUsActionType.SABOTAGE]
 
@@ -1312,6 +1354,7 @@ class AmongUsPlayerDecision(BaseModel):
 
         Returns:
             bool: True for kill/vote actions.
+
         """
         return self.action_type in [AmongUsActionType.KILL, AmongUsActionType.VOTE]
 
@@ -1376,6 +1419,7 @@ class AmongUsAnalysis(BaseModel):
                 risk_assessment="High stakes vote - wrong choice loses game",
                 priority_actions=["Vote Red", "Share observations"]
             )
+
     """
 
     game_phase: AmongUsGamePhase = Field(
@@ -1464,6 +1508,7 @@ class AmongUsAnalysis(BaseModel):
 
         Raises:
             ValueError: If too many priorities listed.
+
         """
         if len(v) > 5:
             raise ValueError("Maximum 5 priority actions allowed")
@@ -1476,6 +1521,7 @@ class AmongUsAnalysis(BaseModel):
 
         Returns:
             bool: True if critical sabotages active or crew disadvantaged.
+
         """
         critical_sabotages = ["reactor", "o2"]
         has_critical = any(sab in critical_sabotages for sab in self.active_sabotages)
@@ -1488,6 +1534,7 @@ class AmongUsAnalysis(BaseModel):
 
         Returns:
             Dict[str, float]: Win chances for crew and impostors.
+
         """
         # Simple linear mapping from advantage to probability
         crew_prob = (self.crew_advantage + 1.0) / 2.0
@@ -1500,6 +1547,7 @@ class AmongUsAnalysis(BaseModel):
 
         Returns:
             str: Early, mid, or late game classification.
+
         """
         if self.task_completion_percentage < 30:
             return "early"

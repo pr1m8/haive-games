@@ -22,6 +22,7 @@ Example:
     >>> # Run the game
     >>> for state in agent.app.stream(initial_state):
     ...     agent.visualize_state(state)
+
 """
 
 # Standard library imports
@@ -85,6 +86,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         ... )
         >>> for state in agent.app.stream(initial_state):
         ...     agent.visualize_state(state)
+
     """
 
     def __init__(self, config: MafiaAgentConfig):
@@ -96,6 +98,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> config = MafiaAgentConfig.default_config(player_count=7)
             >>> agent = MafiaAgent(config)
+
         """
         super().__init__(config)
         self.state_manager = MafiaStateManager
@@ -134,6 +137,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> role = agent.get_player_role(state, "Player_1")
             >>> print(role)  # Shows PlayerRole.VILLAGER
+
         """
         # Handle narrator case specially
         logger.debug("Getting player role", extra={"player_id": player_id})
@@ -170,6 +174,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             ...     PlayerRole.MAFIA, "player"
             ... )
             >>> print(engine.name)  # Shows "mafia_player"
+
         """
         # 1. If role is an enum, convert to normalized string key
         if isinstance(role, PlayerRole):
@@ -223,6 +228,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> context = agent.prepare_move_context(state, "Player_1")
             >>> print(context["phase"])  # Shows current game phase
+
         """
         # Get player's role
         player_role = self.get_player_role(state, player_id)
@@ -361,6 +367,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> context = agent.prepare_narrator_context(state)
             >>> print(context["phase"])  # Shows current game phase
+
         """
         # Create a detailed game state summary for the narrator
         player_summary = []
@@ -487,6 +494,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
             >>> response = engine.invoke(context)
             >>> move = agent.extract_move(response, "Player_1")
             >>> print(move.action_type)  # Shows the action type
+
         """
         logger.debug(f"Extracting move from response: {response}")
 
@@ -690,6 +698,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> new_state = agent.handle_player_turn(state)
             >>> print(new_state["game_phase"])  # Shows current phase
+
         """
         # Make a copy of state available for other methods
         self.state = state
@@ -885,6 +894,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> new_state = agent.handle_narrator_turn(state)
             >>> print(new_state["public_announcements"][-1])
+
         """
         # Make state accessible to other methods
         self.state = state
@@ -979,6 +989,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> next_step = agent.determine_next_step_after_player_turn(state)
             >>> print(next_step)  # Shows what happens next
+
         """
         # If game is over, end the game
         if state.game_status != "ongoing" or state.game_phase == GamePhase.GAME_OVER:
@@ -1133,6 +1144,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
 
         Example:
             >>> agent.visualize_state(state, debug=True)
+
         """
         try:
             # Handle the case where an agent was passed instead of a state
@@ -1252,6 +1264,7 @@ class MafiaAgent(MultiPlayerGameAgent[MafiaAgentConfig]):
         Example:
             >>> state_dict = agent.state_to_dict(state)
             >>> print(state_dict["game_phase"])
+
         """
         try:
             if hasattr(state, "model_dump"):

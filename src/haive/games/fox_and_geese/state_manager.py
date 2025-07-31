@@ -1,9 +1,9 @@
 """State manager for the Fox and Geese game.
 
-This module defines the state manager for the Fox and Geese game, which
-manages the state of the game and provides methods for initializing,
-applying moves, checking game status, and getting legal moves for the
-Fox and Geese game.
+This module defines the state manager for the Fox and Geese game, which manages the
+state of the game and provides methods for initializing, applying moves, checking game
+status, and getting legal moves for the Fox and Geese game.
+
 """
 
 # Standard library imports
@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     """Manager for Fox and Geese game state.
 
-    This class provides methods for initializing, applying moves,
-    checking game status, and getting legal moves for the Fox and Geese
-    game.
+    This class provides methods for initializing, applying moves, checking game status,
+    and getting legal moves for the Fox and Geese game.
+
     """
 
     @classmethod
@@ -37,6 +37,7 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
 
         Returns:
             FoxAndGeeseState: Initial game state with positions set up.
+
         """
         logger.info("Initializing Fox and Geese game")
 
@@ -79,11 +80,11 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     ) -> FoxAndGeeseState:
         """Apply a move to the Fox and Geese state.
 
-        This method updates the state of the game based on the move made
-        by the current player. It handles both regular moves and capture
-        moves, updating the position of the fox and geese accordingly.
-        It also updates the move history and switches turns between fox
-        and geese.
+        This method updates the state of the game based on the move made by the current
+        player. It handles both regular moves and capture moves, updating the position
+        of the fox and geese accordingly. It also updates the move history and switches
+        turns between fox and geese.
+
         """
         # Create a deep copy of the state
         new_state = copy.deepcopy(state)
@@ -115,10 +116,10 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     def get_legal_moves(cls, state: FoxAndGeeseState) -> list[FoxAndGeeseMove]:
         """Get all legal moves for the current state.
 
-        This method returns a list of all legal moves for the current
-        player in the given game state. It checks the current player's
-        turn and calls the appropriate method to get the legal moves for
-        the fox or geese.
+        This method returns a list of all legal moves for the current player in the
+        given game state. It checks the current player's turn and calls the appropriate
+        method to get the legal moves for the fox or geese.
+
         """
         moves = []
 
@@ -135,10 +136,10 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     def _get_fox_moves(cls, state: FoxAndGeeseState) -> list[FoxAndGeeseMove]:
         """Get all legal moves for the fox.
 
-        This method returns a list of all legal moves for the fox in the
-        given game state. It checks all possible diagonal directions
-        from the fox's current position and creates moves for each valid
-        direction.
+        This method returns a list of all legal moves for the fox in the given game
+        state. It checks all possible diagonal directions from the fox's current
+        position and creates moves for each valid direction.
+
         """
         moves = []
         row, col = state.fox_position.row, state.fox_position.col
@@ -194,10 +195,10 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     def _get_geese_moves(cls, state: FoxAndGeeseState) -> list[FoxAndGeeseMove]:
         """Get all legal moves for the geese.
 
-        This method returns a list of all legal moves for the geese in
-        the given game state. It checks all possible diagonal directions
-        from the geese's current position and creates moves for each
-        valid direction.
+        This method returns a list of all legal moves for the geese in the given game
+        state. It checks all possible diagonal directions from the geese's current
+        position and creates moves for each valid direction.
+
         """
         moves = []
 
@@ -229,10 +230,10 @@ class FoxAndGeeseStateManager(GameStateManager[FoxAndGeeseState]):
     def check_game_status(cls, state: FoxAndGeeseState) -> FoxAndGeeseState:
         """Check and update game status.
 
-        This method checks the current game status and updates the state
-        accordingly. It determines if the fox has won by capturing too
-        many geese or if the geese have won by trapping the fox. It also
-        updates the game status and winner.
+        This method checks the current game status and updates the state accordingly. It
+        determines if the fox has won by capturing too many geese or if the geese have
+        won by trapping the fox. It also updates the game status and winner.
+
         """
         # Fox wins if it captures too many geese
         if state.num_geese < 4:  # Assuming fox wins if fewer than 4 geese remain

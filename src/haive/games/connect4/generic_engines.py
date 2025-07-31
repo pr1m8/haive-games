@@ -1,8 +1,8 @@
 """Generic Connect4 engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for
-Connect4, showing the same pattern working with red/yellow player
-identifiers.
+This module demonstrates how to use the generic player agent system for Connect4,
+showing the same pattern working with red/yellow player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -29,6 +29,7 @@ class Connect4PromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for move generation
+
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -58,6 +59,7 @@ class Connect4PromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for position analysis
+
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -140,6 +142,7 @@ def create_generic_connect4_engines(
         ...     "yellow_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_generic_connect4_engines(configs)
+
     """
     return connect4_engine_factory.create_engines_from_player_configs(player_configs)
 
@@ -168,6 +171,7 @@ def create_generic_connect4_engines_simple(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     temperature=0.8
         ... )
+
     """
     return connect4_engine_factory.create_engines_from_simple_configs(
         red_model, yellow_model, temperature=temperature, **kwargs
@@ -192,6 +196,7 @@ def create_generic_connect4_config_from_example(
         - "claude_only": Claude for both players
         - "budget": Cost-effective models
         - "mixed": Different provider per role
+
     """
     example_configs = {
         "gpt_vs_claude": {

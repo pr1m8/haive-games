@@ -38,6 +38,7 @@ Examples provided:
     6. Tournament Mode - Batch game execution and statistics
     7. Async Execution - Concurrent game processing
     8. Custom AI Configuration - Advanced engine customization
+
 """
 
 import asyncio

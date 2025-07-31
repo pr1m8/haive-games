@@ -1,7 +1,8 @@
 """AI Judge System for Gamified Debates.
 
-This module provides sophisticated AI judge agents that can evaluate
-debates using different criteria and scoring methodologies.
+This module provides sophisticated AI judge agents that can evaluate debates using
+different criteria and scoring methodologies.
+
 """
 
 import json
@@ -265,12 +266,12 @@ class DebateJudgingPanel:
 
     @classmethod
     def create_standard_panel(cls, num_judges: int = 3) -> "DebateJudgingPanel":
-        """Create a standard panel with configurable number of randomized
-        judges.
+        """Create a standard panel with configurable number of randomized judges.
 
         Args:
             num_judges: Number of judges to include (default: 3 to avoid ties)
                        Must be odd number for proper tie-breaking.
+
         """
 
         # Ensure odd number for tie-breaking
@@ -487,6 +488,7 @@ def create_tournament_judges(num_judges: int = 3) -> DebateJudgingPanel:
 
     Args:
         num_judges: Number of judges (default: 3 to avoid ties)
+
     """
     return DebateJudgingPanel.create_standard_panel(num_judges)
 
@@ -496,6 +498,7 @@ def create_academic_judges(num_judges: int = 3) -> DebateJudgingPanel:
 
     Args:
         num_judges: Number of judges (default: 3)
+
     """
 
     if num_judges % 2 == 0:
@@ -547,6 +550,7 @@ def create_public_judges(num_judges: int = 3) -> DebateJudgingPanel:
 
     Args:
         num_judges: Number of judges (default: 3)
+
     """
 
     if num_judges % 2 == 0:

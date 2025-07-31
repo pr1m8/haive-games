@@ -5,6 +5,7 @@ without relying on external dependencies like langchain.
 
 Usage:
     python standalone_demo.py
+
 """
 
 import random

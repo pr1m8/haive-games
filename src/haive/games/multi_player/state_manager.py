@@ -18,6 +18,7 @@ Example:
     ...     @classmethod
     ...     def initialize(cls, player_names: List[str], **kwargs) -> MyGameState:
     ...         return MyGameState(players=player_names)
+
 """
 
 from typing import Any, Generic, TypeVar
@@ -46,6 +47,7 @@ class MultiPlayerGameStateManager(Generic[T]):
         ...             players=player_names,
         ...             board=cls.create_initial_board()
         ...         )
+
     """
 
     @classmethod
@@ -61,6 +63,7 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -78,6 +81,7 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -94,6 +98,7 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -112,6 +117,7 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -130,13 +136,13 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
     @classmethod
     def filter_state_for_player(cls, state: T, player_id: str) -> dict[str, Any]:
-        """Filter the state to include only information visible to a specific
-        player.
+        """Filter the state to include only information visible to a specific player.
 
         This method should implement information hiding, ensuring players
         only see game information they should have access to.
@@ -150,5 +156,6 @@ class MultiPlayerGameStateManager(Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         raise NotImplementedError("Must be implemented by subclass")

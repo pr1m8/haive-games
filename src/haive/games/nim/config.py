@@ -1,7 +1,8 @@
 """Configuration for the Nim game.
 
-This module defines the configuration for the Nim game, which includes
-the state schema, engines, enable_analysis, visualize, and pile_sizes.
+This module defines the configuration for the Nim game, which includes the state schema,
+engines, enable_analysis, visualize, and pile_sizes.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -20,6 +21,7 @@ class NimConfig(GameConfig):
         engines (Dict[str, AugLLMConfig]): The engines for the Nim game.
         enable_analysis (bool): Whether to enable analysis.
         visualize (bool): Whether to visualize the game.
+
     """
 
     state_schema: type[NimState] = Field(default=NimState)
@@ -41,6 +43,7 @@ class NimConfig(GameConfig):
 
         Returns:
             NimConfig: The default configuration.
+
         """
         return cls(
             state_schema=NimState,

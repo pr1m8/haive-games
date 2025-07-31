@@ -39,6 +39,7 @@ class Property:
 
         Returns:
             The rent amount
+
         """
         if self.is_mortgaged or self.owner is None:
             return 0

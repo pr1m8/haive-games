@@ -56,6 +56,7 @@ Examples:
 Note:
     All state updates should use LangGraph Commands to ensure proper
     reducer behavior and concurrent update handling.
+
 """
 
 from typing import Annotated, Any, Literal
@@ -84,6 +85,7 @@ def replace_reducer(left: Any, right: Any) -> Any:
         'O'
         >>> replace_reducer([1, 2], [3, 4])
         [3, 4]
+
     """
     return right
 
@@ -106,6 +108,7 @@ def add_messages_reducer(left: list, right: list) -> list:
         [1, 2, 3, 4]
         >>> add_messages_reducer([], [1, 2])
         [1, 2]
+
     """
     if not isinstance(left, list):
         left = []
@@ -126,13 +129,13 @@ def replace_board_reducer(left: Any, right: Any) -> Any:
 
     Returns:
         Any: The new board state.
+
     """
     return right
 
 
 class TicTacToeState(GameState):
-    """Comprehensive state model for Tic Tac Toe gameplay with LangGraph
-    integration.
+    """Comprehensive state model for Tic Tac Toe gameplay with LangGraph integration.
 
     This class provides complete state management for Tic Tac Toe games, supporting
     both traditional gameplay mechanics and advanced features for AI analysis. The
@@ -220,6 +223,7 @@ class TicTacToeState(GameState):
     Note:
         State updates should be performed through LangGraph Commands to ensure
         proper reducer behavior and prevent concurrent update conflicts.
+
     """
 
     @staticmethod
@@ -228,6 +232,7 @@ class TicTacToeState(GameState):
 
         Returns:
             list[str]: Default player identifiers ["player1", "player2"].
+
         """
         return ["player1", "player2"]
 
@@ -246,6 +251,7 @@ class TicTacToeState(GameState):
             True
             >>> all(cell is None for row in board for cell in row)
             True
+
         """
         return [[None for _ in range(3)] for _ in range(3)]
 
@@ -364,6 +370,7 @@ class TicTacToeState(GameState):
 
                 board = [["X", "Y", "O"], [None, None, None], [None, None, None]]
                 # Raises ValueError: "Cell values must be None, 'X', or 'O', got Y"
+
         """
         # If board is empty, initialize a proper 3x3 board
         if not board or len(board) == 0:
@@ -400,6 +407,7 @@ class TicTacToeState(GameState):
             >>> state.board[1][1] = "X"
             >>> len(state.empty_cells)
             8
+
         """
         return [(i, j) for i in range(3) for j in range(3) if self.board[i][j] is None]
 
@@ -421,6 +429,7 @@ class TicTacToeState(GameState):
             >>> state.board = [["X", "O", "X"], ["O", "X", "O"], ["O", "X", "X"]]
             >>> state.is_board_full
             True
+
         """
         return all(self.board[i][j] is not None for i in range(3) for j in range(3))
 
@@ -442,6 +451,7 @@ class TicTacToeState(GameState):
             >>> state.turn = "O"
             >>> state.current_player_name
             'player2'
+
         """
         return self.player_X if self.turn == "X" else self.player_O
 
@@ -477,6 +487,7 @@ class TicTacToeState(GameState):
                   -------
                 2 |O| |X|
                   -------
+
         """
         result = []
         result.append("   0 1 2")
@@ -534,6 +545,7 @@ class TicTacToeState(GameState):
                     player_O="player2"
                 )
                 # Ready for competitive play
+
         """
         first_player = kwargs.get("first_player", "X")
         player_X = kwargs.get("player_X", "player1")

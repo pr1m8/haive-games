@@ -18,8 +18,9 @@ from haive.games.among_us.prompts import (
 class AmongUsEngines:
     """Engines for the Among Us game.
 
-    This class creates and manages the LLM engines used for different
-    player roles and game phases.
+    This class creates and manages the LLM engines used for different player roles and
+    game phases.
+
     """
 
     @classmethod
@@ -33,6 +34,7 @@ class AmongUsEngines:
 
         Returns:
             A dictionary of engines organized by role and game phase
+
         """
         # Default LLM config
         default_llm_config = {
@@ -125,6 +127,7 @@ class AmongUsEngines:
 
         Returns:
             A dictionary of runnable engines organized by role and game phase
+
         """
         engines_config = cls.create_engines(llm_config)
         runnable_engines = {}

@@ -19,6 +19,7 @@ Example:
     ...     captured_stones={"black": 0, "white": 0},
     ...     player_analysis="Territory is balanced"
     ... )
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -59,6 +60,7 @@ def generate_go_move_prompt(color: str) -> ChatPromptTemplate:
         - Captured stones count
         - Previous position analysis
         - Clear instruction for move format
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -116,6 +118,7 @@ def generate_go_analysis_prompt(color: str) -> ChatPromptTemplate:
             1. Territory assessment
             2. Key position identification
             3. Strategic planning
+
     """
     return ChatPromptTemplate.from_messages(
         [

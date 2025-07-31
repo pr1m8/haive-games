@@ -18,6 +18,7 @@ Typical usage:
     - Inherit from GameStateManager to create game-specific state managers
     - Implement the required methods for state initialization and transitions
     - Use in conjunction with game agents to manage game flow
+
 """
 
 from typing import Any, Generic, TypeVar
@@ -47,6 +48,7 @@ class GameStateManager(Generic[T]):
         ...     @classmethod
         ...     def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
         ...         return state.apply_move(move)
+
     """
 
     @classmethod
@@ -73,6 +75,7 @@ class GameStateManager(Generic[T]):
             ...         turn="white",
             ...         game_status="ongoing"
             ...     )
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -102,6 +105,7 @@ class GameStateManager(Generic[T]):
             ...         turn="black" if state.turn == "white" else "white",
             ...         move_history=state.move_history + [move]
             ...     )
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -125,6 +129,7 @@ class GameStateManager(Generic[T]):
             >>> @classmethod
             ... def get_legal_moves(cls, state: ChessState) -> List[ChessMove]:
             ...     return state.board.get_legal_moves(state.turn)
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -153,5 +158,6 @@ class GameStateManager(Generic[T]):
             ...     elif state.board.is_stalemate():
             ...         state.game_status = "stalemate"
             ...     return state
+
         """
         raise NotImplementedError("Must be implemented by subclass")

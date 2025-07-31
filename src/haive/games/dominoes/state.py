@@ -1,5 +1,4 @@
-"""Comprehensive state management system for Dominoes gameplay and strategic
-analysis.
+"""Comprehensive state management system for Dominoes gameplay and strategic analysis.
 
 This module provides sophisticated state models for Dominoes games with complete
 support for tile tracking, board management, strategic analysis, and game flow
@@ -59,6 +58,7 @@ Examples:
 Note:
     All state models use Pydantic for validation and support both JSON
     serialization and integration with LangGraph for distributed gameplay.
+
 """
 
 import random
@@ -71,8 +71,8 @@ from haive.games.framework.base.state import GameState
 
 
 class DominoesState(GameState):
-    """Comprehensive state management for Dominoes gameplay with strategic
-    analysis support.
+    """Comprehensive state management for Dominoes gameplay with strategic analysis
+    support.
 
     This class provides complete state management for Dominoes games, supporting
     both traditional dominoes mechanics and strategic analysis. The state system
@@ -184,6 +184,7 @@ class DominoesState(GameState):
         The state uses Pydantic for validation and supports both JSON serialization
         and integration with LangGraph for distributed game systems. All tile
         operations maintain game rule consistency and strategic context.
+
     """
 
     players: list[str] = Field(
@@ -242,6 +243,7 @@ class DominoesState(GameState):
 
         Returns:
             Optional[int]: Value that can be matched on left end, None if board empty.
+
         """
         if not self.board:
             return None
@@ -254,6 +256,7 @@ class DominoesState(GameState):
 
         Returns:
             Optional[int]: Value that can be matched on right end, None if board empty.
+
         """
         if not self.board:
             return None
@@ -266,6 +269,7 @@ class DominoesState(GameState):
 
         Returns:
             str: Visual representation of the domino train with connecting lines.
+
         """
         if not self.board:
             return "Empty board"
@@ -294,8 +298,7 @@ class DominoesState(GameState):
     @computed_field
     @property
     def total_tiles_in_play(self) -> int:
-        """Get the total number of tiles currently in players' hands and on
-        board."""
+        """Get the total number of tiles currently in players' hands and on board."""
         hand_tiles = sum(len(hand) for hand in self.hands.values())
         board_tiles = len(self.board)
         return hand_tiles + board_tiles
@@ -410,6 +413,7 @@ class DominoesState(GameState):
 
         Returns:
             DominoesState: A new game state ready to play.
+
         """
         if player_names is None:
             player_names = ["player1", "player2"]

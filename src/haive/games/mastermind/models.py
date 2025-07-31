@@ -70,6 +70,7 @@ Examples:
 
 The models provide comprehensive validation, strategic context, and integration
 with AI decision-making systems for optimal gameplay experience.
+
 """
 
 from typing import Literal
@@ -98,6 +99,7 @@ Examples:
             if color not in valid_colors:
                 raise ValueError(f"Invalid color: {color}")
             return color  # type: ignore
+
 """
 
 
@@ -155,6 +157,7 @@ class ColorCode(BaseModel):
         The code is typically hidden from the codebreaker during gameplay,
         only revealed through feedback from guesses. Direct access to the
         code should be restricted to game management and validation functions.
+
     """
 
     code: list[ValidColor] = Field(
@@ -231,6 +234,7 @@ class MastermindGuess(BaseModel):
         Good guessing strategy involves balancing information gathering
         (using diverse colors) with hypothesis testing (focusing on
         likely solutions based on previous feedback).
+
     """
 
     colors: list[ValidColor] = Field(
@@ -251,6 +255,7 @@ class MastermindGuess(BaseModel):
 
                 guess = MastermindGuess(colors=["red", "blue", "green", "yellow"], player="player1")
                 print(guess)  # "player1 guesses: red, blue, green, yellow"
+
         """
         return f"{self.player} guesses: {', '.join(self.colors)}"
 
@@ -311,6 +316,7 @@ class MastermindFeedback(BaseModel):
         The sum of correct_position and correct_color should never exceed 4,
         as there are only 4 positions in the code. The feedback provides
         information about colors, not individual pegs.
+
     """
 
     correct_position: int = Field(
@@ -334,6 +340,7 @@ class MastermindFeedback(BaseModel):
 
                 feedback = MastermindFeedback(correct_position=2, correct_color=1)
                 print(feedback)  # "🌟 Correct position: 2, 🔄 Correct color: 1"
+
         """
         return f"🌟 Correct position: {self.correct_position}, 🔄 Correct color: {
             self.correct_color
@@ -353,6 +360,7 @@ class MastermindFeedback(BaseModel):
 
                 partial_feedback = MastermindFeedback(correct_position=3, correct_color=1)
                 assert partial_feedback.is_winning() == False
+
         """
         return self.correct_position == 4
 
@@ -360,11 +368,11 @@ class MastermindFeedback(BaseModel):
 class MastermindAnalysis(BaseModel):
     """Analysis of a Mastermind position.
 
-    This class defines the structure of an analysis for a Mastermind
-    position, which includes the estimated number of possible
-    combinations left, the colors with high probability of being in the
-    solution, the recommended next guess, the colors likely eliminated,
-    and the fixed positions.
+    This class defines the structure of an analysis for a Mastermind position, which
+    includes the estimated number of possible combinations left, the colors with high
+    probability of being in the solution, the recommended next guess, the colors likely
+    eliminated, and the fixed positions.
+
     """
 
     possible_combinations: int = Field(

@@ -19,6 +19,7 @@ Example:
     from mafia.example import run_mafia_game
     run_mafia_game(player_count=7, max_days=3, debug=True)
     ```
+
 """
 
 # Standard library imports
@@ -68,6 +69,7 @@ def run_mafia_game(
     Raises:
         ValueError: If player_count is less than 4.
         Exception: If game setup or execution fails.
+
     """
     logger.info("🎭 Setting up Mafia Game")
     logger.info("=" * 60)

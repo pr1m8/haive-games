@@ -4,6 +4,7 @@ This module provides prompt templates for various game actions in Battleship, in
     - Ship placement
     - Move selection
     - Strategic analysis
+
 """
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,6 +18,7 @@ def generate_ship_placement_prompt(player: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate for ship placement decisions
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -68,6 +70,7 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate for move selection
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -119,6 +122,7 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate for strategic analysis
+
     """
     return ChatPromptTemplate.from_messages(
         [

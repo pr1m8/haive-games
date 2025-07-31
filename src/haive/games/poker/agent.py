@@ -5,6 +5,7 @@ This module implements a robust poker agent with improved:
 - Comprehensive logging and debugging
 - Error handling and retry policies for invalid moves
 - Enhanced prompts for LLM decisions
+
 """
 
 # Standard library imports
@@ -47,14 +48,14 @@ class RetryConfiguration:
 
 @register_agent(PokerAgentConfig)
 class PokerAgent(Agent[PokerAgentConfig]):
-    """Enhanced agent class for managing a multi-player Texas Hold'em poker
-    game.
+    """Enhanced agent class for managing a multi-player Texas Hold'em poker game.
 
     Key improvements:
     - Proper structured output handling
     - Comprehensive debug logging
     - Retry policies for failed operations
     - Enhanced prompts and decision handling
+
     """
 
     def __init__(self, config: PokerAgentConfig = PokerAgentConfig()):
@@ -73,8 +74,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
         logger.info(f"Agent initialized with {len(self.config.player_names)} players")
 
     def _setup_agent_runnables(self) -> None:
-        """Set up LLM runnables for all players with improved error
-        handling."""
+        """Set up LLM runnables for all players with improved error handling."""
         logger.debug("Setting up agent runnables")
 
         try:
@@ -153,8 +153,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
             raise
 
     def setup_workflow(self):
-        """Set up the poker game workflow graph with enhanced error
-        handling."""
+        """Set up the poker game workflow graph with enhanced error handling."""
         logger.info("Setting up poker game workflow")
 
         try:
@@ -262,8 +261,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
             return state
 
     def setup_hand(self, state: PokerState) -> PokerState:
-        """Set up a new poker hand with enhanced error handling and
-        debugging."""
+        """Set up a new poker hand with enhanced error handling and debugging."""
         logger.info(f"Setting up hand #{self.hands_played + 1}")
 
         try:
@@ -320,6 +318,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
         3. Gets decision from the player agent
         4. Validates and applies the decision
         5. Updates game state
+
         """
         game = state.game
 
@@ -462,8 +461,7 @@ class PokerAgent(Agent[PokerAgentConfig]):
     def _get_player_decision_with_retry(
         self, runnable, messages, context, legal_actions, max_retries=3
     ):
-        """Get player decision with retry logic for handling invalid
-        outputs."""
+        """Get player decision with retry logic for handling invalid outputs."""
         decision = None
         retries = 0
 

@@ -1,8 +1,8 @@
-"""Configurable FoxAndGeese configuration using the generic player agent
-system.
+"""Configurable FoxAndGeese configuration using the generic player agent system.
 
-This module provides configurable FoxAndGeese game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable FoxAndGeese game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -35,6 +35,7 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
         enable_analysis: Whether to enable strategic analysis
         visualize_game: Whether to visualize game state
         recursion_limit: Python recursion limit for game execution
+
     """
 
     fox_model: str | None = Field(default=None, description="Model for fox")
@@ -142,8 +143,7 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
 def create_fox_and_geese_config(
     fox_model: str = "gpt-4o", geese_model: str = "claude-3-5-sonnet-20240620", **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration with simple model
-    specifications.
+    """Create a configurable FoxAndGeese configuration with simple model specifications.
 
     Args:
         fox_model: Model for fox and analyzer
@@ -160,6 +160,7 @@ def create_fox_and_geese_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     enable_analysis=True
         ... )
+
     """
     return ConfigurableFoxAndGeeseConfig(
         fox_model=fox_model, geese_model=geese_model, **kwargs
@@ -169,8 +170,7 @@ def create_fox_and_geese_config(
 def create_fox_and_geese_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration from a predefined
-    example.
+    """Create a configurable FoxAndGeese configuration from a predefined example.
 
     Args:
         example_name: Name of the example configuration
@@ -190,6 +190,7 @@ def create_fox_and_geese_config_from_example(
     Example:
         >>> config = create_fox_and_geese_config_from_example("budget", enable_analysis=False)
         >>> config = create_fox_and_geese_config_from_example("advanced", visualize_game=True)
+
     """
     return ConfigurableFoxAndGeeseConfig(example_config=example_name, **kwargs)
 
@@ -237,6 +238,7 @@ def create_fox_and_geese_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_fox_and_geese_config_from_player_configs(player_configs)
+
     """
     return ConfigurableFoxAndGeeseConfig(player_configs=player_configs, **kwargs)
 
@@ -255,8 +257,7 @@ def create_advanced_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseCon
 
 
 def create_experimental_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseConfig:
-    """Create an experimental FoxAndGeese configuration with mixed
-    providers."""
+    """Create an experimental FoxAndGeese configuration with mixed providers."""
     return create_fox_and_geese_config_from_example("mixed", **kwargs)
 
 
@@ -293,6 +294,7 @@ def get_example_config(name: str) -> ConfigurableFoxAndGeeseConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -306,6 +308,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

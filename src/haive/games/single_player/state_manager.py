@@ -19,6 +19,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
         generate_hint: Generate a hint for the current game state
         check_game_status: Check and update the game status
         interactive_input: Process interactive input from the player
+
     """
 
     @classmethod
@@ -37,6 +38,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             A new game state
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -50,6 +52,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Updated game state
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -62,6 +65,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Tuple of (updated state, hint text)
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)
@@ -83,6 +87,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Updated game state with status checked
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -95,6 +100,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             List of legal moves
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -111,6 +117,7 @@ class SinglePlayerStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Updated game state
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)

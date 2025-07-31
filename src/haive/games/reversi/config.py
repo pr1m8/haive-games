@@ -1,7 +1,8 @@
 """Configuration model for the Reversi (Othello) game agent.
 
-Defines game metadata, initial settings, and engine bindings used to
-drive the game loop and decision-making by language models.
+Defines game metadata, initial settings, and engine bindings used to drive the game loop
+and decision-making by language models.
+
 """
 
 from typing import Literal
@@ -26,6 +27,7 @@ class ReversiConfig(GameConfig):
         first_player (Literal['B', 'W']): Symbol of the player who starts (Black or White).
         player_B (Literal['player1', 'player2']): Who controls the Black pieces.
         player_W (Literal['player1', 'player2']): Who controls the White pieces.
+
     """
 
     name: str = Field(default="reversi", description="Name of the game")
@@ -55,6 +57,7 @@ class ReversiConfig(GameConfig):
 
         Returns:
             ReversiConfig: An instance with standard engine bindings and player layout.
+
         """
         return cls(
             name="reversi",

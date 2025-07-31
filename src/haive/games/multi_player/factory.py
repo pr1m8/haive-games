@@ -18,6 +18,7 @@ Example:
     ...         "black": {"move": black_llm_config}
     ...     }
     ... )
+
 """
 
 from collections.abc import Callable
@@ -55,6 +56,7 @@ class MultiPlayerGameFactory:
         ...         "detective": {"investigate": detective_config}
         ...     }
         ... )
+
     """
 
     @staticmethod
@@ -99,6 +101,7 @@ class MultiPlayerGameFactory:
             ...         "get_piece_moves": my_move_generator
             ...     }
             ... )
+
         """
         # Create agent config class
         config_class = type(

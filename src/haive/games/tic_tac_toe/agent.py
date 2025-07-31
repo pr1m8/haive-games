@@ -44,6 +44,7 @@ Examples:
 Note:
     The agent uses LangGraph for workflow management and supports
     concurrent execution with proper state reducers.
+
 """
 
 import logging
@@ -66,8 +67,7 @@ logger = logging.getLogger(__name__)
 
 @register_agent(TicTacToeConfig)
 class TicTacToeAgent(GameAgent[TicTacToeConfig]):
-    """Strategic agent for Tic Tac Toe gameplay with LLM-driven decision-
-    making.
+    """Strategic agent for Tic Tac Toe gameplay with LLM-driven decision- making.
 
     This agent manages the complete Tic Tac Toe game lifecycle, from initialization
     through gameplay to completion. It coordinates LLM engines for move generation
@@ -109,6 +109,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
             config = TicTacToeConfig.competitive_config()
             agent = TicTacToeAgent(config)
             # Fast gameplay without visualization
+
     """
 
     def __init__(self, config: TicTacToeConfig = TicTacToeConfig()):
@@ -134,6 +135,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                     visualize=True
                 )
                 agent = TicTacToeAgent(config)
+
         """
         self.state_manager = TicTacToeStateManager
         super().__init__(config)
@@ -161,6 +163,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 agent.config.first_player = "O"
                 command = agent.initialize_game({})
                 # Returns Command with O to play first
+
         """
         logger.debug("initialize_game called")
 
@@ -223,6 +226,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
                 context = agent.prepare_move_context(mid_game_state)
                 # Includes previous analysis if available
+
         """
         legal_moves = self.state_manager.get_legal_moves(state)
         formatted_legal_moves = ", ".join(
@@ -273,6 +277,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 #     'player_symbol': 'X',
                 #     'opponent_symbol': 'O'
                 # }
+
         """
         return {
             "board_string": state.board_string,
@@ -312,6 +317,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 agent.config.enable_analysis = True
                 command = agent.make_move(state)
                 # Returns Command with goto="analyze"
+
         """
         logger.debug("make_move called", extra={"state_type": type(state).__name__})
 
@@ -430,6 +436,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 state.game_status = "X_win"
                 command = agent.analyze_position(state)
                 # Returns Command with goto=END
+
         """
         logger.debug("analyze_position called")
 
@@ -521,6 +528,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
 
                 agent.visualize_state(final_state)
                 # Shows final board with winner
+
         """
         if not self.config.visualize:
             return
@@ -576,6 +584,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 agent.config.enable_analysis = False
                 agent.setup_workflow()
                 # Skips analyze node in practice
+
         """
         builder = DynamicGraph(state_schema=self.state_schema)
 
@@ -633,6 +642,7 @@ class TicTacToeAgent(GameAgent[TicTacToeConfig]):
                 agent = TicTacToeAgent(config)
                 result = agent.run_game(visualize=False, debug=False)
                 # Optimized for performance
+
         """
         initial_state = TicTacToeStateManager.initialize(
             first_player=self.config.first_player,

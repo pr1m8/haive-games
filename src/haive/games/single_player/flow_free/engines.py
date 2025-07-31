@@ -1,7 +1,8 @@
 """Prompt generation and engine configuration for Flow Free.
 
-This module defines prompt templates and LLM configurations for move
-generation and position analysis in the Flow Free game.
+This module defines prompt templates and LLM configurations for move generation and
+position analysis in the Flow Free game.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -16,6 +17,7 @@ def generate_move_prompt() -> ChatPromptTemplate:
 
     Returns:
         A prompt template for move generation.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -61,6 +63,7 @@ def generate_analysis_prompt() -> ChatPromptTemplate:
 
     Returns:
         A prompt template for position analysis.
+
     """
     return ChatPromptTemplate.from_messages(
         [

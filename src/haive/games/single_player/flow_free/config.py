@@ -1,7 +1,8 @@
 """Configuration for Flow Free game agent.
 
-This module defines the configuration for the Flow Free game agent,
-including player type, game mode, and difficulty settings.
+This module defines the configuration for the Flow Free game agent, including player
+type, game mode, and difficulty settings.
+
 """
 
 from pydantic import Field
@@ -31,6 +32,7 @@ class FlowFreeConfig(SinglePlayerGameConfig):
         cols: Number of columns in the grid.
         num_flows: Number of flows to include. If None, determined by difficulty.
         engines: Configurations for game LLMs.
+
     """
 
     name: str = Field(default="flow_free", description="Name of the game agent")
@@ -64,6 +66,7 @@ class FlowFreeConfig(SinglePlayerGameConfig):
 
         Returns:
             FlowFreeConfig: An instance of the default game configuration.
+
         """
         return cls(
             name="flow_free",
@@ -85,6 +88,7 @@ class FlowFreeConfig(SinglePlayerGameConfig):
 
         Returns:
             FlowFreeConfig: An instance of the easy game configuration.
+
         """
         return cls(
             name="flow_free_easy",
@@ -106,6 +110,7 @@ class FlowFreeConfig(SinglePlayerGameConfig):
 
         Returns:
             FlowFreeConfig: An instance of the interactive game configuration.
+
         """
         return cls(
             name="flow_free_interactive",

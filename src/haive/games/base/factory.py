@@ -23,6 +23,7 @@ Typical usage:
     - Use create_game_agent to generate new game agent classes
     - Use create_standard_workflow to set up game workflows
     - Customize agents with analysis, custom nodes, and edges
+
 """
 
 from collections.abc import Callable
@@ -71,6 +72,7 @@ class GameAgentFactory:
         >>>
         >>> # Create an instance with custom config
         >>> agent = chess_agent(ChessConfig())
+
     """
 
     @staticmethod
@@ -119,6 +121,7 @@ class GameAgentFactory:
             ...         "player2": player2_config
             ...     }
             ... )
+
         """
         # Create agent config class
         config_class = type(
@@ -274,6 +277,7 @@ class GameAgentFactory:
             ...     graph,
             ...     enable_analysis=True
             ... )
+
         """
         # Set up the workflow based on whether analysis is enabled
         if enable_analysis:

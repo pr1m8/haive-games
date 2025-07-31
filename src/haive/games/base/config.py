@@ -14,6 +14,7 @@ Typical usage:
     - Inherit from GameConfig to create game-specific configurations
     - Override default values to customize game behavior
     - Use as configuration for game agents
+
 """
 
 from haive.core.engine.agent.agent import AgentConfig
@@ -43,6 +44,7 @@ class GameConfig(AgentConfig):
         ...         "player2": player2_engine
         ...     }
         ...     enable_analysis: bool = True
+
     """
 
     state_schema: type[GameState] = Field(

@@ -9,6 +9,7 @@ The state manager is responsible for:
     - Move validation and application
     - Game state filtering for information hiding
     - Win condition checking
+
 """
 
 import random
@@ -45,6 +46,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     Note:
         This class is designed to be used statically, with all methods being
         class methods that take and return game states.
+
     """
 
     @classmethod
@@ -63,6 +65,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             Updated game state with new phase and relevant changes
+
         """
         # Create a deep copy of the state to avoid modifying the original
         new_state = state.model_copy(deep=True)
@@ -223,6 +226,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             Updated state with night actions resolved
+
         """
         new_state = state.model_copy(deep=True)
 
@@ -281,6 +285,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Raises:
             ValueError: If critical game state fields are missing
+
         """
         logger.debug(f"Handling phase transition for state: {state.game_phase}")
 
@@ -345,6 +350,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             Updated game state after applying the move
+
         """
         # Create a copy of state
         new_state = state.model_copy(deep=True)
@@ -442,6 +448,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Raises:
             ValueError: If there aren't enough players (minimum 4)
+
         """
         # Ensure player_names is a non-None iterable
         if player_names is None:
@@ -600,6 +607,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             List of legal moves (MafiaAction or NarratorAction)
+
         """
         legal_moves: list[MafiaAction | NarratorAction] = []
 
@@ -749,6 +757,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             Updated state with game status and winner if game is over
+
         """
         new_state = state.model_copy(deep=True)
 
@@ -778,8 +787,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
     def filter_state_for_player(
         cls, state: MafiaGameState, player_id: str
     ) -> dict[str, Any]:
-        """Filter the state to include only information visible to a specific
-        player.
+        """Filter the state to include only information visible to a specific player.
 
         This method implements information hiding, ensuring players only see
         information they should have access to based on their role and the
@@ -791,6 +799,7 @@ class MafiaStateManager(MultiPlayerGameStateManager[MafiaGameState]):
 
         Returns:
             Filtered state containing only visible information
+
         """
         # Create a filtered copy of the state
         filtered_state: dict[str, Any] = {}

@@ -49,6 +49,7 @@ Note:
     All configuration classes inherit from AgentConfig and include automatic
     engine setup through the build_debate_engines factory function.
     Custom engine configurations can be provided to override defaults.
+
 """
 
 from haive.core.engine.agent.agent import AgentConfig
@@ -60,8 +61,7 @@ from haive.games.debate.state import DebateState
 
 
 class DebateAgentConfig(AgentConfig):
-    """Comprehensive configuration for debate agents with format-specific
-    settings.
+    """Comprehensive configuration for debate agents with format-specific settings.
 
     This configuration class provides extensive customization options for debate
     agents, supporting various debate formats, role assignments, timing controls,
@@ -149,6 +149,7 @@ class DebateAgentConfig(AgentConfig):
         The configuration automatically sets up appropriate engines for each role
         using the build_debate_engines factory. Custom engines can be provided
         to override defaults for specific use cases or to add specialized capabilities.
+
     """
 
     debate_format: str = Field(
@@ -235,6 +236,7 @@ class DebateAgentConfig(AgentConfig):
 
         Raises:
             ValueError: If format is not supported.
+
         """
         supported_formats = {
             "standard",
@@ -265,6 +267,7 @@ class DebateAgentConfig(AgentConfig):
 
         Raises:
             ValueError: If role assignments are invalid.
+
         """
         valid_roles = {
             "pro",

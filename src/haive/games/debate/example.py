@@ -22,6 +22,7 @@ def run_debate(
         max_rounds: Number of argument rounds
         num_debaters: Number of debaters
         num_judges: Number of judges
+
     """
     print(f"Setting up debate on: {topic}")
     print(f"Rounds: {max_rounds}")
@@ -84,6 +85,7 @@ def run_trial_debate(case_title: str, case_facts: str, charges: str):
         case_title: Title of the case
         case_facts: Facts of the case
         charges: Charges against the defendant
+
     """
     # Create a trial-specific description
     description = f"""
@@ -115,6 +117,7 @@ def run_policy_debate(policy: str, context: str = ""):
     Args:
         policy: The policy to debate
         context: Context about the policy
+
     """
     description = f"""
 This is a policy debate on the following proposal:

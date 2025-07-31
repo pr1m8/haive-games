@@ -75,6 +75,7 @@ class NimVariant(str, Enum):
         FIBONACCI: Fibonacci Nim (can only take 1 or 2 stones)
         KAYLES: Kayles variant (splitting piles allowed)
         SUBTRACTION: Subtraction game (limited move set)
+
     """
 
     STANDARD = "standard"
@@ -95,6 +96,7 @@ class PositionType(str, Enum):
         COMPLEX: Complex midgame position (3+ piles)
         CRITICAL: Critical position requiring precise calculation
         TRIVIAL: Trivial position with obvious moves
+
     """
 
     SIMPLE = "simple"
@@ -104,8 +106,7 @@ class PositionType(str, Enum):
 
 
 class NimMove(BaseModel):
-    r"""Comprehensive representation of a Nim move with strategic context and
-    validation.
+    r"""Comprehensive representation of a Nim move with strategic context and validation.
 
     This model provides complete representation of Nim moves, supporting both
     basic gameplay and advanced strategic analysis. It includes validation for
@@ -184,6 +185,7 @@ class NimMove(BaseModel):
     Note:
         Move validation should be performed by the game state manager to ensure
         moves comply with Nim rules and current pile configurations.
+
     """
 
     pile_index: int = Field(
@@ -259,6 +261,7 @@ class NimMove(BaseModel):
 
         Raises:
             ValueError: If alternative moves are malformed.
+
         """
         for move in v:
             if not isinstance(move, dict):
@@ -280,6 +283,7 @@ class NimMove(BaseModel):
 
         Returns:
             str: Move in algebraic notation format (e.g., "P0-3" for pile 0, take 3).
+
         """
         return f"P{self.pile_index}-{self.stones_taken}"
 
@@ -290,6 +294,7 @@ class NimMove(BaseModel):
 
         Returns:
             bool: True if move includes reasoning or quality assessment.
+
         """
         return self.reasoning is not None or self.move_quality is not None
 
@@ -312,6 +317,7 @@ class NimMove(BaseModel):
                     move_quality="optimal"
                 )
                 print(str(move))  # Output: "AI takes 2 stones from pile 1 (optimal)"
+
         """
         base_str = f"{self.player} takes {self.stones_taken} stones from pile {
             self.pile_index
@@ -322,8 +328,7 @@ class NimMove(BaseModel):
 
 
 class NimAnalysis(BaseModel):
-    r"""Advanced strategic analysis model for Nim positions with mathematical
-    rigor.
+    r"""Advanced strategic analysis model for Nim positions with mathematical rigor.
 
     This model provides comprehensive analysis of Nim positions using game theory,
     nimber theory, and optimal play strategies. It supports advanced AI decision-making
@@ -409,6 +414,7 @@ class NimAnalysis(BaseModel):
     Note:
         This model provides structured analysis output for strategic decision-making
         and supports both human-readable explanations and automated analysis systems.
+
     """
 
     nim_sum: int = Field(
@@ -492,6 +498,7 @@ class NimAnalysis(BaseModel):
 
         Returns:
             bool: True if position is winning, False otherwise.
+
         """
         return self.position_evaluation == "winning"
 
@@ -502,6 +509,7 @@ class NimAnalysis(BaseModel):
 
         Returns:
             Literal: Confidence level based on position complexity and proof strength.
+
         """
         if self.mathematical_proof and self.position_complexity in [
             PositionType.SIMPLE,
@@ -520,6 +528,7 @@ class NimAnalysis(BaseModel):
 
         Returns:
             Dict[str, Union[str, int, bool]]: Key strategic insights and metrics.
+
         """
         return {
             "nim_sum": self.nim_sum,
@@ -549,6 +558,7 @@ class NimAnalysis(BaseModel):
                 analysis = NimAnalysis(mathematical_proof="By Sprague-Grundy theorem...")
                 print(str(analysis))
                 # Output: "Analysis: losing position (nim-sum: 0) - Mathematical proof available"
+
         """
         proof_indicator = (
             " - Mathematical proof available" if self.mathematical_proof else ""

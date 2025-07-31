@@ -12,6 +12,7 @@ Typical usage:
     - Use run_game to execute a complete game with an agent
     - Provide optional initial state to continue from a specific point
     - Monitor game progress through visualization and status updates
+
 """
 
 from typing import Any
@@ -43,6 +44,7 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
         - The function will print game progress to the console
         - Game visualization depends on the agent's visualize_state method
         - Game history will be saved using the agent's save_state_history method
+
     """
     # Use provided initial state or create a default one
     game_state = initial_state or {}

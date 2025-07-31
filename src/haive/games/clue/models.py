@@ -1,5 +1,5 @@
-"""Comprehensive data models and enumerations for the Clue (Cluedo) mystery
-game implementation.
+"""Comprehensive data models and enumerations for the Clue (Cluedo) mystery game
+implementation.
 
 This module defines the core data structures, enumerations, and models used
 throughout the Clue game implementation. It includes the traditional game
@@ -85,6 +85,7 @@ The models are designed to be immutable where possible and include comprehensive
 validation to ensure game rules are properly enforced throughout the implementation.
 All models support serialization to dictionaries for persistence and network
 communication.
+
 """
 
 from dataclasses import dataclass, field
@@ -130,6 +131,7 @@ class ValidSuspect(Enum):
                 ValidWeapon.CANDLESTICK,
                 ValidRoom.LIBRARY
             )
+
     """
 
     COLONEL_MUSTARD = "Colonel Mustard"
@@ -178,6 +180,7 @@ class ValidWeapon(Enum):
                 ValidWeapon.KNIFE,
                 ValidRoom.KITCHEN
             )
+
     """
 
     KNIFE = "Knife"
@@ -229,6 +232,7 @@ class ValidRoom(Enum):
                 ValidWeapon.REVOLVER,
                 ValidRoom.LIBRARY
             )
+
     """
 
     KITCHEN = "Kitchen"
@@ -270,6 +274,7 @@ class CardType(Enum):
             # Filter cards by type
             suspect_cards = [card for card in all_cards
                            if card.card_type == CardType.SUSPECT]
+
     """
 
     SUSPECT = "Suspect"
@@ -314,6 +319,7 @@ class ClueCard:
             # Check if player has a specific card
             if card.name == "Colonel Mustard" and card.card_type == CardType.SUSPECT:
                 print("Player has Colonel Mustard suspect card!")
+
     """
 
     name: str  # The name of the card (e.g., "Colonel Mustard")
@@ -335,6 +341,7 @@ class ClueCard:
                 card = ClueCard.from_suspect(ValidSuspect.COLONEL_MUSTARD)
                 assert card.name == "Colonel Mustard"
                 assert card.card_type == CardType.SUSPECT
+
         """
         return ClueCard(name=suspect.value, card_type=CardType.SUSPECT)
 
@@ -354,6 +361,7 @@ class ClueCard:
                 card = ClueCard.from_weapon(ValidWeapon.KNIFE)
                 assert card.name == "Knife"
                 assert card.card_type == CardType.WEAPON
+
         """
         return ClueCard(name=weapon.value, card_type=CardType.WEAPON)
 
@@ -373,6 +381,7 @@ class ClueCard:
                 card = ClueCard.from_room(ValidRoom.KITCHEN)
                 assert card.name == "Kitchen"
                 assert card.card_type == CardType.ROOM
+
         """
         return ClueCard(name=room.value, card_type=CardType.ROOM)
 
@@ -388,6 +397,7 @@ class ClueCard:
                 card = ClueCard.from_suspect(ValidSuspect.COLONEL_MUSTARD)
                 card_dict = card.to_dict()
                 # Returns: {"name": "Colonel Mustard", "card_type": "Suspect"}
+
         """
         return {"name": self.name, "card_type": self.card_type.value}
 
@@ -439,6 +449,7 @@ class ClueSolution:
                 solution.weapon == player_accusation[1] and
                 solution.room == player_accusation[2]
             )
+
     """
 
     suspect: ValidSuspect
@@ -465,6 +476,7 @@ class ClueSolution:
                 #     "weapon": "Knife",
                 #     "room": "Kitchen"
                 # }
+
         """
         return {
             "suspect": self.suspect.value,
@@ -518,6 +530,7 @@ class ClueGuess:
                 guess1.weapon == guess2.weapon and
                 guess1.room == guess2.room
             )
+
     """
 
     suspect: ValidSuspect
@@ -544,6 +557,7 @@ class ClueGuess:
                 #     "weapon": "Candlestick",
                 #     "room": "Library"
                 # }
+
         """
         return {
             "suspect": self.suspect.value,
@@ -603,6 +617,7 @@ class ClueResponse:
             #     "responding_player": "Alice",
             #     "refuting_card": {"name": "Colonel Mustard", "card_type": "Suspect"}
             # }
+
     """
 
     is_correct: bool  # True if the guess matched the solution
@@ -631,6 +646,7 @@ class ClueResponse:
                 #     "responding_player": "Alice",
                 #     "refuting_card": {"name": "Colonel Mustard", "card_type": "Suspect"}
                 # }
+
         """
         result = {
             "is_correct": self.is_correct,
@@ -701,6 +717,7 @@ class ClueHypothesis:
                     weapon=hypothesis.prime_weapon,
                     room=hypothesis.prime_room
                 )
+
     """
 
     # Primary suspects
@@ -747,6 +764,7 @@ class ClueHypothesis:
                 #     "excluded_rooms": [],
                 #     "reasoning": "Based on elimination"
                 # }
+
         """
         return {
             "prime_suspect": self.prime_suspect.value if self.prime_suspect else None,
@@ -798,6 +816,7 @@ class GameStatus(Enum):
             status = GameStatus.IN_PROGRESS
             status_str = str(status)  # Returns "IN_PROGRESS"
             status_name = status.value  # Returns "IN_PROGRESS"
+
     """
 
     NOT_STARTED = "NOT_STARTED"
@@ -815,5 +834,6 @@ class GameStatus(Enum):
 
                 status = GameStatus.IN_PROGRESS
                 print(f"Current status: {status}")  # "Current status: IN_PROGRESS"
+
         """
         return self.value

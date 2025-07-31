@@ -82,8 +82,7 @@ class FlowPipe(FlowPiece):
     connected_directions: set[PipeDirection] = Field(default_factory=set)
 
     def can_move_to(self, position: GridPosition, board: FlowBoard) -> bool:
-        """Check if this pipe segment can be placed at the specified
-        position."""
+        """Check if this pipe segment can be placed at the specified position."""
         # Get the target space
         space = board.get_space_at_position(position)
         if not space:

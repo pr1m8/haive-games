@@ -20,6 +20,7 @@ Example:
     ...         "narrator": {"narrate": narrator_llm_config}
     ...     }
     ... )
+
 """
 
 from haive.core.engine.agent.agent import AgentConfig
@@ -58,6 +59,7 @@ class MultiPlayerGameConfig(AgentConfig):
         ...     },
         ...     initial_player_count=4
         ... )
+
     """
 
     state_schema: type[MultiPlayerGameState] = Field(

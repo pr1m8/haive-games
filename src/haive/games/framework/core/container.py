@@ -16,8 +16,9 @@ T = TypeVar("T", bound=GamePiece)
 class GamePieceContainer(BaseModel, Generic[T]):
     """Base container for game pieces.
 
-    This represents a collection of game pieces like a deck of cards, a
-    bag of tiles, or a player's hand.
+    This represents a collection of game pieces like a deck of cards, a bag of tiles, or
+    a player's hand.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -34,6 +35,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
         Args:
             piece: The piece to add
             position: Where to add the piece ("top", "bottom", or "random")
+
         """
         if position == "top":
             self.pieces.insert(0, piece)
@@ -53,6 +55,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             The removed piece, or None if not found
+
         """
         for i, piece in enumerate(self.pieces):
             if piece.id == piece_id:

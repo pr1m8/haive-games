@@ -1,8 +1,8 @@
 """Example of running chess with configurable LLMs.
 
-This example demonstrates how to run chess games with different LLM
-providers and models, showing the flexibility of the new configuration
-system.
+This example demonstrates how to run chess games with different LLM providers and
+models, showing the flexibility of the new configuration system.
+
 """
 
 import traceback
@@ -38,6 +38,7 @@ def run_chess_with_custom_llms(
         black_model: Model for black (uses default if None)
         max_moves: Maximum moves before draw
         enable_analysis: Whether to enable position analysis
+
     """
     thread_id = f"chess_{uuid.uuid4().hex[:8]}"
     print(f"🎮 Starting chess game with thread_id: {thread_id}")

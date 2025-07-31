@@ -12,6 +12,7 @@ Example:
     >>> if current_phase == GamePhase.MAIN:
     ...     # Handle main game phase
     ...     pass
+
 """
 
 from enum import Enum
@@ -37,6 +38,7 @@ class GamePhase(str, Enum):
         ...     pass
         >>> # Check if game is over
         >>> is_game_over = phase == GamePhase.END
+
     """
 
     SETUP = "setup"

@@ -5,6 +5,7 @@ This module provides improved prompt templates for the poker agent that:
 2. Include more detailed game context and examples
 3. Provide clear instruction on legal moves
 4. Have better formatting for readability by LLMs
+
 """
 
 from langchain_core.prompts import (

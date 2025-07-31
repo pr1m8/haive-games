@@ -1,7 +1,8 @@
 """Rich UI for displaying a live Monopoly game.
 
-This module provides a beautiful terminal interface for watching
-Monopoly games unfold in real-time using Rich.
+This module provides a beautiful terminal interface for watching Monopoly games unfold
+in real-time using Rich.
+
 """
 
 import time
@@ -294,6 +295,7 @@ class MonopolyRichUI:
         Args:
             agent: The Monopoly agent to run
             delay: Delay between updates for readability
+
         """
         # Get initial state
         initial_state = agent.initial_state

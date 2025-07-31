@@ -18,6 +18,7 @@ Example:
     ...     round_number=1,
     ...     target_id="Player_2"
     ... )
+
 """
 
 from enum import Enum
@@ -39,6 +40,7 @@ class GamePhase(str, Enum):
         DAY_DISCUSSION: Day phase for open discussion
         DAY_VOTING: Voting phase to eliminate a player
         GAME_OVER: Game has ended
+
     """
 
     SETUP = "setup"
@@ -61,6 +63,7 @@ class PlayerRole(str, Enum):
         DETECTIVE: Can investigate one player's role each night
         DOCTOR: Can protect one player from death each night
         NARRATOR: Game master role that manages game flow
+
     """
 
     VILLAGER = "villager"
@@ -83,6 +86,7 @@ class ActionType(str, Enum):
         KILL: Mafia night action to eliminate a player
         INVESTIGATE: Detective night action to learn a player's role
         SAVE: Doctor night action to protect a player
+
     """
 
     SPEAK = "speak"  # Make a statement during discussion
@@ -112,6 +116,7 @@ class PlayerState(BaseModel):
         ...     role=PlayerRole.DETECTIVE,
         ...     known_roles={"Player_1": PlayerRole.DETECTIVE}
         ... )
+
     """
 
     player_id: str | None = None
@@ -146,6 +151,7 @@ class MafiaAction(BaseModel):
         ...     round_number=1,
         ...     target_id="Player_2"
         ... )
+
     """
 
     player_id: str
@@ -160,6 +166,7 @@ class MafiaAction(BaseModel):
 
         Returns:
             Dict[str, Any]: Dictionary representation of the action
+
         """
         return self.model_dump()
 
@@ -168,6 +175,7 @@ class MafiaAction(BaseModel):
 
         Returns:
             str: Description of the action
+
         """
         if self.action_type == ActionType.SPEAK:
             return f"{self.player_id} says: {self.message}"
@@ -203,6 +211,7 @@ class NarratorAction(BaseModel):
         ...     next_phase=GamePhase.NIGHT,
         ...     round_number=1
         ... )
+
     """
 
     announcement: str | None = None
@@ -220,6 +229,7 @@ class NarratorAction(BaseModel):
 
         Returns:
             Optional[str]: String value of the phase or None
+
         """
         return next_phase.value if next_phase else None
 
@@ -231,6 +241,7 @@ class NarratorAction(BaseModel):
 
         Returns:
             str: Description of the narrator action
+
         """
         return (
             f"Narrator: {self.announcement}"
@@ -255,6 +266,7 @@ class MafiaPlayerDecision(BaseModel):
         ...     action=MafiaAction(...),
         ...     reasoning="Player seems suspicious based on voting pattern"
         ... )
+
     """
 
     action: MafiaAction
@@ -279,6 +291,7 @@ class NarratorDecision(BaseModel):
         ...     action=NarratorAction(...),
         ...     reasoning="All players have completed their night actions"
         ... )
+
     """
 
     action: NarratorAction
@@ -307,6 +320,7 @@ class MafiaPlayerDecisionSchema(BaseModel):
         ...     target_id="Player_2",
         ...     reasoning="Suspicious behavior during discussion"
         ... )
+
     """
 
     action_type: str = Field(
@@ -371,6 +385,7 @@ class NarratorDecisionSchema(BaseModel):
         ...     phase_transition=True,
         ...     reasoning="All players have completed their day actions."
         ... )
+
     """
 
     announcement: str | None = Field(

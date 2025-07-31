@@ -1,7 +1,8 @@
 """Configurable Hold'em configuration using the generic player agent system.
 
-This module provides configurable Texas Hold'em game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Texas Hold'em game configurations that replace
+hardcoded LLM settings with dynamic, configurable player agents.
+
 """
 
 import logging
@@ -37,6 +38,7 @@ class ConfigurableHoldemConfig(HoldemGameAgentConfig):
         enable_analysis: Whether to enable strategic analysis
         heads_up_mode: Whether this is heads-up play
         recursion_limit: Python recursion limit for game execution
+
     """
 
     player1_model: str | None = Field(default=None, description="Model for player 1")
@@ -148,8 +150,7 @@ def create_holdem_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableHoldemConfig:
-    """Create a configurable Hold'em configuration with simple model
-    specifications.
+    """Create a configurable Hold'em configuration with simple model specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -166,6 +167,7 @@ def create_holdem_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     heads_up_mode=True
         ... )
+
     """
     return ConfigurableHoldemConfig(
         player1_model=player1_model, player2_model=player2_model, **kwargs
@@ -196,6 +198,7 @@ def create_holdem_config_from_example(
     Example:
         >>> config = create_holdem_config_from_example("budget", temperature=0.3)
         >>> config = create_holdem_config_from_example("poker_pros", heads_up_mode=True)
+
     """
     return ConfigurableHoldemConfig(example_config=example_name, **kwargs)
 
@@ -203,8 +206,7 @@ def create_holdem_config_from_example(
 def create_holdem_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableHoldemConfig:
-    """Create a configurable Hold'em configuration from detailed player
-    configurations.
+    """Create a configurable Hold'em configuration from detailed player configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -243,6 +245,7 @@ def create_holdem_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_holdem_config_from_player_configs(player_configs)
+
     """
     return ConfigurableHoldemConfig(player_configs=player_configs, **kwargs)
 
@@ -256,8 +259,7 @@ def create_budget_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
 
 
 def create_poker_pro_holdem_config(**kwargs) -> ConfigurableHoldemConfig:
-    """Create a poker professional-style Hold'em configuration with powerful
-    models."""
+    """Create a poker professional-style Hold'em configuration with powerful models."""
     return create_holdem_config_from_example("poker_pros", **kwargs)
 
 
@@ -308,6 +310,7 @@ def get_example_config(name: str) -> ConfigurableHoldemConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -321,6 +324,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

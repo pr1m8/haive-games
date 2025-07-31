@@ -1,7 +1,8 @@
 """Mancala game agent.
 
-This module defines the Mancala game agent, which uses language models
-to generate moves and analyze positions in the game.
+This module defines the Mancala game agent, which uses language models to generate moves
+and analyze positions in the game.
+
 """
 
 import json
@@ -34,6 +35,7 @@ def ensure_game_state(
 
     Returns:
         MancalaState: Properly typed game state.
+
     """
     if isinstance(state_input, MancalaState):
         return state_input
@@ -58,6 +60,7 @@ def extract_data_from_response(
 
     Returns:
         Extracted data dictionary or None.
+
     """
     # If it's already a dict with the expected fields
     if isinstance(response, dict) and (
@@ -106,6 +109,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
         config: Configuration for the Mancala game.
         graph_builder: Dynamic graph builder for game flow.
         state_manager: Manager for game state transitions.
+
     """
 
     def __init__(self, config: MancalaConfig) -> None:
@@ -113,6 +117,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Args:
             config: Configuration for the Mancala game.
+
         """
         super().__init__(config)
         self.state_manager = MancalaStateManager()
@@ -136,6 +141,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             DynamicGraph configured for Mancala gameplay.
+
         """
         graph_builder = DynamicGraph(state_schema=MancalaState)
 
@@ -179,6 +185,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Simplified DynamicGraph for basic gameplay.
+
         """
         graph_builder = DynamicGraph(state_schema=MancalaState)
         graph_builder.set_entry_point("play")
@@ -194,6 +201,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state as dictionary.
+
         """
         state_obj = ensure_game_state(state)
         if state_obj.game_status == "ended":
@@ -216,6 +224,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state as dictionary.
+
         """
         state_obj = ensure_game_state(state)
         if state_obj.is_game_over():
@@ -231,6 +240,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state after player 1's move as dictionary.
+
         """
         state_obj = ensure_game_state(state)
         result_state = self.make_move(state_obj, "player1")
@@ -244,6 +254,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state after player 2's move as dictionary.
+
         """
         state_obj = ensure_game_state(state)
         result_state = self.make_move(state_obj, "player2")
@@ -262,6 +273,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state after the move.
+
         """
         state = ensure_game_state(state)
         valid_moves = state.get_valid_moves(player)
@@ -324,6 +336,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Dictionary with prompt data for the LLM.
+
         """
         return {
             "board_state": state.display_board(),
@@ -344,6 +357,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Updated game state.
+
         """
         try:
             # Apply the move using state manager
@@ -370,6 +384,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             State with analysis added.
+
         """
         engine = self.engines.get(player)
         if not engine:
@@ -406,6 +421,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             The final game state as a dictionary.
+
         """
         try:
             if not hasattr(self, "_app") or self._app is None:

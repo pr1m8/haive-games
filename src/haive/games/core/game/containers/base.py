@@ -1,7 +1,8 @@
 """Container models for game pieces in the game framework.
 
-This module defines containers for game pieces like decks of cards, bags
-of tiles, and player hands.
+This module defines containers for game pieces like decks of cards, bags of tiles, and
+player hands.
+
 """
 
 from __future__ import annotations
@@ -21,8 +22,9 @@ T = TypeVar("T", bound=GamePiece)
 class GamePieceContainer(BaseModel, Generic[T]):
     """Base container for game pieces.
 
-    This represents a collection of game pieces like a deck of cards, a
-    bag of tiles, or a player's hand.
+    This represents a collection of game pieces like a deck of cards, a bag of tiles, or
+    a player's hand.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -42,6 +44,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Raises:
             ValueError: If position is not valid
+
         """
         if position == "top":
             self.pieces.insert(0, piece)
@@ -61,6 +64,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             The removed piece, or None if not found
+
         """
         for i, piece in enumerate(self.pieces):
             if piece.id == piece_id:
@@ -72,6 +76,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             Number of pieces in the container
+
         """
         return len(self.pieces)
 
@@ -80,6 +85,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             True if the container is empty, False otherwise
+
         """
         return len(self.pieces) == 0
 
@@ -95,6 +101,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             List of pieces from the top
+
         """
         return self.pieces[: min(count, len(self.pieces))]
 
@@ -103,6 +110,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             The top piece, or None if container is empty
+
         """
         if not self.pieces:
             return None
@@ -116,6 +124,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             List of drawn pieces
+
         """
         result = []
         for _ in range(min(count, len(self.pieces))):
@@ -130,6 +139,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             The first matching piece, or None if not found
+
         """
         for piece in self.pieces:
             if predicate(piece):
@@ -144,6 +154,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             List of pieces matching the predicate
+
         """
         return [piece for piece in self.pieces if predicate(piece)]
 
@@ -157,6 +168,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
         Args:
             key: Property name
             value: Property value
+
         """
         self.properties[key] = value
 
@@ -169,6 +181,7 @@ class GamePieceContainer(BaseModel, Generic[T]):
 
         Returns:
             Property value or default
+
         """
         return self.properties.get(key, default)
 
@@ -179,19 +192,19 @@ C = TypeVar("C", bound=Card)
 class Deck(GamePieceContainer[C]):
     """A deck of cards.
 
-    This represents a collection of cards that can be drawn, shuffled,
-    and dealt.
+    This represents a collection of cards that can be drawn, shuffled, and dealt.
+
     """
 
     face_down: bool = True  # Whether cards are hidden by default
     discard_pile: list[C] = Field(default_factory=list)
 
     def draw(self) -> C | None:
-        """Draw the top card and set its face up/down based on deck
-        configuration.
+        """Draw the top card and set its face up/down based on deck configuration.
 
         Returns:
             The drawn card, or None if deck is empty
+
         """
         if not self.pieces:
             return None
@@ -208,6 +221,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of lists, where each inner list contains a player's cards
+
         """
         hands = [[] for _ in range(num_players)]
         for _i in range(cards_per_player):
@@ -223,6 +237,7 @@ class Deck(GamePieceContainer[C]):
 
         Args:
             card: Card to discard
+
         """
         self.discard_pile.append(card)
 
@@ -231,6 +246,7 @@ class Deck(GamePieceContainer[C]):
 
         Args:
             shuffle: Whether to shuffle the deck after recycling
+
         """
         self.pieces.extend(self.discard_pile)
         self.discard_pile.clear()
@@ -245,6 +261,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of cards from the top
+
         """
         return self.peek(count)
 
@@ -256,6 +273,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of cards from the bottom
+
         """
         return self.pieces[-count:] if count <= len(self.pieces) else self.pieces.copy()
 
@@ -264,6 +282,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             The bottom card, or None if deck is empty
+
         """
         if not self.pieces:
             return None
@@ -275,8 +294,9 @@ class Deck(GamePieceContainer[C]):
 class PlayerHand(GamePieceContainer[T]):
     """A player's hand of pieces.
 
-    This represents the collection of pieces a player holds, such as
-    cards in a card game or tiles in Scrabble.
+    This represents the collection of pieces a player holds, such as cards in a card
+    game or tiles in Scrabble.
+
     """
 
     player_id: str
@@ -286,6 +306,7 @@ class PlayerHand(GamePieceContainer[T]):
 
         Args:
             piece: The piece to add
+
         """
         piece.assign_to_player(self.player_id)
         self.pieces.append(piece)
@@ -298,6 +319,7 @@ class PlayerHand(GamePieceContainer[T]):
 
         Returns:
             The played piece, or None if not found
+
         """
         return self.remove(piece_id)
 
@@ -309,6 +331,7 @@ class PlayerHand(GamePieceContainer[T]):
 
         Returns:
             List of played pieces
+
         """
         result = []
         for piece_id in piece_ids:

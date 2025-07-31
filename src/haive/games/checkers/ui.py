@@ -11,6 +11,7 @@ This module provides a rich text-based UI for the checkers game, including:
 
 The UI uses the rich library to create a visually appealing terminal interface
 that makes the game more engaging and easier to follow.
+
 """
 
 import time
@@ -65,13 +66,15 @@ class CheckersUI:
         >>> # Display a move
         >>> move = CheckersMove(from_position="a3", to_position="b4", player="red")
         >>> ui.show_move(move)
+
     """
 
     def __init__(self):
         """Initialize the checkers UI.
 
-        Sets up the console, layout, color schemes, piece symbols, and
-        tracking variables for the UI.
+        Sets up the console, layout, color schemes, piece symbols, and tracking
+        variables for the UI.
+
         """
         self.console = Console()
         self.layout = Layout()
@@ -117,6 +120,7 @@ class CheckersUI:
         - Footer: Status messages and controls
         - Left sidebar: Game info and captured pieces
         - Right sidebar: Analysis and move history
+
         """
         self.layout.split_column(
             Layout(name="header", size=3),
@@ -155,6 +159,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel containing the board visualization
+
         """
         board_lines = []
 
@@ -244,6 +249,7 @@ class CheckersUI:
             - 2: Red king
             - 3: Black piece
             - 4: Black king
+
         """
         if piece_value == 0:
             return self.pieces["empty"]
@@ -291,6 +297,7 @@ class CheckersUI:
             (0, 0)
             >>> ui._notation_to_index("h1")
             (7, 7)
+
         """
         col = ord(notation[0]) - 97
         row = 8 - int(notation[1])
@@ -306,6 +313,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel for the header
+
         """
         current_player = state.turn.upper()
         player_color = self.colors[f"player_{state.turn}"]
@@ -350,6 +358,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel with game information
+
         """
         table = Table(show_header=False, box=None, padding=0)
         table.add_column(style="bold cyan")
@@ -411,6 +420,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel showing captured pieces
+
         """
         captured_text = Text()
 
@@ -465,6 +475,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel with position analysis
+
         """
         analysis_text = Text()
 
@@ -519,6 +530,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled panel with move history
+
         """
         # Use a table for better formatting
         if not state.move_history:
@@ -582,6 +594,7 @@ class CheckersUI:
 
         Returns:
             Panel: A styled footer panel
+
         """
         footer_text = Text()
 
@@ -615,6 +628,7 @@ class CheckersUI:
             >>>
             >>> # Display with a custom message
             >>> ui.display_state(state, "Red is thinking...")
+
         """
         # Get last move if available
         last_move = state.move_history[-1] if state.move_history else None
@@ -646,6 +660,7 @@ class CheckersUI:
         Examples:
             >>> ui = CheckersUI()
             >>> ui.show_thinking("red")  # Shows a spinner for red's thinking
+
         """
         with Progress(
             SpinnerColumn(),
@@ -673,6 +688,7 @@ class CheckersUI:
             >>> ui = CheckersUI()
             >>> move = CheckersMove(from_position="a3", to_position="b4", player="red")
             >>> ui.show_move(move)  # Shows move message
+
         """
         move_text = Text()
         move_text.append("➜ ", style="bold green")
@@ -699,6 +715,7 @@ class CheckersUI:
             >>> ui = CheckersUI()
             >>> state = CheckersState(game_status="game_over", winner="red")
             >>> ui.show_game_over(state)  # Shows "RED WINS!" message
+
         """
         if state.winner:
             # Create a much more impressive game over screen

@@ -1,7 +1,8 @@
 """State manager for Flow Free game logic and mechanics.
 
-This module handles game initialization, move validation, and state
-transitions for the Flow Free puzzle game.
+This module handles game initialization, move validation, and state transitions for the
+Flow Free puzzle game.
+
 """
 
 import random
@@ -82,6 +83,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             A new Flow Free game state.
+
         """
         # Determine board size and flows based on difficulty
         if difficulty == GameDifficulty.EASY:
@@ -158,6 +160,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             List of all legal moves.
+
         """
         legal_moves = []
 
@@ -191,6 +194,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             List of potential positions.
+
         """
         flow = state.flows.get(flow_id)
         if not flow:
@@ -240,6 +244,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Create a copy of the state
         new_state = state.model_copy(deep=True)
@@ -345,6 +350,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             Direction of the pipe.
+
         """
         if prev_pos.row < curr_pos.row:
             return PipeDirection.DOWN
@@ -368,6 +374,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             True if the flow is completed, False otherwise.
+
         """
         # If we already know it's completed
         if flow.completed:
@@ -412,6 +419,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             Updated game state with status checked.
+
         """
         # Create a copy of the state
         new_state = state.model_copy(deep=True)
@@ -439,6 +447,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             Tuple of (updated state, hint text).
+
         """
         # Create a copy of the state
         new_state = state.model_copy(deep=True)
@@ -492,6 +501,7 @@ class FlowFreeStateManager(SinglePlayerStateManager[FlowFreeState]):
 
         Returns:
             Updated game state.
+
         """
         # Handle common commands first
         new_state = super().interactive_input(state, user_input)

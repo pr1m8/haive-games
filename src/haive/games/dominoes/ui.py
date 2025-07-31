@@ -1,7 +1,7 @@
 """Rich UI module for Dominoes game visualization.
 
-This module provides rich console UI components for visualizing the
-Dominoes game.
+This module provides rich console UI components for visualizing the Dominoes game.
+
 """
 
 import logging
@@ -28,6 +28,7 @@ class DominoesUI:
 
         Args:
             console: Optional Rich console instance
+
         """
         self.console = console or Console()
 
@@ -39,6 +40,7 @@ class DominoesUI:
 
         Returns:
             DominoesState instance or None if extraction fails
+
         """
         try:
             # Handle None input gracefully
@@ -183,6 +185,7 @@ class DominoesUI:
 
         Returns:
             True if the dict appears to be a valid game state
+
         """
         required_fields = {
             "players",
@@ -202,6 +205,7 @@ class DominoesUI:
 
         Returns:
             Rich panel representing the board
+
         """
         if not game_state.board:
             board_text = Text("🀱 Empty Board - Play the first tile! 🀱", style="yellow")
@@ -252,6 +256,7 @@ class DominoesUI:
 
         Returns:
             Rich panel with player's hand
+
         """
         hand = game_state.hands[player]
 
@@ -315,6 +320,7 @@ class DominoesUI:
 
         Returns:
             Rich panel with game info
+
         """
         # Current player indicator
         current_player = f"🎮 {game_state.turn}'s Turn"
@@ -362,6 +368,7 @@ class DominoesUI:
 
         Returns:
             Rich panel with last move info
+
         """
         if not game_state.move_history:
             last_move_text = "[dim]No moves yet[/dim]"
@@ -399,6 +406,7 @@ class DominoesUI:
 
         Returns:
             Rich panel with analysis info
+
         """
         analysis_text = ""
 
@@ -434,6 +442,7 @@ class DominoesUI:
 
         Returns:
             Complete rich layout
+
         """
         # Create layout
         layout = Layout()
@@ -493,6 +502,7 @@ class DominoesUI:
 
         Returns:
             True if display was successful, False otherwise
+
         """
         try:
             game_state = self.extract_game_state(state_data)
@@ -538,6 +548,7 @@ The game will be played by AI agents with real-time visualization!
 
         Args:
             final_state: Final game state
+
         """
         try:
             game_state = self.extract_game_state(final_state)
@@ -589,6 +600,7 @@ The game will be played by AI agents with real-time visualization!
         Args:
             state_data: State data to debug
             context: Context string for debugging
+
         """
         logger.debug(f"=== DEBUG INFO {context} ===")
         logger.debug(f"State type: {type(state_data)}")

@@ -32,6 +32,7 @@ class BlackjackStateManager:
 
         Returns:
             Initialized game state
+
         """
         # Create deck and players
         deck = cls.create_deck()
@@ -57,6 +58,7 @@ class BlackjackStateManager:
 
         Returns:
             Updated game state
+
         """
         new_state = copy.deepcopy(state)
         player = new_state.players[player_index]
@@ -83,6 +85,7 @@ class BlackjackStateManager:
 
         Returns:
             Updated game state with initial cards dealt
+
         """
         new_state = copy.deepcopy(state)
 
@@ -115,6 +118,7 @@ class BlackjackStateManager:
 
         Returns:
             Tuple of current player and current hand
+
         """
         player = state.players[state.current_player_index]
         current_hand = player.hands[state.current_hand_index]
@@ -132,6 +136,7 @@ class BlackjackStateManager:
 
         Returns:
             Updated game state
+
         """
         new_state = copy.deepcopy(state)
         player, current_hand = cls.get_current_player_and_hand(new_state)
@@ -208,6 +213,7 @@ class BlackjackStateManager:
 
         Args:
             state: Current game state
+
         """
         player = state.players[state.current_player_index]
 
@@ -237,6 +243,7 @@ class BlackjackStateManager:
 
         Returns:
             Final game state with results
+
         """
         new_state = copy.deepcopy(state)
 
@@ -262,6 +269,7 @@ class BlackjackStateManager:
 
         Returns:
             Final game state with results
+
         """
         dealer_total = sum(card.point_value() for card in state.dealer_hand)
         dealer_bust = dealer_total > 21
@@ -306,6 +314,7 @@ class BlackjackStateManager:
 
         Returns:
             Reset game state
+
         """
         new_state = cls.initialize_game(len(state.players))
 

@@ -1,7 +1,8 @@
 """Configurable Battleship configuration using the generic player agent system.
 
-This module provides configurable Battleship game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Battleship game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ConfigurableBattleshipConfig(BattleshipAgentConfig):
         enable_analysis: Whether to enable strategic analysis
         visualize_board: Whether to visualize game boards
         recursion_limit: Python recursion limit for game execution
+
     """
 
     player1_model: str | None = Field(default=None, description="Model for player 1")
@@ -153,8 +155,7 @@ def create_battleship_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration with simple model
-    specifications.
+    """Create a configurable Battleship configuration with simple model specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -171,6 +172,7 @@ def create_battleship_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     enable_analysis=True
         ... )
+
     """
     return ConfigurableBattleshipConfig(
         player1_model=player1_model,
@@ -183,8 +185,7 @@ def create_battleship_config_from_example(
     example_name: str,
     **kwargs,
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration from a predefined
-    example.
+    """Create a configurable Battleship configuration from a predefined example.
 
     Args:
         example_name: Name of the example configuration
@@ -204,6 +205,7 @@ def create_battleship_config_from_example(
     Example:
         >>> config = create_battleship_config_from_example("budget", enable_analysis=False)
         >>> config = create_battleship_config_from_example("naval_commanders", visualize_board=True)
+
     """
     return ConfigurableBattleshipConfig(example_config=example_name, **kwargs)
 
@@ -252,6 +254,7 @@ def create_battleship_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_battleship_config_from_player_configs(player_configs)
+
     """
     return ConfigurableBattleshipConfig(player_configs=player_configs, **kwargs)
 
@@ -265,8 +268,7 @@ def create_budget_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
 
 
 def create_naval_battleship_config(**kwargs) -> ConfigurableBattleshipConfig:
-    """Create a naval commander-style Battleship configuration with powerful
-    models."""
+    """Create a naval commander-style Battleship configuration with powerful models."""
     return create_battleship_config_from_example("naval_commanders", **kwargs)
 
 
@@ -308,6 +310,7 @@ def get_example_config(name: str) -> ConfigurableBattleshipConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -321,6 +324,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

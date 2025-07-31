@@ -1,7 +1,8 @@
 """Configurable Monopoly configuration using the generic player agent system.
 
-This module provides configurable Monopoly game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Monopoly game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -35,6 +36,7 @@ class ConfigurableMonopolyConfig(MonopolyGameAgentConfig):
         enable_trading: Whether to enable property trading
         enable_building: Whether to enable house/hotel building
         recursion_limit: Python recursion limit for game execution
+
     """
 
     player1_model: str | None = Field(default=None, description="Model for player 1")
@@ -158,8 +160,7 @@ def create_monopoly_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMonopolyConfig:
-    """Create a configurable Monopoly configuration with simple model
-    specifications.
+    """Create a configurable Monopoly configuration with simple model specifications.
 
     Args:
         player1_model: Model for player 1 and analyzer
@@ -176,6 +177,7 @@ def create_monopoly_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     enable_trading=True
         ... )
+
     """
     return ConfigurableMonopolyConfig(
         player1_model=player1_model, player2_model=player2_model, **kwargs
@@ -206,6 +208,7 @@ def create_monopoly_config_from_example(
     Example:
         >>> config = create_monopoly_config_from_example("budget", enable_trading=False)
         >>> config = create_monopoly_config_from_example("real_estate_moguls", enable_building=True)
+
     """
     return ConfigurableMonopolyConfig(example_config=example_name, **kwargs)
 
@@ -213,8 +216,7 @@ def create_monopoly_config_from_example(
 def create_monopoly_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMonopolyConfig:
-    """Create a configurable Monopoly configuration from detailed player
-    configurations.
+    """Create a configurable Monopoly configuration from detailed player configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -253,6 +255,7 @@ def create_monopoly_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_monopoly_config_from_player_configs(player_configs)
+
     """
     return ConfigurableMonopolyConfig(player_configs=player_configs, **kwargs)
 
@@ -266,9 +269,7 @@ def create_budget_monopoly_config(**kwargs) -> ConfigurableMonopolyConfig:
 
 
 def create_real_estate_mogul_monopoly_config(**kwargs) -> ConfigurableMonopolyConfig:
-    """Create a real estate mogul-style Monopoly configuration with powerful
-    models.
-    """
+    """Create a real estate mogul-style Monopoly configuration with powerful models."""
     return create_monopoly_config_from_example("real_estate_moguls", **kwargs)
 
 
@@ -319,6 +320,7 @@ def get_example_config(name: str) -> ConfigurableMonopolyConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -332,6 +334,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

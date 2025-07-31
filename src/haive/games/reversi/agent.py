@@ -18,25 +18,25 @@ class ReversiAgent(GameAgent[ReversiConfig]):
     """Agent for playing Reversi/Othello."""
 
     def __init__(self, config: ReversiConfig = ReversiConfig()):
-        """Initialize the Reversi agent with game configuration and state
-        manager.
+        """Initialize the Reversi agent with game configuration and state manager.
 
         Args:
             config (ReversiConfig): Configuration object defining player settings,
                 engines, first player, visualization preference, and analysis options.
+
         """
         self.state_manager = ReversiStateManager
         super().__init__(config)
 
     def initialize_game(self, state: dict[str, Any]) -> Command:
-        """Initialize a new Reversi game by constructing the initial game
-        state.
+        """Initialize a new Reversi game by constructing the initial game state.
 
         Args:
             state (Dict[str, Any]): Placeholder for incoming LangGraph state (not used directly).
 
         Returns:
             Command: Command containing the serialized initial ReversiState.
+
         """
         game_state = self.state_manager.initialize(
             first_player=self.config.first_player,
@@ -60,6 +60,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
         Returns:
             Dict[str, Any]: A dictionary containing the board string, legal move list,
                             current player turn, and the player's last analysis (if any).
+
         """
         # Format legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
@@ -95,8 +96,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
     def prepare_analysis_context(
         self, state: ReversiState, symbol: str
     ) -> dict[str, Any]:
-        """Prepare the prompt context for board analysis by the strategy
-        engine.
+        """Prepare the prompt context for board analysis by the strategy engine.
 
         Args:
             state (ReversiState): The current game state.
@@ -109,6 +109,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
                 - color labels
                 - legal moves
                 - current disc counts
+
         """
         # Format legal moves
         legal_moves = self.state_manager.get_legal_moves(state)
@@ -141,6 +142,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             ReversiMove: The move selected by the engine.
+
         """
         # The response should already be a ReversiMove object
         return response
@@ -153,6 +155,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             Command: Command containing the updated ReversiState.
+
         """
         if state.turn != "B" or state.game_status != "ongoing":
             return Command(
@@ -203,6 +206,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             Command: Command containing the updated ReversiState.
+
         """
         if state.turn != "W" or state.game_status != "ongoing":
             return Command(
@@ -253,6 +257,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             Command: Command containing the updated ReversiState.
+
         """
         if not self.config.enable_analysis or state.game_status != "ongoing":
             return Command(
@@ -292,6 +297,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             Command: Command containing the updated ReversiState.
+
         """
         if not self.config.enable_analysis or state.game_status != "ongoing":
             return Command(
@@ -331,6 +337,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             None
+
         """
         if not self.config.visualize:
             return
@@ -427,6 +434,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             None
+
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)
@@ -467,6 +475,7 @@ class ReversiAgent(GameAgent[ReversiConfig]):
 
         Returns:
             Final game state
+
         """
         # Create an empty input state to start the game
         input_state = ReversiStateManager.initialize()

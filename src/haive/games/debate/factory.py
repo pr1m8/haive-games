@@ -22,6 +22,7 @@ class DebateFactory:
 
         Returns:
             DebateAgent: Configured presidential debate agent
+
         """
         # Create config
         config = DebateAgentConfig.presidential()
@@ -73,6 +74,7 @@ class DebateFactory:
 
         Returns:
             DebateAgent: Configured trial debate agent
+
         """
         # Create config
         config = DebateAgentConfig.trial()
@@ -104,6 +106,7 @@ class DebateFactory:
 
         Returns:
             DebateAgent: Configured panel discussion agent
+
         """
         # Create config
         config = DebateAgentConfig.panel_discussion()
@@ -156,6 +159,7 @@ class DebateFactory:
 
         Returns:
             DebateAgent: Configured prisoner's dilemma agent
+
         """
         # Create custom config
         config = DebateAgentConfig(

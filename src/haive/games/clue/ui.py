@@ -29,6 +29,7 @@ Example:
     >>>     room=ValidRoom.KITCHEN
     >>> )
     >>> ui.show_guess(guess, "player1")
+
 """
 
 import time
@@ -75,6 +76,7 @@ class ClueUI:
         >>> ui = ClueUI()
         >>> state = ClueState.initialize()
         >>> ui.display_state(state)  # Display the initial game state
+
     """
 
     def __init__(self):
@@ -148,6 +150,7 @@ class ClueUI:
 
         Returns:
             Panel: Styled header panel
+
         """
         title = Text("🕵️ CLUE DETECTIVE GAME 🕵️", style=self.colors["header"])
 
@@ -185,6 +188,7 @@ class ClueUI:
 
         Returns:
             Panel: Suspects panel
+
         """
         suspects_table = Table(
             show_header=True,
@@ -230,6 +234,7 @@ class ClueUI:
 
         Returns:
             Panel: Weapons panel
+
         """
         weapons_table = Table(
             show_header=True,
@@ -276,6 +281,7 @@ class ClueUI:
 
         Returns:
             Panel: Rooms panel
+
         """
         rooms_table = Table(
             show_header=True,
@@ -321,6 +327,7 @@ class ClueUI:
 
         Returns:
             Panel: Guess history panel
+
         """
         if not state.guesses:
             return Panel(
@@ -395,6 +402,7 @@ class ClueUI:
 
         Returns:
             Panel: Game information panel
+
         """
         info_table = Table(
             show_header=False,
@@ -470,6 +478,7 @@ class ClueUI:
 
         Returns:
             Panel: Player cards panel
+
         """
         cards_table = Table(
             show_header=True,
@@ -532,6 +541,7 @@ class ClueUI:
 
         Returns:
             Panel: Deductions panel
+
         """
         if not state.player1_hypotheses and not state.player2_hypotheses:
             return Panel(
@@ -603,6 +613,7 @@ class ClueUI:
             >>> ui = ClueUI()
             >>> state = ClueState.initialize()
             >>> ui.display_state(state)
+
         """
         # Convert dict to ClueState if needed
         if isinstance(state, dict):
@@ -638,6 +649,7 @@ class ClueUI:
         Example:
             >>> ui = ClueUI()
             >>> ui.show_thinking("player1", "Analyzing clues...")
+
         """
         player_color = self.colors[player]
 
@@ -671,6 +683,7 @@ class ClueUI:
             ...     room=ValidRoom.KITCHEN
             ... )
             >>> ui.show_guess(guess, "player1")
+
         """
         player_color = self.colors[player]
 
@@ -709,6 +722,7 @@ class ClueUI:
             ...     refuting_card=ClueCard(name="Knife", card_type=CardType.WEAPON)
             ... )
             >>> ui.show_response(response, "player1")
+
         """
         player_color = self.colors[player]
 
@@ -778,6 +792,7 @@ class ClueUI:
             >>> state.game_status = "player1_win"
             >>> state.winner = "player1"
             >>> ui.show_game_over(state)
+
         """
         # Get the clean string values from enum values or handle as is
         suspect_value = (

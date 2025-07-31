@@ -22,8 +22,9 @@ class TurnPhase(str, Enum):
 class Turn(BaseModel, Generic[M]):
     """Represents a player's turn in a game.
 
-    A turn tracks who is active, what phase the turn is in, and what
-    moves have been made.
+    A turn tracks who is active, what phase the turn is in, and what moves have been
+    made.
+
     """
 
     player_id: str
@@ -37,6 +38,7 @@ class Turn(BaseModel, Generic[M]):
 
         Args:
             move: The move that was made
+
         """
         self.moves.append(move)
 
@@ -49,6 +51,7 @@ class Turn(BaseModel, Generic[M]):
 
         Args:
             phase: The phase to set
+
         """
         self.phase = phase
 
@@ -57,6 +60,7 @@ class Turn(BaseModel, Generic[M]):
 
         Returns:
             The new phase
+
         """
         phases = list(TurnPhase)
         current_index = phases.index(self.phase)

@@ -8,7 +8,6 @@ from haive.games.battleship.models import (
     PlayerBoard,
     ShipPlacement,
 )
-
 r"""Comprehensive state management system for Battleship game mechanics and
 player tracking.
 
@@ -60,8 +59,7 @@ Note:
 
 
 class PlayerState(BaseModel):
-    r"""Comprehensive state model for individual player tracking and strategic
-    analysis.
+    r"""Comprehensive state model for individual player tracking and strategic analysis.
 
     This class maintains complete state information for a single player in the
     Battleship game, including their board configuration, ship placements, attack
@@ -122,6 +120,7 @@ class PlayerState(BaseModel):
     Note:
         Player state is designed to be serializable and thread-safe, supporting
         both local gameplay and distributed game systems.
+
     """
 
     board: PlayerBoard = Field(
@@ -146,8 +145,7 @@ class PlayerState(BaseModel):
 
 
 class BattleshipState(BaseModel):
-    r"""Comprehensive state model for managing complete Battleship game
-    sessions.
+    r"""Comprehensive state model for managing complete Battleship game sessions.
 
     This class provides complete state management for Battleship games, supporting
     turn-based gameplay, phase transitions, strategic analysis, and secure state
@@ -240,6 +238,7 @@ class BattleshipState(BaseModel):
     Note:
         The state uses Pydantic annotations for LangGraph accumulation,
         enabling efficient state updates in distributed game systems.
+
     """
 
     # Player states - using Annotated for LangGraph accumulation
@@ -313,6 +312,7 @@ class BattleshipState(BaseModel):
                 player_state = state.get_player_state("player2")
                 player_state.strategic_analysis.append("Focus on quadrant C")
                 latest_analysis = player_state.strategic_analysis[-1]
+
         """
         if player == "player1":
             return self.player1_state
@@ -358,6 +358,7 @@ class BattleshipState(BaseModel):
 
                 # Analyze opponent's remaining ships
                 opponent_ships = opponent_state.board.sunk_ships
+
         """
         return "player2" if player == "player1" else "player1"
 
@@ -396,6 +397,7 @@ class BattleshipState(BaseModel):
                     if not state.player2_state.has_placed_ships:
                         players_needed.append("player2")
                     print(f"Waiting for ship placement: {players_needed}")
+
         """
         return (
             self.player1_state.has_placed_ships and self.player2_state.has_placed_ships
@@ -440,6 +442,7 @@ class BattleshipState(BaseModel):
                 # Game completed, display results
                 winner = state.winner
                 print(f"Game over! Winner: {winner}")
+
         """
         return (
             self.game_phase == GamePhase.ENDED
@@ -448,8 +451,7 @@ class BattleshipState(BaseModel):
         )
 
     def get_public_state_for_player(self, player: str) -> dict[str, Any]:
-        r"""Generate a secure public view of the game state for AI decision-
-        making.
+        r"""Generate a secure public view of the game state for AI decision- making.
 
         Creates a carefully sanitized view of the game state that provides all
         information a player should legitimately know while hiding opponent secrets
@@ -527,6 +529,7 @@ class BattleshipState(BaseModel):
             This method ensures information security by never exposing opponent
             ship positions or other private game state. All information provided
             is what the player would legitimately know during actual gameplay.
+
         """
         opponent = self.get_opponent(player)
         player_state = self.get_player_state(player)
@@ -582,6 +585,7 @@ class BattleshipState(BaseModel):
                 stats = state.game_statistics
                 print(f"Total moves: {stats['total_moves']}")
                 print(f"Game duration: {stats['game_phase']}")
+
         """
         total_moves = len(self.move_history)
 

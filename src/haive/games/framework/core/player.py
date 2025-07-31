@@ -18,8 +18,9 @@ S = TypeVar("S", bound=BaseModel)
 class Player(BaseModel, ABC):
     """Base class for all player types in games.
 
-    This is an abstract base class that defines the common interface for
-    all player types (human, AI, etc.).
+    This is an abstract base class that defines the common interface for all player
+    types (human, AI, etc.).
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -40,14 +41,16 @@ class Player(BaseModel, ABC):
 
         Returns:
             The chosen move, or None if no move chosen
+
         """
 
 
 class HumanPlayer(Player):
     """A human player that requires external input for moves.
 
-    Human players don't automatically generate moves; they receive them
-    through UI interactions.
+    Human players don't automatically generate moves; they receive them through UI
+    interactions.
+
     """
 
     def get_move(self, game_state: S, valid_moves: list[M]) -> M | None:
@@ -62,6 +65,7 @@ class HumanPlayer(Player):
 
         Returns:
             None (human players don't auto-generate moves)
+
         """
         # Human players don't auto-generate moves
         return None
@@ -74,6 +78,7 @@ class HumanPlayer(Player):
 
         Returns:
             The selected move
+
         """
         return move
 
@@ -82,6 +87,7 @@ class AIPlayer(Player, Generic[S, M]):
     """Base class for AI/computer-controlled players.
 
     AI players automatically generate moves based on the game state.
+
     """
 
     difficulty: str = "medium"  # easy, medium, hard
@@ -96,14 +102,16 @@ class AIPlayer(Player, Generic[S, M]):
 
         Returns:
             The chosen move, or None if no move chosen
+
         """
 
 
 class RandomAIPlayer(AIPlayer[S, M]):
     """An AI player that selects random valid moves.
 
-    This is the simplest form of AI player, useful for testing or for
-    games where random play is appropriate.
+    This is the simplest form of AI player, useful for testing or for games where random
+    play is appropriate.
+
     """
 
     def get_move(self, game_state: S, valid_moves: list[M]) -> M | None:
@@ -115,6 +123,7 @@ class RandomAIPlayer(AIPlayer[S, M]):
 
         Returns:
             A randomly selected valid move, or None if no valid moves
+
         """
 
         if not valid_moves:
@@ -126,6 +135,7 @@ class RuleBasedAIPlayer(AIPlayer[S, M]):
     """An AI player that follows predefined rules to select moves.
 
     Rule-based AIs use heuristics and decision trees to choose moves.
+
     """
 
     rules: list[dict[str, Any]] = Field(default_factory=list)
@@ -139,6 +149,7 @@ class RuleBasedAIPlayer(AIPlayer[S, M]):
 
         Returns:
             The chosen move, or None if no move chosen
+
         """
         # Subclasses should implement rule-based logic
         # Default implementation falls back to random
@@ -154,6 +165,7 @@ class RuleBasedAIPlayer(AIPlayer[S, M]):
             condition: When to apply this rule
             action: What to do when the condition is met
             priority: Rule priority (higher numbers take precedence)
+
         """
         self.rules.append(
             {"condition": condition, "action": action, "priority": priority}

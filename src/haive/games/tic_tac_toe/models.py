@@ -1,5 +1,4 @@
-"""Comprehensive data models for strategic Tic Tac Toe gameplay and positional
-analysis.
+"""Comprehensive data models for strategic Tic Tac Toe gameplay and positional analysis.
 
 This module provides sophisticated data models for the classic game of Tic Tac Toe,
 supporting both traditional gameplay and advanced strategic analysis. The models
@@ -53,6 +52,7 @@ Examples:
 Note:
     All models use Pydantic for validation and support both JSON serialization
     and integration with LLM-based strategic analysis systems for perfect play.
+
 """
 
 from typing import Literal
@@ -61,8 +61,8 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class TicTacToeMove(BaseModel):
-    """Comprehensive representation of a Tic Tac Toe move with validation and
-    game context.
+    """Comprehensive representation of a Tic Tac Toe move with validation and game
+    context.
 
     This model provides complete representation of moves in Tic Tac Toe, supporting
     both basic gameplay and advanced strategic analysis. It includes coordinate
@@ -110,6 +110,7 @@ class TicTacToeMove(BaseModel):
     Note:
         Moves are validated to ensure coordinates are within the 3x3 grid.
         The string representation provides human-readable move descriptions.
+
     """
 
     row: int = Field(
@@ -141,6 +142,7 @@ class TicTacToeMove(BaseModel):
 
         Returns:
             str: Position name like 'center', 'top-left corner', etc.
+
         """
         positions = [
             ["top-left corner", "top-center", "top-right corner"],
@@ -156,6 +158,7 @@ class TicTacToeMove(BaseModel):
 
         Returns:
             bool: True if the move is in a corner (strategic positions).
+
         """
         return (self.row, self.col) in [(0, 0), (0, 2), (2, 0), (2, 2)]
 
@@ -166,6 +169,7 @@ class TicTacToeMove(BaseModel):
 
         Returns:
             bool: True if the move is in the center (most valuable position).
+
         """
         return self.row == 1 and self.col == 1
 
@@ -176,6 +180,7 @@ class TicTacToeMove(BaseModel):
 
         Returns:
             bool: True if the move is on an edge (weakest positions).
+
         """
         return not self.is_corner and not self.is_center
 
@@ -193,6 +198,7 @@ class TicTacToeMove(BaseModel):
             >>> move = TicTacToeMove(row=0, col=0, player="O")
             >>> print(str(move))
             O places at (0, 0) - top-left corner
+
         """
         return (
             f"{self.player} places at ({self.row}, {self.col}) - {self.board_position}"
@@ -200,8 +206,8 @@ class TicTacToeMove(BaseModel):
 
 
 class TicTacToeAnalysis(BaseModel):
-    """Advanced strategic analysis model for Tic Tac Toe positions with game
-    theory insights.
+    """Advanced strategic analysis model for Tic Tac Toe positions with game theory
+    insights.
 
     This model provides comprehensive analysis of Tic Tac Toe positions using
     game theory principles, perfect play algorithms, and strategic heuristics.
@@ -303,6 +309,7 @@ class TicTacToeAnalysis(BaseModel):
     Note:
         This model provides the foundation for perfect Tic Tac Toe play.
         With optimal strategy, the game always ends in a draw.
+
     """
 
     winning_moves: list[dict[str, int]] = Field(
@@ -387,6 +394,7 @@ class TicTacToeAnalysis(BaseModel):
 
         Raises:
             ValueError: If coordinates are out of bounds.
+
         """
         for move in v:
             if "row" not in move or "col" not in move:
@@ -404,6 +412,7 @@ class TicTacToeAnalysis(BaseModel):
 
         Returns:
             bool: True if winning or blocking moves exist.
+
         """
         return len(self.winning_moves) > 0 or len(self.blocking_moves) > 0
 
@@ -414,6 +423,7 @@ class TicTacToeAnalysis(BaseModel):
 
         Returns:
             str: Threat level classification.
+
         """
         if self.winning_moves:
             return "critical-win"
@@ -431,6 +441,7 @@ class TicTacToeAnalysis(BaseModel):
 
         Returns:
             Dict[str, int]: Counts of different move types.
+
         """
         return {
             "winning": len(self.winning_moves),

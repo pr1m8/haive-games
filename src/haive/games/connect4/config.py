@@ -14,6 +14,7 @@ Example:
     ...     should_visualize_graph=True,
     ...     max_moves=42  # Maximum possible moves in Connect4
     ... )
+
 """
 
 from haive.core.engine.agent.agent import AgentConfig
@@ -50,6 +51,7 @@ class Connect4AgentConfig(AgentConfig):
         ...         "yellow_analyzer": yellow_analyzer_config,
         ...     }
         ... )
+
     """
 
     state_schema: type[BaseModel] = Field(default=Connect4State)
@@ -75,8 +77,8 @@ class Connect4AgentConfig(AgentConfig):
     class Config:
         """Pydantic configuration class.
 
-        This inner class configures Pydantic behavior for the
-        Connect4AgentConfig.
+        This inner class configures Pydantic behavior for the Connect4AgentConfig.
+
         """
 
         arbitrary_types_allowed = True

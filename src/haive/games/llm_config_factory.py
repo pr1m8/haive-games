@@ -1,8 +1,8 @@
 """Unified LLM configuration factory for games.
 
-This module provides a simplified factory for creating LLM
-configurations for game agents, leveraging the new haive.core.models.llm
-factory system.
+This module provides a simplified factory for creating LLM configurations for game
+agents, leveraging the new haive.core.models.llm factory system.
+
 """
 
 from typing import Any
@@ -27,9 +27,9 @@ def list_available_models() -> list:
 class GameLLMFactory:
     """Factory for creating game-specific LLM configurations.
 
-    This factory simplifies the process of creating LLM configurations
-    for games by providing game-optimized defaults and leveraging the
-    core LLM factory.
+    This factory simplifies the process of creating LLM configurations for games by
+    providing game-optimized defaults and leveraging the core LLM factory.
+
     """
 
     # Game-optimized temperature defaults
@@ -97,6 +97,7 @@ class GameLLMFactory:
             ...     temperature=0.5,
             ...     max_tokens=1000
             ... )
+
         """
         # Determine temperature based on game type
         if temperature is None:
@@ -149,6 +150,7 @@ class GameLLMFactory:
             ...     "anthropic:claude-3-opus",
             ...     "openai:gpt-4"
             ... )
+
         """
         player1_config = cls.create_llm_config(
             player1_model,
@@ -183,6 +185,7 @@ class GameLLMFactory:
             >>> # Get fast creative model
             >>> model = GameLLMFactory.get_recommended_model("creative", "fast")
             >>> print(model)  # "gpt-3.5-turbo"
+
         """
         recommendations = cls.GAME_RECOMMENDATIONS.get(
             game_type, cls.GAME_RECOMMENDATIONS["strategic"]
@@ -202,6 +205,7 @@ class GameLLMFactory:
         Examples:
             >>> models = GameLLMFactory.list_game_models("chess")
             >>> print(models["recommendations"])
+
         """
         # Get all available models from core
         all_models = list_available_models()

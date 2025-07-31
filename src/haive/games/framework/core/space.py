@@ -18,8 +18,9 @@ T = TypeVar("T", bound=GamePiece)
 class Space(BaseModel, Generic[P, T]):
     """A single space on a game board that can hold a piece.
 
-    Spaces are the fundamental units that make up a board. Each space
-    has a position and can optionally contain a game piece.
+    Spaces are the fundamental units that make up a board. Each space has a position and
+    can optionally contain a game piece.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -40,6 +41,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             True if the piece was placed successfully, False otherwise
+
         """
         if self.is_occupied():
             return False
@@ -53,6 +55,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             The removed piece, or None if there was no piece
+
         """
         piece = self.piece
         self.piece = None

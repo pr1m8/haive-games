@@ -47,6 +47,7 @@ Note:
     The agent maintains detailed analysis history for learning and strategic
     adaptation. Full LLM integration enables sophisticated reasoning about
     territorial strategy, army management, and diplomatic considerations.
+
 """
 
 from pydantic import BaseModel, Field, computed_field, field_validator
@@ -56,8 +57,7 @@ from haive.games.risk.state import RiskState
 
 
 class RiskAgent(BaseModel):
-    """Advanced AI agent for strategic Risk gameplay with sophisticated
-    decision-making.
+    """Advanced AI agent for strategic Risk gameplay with sophisticated decision-making.
 
     This agent employs multi-layered strategic analysis to excel at the classic Risk
     board game, combining territorial evaluation, military logistics, continental
@@ -134,6 +134,7 @@ class RiskAgent(BaseModel):
         The agent maintains state independence, allowing multiple agents to operate
         on different game states simultaneously. Strategic parameters can be adjusted
         dynamically for adaptive gameplay and experimental strategies.
+
     """
 
     name: str = Field(
@@ -205,6 +206,7 @@ class RiskAgent(BaseModel):
 
         Raises:
             ValueError: If strategy is not supported.
+
         """
         valid_strategies = {"aggressive", "defensive", "balanced", "diplomatic"}
         strategy_lower = v.lower().strip()
@@ -225,6 +227,7 @@ class RiskAgent(BaseModel):
 
         Raises:
             ValueError: If diplomatic stance is not supported.
+
         """
         valid_stances = {"aggressive", "neutral", "cooperative"}
         stance_lower = v.lower().strip()
@@ -287,6 +290,7 @@ class RiskAgent(BaseModel):
             Analysis complexity scales with game state complexity. Full LLM
             integration provides sophisticated reasoning about strategic priorities,
             diplomatic considerations, and tactical execution.
+
         """
         if not self.state:
             raise ValueError("Agent must have a state to analyze position")
@@ -334,8 +338,7 @@ class RiskAgent(BaseModel):
         )
 
     def get_move(self) -> RiskMove:
-        """Determine optimal next move through strategic analysis and decision-
-        making.
+        """Determine optimal next move through strategic analysis and decision- making.
 
         Performs comprehensive position analysis and selects the best move based on
         current game state, agent strategy, risk tolerance, and historical performance.
@@ -383,6 +386,7 @@ class RiskAgent(BaseModel):
             Move selection considers multiple factors including territorial security,
             expansion opportunities, continental bonuses, threat mitigation, and
             long-term strategic positioning.
+
         """
         if not self.state:
             raise ValueError("Agent must have a state to get a move")
@@ -409,6 +413,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             RiskMove: Strategic move recommendation optimized for current situation.
+
         """
         if not controlled_territories:
             # No territories controlled - shouldn't happen in normal gameplay
@@ -440,6 +445,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             RiskMove: Attack move targeting optimal expansion opportunity.
+
         """
         # Find territory with most armies for attacking
         strongest_territory = max(controlled_territories, key=lambda t: t.armies)
@@ -468,6 +474,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             RiskMove: Defensive move prioritizing territorial security.
+
         """
         # Find territory with fewest armies for reinforcement
         weakest_territory = min(controlled_territories, key=lambda t: t.armies)
@@ -483,8 +490,7 @@ class RiskAgent(BaseModel):
     def _generate_balanced_move(
         self, controlled_territories: list[Territory], position_evaluation: str
     ) -> RiskMove:
-        """Generate balanced move considering both offensive and defensive
-        needs.
+        """Generate balanced move considering both offensive and defensive needs.
 
         Args:
             controlled_territories (List[Territory]): Agent's controlled territories.
@@ -492,6 +498,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             RiskMove: Balanced move optimizing risk vs. reward.
+
         """
         if position_evaluation == "strong" and self.risk_tolerance > 0.6:
             # Position allows for calculated aggression
@@ -503,8 +510,7 @@ class RiskAgent(BaseModel):
     def _refine_move_with_strategy(
         self, base_move: RiskMove, analysis: RiskAnalysis
     ) -> RiskMove:
-        """Refine move recommendation based on agent strategy and risk
-        tolerance.
+        """Refine move recommendation based on agent strategy and risk tolerance.
 
         Args:
             base_move (RiskMove): Initial move recommendation.
@@ -512,6 +518,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             RiskMove: Refined move incorporating strategic preferences.
+
         """
         # Apply risk tolerance adjustments
         if base_move.move_type == MoveType.ATTACK:
@@ -548,6 +555,7 @@ class RiskAgent(BaseModel):
 
         Returns:
             str: Detailed strategic analysis explanation.
+
         """
         explanation_parts = [
             f"Strategic Analysis for {self.name}:",
@@ -606,6 +614,7 @@ class RiskAgent(BaseModel):
                     print("Agent performing well")
                 elif effectiveness < 0.3:
                     print("Agent may need strategy adjustment")
+
         """
         if len(self.analysis_history) < 2:
             return 0.5  # Neutral starting point
@@ -649,6 +658,7 @@ class RiskAgent(BaseModel):
             - avg_armies: Average total armies
             - most_common_evaluation: Most frequent position evaluation
             - strategic_trend: Overall strategic effectiveness trend
+
         """
         if not self.analysis_history:
             return {

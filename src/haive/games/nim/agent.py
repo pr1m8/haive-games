@@ -1,7 +1,8 @@
 """Agent for playing Nim.
 
-This module defines the Nim agent, which uses language models to
-generate moves and analyze positions in the game.
+This module defines the Nim agent, which uses language models to generate moves and
+analyze positions in the game.
+
 """
 
 import logging
@@ -39,6 +40,7 @@ def ensure_game_state(
 
     Returns:
         NimState: The converted state.
+
     """
     logger.info(f"ensure_game_state: received input of type {type(state_input)}")
 
@@ -82,6 +84,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Args:
             config (NimConfig): The configuration for the game.
+
         """
         self.state_manager = NimStateManager
         self.ui = NimUI() if RICH_AVAILABLE else None
@@ -95,6 +98,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to initialize the game.
+
         """
         logger.info("Initializing new Nim game")
 
@@ -126,6 +130,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Dict[str, Any]: The context for the move generation.
+
         """
         # Format legal moves for display
         formatted_legal_moves = "\n".join(
@@ -157,6 +162,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Any: The move from the engine.
+
         """
         # The response should already be a NimMove object
         return response
@@ -169,6 +175,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to make the move.
+
         """
         return self.make_move(state, "player1")
 
@@ -180,6 +187,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to make the move.
+
         """
         return self.make_move(state, "player2")
 
@@ -194,6 +202,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to make the move.
+
         """
         # Ensure state is a NimState
         game_state = ensure_game_state(state)
@@ -233,6 +242,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Dict[str, Any]: The context for the position analysis.
+
         """
         return {
             "board_string": state.board_string,
@@ -250,6 +260,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to analyze the position.
+
         """
         return self.analyze_position(state, "player1")
 
@@ -261,6 +272,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to analyze the position.
+
         """
         return self.analyze_position(state, "player2")
 
@@ -275,6 +287,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Command: The command to analyze the position.
+
         """
         # Ensure state is a NimState
         game_state = ensure_game_state(state)
@@ -318,6 +331,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Dict[str, Any]: The final game state.
+
         """
         # Initialize the game state
         initial_state = self.state_manager.initialize(
@@ -336,6 +350,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Args:
             state (Dict[str, Any]): The current game state.
+
         """
         # Use Rich UI if available
         if RICH_AVAILABLE and self.ui:
@@ -401,6 +416,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             Dict[str, Any]: The final game state.
+
         """
         # Check if Rich UI is available
         if not RICH_AVAILABLE:
@@ -434,6 +450,7 @@ class NimAgent(GameAgent[NimConfig]):
 
         Returns:
             None
+
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)

@@ -1,8 +1,9 @@
 """General API system for all haive games.
 
-from typing import Any This module provides a general-purpose API that
-automatically discovers all available games and creates endpoints for
-each one, with OpenAPI documentation and game selection capabilities.
+from typing import Any This module provides a general-purpose API that automatically
+discovers all available games and creates endpoints for each one, with OpenAPI
+documentation and game selection capabilities.
+
 """
 
 import importlib
@@ -77,6 +78,7 @@ class GeneralGameAPI:
             route_prefix: Prefix for REST routes
             ws_route_prefix: Prefix for WebSocket routes
             exclude_games: List of game names to exclude
+
         """
         self.app = app
         self.games_package = games_package
@@ -441,6 +443,7 @@ def create_general_game_api(
     Example:
         >>> app, game_api = create_general_game_api()
         >>> # Now you have endpoints for all games!
+
     """
     if app is None:
         app = FastAPI(

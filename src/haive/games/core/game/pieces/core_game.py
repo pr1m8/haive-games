@@ -1,7 +1,8 @@
 """Game engine for the game framework.
 
-This module defines the base Game class that serves as the central point
-for game logic, integrating all framework components.
+This module defines the base Game class that serves as the central point for game logic,
+integrating all framework components.
+
 """
 
 from __future__ import annotations
@@ -75,9 +76,9 @@ class GameConfiguration(BaseModel):
 class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     """Base class for all games.
 
-    The Game class ties together all game components and implements the
-    core game loop. It manages the game state, players, turns, and
-    rules.
+    The Game class ties together all game components and implements the core game loop.
+    It manages the game state, players, turns, and rules.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -112,8 +113,8 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     def initialize(self) -> None:
         """Initialize the game.
 
-        This should be called after adding players and before starting
-        the game.
+        This should be called after adding players and before starting the game.
+
         """
         # Validate player count
         if not self.config.is_valid_player_count(len(self.players)):
@@ -145,8 +146,9 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
     def setup_game(self) -> None:
         """Set up the game-specific components.
 
-        This should be implemented by subclasses to create the board,
-        pieces, and other game elements.
+        This should be implemented by subclasses to create the board, pieces, and other
+        game elements.
+
         """
 
     def start(self) -> None:
@@ -208,6 +210,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Args:
             result: Result of the game
             winners: List of winning player IDs
+
         """
         self.status = GameStatus.FINISHED
         self.result = result
@@ -244,6 +247,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Args:
             player: Player to add
+
         """
         # Check if game has already started
         if self.status != GameStatus.NOT_STARTED:
@@ -280,6 +284,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             List of valid moves
+
         """
 
     def process_move(self, move: M) -> MoveResult[M]:
@@ -290,6 +295,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             Result of the move
+
         """
         # Check if game is in progress
         if self.status != GameStatus.IN_PROGRESS:
@@ -337,6 +343,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             True if the game should end, False otherwise
+
         """
         return False
 
@@ -345,6 +352,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         """Determine the winner(s) of the game.
 
         This should set the result and winners properties.
+
         """
 
     def get_state_for_player(self, player_id: str) -> dict[str, Any]:
@@ -357,6 +365,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             Dictionary with game state information
+
         """
         # Base implementation - subclasses should override for game-specific
         # visibility
@@ -387,6 +396,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             The piece, or None if not found
+
         """
         return self.pieces.get(piece_id)
 
@@ -398,6 +408,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             The container, or None if not found
+
         """
         return self.containers.get(container_id)
 
@@ -409,6 +420,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             Position object, or None if invalid
+
         """
         # Base implementation - subclasses should override for specific
         # position types
@@ -420,6 +432,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Args:
             event: Event name
             callback: Callback function
+
         """
         if event not in self.callbacks:
             self.callbacks[event] = []
@@ -431,6 +444,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Args:
             event: Event name
             callback: Callback function
+
         """
         if event in self.callbacks and callback in self.callbacks[event]:
             self.callbacks[event].remove(callback)
@@ -441,6 +455,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Args:
             event: Event name
             **kwargs: Event data
+
         """
         if event in self.callbacks:
             for callback in self.callbacks[event]:
@@ -455,6 +470,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
         Args:
             key: Property name
             value: Property value
+
         """
         self.properties[key] = value
 
@@ -467,6 +483,7 @@ class Game(BaseModel, Generic[P, T, S, C, M, PL]):
 
         Returns:
             Property value or default
+
         """
         return self.properties.get(key, default)
 
@@ -475,6 +492,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
     """Base class for turn-based games.
 
     This adds additional turn management functionality.
+
     """
 
     turn_timeout: int | None = None  # Timeout in seconds, None for no timeout
@@ -527,6 +545,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
 
         Args:
             player_id: ID of the player
+
         """
         if player_id not in self.turn_actions:
             self.turn_actions[player_id] = 0
@@ -541,6 +560,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
 
         Returns:
             True if the player can take an action, False otherwise
+
         """
         if player_id not in self.turn_actions:
             return True
@@ -555,6 +575,7 @@ class TurnBasedGame(Game[P, T, S, C, M, PL]):
 
         Returns:
             Result of the move
+
         """
         # Check if game is in progress
         if self.status != GameStatus.IN_PROGRESS:
@@ -602,6 +623,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
     """Base class for real-time games.
 
     This adds functionality for games that don't use strict turns.
+
     """
 
     tick_rate: float = 60.0  # Ticks per second
@@ -615,6 +637,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
         Args:
             delta_time: Time in seconds since last update
+
         """
         # Increment current tick
         self.current_tick += 1
@@ -638,6 +661,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
         Args:
             delta_time: Time in seconds since last update
+
         """
 
     def set_cooldown(self, player_id: str, action_type: str, ticks: int) -> None:
@@ -647,6 +671,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
             player_id: ID of the player
             action_type: Type of action
             ticks: Number of ticks until the action is available again
+
         """
         if player_id not in self.action_cooldowns:
             self.action_cooldowns[player_id] = {}
@@ -662,6 +687,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
         Returns:
             True if the action is on cooldown, False otherwise
+
         """
         return (
             player_id in self.action_cooldowns
@@ -677,6 +703,7 @@ class RealTimeGame(Game[P, T, S, C, M, PL]):
 
         Returns:
             Result of the move
+
         """
         # Check if game is in progress
         if self.status != GameStatus.IN_PROGRESS:
@@ -722,5 +749,6 @@ class GameFactory:
 
         Returns:
             Game instance
+
         """
         return game_type(name=config.name, config=config, **kwargs)

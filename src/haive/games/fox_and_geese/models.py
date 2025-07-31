@@ -65,6 +65,7 @@ Examples:
 
 The models provide comprehensive support for asymmetric game analysis and
 strategic AI development with proper validation and immutable data structures.
+
 """
 
 from typing import Literal
@@ -150,6 +151,7 @@ class FoxAndGeesePosition(BaseModel):
         The position is frozen (immutable) to ensure data integrity and
         enable use as dictionary keys and in sets. String representation
         uses mathematical coordinate notation: "(row, col)".
+
     """
 
     # Enable frozen for proper hashing in sets
@@ -169,6 +171,7 @@ class FoxAndGeesePosition(BaseModel):
 
                 pos = FoxAndGeesePosition(row=3, col=4)
                 print(pos)  # "(3, 4)"
+
         """
         return f"({self.row}, {self.col})"
 
@@ -180,6 +183,7 @@ class FoxAndGeesePosition(BaseModel):
 
         Returns:
             bool: True if positions have same row and column.
+
         """
         if not isinstance(other, FoxAndGeesePosition):
             return False
@@ -190,6 +194,7 @@ class FoxAndGeesePosition(BaseModel):
 
         Returns:
             int: Hash value based on row and column coordinates.
+
         """
         return hash((self.row, self.col))
 
@@ -197,9 +202,10 @@ class FoxAndGeesePosition(BaseModel):
 class FoxAndGeeseMove(BaseModel):
     """Represents a move in Fox and Geese.
 
-    This class defines the structure of a move in Fox and Geese, which
-    includes a starting position, an ending position, a piece type, and
-    an optional captured position.
+    This class defines the structure of a move in Fox and Geese, which includes a
+    starting position, an ending position, a piece type, and an optional captured
+    position.
+
     """
 
     # Enable frozen for consistency
@@ -238,9 +244,10 @@ class FoxAndGeeseMove(BaseModel):
 class FoxAndGeeseAnalysis(BaseModel):
     """Analysis of a Fox and Geese position.
 
-    This class defines the structure of an analysis of a Fox and Geese
-    position, which includes an advantage, an advantage level, key
-    features, fox strategy, geese strategy, and critical squares.
+    This class defines the structure of an analysis of a Fox and Geese position, which
+    includes an advantage, an advantage level, key features, fox strategy, geese
+    strategy, and critical squares.
+
     """
 
     model_config = ConfigDict(frozen=True)

@@ -21,6 +21,7 @@ Example:
     ...     small_blind=10,
     ...     big_blind=20
     ... )
+
 """
 
 from typing import Any
@@ -73,6 +74,7 @@ class PokerAgentConfig(AgentConfig):
         ...     big_blind=50,
         ...     max_hands=20
         ... )
+
     """
 
     engines: dict[str, AugLLMConfig] = Field(
@@ -132,6 +134,7 @@ class PokerAgentConfig(AgentConfig):
             ...     starting_chips=2000,
             ...     max_hands=15
             ... )
+
         """
         # Get available providers and create engine configurations
         providers = get_available_providers()

@@ -1,8 +1,8 @@
 """State manager for the Mancala game.
 
-This module defines the state manager for the Mancala game, which
-manages the state of the game and provides methods for initializing,
-updating, and analyzing the game state.
+This module defines the state manager for the Mancala game, which manages the state of
+the game and provides methods for initializing, updating, and analyzing the game state.
+
 """
 
 import json
@@ -21,14 +21,14 @@ logger = logging.getLogger(__name__)
 class MancalaStateManager(GameStateManager[MancalaState]):
     """Manager for Mancala game state.
 
-    This class provides methods for initializing, updating, and
-    analyzing the game state.
+    This class provides methods for initializing, updating, and analyzing the game
+    state.
+
     """
 
     @classmethod
     def initialize(cls, **kwargs) -> MancalaState:
-        """Initialize a new Mancala game with a fresh board and default
-        settings.
+        """Initialize a new Mancala game with a fresh board and default settings.
 
         Args:
             **kwargs: Keyword arguments for game initialization.
@@ -44,6 +44,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
             - Index 6: Player 1's store (right)
             - Indices 7-12: Player 2's pits (top row, right to left)
             - Index 13: Player 2's store (left)
+
         """
         stones_per_pit = kwargs.get("stones_per_pit", 4)
 
@@ -79,6 +80,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
         Note:
             Pit indices are always 0-5 for both players, representing the six pits
             on their side of the board (not including their store).
+
         """
         legal_moves = []
         player = state.turn
@@ -123,6 +125,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
             4. If the last stone lands in an empty pit on the player's side, they
                capture that stone and all stones in the opposite pit.
             5. Game ends when all pits on one side are empty.
+
         """
         # Validate player's turn
         if move.player != state.turn:
@@ -205,6 +208,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
         Returns:
             MancalaState: The game state with updated status.
+
         """
         # Check if any player's side is empty
         player1_empty = all(state.board[i] == 0 for i in range(6))
@@ -245,6 +249,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
         Returns:
             Optional[str]: The winner, or None if the game is ongoing or a draw.
+
         """
         if state.game_status == "player1_win":
             return "player1"
@@ -265,6 +270,7 @@ class MancalaStateManager(GameStateManager[MancalaState]):
 
         Returns:
             MancalaState: Updated state with the analysis added.
+
         """
         # Create a copy of the state
         new_state = state.model_copy()

@@ -72,6 +72,7 @@ class MinesweeperCell(GridSpace[MinePiece]):
 
         Returns:
             True if it's a mine (game over), False otherwise
+
         """
         if self.state != CellState.HIDDEN:
             return False  # Already revealed or flagged
@@ -199,6 +200,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         Args:
             first_click_row: Row of first click
             first_click_col: Column of first click
+
         """
         # Determine safe cells (first click and its 8 neighbors)
         safe_cells = set()
@@ -259,6 +261,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
         Returns:
             Tuple of (hit_mine, cells_revealed)
+
         """
         # Check if it's the first move
         if not self.first_move_made:
@@ -324,6 +327,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
         Returns:
             True if flag was placed, False if removed or state is questioned
+
         """
         cell = self.get_space_at(row, col)
         if not cell or cell.is_revealed():
@@ -341,8 +345,8 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         return new_state == CellState.FLAGGED
 
     def chord(self, row: int, col: int) -> tuple[bool, int]:
-        """Perform a chord (middle-click) to reveal all unflagged neighbors.
-        Only works if the number of flagged neighbors equals the cell's value.
+        """Perform a chord (middle-click) to reveal all unflagged neighbors. Only works
+        if the number of flagged neighbors equals the cell's value.
 
         Args:
             row: Row to chord
@@ -350,6 +354,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
         Returns:
             Tuple of (hit_mine, cells_revealed)
+
         """
         cell = self.get_space_at(row, col)
         if not cell or not cell.is_revealed() or cell.adjacent_mines == 0:
@@ -481,6 +486,7 @@ class MinesweeperGame(BaseModel):
 
         Returns:
             Tuple of (success, hit_mine, cells_revealed)
+
         """
         if self.game_over:
             return False, False, 0
@@ -519,6 +525,7 @@ class MinesweeperGame(BaseModel):
 
         Returns:
             True if successful, False otherwise
+
         """
         if self.game_over:
             return False
@@ -534,6 +541,7 @@ class MinesweeperGame(BaseModel):
 
         Returns:
             Tuple of (success, hit_mine, cells_revealed)
+
         """
         if self.game_over:
             return False, False, 0

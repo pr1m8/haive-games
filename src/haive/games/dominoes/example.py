@@ -20,6 +20,7 @@ def run_dominoes_game(agent: DominoesAgent, delay: float = 1.5):
     Args:
         agent: Configured DominoesAgent
         delay: Delay between moves in seconds
+
     """
     console = Console()
     console.print(

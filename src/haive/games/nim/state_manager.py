@@ -12,9 +12,9 @@ from haive.games.nim.state import NimState
 class NimStateManager(GameStateManager[NimState]):
     """Manager for Nim game state.
 
-    This class provides methods for initializing a new Nim game,
-    retrieving legal moves, applying moves, adding analyses, and
-    checking game status.
+    This class provides methods for initializing a new Nim game, retrieving legal moves,
+    applying moves, adding analyses, and checking game status.
+
     """
 
     @classmethod
@@ -27,6 +27,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Returns:
             NimState: A new Nim game state.
+
         """
         pile_sizes = kwargs.get("pile_sizes", [3, 5, 7])
         return NimState(piles=pile_sizes)
@@ -41,6 +42,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Returns:
             List[NimMove]: A list of all legal moves.
+
         """
         legal_moves = []
 
@@ -70,6 +72,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Validate move
         if move.pile_index < 0 or move.pile_index >= len(state.piles):
@@ -104,6 +107,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Returns:
             NimState: Updated state with the analysis added.
+
         """
         new_state = state.model_copy()
 
@@ -134,6 +138,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Raises:
             ValueError: If it's not the player's turn.
+
         """
         # Convert dict to NimState if needed
         if isinstance(state, dict):
@@ -158,6 +163,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Returns:
             Optional[str]: The winner, or None if the game is ongoing.
+
         """
         if state.game_status == "player1_win":
             return "player1"
@@ -174,6 +180,7 @@ class NimStateManager(GameStateManager[NimState]):
 
         Returns:
             NimState: The game state with updated status.
+
         """
         # Create a copy to avoid modifying the original
         new_state = state

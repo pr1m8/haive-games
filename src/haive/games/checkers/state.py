@@ -78,6 +78,7 @@ class PieceType(int, Enum):
         RED_KING: Red king piece (2)
         BLACK_PIECE: Regular black piece (3)
         BLACK_KING: Black king piece (4)
+
     """
 
     EMPTY = 0
@@ -98,6 +99,7 @@ class GamePhase(str, Enum):
         MIDDLE: Mid-game with active piece development
         ENDGAME: Late game with few pieces remaining
         FINISHED: Game has concluded with a winner
+
     """
 
     OPENING = "opening"
@@ -107,8 +109,7 @@ class GamePhase(str, Enum):
 
 
 class CheckersState(BaseModel):
-    r"""Comprehensive state model for Checkers gameplay with strategic analysis
-    support.
+    r"""Comprehensive state model for Checkers gameplay with strategic analysis support.
 
     This class provides complete state management for Checkers games, supporting
     both game mechanics and strategic analysis. The state system maintains board
@@ -217,6 +218,7 @@ class CheckersState(BaseModel):
     Note:
         The state uses Pydantic for validation and supports both JSON serialization
         and integration with LangGraph for distributed game systems.
+
     """
 
     board: list[list[Literal[0, 1, 2, 3, 4]]] = Field(
@@ -301,6 +303,7 @@ class CheckersState(BaseModel):
 
         Raises:
             ValueError: If turn number is not positive.
+
         """
         if v < 1:
             raise ValueError("Turn number must be positive")
@@ -309,11 +312,11 @@ class CheckersState(BaseModel):
     @computed_field
     @property
     def game_phase(self) -> GamePhase:
-        """Determine the current game phase based on piece count and move
-        history.
+        """Determine the current game phase based on piece count and move history.
 
         Returns:
             GamePhase: Current phase of the game (opening, middle, endgame, finished).
+
         """
         if self.game_status == "game_over":
             return GamePhase.FINISHED
@@ -337,6 +340,7 @@ class CheckersState(BaseModel):
         Returns:
             Dict[str, Union[int, float]]: Material balance statistics including
                 piece counts, king counts, and overall material score.
+
         """
         red_pieces = red_kings = black_pieces = black_kings = 0
 
@@ -374,6 +378,7 @@ class CheckersState(BaseModel):
 
         Returns:
             Dict[str, int]: Number of kings for each player.
+
         """
         red_kings = black_kings = 0
 
@@ -393,6 +398,7 @@ class CheckersState(BaseModel):
 
         Returns:
             Dict[str, Union[int, float]]: Center control statistics.
+
         """
         # Define center squares (d4, e4, d5, e5)
         center_squares = [(3, 3), (3, 4), (4, 3), (4, 4)]
@@ -420,6 +426,7 @@ class CheckersState(BaseModel):
 
         Returns:
             int: Total number of pieces captured by both players.
+
         """
         return len(self.captured_pieces["red"]) + len(self.captured_pieces["black"])
 
@@ -430,6 +437,7 @@ class CheckersState(BaseModel):
 
         Returns:
             Dict[str, Union[int, float, str]]: Position evaluation metrics.
+
         """
         material = self.material_balance
         center = self.center_control_score
@@ -463,6 +471,7 @@ class CheckersState(BaseModel):
 
         Returns:
             Dict[str, Union[int, float, str]]: Game statistics and metrics.
+
         """
         material = self.material_balance
 
@@ -500,6 +509,7 @@ class CheckersState(BaseModel):
                 # Check if position is empty
                 if state.get_piece_at("d4") == PieceType.EMPTY:
                     print("Position d4 is empty")
+
         """
         if len(position) != 2:
             raise ValueError("Position must be 2 characters (e.g., 'a3')")
@@ -520,6 +530,7 @@ class CheckersState(BaseModel):
 
         Returns:
             bool: True if position is empty, False otherwise.
+
         """
         return self.get_piece_at(position) == PieceType.EMPTY
 
@@ -532,6 +543,7 @@ class CheckersState(BaseModel):
 
         Raises:
             ValueError: If player is not "red" or "black".
+
         """
         if player == "red":
             self.red_analysis = list(self.red_analysis) + [analysis]
@@ -548,6 +560,7 @@ class CheckersState(BaseModel):
 
         Returns:
             Optional[CheckersAnalysis]: Latest analysis or None if no analysis exists.
+
         """
         if player == "red":
             return self.red_analysis[-1] if self.red_analysis else None
@@ -564,6 +577,7 @@ class CheckersState(BaseModel):
 
         Returns:
             List[CheckersMove]: List of recent moves (up to count).
+
         """
         return list(self.move_history[-count:]) if self.move_history else []
 
@@ -572,6 +586,7 @@ class CheckersState(BaseModel):
 
         Returns:
             bool: True if game is over, False otherwise.
+
         """
         return self.game_status == "game_over"
 
@@ -594,6 +609,7 @@ class CheckersState(BaseModel):
             - 2: Red king
             - 3: Black piece
             - 4: Black king
+
         """
         return [
             [0, 3, 0, 3, 0, 3, 0, 3],
@@ -634,6 +650,7 @@ class CheckersState(BaseModel):
                 # 2 | . r . r . r . r
                 # 1 | r . r . r . r .
                 #     a b c d e f g h
+
         """
         rows = [
             f"{cls.__board_size - i} | "
@@ -659,6 +676,7 @@ class CheckersState(BaseModel):
 
         Returns:
             str: Symbol representing the cell.
+
         """
         return cls.__symbols[cell]
 
@@ -689,6 +707,7 @@ class CheckersState(BaseModel):
                 assert material["black_total"] == 12
                 assert material["red_kings"] == 0
                 assert material["black_kings"] == 0
+
         """
         board = cls._default_board()
         return cls(board=board, board_string=cls._create_board_string(board))

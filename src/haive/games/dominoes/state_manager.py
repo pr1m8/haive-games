@@ -271,6 +271,7 @@ class DominoesStateManager(GameStateManager[DominoesState]):
 
         Returns:
             Updated game state with analysis
+
         """
         # Create a deep copy to avoid modifying the original
         new_state = copy.deepcopy(state)

@@ -14,6 +14,7 @@ Typical usage:
     - Inherit from GameState to create game-specific state classes
     - Use as the state schema in game configurations
     - Track game progress and history
+
 """
 
 from abc import ABC, abstractmethod
@@ -34,6 +35,7 @@ class GameState(BaseModel, ABC):
         game_status (str): Status of the game (e.g., "ongoing", "finished").
         move_history (List[Any]): History of moves made in the game.
         error_message (Optional[str]): Error message if any error occurred.
+
     """
 
     players: list[str] = Field(default_factory=list, description="List of players")
@@ -54,12 +56,13 @@ class GameState(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def initialize(cls, **kwargs) -> "GameState":
-        """Abstract method that all subclasses must implement to initialize the
-        game state.
+        """Abstract method that all subclasses must implement to initialize the game
+        state.
 
         Returns:
             GameState: A fully initialized game state object.
 
         Example:
             >>> return Connect4State.initialize(first_player="red")
+
         """

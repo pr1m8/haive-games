@@ -31,6 +31,7 @@ Example:
     >>>
     >>> # Advance the game to the next phase
     >>> updated_state = HoldemGameStateManager.advance_phase(state)
+
 """
 
 import uuid
@@ -46,14 +47,14 @@ from haive.games.hold_em.utils import (
 class HoldemGameStateManager:
     """State manager for Texas Hold'em poker games.
 
-    This class provides static methods for manipulating the game state,
-    separating state logic from the game agent. It handles state
-    transitions, player actions, and game flow management in a
-    functional manner.
+    This class provides static methods for manipulating the game state, separating state
+    logic from the game agent. It handles state transitions, player actions, and game
+    flow management in a functional manner.
 
-    All methods are static and take a state object as input, returning a
-    new state object with the requested changes applied, following an
-    immutable approach to state management.
+    All methods are static and take a state object as input, returning a new state
+    object with the requested changes applied, following an immutable approach to state
+    management.
+
     """
 
     @staticmethod
@@ -75,6 +76,7 @@ class HoldemGameStateManager:
 
         Returns:
             A new HoldemState instance ready for the first hand
+
         """
         if not game_id:
             game_id = f"game_{uuid.uuid4().hex[:8]}"
@@ -113,6 +115,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with new hand setup
+
         """
         # Create a copy of the state to modify
         updated_state = state.model_copy(deep=True)
@@ -162,6 +165,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with blinds posted
+
         """
         updated_state = state.model_copy(deep=True)
 
@@ -228,6 +232,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with hole cards dealt
+
         """
         updated_state = state.model_copy(deep=True)
         deck = updated_state.deck.copy()
@@ -273,6 +278,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with community cards dealt
+
         """
         updated_state = state.model_copy(deep=True)
         deck = updated_state.deck.copy()
@@ -334,6 +340,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with the action applied
+
         """
         updated_state = state.model_copy(deep=True)
         player = updated_state.players[player_index]
@@ -454,6 +461,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with winner determined
+
         """
         updated_state = state.model_copy(deep=True)
 
@@ -494,6 +502,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state with pot awarded and hand recorded
+
         """
         updated_state = state.model_copy(deep=True)
 
@@ -537,6 +546,7 @@ class HoldemGameStateManager:
 
         Returns:
             Tuple of (updated state, game_over flag)
+
         """
         updated_state = state.model_copy(deep=True)
 
@@ -565,6 +575,7 @@ class HoldemGameStateManager:
 
         Returns:
             Updated state in the next game phase
+
         """
         # Check if only one player remains
         players_in_hand = [

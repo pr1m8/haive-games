@@ -1,7 +1,8 @@
 """Simple Go engine wrapper using sgfmill instead of sente.
 
-This module provides a compatibility layer to replace sente with
-sgfmill, which is compatible with Python 3.12.
+This module provides a compatibility layer to replace sente with sgfmill, which is
+compatible with Python 3.12.
+
 """
 
 import logging
@@ -50,6 +51,7 @@ class GoGame:
         Args:
             color: 'b' for black, 'w' for white
             move: (row, col) tuple or None for pass
+
         """
         if move is None:
             # Pass

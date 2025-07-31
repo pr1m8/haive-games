@@ -1,8 +1,9 @@
 """State manager for the Mastermind game.
 
-This module defines the state manager for the Mastermind game, which
-manages the state of the game and provides methods for initializing,
-updating, and analyzing the game state.
+This module defines the state manager for the Mastermind game, which manages the state
+of the game and provides methods for initializing, updating, and analyzing the game
+state.
+
 """
 
 import itertools
@@ -21,8 +22,9 @@ from haive.games.mastermind.state import MastermindState
 class MastermindStateManager(GameStateManager[MastermindState]):
     """Manager for Mastermind game state.
 
-    This class provides methods for initializing, updating, and
-    analyzing the game state.
+    This class provides methods for initializing, updating, and analyzing the game
+    state.
+
     """
 
     VALID_COLORS = ["red", "blue", "green", "yellow", "purple", "orange"]
@@ -41,6 +43,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             MastermindState: A new Mastermind game state.
+
         """
         codemaker = kwargs.get("codemaker", "player1")
         codebreaker = "player2" if codemaker == "player1" else "player1"
@@ -79,6 +82,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             List[MastermindGuess]: An empty list (agent should generate its own guesses).
+
         """
         return []
 
@@ -97,6 +101,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Validate player's turn
         if move.player != state.turn:
@@ -140,6 +145,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             MastermindFeedback: Feedback with correct position and color counts.
+
         """
         # Count exact matches (correct position and color)
         correct_position = sum(
@@ -182,6 +188,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             MastermindState: The game state (unchanged).
+
         """
         return state
 
@@ -194,6 +201,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             Optional[str]: The winner, or None if the game is ongoing.
+
         """
         return state.winner
 
@@ -210,6 +218,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             MastermindState: Updated state with the analysis added.
+
         """
         new_state = state.model_copy()
 
@@ -222,8 +231,8 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
     @classmethod
     def get_possible_codes(cls, state: MastermindState) -> set[tuple[str, ...]]:
-        """Get all possible secret codes that are consistent with all guesses
-        and feedback so far.
+        """Get all possible secret codes that are consistent with all guesses and
+        feedback so far.
 
         This is computationally expensive for a full game, so it's limited to use for analysis.
 
@@ -232,6 +241,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             Set[Tuple[str, ...]]: Set of possible codes as tuples.
+
         """
         # Start with all possible codes
         colors = cls.VALID_COLORS
@@ -258,8 +268,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
         guess: tuple[str, ...],
         feedback: MastermindFeedback,
     ) -> bool:
-        """Check if a potential code is consistent with a guess and its
-        feedback.
+        """Check if a potential code is consistent with a guess and its feedback.
 
         Args:
             code: Potential secret code.
@@ -268,6 +277,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
         Returns:
             bool: True if the code is consistent with the guess and feedback.
+
         """
         # Calculate what the feedback would be if this code were the secret
         calculated_feedback = cls._calculate_feedback(list(code), list(guess))

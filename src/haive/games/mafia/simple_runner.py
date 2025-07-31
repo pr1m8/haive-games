@@ -10,6 +10,7 @@ Example:
     ```bash
     python simple_runner.py --players 7 --days 3 --debug
     ```
+
 """
 
 import argparse
@@ -51,6 +52,7 @@ def run_mafia_game_simple(
 
     Raises:
         ValueError: If player_count is less than 4.
+
     """
     try:
         # Print available configs for debugging

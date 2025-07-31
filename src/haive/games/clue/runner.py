@@ -1,6 +1,7 @@
 """Runner script for the Clue game.
 
 This script demonstrates how to initialize and run a Clue game.
+
 """
 
 import asyncio
@@ -24,6 +25,7 @@ async def run_clue_game(
 
     Returns:
         Final game state information
+
     """
     controller = ClueGameController(player_names, max_turns)
     game_state = controller.get_game_state()

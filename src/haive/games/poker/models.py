@@ -17,6 +17,7 @@ Example:
     >>> # Create a card
     >>> ace_of_spades = Card(suit=Suit.SPADES, value=CardValue.ACE)
     >>> print(ace_of_spades)  # Shows "Ace of spades"
+
 """
 
 from enum import Enum
@@ -37,6 +38,7 @@ class Suit(str, Enum):
         DIAMONDS (str): Diamonds suit
         CLUBS (str): Clubs suit
         SPADES (str): Spades suit
+
     """
 
     HEARTS = "hearts"
@@ -58,6 +60,7 @@ class CardValue(int, Enum):
         ...
         KING (int): Value 13
         ACE (int): Value 14 (or 1 in some contexts)
+
     """
 
     TWO = 2
@@ -93,6 +96,7 @@ class HandRank(int, Enum):
         FOUR_OF_A_KIND (int): Four cards of same value
         STRAIGHT_FLUSH (int): Sequential cards of same suit
         ROYAL_FLUSH (int): A-K-Q-J-10 of same suit
+
     """
 
     HIGH_CARD = 0
@@ -122,6 +126,7 @@ class GamePhase(str, Enum):
         RIVER (str): Fifth community card
         SHOWDOWN (str): Hand comparison
         GAME_OVER (str): Game completed
+
     """
 
     SETUP = "setup"
@@ -147,6 +152,7 @@ class PlayerAction(str, Enum):
         BET (str): Place initial bet
         RAISE (str): Increase current bet
         ALL_IN (str): Bet all remaining chips
+
     """
 
     FOLD = "fold"
@@ -172,6 +178,7 @@ class Card(BaseModel):
         >>> card = Card(suit=Suit.HEARTS, value=CardValue.ACE)
         >>> print(card)  # Shows "Ace of hearts"
         >>> print(card.numeric_value)  # Shows 14
+
     """
 
     suit: Suit = Field(description="The suit of the card")
@@ -191,6 +198,7 @@ class Card(BaseModel):
         """Get numeric value treating Ace as 1.
 
         Used for A-2-3-4-5 straight calculations.
+
         """
         return 1 if self.value == CardValue.ACE else self.value.value
 
@@ -211,6 +219,7 @@ class Hand(BaseModel):
         ...     Card(suit=Suit.HEARTS, value=CardValue.KING)
         ... ])
         >>> print(hand)  # Shows "Ace of hearts, King of hearts"
+
     """
 
     cards: list[Card] = Field(
@@ -248,6 +257,7 @@ class Player(BaseModel):
         ...     position=0
         ... )
         >>> print(player)  # Shows "Player Alice ($1000)"
+
     """
 
     id: str = Field(description="The unique identifier for the player")
@@ -295,6 +305,7 @@ class ActionRecord(BaseModel):
         ...     amount=100,
         ...     phase=GamePhase.FLOP
         ... )
+
     """
 
     player_id: str = Field(description="The unique identifier for the player")
@@ -327,6 +338,7 @@ class HandRanking(BaseModel):
         ...     high_cards=[CardValue.ACE, CardValue.KING],
         ...     description="Ace-high flush"
         ... )
+
     """
 
     player_id: str = Field(description="The unique identifier for the player")
@@ -353,6 +365,7 @@ class Pot(BaseModel):
         ...     amount=500,
         ...     eligible_players=["p1", "p2", "p3"]
         ... )
+
     """
 
     amount: int = Field(default=0, description="The amount of chips in the pot")
@@ -393,6 +406,7 @@ class PokerGameState(BaseModel):
         ...     small_blind=5,
         ...     big_blind=10
         ... )
+
     """
 
     players: list[Player] = Field(
@@ -476,6 +490,7 @@ class PlayerObservation(BaseModel):
         ...     position=0,
         ...     position_name="Button"
         ... )
+
     """
 
     player_id: str = Field(description="The unique identifier for the player")
@@ -521,6 +536,7 @@ class AgentDecision(BaseModel):
         ...     reasoning="Strong hand, building pot"
         ... )
         >>> print(decision)  # Shows decision details
+
     """
 
     action: PlayerAction = Field(description="The action the player is taking")
@@ -552,6 +568,7 @@ class AgentDecisionSchema(BaseModel):
         ...     amount=50,
         ...     reasoning="Good pot odds with drawing hand"
         ... )
+
     """
 
     action: PlayerAction = Field(description="The action taken by the player")
@@ -588,6 +605,7 @@ class GameResult(BaseModel):
         ...     hand_rankings={"p1": ace_high_flush},
         ...     total_hands_played=1
         ... )
+
     """
 
     winners: list[str] = Field(description="The players who won the game")

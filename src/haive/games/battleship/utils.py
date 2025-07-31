@@ -4,6 +4,7 @@ This module provides helper functions for the Battleship game, including:
     - Board visualization
     - Coordinate formatting
     - Game status checking
+
 """
 
 from typing import Any
@@ -28,6 +29,7 @@ def visualize_board(board: dict[str, Any], is_opponent: bool = False) -> str:
 
     Returns:
         String representation of the board
+
     """
     # Initialize empty 10x10 board
     grid = [["🟦" for _ in range(10)] for _ in range(10)]
@@ -66,6 +68,7 @@ def format_coordinates_list(coords_list: list[dict[str, int]]) -> str:
 
     Returns:
         Formatted string of coordinates
+
     """
     if not coords_list:
         return "None"
@@ -86,6 +89,7 @@ def format_ship_types(ship_types: list[str]) -> str:
 
     Returns:
         Formatted string of ship types
+
     """
     if not ship_types:
         return "None"
@@ -103,6 +107,7 @@ def calculate_game_stats(
 
     Returns:
         Dictionary of game statistics
+
     """
     total_moves = len(move_history)
     player1_moves = sum(1 for player, _ in move_history if player == "player1")
@@ -170,6 +175,7 @@ def check_all_ships_placed(
 
     Returns:
         Tuple of (is_complete, error_message)
+
     """
     required_ships = {t.value for t in ShipType}
     placed_ships = {p.get("ship_type") for p in ship_placements}

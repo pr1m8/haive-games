@@ -16,6 +16,7 @@ Example:
     >>>
     >>> # Run a game
     >>> run_go_game(agent)
+
 """
 
 import logging
@@ -54,6 +55,7 @@ class GoAgent(Agent[GoAgentConfig]):
         ... )
         >>> agent = GoAgent(config)
         >>> run_go_game(agent)
+
     """
 
     def __init__(self, config: GoAgentConfig):
@@ -61,6 +63,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Args:
             config (GoAgentConfig): Configuration for the Go agent.
+
         """
         super().__init__(config)
 
@@ -77,6 +80,7 @@ class GoAgent(Agent[GoAgentConfig]):
             1. Basic: Initialize -> Black Move -> White Move -> Repeat
             2. With Analysis: Initialize -> Black Move -> Black Analysis ->
                White Move -> White Analysis -> Repeat
+
         """
         self.graph.add_node("initialize_game", self.initialize_game)
         self.graph.add_node("black_move", self.make_black_move)
@@ -125,6 +129,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             Command: Command to update the game state with initial settings.
+
         """
         game_state = GoGameStateManager.initialize()
         return Command(update=game_state.model_dump())
@@ -146,6 +151,7 @@ class GoAgent(Agent[GoAgentConfig]):
             - Provides the last 5 moves as context to the LLM
             - Includes recent position analysis if available
             - Validates moves through the state manager
+
         """
         player = self.engines.get(f"{color}_player")
         if player is None:
@@ -191,6 +197,7 @@ class GoAgent(Agent[GoAgentConfig]):
             - Maintains a history of the last 4 analyses
             - Provides territory evaluation and strategic advice
             - Identifies strong and weak positions
+
         """
         analyzer = self.engines.get(f"{color}_analyzer")
         if analyzer is None:
@@ -226,6 +233,7 @@ class GoAgent(Agent[GoAgentConfig]):
             - Uses sente library to validate game state
             - Detects game end conditions (resignation, passes)
             - Updates status to "ended" when game is complete
+
         """
         game = sente.sgf.loads(state.board_sgf)
 
@@ -243,6 +251,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             bool: True if game is ongoing, False otherwise.
+
         """
         return state.game_status == "ongoing"
 
@@ -254,6 +263,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             Command: Command to update the game state with black's move.
+
         """
         return self.make_move(state, "black")
 
@@ -265,6 +275,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             Command: Command to update the game state with white's move.
+
         """
         return self.make_move(state, "white")
 
@@ -276,6 +287,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             Command: Command to update the game state with black's analysis.
+
         """
         return self.analyze_position(state, "black")
 
@@ -287,6 +299,7 @@ class GoAgent(Agent[GoAgentConfig]):
 
         Returns:
             Command: Command to update the game state with white's analysis.
+
         """
         return self.analyze_position(state, "white")
 
@@ -323,6 +336,7 @@ def run_go_game(agent: GoAgent) -> None:
         🎮 Current Player: Black
         📌 Game Status: ongoing
         --------------------------------------------------
+
     """
     # ✅ Initialize the game state
     initial_state = {

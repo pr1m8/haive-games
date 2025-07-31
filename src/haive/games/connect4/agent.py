@@ -1,7 +1,8 @@
 """Agent for playing Connect 4.
 
-This module defines the Connect 4 agent, which uses language models to
-generate moves and analyze positions in the game.
+This module defines the Connect 4 agent, which uses language models to generate moves
+and analyze positions in the game.
+
 """
 
 # Standard library imports
@@ -31,8 +32,9 @@ logger = logging.getLogger(__name__)
 class Connect4Agent(GameAgent[Connect4AgentConfig]):
     """Agent for playing Connect 4.
 
-    This class implements the Connect 4 agent, which uses language
-    models to generate moves and analyze positions in the game.
+    This class implements the Connect 4 agent, which uses language models to generate
+    moves and analyze positions in the game.
+
     """
 
     def __init__(self, config: Connect4AgentConfig):
@@ -43,9 +45,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
     def prepare_move_context(self, state: Connect4State, player: str) -> dict[str, Any]:
         """Prepare context for move generation.
 
-        This method prepares the context for move generation by
-        formatting the legal moves and getting the player's last
-        analysis.
+        This method prepares the context for move generation by formatting the legal
+        moves and getting the player's last analysis.
+
         """
         legal_moves = self.state_manager.get_legal_moves(state)
         formatted_legal_moves = [f"Column {move.column}" for move in legal_moves]
@@ -82,8 +84,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
     ) -> dict[str, list[int]]:
         """Calculate immediate threats and opportunities.
 
-        This method calculates the immediate threats and opportunities
-        for the given player in the current game state.
+        This method calculates the immediate threats and opportunities for the given
+        player in the current game state.
+
         """
         opponent = "yellow" if player == "red" else "red"
 
@@ -118,8 +121,9 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
     ) -> dict[str, Any]:
         """Prepare context for position analysis with correct variables.
 
-        This method prepares the context for position analysis by
-        calculating threats and formatting the required fields.
+        This method prepares the context for position analysis by calculating threats
+        and formatting the required fields.
+
         """
         threats = self._calculate_threats(state, player)
 
@@ -148,48 +152,50 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
         """Extract move from engine response.
 
         This method extracts the move from the engine response.
+
         """
         return response.move
 
     def make_player1_move(self, state: Connect4State) -> Command:
         """Make a move for the red player.
 
-        This method makes a move for the red player in the current game
-        state.
+        This method makes a move for the red player in the current game state.
+
         """
         return self.make_move(state, "red")
 
     def make_player2_move(self, state: Connect4State) -> Command:
         """Make a move for the yellow player.
 
-        This method makes a move for the yellow player in the current
-        game state.
+        This method makes a move for the yellow player in the current game state.
+
         """
         return self.make_move(state, "yellow")
 
     def analyze_player1(self, state: Connect4State) -> Command:
         """Analyze position for the red player.
 
-        This method analyzes the position for the red player in the
-        current game state.
+        This method analyzes the position for the red player in the current game state.
+
         """
         return self.analyze_position(state, "red")
 
     def analyze_player2(self, state: Connect4State) -> Command:
         """Analyze position for the yellow player.
 
-        This method analyzes the position for the yellow player in the
-        current game state.
+        This method analyzes the position for the yellow player in the current game
+        state.
+
         """
         return self.analyze_position(state, "yellow")
 
     def visualize_state(self, state: dict[str, Any]) -> None:
-        """Visualize the current game state with better formatting and
-        insights.
+        """Visualize the current game state with better formatting and insights.
 
-        This method visualizes the current game state with better
-        formatting and insights. It displays the current player, game
-        status, board, last move, and analysis from the previous turn.
+        This method visualizes the current game state with better formatting and
+        insights. It displays the current player, game status, board, last move, and
+        analysis from the previous turn.
+
         """
         # Create a Connect4State from the dict
         connect4_state = Connect4State(**state)

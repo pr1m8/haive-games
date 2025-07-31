@@ -1,5 +1,4 @@
-"""Example Reversi (Othello) game demonstrating the Haive Reversi
-implementation.
+"""Example Reversi (Othello) game demonstrating the Haive Reversi implementation.
 
 This module provides a simple example of running a Reversi game with AI players
 using the Haive framework. Reversi, also known as Othello, is a strategy board
@@ -33,6 +32,7 @@ Example:
     >>> agent = ReversiAgent()
     >>> state = agent.run_game(visualize=True)
     >>> print(f"Winner: {state.get('winner', 'Draw')}")
+
 """
 
 from haive.games.reversi.agent import ReversiAgent

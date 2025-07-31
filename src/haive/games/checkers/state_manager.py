@@ -11,6 +11,7 @@ This module provides state management functionality for checkers games, includin
 
 The state manager offers a clean, functional interface for manipulating
 checkers game states without directly modifying them.
+
 """
 
 import copy
@@ -36,6 +37,7 @@ class CheckersStateManager:
 
     Attributes:
         BOARD_SIZE (int): Size of the checkers board (8x8)
+
     """
 
     BOARD_SIZE = 8
@@ -58,6 +60,7 @@ class CheckersStateManager:
             'ongoing'
             >>> len(state.move_history)
             0
+
         """
         # Create initial board
         # 0 = empty, 1 = red piece, 2 = red king, 3 = black piece, 4 = black
@@ -113,6 +116,7 @@ class CheckersStateManager:
             ...          [1, 0, 0, 0, 0, 0, 0, 0]]
             >>> print(CheckersStateManager._create_board_string(board).split('\\n')[0])
             '8 | . b . . . . . .'
+
         """
         symbols = {
             0: ".",  # Empty square
@@ -156,6 +160,7 @@ class CheckersStateManager:
             True
             >>> all(move.player == "red" for move in moves)
             True
+
         """
         board = state.board
         current_player = state.turn
@@ -192,6 +197,7 @@ class CheckersStateManager:
 
         Returns:
             list[CheckersMove]: List of jump moves
+
         """
         jumps = []
 
@@ -221,6 +227,7 @@ class CheckersStateManager:
 
         Returns:
             list[CheckersMove]: List of jump moves for this piece
+
         """
         jumps = []
         piece = board[row][col]
@@ -289,6 +296,7 @@ class CheckersStateManager:
 
         Returns:
             list[CheckersMove]: List of regular moves
+
         """
         moves = []
 
@@ -318,6 +326,7 @@ class CheckersStateManager:
 
         Returns:
             list[CheckersMove]: List of regular moves for this piece
+
         """
         moves = []
         piece = board[row][col]
@@ -379,6 +388,7 @@ class CheckersStateManager:
             'a8'
             >>> CheckersStateManager._index_to_notation(7, 7)
             'h1'
+
         """
         return f"{chr(97 + col)}{8 - row}"
 
@@ -399,6 +409,7 @@ class CheckersStateManager:
             (0, 0)
             >>> CheckersStateManager._notation_to_index("h1")
             (7, 7)
+
         """
         col = ord(notation[0]) - 97
         row = 8 - int(notation[1])
@@ -426,6 +437,7 @@ class CheckersStateManager:
             'black'
             >>> len(new_state.move_history)
             1
+
         """
         # Create a deep copy of the state to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -497,6 +509,7 @@ class CheckersStateManager:
 
         Returns:
             CheckersState: Updated game state with correct status
+
         """
         # Create a deep copy to avoid modifying the original
         new_state = copy.deepcopy(state)
@@ -542,6 +555,7 @@ class CheckersStateManager:
 
         Returns:
             CheckersState: Updated game state with new analysis
+
         """
         # Create a deep copy to avoid modifying the original
         new_state = copy.deepcopy(state)

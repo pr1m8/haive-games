@@ -1,7 +1,8 @@
 """Fox and Geese game agent with fixed state handling and UI integration.
 
-This module defines the Fox and Geese game agent, which uses language
-models to generate moves and analyze positions in the game.
+This module defines the Fox and Geese game agent, which uses language models to generate
+moves and analyze positions in the game.
+
 """
 
 # Standard library imports
@@ -53,6 +54,7 @@ def ensure_game_state(
 
     Returns:
         FoxAndGeeseState instance
+
     """
     logger.info(f"ensure_game_state: received input of type {type(state_input)}")
 
@@ -92,8 +94,9 @@ def ensure_game_state(
 class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
     """Agent for playing Fox and Geese.
 
-    This class implements the Fox and Geese game agent, which uses
-    language models to generate moves and analyze positions in the game.
+    This class implements the Fox and Geese game agent, which uses language models to
+    generate moves and analyze positions in the game.
+
     """
 
     def __init__(self, config: FoxAndGeeseConfig = FoxAndGeeseConfig()):
@@ -101,6 +104,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Args:
             config (FoxAndGeeseConfig): The configuration for the Fox and Geese game.
+
         """
         super().__init__(config)
         self.state_manager = FoxAndGeeseStateManager
@@ -128,6 +132,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: State updates for the new game
+
         """
         logger.info("Initializing new Fox and Geese game")
         game_state = self.state_manager.initialize()
@@ -167,6 +172,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: Context dictionary for move generation
+
         """
         # Format legal moves for display
         legal_moves = self.state_manager.get_legal_moves(state)
@@ -198,6 +204,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: The context dictionary for position analysis
+
         """
         # Use the ensure_game_state helper to handle all conversion cases
         state = ensure_game_state(state)
@@ -217,6 +224,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseMove: Parsed move object
+
         """
         logger.debug(f"Extracting move from response type: {type(response)}")
 
@@ -330,6 +338,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseMove: A legal move
+
         """
         legal_moves = self.state_manager.get_legal_moves(game_state)
         if not legal_moves:
@@ -349,6 +358,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: State updates after the move
+
         """
         new_state = self.make_fox_move(state)
         return Command(
@@ -374,6 +384,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: State updates after the move
+
         """
         new_state = self.make_geese_move(state)
         return Command(
@@ -399,6 +410,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: State updates with analysis
+
         """
         # analyze_fox_position already returns a Command
         return self.analyze_fox_position(state)
@@ -411,6 +423,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Dict[str, Any]: State updates with analysis
+
         """
         # analyze_geese_position already returns a Command
         return self.analyze_geese_position(state)
@@ -423,6 +436,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseState: Updated game state after the move
+
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
@@ -509,6 +523,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseState: Updated game state after the move
+
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
@@ -597,6 +612,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Command: LangGraph command with fox analysis updates
+
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
@@ -641,6 +657,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             Command: LangGraph command with geese analysis updates
+
         """
         try:
             # Ensure we have a proper FoxAndGeeseState
@@ -686,6 +703,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             String representation of the analysis
+
         """
 
         # Try to extract structured data
@@ -760,6 +778,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             bool: True if the game should continue, False otherwise
+
         """
         try:
             # Ensure we have a proper game state
@@ -784,8 +803,9 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization, move
-        making, and analysis. Uses the base GameAgent workflow pattern.
+        Creates a dynamic graph with nodes for game initialization, move making, and
+        analysis. Uses the base GameAgent workflow pattern.
+
         """
         logger.info("Setting up Fox and Geese workflow")
 
@@ -856,6 +876,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseState: Final game state after completion
+
         """
         if not self.ui:
             logger.error("UI not available - falling back to regular run")
@@ -945,6 +966,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             FoxAndGeeseState: Final game state after completion
+
         """
         if visualize and self.config.visualize and self.ui:
             return self.run_game_with_ui()
@@ -1027,6 +1049,7 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
 
         Returns:
             The final game state as a dictionary
+
         """
         try:
             # Initialize state from input if provided, otherwise create new

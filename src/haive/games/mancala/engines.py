@@ -1,7 +1,8 @@
 """Engines for the Mancala game.
 
-This module defines the engines for the Mancala game, including the move
-and analysis prompts.
+This module defines the engines for the Mancala game, including the move and analysis
+prompts.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -14,8 +15,9 @@ from haive.games.mancala.models import MancalaAnalysis, MancalaMove
 def generate_move_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for making a move in Mancala.
 
-    This function constructs a prompt template for the move engine,
-    which generates a move for the Mancala game.
+    This function constructs a prompt template for the move engine, which generates a
+    move for the Mancala game.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -46,9 +48,9 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
 def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for analyzing a Mancala position.
 
-    This function constructs a prompt template for the analysis engine,
-    which analyzes the current game state from the perspective of the
-    specified player.
+    This function constructs a prompt template for the analysis engine, which analyzes
+    the current game state from the perspective of the specified player.
+
     """
     return ChatPromptTemplate.from_messages(
         [

@@ -14,6 +14,7 @@ Example:
     ...     def __init__(self, config: ChessConfig):
     ...         super().__init__(config)
     ...         self.state_manager = ChessStateManager
+
 """
 
 import logging
@@ -57,6 +58,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         ...             "game_state": state.board_string,
         ...             "player_role": self.get_player_role(state, player_id)
         ...         }
+
     """
 
     def __init__(self, config: MultiPlayerGameConfig):
@@ -65,6 +67,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         Args:
             config (MultiPlayerGameConfig): Agent configuration including
                 state schema, LLM configurations, and game settings.
+
         """
         super().__init__(config)
         # Compose all LLMs from src.configs based on roles
@@ -72,8 +75,9 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
     def _init_engines(self):
         """Initialize the engines from the configuration.
 
-        This method sets up LLM engines for each role and function,
-        handling both AugLLM configurations and direct runnables.
+        This method sets up LLM engines for each role and function, handling both AugLLM
+        configurations and direct runnables.
+
         """
         self.engines = {}
 
@@ -121,6 +125,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         The workflow supports conditional transitions based on game state
         and can be overridden for custom game flows.
+
         """
         # Use DynamicGraph to build the workflow
         graph_builder = DynamicGraph(
@@ -192,6 +197,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             'MAFIA'
             >>> agent.get_player_role(state, "narrator")
             'NARRATOR'
+
         """
         # Fix the capitalization issue with 'narrator' vs 'Narrator'
         if player_id.lower() == "narrator":
@@ -235,6 +241,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             >>> # If more players need to act
             >>> agent.determine_next_step_after_player_turn(state)
             'next_player'  # Continue with next player
+
         """
         # If game is over, end the game
         if state.game_status != "ongoing" or state.game_phase == "GAME_OVER":
@@ -349,6 +356,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             - Handles case sensitivity issues with narrator role
             - Provides error handling for missing narrator engine
             - Converts state between dict and model forms as needed
+
         """
         # Get the narrator engine - fix case sensitivity issues
         narrator_engine = None
@@ -411,6 +419,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             ...         "alive_players": [p for p in state.players if p.is_alive],
             ...         "recent_actions": state.action_history[-5:]
             ...     }
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -425,6 +434,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Raises:
             ValueError: If state manager is not set.
+
         """
         if not self.state_manager:
             raise ValueError("State manager must be set by subclass")
@@ -455,6 +465,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             Dict[str, Any]: Updated game state after setup.
+
         """
         # Implement game-specific setup logic
         # Default implementation just advances to main phase
@@ -480,6 +491,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             Dict[str, Any]: Updated game state after the player's move.
+
         """
         # Get current player
         player_id = state.current_player
@@ -530,6 +542,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             Dict[str, Any]: Updated game state in the new phase.
+
         """
         try:
             # Advance to the next phase
@@ -557,6 +570,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             Dict[str, Any]: Final game state.
+
         """
         # Set game status to ended if not already
         state_dict = state.dict() if hasattr(state, "dict") else dict(state)
@@ -575,6 +589,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             bool: True if game should continue to main phase.
+
         """
         # Default: continue if game is ongoing
         return state.game_status == "ongoing"
@@ -587,6 +602,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             bool: True if game should continue.
+
         """
         # Continue if game is ongoing
         return state.game_status == "ongoing"
@@ -599,6 +615,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             bool: True if phase transition should occur.
+
         """
         # Default implementation: transition after all players have had a turn
         # Override this for game-specific logic
@@ -614,6 +631,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             str: Role of the player.
+
         """
         # Default implementation: all players have the same role
         # Override this for role-based games
@@ -628,6 +646,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Returns:
             Optional[Any]: Engine for the role and function, or None if not found.
+
         """
         role_engines = self.engines.get(role)
         if not role_engines:
@@ -650,6 +669,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         # This should be implemented by the subclass
         raise NotImplementedError("Must be implemented by subclass")
@@ -666,6 +686,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         # This should be implemented by the subclass
         raise NotImplementedError("Must be implemented by subclass")
@@ -678,6 +699,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
 
         Raises:
             NotImplementedError: Must be implemented by subclass.
+
         """
         # This should be implemented by the subclass
         raise NotImplementedError("Must be implemented by subclass")

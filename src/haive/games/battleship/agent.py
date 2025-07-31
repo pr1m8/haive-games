@@ -6,6 +6,7 @@ This module implements the main agent for the Battleship game, including:
     - LLM-powered player actions
     - Game state transitions
     - Ship placement and move execution
+
 """
 
 import logging
@@ -56,6 +57,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         >>> config = BattleshipAgentConfig()
         >>> agent = BattleshipAgent(config)
         >>> result = agent.run_game(visualize=True)
+
     """
 
     def __init__(self, config: BattleshipAgentConfig):
@@ -63,6 +65,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Args:
             config: Configuration for the agent
+
         """
         self.state_manager = BattleshipStateManager()
         self.engines = config.engines  # Store reference to engines
@@ -86,6 +89,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             >>> state_obj = agent.ensure_state(state_dict)
             >>> isinstance(state_obj, BattleshipState)
             True
+
         """
         if isinstance(state, dict):
             return BattleshipState(**state)
@@ -104,6 +108,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         The workflow includes conditional routing based on game state
         and supports different paths depending on whether analysis is enabled.
+
         """
         gb = DynamicGraph(
             name="battleship_game",
@@ -207,6 +212,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = self.ensure_state(state)
 
@@ -236,6 +242,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = self.ensure_state(state)
 
@@ -273,6 +280,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = self.ensure_state(state)
 
@@ -315,6 +323,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         Note:
             If an error occurs during analysis, it's logged but doesn't
             stop the game - control flows to the player's move node.
+
         """
         try:
             state_obj = self.ensure_state(state)
@@ -375,6 +384,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with initialized state
+
         """
         new_state = self.state_manager.initialize()
         return Command(update=new_state.model_dump(), goto="place_ships_player1")
@@ -389,6 +399,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.place_ships(state, "player1")
 
@@ -402,6 +413,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.place_ships(state, "player2")
 
@@ -423,6 +435,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Note:
             If an error occurs during placement, the game is reinitialized.
+
         """
         state_obj = self.ensure_state(state)
         state_obj.get_player_state(player)
@@ -515,6 +528,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.make_move(state, "player1", "check_game_over")
 
@@ -528,6 +542,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.make_move(state, "player2", "check_game_over")
 
@@ -553,6 +568,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
         Note:
             If the LLM fails to generate a valid move, a fallback move is
             generated using a deterministic strategy.
+
         """
         state_obj = self.ensure_state(state)
 
@@ -619,6 +635,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             MoveCommand: A valid move command
+
         """
         opponent = state.get_opponent(player)
         state.get_player_state(opponent)
@@ -661,6 +678,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.analyze_position(state, "player1", "player1_move")
 
@@ -674,6 +692,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state
+
         """
         return self.analyze_position(state, "player2", "player2_move")
 
@@ -692,6 +711,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         try:
             state_obj = self.ensure_state(state)
@@ -750,6 +770,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = self.ensure_state(state)
 
@@ -869,6 +890,7 @@ class BattleshipAgent(Agent[BattleshipAgentConfig]):
             valuable for debugging agent behavior, understanding game flow, and
             monitoring performance. Silent mode is optimized for automated testing
             and batch game execution.
+
         """
         if not self.app:
             self.compile()

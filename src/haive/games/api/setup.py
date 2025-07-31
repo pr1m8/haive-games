@@ -1,7 +1,8 @@
 """Game API setup utilities.
 
-This module provides utilities for setting up game APIs using the
-standardized GameAPI system from haive-dataflow.
+This module provides utilities for setting up game APIs using the standardized GameAPI
+system from haive-dataflow.
+
 """
 
 from typing import Any
@@ -48,6 +49,7 @@ def create_game_api(
 
     Returns:
         Configured GameAPI instance
+
     """
     if api_config is None:
         api_config = GameAPIConfig(app_name="Game")
@@ -109,6 +111,7 @@ def create_chess_api(
         ...         "enable_analysis": True
         ...     }
         ... )
+
     """
     # from haive.games.chess.agent import ChessAgent  # TODO: ChessAgent not
     # implemented
@@ -146,6 +149,7 @@ def create_connect4_api(
         ...         "temperature": 0.5
         ...     }
         ... )
+
     """
 
     api_config = GameAPIConfig(
@@ -181,6 +185,7 @@ def create_tic_tac_toe_api(
         ...         "example_config": "budget"
         ...     }
         ... )
+
     """
 
     api_config = GameAPIConfig(

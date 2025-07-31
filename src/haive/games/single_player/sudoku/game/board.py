@@ -50,6 +50,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
 
         Args:
             puzzle: 9x9 grid with digits (0 for empty cells)
+
         """
         if len(puzzle) != 9 or any(len(row) != 9 for row in puzzle):
             raise ValueError("Puzzle must be a 9x9 grid")
@@ -182,8 +183,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
         return False
 
     def update_candidates_for_related_cells(self, row: int, col: int) -> None:
-        """Update candidates for all cells related to the specified
-        position."""
+        """Update candidates for all cells related to the specified position."""
         # Update cells in the same row
         for c in range(self.cols):
             if c != col:
@@ -263,6 +263,7 @@ class SudokuBoard(GridBoard[SudokuCell, GridPosition, SudokuDigit]):
 
         Returns:
             True if a cell was filled, False otherwise
+
         """
         # Strategy 1: Naked Singles - cells with only one candidate
         for row in range(self.rows):

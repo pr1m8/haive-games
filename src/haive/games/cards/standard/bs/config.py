@@ -36,8 +36,7 @@ def generate_claim_prompt() -> ChatPromptTemplate:
 
 
 def generate_challenge_prompt() -> ChatPromptTemplate:
-    """Create a prompt for players to decide whether to challenge another
-    player."""
+    """Create a prompt for players to decide whether to challenge another player."""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -68,6 +67,7 @@ class BullshitAgentConfig(AgentConfig):
         num_players: Number of players in the game
         max_rounds: Maximum number of rounds to play
         state_schema: State schema for the Bullshit game
+
     """
 
     num_players: int = Field(default=4, description="Number of players in the game")

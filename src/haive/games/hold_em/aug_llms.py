@@ -22,6 +22,7 @@ Example:
     >>>     "hole_cards": ["Ah", "Kh"],
     >>>     "community_cards": ["Qh", "Jh", "2s", "7c", "9d"],
     >>> })
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -55,6 +56,7 @@ def get_hand_analyzer(level: str = "standard") -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured hand analyzer
+
     """
     # Select model based on complexity level
     if level == "basic":
@@ -139,6 +141,7 @@ def get_opponent_profiler(tracking_depth: str = "standard") -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured opponent profiler
+
     """
     # Select model based on tracking depth
     if tracking_depth == "basic":
@@ -223,6 +226,7 @@ def get_betting_strategist(style: str = "gto") -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured betting strategist
+
     """
     # Select model and temperature based on style
     if style == "exploitative":
@@ -320,6 +324,7 @@ def get_situation_analyzer(focus: str = "general") -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured situation analyzer
+
     """
     # Select model based on focus area
     if focus == "tournament":
@@ -410,6 +415,7 @@ def get_bluff_detector(sensitivity: str = "balanced") -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured bluff detector
+
     """
     # Select model and parameters based on sensitivity
     if sensitivity == "conservative":
@@ -499,6 +505,7 @@ def get_table_dynamics_analyzer() -> AugLLMConfig:
 
     Returns:
         AugLLMConfig: Configured table dynamics analyzer
+
     """
     model = AzureLLMConfig(model="gpt-4o", temperature=0.5)
 
@@ -560,6 +567,7 @@ def get_complete_llm_suite(player_style: str = "balanced") -> dict[str, AugLLMCo
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of specialized LLM configurations
+
     """
     # Map player styles to specialized configurations
     style_map = {

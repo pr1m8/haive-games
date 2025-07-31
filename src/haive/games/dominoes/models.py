@@ -52,6 +52,7 @@ Examples:
 
 The models provide comprehensive tile management and strategic gameplay
 support for AI-driven dominoes implementation.
+
 """
 
 from typing import Literal

@@ -28,6 +28,7 @@ class PokerStateManager:
     - Hand evaluation and winner determination
     - Player action validation and application
     - State observation
+
     """
 
     def __init__(self, debug: bool = False):
@@ -81,6 +82,7 @@ class PokerStateManager:
 
         Returns:
             Tuple of (success, message)
+
         """
 
         # Create decision object
@@ -130,6 +132,7 @@ class PokerStateManager:
 
         Returns:
             Tuple of (success, message)
+
         """
         try:
             # Advance phase in state
@@ -158,6 +161,7 @@ class PokerStateManager:
 
         Returns:
             Hand result information
+
         """
         # If not already in game over phase, handle showdown
         if self.state.game.phase != GamePhase.GAME_OVER:

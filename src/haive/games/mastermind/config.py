@@ -1,8 +1,8 @@
 """Configuration for the Mastermind game agent.
 
-This module defines the configuration for the Mastermind game agent,
-including game state schema, engines, analysis settings, visualization,
-and game parameters.
+This module defines the configuration for the Mastermind game agent, including game
+state schema, engines, analysis settings, visualization, and game parameters.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -19,9 +19,9 @@ VERSION = "1.1.0"
 class MastermindConfig(GameConfig):
     """Configuration for the Mastermind game agent.
 
-    This class defines the configuration for the Mastermind game agent,
-    including game state schema, engines, analysis settings,
-    visualization, and game parameters.
+    This class defines the configuration for the Mastermind game agent, including game
+    state schema, engines, analysis settings, visualization, and game parameters.
+
     """
 
     name: str = Field(default="mastermind", description="Name of the game")
@@ -57,6 +57,7 @@ class MastermindConfig(GameConfig):
 
         Returns:
             MastermindConfig: Default configuration for Mastermind game.
+
         """
         return cls(
             name="mastermind",

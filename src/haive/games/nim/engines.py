@@ -12,6 +12,7 @@ def generate_move_prompt(player: str) -> ChatPromptTemplate:
 
     Args:
         player (str): The player to generate the prompt for.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -43,6 +44,7 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
 
     Args:
         player (str): The player to generate the analysis for.
+
     """
     return ChatPromptTemplate.from_messages(
         [

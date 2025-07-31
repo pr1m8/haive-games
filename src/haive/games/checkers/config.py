@@ -61,8 +61,8 @@ Note:
 
 
 class CheckersAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Checkers agents with comprehensive
-    rule support.
+    r"""Advanced configuration system for Checkers agents with comprehensive rule
+    support.
 
     This class provides complete configuration management for Checkers gameplay,
     supporting multiple rule variants, strategic AI customization, and performance
@@ -154,6 +154,7 @@ class CheckersAgentConfig(AgentConfig):
     Note:
         All configurations use Pydantic for validation and support both JSON
         serialization and integration with distributed tournament systems.
+
     """
 
     board_size: int = Field(
@@ -258,6 +259,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Raises:
             ValueError: If promotion row is invalid for the board size.
+
         """
         board_size = values.get("board_size", 8)
         if v is None:
@@ -277,6 +279,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Returns:
             int: Total number of squares (board_size * board_size).
+
         """
         return self.board_size * self.board_size
 
@@ -287,6 +290,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Returns:
             int: Number of playable squares (half of total squares).
+
         """
         return self.total_squares // 2
 
@@ -297,6 +301,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Returns:
             int: Number of pieces each player starts with.
+
         """
         # Typically 3 rows of pieces for each player
         return (self.board_size // 2 - 1) * (self.board_size // 2)
@@ -308,6 +313,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Returns:
             str: Game variant name (American, International, Custom).
+
         """
         if self.board_size == 8 and not self.allow_flying_kings:
             return "American Checkers"
@@ -322,6 +328,7 @@ class CheckersAgentConfig(AgentConfig):
 
         Returns:
             Dict[str, Union[str, int, float]]: Performance characteristics.
+
         """
         complexity_score = (
             self.board_size
@@ -372,6 +379,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.allow_flying_kings == False
                 assert config.mandatory_jumps == True
                 assert config.pieces_per_player == 12
+
         """
         return cls(
             name="american_checkers",
@@ -414,6 +422,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.allow_flying_kings == True
                 assert config.pieces_per_player == 20
                 assert config.strategic_depth == 6
+
         """
         return cls(
             name="international_draughts",
@@ -456,6 +465,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.enable_endgame_tables == True
                 assert config.time_per_move == 30.0
                 assert config.analysis_threads == 4
+
         """
         return cls(
             name="tournament_checkers",
@@ -498,6 +508,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.time_per_move == 5.0
                 assert config.memory_limit_mb == 256
                 assert config.max_turns == 100
+
         """
         return cls(
             name="training_checkers",
@@ -540,6 +551,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.memory_limit_mb == 1024
                 assert config.enable_endgame_tables == True
                 assert config.strategic_depth == 6
+
         """
         return cls(
             name="performance_checkers",
@@ -582,6 +594,7 @@ class CheckersAgentConfig(AgentConfig):
                 assert config.mandatory_jumps == True
                 assert config.strategic_depth == 4
                 assert config.game_variant == "American Checkers"
+
         """
         return cls.american_checkers()
 

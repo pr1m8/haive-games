@@ -5,6 +5,7 @@ This module provides data models for the chess game, including:
     - Player decisions
     - Position analysis
     - Structured output models for LLMs
+
 """
 
 import chess
@@ -22,6 +23,7 @@ class ChessMoveModel(BaseModel):
     Attributes:
         move (str): Move in UCI notation
         explanation (Optional[str]): Explanation of the move's purpose
+
     """
 
     move: str = Field(..., description="Move in UCI notation (e.g., 'e2e4')")
@@ -43,6 +45,7 @@ class ChessMoveModel(BaseModel):
 
         Raises:
             ValueError: If move is not a string or too short
+
         """
         if not isinstance(v, str) or len(v) < 4:
             raise ValueError("Move must be a string of at least 4 characters")
@@ -74,6 +77,7 @@ class ChessPlayerDecision(BaseModel):
         position_eval (str): Player's assessment of the position
         alternatives (List[ChessMoveModel]): Alternative moves considered
         reasoning (str): Detailed reasoning for the move choice
+
     """
 
     selected_move: ChessMoveModel = Field(
@@ -106,6 +110,7 @@ class ChessAnalysis(BaseModel):
         tactics (List[str]): List of tactical opportunities
         strategy (str): Long-term strategic plan
         best_moves (List[str]): Suggested best moves
+
     """
 
     material_eval: float = Field(
@@ -142,6 +147,7 @@ class SegmentedAnalysis(BaseModel):
         attacking_chances (str): Likelihood of a successful attack
         suggested_plans (List[str]): Recommended next plans
         defensive_needs (Optional[str]): Defensive needs and counterplay ideas
+
     """
 
     position_score: float = Field(
@@ -169,6 +175,7 @@ class ChessMoveValidation(BaseModel):
         is_valid (bool): Whether the move is legal
         error_message (Optional[str]): Error message if move is invalid
         resulting_fen (Optional[str]): FEN of position after move
+
     """
 
     is_valid: bool = Field(

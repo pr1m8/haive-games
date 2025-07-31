@@ -1,8 +1,8 @@
 """State for the Mancala game.
 
-This module defines the state for the Mancala game, which includes the
-board, turn, game status, move history, free turn, winner, and player
-analyses.
+This module defines the state for the Mancala game, which includes the board, turn, game
+status, move history, free turn, winner, and player analyses.
+
 """
 
 import json
@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 class MancalaState(GameState):
     """State for a Mancala game.
 
-    This class defines the structure of the Mancala game state, which
-    includes the board, turn, game status, move history, free turn,
-    winner, and player analyses.
+    This class defines the structure of the Mancala game state, which includes the
+    board, turn, game status, move history, free turn, winner, and player analyses.
+
     """
 
     # The board has 14 pits:
@@ -227,6 +227,7 @@ class MancalaState(GameState):
 
         Returns:
             MancalaState: A new initialized game state
+
         """
         # Create board with 14 positions
         board = [0] * 14
@@ -294,6 +295,7 @@ class MancalaState(GameState):
 
         Returns:
             bool: True if game is over, False otherwise
+
         """
         # Check if either player's side is empty
         player1_stones = sum(self.board[0:6])
@@ -306,6 +308,7 @@ class MancalaState(GameState):
 
         Returns:
             Optional[str]: "player1", "player2", "draw", or None if game ongoing
+
         """
         if not self.is_game_over():
             return None
@@ -325,6 +328,7 @@ class MancalaState(GameState):
 
         Returns:
             List[int]: List of valid pit indices that can be played
+
         """
         if player is None:
             player = self.turn
@@ -340,6 +344,7 @@ class MancalaState(GameState):
 
         Returns:
             MancalaState: A new instance with the same values
+
         """
         return MancalaState(
             board=self.board.copy(),

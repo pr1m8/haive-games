@@ -28,6 +28,7 @@ class GameDebateAgent(DebateConversation):
     - Tournament bracket support
     - Performance statistics tracking
     - Ranking and leaderboard capabilities
+
     """
 
     # Mode identifier

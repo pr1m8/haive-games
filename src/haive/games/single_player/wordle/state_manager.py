@@ -126,6 +126,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Initialized game state
+
         """
         # Select puzzle
         if puzzle_index is not None and 0 <= puzzle_index < len(cls.NYT_PUZZLES):
@@ -163,6 +164,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Updated game state
+
         """
         # Create a copy of the state
         new_state = state.model_copy(deep=True)
@@ -207,6 +209,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Updated game state
+
         """
         # Already handled in apply_move
         return state
@@ -220,6 +223,7 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
 
         Returns:
             Hint string
+
         """
         # Find easiest unsolved category
         for difficulty in ["yellow", "green", "blue", "purple"]:

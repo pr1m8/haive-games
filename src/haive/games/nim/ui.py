@@ -1,8 +1,9 @@
 """Rich UI implementation for the Nim game.
 
-This module provides a Rich-based UI for visualizing and interacting
-with the Nim game. It includes a NimUI class that handles visualization
-of the game state, piles, and game information.
+This module provides a Rich-based UI for visualizing and interacting with the Nim game.
+It includes a NimUI class that handles visualization of the game state, piles, and game
+information.
+
 """
 
 import logging
@@ -35,9 +36,10 @@ logger = logging.getLogger(__name__)
 class NimUI:
     """Rich terminal UI for the Nim game.
 
-    This class provides methods for visualizing the Nim game state using
-    the Rich library. It includes methods for displaying the game board,
-    piles, game information, and analysis.
+    This class provides methods for visualizing the Nim game state using the Rich
+    library. It includes methods for displaying the game board, piles, game information,
+    and analysis.
+
     """
 
     # Stone representation
@@ -70,6 +72,7 @@ class NimUI:
 
         Returns:
             Panel: A Rich panel containing the game header information.
+
         """
         # Determine game status text and style
         if state.game_status == "in_progress":
@@ -110,6 +113,7 @@ class NimUI:
 
         Returns:
             Panel: A Rich panel containing visualizations of the piles.
+
         """
         pile_lines = []
 
@@ -134,6 +138,7 @@ class NimUI:
 
         Returns:
             Table: A Rich table containing the move history.
+
         """
         table = Table(title="Move History", box=box.SIMPLE)
 
@@ -158,6 +163,7 @@ class NimUI:
 
         Returns:
             Optional[Panel]: A Rich panel containing analysis information, or None if no analysis.
+
         """
         # Get the latest analysis, if any
         latest_analysis = None
@@ -202,6 +208,7 @@ class NimUI:
 
         Returns:
             Layout: A Rich layout for the complete game display.
+
         """
         # Create main layout
         layout = Layout()
@@ -241,6 +248,7 @@ class NimUI:
 
         Args:
             state: The current game state as a NimState object or dict.
+
         """
         # Convert dict to NimState if needed
         if isinstance(state, dict):
@@ -256,11 +264,11 @@ class NimUI:
             self._display_text_ui(state)
 
     def _display_text_ui(self, state: NimState):
-        """Display a text-based UI for the game state when Rich is not
-        available.
+        """Display a text-based UI for the game state when Rich is not available.
 
         Args:
             state: The current game state.
+
         """
         # Header
         print("\n" + "=" * 50)
@@ -316,6 +324,7 @@ class NimUI:
 
         Returns:
             NimMove: The move chosen by the user.
+
         """
         # Display current state
         self.display_game_state(state)

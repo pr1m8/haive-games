@@ -5,6 +5,7 @@ The game will use the Rich UI to display the game state.
 
 Usage:
     python example.py
+
 """
 
 import logging

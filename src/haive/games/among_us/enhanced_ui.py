@@ -1,8 +1,8 @@
 """Enhanced Rich UI module for Among Us game visualization.
 
-This module provides an enhanced rich console UI for visualizing the
-Among Us game, with better styling, animated visualizations, and
-improved game information display.
+This module provides an enhanced rich console UI for visualizing the Among Us game, with
+better styling, animated visualizations, and improved game information display.
+
 """
 
 import logging
@@ -36,6 +36,7 @@ class EnhancedAmongUsUI:
         - Vent and sabotage system visualization
         - Meeting and voting interfaces
         - Game over screens with detailed statistics
+
     """
 
     def __init__(self, console: Console | None = None):
@@ -43,6 +44,7 @@ class EnhancedAmongUsUI:
 
         Args:
             console: Optional Rich console instance
+
         """
         self.console = console or Console()
 
@@ -120,6 +122,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             AmongUsState instance or None if extraction fails
+
         """
         try:
             # Handle None input gracefully
@@ -209,6 +212,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             True if the dict appears to be a valid game state
+
         """
         required_fields = {"player_states", "game_phase", "map_name"}
         return all(field in data for field in required_fields)
@@ -216,8 +220,7 @@ class EnhancedAmongUsUI:
     def create_map_visualization(
         self, state: AmongUsState, player_id: str | None = None
     ) -> Panel:
-        """Create a visual representation of the map with rooms, vents, and
-        players.
+        """Create a visual representation of the map with rooms, vents, and players.
 
         Args:
             state: Current game state
@@ -225,6 +228,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel containing the map visualization
+
         """
         # Get the current player's state if provided
         player_state = None
@@ -389,6 +393,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel containing player information
+
         """
         if player_id not in state.player_states:
             return Panel("Player not found", title="Player Info")
@@ -527,6 +532,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel containing game information
+
         """
         # Create info table
         info_table = Table(show_header=False, box=None, show_edge=False, padding=(0, 1))
@@ -621,6 +627,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel containing other player information
+
         """
         if player_id not in state.player_states:
             return Panel("Player not found", title="Other Players")
@@ -693,6 +700,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel for the meeting
+
         """
         if state.game_phase not in [AmongUsGamePhase.MEETING, AmongUsGamePhase.VOTING]:
             return Panel("No meeting in progress", title="Meeting")
@@ -820,6 +828,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel for game over
+
         """
         if state.game_phase != AmongUsGamePhase.GAME_OVER:
             return Panel("Game not over", title="Game Status")
@@ -966,6 +975,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel for sabotage or None if no active sabotage
+
         """
         active_sabotage = state.get_active_sabotage()
         if not active_sabotage:
@@ -1090,6 +1100,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Rich panel showing legal moves
+
         """
         if not legal_moves:
             return Panel("No legal moves available", title="Legal Moves")
@@ -1202,6 +1213,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             Complete rich layout
+
         """
         # Create main layout
         layout = Layout()
@@ -1347,6 +1359,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             True if display was successful, False otherwise
+
         """
         try:
             game_state = self.extract_game_state(state_data)
@@ -1371,6 +1384,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             None
+
         """
         with Progress(
             SpinnerColumn(),
@@ -1386,6 +1400,7 @@ class EnhancedAmongUsUI:
 
         Returns:
             None
+
         """
         welcome_text = Text(
             """
@@ -1426,6 +1441,7 @@ The game will be played by AI agents with enhanced visualization!
 
         Returns:
             None
+
         """
         game_state = self.extract_game_state(final_state)
         if game_state is None:
@@ -1454,6 +1470,7 @@ The game will be played by AI agents with enhanced visualization!
 
         Returns:
             None
+
         """
         action_type = move.get("action", "unknown")
 
@@ -1489,6 +1506,7 @@ The game will be played by AI agents with enhanced visualization!
 
         Returns:
             Formatted move description
+
         """
         action_type = move.get("action", "unknown")
         player_role = (
@@ -1581,6 +1599,7 @@ The game will be played by AI agents with enhanced visualization!
 
         Returns:
             Final game state
+
         """
         # Set the UI on the agent if possible
         if hasattr(agent, "ui"):

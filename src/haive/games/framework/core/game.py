@@ -37,8 +37,8 @@ M = TypeVar("M", bound=Move)
 class Game(BaseModel, Generic[S, M]):
     """Base class for all games.
 
-    A Game represents a complete playable game with turns, moves, and
-    state.
+    A Game represents a complete playable game with turns, moves, and state.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -78,6 +78,7 @@ class Game(BaseModel, Generic[S, M]):
 
         Args:
             player: The player to add
+
         """
         if self.status == GameStatus.NOT_STARTED:
             self.players.append(player)
@@ -87,6 +88,7 @@ class Game(BaseModel, Generic[S, M]):
 
         Returns:
             The current player, or None if no players
+
         """
         if not self.players:
             return None
@@ -97,6 +99,7 @@ class Game(BaseModel, Generic[S, M]):
 
         Returns:
             The new turn
+
         """
         current_player = self.get_current_player()
         if not current_player:
@@ -126,6 +129,7 @@ class Game(BaseModel, Generic[S, M]):
 
         Returns:
             True if the move was valid and applied, False otherwise
+
         """
         # Ensure game is in progress
         if self.status != GameStatus.IN_PROGRESS:
@@ -158,6 +162,7 @@ class Game(BaseModel, Generic[S, M]):
 
         Returns:
             True if the game is over, False otherwise
+
         """
         # Subclasses should implement game-specific end conditions
         return False

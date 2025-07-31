@@ -15,6 +15,7 @@ Command-line options:
     --no-analysis: Disable strategic analysis
     --debug: Enable debug mode with detailed logs
     --delay: Set delay between game steps (default: 0.5s)
+
 """
 
 import argparse
@@ -62,6 +63,7 @@ def run_game(visualize=True, debug=False, analysis=True, delay=0.5):
 
         >>> run_game(visualize=False, debug=True, analysis=False)
         # Runs a game with debug logging but no visualization or analysis
+
     """
     console.print(
         Panel.fit(
@@ -244,6 +246,7 @@ def main():
 
     Returns:
         None
+
     """
     parser = argparse.ArgumentParser(description="Run a Battleship LLM agent match.")
     parser.add_argument(

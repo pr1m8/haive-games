@@ -1,7 +1,8 @@
 """Models for Flow Free gameplay and analysis.
 
-This module defines the core data models for the Flow Free puzzle game,
-including move representation and strategic analysis.
+This module defines the core data models for the Flow Free puzzle game, including move
+representation and strategic analysis.
+
 """
 
 from enum import Enum
@@ -40,6 +41,7 @@ class Position(BaseModel):
     Attributes:
         row: Row index (0-based).
         col: Column index (0-based).
+
     """
 
     row: int = Field(..., ge=0, description="Row index (0-based)")
@@ -56,6 +58,7 @@ class FlowFreeMove(BaseModel):
     Attributes:
         flow_id: Identifier for the flow being extended.
         position: Position to place the next pipe segment.
+
     """
 
     flow_id: str = Field(..., description="ID of the flow to extend")
@@ -76,6 +79,7 @@ class FlowFreeAnalysis(BaseModel):
         blocked_flows: Flows that might be blocked or have limited space.
         recommended_move: The suggested next move based on analysis.
         reasoning: Detailed explanation of the analysis.
+
     """
 
     completed_flows: list[str] = Field(

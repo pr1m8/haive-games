@@ -428,6 +428,7 @@ class ChessRichUI:
         Args:
             agent: The chess agent to run
             delay: Minimum delay between UI updates (seconds)
+
         """
         # Create initial state
         initial_state = ChessState()

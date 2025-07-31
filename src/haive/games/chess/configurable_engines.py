@@ -1,8 +1,9 @@
 """Configurable chess engines using the new player agent system.
 
-This module provides chess engine configurations that use configurable
-player agents instead of hardcoded LLM configurations, making it easy to
-switch LLMs for different players.
+This module provides chess engine configurations that use configurable player agents
+instead of hardcoded LLM configurations, making it easy to switch LLMs for different
+players.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -25,6 +26,7 @@ def create_chess_move_prompt(color: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: Prompt template for move generation
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -75,6 +77,7 @@ def create_chess_analysis_prompt(color: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: Prompt template for position analysis
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -111,6 +114,7 @@ def get_chess_role_definitions() -> dict[str, GamePlayerRole]:
 
     Returns:
         Dict[str, GamePlayerRole]: Dictionary of role definitions
+
     """
     return {
         "white_player": GamePlayerRole(
@@ -163,6 +167,7 @@ def create_configurable_chess_engines(
         ...     "black_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_configurable_chess_engines(configs)
+
     """
     roles = get_chess_role_definitions()
     return PlayerAgentFactory.create_engines_from_player_configs(roles, player_configs)
@@ -185,6 +190,7 @@ def create_anthropic_vs_openai_engines(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     configs = create_simple_player_configs(
         white_model=f"anthropic:{white_model}",
@@ -205,6 +211,7 @@ def create_same_model_engines(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     configs = create_simple_player_configs(
         white_model=model, black_model=model, temperature=temperature
@@ -223,6 +230,7 @@ def create_mixed_provider_engines(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     if providers is None:
         providers = {
@@ -272,6 +280,7 @@ def get_example_engines(config_name: str) -> dict[str, AugLLMConfig]:
 
     Available configs: anthropic_vs_openai, gpt4_only, claude_only,
                       mixed_providers, budget_friendly
+
     """
     if config_name not in EXAMPLE_CONFIGS:
         available = ", ".join(EXAMPLE_CONFIGS.keys())

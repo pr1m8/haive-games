@@ -95,6 +95,7 @@ class GameStatus(str, Enum):
         PAUSED: Game is temporarily paused
         FINISHED: Game has completed with a winner
         ABANDONED: Game was abandoned before completion
+
     """
 
     WAITING = "waiting"
@@ -135,6 +136,7 @@ def add_strings(left: list[str], right: list[str]) -> list[str]:
 
     Returns:
         List[str]: Combined list of strings.
+
     """
     if not left:
         return right
@@ -144,8 +146,8 @@ def add_strings(left: list[str], right: list[str]) -> list[str]:
 
 
 class MonopolyState(BaseModel):
-    r"""Comprehensive state model for Monopoly gameplay with economic analysis
-    and strategic context.
+    r"""Comprehensive state model for Monopoly gameplay with economic analysis and
+    strategic context.
 
     This class provides complete state management for Monopoly games, supporting
     both traditional gameplay mechanics and advanced economic simulation. The state
@@ -274,6 +276,7 @@ class MonopolyState(BaseModel):
     Note:
         The state uses Pydantic for validation and supports both JSON serialization
         and integration with LangGraph for distributed tournament systems.
+
     """
 
     # Core game data with comprehensive player and property management
@@ -391,6 +394,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             int: Validated current player index.
+
         """
         players = values.get("players", [])
         if players and v >= len(players):
@@ -407,6 +411,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             int: Validated doubles count.
+
         """
         return min(v, 3)  # Maximum 3 doubles before jail
 
@@ -414,11 +419,11 @@ class MonopolyState(BaseModel):
     @computed_field
     @property
     def current_player(self) -> Player:
-        """Get the current player with comprehensive bounds checking and
-        validation.
+        """Get the current player with comprehensive bounds checking and validation.
 
         Returns:
             Player: The player whose turn it currently is, with defensive fallbacks.
+
         """
         if not self.players:
             # Return a default player if no players exist
@@ -442,6 +447,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             List[Player]: All players who are still actively playing the game.
+
         """
         return [p for p in self.players if not p.bankrupt]
 
@@ -452,6 +458,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             List[Player]: All players who have been eliminated from the game.
+
         """
         return [p for p in self.players if p.bankrupt]
 
@@ -462,6 +469,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             bool: True if the game is over, False if gameplay should continue.
+
         """
         return (
             self.game_status == GameStatus.FINISHED
@@ -477,6 +485,7 @@ class MonopolyState(BaseModel):
         Returns:
             Dict[str, Union[int, float]]: Economic analysis including money supply,
                 wealth distribution, and market concentration.
+
         """
         if not self.players:
             return {
@@ -537,6 +546,7 @@ class MonopolyState(BaseModel):
         Returns:
             Dict[str, Any]: Property distribution analysis including monopolies,
                 development patterns, and strategic positions.
+
         """
         analysis = {
             "monopolies": {},
@@ -600,6 +610,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             List[Dict[str, Any]]: Players ranked by net worth with strategic metrics.
+
         """
         rankings = []
 
@@ -634,6 +645,7 @@ class MonopolyState(BaseModel):
         Returns:
             Dict[str, Union[int, float, str]]: Game statistics including duration,
                 activity levels, and strategic metrics.
+
         """
         return {
             "turn_number": self.turn_number,
@@ -733,8 +745,8 @@ class MonopolyState(BaseModel):
     ) -> "MonopolyState":
         """Convert any state object to MonopolyState.
 
-        This is the primary method for ensuring consistency across all
-        state handling.
+        This is the primary method for ensuring consistency across all state handling.
+
         """
         if isinstance(state, cls):
             return state
@@ -883,6 +895,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             List[str]: List of color groups where player owns all properties.
+
         """
         monopolies = []
         for color in PropertyColor:
@@ -898,6 +911,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             float: Strategic score based on net worth, monopolies, and position.
+
         """
         player = self.get_player_by_name(player_name)
         if not player:
@@ -932,6 +946,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             Dict[str, Any]: Strategic position analysis including strengths and weaknesses.
+
         """
         player = self.get_player_by_name(player_name)
         if not player:
@@ -970,8 +985,7 @@ class MonopolyState(BaseModel):
         }
 
     def get_public_view_for_player(self, player_name: str) -> dict[str, Any]:
-        """Generate a secure public view of the game state for a specific
-        player.
+        """Generate a secure public view of the game state for a specific player.
 
         This method creates a view that contains all information a player should
         legitimately know while hiding private information from other players.
@@ -981,6 +995,7 @@ class MonopolyState(BaseModel):
 
         Returns:
             Dict[str, Any]: Public state information for the player.
+
         """
         public_view = {
             "game_status": self.game_status.value,

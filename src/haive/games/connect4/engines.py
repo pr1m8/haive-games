@@ -33,8 +33,7 @@ def generate_move_prompt(color: str) -> ChatPromptTemplate:
 
 
 def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
-    """Generate a structured and detailed prompt for analyzing a Connect 4
-    position."""
+    """Generate a structured and detailed prompt for analyzing a Connect 4 position."""
     return ChatPromptTemplate.from_messages(
         [
             (

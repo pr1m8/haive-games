@@ -47,6 +47,7 @@ Examples:
 Note:
     All configurations use Pydantic for validation and support both JSON
     serialization and integration with the game agent framework.
+
 """
 
 from typing import Any, Literal
@@ -136,6 +137,7 @@ class TicTacToeConfig(GameConfig):
     Note:
         The configuration integrates with the game agent framework and
         supports runtime modification through the agent's lifecycle.
+
     """
 
     name: str = Field(
@@ -201,6 +203,7 @@ class TicTacToeConfig(GameConfig):
 
         Raises:
             ValueError: If first player is not X or O.
+
         """
         if v not in ["X", "O"]:
             raise ValueError(f"first_player must be 'X' or 'O', got '{v}'")
@@ -213,6 +216,7 @@ class TicTacToeConfig(GameConfig):
 
         Returns:
             str: Game mode classification.
+
         """
         if self.enable_analysis and self.visualize:
             return "educational"
@@ -230,6 +234,7 @@ class TicTacToeConfig(GameConfig):
 
         Returns:
             Dict[str, Any]: Performance characteristics.
+
         """
         return {
             "analysis_overhead": self.enable_analysis,
@@ -262,6 +267,7 @@ class TicTacToeConfig(GameConfig):
                 config = TicTacToeConfig.default_config()
                 agent = TicTacToeAgent(config)
                 agent.run_game()
+
         """
         return cls(
             name="tictactoe",
@@ -286,6 +292,7 @@ class TicTacToeConfig(GameConfig):
 
         Returns:
             TicTacToeConfig: Educational configuration.
+
         """
         return cls(name="educational_tictactoe", enable_analysis=True, visualize=True)
 
@@ -301,6 +308,7 @@ class TicTacToeConfig(GameConfig):
 
         Returns:
             TicTacToeConfig: Competitive configuration.
+
         """
         return cls(name="competitive_tictactoe", enable_analysis=False, visualize=False)
 
@@ -316,6 +324,7 @@ class TicTacToeConfig(GameConfig):
 
         Returns:
             TicTacToeConfig: Spectator configuration.
+
         """
         return cls(name="spectator_tictactoe", enable_analysis=False, visualize=True)
 

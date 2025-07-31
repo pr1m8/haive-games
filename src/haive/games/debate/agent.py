@@ -49,6 +49,7 @@ Note:
     The agent requires properly configured engines for different participant
     roles (debater, moderator, judge) and uses the DebateStateManager for
     all state transitions and rule enforcement.
+
 """
 
 import time
@@ -132,6 +133,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         The agent requires appropriate engines to be configured for different
         participant roles. Each role (debater, moderator, judge, etc.) should
         have corresponding engine configurations in the agent setup.
+
     """
 
     def __init__(self, config: DebateAgentConfig) -> None:
@@ -144,6 +146,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             The state_manager is set as a class reference and will be used
             to create instances for state management operations.
+
         """
         self.state_manager = DebateStateManager
         super().__init__(config)
@@ -191,6 +194,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             If no topic is provided, defaults to "AI Ethics in Society".
             If no participants are provided, creates 4 default participants.
             Participant roles are assigned during the setup phase based on config.
+
         """
         logger.debug(f"=== initialize_game called with state: {state}")
         logger.debug(f"State type: {type(state)}")
@@ -271,6 +275,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             Default role is "debater" for unknown participants to ensure
             graceful handling of edge cases during debate flow.
+
         """
         if player_id in state.participants:
             return state.participants[player_id].role
@@ -341,6 +346,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             Returns empty dict if participant not found in state.
             Context is optimized for AI engines but human-readable for hybrid debates.
+
         """
         participant = state.participants.get(player_id)
         if not participant:
@@ -498,6 +504,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             Only includes arguments from participants with defined positions.
             Neutral participants and moderators are excluded from argument extraction.
+
         """
         pro_args = []
         con_args = []
@@ -557,6 +564,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             Only includes statements from participants explicitly assigned
             the 'witness' role. Other participant types are filtered out.
+
         """
         witness_stmts = []
 
@@ -638,6 +646,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
         Note:
             Fallback behavior treats any unrecognized response as a general
             statement to ensure debate flow continues even with unexpected responses.
+
         """
         if isinstance(response, Statement):
             # If response is already a structured Statement
@@ -707,6 +716,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             Role assignment from config takes precedence over default assignments.
             If moderator_role is enabled, the first player becomes moderator.
             Always advances to opening statements phase after setup.
+
         """
         state_obj = DebateState(**state) if isinstance(state, dict) else state
 
@@ -768,6 +778,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             Automatically handles error recovery by skipping problematic turns.
             Engine selection is based on participant role and position.
             State visualization occurs if configured in agent settings.
+
         """
         state_obj = DebateState(**state) if isinstance(state, dict) else state
 
@@ -909,6 +920,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             If no moderator is designated or no moderator engine is available,
             the turn is skipped and normal turn progression continues.
             Moderator "advance_phase" actions trigger immediate phase transitions.
+
         """
         moderator_id = state.moderator_id
         if not moderator_id:
@@ -985,6 +997,7 @@ class DebateAgent(MultiPlayerGameAgent[DebateAgentConfig]):
             - Opening/Closing: All participants have made statements
             - Voting: All participants have cast votes
             - Other phases: Use turn-based progression
+
         """
         # End if game over
         if (

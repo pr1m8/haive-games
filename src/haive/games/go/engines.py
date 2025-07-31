@@ -8,6 +8,7 @@ This module provides LLM engine configurations for Go game agents, including:
 
 The engines use LLM configurations optimized for strategic gameplay,
 with prompt templates designed to generate high-quality moves and analysis.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -22,6 +23,7 @@ def generate_black_prompt() -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: A prompt template for black player gameplay
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -61,6 +63,7 @@ def generate_white_prompt() -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: A prompt template for white player gameplay
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -100,6 +103,7 @@ def generate_analysis_prompt() -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: A prompt template for position analysis
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -135,6 +139,7 @@ def build_go_aug_llms() -> dict[str, AugLLMConfig]:
 
     Returns:
         dict[str, AugLLMConfig]: Dictionary of engine configurations
+
     """
     engines = {}
 

@@ -1,7 +1,8 @@
 """State model for the Risk game.
 
-This module defines the state model for the Risk game, tracking the game
-board, player information, and game status.
+This module defines the state model for the Risk game, tracking the game board, player
+information, and game status.
+
 """
 
 import random
@@ -37,6 +38,7 @@ class RiskState(BaseModel):
         move_history: List of moves that have been made.
         player_analyses: Dictionary of player analyses, keyed by player name.
         attacker_captured_territory: Whether the attacker captured a territory this turn.
+
     """
 
     territories: dict[str, Territory] = Field(default_factory=dict)
@@ -61,6 +63,7 @@ class RiskState(BaseModel):
 
         Returns:
             A new RiskState object with default values.
+
         """
         if len(player_names) < 2 or len(player_names) > 6:
             raise ValueError("Risk requires 2-6 players")
@@ -364,6 +367,7 @@ class RiskState(BaseModel):
 
         Returns:
             List of territories controlled by the player.
+
         """
         return [t for t in self.territories.values() if t.owner == player_name]
 
@@ -375,6 +379,7 @@ class RiskState(BaseModel):
 
         Returns:
             List of continents controlled by the player.
+
         """
         controlled_continents = []
 
@@ -393,6 +398,7 @@ class RiskState(BaseModel):
 
         Returns:
             True if the game is over, False otherwise.
+
         """
         return self.game_status == GameStatus.FINISHED
 
@@ -401,6 +407,7 @@ class RiskState(BaseModel):
 
         Returns:
             Name of the winner, or None if the game is not over.
+
         """
         if not self.is_game_over():
             return None

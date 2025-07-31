@@ -1,7 +1,8 @@
 """Configurable Mastermind configuration using the generic player agent system.
 
-This module provides configurable Mastermind game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Mastermind game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ConfigurableMastermindConfig(MastermindConfig):
         enable_analysis: Whether to enable strategic analysis
         visualize_game: Whether to visualize game state
         recursion_limit: Python recursion limit for game execution
+
     """
 
     codemaker_model: str | None = Field(default=None, description="Model for codemaker")
@@ -151,8 +153,7 @@ def create_mastermind_config(
     codebreaker_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration with simple model
-    specifications.
+    """Create a configurable Mastermind configuration with simple model specifications.
 
     Args:
         codemaker_model: Model for codemaker and analyzer
@@ -169,6 +170,7 @@ def create_mastermind_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     enable_analysis=True
         ... )
+
     """
     return ConfigurableMastermindConfig(
         codemaker_model=codemaker_model, codebreaker_model=codebreaker_model, **kwargs
@@ -178,8 +180,7 @@ def create_mastermind_config(
 def create_mastermind_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration from a predefined
-    example.
+    """Create a configurable Mastermind configuration from a predefined example.
 
     Args:
         example_name: Name of the example configuration
@@ -199,6 +200,7 @@ def create_mastermind_config_from_example(
     Example:
         >>> config = create_mastermind_config_from_example("budget", enable_analysis=False)
         >>> config = create_mastermind_config_from_example("advanced", visualize_game=True)
+
     """
     return ConfigurableMastermindConfig(example_config=example_name, **kwargs)
 
@@ -246,6 +248,7 @@ def create_mastermind_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_mastermind_config_from_player_configs(player_configs)
+
     """
     return ConfigurableMastermindConfig(player_configs=player_configs, **kwargs)
 
@@ -301,6 +304,7 @@ def get_example_config(name: str) -> ConfigurableMastermindConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -314,6 +318,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

@@ -1,8 +1,8 @@
 """Chess-specific LLM utilities using the game LLM factory.
 
-This module provides chess-specific utilities for creating and
-configuring LLMs for chess gameplay, building on the core LLM factory
-system.
+This module provides chess-specific utilities for creating and configuring LLMs for
+chess gameplay, building on the core LLM factory system.
+
 """
 
 from typing import Any
@@ -59,6 +59,7 @@ def create_chess_engines_from_config(
         ...         "black": {"provider": "azure"}
         ...     }
         ... )
+
     """
     # Create player LLM configs using the factory
     white_llm = GameLLMFactory.create_llm_config(
@@ -163,6 +164,7 @@ def create_chess_engines_simple(
         ...     black_provider="openai",
         ...     black_model="gpt-4-turbo"
         ... )
+
     """
     white_config = {"provider": white_provider}
     if white_model:
@@ -188,6 +190,7 @@ def get_available_chess_providers() -> list[str]:
 
     Returns:
         List of provider names
+
     """
     return GameLLMFactory.get_available_providers()
 
@@ -197,6 +200,7 @@ def get_recommended_chess_models() -> dict[str, str]:
 
     Returns:
         Dictionary mapping providers to recommended models
+
     """
     recommendations = {
         "anthropic": "claude-3-5-sonnet-20240620",  # Fast and strategic

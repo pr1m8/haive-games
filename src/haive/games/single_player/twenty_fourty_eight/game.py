@@ -144,6 +144,7 @@ class TwentyFortyEightGame(BaseModel):
 
         Returns:
             Tuple of (success, points_earned)
+
         """
         if self.game_over:
             return False, 0

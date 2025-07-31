@@ -33,6 +33,7 @@ class Player:
 
         Returns:
             True if the payment was successful, False if player can't afford it
+
         """
         if amount <= 0:
             return True
@@ -47,6 +48,7 @@ class Player:
 
         Args:
             amount: Amount to receive
+
         """
         if amount > 0:
             self.cash += amount
@@ -59,6 +61,7 @@ class Player:
 
         Returns:
             The player's total net worth
+
         """
         # Cash value
         worth = self.cash

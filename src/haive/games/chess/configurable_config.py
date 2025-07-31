@@ -1,7 +1,8 @@
 """Configurable chess agent configuration using player agents.
 
-This module provides a chess configuration that supports configurable
-player agents instead of hardcoded engine configurations.
+This module provides a chess configuration that supports configurable player agents
+instead of hardcoded engine configurations.
+
 """
 
 from typing import Any
@@ -48,6 +49,7 @@ class ConfigurableChessConfig(AgentConfig):
         >>> config = ConfigurableChessConfig(
         ...     example_config="anthropic_vs_openai"
         ... )
+
     """
 
     # State schema
@@ -255,6 +257,7 @@ def create_chess_config(
 
     Example:
         >>> config = create_chess_config("gpt-4", "claude-3-opus", temperature=0.8)
+
     """
     return ConfigurableChessConfig(
         white_model=white_model,
@@ -283,6 +286,7 @@ def create_chess_config_from_example(
 
     Example:
         >>> config = create_chess_config_from_example("budget_friendly")
+
     """
     return ConfigurableChessConfig(
         example_config=example_name, enable_analysis=enable_analysis, **kwargs
@@ -308,6 +312,7 @@ def create_chess_config_from_player_configs(
         ...     "black_player": create_player_config("claude-3-opus", player_name="AlphaZero"),
         ... }
         >>> config = create_chess_config_from_player_configs(configs)
+
     """
     return ConfigurableChessConfig(
         player_configs=player_configs, enable_analysis=enable_analysis, **kwargs

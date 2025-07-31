@@ -1,7 +1,8 @@
 """State model for Flow Free game.
 
-This module defines the game state for Flow Free, tracking the board,
-flows, and game progress.
+This module defines the game state for Flow Free, tracking the board, flows, and game
+progress.
+
 """
 
 from uuid import uuid4
@@ -18,6 +19,7 @@ class FlowEndpoint(BaseModel):
     Attributes:
         position: Position of the endpoint on the board.
         is_start: Whether this is the start endpoint (otherwise it's the end).
+
     """
 
     position: Position
@@ -34,6 +36,7 @@ class Flow(BaseModel):
         end: Ending endpoint.
         path: List of positions forming the path between endpoints.
         completed: Whether the flow is complete (endpoints connected).
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid4()))
@@ -52,6 +55,7 @@ class Cell(BaseModel):
         flow_id: ID of the flow occupying this cell, if any.
         is_endpoint: Whether this cell contains an endpoint.
         pipe_direction: Direction of the pipe in this cell, if any.
+
     """
 
     position: Position
@@ -71,6 +75,7 @@ class FlowFreeState(SinglePlayerGameState):
         current_flow_id: ID of the currently selected flow.
         puzzle_id: Identifier for the current puzzle.
         hints_used: Number of hints used.
+
     """
 
     rows: int = Field(default=5, description="Number of rows in the grid")
@@ -92,8 +97,8 @@ class FlowFreeState(SinglePlayerGameState):
     def is_solved(self) -> bool:
         """Check if the puzzle is solved.
 
-        The puzzle is solved when all flows are completed and all cells
-        are filled.
+        The puzzle is solved when all flows are completed and all cells are filled.
+
         """
         # Check if all flows are completed
         if not all(flow.completed for flow in self.flows.values()):
@@ -147,6 +152,7 @@ class FlowFreeState(SinglePlayerGameState):
 
         Returns:
             The cell at the position, or None if out of bounds.
+
         """
         if 0 <= position.row < self.rows and 0 <= position.col < self.cols:
             return self.grid[position.row][position.col]
@@ -160,6 +166,7 @@ class FlowFreeState(SinglePlayerGameState):
 
         Returns:
             True if the cell is empty, False otherwise.
+
         """
         cell = self.get_cell(position)
         return cell is not None and cell.flow_id is None
@@ -172,6 +179,7 @@ class FlowFreeState(SinglePlayerGameState):
 
         Returns:
             True if the cell contains an endpoint, False otherwise.
+
         """
         cell = self.get_cell(position)
         return cell is not None and cell.is_endpoint
@@ -184,6 +192,7 @@ class FlowFreeState(SinglePlayerGameState):
 
         Returns:
             List of adjacent positions.
+
         """
         adjacent = []
         for dr, dc in [(0, 1), (1, 0), (0, -1), (-1, 0)]:  # right, down, left, up
@@ -197,6 +206,7 @@ class FlowFreeState(SinglePlayerGameState):
 
         Returns:
             A formatted string representation of the board.
+
         """
         result = []
 

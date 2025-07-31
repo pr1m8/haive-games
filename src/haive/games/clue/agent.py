@@ -62,6 +62,7 @@ Examples:
 The agent integrates seamlessly with the Haive framework and provides complete
 functionality for running Clue games with AI players, visualization, and
 comprehensive state management.
+
 """
 
 import logging
@@ -141,6 +142,7 @@ class ClueAgent(GameAgent[ClueConfig]):
         The agent requires a configured state manager and proper game
         configuration to function correctly. All game logic is delegated
         to the state manager to maintain separation of concerns.
+
     """
 
     def __init__(self, config: ClueConfig = ClueConfig()):
@@ -180,6 +182,7 @@ class ClueAgent(GameAgent[ClueConfig]):
                 config = ClueConfig.competitive_game()
                 agent = ClueAgent(config)
                 assert agent.config.enable_analysis == False
+
         """
         self.state_manager = ClueStateManager
         super().__init__(config)
@@ -249,6 +252,7 @@ class ClueAgent(GameAgent[ClueConfig]):
             The state parameter is unused in this implementation but is
             maintained for interface compatibility. All initialization
             parameters come from the agent's configuration object.
+
         """
         # Initialize the game state
         game_state = self.state_manager.initialize(
@@ -324,6 +328,7 @@ class ClueAgent(GameAgent[ClueConfig]):
             If visualize=False, this method returns immediately without
             displaying anything. The display includes emoji icons for
             better readability and visual appeal.
+
         """
         if not self.config.visualize:
             return
@@ -420,6 +425,7 @@ class ClueAgent(GameAgent[ClueConfig]):
             from running indefinitely. If the maximum turns are reached
             or the game state stops changing, the game will be automatically
             terminated with appropriate logging.
+
         """
         # Initialize the game state
         initial_state = self.state_manager.initialize(

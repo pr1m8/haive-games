@@ -11,8 +11,8 @@ from pydantic import BaseModel, Field
 class Rule(BaseModel):
     """Base class for game rules.
 
-    Rules define what actions are valid in a game and how they affect
-    the game state.
+    Rules define what actions are valid in a game and how they affect the game state.
+
     """
 
     name: str
@@ -32,6 +32,7 @@ class Rule(BaseModel):
 
         Returns:
             True if the action is valid, False otherwise
+
         """
 
     def apply(self, action: Any, game_state: Any) -> dict[str, Any]:
@@ -43,6 +44,7 @@ class Rule(BaseModel):
 
         Returns:
             Dictionary of updates to apply to the game state
+
         """
         return {}
 
@@ -51,6 +53,7 @@ class RuleSet(BaseModel):
     """A collection of rules that govern a game.
 
     RuleSet allows for modular rule composition and enforcement.
+
     """
 
     name: str
@@ -61,6 +64,7 @@ class RuleSet(BaseModel):
 
         Args:
             rule: The rule to add
+
         """
         self.rules.append(rule)
 
@@ -73,6 +77,7 @@ class RuleSet(BaseModel):
 
         Returns:
             True if the action is valid under all rules, False otherwise
+
         """
         return all(
             rule.validate(action, game_state) for rule in self.rules if rule.active
@@ -87,6 +92,7 @@ class RuleSet(BaseModel):
 
         Returns:
             Combined dictionary of all updates to apply
+
         """
         updates = {}
         for rule in self.rules:

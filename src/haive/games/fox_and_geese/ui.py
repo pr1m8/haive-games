@@ -1,7 +1,7 @@
 """Rich UI module for Fox and Geese game visualization.
 
-This module provides rich console UI components for visualizing the Fox
-and Geese game.
+This module provides rich console UI components for visualizing the Fox and Geese game.
+
 """
 
 import logging
@@ -28,6 +28,7 @@ class FoxAndGeeseUI:
 
         Args:
             console: Optional Rich console instance
+
         """
         self.console = console or Console()
 
@@ -39,6 +40,7 @@ class FoxAndGeeseUI:
 
         Returns:
             FoxAndGeeseState instance or None if extraction fails
+
         """
         try:
             # Handle None input gracefully
@@ -145,6 +147,7 @@ class FoxAndGeeseUI:
 
         Returns:
             True if the dict appears to be a valid game state
+
         """
         required_fields = {"fox_position", "geese_positions", "turn", "game_status"}
         return all(field in data for field in required_fields)
@@ -157,6 +160,7 @@ class FoxAndGeeseUI:
 
         Returns:
             Rich table representing the board
+
         """
         # Create board table
         board_table = Table(show_header=False, show_edge=False, padding=(0, 1))
@@ -195,6 +199,7 @@ class FoxAndGeeseUI:
 
         Returns:
             Rich panel with game info
+
         """
         # Current player indicator
         if game_state.turn == "fox":
@@ -233,6 +238,7 @@ class FoxAndGeeseUI:
 
         Returns:
             Rich panel with last move info
+
         """
         if not game_state.move_history:
             last_move_text = "[dim]No moves yet[/dim]"
@@ -267,6 +273,7 @@ class FoxAndGeeseUI:
 
         Returns:
             Rich panel with analysis info
+
         """
         analysis_text = ""
 
@@ -300,6 +307,7 @@ class FoxAndGeeseUI:
 
         Returns:
             Complete rich layout
+
         """
         # Create layout
         layout = Layout()
@@ -347,6 +355,7 @@ class FoxAndGeeseUI:
 
         Returns:
             True if display was successful, False otherwise
+
         """
         try:
             game_state = self.extract_game_state(state_data)
@@ -392,6 +401,7 @@ The game will be played by AI agents with real-time visualization!
 
         Args:
             final_state: Final game state
+
         """
         try:
             game_state = self.extract_game_state(final_state)
@@ -431,6 +441,7 @@ The game will be played by AI agents with real-time visualization!
         Args:
             state_data: State data to debug
             context: Context string for debugging
+
         """
         logger.debug(f"=== DEBUG INFO {context} ===")
         logger.debug(f"State type: {type(state_data)}")

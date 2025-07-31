@@ -5,6 +5,7 @@ This module provides a flexible configuration system for chess that supports:
 - Simple model string configuration
 - Example-based configuration
 - Advanced PlayerAgentConfig configuration
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ChessConfig(BaseGameConfig):
         black_player_name: Display name for black player
         max_moves: Maximum moves before draw (default: 200)
         enable_fen_visualization: Show FEN strings in analysis
+
     """
 
     # Game-specific fields
@@ -196,6 +198,7 @@ def create_chess_config(
         ...     "anthropic:claude-3-5-sonnet",
         ...     temperature=0.8
         ... )
+
     """
     return ChessConfig(white_model=white_model, black_model=black_model, **kwargs)
 
@@ -221,6 +224,7 @@ def create_chess_config_from_example(example_name: str, **kwargs) -> ChessConfig
     Example:
         >>> config = create_chess_config_from_example("budget")
         >>> config = create_chess_config_from_example("gpt_vs_claude", max_moves=150)
+
     """
     return ChessConfig(example_config=example_name, **kwargs)
 
@@ -257,6 +261,7 @@ def create_chess_config_with_players(
         ...     )
         ... }
         >>> config = create_chess_config_with_players(player_configs)
+
     """
     return ChessConfig(player_configs=player_configs, **kwargs)
 
@@ -271,6 +276,7 @@ def create_legacy_chess_config(**kwargs) -> ChessConfig:
 
     Returns:
         ChessConfig instance with hardcoded engines
+
     """
     return ChessConfig(use_legacy_engines=True, **kwargs)
 

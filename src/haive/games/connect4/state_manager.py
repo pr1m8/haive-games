@@ -16,6 +16,7 @@ Example:
     >>> # Apply a move
     >>> move = Connect4Move(column=3)
     >>> new_state = Connect4StateManager.apply_move(state, move)
+
 """
 
 import copy
@@ -37,6 +38,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
 
     The state manager follows the immutable state pattern, creating
     new state instances rather than modifying existing ones.
+
     """
 
     @classmethod
@@ -55,6 +57,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
             'red'
             >>> state.game_status
             'ongoing'
+
         """
         board = [[None for _ in range(7)] for _ in range(6)]
         return Connect4State(
@@ -84,6 +87,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
             >>> new_state = Connect4StateManager.apply_move(state, move)
             >>> new_state.turn
             'yellow'
+
         """
         new_state = copy.deepcopy(state)
         board = new_state.board
@@ -130,6 +134,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
             >>> legal_moves = Connect4StateManager.get_legal_moves(state)
             >>> len(legal_moves)
             7  # All columns are empty in a new game
+
         """
         return [
             Connect4Move(column=col)
@@ -151,6 +156,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
             >>> state = Connect4StateManager.initialize()
             >>> Connect4StateManager.check_game_over(state)
             False
+
         """
         return state.game_status in ["red_win", "yellow_win", "draw"]
 
@@ -170,6 +176,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
             >>> state = Connect4StateManager.ensure_state(state_dict)
             >>> isinstance(state, Connect4State)
             True
+
         """
         if isinstance(state, dict):
             return Connect4State(**state)
@@ -189,6 +196,7 @@ class Connect4StateManager(GameStateManager[Connect4State]):
 
         Returns:
             bool: True if there's a win, False otherwise
+
         """
         player = state.turn
         board = state.board

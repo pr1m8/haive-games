@@ -15,6 +15,7 @@ Example:
     >>>
     >>> # Apply a move
     >>> new_state = GoGameStateManager.apply_move(state, (3, 4))
+
 """
 
 from haive.games.go import go_engine as sente
@@ -38,6 +39,7 @@ class GoGameStateManager:
         >>> # Apply a move
         >>> new_state = GoGameStateManager.apply_move(state, (3, 4))
         >>> print(new_state.turn)  # 'white'
+
     """
 
     @staticmethod
@@ -54,6 +56,7 @@ class GoGameStateManager:
             >>> state = GoGameStateManager.initialize(board_size=13)
             >>> print(state.board_size)  # 13
             >>> print(state.turn)  # 'black'
+
         """
         game = sente.Game(board_size)
         return GoGameState(board_sgf=sente.sgf.dumps(game), turn="black")
@@ -85,6 +88,7 @@ class GoGameStateManager:
             >>> # Pass move
             >>> pass_state = GoGameStateManager.apply_move(new_state, None)
             >>> print(pass_state.passes)  # 1
+
         """
         game = sente.sgf.loads(state.board_sgf)
         player = state.turn  # Current player

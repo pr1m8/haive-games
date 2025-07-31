@@ -20,6 +20,7 @@ class MonopolyGame:
     """Core Monopoly game engine without UI dependencies.
 
     Designed for AI agent experimentation.
+
     """
 
     # Standard Monopoly board configuration
@@ -421,6 +422,7 @@ class MonopolyGame:
             max_rounds: Maximum number of rounds to play
             free_parking_money: Whether Free Parking collects money
             auction_properties: Whether to auction unsold properties
+
         """
         self.max_players = len(player_names)
         if self.max_players < 2:
@@ -575,6 +577,7 @@ class MonopolyGame:
 
         Args:
             event: Description of the event
+
         """
         self.event_log.append(event)
         logger.info(event)
@@ -584,6 +587,7 @@ class MonopolyGame:
 
         Returns:
             Tuple of (die1, die2)
+
         """
         die1 = random.randint(1, 6)
         die2 = random.randint(1, 6)
@@ -603,6 +607,7 @@ class MonopolyGame:
 
         Returns:
             Current Player object
+
         """
         return self.players[self.current_player_idx]
 
@@ -614,6 +619,7 @@ class MonopolyGame:
 
         Returns:
             Property object or None if not found
+
         """
         for prop in self.properties:
             if prop.position == position:
@@ -628,6 +634,7 @@ class MonopolyGame:
 
         Returns:
             List of Property objects
+
         """
         return [p for p in self.properties if p.color_group == color_group]
 
@@ -639,6 +646,7 @@ class MonopolyGame:
 
         Returns:
             List of Property objects
+
         """
         return [p for p in self.properties if p.owner == player_idx]
 
@@ -651,6 +659,7 @@ class MonopolyGame:
 
         Returns:
             True if player owns all properties in the group
+
         """
         group_properties = self.get_properties_by_group(color_group)
         return all(p.owner == player_idx for p in group_properties)
@@ -663,6 +672,7 @@ class MonopolyGame:
 
         Returns:
             True if a house can be built
+
         """
         prop = self.get_property_at(property_position)
         if not prop or prop.property_type != PropertyType.PROPERTY:
@@ -699,6 +709,7 @@ class MonopolyGame:
 
         Returns:
             True if a house can be sold
+
         """
         prop = self.get_property_at(property_position)
         if not prop or prop.property_type != PropertyType.PROPERTY:
@@ -723,6 +734,7 @@ class MonopolyGame:
 
         Returns:
             True if the property can be mortgaged
+
         """
         prop = self.get_property_at(property_position)
         if not prop:
@@ -754,6 +766,7 @@ class MonopolyGame:
 
         Returns:
             True if the property can be unmortgaged
+
         """
         prop = self.get_property_at(property_position)
         if not prop:
@@ -779,6 +792,7 @@ class MonopolyGame:
 
         Returns:
             True if the action was successful
+
         """
         player = self.players[player_idx]
 
@@ -1768,6 +1782,7 @@ class MonopolyGame:
 
         Returns:
             Dictionary with the game state
+
         """
         return {
             "current_player_idx": self.current_player_idx,

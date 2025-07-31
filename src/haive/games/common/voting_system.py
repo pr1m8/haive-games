@@ -1,8 +1,8 @@
 """Generalized AI Voting System for Game Winner Determination.
 
-This module provides a reusable voting system that can evaluate game
-performance across different game types using AI judges with specialized
-perspectives.
+This module provides a reusable voting system that can evaluate game performance across
+different game types using AI judges with specialized perspectives.
+
 """
 
 import json
@@ -231,6 +231,7 @@ class GameVotingSystem:
         Args:
             num_judges: Number of judges to create (default: 3 to avoid ties)
                        Odd numbers recommended to prevent tie votes.
+
         """
 
         # Warn about even numbers that can cause ties
@@ -319,6 +320,7 @@ class GameVotingSystem:
         Args:
             game_type: Type of game to create judges for
             num_judges: Number of judges to create (default: 3)
+
         """
 
         if num_judges % 2 == 0:
@@ -615,6 +617,7 @@ def create_voting_system(
     Args:
         game_type: Type of game ("general", "chess", "debate", "poker", "go")
         num_judges: Number of judges (default: 3 to avoid ties)
+
     """
     if game_type == "general":
         return GameVotingSystem.create_standard_judges(num_judges)

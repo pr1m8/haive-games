@@ -4,6 +4,7 @@ Key fixes:
 1. Added Annotated type for current_player_index to handle concurrent updates
 2. Fixed reducer setup for fields that might be updated concurrently
 3. Added proper field annotations for LangGraph compatibility
+
 """
 
 import operator
@@ -83,6 +84,7 @@ class HoldemState(BaseModel):
         - Betting rounds
         - Pot information
         - Game phase tracking
+
     """
 
     # Game setup

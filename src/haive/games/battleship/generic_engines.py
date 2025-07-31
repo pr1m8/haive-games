@@ -1,8 +1,8 @@
 """Generic Battleship engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Battleship
-games, allowing for configurable LLM models and game-specific player
-identifiers.
+This module provides generic engine creation functions for Battleship games, allowing
+for configurable LLM models and game-specific player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -131,6 +131,7 @@ def create_generic_battleship_engines(
         - "player2_player": Player 2 configuration
         - "player1_analyzer": Player 1 analyzer configuration
         - "player2_analyzer": Player 2 analyzer configuration
+
     """
     return battleship_factory.create_engines(player_configs)
 
@@ -149,6 +150,7 @@ def create_generic_battleship_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of Battleship engines
+
     """
     return create_engines_from_simple_configs(
         battleship_factory,
@@ -178,6 +180,7 @@ def create_generic_battleship_config_from_example(
         - "budget": Cost-effective models
         - "mixed": Different provider per role
         - "naval_commanders": High-powered models for strategic gameplay
+
     """
     examples = {
         "gpt_vs_claude": ("gpt-4o", "claude-3-5-sonnet-20240620"),
@@ -204,8 +207,7 @@ def create_generic_battleship_config_from_example(
 
 
 def create_naval_battleship_engines(**kwargs) -> dict[str, AugLLMConfig]:
-    """Create naval commander-style Battleship engines with high-powered
-    models."""
+    """Create naval commander-style Battleship engines with high-powered models."""
     return create_generic_battleship_config_from_example("naval_commanders", **kwargs)
 
 

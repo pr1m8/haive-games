@@ -65,6 +65,7 @@ Examples:
 
 The configuration system integrates seamlessly with the game engine and provides
 all necessary parameters for consistent and customizable gameplay experiences.
+
 """
 
 from pydantic import Field
@@ -167,6 +168,7 @@ class ClueConfig(GameConfig):
         The solution parameter accepts a dictionary with 'suspect', 'weapon',
         and 'room' keys. Values should be the string values from the
         corresponding enum classes, not the enum instances themselves.
+
     """
 
     name: str = Field(default="clue", description="Name of the game")
@@ -216,6 +218,7 @@ class ClueConfig(GameConfig):
 
                 config = ClueConfig.casual_game(max_turns=30)
                 assert config.max_turns == 30
+
         """
         return cls(
             max_turns=max_turns, enable_analysis=True, visualize=True, solution=None
@@ -250,6 +253,7 @@ class ClueConfig(GameConfig):
 
                 config = ClueConfig.competitive_game(max_turns=12)
                 assert config.max_turns == 12
+
         """
         return cls(
             max_turns=max_turns, enable_analysis=False, visualize=False, solution=None
@@ -291,6 +295,7 @@ class ClueConfig(GameConfig):
                 }
                 config = ClueConfig.tutorial_game(solution_dict=custom_solution)
                 assert config.solution == custom_solution
+
         """
 
         if solution_dict is None:
@@ -333,6 +338,7 @@ class ClueConfig(GameConfig):
 
                 config = ClueConfig.benchmark_game(max_turns=5)
                 assert config.max_turns == 5
+
         """
         return cls(
             max_turns=max_turns, enable_analysis=False, visualize=False, solution=None

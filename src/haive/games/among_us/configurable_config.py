@@ -1,7 +1,8 @@
 """Configurable Among Us configuration using the generic player agent system.
 
-This module provides configurable Among Us game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Among Us game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ConfigurableAmongUsConfig(AmongUsConfig):
         max_rounds: Maximum number of rounds before game ends
         enable_analysis: Whether to enable game state analysis
         recursion_limit: Python recursion limit for game execution
+
     """
 
     crewmate_model: str | None = Field(
@@ -161,8 +163,7 @@ def create_among_us_config(
     impostor_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableAmongUsConfig:
-    """Create a configurable Among Us configuration with simple model
-    specifications.
+    """Create a configurable Among Us configuration with simple model specifications.
 
     Args:
         crewmate_model: Model for crewmate players and analyzers
@@ -179,6 +180,7 @@ def create_among_us_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     max_rounds=75
         ... )
+
     """
     return ConfigurableAmongUsConfig(
         crewmate_model=crewmate_model, impostor_model=impostor_model, **kwargs
@@ -208,6 +210,7 @@ def create_among_us_config_from_example(
     Example:
         >>> config = create_among_us_config_from_example("budget", max_rounds=40)
         >>> config = create_among_us_config_from_example("detective_vs_mastermind", enable_analysis=False)
+
     """
     return ConfigurableAmongUsConfig(example_config=example_name, **kwargs)
 
@@ -215,8 +218,7 @@ def create_among_us_config_from_example(
 def create_among_us_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableAmongUsConfig:
-    """Create a configurable Among Us configuration from detailed player
-    configurations.
+    """Create a configurable Among Us configuration from detailed player configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -255,6 +257,7 @@ def create_among_us_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_among_us_config_from_player_configs(player_configs)
+
     """
     return ConfigurableAmongUsConfig(player_configs=player_configs, **kwargs)
 
@@ -310,6 +313,7 @@ def get_example_config(name: str) -> ConfigurableAmongUsConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -323,6 +327,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

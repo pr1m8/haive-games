@@ -1,7 +1,8 @@
 """Rich UI Game Runner for Tic Tac Toe.
 
-This module provides a beautiful, interactive UI for running Tic Tac Toe
-games using the Rich library for enhanced terminal displays.
+This module provides a beautiful, interactive UI for running Tic Tac Toe games using the
+Rich library for enhanced terminal displays.
+
 """
 
 import time
@@ -30,6 +31,7 @@ class RichTicTacToeRunner:
 
         Args:
             agent: The TicTacToe agent to run
+
         """
         self.agent = agent
         self.console = Console()
@@ -43,6 +45,7 @@ class RichTicTacToeRunner:
 
         Returns:
             Rich Panel with the game board
+
         """
         # Create a table for the board
         board_table = Table(show_header=False, show_lines=True, box=box.HEAVY)
@@ -94,6 +97,7 @@ class RichTicTacToeRunner:
 
         Returns:
             Rich Panel with game info
+
         """
         info_table = Table(show_header=False, box=None)
         info_table.add_column("Property", style="cyan")
@@ -139,6 +143,7 @@ class RichTicTacToeRunner:
 
         Returns:
             Rich Panel with analysis info, or None if no analysis
+
         """
         # Get the most recent analysis
         analysis = None
@@ -212,6 +217,7 @@ class RichTicTacToeRunner:
 
         Returns:
             Rich Layout object
+
         """
         layout = Layout()
 
@@ -270,6 +276,7 @@ class RichTicTacToeRunner:
         Args:
             player: The player who is thinking
             duration: How long to show the animation
+
         """
         with Progress(
             SpinnerColumn(),
@@ -296,6 +303,7 @@ class RichTicTacToeRunner:
 
         Returns:
             Final game state
+
         """
         self.console.clear()
 
@@ -403,6 +411,7 @@ class RichTicTacToeRunner:
 
         Args:
             final_state: The final state of the game
+
         """
         if not final_state:
             return

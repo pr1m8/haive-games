@@ -4,6 +4,7 @@ def run_interactive_game(agent: SinglePlayerGameAgent, commands: list[str] = Non
     Args:
         agent: The game agent
         commands: Optional list of commands to execute (for testing)
+
     """
     # Initialize the game
     print(f"\n🎮 Starting Single-Player Game in {agent.config.game_mode.value} mode")
@@ -90,6 +91,7 @@ def run_auto_game(agent: SinglePlayerGameAgent):
 
     Args:
         agent: The game agent
+
     """
     # Initialize the game
     print("\n🎮 Starting Automated Single-Player Game")

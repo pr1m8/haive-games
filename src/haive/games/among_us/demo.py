@@ -35,6 +35,7 @@ Example:
     >>> # Run a standard Among Us game
     >>> from haive.games.among_us.demo import run_among_us_demo
     >>> run_among_us_demo(num_players=7, num_impostors=2)
+
 """
 
 # demo_among_us.py
@@ -78,6 +79,7 @@ def run_among_us_demo(
         max_rounds: Maximum number of rounds
         speed: Simulation speed multiplier
         use_enhanced_ui: Whether to use the enhanced UI (recommended)
+
     """
     console = Console()
 
@@ -411,8 +413,7 @@ def get_role_color(role):
 
 
 def process_player_turn(agent, state, player_id, console, interactive, speed):
-    """Process a single player's turn with enhanced visibility into AI
-    thoughts."""
+    """Process a single player's turn with enhanced visibility into AI thoughts."""
     # Skip dead players during task phase
     player_state = state.player_states.get(player_id)
     if (
@@ -663,6 +664,7 @@ def process_meeting_discussion(agent, state, console, interactive, speed):
 
     Returns:
         Updated state
+
     """
     # Display meeting information
     if state.reported_body:
@@ -772,6 +774,7 @@ def process_meeting_discussion_enhanced(agent, state, ui, interactive, speed):
 
     Returns:
         Updated state
+
     """
     # Display meeting phase
     ui.console.print("\n[bold]MEETING PHASE[/bold]")
@@ -865,6 +868,7 @@ def process_voting_phase_enhanced(agent, state, ui, interactive, speed):
 
     Returns:
         Updated state
+
     """
     # Display voting phase
     ui.console.print("\n[bold]VOTING PHASE[/bold]")
@@ -1038,6 +1042,7 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
     Returns:
         Updated state
+
     """
     console.print("\n[bold]VOTING PHASE[/bold]")
 
@@ -1168,8 +1173,7 @@ def process_voting_phase(agent, state, console, interactive, speed):
 
 
 def process_random_events_enhanced(agent, state, ui, interactive, speed):
-    """Process random events that might occur during the task phase with
-    enhanced UI.
+    """Process random events that might occur during the task phase with enhanced UI.
 
     Args:
         agent: The AmongUsAgent instance
@@ -1180,6 +1184,7 @@ def process_random_events_enhanced(agent, state, ui, interactive, speed):
 
     Returns:
         Updated state
+
     """
     # Check if a random event should occur
     if random.random() < 0.3 and not state.meeting_active:

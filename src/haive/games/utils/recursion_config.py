@@ -1,7 +1,8 @@
 """Recursion configuration utilities for game agents.
 
-This module provides utilities to properly configure recursion limits
-for game agents to prevent recursion errors during gameplay.
+This module provides utilities to properly configure recursion limits for game agents to
+prevent recursion errors during gameplay.
+
 """
 
 import uuid
@@ -71,6 +72,7 @@ class RecursionConfig:
             ...     num_players=4
             ... )
             >>> print(limit)  # 960 (800 + 20% for extra players)
+
         """
         # Use custom limit if provided
         if custom_limit is not None:
@@ -105,8 +107,7 @@ class RecursionConfig:
         num_players: int = 2,
         thread_id: str | None = None,
     ) -> dict[str, Any]:
-        """Configure or update a runnable config with appropriate recursion
-        limit.
+        """Configure or update a runnable config with appropriate recursion limit.
 
         Args:
             runnable_config: Existing config to update (creates new if None)
@@ -134,6 +135,7 @@ class RecursionConfig:
             ...     game_type="complex"
             ... )
             >>> print(updated["configurable"]["recursion_limit"])  # 800
+
         """
         # Start with existing config or create new
         if runnable_config is None:
@@ -190,6 +192,7 @@ class RecursionConfig:
             ...     100, game_type="complex"
             ... )
             >>> print(valid, msg)  # False, "Limit too low..."
+
         """
         recommended = cls.get_recursion_limit(
             game_name=game_name,

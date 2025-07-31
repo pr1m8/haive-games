@@ -1,6 +1,7 @@
 """Example client for the Chess API.
 
 This shows how to interact with the chess API to create and play games.
+
 """
 
 import json

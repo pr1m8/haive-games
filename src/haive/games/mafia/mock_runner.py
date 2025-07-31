@@ -8,6 +8,7 @@ Example:
     ```bash
     python mock_runner.py --players 5 --days 1 --debug
     ```
+
 """
 
 import argparse
@@ -358,6 +359,7 @@ def run_mafia_game_mock(
 
     Raises:
         ValueError: If player_count is less than 4.
+
     """
     print("\n🎭 Setting up Mafia Game (MOCK VERSION)")
     print("=" * 60)

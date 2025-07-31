@@ -37,6 +37,7 @@ class FixedFoxAndGeeseAgent(FoxAndGeeseAgent):
 
         Returns:
             Final game state
+
         """
         console = Console()
         console.print(

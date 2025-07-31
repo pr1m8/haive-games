@@ -14,6 +14,7 @@ Example:
     >>> # Check game properties
     >>> state.is_column_full(3)  # Check if column is full
     >>> state.get_next_row(3)    # Get next available row in column
+
 """
 
 from typing import Literal
@@ -55,6 +56,7 @@ class Connect4State(GameState):
         'red'
         >>> state.is_column_full(3)
         False
+
     """
 
     board: list[list[str | None]] = Field(
@@ -99,6 +101,7 @@ class Connect4State(GameState):
             5| | | | | | | |
               -------------
               0 1 2 3 4 5 6
+
         """
         result = []
 
@@ -136,6 +139,7 @@ class Connect4State(GameState):
             >>> state = Connect4State.initialize()
             >>> state.is_column_full(3)
             False
+
         """
         return self.board[0][column] is not None
 
@@ -155,6 +159,7 @@ class Connect4State(GameState):
             >>> state = Connect4State.initialize()
             >>> state.get_next_row(3)
             5  # Bottom row (gravity effect)
+
         """
         for row in range(len(self.board) - 1, -1, -1):
             if self.board[row][column] is None:
@@ -174,6 +179,7 @@ class Connect4State(GameState):
 
         Raises:
             ValueError: If board dimensions are invalid
+
         """
         if len(board) != 6:
             raise ValueError("Board must have 6 rows")
@@ -197,6 +203,7 @@ class Connect4State(GameState):
             'red'
             >>> state.game_status
             'ongoing'
+
         """
         board = [[None for _ in range(7)] for _ in range(6)]
         return cls(board=board, turn="red", game_status="ongoing", move_history=[])

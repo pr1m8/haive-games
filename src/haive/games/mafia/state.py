@@ -22,6 +22,7 @@ Example:
     ...            "Narrator": PlayerRole.NARRATOR},
     ...     game_phase=GamePhase.SETUP
     ... )
+
 """
 
 import copy
@@ -81,6 +82,7 @@ class MafiaGameState(MultiPlayerGameState):
         ...     game_phase=GamePhase.SETUP
         ... )
         >>> print(state.game_phase)  # Shows SETUP
+
     """
 
     # Required fields from MultiPlayerGameState - declare them explicitly
@@ -173,6 +175,7 @@ class MafiaGameState(MultiPlayerGameState):
             >>> state.player_states["Player_1"].is_alive = False
             >>> state.update_alive_counts()
             >>> print(state.alive_village_count)  # Shows updated count
+
         """
         self.alive_village_count = sum(
             1
@@ -206,6 +209,7 @@ class MafiaGameState(MultiPlayerGameState):
         Example:
             >>> state.add_public_announcement("Night falls on the village.")
             >>> print(state.public_announcements[-1])
+
         """
         if not hasattr(self, "public_announcements"):
             self.public_announcements = []
@@ -229,6 +233,7 @@ class MafiaGameState(MultiPlayerGameState):
             ...     round_number=1
             ... )
             >>> state.log_action(action)
+
         """
         if not hasattr(self, "action_history"):
             self.action_history = []
@@ -285,6 +290,7 @@ class MafiaGameState(MultiPlayerGameState):
 
         Example:
             >>> new_state = state.model_copy(deep=True)
+
         """
         if deep:
             return copy.deepcopy(self)

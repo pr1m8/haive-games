@@ -1,7 +1,8 @@
 """Configurable Nim configuration using the generic player agent system.
 
-This module provides configurable Nim game configurations that replace
-hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Nim game configurations that replace hardcoded LLM
+settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ConfigurableNimConfig(NimConfig):
         enable_analysis: Whether to enable strategic analysis
         visualize_game: Whether to visualize game state
         recursion_limit: Python recursion limit for game execution
+
     """
 
     player1_model: str | None = Field(default=None, description="Model for player1")
@@ -147,8 +149,7 @@ def create_nim_config(
     player2_model: str = "claude-3-5-sonnet-20240620",
     **kwargs,
 ) -> ConfigurableNimConfig:
-    """Create a configurable Nim configuration with simple model
-    specifications.
+    """Create a configurable Nim configuration with simple model specifications.
 
     Args:
         player1_model: Model for player1 and analyzer
@@ -165,6 +166,7 @@ def create_nim_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     enable_analysis=True
         ... )
+
     """
     return ConfigurableNimConfig(
         player1_model=player1_model, player2_model=player2_model, **kwargs
@@ -194,6 +196,7 @@ def create_nim_config_from_example(
     Example:
         >>> config = create_nim_config_from_example("budget", enable_analysis=False)
         >>> config = create_nim_config_from_example("advanced", visualize_game=True)
+
     """
     return ConfigurableNimConfig(example_config=example_name, **kwargs)
 
@@ -201,8 +204,7 @@ def create_nim_config_from_example(
 def create_nim_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableNimConfig:
-    """Create a configurable Nim configuration from detailed player
-    configurations.
+    """Create a configurable Nim configuration from detailed player configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -241,6 +243,7 @@ def create_nim_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_nim_config_from_player_configs(player_configs)
+
     """
     return ConfigurableNimConfig(player_configs=player_configs, **kwargs)
 
@@ -296,6 +299,7 @@ def get_example_config(name: str) -> ConfigurableNimConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -309,6 +313,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

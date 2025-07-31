@@ -30,6 +30,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             DebateState: A new debate state
+
         """
         # Create base state
         state = DebateState(
@@ -100,6 +101,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             DebateState: Updated debate state
+
         """
         new_state = copy.deepcopy(state)
 
@@ -179,6 +181,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             List[Dict[str, Any]]: List of legal moves
+
         """
         moves = []
 
@@ -220,6 +223,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             DebateState: Updated debate state with status
+
         """
         new_state = copy.deepcopy(state)
 
@@ -248,6 +252,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             DebateState: State in the next phase
+
         """
         new_state = copy.deepcopy(state)
 
@@ -304,6 +309,7 @@ class DebateStateManager(MultiPlayerGameStateManager[DebateState]):
 
         Returns:
             Dict[str, Any]: Filtered state visible to the player
+
         """
         # In a debate, most information is public
         visible_state = state.dict()

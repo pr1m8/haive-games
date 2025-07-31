@@ -15,6 +15,7 @@ Example:
     >>> # Access white player's move generation configuration
     >>> white_config = aug_llm_configs["white_player"]
     >>> white_prompt = white_config.prompt_template
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -42,6 +43,7 @@ def generate_move_prompt(color: str) -> ChatPromptTemplate:
         True
         >>> "UCI format" in white_prompt.messages[0][1]
         True
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -83,6 +85,7 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
         True
         >>> "strategic themes" in black_prompt.messages[1][1]
         True
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -139,6 +142,7 @@ def build_chess_aug_llms_per_color(
         ... )
         >>> configs["white_player"].llm_config.model
         'claude-3-opus-20240229'
+
     """
     print(white_llm)
     print(black_llm)

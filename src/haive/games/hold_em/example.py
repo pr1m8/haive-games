@@ -8,6 +8,7 @@ This example script demonstrates how to:
     - Access and analyze game results
 
 Run this script directly to see a Hold'em game in action.
+
 """
 
 import argparse
@@ -51,6 +52,7 @@ def create_custom_game(
 
     Returns:
         HoldemGameAgent: Configured game agent ready to run
+
     """
     if player_styles is None:
         player_styles = ["balanced"] * len(player_names)
@@ -111,6 +113,7 @@ def run_example_game(game_type: str = "default", delay: float = 1.5):
     Args:
         game_type: Type of game to run ("default", "heads-up", "tournament", "cash", "custom")
         delay: Delay between UI updates (seconds)
+
     """
     try:
         if game_type == "default":
@@ -175,6 +178,7 @@ def analyze_game_results(agent: HoldemGameAgent):
 
     Args:
         agent: The game agent after running a game
+
     """
     # Access the final state
     if not hasattr(agent, "app") or not hasattr(agent.app, "last_state"):

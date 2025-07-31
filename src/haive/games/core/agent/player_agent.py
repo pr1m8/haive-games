@@ -8,6 +8,7 @@ The system supports:
 - Role-based agent configuration (player, analyzer, etc.)
 - Easy swapping of LLMs and models
 - Integration with the new LLM factory system
+
 """
 
 from abc import ABC, abstractmethod
@@ -26,8 +27,8 @@ from pydantic import BaseModel, Field
 def create_llm_config(model: str, **kwargs) -> LLMConfig:
     """Create an LLM config based on model string.
 
-    This is a simple helper to create configs until a proper factory is
-    available.
+    This is a simple helper to create configs until a proper factory is available.
+
     """
     # Simple provider detection based on model name
     if "gpt" in model.lower() or kwargs.get("model_provider") == "openai":
@@ -60,8 +61,9 @@ class PlayerRole(Protocol):
 class GamePlayerRole(BaseModel):
     """Standard implementation of a player role in a game.
 
-    This class defines a specific role that a player can take in a game,
-    such as 'white_player', 'black_analyzer', etc.
+    This class defines a specific role that a player can take in a game, such as
+    'white_player', 'black_analyzer', etc.
+
     """
 
     role_name: str = Field(description="Name of the role (e.g., 'white_player')")
@@ -81,8 +83,9 @@ class GamePlayerRole(BaseModel):
 class PlayerAgentConfig(BaseModel):
     """Configuration for a player agent.
 
-    This allows specifying which LLM configuration to use for a player
-    without hardcoding it in the engine definitions.
+    This allows specifying which LLM configuration to use for a player without
+    hardcoding it in the engine definitions.
+
     """
 
     # LLM Configuration - can be string, LLMConfig, or dict
@@ -109,6 +112,7 @@ class PlayerAgentConfig(BaseModel):
 
         Returns:
             LLMConfig: Configured LLM instance
+
         """
         if isinstance(self.llm_config, LLMConfig):
             # Already an LLMConfig, use directly
@@ -143,8 +147,9 @@ class PlayerAgentConfig(BaseModel):
 class PlayerAgentFactory:
     """Factory for creating configurable player agents.
 
-    This factory creates AugLLMConfig instances for game roles using
-    configurable player agents instead of hardcoded LLM configurations.
+    This factory creates AugLLMConfig instances for game roles using configurable player
+    agents instead of hardcoded LLM configurations.
+
     """
 
     @staticmethod
@@ -160,6 +165,7 @@ class PlayerAgentFactory:
 
         Returns:
             AugLLMConfig: Configured engine for the role
+
         """
         # Get LLM config from agent
         llm_config = agent_config.create_llm_config()
@@ -181,8 +187,7 @@ class PlayerAgentFactory:
     def create_engines_from_player_configs(
         roles: dict[str, GamePlayerRole], player_configs: dict[str, PlayerAgentConfig]
     ) -> dict[str, AugLLMConfig]:
-        """Create a complete set of engines from role definitions and player
-        configs.
+        """Create a complete set of engines from role definitions and player configs.
 
         Args:
             roles: Dictionary of role name to role definition
@@ -203,6 +208,7 @@ class PlayerAgentFactory:
             ...     "white_player": PlayerAgentConfig(llm_config="gpt-4")
             ... }
             >>> engines = PlayerAgentFactory.create_engines_from_player_configs(roles, configs)
+
         """
         engines = {}
 
@@ -221,8 +227,9 @@ class PlayerAgentFactory:
 class ConfigurableGameAgent(ABC):
     """Abstract base for game agents with configurable players.
 
-    This class provides the interface for game agents that support
-    configurable player agents instead of hardcoded engines.
+    This class provides the interface for game agents that support configurable player
+    agents instead of hardcoded engines.
+
     """
 
     @abstractmethod
@@ -231,6 +238,7 @@ class ConfigurableGameAgent(ABC):
 
         Returns:
             Dict[str, GamePlayerRole]: Dictionary of role name to role definition
+
         """
 
     @abstractmethod
@@ -244,6 +252,7 @@ class ConfigurableGameAgent(ABC):
 
         Returns:
             Dict[str, AugLLMConfig]: Dictionary of engines
+
         """
         roles = self.get_role_definitions()
         return PlayerAgentFactory.create_engines_from_player_configs(
@@ -275,6 +284,7 @@ def create_player_config(
         >>> config = create_player_config("gpt-4", temperature=0.7)
         >>> config = create_player_config("anthropic:claude-3-opus")
         >>> config = create_player_config({"model": "gpt-4", "provider": "openai"})
+
     """
     return PlayerAgentConfig(
         llm_config=model, temperature=temperature, player_name=player_name, **kwargs
@@ -301,6 +311,7 @@ def create_simple_player_configs(
     Example:
         >>> configs = create_simple_player_configs("gpt-4", "claude-3-opus", temperature=0.7)
         >>> # Creates configs for white_player, black_player, white_analyzer, black_analyzer
+
     """
     base_config = {"temperature": temperature, **kwargs}
 

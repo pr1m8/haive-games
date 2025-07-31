@@ -10,6 +10,7 @@ It's designed for:
 
 Run this script directly to start a debug session:
     python -m haive.games.battleship.debug
+
 """
 
 import time
@@ -49,6 +50,7 @@ def test_battleship():
 
     Raises:
         Exception: Catches and logs any exceptions that occur during gameplay
+
     """
     console.rule("[bold blue]Battleship Game Debug Test")
     console.print("Initializing game agent...")

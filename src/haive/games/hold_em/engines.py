@@ -400,8 +400,7 @@ def create_style_specific_engines(player_style: str) -> dict[str, AugLLMConfig]:
 
 
 def prepare_situation_context(game_state, player) -> dict[str, str]:
-    """Prepare context dictionary for situation analysis with correct variable
-    names."""
+    """Prepare context dictionary for situation analysis with correct variable names."""
     return {
         "player_position": player.position,
         "pot_size": str(game_state.pot_size),

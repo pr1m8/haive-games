@@ -56,6 +56,7 @@ Examples:
 
 The state model integrates seamlessly with the game agent system and provides
 all necessary information for AI decision-making and strategic gameplay.
+
 """
 
 import random
@@ -134,6 +135,7 @@ class ClueState(GameState):
     Note:
         The solution is hidden from players during normal gameplay but is
         accessible to the game engine for validation and scoring purposes.
+
     """
 
     solution: ClueSolution = Field(
@@ -185,6 +187,7 @@ class ClueState(GameState):
                 # After first guess
                 state.guesses.append(guess)
                 print(f"Turn {state.current_turn_number}")  # "Turn 2"
+
         """
         return len(self.guesses) + 1
 
@@ -206,6 +209,7 @@ class ClueState(GameState):
                     print(f"Game ended! Winner: {state.winner}")
                 else:
                     print("Game is still in progress")
+
         """
         return self.game_status != "ongoing"
 
@@ -228,6 +232,7 @@ class ClueState(GameState):
                 # Output:
                 # Turn 1: Colonel Mustard, Knife, Kitchen | Response: Alice
                 # Turn 2: Professor Plum, Candlestick, Library | Response: No card shown
+
         """
         lines = []
         for i, (guess, response) in enumerate(
@@ -311,6 +316,7 @@ class ClueState(GameState):
             The solution cards are automatically removed from the deck before
             dealing to players, ensuring they remain hidden. Card distribution
             is as even as possible, with any extra cards going to player1.
+
         """
         # Define all cards using enums
         all_suspects = list(ValidSuspect)

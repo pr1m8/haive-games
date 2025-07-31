@@ -1,5 +1,5 @@
-"""Comprehensive state management system for Fox and Geese gameplay and
-strategic analysis.
+"""Comprehensive state management system for Fox and Geese gameplay and strategic
+analysis.
 
 This module provides sophisticated state models for the classic Fox and Geese game
 with complete support for position tracking, strategic analysis, and game flow
@@ -53,6 +53,7 @@ Examples:
 Note:
     All state models use Pydantic v2 for validation and support both JSON
     serialization and integration with LangGraph for distributed gameplay.
+
 """
 
 from typing import Any, Literal
@@ -176,6 +177,7 @@ class FoxAndGeeseState(GameState):
         The state uses Pydantic v2 for validation and supports both JSON serialization
         and integration with LangGraph for distributed game systems. All position
         operations maintain game rule consistency and strategic context.
+
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
@@ -361,6 +363,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             float: Mobility score from 0.0 (trapped) to 1.0 (maximum mobility).
+
         """
         # Check adjacent positions for movement options
         adjacent_positions = [
@@ -388,6 +391,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             int: Minimum number of moves to reach the opposite edge.
+
         """
         # Fox escapes by reaching row 0 (starting from center)
         return self.fox_position.row
@@ -399,6 +403,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             float: Formation strength from 0.0 (weak) to 1.0 (strong).
+
         """
         if not self.geese_positions:
             return 0.0
@@ -419,6 +424,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             int: Number of geese captured during the game.
+
         """
         # Calculate from initial geese count minus current count
         initial_geese = 8  # Standard starting number
@@ -431,6 +437,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             Dict[str, Union[int, float, str]]: Game statistics and metrics.
+
         """
         total_moves = len(self.move_history)
         fox_moves = sum(1 for move in self.move_history if move.piece_type == "fox")
@@ -463,6 +470,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             Dict[str, Union[str, float]]: Position evaluation metrics.
+
         """
         fox_advantage = (
             self.fox_mobility_score * 0.4 + (1.0 - self.fox_escape_distance / 7.0) * 0.6
@@ -492,6 +500,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             Optional[str]: Latest fox analysis or None if no analysis exists.
+
         """
         return self.fox_analysis[-1] if self.fox_analysis else None
 
@@ -500,6 +509,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             Optional[str]: Latest geese analysis or None if no analysis exists.
+
         """
         return self.geese_analysis[-1] if self.geese_analysis else None
 
@@ -511,6 +521,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             List[FoxAndGeeseMove]: List of recent moves (up to count).
+
         """
         return self.move_history[-count:] if self.move_history else []
 
@@ -519,6 +530,7 @@ class FoxAndGeeseState(GameState):
 
         Returns:
             bool: True if game is over, False otherwise.
+
         """
         return self.game_status != "ongoing"
 

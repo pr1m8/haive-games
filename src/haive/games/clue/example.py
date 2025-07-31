@@ -20,6 +20,7 @@ Example:
         --debug: Enable debug mode with detailed logging
         --turns: Set maximum number of turns (default: 10)
         --delay: Set delay between moves in seconds (default: 1.0)
+
 """
 
 import argparse
@@ -66,6 +67,7 @@ def run_clue_game(debug: bool = False, max_turns: int = 10, delay: float = 1.0):
     Example:
         >>> run_clue_game(debug=True, max_turns=5, delay=0.5)
         # Runs a test game with debug logging, 5 max turns, and 0.5s delay
+
     """
     # Create the UI
     ui = ClueUI()

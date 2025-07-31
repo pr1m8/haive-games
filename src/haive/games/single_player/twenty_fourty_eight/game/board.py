@@ -50,6 +50,7 @@ class TwentyFortyEightBoard(
 
         Returns:
             True if any tiles moved, False otherwise
+
         """
         # Reset merge status on all tiles
         for space in self.spaces.values():
@@ -91,6 +92,7 @@ class TwentyFortyEightBoard(
 
         Returns:
             True if the tile moved, False otherwise
+
         """
         # Check if there's a tile at this position
         source = self.get_space_at(row, col)

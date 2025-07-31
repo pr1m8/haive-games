@@ -57,6 +57,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         game_state = self.state_manager.initialize()
         return Command(update=game_state, goto="player1_move")
@@ -100,6 +101,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -126,6 +128,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -153,6 +156,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -360,6 +364,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -384,6 +389,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -409,6 +415,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Command: Command with updated state.
+
         """
         # Ensure we have a DominoesState object
         if isinstance(state, dict):
@@ -526,6 +533,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             str: Next node to go to.
+
         """
         if state.game_status == "game_over" or "win" in state.game_status:
             return END
@@ -622,6 +630,7 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
         Returns:
             Final game state
+
         """
         if not self.ui:
             logger.error("UI not available - falling back to regular run")

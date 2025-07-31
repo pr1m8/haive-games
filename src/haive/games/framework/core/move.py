@@ -15,6 +15,7 @@ class Move(BaseModel, Generic[S]):
     """Base class for game moves.
 
     Moves represent changes to the game state initiated by players.
+
     """
 
     player_id: str
@@ -32,6 +33,7 @@ class Move(BaseModel, Generic[S]):
 
         Returns:
             True if the move is valid, False otherwise
+
         """
 
     @abstractmethod
@@ -43,4 +45,5 @@ class Move(BaseModel, Generic[S]):
 
         Returns:
             Updated game state after applying the move
+
         """

@@ -1,7 +1,8 @@
 """State manager for the Risk game.
 
-This module defines the RiskStateManager class that manages game state
-transitions, rule enforcement, and game progression.
+This module defines the RiskStateManager class that manages game state transitions, rule
+enforcement, and game progression.
+
 """
 
 import random
@@ -23,6 +24,7 @@ class RiskStateManager(BaseModel):
         state: The current game state.
         config: Configuration settings for the game.
         move_history: History of all moves made in the game.
+
     """
 
     state: RiskState
@@ -45,6 +47,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the number of players is invalid.
+
         """
         # Use default config if none provided
         if config is None:
@@ -70,6 +73,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid or violates game rules.
+
         """
         # Validate move
         self._validate_move(move)
@@ -100,6 +104,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Check if it's the player's turn
         if move.player != self.state.current_player:
@@ -127,6 +132,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Check if to_territory is specified
         if not move.to_territory:
@@ -159,6 +165,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Check if from_territory and to_territory are specified
         if not move.from_territory:
@@ -218,6 +225,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Skip validation for empty fortify (end turn)
         if not move.from_territory and not move.to_territory:
@@ -272,6 +280,7 @@ class RiskStateManager(BaseModel):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Check if cards are specified
         if not move.cards or len(move.cards) != 3:
@@ -307,6 +316,7 @@ class RiskStateManager(BaseModel):
 
         Args:
             move: The place armies move to apply.
+
         """
         # Add armies to territory
         territory = self.state.territories[move.to_territory]
@@ -332,6 +342,7 @@ class RiskStateManager(BaseModel):
 
         Args:
             move: The attack move to apply.
+
         """
         # Simulate dice rolls
         attacker_territory = self.state.territories[move.from_territory]
@@ -402,6 +413,7 @@ class RiskStateManager(BaseModel):
 
         Args:
             move: The fortify move to apply.
+
         """
         # Skip for empty fortify (end turn)
         if not move.from_territory and not move.to_territory:
@@ -423,6 +435,7 @@ class RiskStateManager(BaseModel):
 
         Args:
             move: The trade cards move to apply.
+
         """
         # Calculate armies received
         armies_received = self.state.next_card_set_value

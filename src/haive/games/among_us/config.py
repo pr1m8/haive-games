@@ -188,6 +188,7 @@ class AmongUsAgentConfig(GameConfig):
 
         Returns:
             Dict[str, Any]: Balance analysis including ratios and recommendations.
+
         """
         player_count = len(self.player_names)
         impostor_ratio = self.num_impostors / player_count
@@ -221,6 +222,7 @@ class AmongUsAgentConfig(GameConfig):
 
         Returns:
             AmongUsAgentConfig: Casual game configuration.
+
         """
         return cls(
             name="casual_game",
@@ -247,6 +249,7 @@ class AmongUsAgentConfig(GameConfig):
 
         Returns:
             AmongUsAgentConfig: Tournament configuration.
+
         """
         return cls(
             name="tournament_game",
@@ -274,6 +277,7 @@ class AmongUsAgentConfig(GameConfig):
 
         Returns:
             AmongUsAgentConfig: Educational configuration.
+
         """
         return cls(
             name="educational_demo",
@@ -302,6 +306,7 @@ class AmongUsAgentConfig(GameConfig):
 
         Returns:
             AmongUsAgentConfig: Speed game configuration.
+
         """
         return cls(
             name="speed_game",

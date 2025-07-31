@@ -21,9 +21,9 @@ T = TypeVar("T", bound=GamePiece)
 class Board(BaseModel, Generic[S, P, T]):
     """Base class for all game boards.
 
-    A Board represents the playing surface in a game, containing spaces
-    where pieces can be placed. It manages the spatial relationships
-    between spaces.
+    A Board represents the playing surface in a game, containing spaces where pieces can
+    be placed. It manages the spatial relationships between spaces.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -42,6 +42,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             ID of the added space
+
         """
         self.spaces[space.id] = space
         return space.id
@@ -55,6 +56,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Raises:
             ValueError: If either space doesn't exist on the board
+
         """
         if space1_id not in self.spaces or space2_id not in self.spaces:
             raise ValueError("Both spaces must exist on the board")
@@ -74,6 +76,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
 
     def place_piece(self, piece: T, position: P) -> bool:
@@ -85,6 +88,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             True if placement was successful, False otherwise
+
         """
         space = self.get_space_at_position(position)
         if not space:

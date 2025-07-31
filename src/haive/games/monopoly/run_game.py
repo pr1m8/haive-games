@@ -1,6 +1,7 @@
 """Run a Monopoly game with the fixed UI.
 
 This script demonstrates how to run a Monopoly game with the fixed UI.
+
 """
 
 import logging

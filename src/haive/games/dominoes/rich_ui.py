@@ -1,8 +1,8 @@
 """Enhanced Rich UI module for Dominoes game visualization.
 
-This module provides an enhanced rich console UI for visualizing the
-Dominoes game, with better styling, clearer representation of dominoes,
-and improved game animations.
+This module provides an enhanced rich console UI for visualizing the Dominoes game, with
+better styling, clearer representation of dominoes, and improved game animations.
+
 """
 
 import logging
@@ -47,6 +47,7 @@ class DominoesRichUI:
         >>> ui = DominoesRichUI()
         >>> state = DominoesState.initialize()
         >>> ui.display_state(state)  # Display the initial game state
+
     """
 
     def __init__(self, console: Console | None = None):
@@ -54,6 +55,7 @@ class DominoesRichUI:
 
         Args:
             console: Optional Rich console instance
+
         """
         self.console = console or Console()
 
@@ -82,6 +84,7 @@ class DominoesRichUI:
 
         Returns:
             DominoesState instance or None if extraction fails
+
         """
         try:
             # Handle None input gracefully
@@ -190,6 +193,7 @@ class DominoesRichUI:
 
         Returns:
             True if the dict appears to be a valid game state
+
         """
         required_fields = {
             "players",
@@ -210,6 +214,7 @@ class DominoesRichUI:
 
         Returns:
             Rich Text object with tile representation
+
         """
         # Determine tile style
         if tile.is_double():
@@ -234,6 +239,7 @@ class DominoesRichUI:
 
         Returns:
             Rich panel representing the board
+
         """
         if not game_state.board:
             board_text = Text(
@@ -310,6 +316,7 @@ class DominoesRichUI:
 
         Returns:
             Rich panel with player's hand
+
         """
         hand = game_state.hands[player]
         player_color = self.colors[player]
@@ -387,6 +394,7 @@ class DominoesRichUI:
 
         Returns:
             Rich panel with game info
+
         """
         # Create a table for the info
         info_table = Table(
@@ -475,6 +483,7 @@ class DominoesRichUI:
 
         Returns:
             Rich panel with move history
+
         """
         if not game_state.move_history:
             history_text = Text(
@@ -545,6 +554,7 @@ class DominoesRichUI:
 
         Returns:
             Rich panel with analysis info
+
         """
         # Create a table for the analysis
         analysis_table = Table(
@@ -631,6 +641,7 @@ class DominoesRichUI:
 
         Returns:
             Complete rich layout
+
         """
         # Create layout
         layout = Layout()
@@ -710,6 +721,7 @@ class DominoesRichUI:
 
         Returns:
             True if display was successful, False otherwise
+
         """
         try:
             game_state = self.extract_game_state(state_data)
@@ -737,6 +749,7 @@ class DominoesRichUI:
 
         Returns:
             None
+
         """
         player_color = self.colors[player]
 
@@ -761,6 +774,7 @@ class DominoesRichUI:
 
         Returns:
             None
+
         """
         player_color = self.colors[player]
 
@@ -823,6 +837,7 @@ The game will be played by AI agents with real-time visualization!
 
         Args:
             final_state: Final game state
+
         """
         try:
             game_state = self.extract_game_state(final_state)
@@ -905,6 +920,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             None
+
         """
         # Get the last move
         if not state_after.move_history:
@@ -943,6 +959,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             None
+
         """
         if not state_sequence:
             return
@@ -979,6 +996,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             Final game state
+
         """
         # Display welcome
         self.display_welcome()

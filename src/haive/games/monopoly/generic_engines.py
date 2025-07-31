@@ -1,8 +1,8 @@
 """Generic Monopoly engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Monopoly
-games, allowing for configurable LLM models and game-specific player
-identifiers.
+This module provides generic engine creation functions for Monopoly games, allowing for
+configurable LLM models and game-specific player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -173,6 +173,7 @@ def create_generic_monopoly_engines(
         - "player2_player": Player 2 configuration
         - "player1_analyzer": Player 1 analyzer configuration
         - "player2_analyzer": Player 2 analyzer configuration
+
     """
     return monopoly_factory.create_engines(player_configs)
 
@@ -189,6 +190,7 @@ def create_generic_monopoly_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of Monopoly engines
+
     """
     return create_engines_from_simple_configs(
         monopoly_factory, player1_model, player2_model, temperature
@@ -215,6 +217,7 @@ def create_generic_monopoly_config_from_example(
         - "mixed": Different provider per role
         - "real_estate_moguls": High-powered models for strategic gameplay
         - "property_tycoons": Specialized for property investment
+
     """
     examples = {
         "gpt_vs_claude": ("gpt-4o", "claude-3-5-sonnet-20240620"),
@@ -240,9 +243,7 @@ def create_generic_monopoly_config_from_example(
 
 
 def create_real_estate_mogul_monopoly_engines(**kwargs) -> dict[str, AugLLMConfig]:
-    """Create real estate mogul-style Monopoly engines with high-powered
-    models.
-    """
+    """Create real estate mogul-style Monopoly engines with high-powered models."""
     return create_generic_monopoly_config_from_example("real_estate_moguls", **kwargs)
 
 

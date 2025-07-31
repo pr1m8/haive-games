@@ -1,8 +1,9 @@
 """Simple demonstration of the Mafia game module.
 
-This script provides a simplified demonstration of the Mafia game
-functionality without relying on the full LangGraph integration. It
-shows the basic game flow and state transitions.
+This script provides a simplified demonstration of the Mafia game functionality without
+relying on the full LangGraph integration. It shows the basic game flow and state
+transitions.
+
 """
 
 import random

@@ -1,8 +1,8 @@
 """Base configuration classes for configurable games.
 
-from typing import Any This module provides the foundation for creating
-flexible game configurations that support multiple LLM providers and
-configuration modes.
+from typing import Any This module provides the foundation for creating flexible game
+configurations that support multiple LLM providers and configuration modes.
+
 """
 
 from abc import ABC, abstractmethod
@@ -56,6 +56,7 @@ class BaseGameConfig(AgentConfig, ABC):
     - Advanced PlayerAgentConfig configuration
 
     Games should extend this class and implement the required abstract methods.
+
     """
 
     # Configuration mode
@@ -104,6 +105,7 @@ class BaseGameConfig(AgentConfig, ABC):
                 "white_analyzer": GamePlayerRole(name="white_analyzer", display_name="White Analyst", is_analyzer=True),
                 "black_analyzer": GamePlayerRole(name="black_analyzer", display_name="Black Analyst", is_analyzer=True),
             }
+
         """
 
     @abstractmethod
@@ -126,6 +128,7 @@ class BaseGameConfig(AgentConfig, ABC):
                     "temperature": 0.5
                 }
             }
+
         """
 
     @abstractmethod
@@ -134,6 +137,7 @@ class BaseGameConfig(AgentConfig, ABC):
 
         Returns:
             List of game engines using hardcoded LLM configurations
+
         """
 
     @abstractmethod
@@ -147,11 +151,11 @@ class BaseGameConfig(AgentConfig, ABC):
 
         Returns:
             List of configured game engines
+
         """
 
     def determine_config_mode(self) -> ConfigMode:
-        """Automatically determine configuration mode based on provided
-        fields."""
+        """Automatically determine configuration mode based on provided fields."""
         if self.config_mode != ConfigMode.AUTO:
             return self.config_mode
 
@@ -166,9 +170,9 @@ class BaseGameConfig(AgentConfig, ABC):
     def create_simple_player_configs(self) -> dict[str, PlayerAgentConfig]:
         """Create player configs from simple model strings.
 
-        This method should be overridden by games that use different
-        field names (e.g., white_model/black_model instead of
-        player1_model/player2_model).
+        This method should be overridden by games that use different field names (e.g.,
+        white_model/black_model instead of player1_model/player2_model).
+
         """
         roles = self.get_role_definitions()
         configs = {}
@@ -263,6 +267,7 @@ def create_simple_config(
 
     Returns:
         Configured game instance
+
     """
     return config_class(
         config_mode=ConfigMode.SIMPLE,
@@ -284,6 +289,7 @@ def create_example_config(
 
     Returns:
         Configured game instance
+
     """
     return config_class(
         config_mode=ConfigMode.EXAMPLE, example_config=example_name, **kwargs
@@ -304,6 +310,7 @@ def create_advanced_config(
 
     Returns:
         Configured game instance
+
     """
     return config_class(
         config_mode=ConfigMode.ADVANCED, player_configs=player_configs, **kwargs

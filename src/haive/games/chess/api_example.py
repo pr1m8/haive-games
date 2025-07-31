@@ -1,7 +1,8 @@
 """FastAPI example for chess game with configurable LLMs.
 
-This module demonstrates how to create API endpoints for chess games
-with configurable LLM providers and models.
+This module demonstrates how to create API endpoints for chess games with configurable
+LLM providers and models.
+
 """
 
 import json

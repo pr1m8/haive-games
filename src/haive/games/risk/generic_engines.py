@@ -1,8 +1,8 @@
 """Generic Risk engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Risk games,
-allowing for configurable LLM models and game-specific player
-identifiers.
+This module provides generic engine creation functions for Risk games, allowing for
+configurable LLM models and game-specific player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -129,6 +129,7 @@ def create_generic_risk_engines(
         - "player2_player": Player 2 configuration
         - "player1_analyzer": Player 1 analyzer configuration
         - "player2_analyzer": Player 2 analyzer configuration
+
     """
     return risk_factory.create_engines(player_configs)
 
@@ -145,6 +146,7 @@ def create_generic_risk_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of Risk engines
+
     """
     return create_engines_from_simple_configs(
         risk_factory, player1_model, player2_model, temperature
@@ -170,6 +172,7 @@ def create_generic_risk_config_from_example(
         - "budget": Cost-effective models
         - "mixed": Different provider per role
         - "advanced": High-powered models for strategic gameplay
+
     """
     examples = {
         "gpt_vs_claude": ("gpt-4o", "claude-3-5-sonnet-20240620"),

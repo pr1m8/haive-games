@@ -10,6 +10,7 @@ This module provides the main checkers agent implementation using LangGraph, inc
 
 The agent uses a state-based approach with LangGraph for managing the game workflow
 and supports both automated play and human interaction through a beautiful UI.
+
 """
 
 import sys
@@ -63,6 +64,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
         >>>
         >>> # Check the final game state
         >>> print(f"Game winner: {final_state.get('winner')}")
+
     """
 
     def __init__(self, config: CheckersAgentConfig):
@@ -73,6 +75,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Args:
             config (CheckersAgentConfig): Configuration for the checkers agent
+
         """
         self.state_manager = CheckersStateManager
         self.ui = CheckersUI()
@@ -91,6 +94,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with initialized game state
+
         """
         game_state = self.state_manager.initialize()
         return Command(update=game_state, goto="player1_move")
@@ -109,6 +113,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             dict[str, Any]: Context dictionary for analysis
+
         """
         return {
             "board": state.board_string,
@@ -129,6 +134,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             CheckersMove: The selected move
+
         """
         return response.move
 
@@ -143,6 +149,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
@@ -163,6 +170,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
@@ -195,6 +203,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         if state.turn != player:
             return Command(update=state.model_dump(), goto=f"analyze_{player}")
@@ -330,6 +339,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             dict[str, Any]: Context dictionary for move generation
+
         """
         legal_moves = self.state_manager.get_legal_moves(state)
         formatted_legal_moves = [str(move) for move in legal_moves]
@@ -372,6 +382,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
@@ -390,6 +401,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         state_obj = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
@@ -410,6 +422,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Returns:
             Command: LangGraph command with updated state and next node
+
         """
         if state.turn != player:
             return Command(update=state.model_dump(), goto=f"{player}_move")
@@ -445,6 +458,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         Args:
             state (dict[str, Any]): Current game state
+
         """
         checker_state = (
             state if isinstance(state, CheckersState) else CheckersState(**state)
@@ -468,6 +482,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             >>> agent = CheckersAgent(CheckersAgentConfig())
             >>> final_state = agent.run_game_with_ui()
             >>> print(f"Winner: {final_state.get('winner')}")
+
         """
         initial_state = self.state_manager.initialize()
 
@@ -507,6 +522,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
             >>> final_state = agent.run_game(visualize=True)
             >>> # Run without visualization
             >>> final_state = agent.run_game(visualize=False)
+
         """
         if visualize:
             return self.run_game_with_ui()
@@ -524,6 +540,7 @@ class CheckersAgent(GameAgent[CheckersAgentConfig]):
 
         The graph flow follows this pattern:
         initialize → player1_move → analyze_player2 → player2_move → analyze_player1 → loop
+
         """
         gb = DynamicGraph(
             components=[self.config], state_schema=self.config.state_schema

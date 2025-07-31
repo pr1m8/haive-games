@@ -1,8 +1,9 @@
 """Configuration for the Mancala game agent.
 
-This module defines the configuration for the Mancala game agent, which
-includes the game name, state schema, engine configurations,
-enable_analysis, visualize, and stones_per_pit.
+This module defines the configuration for the Mancala game agent, which includes the
+game name, state schema, engine configurations, enable_analysis, visualize, and
+stones_per_pit.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -16,9 +17,10 @@ from haive.games.mancala.state import MancalaState
 class MancalaConfig(GameConfig):
     """Configuration for the Mancala game agent.
 
-    This class defines the configuration for the Mancala game agent,
-    which includes the game name, state schema, engine configurations,
-    enable_analysis, visualize, and stones_per_pit.
+    This class defines the configuration for the Mancala game agent, which includes the
+    game name, state schema, engine configurations, enable_analysis, visualize, and
+    stones_per_pit.
+
     """
 
     name: str = Field(default="mancala", description="Name of the game")
@@ -40,6 +42,7 @@ class MancalaConfig(GameConfig):
 
         Returns:
             MancalaConfig: Default configuration for the Mancala game.
+
         """
         return cls(
             name="mancala",

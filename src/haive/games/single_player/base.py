@@ -17,6 +17,7 @@ Typical usage:
     - Inherit from SinglePlayerStateManager for game logic
     - Inherit from SinglePlayerGameConfig for configuration
     - Inherit from SinglePlayerGameAgent for the agent implementation
+
 """
 
 import copy
@@ -85,6 +86,7 @@ class SinglePlayerGameState(BaseModel):
         move_history (List[Dict]): History of moves made
         analysis_history (List[Dict]): History of analyses made
         error_message (Optional[str]): Error message if any
+
     """
 
     player_type: PlayerType = Field(
@@ -141,6 +143,7 @@ class SinglePlayerStateManager(Generic[T]):
         generate_hint: Generate a hint for the current game state
         check_game_status: Check and update the game status
         interactive_input: Process interactive input from the player
+
     """
 
     @classmethod
@@ -159,6 +162,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             A new game state
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -172,6 +176,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             Updated game state
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -184,6 +189,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             Tuple of (updated state, hint text)
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)
@@ -205,6 +211,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             Updated game state with status checked
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -217,6 +224,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             List of legal moves
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -233,6 +241,7 @@ class SinglePlayerStateManager(Generic[T]):
 
         Returns:
             Updated game state
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)
@@ -272,6 +281,7 @@ class SinglePlayerGameConfig(BaseModel):
         max_hints: Maximum number of hints allowed
         auto_analyze: Whether to automatically analyze after each move
         engines: Configurations for game LLMs
+
     """
 
     name: str = Field(
@@ -323,6 +333,7 @@ class SinglePlayerGameAgent:
         engines: Dictionary of LLM engines for move generation and analysis
         graph: State graph for game flow
         app: Compiled graph application
+
     """
 
     def __init__(self, config):
@@ -330,6 +341,7 @@ class SinglePlayerGameAgent:
 
         Args:
             config: Configuration for the game agent
+
         """
         self.config = config
         self.state_manager = None  # Must be set by subclass
@@ -384,6 +396,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Command with the initialized game state
+
         """
         # Initialize with configured difficulty and player type
         game_state = self.state_manager.initialize(
@@ -409,6 +422,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Command with the updated game state
+
         """
         # For auto mode, use the LLM to make a move
         if self.config.game_mode == GameMode.AUTO:
@@ -455,6 +469,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Command with the updated game state including analysis
+
         """
         analyzer = self.engines.get("game_analyzer")
         if not analyzer:
@@ -488,6 +503,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Command with the updated game state including a hint
+
         """
         # Check hint limit
         if state.hint_count >= self.config.max_hints:
@@ -529,6 +545,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Command with the updated game state
+
         """
         # Process the command
         new_state = self.state_manager.interactive_input(state, command)
@@ -548,6 +565,7 @@ class SinglePlayerGameAgent:
         - Auto: Initialize -> Analyze -> Move -> Check -> Repeat
         - Interactive: Initialize -> Listen for commands
         - Assist: Initialize -> Analyze -> Listen for commands
+
         """
         # Core nodes
         self.graph.add_node("initialize_game", self.initialize_game)
@@ -595,6 +613,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             True if the game should continue, False otherwise
+
         """
         return state.game_status == "ongoing"
 
@@ -606,6 +625,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Context dictionary for the move engine
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -617,6 +637,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Context dictionary for the analysis engine
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -628,6 +649,7 @@ class SinglePlayerGameAgent:
 
         Returns:
             Extracted move
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -636,6 +658,7 @@ class SinglePlayerGameAgent:
 
         Args:
             state: Current game state
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -655,7 +678,8 @@ class SinglePlayerGameAgent:
         # Ensure state is JSON serializable
         def _ensure_json_serializable(obj: Any) -> Any:
             """Ensure object is JSON serializable, converting non-serializable
-            objects."""
+            objects.
+            """
             try:
                 json.dumps(obj)
                 return obj

@@ -1,8 +1,8 @@
 """Rich UI for displaying a live Monopoly game with proper error handling.
 
-This module provides a beautiful terminal interface for watching
-Monopoly games unfold in real-time using Rich, with fixes for the
-validation error.
+This module provides a beautiful terminal interface for watching Monopoly games unfold
+in real-time using Rich, with fixes for the validation error.
+
 """
 
 import time
@@ -328,6 +328,7 @@ class MonopolyRichUI:
         Args:
             agent: The Monopoly agent to run
             delay: Delay between updates for readability
+
         """
         # CRITICAL FIX: Ensure initial state has messages field
         initial_state = agent.initial_state

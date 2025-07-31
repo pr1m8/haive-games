@@ -29,6 +29,7 @@ Examples:
         attack = MoveCommand(row=4, col=6)
         outcome = board.receive_attack(attack.row, attack.col)
         print(f"Attack result: {outcome}")
+
 """
 
 from enum import Enum
@@ -71,6 +72,7 @@ class ShipType(str, Enum):
         Ship types follow traditional naval classifications and provide
         different strategic value in terms of size, placement difficulty,
         and target priority for AI decision-making.
+
     """
 
     CARRIER = "Carrier"  #: Aircraft carrier, largest ship (5 squares)
@@ -131,6 +133,7 @@ class Coordinates(BaseModel):
     Note:
         Standard naval notation (A1, B2, etc.) can be converted to/from
         this coordinate system for human-readable game interfaces.
+
     """
 
     row: int = Field(
@@ -160,6 +163,7 @@ class Coordinates(BaseModel):
             >>> coord.to_tuple()
             (3, 5)
             >>> coord_set = {coord.to_tuple() for coord in coordinates_list}
+
         """
         return (self.row, self.col)
 
@@ -173,6 +177,7 @@ class Coordinates(BaseModel):
             >>> coord = Coordinates(row=3, col=5)
             >>> str(coord)
             "(3, 5)"
+
         """
         return f"({self.row}, {self.col})"
 
@@ -181,6 +186,7 @@ class Coordinates(BaseModel):
 
         Returns:
             int: Hash value based on coordinate tuple.
+
         """
         return hash(self.to_tuple())
 
@@ -192,6 +198,7 @@ class Coordinates(BaseModel):
 
         Returns:
             bool: True if coordinates are equal.
+
         """
         if isinstance(other, Coordinates):
             return self.to_tuple() == other.to_tuple()
@@ -208,6 +215,7 @@ class Coordinates(BaseModel):
         Note:
             Corner positions have unique strategic properties for ship
             placement and targeting algorithms.
+
         """
         return (self.row, self.col) in [(0, 0), (0, 9), (9, 0), (9, 9)]
 
@@ -222,6 +230,7 @@ class Coordinates(BaseModel):
         Note:
             Edge positions limit ship placement options and affect
             AI search patterns.
+
         """
         return self.row in [0, 9] or self.col in [0, 9]
 
@@ -278,6 +287,7 @@ class Ship(BaseModel):
     Note:
         Ship coordinates must form a straight line (horizontal or vertical)
         and be contiguous. Size must match the ship type's expected size.
+
     """
 
     ship_type: ShipType = Field(
@@ -334,6 +344,7 @@ class Ship(BaseModel):
 
         Raises:
             ValueError: If size doesn't match expected size for ship type.
+
         """
         # Note: ship_type might not be available during validation
         # Size validation with type will be done in model_validator
@@ -350,6 +361,7 @@ class Ship(BaseModel):
 
         Raises:
             ValueError: If ship configuration is invalid.
+
         """
         # Validate size matches ship type
         expected_size = SHIP_SIZES.get(self.ship_type)
@@ -401,6 +413,7 @@ class Ship(BaseModel):
             >>> carrier = Ship(ship_type=ShipType.CARRIER, size=5, hits=3)
             >>> carrier.is_sunk
             False
+
         """
         return self.hits >= self.size
 
@@ -416,6 +429,7 @@ class Ship(BaseModel):
             >>> ship = Ship(ship_type=ShipType.CRUISER, size=3, hits=2)
             >>> ship.damage_percentage
             0.6666666666666666
+
         """
         return self.hits / max(1, self.size)
 
@@ -429,6 +443,7 @@ class Ship(BaseModel):
 
         Note:
             Orientation affects targeting strategies and probability calculations.
+
         """
         if len(self.coordinates) <= 1:
             return "single"
@@ -448,6 +463,7 @@ class Ship(BaseModel):
             >>> ship = Ship(coordinates=[Coordinates(row=3, col=4), Coordinates(row=3, col=5)])
             >>> ship.get_occupied_positions()
             [(3, 4), (3, 5)]
+
         """
         return [c.to_tuple() for c in self.coordinates]
 
@@ -462,6 +478,7 @@ class Ship(BaseModel):
             ...             coordinates=[Coordinates(row=3, col=4), Coordinates(row=3, col=5)])
             >>> str(ship)
             "Destroyer (2): ['(3, 4)', '(3, 5)']"
+
         """
         return f"{self.ship_type} ({self.size}): {[str(c) for c in self.coordinates]}"
 
@@ -517,6 +534,7 @@ class ShipPlacement(BaseModel):
     Note:
         Placement validation ensures ships don't overlap, stay within
         board boundaries, and maintain proper size and orientation.
+
     """
 
     ship_type: ShipType = Field(
@@ -558,6 +576,7 @@ class ShipPlacement(BaseModel):
 
         Raises:
             ValueError: If coordinates are invalid format.
+
         """
         if not isinstance(coords, list):
             raise ValueError("Coordinates must be a list")
@@ -582,6 +601,7 @@ class ShipPlacement(BaseModel):
 
         Raises:
             ValueError: If placement violates game rules.
+
         """
         # Validate coordinate count matches ship size
         expected_size = SHIP_SIZES[self.ship_type]
@@ -621,6 +641,7 @@ class ShipPlacement(BaseModel):
             ...                          coordinates=[Coordinates(row=3, col=4), Coordinates(row=3, col=5)])
             >>> str(placement)
             "Destroyer at ['(3, 4)', '(3, 5)']"
+
         """
         return f"{self.ship_type} at {[str(c) for c in self.coordinates]}"
 
@@ -662,6 +683,7 @@ class ShipPlacementWrapper(BaseModel):
     Note:
         This wrapper enforces that exactly one ship of each type is included
         in the fleet, preventing duplicate or missing ships.
+
     """
 
     placements: list[ShipPlacement] = Field(
@@ -723,6 +745,7 @@ class ShipPlacementWrapper(BaseModel):
 
         Raises:
             ValueError: If fleet is incomplete or has duplicates.
+
         """
         placements = self.placements
         if not isinstance(placements, list):
@@ -802,6 +825,7 @@ class MoveResult(str, Enum):
     Note:
         Results guide AI targeting algorithms, with hits triggering
         focused searching and sunk ships enabling area elimination.
+
     """
 
     HIT = "hit"  #: Attack damaged a ship
@@ -846,6 +870,7 @@ class MoveCommand(BaseModel):
     Note:
         Move commands validate target coordinates are within the 10x10
         game board but don't check for previous attacks (handled by board state).
+
     """
 
     row: int = Field(
@@ -875,6 +900,7 @@ class MoveCommand(BaseModel):
             >>> coords = move.to_coordinates()
             >>> coords.row, coords.col
             (3, 5)
+
         """
         return Coordinates(row=self.row, col=self.col)
 
@@ -888,6 +914,7 @@ class MoveCommand(BaseModel):
             >>> move = MoveCommand(row=4, col=6)
             >>> str(move)
             "Attack (4, 6)"
+
         """
         return f"Attack ({self.row}, {self.col})"
 
@@ -934,6 +961,7 @@ class MoveOutcome(BaseModel):
     Note:
         Sunk ship information enables AI to eliminate search areas
         and adjust targeting priorities for remaining fleet.
+
     """
 
     row: int = Field(
@@ -973,6 +1001,7 @@ class MoveOutcome(BaseModel):
 
         Raises:
             ValueError: If sunk_ship is specified for non-SUNK results.
+
         """
         if self.result == MoveResult.SUNK and self.sunk_ship is None:
             raise ValueError("SUNK result must specify which ship was sunk")
@@ -993,6 +1022,7 @@ class MoveOutcome(BaseModel):
             >>> outcome = MoveOutcome(row=7, col=2, result=MoveResult.SUNK, sunk_ship=ShipType.DESTROYER)
             >>> str(outcome)
             "(7, 2): sunk - Destroyer sunk!"
+
         """
         result_str = f"({self.row}, {self.col}): {self.result}"
         if self.sunk_ship:
@@ -1053,6 +1083,7 @@ class Analysis(BaseModel):
         Analysis quality directly impacts AI performance. Advanced analysis
         considers ship placement patterns, probability distributions, and
         optimal search strategies.
+
     """
 
     analysis: str = Field(
@@ -1091,6 +1122,7 @@ class Analysis(BaseModel):
 
         Returns:
             List[Coordinates]: Validated target list.
+
         """
         if not targets:
             return []
@@ -1157,6 +1189,7 @@ class PlayerBoard(BaseModel):
     Note:
         Board state is mutable and updates as the game progresses.
         Each attack modifies the appropriate tracking lists.
+
     """
 
     ships: list[Ship] = Field(
@@ -1244,6 +1277,7 @@ class PlayerBoard(BaseModel):
             >>> placement = ShipPlacement(ship_type=ShipType.DESTROYER, coordinates=[...])
             >>> if board.is_valid_placement(placement):
             ...     board.place_ship(placement)
+
         """
         # Check if ship size matches expected size
         expected_size = SHIP_SIZES[placement.ship_type]
@@ -1278,6 +1312,7 @@ class PlayerBoard(BaseModel):
             >>> placement = ShipPlacement(ship_type=ShipType.CRUISER, coordinates=[...])
             >>> success = board.place_ship(placement)
             >>> print(f"Placement {'successful' if success else 'failed'}")
+
         """
         if not self.is_valid_placement(placement):
             return False
@@ -1306,6 +1341,7 @@ class PlayerBoard(BaseModel):
             >>> # ... place ships ...
             >>> outcome = board.receive_attack(3, 4)
             >>> print(f"Attack result: {outcome.result}")
+
         """
         coord = Coordinates(row=row, col=col)
         coord_tuple = coord.to_tuple()
@@ -1354,6 +1390,7 @@ class PlayerBoard(BaseModel):
             >>> # ... game progression ...
             >>> if board.all_ships_sunk():
             ...     print("Game over!")
+
         """
         return len(self.ships) > 0 and all(ship.is_sunk for ship in self.ships)
 
@@ -1368,6 +1405,7 @@ class PlayerBoard(BaseModel):
             >>> # ... place ships ...
             >>> occupied = board.get_occupied_positions()
             >>> print(f"Ships occupy {len(occupied)} squares")
+
         """
         return [coord for ship in self.ships for coord in ship.get_occupied_positions()]
 
@@ -1378,6 +1416,7 @@ class PlayerBoard(BaseModel):
 
         Returns:
             int: Number of ships not yet sunk.
+
         """
         return sum(1 for ship in self.ships if not ship.is_sunk)
 
@@ -1388,6 +1427,7 @@ class PlayerBoard(BaseModel):
 
         Returns:
             int: Total ship squares on the board.
+
         """
         return sum(ship.size for ship in self.ships)
 
@@ -1398,6 +1438,7 @@ class PlayerBoard(BaseModel):
 
         Returns:
             int: Number of ship squares that have been hit.
+
         """
         return len(self.hits)
 
@@ -1430,6 +1471,7 @@ class GamePhase(str, Enum):
     Note:
         Phase transitions are managed by the game controller and
         determine which operations are valid at any given time.
+
     """
 
     SETUP = "setup"  #: Ship placement and initial configuration

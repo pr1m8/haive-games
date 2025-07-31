@@ -1,8 +1,9 @@
 """Generic Tic Tac Toe engines using the new generic player agent system.
 
-This module demonstrates how to use the generic player agent system for
-Tic Tac Toe, showing the same pattern working across different games
-with different player identifiers.
+This module demonstrates how to use the generic player agent system for Tic Tac Toe,
+showing the same pattern working across different games with different player
+identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -30,6 +31,7 @@ class TicTacToePromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for move generation
+
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -62,6 +64,7 @@ class TicTacToePromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for position analysis
+
         """
         opponent = "O" if player == "X" else "X"
 
@@ -134,6 +137,7 @@ def create_generic_ttt_engines(
         ...     "O_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_generic_ttt_engines(configs)
+
     """
     return ttt_engine_factory.create_engines_from_player_configs(player_configs)
 
@@ -144,8 +148,7 @@ def create_generic_ttt_engines_simple(
     temperature: float = 0.3,
     **kwargs,
 ) -> dict[str, AugLLMConfig]:
-    """Create Tic Tac Toe engines with simple model configurations using
-    generics.
+    """Create Tic Tac Toe engines with simple model configurations using generics.
 
     Args:
         x_model: Model for X player and analyzer
@@ -163,6 +166,7 @@ def create_generic_ttt_engines_simple(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     temperature=0.5
         ... )
+
     """
     return ttt_engine_factory.create_engines_from_simple_configs(
         x_model, o_model, temperature=temperature, **kwargs
@@ -187,6 +191,7 @@ def create_generic_ttt_config_from_example(
         - "claude_only": Claude for both players
         - "budget": Cost-effective models
         - "mixed": Different provider per role
+
     """
     example_configs = {
         "gpt_vs_claude": {
@@ -218,8 +223,9 @@ def create_generic_ttt_config_from_example(
 def compare_chess_vs_ttt_patterns():
     """Compare the chess vs tic-tac-toe patterns to show generalization.
 
-    This function demonstrates how the same generic system works for
-    different games with different player naming conventions.
+    This function demonstrates how the same generic system works for different games
+    with different player naming conventions.
+
     """
     print("🎯 Cross-Game Pattern Comparison")
     print("=" * 40)
@@ -268,8 +274,9 @@ def compare_chess_vs_ttt_patterns():
 def create_multi_game_comparison():
     """Create engines for multiple games to show the pattern.
 
-    This demonstrates how the same configuration approach works across
-    different games with the generic system.
+    This demonstrates how the same configuration approach works across different games
+    with the generic system.
+
     """
     print("\n🎮 Multi-Game Configuration Demonstration")
     print("=" * 50)

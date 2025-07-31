@@ -4,6 +4,7 @@ This module provides engine configurations for the Battleship game, including:
     - Player decision engines
     - Ship placement engines
     - Analysis engines
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -30,6 +31,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engine configurations
+
     """
     # Default LLM configuration
     default_llm_config = AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.7})

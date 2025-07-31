@@ -1,7 +1,8 @@
 """Risk game engines.
 
-This module defines engine configurations for the Risk game, including
-state management, analysis, and strategic planning.
+This module defines engine configurations for the Risk game, including state management,
+analysis, and strategic planning.
+
 """
 
 from typing import Any
@@ -18,6 +19,7 @@ def risk_engines(config: RiskConfig | None = None) -> dict[str, Any]:
 
     Returns:
         A dictionary of engine configurations for the Risk game.
+
     """
     # Use default config if none provided
     if config is None:

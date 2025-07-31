@@ -25,6 +25,7 @@ Example:
     >>> from haive.games.connect4.models import Connect4Move
     >>> move = Connect4Move(column=3)
     >>> ui.show_move(move, "red")
+
 """
 
 import time
@@ -64,6 +65,7 @@ class Connect4UI:
         >>> ui = Connect4UI()
         >>> state = Connect4State.initialize()
         >>> ui.display_state(state)  # Display the initial board
+
     """
 
     def __init__(self):
@@ -119,6 +121,7 @@ class Connect4UI:
 
         Returns:
             Panel: Styled header panel
+
         """
         title = Text("🔴 🟡 CONNECT 4 GAME 🟡 🔴", style=self.colors["header"])
         status = Text(f"Status: {state.game_status.upper()}", style=self.colors["info"])
@@ -154,6 +157,7 @@ class Connect4UI:
 
         Returns:
             Panel: Styled board panel
+
         """
         # Create a table for the board
         board_table = Table(
@@ -202,6 +206,7 @@ class Connect4UI:
 
         Returns:
             Panel: Game information panel
+
         """
         info_table = Table(
             show_header=False,
@@ -245,6 +250,7 @@ class Connect4UI:
 
         Returns:
             Panel: Analysis information panel
+
         """
         # Get the latest analysis for the previous player
         analysis = None
@@ -347,6 +353,7 @@ class Connect4UI:
 
         Returns:
             Panel: Move history panel
+
         """
         if not state.move_history:
             return Panel(
@@ -405,6 +412,7 @@ class Connect4UI:
             >>> ui = Connect4UI()
             >>> state = Connect4State.initialize()
             >>> ui.display_state(state)
+
         """
         # Convert dict to Connect4State if needed
         if isinstance(state, dict):
@@ -437,6 +445,7 @@ class Connect4UI:
         Example:
             >>> ui = Connect4UI()
             >>> ui.show_thinking("red", "Analyzing position...")
+
         """
         player_color = self.colors[player]["text"]
 
@@ -466,6 +475,7 @@ class Connect4UI:
             >>> ui = Connect4UI()
             >>> move = Connect4Move(column=3)
             >>> ui.show_move(move, "red")
+
         """
         player_color = self.colors[player]["text"]
         piece_symbol = "🔴" if player == "red" else "🟡"
@@ -491,6 +501,7 @@ class Connect4UI:
             >>> ui = Connect4UI()
             >>> ui.show_game_over("red")  # Red player wins
             >>> ui.show_game_over(None)   # Draw
+
         """
         if winner:
             winner_color = self.colors[winner]["text"]

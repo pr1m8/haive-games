@@ -10,6 +10,7 @@ This module provides a chess agent implementation using LangGraph, featuring:
 The agent orchestrates the game flow between two LLM players and handles
 all game mechanics including move validation, position analysis, and
 game status tracking.
+
 """
 
 import copy
@@ -43,6 +44,7 @@ class ChessAgent(Agent[ChessConfig]):
         config (ChessConfig): Configuration for the chess agent
         engines (Dict[str, Any]): LLM engines for players and analyzers
         graph (StateGraph): LangGraph workflow for the chess game
+
     """
 
     def __init__(self, config: ChessConfig):
@@ -52,6 +54,7 @@ class ChessAgent(Agent[ChessConfig]):
             config (ChessConfig): Configuration for the chess agent,
                 including LLM engine settings, analysis options, and
                 game parameters.
+
         """
         super().__init__(config)
         self.engines = {}
@@ -71,6 +74,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         The graph flow depends on the current player and game status,
         with conditional edges for routing between nodes.
+
         """
         # Build the graph using StateGraph
         builder = StateGraph(ChessState)
@@ -143,6 +147,7 @@ class ChessAgent(Agent[ChessConfig]):
             >>> command = agent.make_move(state, "white")
             >>> command.update  # Contains the updated game state
             {'board_fens': [...], 'move_history': [...], ...}
+
         """
         print(f"\n🎲 {color.capitalize()}'s turn to move")
 
@@ -381,6 +386,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         Returns:
             Command: LangGraph command with state updates
+
         """
         return self.make_move(state, "white")
 
@@ -392,6 +398,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         Returns:
             Command: LangGraph command with state updates
+
         """
         return self.make_move(state, "black")
 
@@ -412,6 +419,7 @@ class ChessAgent(Agent[ChessConfig]):
         Note:
             Analysis results are stored in the state's white_analysis
             or black_analysis fields, depending on the color.
+
         """
         print(f"\n🧠 Analyzing position for {color}")
 
@@ -463,6 +471,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         Returns:
             Command: LangGraph command with white analysis updates
+
         """
         return self.analyze_position(state, "white")
 
@@ -474,6 +483,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         Returns:
             Command: LangGraph command with black analysis updates
+
         """
         return self.analyze_position(state, "black")
 
@@ -495,6 +505,7 @@ class ChessAgent(Agent[ChessConfig]):
 
         Returns:
             Command: LangGraph command with game status updates
+
         """
         board = chess.Board(state.board_fen)
 
@@ -543,6 +554,7 @@ class ChessAgent(Agent[ChessConfig]):
             Return values correspond to the keys in the conditional
             edges of the graph: "game_over", "continue_white", or
             "continue_black".
+
         """
         # Check if game is over
         if state.game_status in ["checkmate", "stalemate", "draw"] or state.game_result:

@@ -1,7 +1,8 @@
 """Board models for the game framework.
 
-This module defines the base Board class and specific implementations
-for different types of game boards.
+This module defines the base Board class and specific implementations for different
+types of game boards.
+
 """
 
 from __future__ import annotations
@@ -25,9 +26,9 @@ T = TypeVar("T", bound=GamePiece)
 class Board(BaseModel, Generic[S, P, T]):
     """Base class for all game boards.
 
-    A Board represents the playing surface in a game, containing spaces
-    where pieces can be placed. It manages the spatial relationships
-    between spaces.
+    A Board represents the playing surface in a game, containing spaces where pieces can
+    be placed. It manages the spatial relationships between spaces.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -46,6 +47,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             ID of the added space
+
         """
         self.spaces[space.id] = space
         return space.id
@@ -59,6 +61,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Raises:
             ValueError: If either space doesn't exist on the board
+
         """
         if space1_id not in self.spaces or space2_id not in self.spaces:
             raise ValueError("Both spaces must exist on the board")
@@ -77,6 +80,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Raises:
             ValueError: If the space doesn't exist on the board
+
         """
         if space_id not in self.spaces:
             raise ValueError(f"Space {space_id} not found")
@@ -100,6 +104,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
 
     def place_piece(self, piece: T, position: P) -> bool:
@@ -111,6 +116,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             True if placement was successful, False otherwise
+
         """
         space = self.get_space_at_position(position)
         if not space:
@@ -130,6 +136,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             The removed piece, or None if no piece was at the position
+
         """
         space = self.get_space_at_position(position)
         if not space:
@@ -145,6 +152,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             True if the position is valid, False otherwise
+
         """
         return self.get_space_at_position(position) is not None
 
@@ -153,6 +161,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             Dictionary mapping piece IDs to pieces
+
         """
         pieces: dict[str, T] = {}
         for space in self.spaces.values():
@@ -168,6 +177,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             List of pieces owned by the player
+
         """
         return [
             space.piece
@@ -183,6 +193,7 @@ class Board(BaseModel, Generic[S, P, T]):
         Args:
             key: Property name
             value: Property value
+
         """
         self.properties[key] = value
 
@@ -195,6 +206,7 @@ class Board(BaseModel, Generic[S, P, T]):
 
         Returns:
             Property value or default
+
         """
         return self.properties.get(key, default)
 
@@ -203,6 +215,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
     """A grid-based board (Chess, Checkers, Scrabble).
 
     This represents a rectangular grid of spaces.
+
     """
 
     rows: int
@@ -224,6 +237,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
         # Simple linear search - could be optimized with a position-based index
         for space in self.spaces.values():
@@ -247,6 +261,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
         # Create a temporary position object for lookup
         # This assumes P is compatible with GridPosition
@@ -260,6 +275,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Args:
             space_factory: Optional factory function to create spaces
+
         """
         for row in range(self.rows):
             for col in range(self.cols):
@@ -292,6 +308,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             True if the position is valid, False otherwise
+
         """
         return (
             hasattr(position, "row")
@@ -307,6 +324,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             Total number of spaces
+
         """
         return self.rows * self.cols
 
@@ -318,6 +336,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             List of spaces in the row, ordered by column
+
         """
         if not 0 <= row < self.rows:
             return []
@@ -337,6 +356,7 @@ class GridBoard(Board[GridSpace[P, T], P, T]):
 
         Returns:
             List of spaces in the column, ordered by row
+
         """
         if not 0 <= col < self.cols:
             return []

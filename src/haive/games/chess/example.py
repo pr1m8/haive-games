@@ -9,6 +9,7 @@ using the Haive chess module, demonstrating:
 
 This is intended as a basic demonstration of the chess module's capabilities
 and can be used as a starting point for more complex implementations.
+
 """
 
 import traceback
@@ -47,6 +48,7 @@ def run_chess_game(thread_id: str = None):
         - Streaming output of game events
 
     The function handles errors gracefully and reports the final game result.
+
     """
     # Create thread ID
     thread_id = thread_id or f"chess_{uuid.uuid4().hex[:8]}"
@@ -97,5 +99,6 @@ if __name__ == "__main__":
 
     Example:
         $ python -m haive.games.chess.example
+
     """
     run_chess_game()

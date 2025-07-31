@@ -1,7 +1,8 @@
 """Test helpers for bypassing LLM factory issues during testing.
 
-This module provides temporary workarounds for testing game
-functionality while the LLM factory registry issues are being resolved.
+This module provides temporary workarounds for testing game functionality while the LLM
+factory registry issues are being resolved.
+
 """
 
 from typing import Any
@@ -28,6 +29,7 @@ def create_test_llm_config(model: str, **kwargs) -> LLMConfig:
 
     Returns:
         LLMConfig: Appropriate config instance
+
     """
     # Simple model to provider mapping
     if "gpt" in model.lower():
@@ -58,6 +60,7 @@ def create_test_player_agent_config(
 
     Returns:
         PlayerAgentConfig: Configured player agent
+
     """
     # Create the LLM config directly
     direct_llm_config = create_test_llm_config(llm_config, temperature=temperature)
@@ -91,6 +94,7 @@ def create_test_aug_llm_config(
 
     Returns:
         AugLLMConfig: Configured augmented LLM
+
     """
     llm_config = create_test_llm_config(model, temperature=temperature)
 
@@ -123,6 +127,7 @@ def create_test_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of test engines
+
     """
 
     # Simple prompt template for testing
@@ -210,6 +215,7 @@ def validate_engine_structure(engines: dict[str, AugLLMConfig], game_name: str) 
 
     Returns:
         bool: True if structure is valid
+
     """
     if len(engines) != 4:
         return False
@@ -236,6 +242,7 @@ def test_basic_game_structure(
 
     Returns:
         bool: True if test passed
+
     """
     try:
         # Create engines

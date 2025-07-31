@@ -1,7 +1,8 @@
 """State manager for Reversi (Othello) game logic and mechanics.
 
-Handles legal move validation, disc flipping, game progression, skipping
-turns, win detection, and analysis updates.
+Handles legal move validation, disc flipping, game progression, skipping turns, win
+detection, and analysis updates.
+
 """
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -36,6 +37,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             ReversiState: A new Reversi game state.
+
         """
         first_player = kwargs.get("first_player", "B")
         player_B = kwargs.get("player_B", "player1")
@@ -70,6 +72,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             List[ReversiMove]: A list of all legal moves.
+
         """
         legal_moves = []
         player = state.turn
@@ -99,6 +102,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Validate player's turn
         if move.player != state.turn:
@@ -153,6 +157,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             ReversiState: The game state with updated status.
+
         """
         # If both players have skipped their turns, game is over
         if state.skip_count >= 2:
@@ -201,6 +206,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             Optional[str]: The winner ('B' or 'W'), or None if the game is ongoing or a draw.
+
         """
         return state.winner
 
@@ -217,6 +223,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             ReversiState: Updated state with the analysis added.
+
         """
         new_state = state.model_copy()
 
@@ -231,8 +238,8 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     def _get_flips(
         cls, board: list[list[str | None]], row: int, col: int, player: str
     ) -> set[tuple[int, int]]:
-        """Get the positions of opponent's discs that would be flipped by
-        placing player's disc at (row, col).
+        """Get the positions of opponent's discs that would be flipped by placing
+        player's disc at (row, col).
 
         Args:
             board: The current board.
@@ -242,6 +249,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             Set[Tuple[int, int]]: Positions of discs that would be flipped.
+
         """
         # If the cell is not empty, no flips possible
         if board[row][col] is not None:
@@ -281,6 +289,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             bool: True if the move is legal, False otherwise.
+
         """
         # Check if the cell is within bounds and empty
         if not (0 <= row < 8 and 0 <= col < 8) or state.board[row][col] is not None:
@@ -298,6 +307,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
 
         Returns:
             ReversiState: A new game state after skipping the turn.
+
         """
         new_state = state.model_copy()
 

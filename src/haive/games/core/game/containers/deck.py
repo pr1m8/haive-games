@@ -1,7 +1,7 @@
 """Deck classes for card games in the game framework.
 
-This module defines the Deck container type and related classes for card
-games.
+This module defines the Deck container type and related classes for card games.
+
 """
 
 from __future__ import annotations
@@ -34,19 +34,19 @@ C = TypeVar("C", bound=Card)
 class Deck(GamePieceContainer[C]):
     """A deck of cards.
 
-    This represents a collection of cards that can be drawn, shuffled,
-    and dealt.
+    This represents a collection of cards that can be drawn, shuffled, and dealt.
+
     """
 
     face_down: bool = True  # Whether cards are hidden by default
     discard_pile: list[C] = Field(default_factory=list)
 
     def draw(self) -> C | None:
-        """Draw the top card and set its face up/down based on deck
-        configuration.
+        """Draw the top card and set its face up/down based on deck configuration.
 
         Returns:
             The drawn card, or None if deck is empty
+
         """
         if not self.pieces:
             return None
@@ -63,6 +63,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of lists, where each inner list contains a player's cards
+
         """
         hands = [[] for _ in range(num_players)]
         for _i in range(cards_per_player):
@@ -78,6 +79,7 @@ class Deck(GamePieceContainer[C]):
 
         Args:
             card: Card to discard
+
         """
         self.discard_pile.append(card)
 
@@ -86,6 +88,7 @@ class Deck(GamePieceContainer[C]):
 
         Args:
             shuffle: Whether to shuffle the deck after recycling
+
         """
         self.pieces.extend(self.discard_pile)
         self.discard_pile.clear()
@@ -100,6 +103,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of cards from the top
+
         """
         return self.peek(count)
 
@@ -111,6 +115,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             List of cards from the bottom
+
         """
         return self.pieces[-count:] if count <= len(self.pieces) else self.pieces.copy()
 
@@ -119,6 +124,7 @@ class Deck(GamePieceContainer[C]):
 
         Returns:
             The bottom card, or None if deck is empty
+
         """
         if not self.pieces:
             return None
@@ -135,6 +141,7 @@ class Deck(GamePieceContainer[C]):
 
         Raises:
             ValueError: If position is out of bounds
+
         """
         if position < 0 or position > len(self.pieces):
             raise ValueError(f"Position {position} is out of bounds")
@@ -145,6 +152,7 @@ class Deck(GamePieceContainer[C]):
 
         Args:
             card: Card to place
+
         """
         self.pieces.append(card)
 
@@ -188,6 +196,7 @@ class StandardPlayingCardDeck(Deck):
 
         Returns:
             A new StandardPlayingCardDeck instance
+
         """
         # Since we don't have the full PlayingCard implementation,
         # we'll just illustrate the structure here

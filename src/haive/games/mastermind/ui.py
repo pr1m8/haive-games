@@ -1,8 +1,8 @@
 """Rich UI for the Mastermind game.
 
-This module provides a rich terminal UI for the Mastermind game using
-the Rich library. It displays the game board, guesses, feedback, and
-analysis in a visually appealing way.
+This module provides a rich terminal UI for the Mastermind game using the Rich library.
+It displays the game board, guesses, feedback, and analysis in a visually appealing way.
+
 """
 
 from typing import Any
@@ -19,8 +19,9 @@ from haive.games.mastermind.state import MastermindState
 class MastermindUI:
     """Rich terminal UI for the Mastermind game.
 
-    This class provides methods for displaying the Mastermind game state
-    in a visually appealing way using the Rich library.
+    This class provides methods for displaying the Mastermind game state in a visually
+    appealing way using the Rich library.
+
     """
 
     # Color emoji mappings
@@ -52,6 +53,7 @@ class MastermindUI:
 
         Args:
             console: Optional Rich console to use. If not provided, a new one is created.
+
         """
         self.console = console or Console()
 
@@ -79,6 +81,7 @@ class MastermindUI:
 
         Returns:
             A Rich Text object with appropriate styling for the color.
+
         """
         emoji = self.COLOR_EMOJIS.get(color, "❓")
         style = self.COLOR_STYLES.get(color, "white")
@@ -92,6 +95,7 @@ class MastermindUI:
 
         Returns:
             A Rich Table object containing the guesses and feedback.
+
         """
         table = Table(show_header=True, header_style="bold")
         table.add_column("Turn", style="dim", width=6)
@@ -130,6 +134,7 @@ class MastermindUI:
 
         Returns:
             A Rich Panel object containing game information.
+
         """
         info_text = Text()
         info_text.append(
@@ -164,6 +169,7 @@ class MastermindUI:
 
         Returns:
             A Rich Panel object containing analysis information, or None if no analysis available.
+
         """
         codebreaker = "player2" if state.codemaker == "player1" else "player1"
         analysis = None
@@ -242,6 +248,7 @@ class MastermindUI:
 
         Returns:
             A Rich Layout object containing all game UI components.
+
         """
         layout = Layout()
         layout.split(
@@ -266,6 +273,7 @@ class MastermindUI:
 
         Args:
             state: The current game state.
+
         """
         self.console.clear()
         self.console.print(self.create_layout(state))
@@ -275,6 +283,7 @@ class MastermindUI:
 
         Args:
             state: The final game state.
+
         """
         winner = state.winner or "None"
         result_text = Text()
@@ -317,6 +326,7 @@ class MastermindUI:
 
         Returns:
             A MastermindState object, or None if conversion fails.
+
         """
         try:
             return MastermindState(**state_dict)
@@ -330,6 +340,7 @@ class MastermindUI:
         Args:
             data: The data to print.
             label: A label for the debug panel.
+
         """
         debug_text = str(data)
         panel = Panel(debug_text, title=f"🐞 {label}", border_style="red")

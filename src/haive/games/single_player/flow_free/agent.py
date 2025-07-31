@@ -1,7 +1,8 @@
 """Flow Free game agent implementation.
 
-This module implements the agent for the Flow Free puzzle game, handling
-move generation, analysis, and game flow.
+This module implements the agent for the Flow Free puzzle game, handling move
+generation, analysis, and game flow.
+
 """
 
 import time
@@ -29,6 +30,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Args:
             config: Configuration for the agent.
+
         """
         self.console = Console()
         self.state_manager = FlowFreeStateManager
@@ -42,6 +44,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Returns:
             Command with the initialized game state.
+
         """
         game_state = self.state_manager.initialize(
             difficulty=self.config.difficulty,
@@ -67,6 +70,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Returns:
             Context for the move generation engine.
+
         """
         # Generate board display
         board_display = state.to_display_string()
@@ -115,6 +119,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Returns:
             Context for the analysis engine.
+
         """
         # Generate board display
         board_display = state.to_display_string()
@@ -154,6 +159,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Returns:
             Extracted FlowFreeMove.
+
         """
         # If the response is already a FlowFreeMove object, return it
         if isinstance(response, FlowFreeMove):
@@ -175,6 +181,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Args:
             state: Current game state.
+
         """
         if not self.config.visualize:
             return
@@ -317,6 +324,7 @@ class FlowFreeAgent(SinglePlayerGameAgent):
 
         Returns:
             Final game state.
+
         """
         # Initialize the game
         initial_state = self.state_manager.initialize(

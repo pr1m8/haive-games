@@ -1,8 +1,8 @@
-"""Configurable Tic-Tac-Toe configuration using the generic player agent
-system.
+"""Configurable Tic-Tac-Toe configuration using the generic player agent system.
 
-This module provides configurable Tic-Tac-Toe game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Tic-Tac-Toe game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -35,6 +35,7 @@ class ConfigurableTicTacToeConfig(TicTacToeConfig):
         max_moves: Maximum number of moves before draw
         enable_analysis: Whether to enable position analysis
         recursion_limit: Python recursion limit for game execution
+
     """
 
     x_model: str | None = Field(default=None, description="Model for X player")
@@ -143,8 +144,7 @@ class ConfigurableTicTacToeConfig(TicTacToeConfig):
 def create_ttt_config(
     x_model: str = "gpt-4o", o_model: str = "claude-3-5-sonnet-20240620", **kwargs
 ) -> ConfigurableTicTacToeConfig:
-    """Create a configurable Tic-Tac-Toe configuration with simple model
-    specifications.
+    """Create a configurable Tic-Tac-Toe configuration with simple model specifications.
 
     Args:
         x_model: Model for X player and analyzer
@@ -161,6 +161,7 @@ def create_ttt_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     max_moves=9
         ... )
+
     """
     return ConfigurableTicTacToeConfig(x_model=x_model, o_model=o_model, **kwargs)
 
@@ -168,8 +169,7 @@ def create_ttt_config(
 def create_ttt_config_from_example(
     example_name: str, **kwargs
 ) -> ConfigurableTicTacToeConfig:
-    """Create a configurable Tic-Tac-Toe configuration from a predefined
-    example.
+    """Create a configurable Tic-Tac-Toe configuration from a predefined example.
 
     Args:
         example_name: Name of the example configuration
@@ -188,6 +188,7 @@ def create_ttt_config_from_example(
     Example:
         >>> config = create_ttt_config_from_example("budget", max_moves=9)
         >>> config = create_ttt_config_from_example("gpt_vs_claude", enable_analysis=False)
+
     """
     return ConfigurableTicTacToeConfig(example_config=example_name, **kwargs)
 
@@ -235,6 +236,7 @@ def create_ttt_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_ttt_config_from_player_configs(player_configs)
+
     """
     return ConfigurableTicTacToeConfig(player_configs=player_configs, **kwargs)
 
@@ -253,8 +255,7 @@ def create_quick_ttt_config(**kwargs) -> ConfigurableTicTacToeConfig:
 
 
 def create_experimental_ttt_config(**kwargs) -> ConfigurableTicTacToeConfig:
-    """Create an experimental Tic-Tac-Toe configuration with mixed
-    providers."""
+    """Create an experimental Tic-Tac-Toe configuration with mixed providers."""
     return create_ttt_config_from_example("mixed", **kwargs)
 
 
@@ -291,6 +292,7 @@ def get_example_config(name: str) -> ConfigurableTicTacToeConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -304,6 +306,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

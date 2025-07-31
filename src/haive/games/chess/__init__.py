@@ -4,6 +4,7 @@ This module provides chess game functionality including:
 - ChessAgent: LLM-powered chess player agent
 - ChessConfig: Configuration for chess games
 - ChessState: Game state management
+
 """
 
 from haive.games.chess.agent import ChessAgent

@@ -8,6 +8,7 @@ This module provides LLM engine configurations for checkers game agents, includi
 
 The engines use LLM configurations optimized for checkers gameplay,
 with prompt templates designed to generate high-quality moves and analysis.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -39,6 +40,7 @@ def generate_move_prompt(color: str) -> ChatPromptTemplate:
         'system'
         >>> "You are playing checkers as RED" in red_prompt.messages[0][1]  # First message content
         True
+
     """
     color_upper = color.upper()
     opponent = "BLACK" if color == "red" else "RED"
@@ -117,6 +119,7 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
         True
         >>> "material_advantage" in black_prompt.messages[0][1]  # Output format specification
         True
+
     """
     color_upper = color.upper()
 
@@ -182,6 +185,7 @@ def build_checkers_aug_llms() -> dict[str, AugLLMConfig]:
         ['black_analyzer', 'black_player', 'red_analyzer', 'red_player']
         >>> engines["red_player"].structured_output_model
         <class 'haive.games.checkers.models.CheckersPlayerDecision'>
+
     """
     default_llm_config = AzureLLMConfig(model="gpt-4o", temperature=0.7)
 

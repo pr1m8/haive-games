@@ -1,7 +1,8 @@
 """Reversi (Othello) game state model.
 
-Defines board layout, current game status, turn tracking, move history,
-analysis storage, and rendering utilities for the Reversi agent system.
+Defines board layout, current game status, turn tracking, move history, analysis
+storage, and rendering utilities for the Reversi agent system.
+
 """
 
 from typing import Any, Literal
@@ -27,6 +28,7 @@ class ReversiState(GameState):
         player1_analysis (List[Dict[str, any]]): Analysis history by player1.
         player2_analysis (List[Dict[str, any]]): Analysis history by player2.
         skip_count (int): Number of consecutive turns skipped (used for endgame).
+
     """
 
     board: list[list[str | None]] = Field(
@@ -71,6 +73,7 @@ class ReversiState(GameState):
 
         Raises:
             ValueError: If the board structure or contents are invalid.
+
         """
         if len(board) != 8:
             raise ValueError("Board must have 8 rows")
@@ -90,6 +93,7 @@ class ReversiState(GameState):
 
         Returns:
             str: Either 'player1' or 'player2'.
+
         """
         return self.player_B if self.turn == "B" else self.player_W
 
@@ -99,6 +103,7 @@ class ReversiState(GameState):
 
         Returns:
             Dict[str, int]: Dictionary with counts of 'B' and 'W'.
+
         """
         black_count = sum(1 for row in self.board for cell in row if cell == "B")
         white_count = sum(1 for row in self.board for cell in row if cell == "W")
@@ -110,6 +115,7 @@ class ReversiState(GameState):
 
         Returns:
             str: Formatted board as text.
+
         """
         result = []
         result.append("    1 2 3 4 5 6 7 8")
@@ -143,6 +149,7 @@ class ReversiState(GameState):
 
         Returns:
             ReversiState: Initialized state.
+
         """
 
         return ReversiStateManager.initialize(

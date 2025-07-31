@@ -35,6 +35,7 @@ class GoAgentConfig(AgentConfig):
         ...         "analyzer": AugLLMConfig(...)
         ...     }
         ... )
+
     """
 
     state_schema: type = Field(

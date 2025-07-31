@@ -23,6 +23,7 @@ Typical usage:
     - Initialize the generator with game details
     - Generate all template files at once
     - Customize the generated code for your specific game
+
 """
 
 import os
@@ -53,6 +54,7 @@ class GameTemplateGenerator:
         >>> generator = GameTemplateGenerator("Tic Tac Toe")
         >>> generator.generate_templates()
         ✅ Generated template files for Tic Tac Toe in src/haive/agents/agent_games/tic_tac_toe
+
     """
 
     def __init__(
@@ -77,6 +79,7 @@ class GameTemplateGenerator:
             ...     player1_name="white",
             ...     player2_name="black"
             ... )
+
         """
         self.game_name = game_name
         self.player1_name = player1_name
@@ -109,6 +112,7 @@ class GameTemplateGenerator:
             >>> generator.generate_templates()
             >>> # Generate in custom location
             >>> generator.generate_templates("my_games/chess")
+
         """
         if output_dir:
             self.base_dir = output_dir
@@ -136,6 +140,7 @@ class GameTemplateGenerator:
 
         The generated models include proper type hints, field descriptions,
         and validation rules.
+
         """
         content = dedent(
             f'''
@@ -230,6 +235,7 @@ class GameTemplateGenerator:
         - Game status checking
 
         The generated code includes placeholders for game-specific logic.
+
         """
         content = dedent(
             f'''
@@ -313,6 +319,7 @@ class GameTemplateGenerator:
         - Game-specific agent configuration class
 
         The generated code includes default configurations that can be customized.
+
         """
         content = dedent(
             f"""
@@ -462,6 +469,7 @@ class GameTemplateGenerator:
         - Integration with the framework
 
         The generated code includes proper error handling and logging.
+
         """
         content = dedent(
             f"""
@@ -599,6 +607,7 @@ class GameTemplateGenerator:
         - State history saving
 
         The generated code serves as a starting point for using the agent.
+
         """
         content = dedent(
             f'''

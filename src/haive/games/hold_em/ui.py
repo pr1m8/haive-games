@@ -6,6 +6,7 @@ Texas Hold'em games in real-time, showing:
     - Community cards and pot
     - Current action and betting
     - Game phase and status
+
 """
 
 import logging
@@ -392,6 +393,7 @@ class HoldemRichUI:
         Args:
             agent: The HoldemGameAgent instance
             delay: Delay between updates for readability
+
         """
         # Create initial state
         initial_state = self._create_initial_state(agent)

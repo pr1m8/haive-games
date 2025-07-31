@@ -13,6 +13,7 @@ Options:
     --no-analysis    Disable position analysis
     --no-visual      Disable visualization
     --debug          Enable debug output
+
 """
 
 import argparse

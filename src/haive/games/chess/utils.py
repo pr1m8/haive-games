@@ -7,6 +7,7 @@ This module provides helper functions for the chess game, including:
 
 These utilities support the core functionality of the chess module
 by providing common operations used across different components.
+
 """
 
 import chess
@@ -35,6 +36,7 @@ def determine_game_status(board: chess.Board) -> str:
         >>> board.push_san("Qh4#")
         >>> determine_game_status(board)
         'checkmate'
+
     """
     if board.is_checkmate():
         return "checkmate"
@@ -73,6 +75,7 @@ def generate_ascii_board(fen: str, last_move: str | None = None) -> str:
         ...     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
         ...     "e2e4"
         ... )
+
     """
     board = chess.Board(fen)
 
@@ -141,6 +144,7 @@ def validate_move(fen: str, move_uci: str) -> tuple[bool, str | None, str | None
         True
         >>> new_fen is None
         True
+
     """
     board = chess.Board(fen)
 

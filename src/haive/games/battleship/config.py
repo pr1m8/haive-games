@@ -36,6 +36,7 @@ Note:
     All configuration classes include comprehensive validation to ensure
     game rule consistency and prevent invalid combinations that would
     break gameplay mechanics.
+
 """
 
 import uuid
@@ -124,6 +125,7 @@ class BattleshipAgentConfig(AgentConfig):
         Configuration validation ensures game rule consistency and prevents
         invalid combinations that would break gameplay mechanics or create
         unfair advantages.
+
     """
 
     name: str = Field(
@@ -200,6 +202,7 @@ class BattleshipAgentConfig(AgentConfig):
                 # After validation, player names might be:
                 # player1_name = "azure-gpt-4o"
                 # player2_name = "Player 2"
+
         """
         # Set thread_id if not already set
         if (
@@ -244,6 +247,7 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Visualization disabled for performance
                 # - Optimized recursion limits
                 # - Tournament-appropriate naming
+
         """
         return cls(
             name="competitive_battleship",
@@ -278,6 +282,7 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Visualization enabled for monitoring
                 # - Extended recursion limits
                 # - Training-appropriate naming
+
         """
         return cls(
             name="training_battleship",
@@ -312,6 +317,7 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Visualization disabled for performance
                 # - Reduced recursion limits
                 # - Performance-appropriate naming
+
         """
         return cls(
             name="performance_battleship",
@@ -340,6 +346,7 @@ class BattleshipAgentConfig(AgentConfig):
                 summary = config.configuration_summary
                 print(f"Mode: {summary['mode']}")
                 print(f"Analysis: {summary['analysis_enabled']}")
+
         """
         return {
             "name": self.name,

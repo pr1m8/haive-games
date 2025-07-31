@@ -16,6 +16,7 @@ Example:
     >>> # Get the villager player engine config
     >>> villager_config = aug_llm_configs["villager"]["player"]
     >>> print(villager_config.name)  # Shows "villager_player"
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -45,6 +46,7 @@ def generate_villager_prompt() -> ChatPromptTemplate:
         ...     alive_players=["Player_1", "Player_2"],
         ...     public_info=["Night falls..."]
         ... )
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -95,6 +97,7 @@ def generate_mafia_prompt() -> ChatPromptTemplate:
         ...     alive_players=["Player_1", "Player_2"],
         ...     private_info=["Other mafia: Player_3"]
         ... )
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -145,6 +148,7 @@ def generate_detective_prompt() -> ChatPromptTemplate:
         ...     alive_players=["Player_1", "Player_2"],
         ...     private_info=["Player_2 is not mafia"]
         ... )
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -195,6 +199,7 @@ def generate_doctor_prompt() -> ChatPromptTemplate:
         ...     alive_players=["Player_1", "Player_2"],
         ...     private_info=["You saved Player_2 last night"]
         ... )
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -245,6 +250,7 @@ def generate_narrator_prompt() -> ChatPromptTemplate:
         ...     alive_mafia_count=2,
         ...     alive_village_count=3
         ... )
+
     """
     return ChatPromptTemplate.from_messages(
         [

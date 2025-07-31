@@ -15,6 +15,7 @@ Example:
     >>> # Get an analyzer for evaluating player suspicion levels
     >>> analyzer = get_mafia_analyzer("suspicion")
     >>> analysis = analyzer.invoke(game_state)
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -44,6 +45,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
     Example:
         >>> analyzer = get_mafia_analyzer("suspicion")
         >>> analysis = analyzer.invoke(game_context)
+
     """
     if analyzer_type == "suspicion":
         return AugLLMConfig(

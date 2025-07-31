@@ -34,6 +34,7 @@ def create_among_us_game(
 
     Returns:
         An initialized AmongUsAgent
+
     """
     # Default configurations
     default_llm_config = {

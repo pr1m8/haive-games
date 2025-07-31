@@ -1,8 +1,8 @@
 """Generic Clue engine creation using the generic player agent system.
 
-This module provides generic engine creation functions for Clue games,
-allowing for configurable LLM models and game-specific player
-identifiers.
+This module provides generic engine creation functions for Clue games, allowing for
+configurable LLM models and game-specific player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -128,6 +128,7 @@ def create_generic_clue_engines(
         - "suspect_player": Player 2 configuration
         - "detective_analyzer": Player 1 analyzer configuration
         - "suspect_analyzer": Player 2 analyzer configuration
+
     """
     return clue_factory.create_engines(player_configs)
 
@@ -144,6 +145,7 @@ def create_generic_clue_engines_simple(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of Clue engines
+
     """
     return create_engines_from_simple_configs(
         clue_factory, detective_model, suspect_model, temperature
@@ -169,6 +171,7 @@ def create_generic_clue_config_from_example(
         - "budget": Cost-effective models
         - "mixed": Different provider per role
         - "advanced": High-powered models for strategic gameplay
+
     """
     examples = {
         "gpt_vs_claude": ("gpt-4o", "claude-3-5-sonnet-20240620"),

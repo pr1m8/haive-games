@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Example script for running the Mastermind game.
 
-This script demonstrates how to initialize and run the Mastermind game
-with various configuration options.
+This script demonstrates how to initialize and run the Mastermind game with various
+configuration options.
+
 """
 
 import argparse

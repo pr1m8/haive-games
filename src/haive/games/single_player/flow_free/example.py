@@ -1,7 +1,8 @@
 """Example script for running the Flow Free game agent.
 
-This script demonstrates how to configure and run the Flow Free game
-agent in different modes and difficulty levels.
+This script demonstrates how to configure and run the Flow Free game agent in different
+modes and difficulty levels.
+
 """
 
 import argparse
@@ -71,6 +72,7 @@ def parse_arguments():
 
     Returns:
         Namespace with parsed arguments.
+
     """
 
     parser = argparse.ArgumentParser(description="Flow Free Puzzle Game")
@@ -118,6 +120,7 @@ def create_config(args):
 
     Returns:
         FlowFreeConfig: Game configuration.
+
     """
     # Parse difficulty
     difficulty_map = {

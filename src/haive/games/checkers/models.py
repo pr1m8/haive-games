@@ -135,6 +135,7 @@ class CheckersMove(BaseModel):
     Note:
         Move validation should be performed by the game state manager to ensure
         moves comply with Checkers rules and current board configuration.
+
     """
 
     from_position: str = Field(
@@ -186,6 +187,7 @@ class CheckersMove(BaseModel):
 
         Raises:
             ValueError: If position format is invalid.
+
         """
         if len(v) != 2:
             raise ValueError("Position must be exactly 2 characters (e.g., 'a3')")
@@ -212,6 +214,7 @@ class CheckersMove(BaseModel):
 
         Raises:
             ValueError: If captured position is invalid for jump moves.
+
         """
         if v is not None:
             if len(v) != 2:
@@ -246,6 +249,7 @@ class CheckersMove(BaseModel):
                     is_jump=True, captured_position="d4"
                 )
                 print(str(jump))  # Output: "c3xe5"
+
         """
         if self.is_jump:
             return f"{self.from_position}x{self.to_position}"
@@ -258,6 +262,7 @@ class CheckersMove(BaseModel):
 
         Returns:
             int: Distance moved in board squares (1 for regular moves, 2+ for jumps).
+
         """
         from_col = ord(self.from_position[0]) - ord("a")
         from_row = int(self.from_position[1]) - 1
@@ -329,6 +334,7 @@ class CheckersPlayerDecision(BaseModel):
     Note:
         This model is designed for structured output from LLM-based player engines
         and provides comprehensive strategic context for move analysis.
+
     """
 
     move: CheckersMove = Field(
@@ -379,6 +385,7 @@ class CheckersPlayerDecision(BaseModel):
 
         Returns:
             List[str]: Validated list of alternative moves.
+
         """
         for move in v:
             if "-" in move:
@@ -452,6 +459,7 @@ class CheckersAnalysis(BaseModel):
     Note:
         This model provides structured analysis output for strategic decision-making
         and supports both human-readable explanations and automated analysis.
+
     """
 
     material_advantage: str = Field(
@@ -507,6 +515,7 @@ class CheckersAnalysis(BaseModel):
 
         Returns:
             Dict[str, Union[str, int]]: Summary containing key analysis points.
+
         """
         return {
             "material_status": self.material_advantage.split(",")[0],

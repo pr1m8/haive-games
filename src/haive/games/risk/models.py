@@ -36,6 +36,7 @@ Examples:
             to_territory="Middle East",
             attack_dice=3
         )
+
 """
 
 from enum import Enum
@@ -77,6 +78,7 @@ class CardType(str, Enum):
     Note:
         Card trading values typically increase each time cards are traded,
         starting at 4 armies for the first trade and increasing by 2 each time.
+
     """
 
     INFANTRY = "infantry"  #: Basic ground unit, represents foot soldiers
@@ -126,6 +128,7 @@ class Card(BaseModel):
         Territory names on cards are typically for thematic purposes
         and don't affect trading value, but may provide strategic
         information about board state.
+
     """
 
     card_type: CardType = Field(
@@ -159,6 +162,7 @@ class Card(BaseModel):
             >>> card = Card(card_type=CardType.WILD)
             >>> str(card)
             "Wild"
+
         """
         if self.territory_name:
             return f"{self.card_type.value.capitalize()} ({self.territory_name})"
@@ -179,6 +183,7 @@ class Card(BaseModel):
             >>> infantry_card = Card(card_type=CardType.INFANTRY)
             >>> infantry_card.is_wild
             False
+
         """
         return self.card_type == CardType.WILD
 
@@ -237,6 +242,7 @@ class Territory(BaseModel):
         Territory adjacency defines the game's strategic geography.
         Control of key chokepoints and continental borders often
         determines game outcomes.
+
     """
 
     name: str = Field(
@@ -299,6 +305,7 @@ class Territory(BaseModel):
 
         Raises:
             ValueError: If name is empty or contains invalid characters.
+
         """
         name = v.strip()
         if not name:
@@ -318,6 +325,7 @@ class Territory(BaseModel):
 
         Raises:
             ValueError: If army count is negative.
+
         """
         if v < 0:
             raise ValueError("Army count cannot be negative")
@@ -334,6 +342,7 @@ class Territory(BaseModel):
             ...                      owner="player_1", armies=3)
             >>> str(territory)
             "Alaska (player_1, 3 armies)"
+
         """
         owner_str = f"{self.owner}" if self.owner else "Unoccupied"
         return f"{self.name} ({owner_str}, {self.armies} armies)"
@@ -345,6 +354,7 @@ class Territory(BaseModel):
 
         Returns:
             bool: True if territory has an owner, False if neutral.
+
         """
         return self.owner is not None
 
@@ -359,6 +369,7 @@ class Territory(BaseModel):
         Note:
             Territories with 1 army can defend with 1 die,
             territories with 2+ armies can defend with 2 dice.
+
         """
         return min(2, max(1, self.armies))
 
@@ -416,6 +427,7 @@ class Continent(BaseModel):
         offer bigger bonuses but are harder to conquer and defend.
         Australia is traditionally the easiest to defend but offers
         the smallest bonus.
+
     """
 
     name: str = Field(
@@ -475,6 +487,7 @@ class Continent(BaseModel):
 
         Raises:
             ValueError: If territory list is empty or contains invalid names.
+
         """
         if not v:
             raise ValueError("Continent must contain at least one territory")
@@ -496,6 +509,7 @@ class Continent(BaseModel):
             >>> continent = Continent(name="Europe", bonus=5, territories=["..."])
             >>> str(continent)
             "Europe (Bonus: 5)"
+
         """
         return f"{self.name} (Bonus: {self.bonus})"
 
@@ -506,6 +520,7 @@ class Continent(BaseModel):
 
         Returns:
             int: Count of territories in the continent.
+
         """
         return len(self.territories)
 
@@ -521,6 +536,7 @@ class Continent(BaseModel):
             Higher ratios indicate more efficient continents to control.
             Australia typically has the highest ratio (0.5), while
             Asia has a lower ratio (0.58) despite its large bonus.
+
         """
         return self.bonus / max(1, len(self.territories))
 
@@ -575,6 +591,7 @@ class Player(BaseModel):
         Card accumulation is crucial for late-game army generation.
         Players must balance aggressive expansion (to earn cards)
         with defensive positioning (to avoid elimination).
+
     """
 
     name: str = Field(
@@ -632,6 +649,7 @@ class Player(BaseModel):
 
         Raises:
             ValueError: If army count is negative.
+
         """
         if v < 0:
             raise ValueError("Unplaced armies cannot be negative")
@@ -648,6 +666,7 @@ class Player(BaseModel):
             ...                cards=[Card(card_type=CardType.INFANTRY)])
             >>> str(player)
             "General Patton (Active, 5 unplaced armies, 1 cards)"
+
         """
         status = "Eliminated" if self.eliminated else "Active"
         return f"{self.name} ({status}, {self.unplaced_armies} unplaced armies, {
@@ -665,6 +684,7 @@ class Player(BaseModel):
         Note:
             Players with 5+ cards must trade at the start of their turn.
             Trading with exactly 3 cards is optional but often strategic.
+
         """
         return len(self.cards) >= 3
 
@@ -678,6 +698,7 @@ class Player(BaseModel):
 
         Note:
             This rule prevents card hoarding and maintains game flow.
+
         """
         return len(self.cards) >= 5
 
@@ -725,6 +746,7 @@ class MoveType(str, Enum):
         Move types correspond to Risk's traditional turn structure:
         reinforcement → attack → fortification. Card trading can
         occur at the start if the player has 3+ cards.
+
     """
 
     PLACE_ARMIES = "place_armies"  #: Deploy reinforcement armies to territories
@@ -800,6 +822,7 @@ class RiskMove(BaseModel):
         Move validation depends on game state, including territory
         ownership, army counts, and adjacency relationships.
         Invalid moves should be rejected with clear error messages.
+
     """
 
     move_type: MoveType = Field(
@@ -876,6 +899,7 @@ class RiskMove(BaseModel):
 
         Raises:
             ValueError: If army count is not positive.
+
         """
         if v is not None and v <= 0:
             raise ValueError("Army count must be positive")
@@ -894,6 +918,7 @@ class RiskMove(BaseModel):
 
         Raises:
             ValueError: If dice count is not 1-3.
+
         """
         if v is not None and not (1 <= v <= 3):
             raise ValueError("Attack dice must be between 1 and 3")
@@ -911,6 +936,7 @@ class RiskMove(BaseModel):
             ...                attack_dice=3)
             >>> str(move)
             "player_1 attacks from Ukraine to Middle East with 3 dice"
+
         """
         if self.move_type == MoveType.PLACE_ARMIES:
             return f"{self.player} places {self.armies} armies on {self.to_territory}"
@@ -934,14 +960,14 @@ class RiskMove(BaseModel):
     @computed_field
     @property
     def is_aggressive(self) -> bool:
-        """Determine if this move is aggressive (attack or large army
-        placement).
+        """Determine if this move is aggressive (attack or large army placement).
 
         Returns:
             bool: True if move represents aggressive action.
 
         Note:
             Used for AI personality and strategic analysis.
+
         """
         if self.move_type == MoveType.ATTACK:
             return True
@@ -987,6 +1013,7 @@ class PhaseType(str, Enum):
     Note:
         Phase enforcement ensures proper Risk rule compliance and
         provides structure for AI decision-making algorithms.
+
     """
 
     SETUP = "setup"  #: Initial game setup and territory allocation
@@ -1016,6 +1043,7 @@ class GameStatus(str, Enum):
 
             status = GameStatus.FINISHED
             # Victory conditions met, declare winner
+
     """
 
     IN_PROGRESS = "in_progress"  #: Game is actively being played
@@ -1085,6 +1113,7 @@ class RiskAnalysis(BaseModel):
         Analysis quality directly impacts AI performance. Sophisticated
         evaluation considers not just current position but also trajectory,
         opponent threats, and multi-turn strategic opportunities.
+
     """
 
     player: str = Field(
@@ -1161,6 +1190,7 @@ class RiskAnalysis(BaseModel):
 
         Raises:
             ValueError: If evaluation is not recognized.
+
         """
         valid_evaluations = {
             "winning",
@@ -1194,6 +1224,7 @@ class RiskAnalysis(BaseModel):
             Total armies: 25
             Position evaluation: favorable
             ..."
+
         """
         continents_str = (
             ", ".join(self.controlled_continents)
@@ -1221,6 +1252,7 @@ class RiskAnalysis(BaseModel):
         Note:
             This is a simplified calculation. Real implementation would
             need access to continent definitions with their bonus values.
+
         """
         # Simplified continent bonuses (would normally reference game data)
         continent_bonuses = {
@@ -1247,5 +1279,6 @@ class RiskAnalysis(BaseModel):
         Note:
             Higher ratios indicate stronger defensive positions or
             preparation for major offensives.
+
         """
         return self.total_armies / max(1, self.controlled_territories)

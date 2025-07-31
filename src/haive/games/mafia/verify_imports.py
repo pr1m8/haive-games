@@ -1,7 +1,8 @@
 """Verify imports script for Mafia game module.
 
-This script checks that we can import all essential models from the
-Mafia module without requiring external dependencies.
+This script checks that we can import all essential models from the Mafia module without
+requiring external dependencies.
+
 """
 
 from models import ActionType, GamePhase, MafiaAction, PlayerRole

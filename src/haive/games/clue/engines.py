@@ -1,7 +1,8 @@
 """Engines for the Clue game.
 
-This module contains the engines for the Clue game, including the player
-engines, guess engines, and analysis engines.
+This module contains the engines for the Clue game, including the player engines, guess
+engines, and analysis engines.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -11,8 +12,9 @@ from langchain_core.prompts import ChatPromptTemplate
 def generate_player_prompt() -> ChatPromptTemplate:
     """Generate a prompt for playing Clue.
 
-    This function constructs a prompt template for the player engine,
-    which makes guesses in the Clue game.
+    This function constructs a prompt template for the player engine, which makes
+    guesses in the Clue game.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -43,8 +45,9 @@ def generate_player_prompt() -> ChatPromptTemplate:
 def generate_analysis_prompt() -> ChatPromptTemplate:
     """Generate a prompt for analyzing Clue game state.
 
-    This function constructs a prompt template for the analysis engine,
-    which analyzes the current game state and provides insights.
+    This function constructs a prompt template for the analysis engine, which analyzes
+    the current game state and provides insights.
+
     """
     return ChatPromptTemplate.from_messages(
         [

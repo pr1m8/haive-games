@@ -5,6 +5,7 @@ This module provides utility functions for the monopoly game, including:
     - Game logic calculations
     - Card definitions and handling
     - Rent calculations
+
 """
 
 import random

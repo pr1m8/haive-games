@@ -4,6 +4,7 @@ This module provides utility functions for the Hold'em game, including:
     - Card and hand evaluation
     - Game state utilities
     - Poker calculations
+
 """
 
 import random
@@ -86,6 +87,7 @@ def evaluate_hand_simple(
     """Simple hand evaluation (placeholder for production poker evaluator).
 
     Returns hand rank, strength score, and description.
+
     """
     all_cards = hole_cards + community_cards
     if len(all_cards) < 5:

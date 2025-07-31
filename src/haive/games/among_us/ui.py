@@ -19,8 +19,9 @@ from haive.games.among_us.state import AmongUsState
 class AmongUsUI:
     """Rich UI implementation for the Among Us game.
 
-    This class provides a visually appealing and informative interface
-    for displaying game state and player information.
+    This class provides a visually appealing and informative interface for displaying
+    game state and player information.
+
     """
 
     # Color scheme
@@ -64,6 +65,7 @@ class AmongUsUI:
 
         Returns:
             The complete layout object, which can be used in a Live display
+
         """
         # Create main layout
         layout = Layout()
@@ -109,6 +111,7 @@ class AmongUsUI:
 
         Returns:
             A panel containing the player view
+
         """
         # Check if player exists
         if player_id not in state.player_states:
@@ -250,6 +253,7 @@ class AmongUsUI:
 
         Returns:
             A layout representing the meeting
+
         """
         # Create meeting layout
         layout = Layout()
@@ -373,6 +377,7 @@ class AmongUsUI:
 
         Returns:
             A panel showing the game results
+
         """
         # Create layout for results
         layout = Layout()

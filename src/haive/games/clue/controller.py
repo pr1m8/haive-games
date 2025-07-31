@@ -1,7 +1,8 @@
 """Controller for the Clue game.
 
-This module provides the game controller that manages the state and flow
-of the Clue game.
+This module provides the game controller that manages the state and flow of the Clue
+game.
+
 """
 
 import random
@@ -56,6 +57,7 @@ class ClueGameController:
         Args:
             player_names: Names of the players
             max_turns: Maximum number of turns before the game ends
+
         """
         self.player_names = player_names
         self.max_turns = max_turns
@@ -127,6 +129,7 @@ class ClueGameController:
 
         Returns:
             A response indicating whether the guess was correct or which player refuted it
+
         """
         if self.game_state.status != GameStatus.IN_PROGRESS:
             raise ValueError("Game is not in progress")
@@ -228,6 +231,7 @@ class ClueGameController:
 
         Returns:
             A dictionary with the game state visible to the player
+
         """
         player = self.game_state.players[player_idx]
 
@@ -250,6 +254,7 @@ class ClueGameController:
 
         Returns:
             The generated guess
+
         """
         player = self.game_state.players[player_idx]
         if not player.player_engine:
@@ -275,6 +280,7 @@ class ClueGameController:
 
         Returns:
             The generated analysis
+
         """
         player = self.game_state.players[player_idx]
         if not player.analysis_engine:

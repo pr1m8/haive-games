@@ -1,8 +1,8 @@
 """Fixed Monopoly game agent implementation.
 
-This module provides the corrected main game agent for orchestrating a
-Monopoly game, with proper handling of BaseModel objects from LangGraph
-instead of dictionaries.
+This module provides the corrected main game agent for orchestrating a Monopoly game,
+with proper handling of BaseModel objects from LangGraph instead of dictionaries.
+
 """
 
 from typing import Any

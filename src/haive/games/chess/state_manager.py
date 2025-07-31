@@ -17,6 +17,7 @@ Example:
     >>>
     >>> # Apply a move
     >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
+
 """
 
 import chess
@@ -44,6 +45,7 @@ class ChessGameStateManager:
         >>> new_state = ChessGameStateManager.apply_move(state, "e2e4")
         >>> print(new_state.board_fen)
         'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1'
+
     """
 
     @staticmethod
@@ -61,6 +63,7 @@ class ChessGameStateManager:
             >>> assert state.turn == "white"
             >>> assert state.game_status == "ongoing"
             >>> assert state.board_fen.startswith("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
+
         """
 
         return ChessState(
@@ -110,6 +113,7 @@ class ChessGameStateManager:
             >>> state = ChessState(board_fen=board.fen())
             >>> new_state = ChessGameStateManager.apply_move(state, "e2e1")
             >>> assert new_state.game_status == "checkmate"
+
         """
 
         board = chess.Board(state.board_fen)

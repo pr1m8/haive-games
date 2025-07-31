@@ -32,6 +32,7 @@ def run_dominoes_game(
 
     Returns:
         The final game state
+
     """
     console = Console()
     console.print(
@@ -92,6 +93,7 @@ def demo_ui_features(delay: float = 0.5):
 
     Args:
         delay: Delay between demonstrations in seconds
+
     """
     console = Console()
     ui = DominoesRichUI(console=console)

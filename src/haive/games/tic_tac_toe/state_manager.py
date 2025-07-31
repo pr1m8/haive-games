@@ -1,8 +1,8 @@
 """State manager for Tic Tac Toe game logic and mechanics.
 
-Handles core operations like initializing the board, validating and
-applying moves, evaluating win conditions, and updating the state with
-engine analyses.
+Handles core operations like initializing the board, validating and applying moves,
+evaluating win conditions, and updating the state with engine analyses.
+
 """
 
 from haive.games.framework.base.state_manager import GameStateManager
@@ -25,6 +25,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             TicTacToeState: A new Tic Tac Toe game state.
+
         """
         first_player = kwargs.get("first_player", "X")
         player_X = kwargs.get("player_X", "player1")
@@ -56,6 +57,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             List[TicTacToeMove]: A list of all legal moves.
+
         """
         legal_moves = []
 
@@ -86,6 +88,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Raises:
             ValueError: If the move is invalid.
+
         """
         # Validate player's turn
         if move.player != state.turn:
@@ -117,6 +120,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             TicTacToeState: The game state with updated status.
+
         """
         # Check rows for a win
         for row in range(3):
@@ -177,6 +181,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             Optional[str]: The winner ('X' or 'O'), or None if the game is ongoing or a draw.
+
         """
         return state.winner
 
@@ -193,6 +198,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             TicTacToeState: Updated state with the analysis added.
+
         """
         new_state = state.model_copy()
 
@@ -215,6 +221,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             List[Tuple[int, int]]: List of winning move coordinates (row, col), or empty list if none.
+
         """
         winning_moves = []
 
@@ -240,6 +247,7 @@ class TicTacToeStateManager(GameStateManager[TicTacToeState]):
 
         Returns:
             bool: True if the player has won, False otherwise.
+
         """
         # Check rows
         for row in range(3):

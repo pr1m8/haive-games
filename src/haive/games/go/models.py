@@ -21,6 +21,7 @@ Example:
     ...     weak_positions=[(0, 0)],
     ...     suggested_strategies=["Strengthen the center group"]
     ... )
+
 """
 
 from typing import Literal
@@ -48,6 +49,7 @@ class GoMoveModel(BaseModel):
         >>> # Invalid move raises error
         >>> GoMoveModel(move=(19, 19))  # Out of bounds
         ValueError: Move (19, 19) is out of bounds for a 19x19 board.
+
     """
 
     move: tuple[int, int] = Field(
@@ -69,6 +71,7 @@ class GoMoveModel(BaseModel):
 
         Raises:
             ValueError: If move coordinates are outside board bounds.
+
         """
         row, col = move
         board_size = values.get("board_size", 19)
@@ -85,6 +88,7 @@ class GoMoveModel(BaseModel):
 
         Returns:
             Tuple[int, int]: The move coordinates as (row, col).
+
         """
         return self.move
 
@@ -104,6 +108,7 @@ class GoPlayerDecision(BaseModel):
         ... )
         >>> decision.move.to_tuple()
         (3, 4)
+
     """
 
     move: GoMoveModel = Field(..., description="The player's chosen move.")
@@ -131,6 +136,7 @@ class GoAnalysis(BaseModel):
         ...         "Consider invading the top right"
         ...     ]
         ... )
+
     """
 
     territory_control: dict[Literal["black", "white"], int] = Field(

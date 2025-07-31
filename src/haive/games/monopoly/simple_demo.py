@@ -9,6 +9,7 @@ This script demonstrates the core functionality of the Monopoly game:
 
 Usage:
     python simple_demo.py
+
 """
 
 from rich.console import Console

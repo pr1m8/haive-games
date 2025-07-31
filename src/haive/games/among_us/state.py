@@ -53,6 +53,7 @@ Examples:
 Note:
     The state model extends MultiPlayerGameState and integrates with
     LangGraph for distributed game session management.
+
 """
 
 from typing import Any, Literal
@@ -149,6 +150,7 @@ class AmongUsState(MultiPlayerGameState):
             state.meeting_caller = "player1"
             state.votes["player1"] = "player3"  # Voting for player3
             state.votes["player2"] = "skip"     # Voting to skip
+
     """
 
     map_locations: list[str] = Field(
@@ -237,6 +239,7 @@ class AmongUsState(MultiPlayerGameState):
                 if len(alive) <= 2:
                     # Check for impostor majority
                     pass
+
         """
         return [pid for pid, pstate in self.player_states.items() if pstate.is_alive]
 
@@ -263,6 +266,7 @@ class AmongUsState(MultiPlayerGameState):
 
         Note:
             Returns 100.0 if no tasks exist (edge case handling).
+
         """
         total = len(self.tasks)
         if total == 0:
@@ -307,6 +311,7 @@ class AmongUsState(MultiPlayerGameState):
                 # Reactor meltdown timer reaches 0
                 winner = state.check_win_condition()
                 assert winner == "impostors"
+
         """
         # Crewmate task victory
         if self.get_task_completion_percentage() >= 100:
@@ -358,6 +363,7 @@ class AmongUsState(MultiPlayerGameState):
                 room = state.get_room("electrical")
                 if room and room.has_security_camera:
                     print("This room is monitored")
+
         """
         return self.rooms.get(room_id)
 
@@ -377,6 +383,7 @@ class AmongUsState(MultiPlayerGameState):
                 if vent:
                     connected = [c.target_vent_id for c in vent.connections]
                     print(f"Can travel to: {connected}")
+
         """
         return self.vents.get(vent_id)
 
@@ -397,6 +404,7 @@ class AmongUsState(MultiPlayerGameState):
                 vents = state.get_vents_in_room("electrical")
                 if vents and player.role == PlayerRole.IMPOSTOR:
                     print(f"Can enter {len(vents)} vent(s) here")
+
         """
         return [
             vent for vent_id, vent in self.vents.items() if vent.location == room_id
@@ -426,6 +434,7 @@ class AmongUsState(MultiPlayerGameState):
                 rooms = state.get_connected_rooms("admin")
                 if len(rooms) < normal_count:
                     print("Some exits are blocked!")
+
         """
         room = self.get_room(room_id)
         if not room:
@@ -451,6 +460,7 @@ class AmongUsState(MultiPlayerGameState):
                 for vent_id in connected:
                     vent = state.get_vent(vent_id)
                     print(f"Can emerge in: {vent.location}")
+
         """
         vent = self.get_vent(vent_id)
         if not vent:
@@ -481,6 +491,7 @@ class AmongUsState(MultiPlayerGameState):
                     "player2",
                     "Watched player4 complete medbay scan"
                 )
+
         """
         if player_id in self.player_states:
             self.player_states[player_id].observations.append(observation)
@@ -523,6 +534,7 @@ class AmongUsState(MultiPlayerGameState):
                     "medbay",
                     "Player3 completed scan (confirmed crewmate)"
                 )
+
         """
         exclude_players = exclude_players or []
         for pid, pstate in self.player_states.items():
@@ -554,6 +566,7 @@ class AmongUsState(MultiPlayerGameState):
                 if state.get_active_sabotage() is None:
                     # Impostors can trigger new sabotage
                     pass
+
         """
         for sabotage in self.sabotages:
             if not sabotage.is_resolved():
@@ -577,6 +590,7 @@ class AmongUsState(MultiPlayerGameState):
                     print("Kill ability ready")
                 else:
                     print(f"Kill on cooldown: {cooldown}s")
+
         """
         return self.kill_cooldowns.get(player_id, 0)
 
@@ -599,6 +613,7 @@ class AmongUsState(MultiPlayerGameState):
 
                 # Fast-paced game with 10s cooldown
                 state.set_player_cooldown("impostor1", 10)
+
         """
         self.kill_cooldowns[player_id] = cooldown
 
@@ -619,6 +634,7 @@ class AmongUsState(MultiPlayerGameState):
                     if state.get_player_cooldown(impostor_id) == 0:
                         # Enable kill button in UI
                         pass
+
         """
         for player_id in list(self.kill_cooldowns.keys()):
             if self.kill_cooldowns[player_id] > 0:
@@ -652,6 +668,7 @@ class AmongUsState(MultiPlayerGameState):
         Note:
             This method clears any existing rooms and vents before
             creating the new map layout.
+
         """
         # Clear existing spatial data
         self.rooms = {}
@@ -925,6 +942,7 @@ class AmongUsState(MultiPlayerGameState):
 
         Raises:
             ValueError: If map name is not supported.
+
         """
         supported_maps = ["skeld"]  # Add "polus", "mira_hq" when implemented
         if v.lower() not in supported_maps:
@@ -945,6 +963,7 @@ class AmongUsState(MultiPlayerGameState):
                 stats = state.game_statistics
                 print(f"Tasks: {stats['task_progress']:.1f}%")
                 print(f"Impostors: {stats['alive_impostors']}/{stats['total_impostors']}")
+
         """
         total_players = len(self.player_states)
         alive_players = len(self.get_alive_players())

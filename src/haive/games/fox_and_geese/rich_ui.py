@@ -1,8 +1,8 @@
 """Enhanced Rich UI module for Fox and Geese game visualization.
 
-This module provides an enhanced rich console UI for visualizing the Fox
-and Geese game, with better styling, animated piece movements, and
-improved game information display.
+This module provides an enhanced rich console UI for visualizing the Fox and Geese game,
+with better styling, animated piece movements, and improved game information display.
+
 """
 
 import logging
@@ -41,6 +41,7 @@ class FoxAndGeeseRichUI:
     Attributes:
         console (Console): Rich console for output
         colors (dict): Color schemes for different UI elements
+
     """
 
     def __init__(self, console: Console | None = None):
@@ -48,6 +49,7 @@ class FoxAndGeeseRichUI:
 
         Args:
             console: Optional Rich console instance
+
         """
         self.console = console or Console()
 
@@ -86,6 +88,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             FoxAndGeeseState instance or None if extraction fails
+
         """
         try:
             # Handle None input gracefully
@@ -177,6 +180,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             True if the dict appears to be a valid game state
+
         """
         required_fields = {"fox_position", "geese_positions", "turn", "game_status"}
         return all(field in data for field in required_fields)
@@ -196,6 +200,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Rich table representing the board
+
         """
         # Create board table with nicer styling
         board_table = Table(
@@ -272,6 +277,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Symbol for the square
+
         """
         # Create a checkered pattern for better visibility
         if (row + col) % 2 == 0:
@@ -286,6 +292,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Rich panel with detailed game info
+
         """
         # Create a table for the game info
         info_table = Table(show_header=False, box=None, show_edge=False, padding=(0, 1))
@@ -359,6 +366,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Rich panel with detailed move history
+
         """
         if not game_state.move_history:
             history_text = Text(
@@ -431,6 +439,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Rich panel with detailed analysis
+
         """
         # Create a table for the analysis
         analysis_table = Table(
@@ -508,6 +517,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Rich panel with legal moves info
+
         """
         # If no legal moves are provided, use an empty list
         if legal_moves is None:
@@ -607,6 +617,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             Complete rich layout
+
         """
         # Create layout
         layout = Layout()
@@ -695,6 +706,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             True if display was successful, False otherwise
+
         """
         try:
             game_state = self.extract_game_state(state_data)
@@ -727,6 +739,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             None
+
         """
         player_color = self.colors[player]
         player_display = "🦊 Fox" if player == "fox" else "🪿 Geese"
@@ -757,6 +770,7 @@ class FoxAndGeeseRichUI:
 
         Returns:
             None
+
         """
         # Highlight the source and destination squares
         highlight_positions = {move.from_pos, move.to_pos}
@@ -827,6 +841,7 @@ The game will be played by AI agents with real-time visualization!
 
         Args:
             final_state: Final game state
+
         """
         try:
             game_state = self.extract_game_state(final_state)
@@ -917,6 +932,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             None
+
         """
         # Get the last move
         if not state_after.move_history:
@@ -947,6 +963,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             None
+
         """
         if not state_sequence:
             return
@@ -983,6 +1000,7 @@ The game will be played by AI agents with real-time visualization!
 
         Returns:
             Final game state
+
         """
         # Set the UI on the agent if possible
         if hasattr(agent, "ui"):

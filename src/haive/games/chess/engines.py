@@ -8,6 +8,7 @@ This module provides LLM engine configurations for chess game agents, including:
 
 The engines use different LLM configurations optimized for their specific roles,
 with prompt templates designed to generate high-quality chess moves and analysis.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -35,6 +36,7 @@ def create_white_player_engine() -> AugLLMConfig:
         'white_player'
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.ChessPlayerDecision'>
+
     """
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -105,6 +107,7 @@ def create_black_player_engine() -> AugLLMConfig:
         'black_player'
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.ChessPlayerDecision'>
+
     """
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -176,6 +179,7 @@ def create_white_analyzer_engine() -> AugLLMConfig:
         'white_analyzer'
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.SegmentedAnalysis'>
+
     """
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -233,6 +237,7 @@ def create_black_analyzer_engine() -> AugLLMConfig:
         'black_analyzer'
         >>> engine.structured_output_model
         <class 'haive.games.chess.models.SegmentedAnalysis'>
+
     """
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -290,6 +295,7 @@ def build_chess_aug_llms() -> dict[str, AugLLMConfig]:
         4
         >>> sorted(list(engines.keys()))
         ['black_analyzer', 'black_player', 'white_analyzer', 'white_player']
+
     """
     return {
         "white_player": create_white_player_engine(),

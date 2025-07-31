@@ -1,8 +1,8 @@
 """State for the Mancala game.
 
-This module defines the state for the Mancala game, which includes the
-board, turn, game status, move history, free turn, winner, and player
-analyses.
+This module defines the state for the Mancala game, which includes the board, turn, game
+status, move history, free turn, winner, and player analyses.
+
 """
 
 import json
@@ -25,6 +25,7 @@ def extract_analysis_from_message(analysis: Any) -> dict[str, Any] | None:
 
     Returns:
         Extracted analysis data or None if extraction fails.
+
     """
     if isinstance(analysis, dict) and "position_evaluation" in analysis:
         return analysis
@@ -62,6 +63,7 @@ class MancalaState(GameState):
         winner: The winner of the game, if any.
         player1_analysis: Analysis data for player 1.
         player2_analysis: Analysis data for player 2.
+
     """
 
     board: list[int] = Field(
@@ -103,6 +105,7 @@ class MancalaState(GameState):
 
         Raises:
             ValueError: If board doesn't have exactly 14 positions.
+
         """
         if len(v) != 14:
             raise ValueError("Board must have exactly 14 positions")
@@ -183,6 +186,7 @@ class MancalaState(GameState):
 
         Returns:
             MancalaState: A fully initialized Mancala game state.
+
         """
         stones_per_pit = kwargs.get("stones_per_pit", 4)
         board = cls._create_initial_board(stones_per_pit)
@@ -208,6 +212,7 @@ class MancalaState(GameState):
 
         Returns:
             Initial board configuration.
+
         """
         board = [0] * 14
         # Player 1's pits (indices 0-5)
@@ -233,6 +238,7 @@ class MancalaState(GameState):
 
         Returns:
             List of converted analysis dictionaries.
+
         """
         converted_analyses = []
         for analysis in analyses:
@@ -250,6 +256,7 @@ class MancalaState(GameState):
 
         Returns:
             A string representation of the current board state.
+
         """
         # Player 2's side (displayed on top, right to left)
         p2_pits = " ".join(f"{self.board[i]:2}" for i in range(12, 6, -1))
@@ -276,6 +283,7 @@ class MancalaState(GameState):
 
         Returns:
             List of valid pit indices the player can choose from.
+
         """
         if player == "player1":
             # Player 1's pits are indices 0-5
@@ -290,6 +298,7 @@ class MancalaState(GameState):
 
         Returns:
             True if the game is over, False otherwise.
+
         """
         # Game is over if either side has no stones in their pits
         player1_empty = all(self.board[i] == 0 for i in range(6))
@@ -301,6 +310,7 @@ class MancalaState(GameState):
 
         Returns:
             Dictionary with player1 and player2 scores.
+
         """
         return {
             "player1": self.board[6],
@@ -312,6 +322,7 @@ class MancalaState(GameState):
 
         Returns:
             The winner of the game or 'draw' if tied.
+
         """
         # Collect remaining stones into stores
         final_board = self.board.copy()

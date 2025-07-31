@@ -1,8 +1,8 @@
 """Configurable Connect4 agent configuration using player agents.
 
-from typing import Any This module provides a Connect4 configuration
-that supports configurable player agents instead of hardcoded engine
-configurations.
+from typing import Any This module provides a Connect4 configuration that supports
+configurable player agents instead of hardcoded engine configurations.
+
 """
 
 from typing import Any
@@ -46,6 +46,7 @@ class ConfigurableConnect4Config(AgentConfig):
         >>> config = ConfigurableConnect4Config(
         ...     example_config="gpt_vs_claude"
         ... )
+
     """
 
     # State schema
@@ -237,6 +238,7 @@ def create_connect4_config(
 
     Example:
         >>> config = create_connect4_config("gpt-4", "claude-3-opus", temperature=0.8)
+
     """
     return ConfigurableConnect4Config(
         red_model=red_model,
@@ -264,6 +266,7 @@ def create_connect4_config_from_example(
 
     Example:
         >>> config = create_connect4_config_from_example("budget")
+
     """
     return ConfigurableConnect4Config(
         example_config=example_name, enable_analysis=enable_analysis, **kwargs
@@ -291,6 +294,7 @@ def create_connect4_config_from_player_configs(
         ...     "yellow_player": create_player_config("claude-3-opus", player_name="Yellow Pro"),
         ... }
         >>> config = create_connect4_config_from_player_configs(configs)
+
     """
     return ConfigurableConnect4Config(
         player_configs=player_configs, enable_analysis=enable_analysis, **kwargs

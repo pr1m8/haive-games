@@ -60,6 +60,7 @@ class BlackjackAgentConfig(AgentConfig):
         max_rounds: Maximum number of rounds to play
         initial_chips: Starting chip amount for each player
         state_schema: State schema for the Blackjack game
+
     """
 
     num_players: int = Field(default=2, description="Number of players in the game")

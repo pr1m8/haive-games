@@ -15,6 +15,7 @@ Example:
     ...     column=3,
     ...     explanation="Control the center column"
     ... )
+
 """
 
 # Standard library imports
@@ -41,6 +42,7 @@ class Connect4Move(BaseModel):
         ...     column=3,
         ...     explanation="Control the center column"
         ... )
+
     """
 
     column: int = Field(
@@ -64,6 +66,7 @@ class Connect4Move(BaseModel):
 
         Raises:
             ValueError: If the column number is not between 0 and 6.
+
         """
         if not isinstance(v, int) or v < 0 or v > 6:
             raise ValueError("Column must be an integer between 0 and 6")
@@ -74,6 +77,7 @@ class Connect4Move(BaseModel):
 
         Returns:
             str: Human-readable move description.
+
         """
         return f"Drop in column {self.column}"
 
@@ -102,6 +106,7 @@ class Connect4PlayerDecision(BaseModel):
         ...     ],
         ...     reasoning="Playing in column 3 maintains center control"
         ... )
+
     """
 
     move: Connect4Move = Field(..., description="Selected move with explanation.")
@@ -144,6 +149,7 @@ class Connect4Analysis(BaseModel):
         ...     suggested_columns=[3, 2, 4],
         ...     winning_chances=75
         ... )
+
     """
 
     @staticmethod
@@ -152,6 +158,7 @@ class Connect4Analysis(BaseModel):
 
         Returns:
             dict[str, list[int]]: Dictionary with empty lists for winning and blocking moves.
+
         """
         return {"winning_moves": [], "blocking_moves": []}
 
@@ -190,6 +197,7 @@ class Connect4Analysis(BaseModel):
 
         Raises:
             ValueError: If the rating is not between 0 and 10.
+
         """
         if not isinstance(v, int) or v < 0 or v > 10:
             raise ValueError("Center control must be an integer between 0 and 10")
@@ -208,6 +216,7 @@ class Connect4Analysis(BaseModel):
 
         Raises:
             ValueError: If the percentage is not between 0 and 100.
+
         """
         if not isinstance(v, int) or v < 0 or v > 100:
             raise ValueError("Winning chances must be an integer between 0 and 100")

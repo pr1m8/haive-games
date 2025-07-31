@@ -1,7 +1,8 @@
 """State manager for the Clue game.
 
-This module defines the state management for the Clue game, providing
-methods for game logic and state transitions.
+This module defines the state management for the Clue game, providing methods for game
+logic and state transitions.
+
 """
 
 from typing import Any
@@ -23,6 +24,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             ClueState: A new Clue game state
+
         """
         return ClueState.initialize(**kwargs)
 
@@ -35,6 +37,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             List of possible legal guesses
+
         """
         # In Clue, moves depend on player's hand and game state
         # This method could generate suggestions based on current knowledge
@@ -50,6 +53,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             Updated game state
+
         """
         # Validate player's turn
         # Note: ClueGuess doesn't have a player attribute, so we use current_player
@@ -95,6 +99,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             Updated game state
+
         """
         return state
 
@@ -107,6 +112,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             Winner of the game, or None if ongoing
+
         """
         return state.winner
 
@@ -123,6 +129,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             Updated state with added hypothesis
+
         """
         new_state = state.model_copy()
 
@@ -142,6 +149,7 @@ class ClueStateManager(GameStateManager[ClueState]):
 
         Returns:
             Set of possible solutions as (suspect, weapon, room) tuples
+
         """
         # Start with all possible combinations
         all_suspects = [

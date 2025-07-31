@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Enhanced example runner for Fox and Geese game with Rich UI
-visualization."""
+"""Enhanced example runner for Fox and Geese game with Rich UI visualization."""
 
 import argparse
 import time
@@ -32,6 +31,7 @@ def run_fox_and_geese_game(
 
     Returns:
         The final game state
+
     """
     console = Console()
     console.print(
@@ -95,6 +95,7 @@ def demo_ui_features(delay: float = 0.5):
 
     Args:
         delay: Delay between demonstrations in seconds
+
     """
     console = Console()
     ui = FoxAndGeeseRichUI(console=console)

@@ -12,6 +12,7 @@ Example:
 Typical usage:
     - Use these models as base classes for game-specific models
     - Inherit from these models to add game-specific functionality
+
 """
 
 import time
@@ -42,6 +43,7 @@ class MoveModel(BaseModel, Generic[TMove], ABC):
         ...     move=ChessMove(from_pos="e2", to_pos="e4"),
         ...     player_id="p1"
         ... )
+
     """
 
     move: TMove = Field(..., description="The move data")
@@ -68,6 +70,7 @@ class Player(BaseModel):
 
     Example:
         >>> player = Player(id="p1", name="Player 1", score=0)
+
     """
 
     id: str = Field(..., description="Unique identifier for the player")
@@ -89,6 +92,7 @@ class Board(BaseModel):
     Example:
         >>> board = Board(size=(8, 8))
         >>> chess_board = Board(size=(8, 8), grid=[["R", "N", "B", ...]])
+
     """
 
     size: tuple[int, int] = Field(..., description="Board dimensions (width, height)")
@@ -124,6 +128,7 @@ class GameState(BaseModel):
         ...     current_player=player,
         ...     game_status="ongoing"
         ... )
+
     """
 
     board: Board = Field(..., description="The board of the game.")

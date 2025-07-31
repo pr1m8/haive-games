@@ -20,6 +20,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
     """A grid-based board (Chess, Checkers, Scrabble).
 
     This represents a rectangular grid of spaces.
+
     """
 
     rows: int
@@ -41,6 +42,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
         for space in self.spaces.values():
             if (
@@ -59,6 +61,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
 
         Returns:
             The space at the position, or None if no space exists there
+
         """
         return self.get_space_at_position(GridPosition(row=row, col=col))
 
@@ -69,6 +72,7 @@ class GridBoard(Board[GridSpace[T], GridPosition, T]):
 
         Args:
             space_factory: Optional factory function to create spaces
+
         """
         for row in range(self.rows):
             for col in range(self.cols):

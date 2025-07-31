@@ -21,6 +21,7 @@ def create_blackjack_agent(
 
     Returns:
         Configured BlackjackAgent
+
     """
     # Create configuration
     config = BlackjackAgentConfig(
@@ -57,6 +58,7 @@ def run_blackjack_game(
 
     Returns:
         Final game state
+
     """
     # Create the agent
     agent = create_blackjack_agent(

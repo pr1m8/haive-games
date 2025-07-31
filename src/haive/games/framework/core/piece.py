@@ -16,8 +16,9 @@ P = TypeVar("P", bound=Position)
 class GamePiece(BaseModel, Generic[P]):
     """Base class for any game piece that can be placed on a board.
 
-    GamePiece serves as the foundation for all movable objects in games,
-    such as chess pieces, playing cards, tiles, etc.
+    GamePiece serves as the foundation for all movable objects in games, such as chess
+    pieces, playing cards, tiles, etc.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -38,6 +39,7 @@ class GamePiece(BaseModel, Generic[P]):
 
         Returns:
             True if the piece can be moved to the position, False otherwise
+
         """
         # Base implementation - subclasses should override
         return True
@@ -47,6 +49,7 @@ class GamePiece(BaseModel, Generic[P]):
 
         Args:
             player_id: ID of the player to assign this piece to
+
         """
         self.owner_id = player_id
 
@@ -55,6 +58,7 @@ class GamePiece(BaseModel, Generic[P]):
 
         Args:
             position: Position to place the piece at
+
         """
         self.position = position
 

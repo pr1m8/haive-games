@@ -56,14 +56,14 @@ Note:
     All configuration classes include comprehensive validation to ensure
     game rule consistency and prevent invalid combinations that would
     break gameplay mechanics.
+
 """
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class RiskConfig(BaseModel):
-    """Comprehensive configuration for Risk game variants with extensive
-    customization.
+    """Comprehensive configuration for Risk game variants with extensive customization.
 
     This configuration class provides complete control over Risk game mechanics,
     supporting classic rules, modern variants, tournament settings, and custom
@@ -174,6 +174,7 @@ class RiskConfig(BaseModel):
         Configuration validation ensures rule consistency and prevents
         invalid combinations that would break game mechanics or create
         unfair advantages.
+
     """
 
     # Core game settings
@@ -356,6 +357,7 @@ class RiskConfig(BaseModel):
 
         Raises:
             ValueError: If territory configuration is invalid.
+
         """
         if v is None:
             return v
@@ -401,6 +403,7 @@ class RiskConfig(BaseModel):
 
         Raises:
             ValueError: If bonus configuration is invalid.
+
         """
         for continent, bonus in v.items():
             if not isinstance(continent, str) or not continent.strip():
@@ -443,6 +446,7 @@ class RiskConfig(BaseModel):
         Note:
             Classic rules can lead to longer games and potential player
             elimination early in the game due to unbalanced starting positions.
+
         """
         return cls(
             player_count=3,
@@ -490,6 +494,7 @@ class RiskConfig(BaseModel):
         Note:
             Modern rules generally result in shorter, more balanced games
             with multiple viable victory paths through mission completion.
+
         """
         return cls(
             player_count=3,
@@ -536,6 +541,7 @@ class RiskConfig(BaseModel):
         Note:
             Tournament configuration prioritizes fairness, time management,
             and decisive game endings for competitive play environments.
+
         """
         return cls(
             player_count=4,
@@ -579,6 +585,7 @@ class RiskConfig(BaseModel):
         Note:
             Blitz configuration typically results in 30-45 minute games
             with high action and strategic decision-making under time pressure.
+
         """
         return cls(
             player_count=3,
@@ -621,6 +628,7 @@ class RiskConfig(BaseModel):
         Note:
             Strategic configuration can result in longer games (2-4 hours)
             with complex diplomatic interactions and shifting alliances.
+
         """
         return cls(
             player_count=6,
@@ -649,6 +657,7 @@ class RiskConfig(BaseModel):
                 config = RiskConfig.blitz()
                 duration = config.estimated_game_duration
                 print(f"Expected game time: {duration}")  # "30-60 minutes"
+
         """
         base_minutes = 60  # Base game duration
 
@@ -691,6 +700,7 @@ class RiskConfig(BaseModel):
                 config = RiskConfig.classic()
                 complexity = config.complexity_level
                 print(f"Game complexity: {complexity}")  # "Intermediate"
+
         """
         complexity_score = 0
 
@@ -744,6 +754,7 @@ class RiskConfig(BaseModel):
                         print(f"Warning: {issue}")
                 else:
                     print("Configuration is valid")
+
         """
         issues = []
 

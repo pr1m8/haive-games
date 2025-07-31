@@ -90,6 +90,7 @@ class MastermindState(GameState):
         but should remain hidden from the codebreaker during gameplay.
         The state maintains immutability for core game data while
         supporting dynamic updates for game progression.
+
     """
 
     secret_code: list[str] = Field(

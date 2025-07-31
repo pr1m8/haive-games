@@ -11,8 +11,9 @@ from pydantic import BaseModel, Field
 class Position(BaseModel):
     """Base class for all position types in games.
 
-    A Position represents a location in a game, with different games
-    using different coordinate systems.
+    A Position represents a location in a game, with different games using different
+    coordinate systems.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -24,6 +25,7 @@ class Position(BaseModel):
         """Equality check must be implemented by subclasses.
 
         The base implementation just checks if the IDs match.
+
         """
         if not isinstance(other, Position):
             return False
@@ -33,6 +35,7 @@ class Position(BaseModel):
         """Hash implementation must be consistent with __eq__.
 
         The base implementation uses the ID.
+
         """
         return hash(self.id)
 

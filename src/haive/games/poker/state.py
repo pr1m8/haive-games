@@ -18,6 +18,7 @@ Example:
     >>> state = PokerState()
     >>> state.initialize_game(["Alice", "Bob", "Charlie"], starting_chips=1000)
     >>> state.start_new_hand()
+
 """
 
 import logging
@@ -71,6 +72,7 @@ class PokerState(BaseModel):
         >>> state.initialize_game(["Alice", "Bob"], 1000)
         >>> state.start_new_hand()
         >>> obs = state.create_player_observation("player_0")
+
     """
 
     # Standard agent state fields
@@ -98,6 +100,7 @@ class PokerState(BaseModel):
 
         Example:
             >>> state.initialize_game(["Alice", "Bob", "Charlie"], 2000)
+
         """
         self.game = PokerGameState(
             players=[
@@ -117,8 +120,9 @@ class PokerState(BaseModel):
     def initialize_deck(self):
         """Create and shuffle a new deck of cards.
 
-        Creates a standard 52-card deck and performs a random shuffle.
-        Updates the game state with the new deck.
+        Creates a standard 52-card deck and performs a random shuffle. Updates the game
+        state with the new deck.
+
         """
         deck = []
         for suit in Suit:
@@ -132,9 +136,9 @@ class PokerState(BaseModel):
     def deal_hands(self):
         """Deal two cards to each active player.
 
-        Deals hole cards to all active players with chips. Skips
-        inactive or busted players. Logs an error if there aren't enough
-        cards.
+        Deals hole cards to all active players with chips. Skips inactive or busted
+        players. Logs an error if there aren't enough cards.
+
         """
         if len(self.game.deck) < len(self.game.players) * 2:
             self.log_event("Not enough cards in deck to deal hands")
@@ -156,6 +160,7 @@ class PokerState(BaseModel):
         Raises:
             Sets self.error if there aren't enough players or if blind
             positions can't be determined.
+
         """
         if len(self.game.players) < 2:
             self.error = "Not enough players to post blinds"
@@ -199,6 +204,7 @@ class PokerState(BaseModel):
 
         Raises:
             Sets self.error if there aren't enough cards in the deck.
+
         """
         if len(self.game.deck) < count:
             self.error = "Not enough cards in deck"
@@ -233,6 +239,7 @@ class PokerState(BaseModel):
             2. Deal hole cards
             3. Post blinds
             4. Start preflop betting
+
         """
         # Rotate dealer position
         self.game.dealer_position = (self.game.dealer_position + 1) % len(
@@ -291,6 +298,7 @@ class PokerState(BaseModel):
         Side Effects:
             - Updates player chips and bet amounts
             - May create side pots if player goes all-in
+
         """
         actual_amount = min(amount, player.chips)
         player.chips -= actual_amount
@@ -319,6 +327,7 @@ class PokerState(BaseModel):
             - Creates new pots based on all-in amounts
             - Updates pot eligibility for each player
             - Redistributes chips between pots
+
         """
         all_in_players = sorted(
             [p for p in self.game.players if p.is_all_in and p.is_active],
@@ -385,6 +394,7 @@ class PokerState(BaseModel):
                 - Player not active
                 - Invalid action for current state
                 - Invalid bet/raise amount
+
         """
         player = next((p for p in self.game.players if p.id == player_id), None)
         if not player:
@@ -508,6 +518,7 @@ class PokerState(BaseModel):
         Side Effects:
             - Updates current_player_idx
             - May mark round as complete
+
         """
         start_idx = self.game.current_player_idx
 
@@ -540,6 +551,7 @@ class PokerState(BaseModel):
 
         Side Effects:
             - May mark round as complete
+
         """
         if self.game.round_complete:
             return True
@@ -574,6 +586,7 @@ class PokerState(BaseModel):
 
         Returns:
             bool: True if all players have acted, False otherwise
+
         """
         if not self.game.last_aggressor:
             return True
@@ -617,6 +630,7 @@ class PokerState(BaseModel):
             - Deals community cards
             - Resets betting state
             - May end the hand
+
         """
         if not self.game.round_complete:
             return
@@ -670,6 +684,7 @@ class PokerState(BaseModel):
             - Awards pots to winner
             - Updates game phase
             - Logs result
+
         """
         winner_id = self.game.active_players[0]
         winner = next(p for p in self.game.players if p.id == winner_id)
@@ -700,6 +715,7 @@ class PokerState(BaseModel):
             - Awards pots to winners
             - Updates game phase
             - Logs results
+
         """
         # Evaluate all active hands
         for player in self.game.players:
@@ -827,6 +843,7 @@ class PokerState(BaseModel):
             ... ]
             >>> rank, high_cards, desc = _evaluate_hand(cards)
             >>> print(desc)  # Shows "Royal Flush"
+
         """
         # Sort cards by value, highest first
         sorted_cards = sorted(cards, key=lambda card: card.numeric_value, reverse=True)
@@ -1052,6 +1069,7 @@ class PokerState(BaseModel):
             >>> obs = state.create_player_observation("player_0")
             >>> print(obs.hand)  # Shows player's hole cards
             >>> print(obs.community_cards)  # Shows shared cards
+
         """
         player = next((p for p in self.game.players if p.id == player_id), None)
         if not player:
@@ -1135,6 +1153,7 @@ class PokerState(BaseModel):
         Example:
             >>> state.log_event("Alice raises to $100")
             [14:30:45] Alice raises to $100
+
         """
         timestamp = datetime.now().strftime("%H:%M:%S")
         log_entry = f"[{timestamp}] {message}"

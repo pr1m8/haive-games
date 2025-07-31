@@ -33,6 +33,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Returns:
             Command to set up the game
+
         """
         # Create initial game state
         game_state = self.state_manager.initialize_game(
@@ -52,6 +53,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Returns:
             Command for next phase
+
         """
         game_state = BlackjackGameState(**state)
 
@@ -94,6 +96,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Returns:
             Command for player turns
+
         """
         game_state = BlackjackGameState(**state)
 
@@ -110,6 +113,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Returns:
             Command for next phase
+
         """
         game_state = BlackjackGameState(**state)
 
@@ -173,6 +177,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Returns:
             Command for game conclusion
+
         """
         game_state = BlackjackGameState(**state)
 
@@ -201,6 +206,7 @@ class BlackjackAgent(GameAgent[BlackjackAgentConfig]):
 
         Args:
             state: Current game state
+
         """
         game_state = BlackjackGameState(**state)
 

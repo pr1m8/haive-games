@@ -10,6 +10,7 @@ The generic system supports:
 - Automatic engine generation from player configurations
 - Template-based prompt generation
 - Full integration with the LLM factory system
+
 """
 
 from abc import ABC, abstractmethod
@@ -39,6 +40,7 @@ class GamePlayerIdentifiers(BaseModel, Generic[PlayerType, PlayerType2]):
         >>> checkers_players = GamePlayerIdentifiers(player1="red", player2="black")
         >>> ttt_players = GamePlayerIdentifiers(player1="X", player2="O")
         >>> connect4_players = GamePlayerIdentifiers(player1="red", player2="yellow")
+
     """
 
     player1: PlayerType = Field(description="Identifier for first player")
@@ -66,9 +68,9 @@ class GamePlayerIdentifiers(BaseModel, Generic[PlayerType, PlayerType2]):
 class GenericGameRole(BaseModel, Generic[PlayerType]):
     """Generic game role definition using player type generics.
 
-    This class defines a role in a game (like "white_player" or
-    "red_analyzer") using generic types for type safety and reusability
-    across games.
+    This class defines a role in a game (like "white_player" or "red_analyzer") using
+    generic types for type safety and reusability across games.
+
     """
 
     role_name: str = Field(description="Name of the role (e.g., 'white_player')")
@@ -88,8 +90,9 @@ class GenericGameRole(BaseModel, Generic[PlayerType]):
 class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
     """Abstract base class for generating game-specific prompts using generics.
 
-    This class provides the interface for generating move and analysis
-    prompts for any two-player game using generic player types.
+    This class provides the interface for generating move and analysis prompts for any
+    two-player game using generic player types.
+
     """
 
     def __init__(self, players: GamePlayerIdentifiers[PlayerType, PlayerType2]):
@@ -119,9 +122,9 @@ class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
 class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
     """Generic factory for creating game engines using player type generics.
 
-    This factory creates AugLLMConfig engines for any two-player game
-    using the generic player agent system and type-safe player
-    identifiers.
+    This factory creates AugLLMConfig engines for any two-player game using the generic
+    player agent system and type-safe player identifiers.
+
     """
 
     def __init__(
@@ -143,6 +146,7 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
 
         Returns:
             Dict[str, GenericGameRole]: Dictionary of role definitions
+
         """
         move_model = self.prompt_generator.get_move_output_model()
         analysis_model = self.prompt_generator.get_analysis_output_model()
@@ -195,6 +199,7 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
             ...     "black_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
             ... }
             >>> engines = factory.create_engines_from_player_configs(configs)
+
         """
         role_definitions = self.create_role_definitions()
         engines = {}
@@ -223,6 +228,7 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
 
         Returns:
             Dict[str, AugLLMConfig]: Dictionary of engines
+
         """
         player1, player2 = self.players.get_players()
 
@@ -442,6 +448,7 @@ def create_engines_from_simple_configs(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     return factory.create_engines_from_simple_configs(
         player1_model, player2_model, temperature=temperature
@@ -478,6 +485,7 @@ def create_generic_game_config(
         >>> engines = create_generic_game_config(
         ...     "chess", chess_players, chess_prompt_gen, "gpt-4", "claude-3-opus"
         ... )
+
     """
     factory = GenericGameEngineFactory(players, prompt_generator, **kwargs)
     return factory.create_engines_from_simple_configs(

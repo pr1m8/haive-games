@@ -35,6 +35,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Command to set up the game
+
         """
         # Create initial game state
         game_state = self.state_manager.initialize_game(
@@ -54,6 +55,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Context dictionary for claim decision
+
         """
         current_player = state.players[state.current_player_index]
 
@@ -80,6 +82,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Context dictionary for challenge decision
+
         """
         current_player = state.players[state.current_player_index]
 
@@ -106,6 +109,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Command for next phase
+
         """
         game_state = BullshitGameState(**state)
 
@@ -182,6 +186,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Next node in the graph
+
         """
         # If no cards have been played yet, continue to next turn
         if not state.last_played_cards:
@@ -230,6 +235,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Returns:
             Probability of challenging
+
         """
         # Base challenge probability
         base_prob = self.challenge_probability
@@ -251,6 +257,7 @@ class BullshitAgent(GameAgent[BullshitAgentConfig]):
 
         Args:
             state: Current game state
+
         """
         game_state = BullshitGameState(**state)
 
@@ -313,6 +320,7 @@ def create_bullshit_agent(
 
     Returns:
         Configured BullshitAgent
+
     """
     # Create configuration
     config = BullshitAgentConfig(
@@ -344,6 +352,7 @@ def run_game(
 
     Returns:
         Final game state
+
     """
     # Create the agent
     agent = create_bullshit_agent(

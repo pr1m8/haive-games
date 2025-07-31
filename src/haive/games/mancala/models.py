@@ -39,6 +39,7 @@ Examples:
 
 The models support AI strategy development with comprehensive validation
 and integration with the Mancala game engine.
+
 """
 
 from typing import Literal
@@ -49,8 +50,9 @@ from pydantic import BaseModel, Field, ValidationInfo, field_validator
 class MancalaMove(BaseModel):
     """Represents a move in Mancala.
 
-    This class defines the structure of a move in Mancala, which
-    includes the pit index to sow from and the player making the move.
+    This class defines the structure of a move in Mancala, which includes the pit index
+    to sow from and the player making the move.
+
     """
 
     pit_index: int = Field(
@@ -74,6 +76,7 @@ class MancalaMove(BaseModel):
 
         Raises:
             ValueError: If pit index is out of valid range.
+
         """
         if "player" in info.data:
             # Adjust validation based on player
@@ -91,10 +94,10 @@ class MancalaMove(BaseModel):
 class MancalaAnalysis(BaseModel):
     """Analysis of a Mancala position.
 
-    This class defines the structure of an analysis for a Mancala
-    position, which includes the overall position evaluation, advantage
-    level, stone distribution, pit recommendations, strategic focus, key
-    tactics, and reasoning.
+    This class defines the structure of an analysis for a Mancala position, which
+    includes the overall position evaluation, advantage level, stone distribution, pit
+    recommendations, strategic focus, key tactics, and reasoning.
+
     """
 
     position_evaluation: Literal["winning", "losing", "equal", "unclear"] = Field(

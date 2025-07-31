@@ -61,15 +61,15 @@ logger = logging.getLogger(__name__)
 class HoldemGameAgentConfig(AgentConfig):
     """Configuration for the main Hold'em game agent.
 
-    This configuration class defines the parameters for a Texas Hold'em
-    game, including the number of players, blinds, starting chips, game
-    limits, and player agent configurations. It encapsulates all the
-    settings needed to initialize and run a complete poker game.
+    This configuration class defines the parameters for a Texas Hold'em game, including
+    the number of players, blinds, starting chips, game limits, and player agent
+    configurations. It encapsulates all the settings needed to initialize and run a
+    complete poker game.
 
-    The configuration serves as the blueprint for creating a
-    HoldemGameAgent instance with specific game rules and player
-    characteristics. It can be created directly or through helper
-    functions in the config module.
+    The configuration serves as the blueprint for creating a HoldemGameAgent instance
+    with specific game rules and player characteristics. It can be created directly or
+    through helper functions in the config module.
+
     """
 
     state_schema: type = Field(default=HoldemState)
@@ -118,6 +118,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
     This version includes enhanced debugging capabilities, robust player ID handling,
     and comprehensive error recovery mechanisms.
+
     """
 
     def __init__(self, config: HoldemGameAgentConfig):
@@ -145,6 +146,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If any required player agent cannot be created successfully
+
         """
         logger.info(f"🎭 Setting up {len(self.config.player_configs)} player agents...")
 
@@ -183,6 +185,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Returns:
             None: The configuration is logged to the logger
+
         """
         config_info = {
             "player_name": player_config.player_name,
@@ -222,6 +225,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
         The graph includes conditional edges to route game flow based on the current
         state, such as proceeding to the next betting round or directly to showdown
         when appropriate. This creates a complete state machine for poker game flow.
+
         """
         logger.info("🔧 Setting up game workflow...")
 
@@ -333,6 +337,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If hand setup fails due to errors
+
         """
         logger.info(f"\n🃏 Setting up hand #{state.hand_number}")
 
@@ -399,6 +404,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If blind players cannot be found or posting fails
+
         """
         logger.info("💰 Posting blinds...")
 
@@ -496,6 +502,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If there aren't enough cards or dealing fails
+
         """
         logger.info("🎴 Dealing hole cards...")
 
@@ -572,6 +579,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If player lookup fails or decision-making fails
+
         """
 
         # Ensure we have proper state object
@@ -848,6 +856,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If action application fails due to errors
+
         """
         action = decision.get("action", "fold")
         amount = decision.get("amount", 0)
@@ -1139,6 +1148,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If card dealing fails
+
         """
         try:
             deck = state.deck.copy()
@@ -1276,6 +1286,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Raises:
             RuntimeError: If pot awarding fails
+
         """
         logger.info("💰 Awarding pot...")
 
@@ -1363,6 +1374,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Returns:
             str: The name of the next node to route to
+
         """
         try:
             players_in_hand = [
@@ -1413,8 +1425,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     def _evaluate_hand_simple(
         self, hole_cards: list[str], community_cards: list[str]
     ) -> float:
-        """Simple hand evaluation method (placeholder for production
-        evaluator).
+        """Simple hand evaluation method (placeholder for production evaluator).
 
         This is a simplified poker hand evaluator that assigns a score based
         primarily on high card values. In a production system, this would be
@@ -1427,6 +1438,7 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
         Returns:
             float: A score representing hand strength (higher is better)
+
         """
         all_cards = hole_cards + community_cards
         if not all_cards:

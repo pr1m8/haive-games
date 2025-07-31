@@ -1,7 +1,8 @@
 """Engines for the Mastermind game.
 
-This module contains the engines for the Mastermind game, including the
-codemaker engine, guess engines, and analyzer engines.
+This module contains the engines for the Mastermind game, including the codemaker
+engine, guess engines, and analyzer engines.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -14,8 +15,9 @@ from haive.games.mastermind.models import ColorCode, MastermindAnalysis, Masterm
 def generate_codemaker_prompt() -> ChatPromptTemplate:
     """Generate a prompt for creating a secret code in Mastermind.
 
-    This function constructs a prompt template for the codemaker engine,
-    which generates a secret code for the Mastermind game.
+    This function constructs a prompt template for the codemaker engine, which generates
+    a secret code for the Mastermind game.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -39,8 +41,9 @@ def generate_codemaker_prompt() -> ChatPromptTemplate:
 def generate_guess_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for making a guess in Mastermind.
 
-    This function constructs a prompt template for the guess engine,
-    which generates a guess for the Mastermind game.
+    This function constructs a prompt template for the guess engine, which generates a
+    guess for the Mastermind game.
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -73,9 +76,9 @@ def generate_guess_prompt(player: str) -> ChatPromptTemplate:
 def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
     """Generate a prompt for analyzing a Mastermind position.
 
-    This function constructs a prompt template for the analyzer engine,
-    which analyzes the current game state from the perspective of the
-    specified player.
+    This function constructs a prompt template for the analyzer engine, which analyzes
+    the current game state from the perspective of the specified player.
+
     """
     return ChatPromptTemplate.from_messages(
         [

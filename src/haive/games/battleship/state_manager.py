@@ -6,6 +6,7 @@ This module provides state transition logic for the Battleship game, including:
     - Move execution and validation
     - Strategic analysis tracking
     - Game state updates
+
 """
 
 import copy
@@ -43,6 +44,7 @@ class BattleshipStateManager:
         >>> state = manager.initialize()
         >>> state.game_phase
         GamePhase.SETUP
+
     """
 
     @staticmethod
@@ -62,6 +64,7 @@ class BattleshipStateManager:
             'player1'
             >>> state.game_phase
             GamePhase.SETUP
+
         """
         return BattleshipState(
             player1_state=PlayerState(),
@@ -107,6 +110,7 @@ class BattleshipStateManager:
             >>> new_state = manager.place_ships(state, "player1", placements)
             >>> new_state.player1_state.has_placed_ships
             True
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)
@@ -192,6 +196,7 @@ class BattleshipStateManager:
             >>> # Check if move was recorded in history
             >>> len(new_state.move_history) > 0
             True
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)
@@ -264,6 +269,7 @@ class BattleshipStateManager:
             >>> new_state = manager.add_analysis(state, "player1", analysis)
             >>> new_state.player1_state.strategic_analysis[-1]
             'Focus attacks on the center of the board.'
+
         """
         # Create a copy of the state
         new_state = copy.deepcopy(state)

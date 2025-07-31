@@ -1,7 +1,8 @@
 """Configurable Checkers configuration using the generic player agent system.
 
-This module provides configurable Checkers game configurations that
-replace hardcoded LLM settings with dynamic, configurable player agents.
+This module provides configurable Checkers game configurations that replace hardcoded
+LLM settings with dynamic, configurable player agents.
+
 """
 
 from typing import Any
@@ -34,6 +35,7 @@ class ConfigurableCheckersConfig(CheckersAgentConfig):
         max_moves: Maximum number of moves before draw
         enable_analysis: Whether to enable position analysis
         recursion_limit: Python recursion limit for game execution
+
     """
 
     red_model: str | None = Field(default=None, description="Model for red player")
@@ -147,8 +149,7 @@ class ConfigurableCheckersConfig(CheckersAgentConfig):
 def create_checkers_config(
     red_model: str = "gpt-4o", black_model: str = "claude-3-5-sonnet-20240620", **kwargs
 ) -> ConfigurableCheckersConfig:
-    """Create a configurable Checkers configuration with simple model
-    specifications.
+    """Create a configurable Checkers configuration with simple model specifications.
 
     Args:
         red_model: Model for red player and analyzer
@@ -165,6 +166,7 @@ def create_checkers_config(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     max_moves=150
         ... )
+
     """
     return ConfigurableCheckersConfig(
         red_model=red_model, black_model=black_model, **kwargs
@@ -194,6 +196,7 @@ def create_checkers_config_from_example(
     Example:
         >>> config = create_checkers_config_from_example("budget", max_moves=80)
         >>> config = create_checkers_config_from_example("gpt_vs_claude", enable_analysis=False)
+
     """
     return ConfigurableCheckersConfig(example_config=example_name, **kwargs)
 
@@ -201,8 +204,7 @@ def create_checkers_config_from_example(
 def create_checkers_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableCheckersConfig:
-    """Create a configurable Checkers configuration from detailed player
-    configurations.
+    """Create a configurable Checkers configuration from detailed player configurations.
 
     Args:
         player_configs: Dictionary mapping role names to player configurations
@@ -241,6 +243,7 @@ def create_checkers_config_from_player_configs(
         ...     ),
         ... }
         >>> config = create_checkers_config_from_player_configs(player_configs)
+
     """
     return ConfigurableCheckersConfig(player_configs=player_configs, **kwargs)
 
@@ -296,6 +299,7 @@ def get_example_config(name: str) -> ConfigurableCheckersConfig:
 
     Raises:
         ValueError: If the example name is not found
+
     """
     if name not in EXAMPLE_CONFIGURATIONS:
         available = ", ".join(EXAMPLE_CONFIGURATIONS.keys())
@@ -309,6 +313,7 @@ def list_example_configurations() -> dict[str, str]:
 
     Returns:
         Dict[str, str]: Mapping of configuration names to descriptions
+
     """
     return {
         name: config["description"] for name, config in EXAMPLE_CONFIGURATIONS.items()

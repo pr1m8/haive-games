@@ -20,6 +20,7 @@ Example:
     >>> # Check game status
     >>> print(state.game_status)  # 'ongoing'
     >>> print(state.captured_stones)  # {'black': 0, 'white': 0}
+
 """
 
 from typing import Literal
@@ -59,6 +60,7 @@ class GoGameState(BaseModel):
         ... )
         >>> state.validate_turn("black", {"board_sgf": state.board_sgf})
         'black'
+
     """
 
     board_size: int = Field(default=19, description="Size of the Go board (NxN).")
@@ -99,6 +101,7 @@ class GoGameState(BaseModel):
 
         Raises:
             ValueError: If turn doesn't match the board state.
+
         """
         board_sgf = info.data.get("board_sgf")
         if board_sgf:

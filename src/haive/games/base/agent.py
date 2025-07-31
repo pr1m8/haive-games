@@ -14,6 +14,7 @@ Typical usage:
     - Inherit from GameAgent to create game-specific agents
     - Override necessary methods like prepare_move_context and extract_move
     - Use the setup_workflow method to customize the game flow
+
 """
 
 from typing import Any, Generic, TypeVar
@@ -53,6 +54,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         ...     def prepare_move_context(self, state, player):
         ...         legal_moves = self.state_manager.get_legal_moves(state)
         ...         return {"legal_moves": legal_moves}
+
     """
 
     def __init__(self, config: GameConfig):
@@ -61,6 +63,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Args:
             config (GameConfig, optional): Configuration for the game agent.
                 Defaults to GameConfig().
+
         """
         super().__init__(config)
 
@@ -83,6 +86,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...     self.graph.add_node("custom_analysis", self.analyze_position)
             ...     # Modify the workflow
             ...     self.graph.add_edge("initialize_game", "custom_analysis")
+
         """
         # Core nodes that all games need
         self.graph.add_node("initialize_game", self.initialize_game)
@@ -143,6 +147,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             >>> def initialize_game(self, state):
             ...     game_state = self.state_manager.initialize()
             ...     return Command(update=game_state.dict())
+
         """
         game_state = self.state_manager.initialize()
         return Command(
@@ -177,6 +182,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...     move = self.extract_move(response)
             ...     new_state = self.state_manager.apply_move(state, move)
             ...     return Command(update=new_state.dict())
+
         """
         engine = self.engines.get(f"{player}_player")
         if not engine:
@@ -223,6 +229,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...     analyzer = self.engines.get(f"{player}_analyzer")
             ...     analysis = analyzer.invoke({"position": state.board})
             ...     return Command(update={f"{player}_analysis": analysis})
+
         """
         analyzer = self.engines.get(f"{player}_analyzer")
         if not analyzer:
@@ -262,6 +269,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Example:
             >>> def should_continue_game(self, state):
             ...     return state.moves_remaining > 0 and not state.checkmate
+
         """
         return state.game_status == "ongoing"
 
@@ -290,6 +298,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...         "legal_moves": legal_moves,
             ...         "player": player
             ...     }
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -316,6 +325,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             ...         "material_count": state.get_material_count(player),
             ...         "previous_moves": state.move_history[-5:]
             ...     }
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -338,6 +348,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
             >>> def extract_move(self, response):
             ...     move_text = response.get("move")
             ...     return ChessMove.from_uci(move_text)
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -359,6 +370,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Example:
             >>> def make_player1_move(self, state):
             ...     return self.make_move(state, "player1")
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -380,6 +392,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Example:
             >>> def make_player2_move(self, state):
             ...     return self.make_move(state, "player2")
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -401,6 +414,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Example:
             >>> def analyze_player1(self, state):
             ...     return self.analyze_position(state, "player1")
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -422,6 +436,7 @@ class GameAgent(Agent[GameConfig], Generic[T]):
         Example:
             >>> def analyze_player2(self, state):
             ...     return self.analyze_position(state, "player2")
+
         """
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -470,6 +485,7 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
         - The function will print game progress to the console
         - Game visualization depends on the agent's visualize_state method
         - Game history will be saved using the agent's save_state_history method
+
     """
     # Use provided initial state or create a default one
     game_state = initial_state or {}

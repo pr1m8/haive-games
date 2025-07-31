@@ -1,7 +1,8 @@
 """Space models for the game framework.
 
-This module defines the base Space class and specific implementations
-for different types of board spaces.
+This module defines the base Space class and specific implementations for different
+types of board spaces.
+
 """
 
 from __future__ import annotations
@@ -32,8 +33,9 @@ class SpaceProtocol(Protocol, Generic[P, T]):
 class Space(BaseModel, Generic[P, T]):
     """A space on a game board where pieces can be placed.
 
-    A Space represents a location on a board that can hold a game piece.
-    It has a position and can be connected to other spaces.
+    A Space represents a location on a board that can hold a game piece. It has a
+    position and can be connected to other spaces.
+
     """
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -51,6 +53,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             True if the space has a piece, False otherwise
+
         """
         return self.piece is not None
 
@@ -62,6 +65,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             True if placement was successful, False otherwise
+
         """
         if self.is_occupied():
             return False
@@ -77,6 +81,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             The removed piece, or None if no piece was on the space
+
         """
         piece = self.piece
         self.piece = None
@@ -87,6 +92,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Args:
             space_id: ID of the space to connect to
+
         """
         self.connections.add(space_id)
 
@@ -95,6 +101,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Args:
             space_id: ID of the space to disconnect from
+
         """
         if space_id in self.connections:
             self.connections.remove(space_id)
@@ -107,6 +114,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             True if connected, False otherwise
+
         """
         return space_id in self.connections
 
@@ -119,6 +127,7 @@ class Space(BaseModel, Generic[P, T]):
 
         Returns:
             Property value or default
+
         """
         return self.properties.get(key, default)
 
@@ -128,6 +137,7 @@ class Space(BaseModel, Generic[P, T]):
         Args:
             key: Property name
             value: Property value
+
         """
         self.properties[key] = value
 
@@ -136,6 +146,7 @@ class GridSpace(Space[P, T]):
     """A space on a grid-based board.
 
     Used for games like Chess, Checkers, Scrabble, etc.
+
     """
 
     def get_grid_position(self) -> tuple[int, int]:
@@ -143,6 +154,7 @@ class GridSpace(Space[P, T]):
 
         Returns:
             Tuple of (row, col)
+
         """
         if hasattr(self.position, "row") and hasattr(self.position, "col"):
             return (self.position.row, self.position.col)
@@ -155,6 +167,7 @@ class GridSpace(Space[P, T]):
 
         Returns:
             String like "A1", "B2", etc.
+
         """
         if hasattr(self.position, "display_coords"):
             return self.position.display_coords
@@ -165,6 +178,7 @@ class HexSpace(Space[P, T]):
     """A space on a hexagonal board.
 
     Used for games like Catan, hex-based war games, etc.
+
     """
 
     @computed_field
@@ -174,6 +188,7 @@ class HexSpace(Space[P, T]):
 
         Returns:
             Tuple of (q, r, s) in cube coordinates
+
         """
         if (
             hasattr(self.position, "q")

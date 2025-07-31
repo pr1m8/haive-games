@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Standalone demo for the Mastermind game with Rich UI.
 
-This script demonstrates the Mastermind game without requiring the full
-Haive framework.
+This script demonstrates the Mastermind game without requiring the full Haive framework.
+
 """
 
 import argparse

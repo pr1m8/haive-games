@@ -16,6 +16,7 @@ Example:
     ...     max_days=3
     ... )
     >>> print(config.max_days)  # Shows 3
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -49,6 +50,7 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
         ...     initial_player_count=7
         ... )
         >>> print(config.max_days)  # Shows 3
+
     """
 
     max_days: int = Field(
@@ -93,6 +95,7 @@ class MafiaAgentConfig(MultiPlayerGameConfig):
             ...     max_days=4
             ... )
             >>> print(len(config.role_mapping))  # Shows 5 (all roles)
+
         """
         # Create standard role mapping
         role_mapping = {

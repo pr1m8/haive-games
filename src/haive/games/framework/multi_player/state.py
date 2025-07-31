@@ -19,6 +19,7 @@ Example:
     >>>
     >>> # Advance to next player
     >>> next_player = state.advance_player()
+
 """
 
 from typing import Any
@@ -54,6 +55,7 @@ class MultiPlayerGameState(BaseModel):
         >>> state.advance_player()
         'player2'
         >>> private_data = state.get_player_private_data("player1")
+
     """
 
     players: list[str] = Field(..., description="List of player names/IDs")
@@ -90,6 +92,7 @@ class MultiPlayerGameState(BaseModel):
             >>> state = MultiPlayerGameState(players=["p1", "p2"])
             >>> state.current_player
             'p1'
+
         """
         if 0 <= self.current_player_idx < len(self.players):
             return self.players[self.current_player_idx]
@@ -112,6 +115,7 @@ class MultiPlayerGameState(BaseModel):
             'p3'
             >>> state.advance_player()  # Wraps back to p1
             'p1'
+
         """
         self.current_player_idx = (self.current_player_idx + 1) % len(self.players)
         return self.current_player
@@ -135,5 +139,6 @@ class MultiPlayerGameState(BaseModel):
             {'secret_info': 42}
             >>> state.get_player_private_data("unknown")
             {}
+
         """
         return self.player_data.get(player_id, {})

@@ -54,6 +54,7 @@ Examples:
 
 The models provide comprehensive strategic analysis capabilities for
 AI-driven Reversi gameplay with position evaluation and move optimization.
+
 """
 
 from typing import Literal
@@ -67,6 +68,7 @@ class Position(BaseModel):
     Attributes:
         row (int): Row index (0-7).
         col (int): Column index (0-7).
+
     """
 
     row: int = Field(..., ge=0, lt=8, description="Row index (0-7)")
@@ -80,6 +82,7 @@ class ReversiMove(BaseModel):
         row (int): Row position of the move (0-7).
         col (int): Column position of the move (0-7).
         player (str): The player making the move ('B' or 'W').
+
     """
 
     row: int = Field(..., ge=0, lt=8, description="Row index (0-7)")
@@ -108,6 +111,7 @@ class ReversiAnalysis(BaseModel):
         danger_zones (List[Position]): High-risk positions to avoid.
         strategy (str): Summary of strategic approach.
         reasoning (str): Detailed explanation of analysis.
+
     """
 
     mobility: int = Field(..., description="Number of legal moves available")

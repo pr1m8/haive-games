@@ -22,6 +22,7 @@ class BullshitStateManager:
 
         Returns:
             Initialized game state
+
         """
         # Create full deck
         deck = Card.create_deck()
@@ -57,6 +58,7 @@ class BullshitStateManager:
 
         Returns:
             Whether the claim could be true
+
         """
         current_player = state.players[state.current_player_index]
 
@@ -80,6 +82,7 @@ class BullshitStateManager:
 
         Returns:
             Updated game state
+
         """
         new_state = copy.deepcopy(state)
         current_player = new_state.players[new_state.current_player_index]
@@ -123,6 +126,7 @@ class BullshitStateManager:
 
         Returns:
             Updated game state
+
         """
         new_state = copy.deepcopy(state)
 
@@ -172,6 +176,7 @@ class BullshitStateManager:
 
         Returns:
             Updated game state
+
         """
         new_state = copy.deepcopy(state)
 
@@ -193,5 +198,6 @@ class BullshitStateManager:
 
         Returns:
             Reset game state
+
         """
         return cls.initialize_game(len(state.players))

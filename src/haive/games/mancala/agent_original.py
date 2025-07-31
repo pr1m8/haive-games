@@ -1,7 +1,8 @@
 """Mancala game agent.
 
-This module defines the Mancala game agent, which uses language models
-to generate moves and analyze positions in the game.
+This module defines the Mancala game agent, which uses language models to generate moves
+and analyze positions in the game.
+
 """
 
 import json
@@ -35,6 +36,7 @@ def ensure_game_state(
 
     Returns:
         MancalaState instance
+
     """
     logger.info(f"ensure_game_state: received input of type {type(state_input)}")
 
@@ -74,8 +76,9 @@ def ensure_game_state(
 class MancalaAgent(GameAgent[MancalaConfig]):
     """Agent for playing Mancala.
 
-    This class implements the Mancala game agent, which uses language
-    models to generate moves and analyze positions in the game.
+    This class implements the Mancala game agent, which uses language models to generate
+    moves and analyze positions in the game.
+
     """
 
     def __init__(self, config: MancalaConfig = MancalaConfig()):
@@ -83,6 +86,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Args:
             config (MancalaConfig): The configuration for the Mancala game.
+
         """
         super().__init__(config)
         self.state_manager = MancalaStateManager
@@ -96,6 +100,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Initialization command containing the new game state fields.
+
         """
         game_state = self.state_manager.initialize(
             stones_per_pit=self.config.stones_per_pit
@@ -124,6 +129,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Dict[str, Any]: Context dictionary for move generation.
+
         """
         try:
             # Ensure we have a proper MancalaState
@@ -185,6 +191,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Dict[str, Any]: Context dictionary for position analysis.
+
         """
         try:
             # Ensure we have a proper MancalaState
@@ -231,6 +238,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             MancalaMove: Parsed move object.
+
         """
         # Handle different response types
 
@@ -287,6 +295,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the move.
+
         """
         return self.make_move(state, "player1")
 
@@ -298,6 +307,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the move.
+
         """
         return self.make_move(state, "player2")
 
@@ -310,6 +320,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the move.
+
         """
         try:
             # Ensure we have a proper MancalaState
@@ -392,6 +403,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Any: Parsed analysis object.
+
         """
         # Handle different response types
 
@@ -447,6 +459,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the analysis.
+
         """
         return self.analyze_position(state, "player1")
 
@@ -458,6 +471,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the analysis.
+
         """
         return self.analyze_position(state, "player2")
 
@@ -470,6 +484,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             Command: Updated game state after the analysis.
+
         """
         try:
             # Ensure we have a proper MancalaState
@@ -541,6 +556,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Args:
             state: Either a MancalaState object or a dictionary with state data
+
         """
         try:
             # Use our helper function to ensure we have a proper MancalaState
@@ -583,9 +599,9 @@ class MancalaAgent(GameAgent[MancalaConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization, move
-        making, and analysis. Adds edges between nodes based on the
-        current player's turn.
+        Creates a dynamic graph with nodes for game initialization, move making, and
+        analysis. Adds edges between nodes based on the current player's turn.
+
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)
@@ -617,6 +633,7 @@ class MancalaAgent(GameAgent[MancalaConfig]):
 
         Returns:
             MancalaState: Final game state after completion.
+
         """
         # Initialize game state
         initial_state = MancalaStateManager.initialize(

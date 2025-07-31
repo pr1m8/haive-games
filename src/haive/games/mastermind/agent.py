@@ -34,6 +34,7 @@ def ensure_game_state(
 
     Returns:
         MastermindState instance
+
     """
     logger.info(f"ensure_game_state: received input of type {type(state_input)}")
 
@@ -73,8 +74,9 @@ def ensure_game_state(
 class MastermindAgent(GameAgent[MastermindConfig]):
     """Agent for playing Mastermind.
 
-    This class implements the Mastermind game agent, which uses language
-    models to generate guesses and analyze positions in the game.
+    This class implements the Mastermind game agent, which uses language models to
+    generate guesses and analyze positions in the game.
+
     """
 
     def __init__(self, config: MastermindConfig = MastermindConfig()):
@@ -82,6 +84,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Args:
             config (MastermindConfig): The configuration for the Mastermind game.
+
         """
         self.state_manager = MastermindStateManager
         # self.engines = config.aug_llm_configs
@@ -104,6 +107,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Initialization command containing the new game state.
+
         """
         # If secret code is not provided, generate it using LLM
         secret_code = self.config.secret_code
@@ -143,6 +147,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Dict[str, Any]: Context dictionary for guess generation.
+
         """
         # Format guess history
         guess_history = []
@@ -187,6 +192,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Dict[str, Any]: Context dictionary for analysis.
+
         """
         # Format guess history
         guess_history = []
@@ -207,14 +213,14 @@ class MastermindAgent(GameAgent[MastermindConfig]):
         }
 
     def extract_guess(self, response: Any) -> MastermindGuess:
-        """Extract a structured MastermindGuess object from the engine
-        response.
+        """Extract a structured MastermindGuess object from the engine response.
 
         Args:
             response (Any): Response from the guess engine.
 
         Returns:
             MastermindGuess: Parsed guess object.
+
         """
         # The response should already be a MastermindGuess object
         return response
@@ -229,6 +235,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated game state after the guess or passthrough if not allowed.
+
         """
         if state.codemaker == "player1":
             # Player1 is the codemaker, not the guesser
@@ -249,6 +256,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated game state after the guess or passthrough if not allowed.
+
         """
         if state.codemaker == "player2":
             # Player2 is the codemaker, not the guesser
@@ -270,6 +278,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated game state with the new guess applied.
+
         """
         # Check if it's the player's turn
         if state.turn != player:
@@ -317,6 +326,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated state with appended analysis or passthrough.
+
         """
         if state.codemaker == "player1":
             # Player1 is the codemaker, not the codebreaker
@@ -335,6 +345,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated state with appended analysis or passthrough.
+
         """
         if state.codemaker == "player2":
             # Player2 is the codemaker, not the codebreaker
@@ -354,6 +365,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Command: Updated state including the newly generated analysis.
+
         """
         if not self.config.enable_analysis:
             return Command(
@@ -399,6 +411,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Args:
             state (Dict[str, Any]): The state dictionary to render.
+
         """
         if not self.config.visualize:
             return
@@ -526,9 +539,9 @@ class MastermindAgent(GameAgent[MastermindConfig]):
     def setup_workflow(self) -> None:
         """Set up the game workflow.
 
-        Creates a dynamic graph with nodes for game initialization,
-        guess making, and analysis. Adds edges between nodes based on
-        the codemaker's role.
+        Creates a dynamic graph with nodes for game initialization, guess making, and
+        analysis. Adds edges between nodes based on the codemaker's role.
+
         """
         # Create a graph builder
         builder = DynamicGraph(state_schema=self.state_schema)
@@ -568,6 +581,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Dict[str, Any]: Final game state after completion.
+
         """
         if not self.ui or not UI_AVAILABLE:
             logger.warning("UI not available - falling back to regular run")
@@ -662,6 +676,7 @@ class MastermindAgent(GameAgent[MastermindConfig]):
 
         Returns:
             Dict[str, Any]: Final game state after completion.
+
         """
         # Use Rich UI if available and visualize is True
         if visualize and self.config.visualize and self.ui and UI_AVAILABLE:

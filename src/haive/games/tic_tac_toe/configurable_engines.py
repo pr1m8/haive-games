@@ -1,7 +1,8 @@
 """Configurable Tic Tac Toe engines using the new player agent system.
 
-This module provides Tic Tac Toe engine configurations that use
-configurable player agents instead of hardcoded LLM configurations.
+This module provides Tic Tac Toe engine configurations that use configurable player
+agents instead of hardcoded LLM configurations.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -23,6 +24,7 @@ def create_tic_tac_toe_move_prompt(player_symbol: str) -> ChatPromptTemplate:
 
     Returns:
         ChatPromptTemplate: Prompt template for move generation
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -56,6 +58,7 @@ def create_tic_tac_toe_analysis_prompt(player_symbol: str) -> ChatPromptTemplate
 
     Returns:
         ChatPromptTemplate: Prompt template for position analysis
+
     """
     return ChatPromptTemplate.from_messages(
         [
@@ -93,6 +96,7 @@ def get_tic_tac_toe_role_definitions() -> dict[str, GamePlayerRole]:
 
     Returns:
         Dict[str, GamePlayerRole]: Dictionary of role definitions
+
     """
     return {
         "X_player": GamePlayerRole(
@@ -145,6 +149,7 @@ def create_configurable_tic_tac_toe_engines(
         ...     "O_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_configurable_tic_tac_toe_engines(configs)
+
     """
     roles = get_tic_tac_toe_role_definitions()
     return PlayerAgentFactory.create_engines_from_player_configs(roles, player_configs)
@@ -167,6 +172,7 @@ def create_simple_tic_tac_toe_player_configs(
 
     Returns:
         Dict[str, PlayerAgentConfig]: Player configurations
+
     """
     return {
         "X_player": PlayerAgentConfig(
@@ -198,6 +204,7 @@ def create_tic_tac_toe_engines_from_models(
 
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
+
     """
     configs = create_simple_tic_tac_toe_player_configs(x_model, o_model, temperature)
     return create_configurable_tic_tac_toe_engines(configs)
@@ -243,6 +250,7 @@ def get_example_tic_tac_toe_engines(config_name: str) -> dict[str, AugLLMConfig]
         Dict[str, AugLLMConfig]: Dictionary of engines
 
     Available configs: gpt_vs_claude, gpt_only, claude_only, budget, mixed
+
     """
     if config_name not in EXAMPLE_TTT_CONFIGS:
         available = ", ".join(EXAMPLE_TTT_CONFIGS.keys())

@@ -10,6 +10,7 @@ This module provides configuration classes for chess agents, including:
 
 The configuration system uses Pydantic for validation and default values,
 making it easy to create and customize chess agent instances.
+
 """
 
 from typing import Any
@@ -55,6 +56,7 @@ class ChessConfig(BaseGameConfig):
         ...     "black_player": build_aug_llm("anthropic", "claude-3-opus-20240229"),
         ... }
         >>> config = ChessConfig(engines=engines)
+
     """
 
     # State schema
@@ -234,6 +236,7 @@ class ChessConfig(BaseGameConfig):
 
         Attributes:
             arbitrary_types_allowed (bool): Whether to allow arbitrary types in the model.
+
         """
 
         arbitrary_types_allowed = True

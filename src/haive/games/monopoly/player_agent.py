@@ -6,6 +6,7 @@ player decisions in Monopoly, including:
     - Jail decisions
     - Building decisions
     - Trade negotiations
+
 """
 
 import operator
@@ -117,6 +118,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         max_turns (int): Maximum turns before ending game
         enable_trading (bool): Whether to enable trade negotiations
         enable_building (bool): Whether to enable house/hotel building
+
     """
 
     # Override base agent config fields
@@ -218,9 +220,7 @@ class MonopolyGameAgentConfig(AgentConfig):
         return MonopolyPlayerAgent(self.player_agent_config)
 
     def setup_player_agent_engines(self) -> None:
-        """Set up the engines for the player agent if not already
-        configured.
-        """
+        """Set up the engines for the player agent if not already configured."""
         if not self.player_agent_config.engines:
             self.player_agent_config.engines = build_monopoly_player_aug_llms()
 

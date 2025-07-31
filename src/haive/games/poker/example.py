@@ -25,6 +25,7 @@ Example:
     >>> # Run a basic 4-player game
     >>> from haive.games.poker.example import run_poker_game
     >>> run_poker_game(num_players=4, starting_chips=1000)
+
 """
 
 # Standard library imports

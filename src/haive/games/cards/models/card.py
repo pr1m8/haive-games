@@ -11,6 +11,7 @@ Example:
     A`
     >>> card.value
     14
+
 """
 
 from enum import Enum, auto
@@ -19,8 +20,9 @@ from enum import Enum, auto
 class Suit(Enum):
     """Playing card suits.
 
-    Standard card suits for a 52-card deck, with optional support for
-    additional special suits in non-standard decks.
+    Standard card suits for a 52-card deck, with optional support for additional special
+    suits in non-standard decks.
+
     """
 
     CLUBS = auto()
@@ -34,6 +36,7 @@ class Suit(Enum):
 
         Returns:
             The Unicode character representing the suit.
+
         """
         return {
             Suit.CLUBS: "c",
@@ -49,6 +52,7 @@ class Suit(Enum):
 
         Returns:
             The color as a string: "red" or "black".
+
         """
         if self in [Suit.HEARTS, Suit.DIAMONDS]:
             return "red"
@@ -58,8 +62,9 @@ class Suit(Enum):
 class Rank(Enum):
     """Playing card ranks.
 
-    Standard card ranks for a 52-card deck, with values that facilitate
-    numeric comparisons between cards.
+    Standard card ranks for a 52-card deck, with values that facilitate numeric
+    comparisons between cards.
+
     """
 
     TWO = 2
@@ -82,6 +87,7 @@ class Rank(Enum):
 
         Returns:
             A string representation suitable for display.
+
         """
         rank_str = {
             Rank.ACE: "A",
@@ -121,6 +127,7 @@ class Card:
         14
         >>> card.long_name
         'Ace of Spades'
+
     """
 
     def __init__(self, rank: Rank, suit: Suit):
@@ -132,6 +139,7 @@ class Card:
 
         Raises:
             ValueError: If a standard card is created with Joker suit but not Joker rank.
+
         """
         if suit == Suit.JOKER and rank != Rank.JOKER:
             raise ValueError("Cards with Joker suit must have Joker rank")
@@ -145,6 +153,7 @@ class Card:
 
         Returns:
             A string with rank and suit symbols.
+
         """
         return f"{self.rank}{self.suit}"
 
@@ -153,6 +162,7 @@ class Card:
 
         Returns:
             A string representation for debugging.
+
         """
         return f"Card({self.rank}, {self.suit})"
 
@@ -164,6 +174,7 @@ class Card:
 
         Returns:
             True if the cards have the same rank and suit, False otherwise.
+
         """
         if not isinstance(other, Card):
             return NotImplemented
@@ -177,6 +188,7 @@ class Card:
 
         Returns:
             True if this card's value is less than the other card's value.
+
         """
         if not isinstance(other, Card):
             return NotImplemented
@@ -190,6 +202,7 @@ class Card:
 
         Returns:
             True if this card's value is greater than the other card's value.
+
         """
         if not isinstance(other, Card):
             return NotImplemented
@@ -201,6 +214,7 @@ class Card:
 
         Returns:
             A string with the full name (e.g., "Ace of Spades").
+
         """
         if self.rank == Rank.JOKER:
             return "Joker"
@@ -238,6 +252,7 @@ class Card:
 
         Returns:
             The card's value in Blackjack.
+
         """
         if self.rank == Rank.ACE:
             return 11
@@ -250,6 +265,7 @@ class Card:
 
         Returns:
             True if the card is a face card, False otherwise.
+
         """
         return self.rank in [Rank.JACK, Rank.QUEEN, Rank.KING]
 
@@ -265,6 +281,7 @@ class Card:
 
         Raises:
             ValueError: If the string format is invalid.
+
         """
         if len(card_str) < 2:
             raise ValueError(f"Invalid card string: {card_str}")

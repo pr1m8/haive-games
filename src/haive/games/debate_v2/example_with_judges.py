@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Example usage of AI judge system for gamified debates.
 
-This example demonstrates how to use AI judge panels for sophisticated
-winner determination in debate tournaments.
+This example demonstrates how to use AI judge panels for sophisticated winner
+determination in debate tournaments.
+
 """
 
 import asyncio

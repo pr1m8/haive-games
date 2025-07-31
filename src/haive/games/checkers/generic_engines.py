@@ -1,8 +1,9 @@
 """Generic Checkers engines using the new generic player agent system.
 
-from typing import Any This module demonstrates how to use the generic
-player agent system for Checkers, showing the same pattern working
-across different games with different player identifiers.
+from typing import Any This module demonstrates how to use the generic player agent
+system for Checkers, showing the same pattern working across different games with
+different player identifiers.
+
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -31,6 +32,7 @@ class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for move generation
+
         """
         player_upper = player.upper()
 
@@ -76,6 +78,7 @@ class CheckersPromptGenerator(GenericPromptGenerator[str, str]):
 
         Returns:
             ChatPromptTemplate: Prompt template for position analysis
+
         """
         player_upper = player.upper()
         opponent = "BLACK" if player == "red" else "RED"
@@ -158,6 +161,7 @@ def create_generic_checkers_engines(
         ...     "black_analyzer": PlayerAgentConfig(llm_config="claude-3-opus"),
         ... }
         >>> engines = create_generic_checkers_engines(configs)
+
     """
     return checkers_engine_factory.create_engines_from_player_configs(player_configs)
 
@@ -186,6 +190,7 @@ def create_generic_checkers_engines_simple(
         ...     "anthropic:claude-3-5-sonnet-20240620",
         ...     temperature=0.5
         ... )
+
     """
     return checkers_engine_factory.create_engines_from_simple_configs(
         red_model, black_model, temperature=temperature, **kwargs
@@ -211,6 +216,7 @@ def create_generic_checkers_config_from_example(
         - "budget": Cost-effective models
         - "mixed": Different provider per role
         - "checkers_masters": High-powered models for competitive play
+
     """
     example_configs = {
         "gpt_vs_claude": {
@@ -246,8 +252,9 @@ def create_generic_checkers_config_from_example(
 def compare_checkers_with_other_games() -> None:
     """Compare the checkers pattern with other games to show generalization.
 
-    This function demonstrates how the same generic system works for
-    different games with different player naming conventions.
+    This function demonstrates how the same generic system works for different games
+    with different player naming conventions.
+
     """
     # Chess pattern
     chess_engines = {
@@ -286,8 +293,9 @@ def compare_checkers_with_other_games() -> None:
 def create_multi_game_checkers_demo() -> Any:
     """Create engines for multiple games including checkers.
 
-    This demonstrates how the same configuration approach works across
-    different games with the generic system.
+    This demonstrates how the same configuration approach works across different games
+    with the generic system.
+
     """
     # Same models, different games
     model1 = "openai:gpt-4o"

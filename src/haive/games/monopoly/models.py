@@ -76,6 +76,7 @@ class PropertyType(str, Enum):
         RAILROAD: Transportation properties with special rent calculation
         UTILITY: Electric Company and Water Works with dice-based rent
         SPECIAL: Non-purchasable spaces like GO, Jail, Free Parking
+
     """
 
     STREET = "street"
@@ -103,6 +104,7 @@ class PropertyColor(str, Enum):
         RAILROAD: All four railroad properties
         UTILITY: Electric Company and Water Works
         SPECIAL: Non-property spaces
+
     """
 
     BROWN = "brown"
@@ -127,6 +129,7 @@ class CardType(str, Enum):
     Values:
         CHANCE: Orange cards with various effects (movement, payments, etc.)
         COMMUNITY_CHEST: Blue cards typically involving payments or rewards
+
     """
 
     CHANCE = "chance"
@@ -157,6 +160,7 @@ class PlayerActionType(str, Enum):
         TRADE_ACCEPT: Accept a trade offer
         TRADE_DECLINE: Decline a trade offer
         DECLARE_BANKRUPTCY: Declare bankruptcy and exit the game
+
     """
 
     BUY_PROPERTY = "buy_property"
@@ -229,6 +233,7 @@ class PropertyDecision(BaseModel):
     Note:
         When action is BUY_PROPERTY, max_bid should be None. When action is
         PASS_PROPERTY, max_bid determines auction participation level.
+
     """
 
     action: PlayerActionType = Field(
@@ -269,6 +274,7 @@ class PropertyDecision(BaseModel):
 
         Raises:
             ValueError: If action is not valid for property decisions.
+
         """
         valid_actions = {PlayerActionType.BUY_PROPERTY, PlayerActionType.PASS_PROPERTY}
         if v not in valid_actions:
@@ -282,6 +288,7 @@ class PropertyDecision(BaseModel):
 
         Returns:
             bool: True if player will bid in auction, False otherwise.
+
         """
         return self.action == PlayerActionType.PASS_PROPERTY and (self.max_bid or 0) > 0
 
@@ -332,6 +339,7 @@ class JailDecision(BaseModel):
     Note:
         In late game, staying in jail can be strategically beneficial to avoid
         landing on expensive developed properties while still collecting rent.
+
     """
 
     action: PlayerActionType = Field(
@@ -364,6 +372,7 @@ class JailDecision(BaseModel):
 
         Raises:
             ValueError: If action is not valid for jail decisions.
+
         """
         valid_actions = {
             PlayerActionType.PAY_JAIL_FINE,
@@ -381,13 +390,13 @@ class JailDecision(BaseModel):
 
         Returns:
             bool: True if action requires immediate payment, False otherwise.
+
         """
         return self.action == PlayerActionType.PAY_JAIL_FINE
 
 
 class BuildingDecision(BaseModel):
-    r"""Strategic decision model for property development and rental income
-    optimization.
+    r"""Strategic decision model for property development and rental income optimization.
 
     This model captures the decision-making process for building houses and hotels
     on monopolized properties, including development strategy, cash flow management,
@@ -441,6 +450,7 @@ class BuildingDecision(BaseModel):
     Note:
         Houses must be built evenly across all properties in a monopoly group.
         Hotels require 4 houses to be traded in plus hotel cost.
+
     """
 
     property_name: str = Field(
@@ -488,6 +498,7 @@ class BuildingDecision(BaseModel):
 
         Raises:
             ValueError: If action is not valid for building.
+
         """
         valid_actions = {PlayerActionType.BUILD_HOUSE, PlayerActionType.BUILD_HOTEL}
         if v not in valid_actions:
@@ -507,6 +518,7 @@ class BuildingDecision(BaseModel):
 
         Raises:
             ValueError: If quantity is outside valid range.
+
         """
         if v < 1 or v > 4:
             raise ValueError("Quantity must be between 1 and 4")
@@ -519,13 +531,13 @@ class BuildingDecision(BaseModel):
 
         Returns:
             bool: True if upgrading to hotel, False if building houses.
+
         """
         return self.action == PlayerActionType.BUILD_HOTEL
 
 
 class TradeOffer(BaseModel):
-    r"""Comprehensive model for inter-player trade negotiations and strategic
-    exchanges.
+    r"""Comprehensive model for inter-player trade negotiations and strategic exchanges.
 
     This model captures complex trade offers between players, including property
     exchanges, cash considerations, and strategic reasoning. It supports multi-asset
@@ -594,6 +606,7 @@ class TradeOffer(BaseModel):
     Note:
         Trade offers should be mutually beneficial or strategically justified.
         Players cannot trade mortgaged properties or properties with buildings.
+
     """
 
     offering_player: str = Field(
@@ -670,6 +683,7 @@ class TradeOffer(BaseModel):
 
         Raises:
             ValueError: If receiving player is the same as offering player.
+
         """
         if hasattr(info, "data") and info.data.get("offering_player") == v:
             raise ValueError("Receiving player must be different from offering player")
@@ -682,6 +696,7 @@ class TradeOffer(BaseModel):
 
         Returns:
             int: Net cash change for offering player (negative = paying out, positive = receiving).
+
         """
         return self.requested_money - self.offered_money
 
@@ -692,6 +707,7 @@ class TradeOffer(BaseModel):
 
         Returns:
             int: Total count of properties and cash being offered.
+
         """
         return len(self.offered_properties) + (1 if self.offered_money > 0 else 0)
 
@@ -702,6 +718,7 @@ class TradeOffer(BaseModel):
 
         Returns:
             int: Total count of properties and cash being requested.
+
         """
         return len(self.requested_properties) + (1 if self.requested_money > 0 else 0)
 
@@ -765,6 +782,7 @@ class TradeResponse(BaseModel):
     Note:
         Counter-offers should only be provided when declining. When accepting,
         counter_offer should be None.
+
     """
 
     action: PlayerActionType = Field(
@@ -801,6 +819,7 @@ class TradeResponse(BaseModel):
 
         Raises:
             ValueError: If action is not valid for trade responses.
+
         """
         valid_actions = {PlayerActionType.TRADE_ACCEPT, PlayerActionType.TRADE_DECLINE}
         if v not in valid_actions:
@@ -814,6 +833,7 @@ class TradeResponse(BaseModel):
 
         Returns:
             bool: True if declining with counter-offer, False otherwise.
+
         """
         return (
             self.action == PlayerActionType.TRADE_DECLINE
@@ -822,8 +842,8 @@ class TradeResponse(BaseModel):
 
 
 class PlayerAnalysis(BaseModel):
-    """Comprehensive strategic analysis model for player position and game
-    state evaluation.
+    """Comprehensive strategic analysis model for player position and game state
+    evaluation.
 
     This model provides detailed analysis of a player's current position in the game,
     including financial assessment, strategic planning, opportunity identification,
@@ -891,6 +911,7 @@ class PlayerAnalysis(BaseModel):
     Note:
         Analysis should be updated regularly as game state changes and new
         information becomes available through player actions and market dynamics.
+
     """
 
     financial_position: str = Field(
@@ -962,6 +983,7 @@ class PlayerAnalysis(BaseModel):
 
         Returns:
             str: Overall strategic position assessment.
+
         """
         threat_count = len(self.threats)
         opportunity_count = len(self.opportunities)
@@ -1038,6 +1060,7 @@ class GameEvent(BaseModel):
     Note:
         Events should be logged chronologically to maintain complete game history.
         The details field can contain any additional structured data relevant to the event.
+
     """
 
     event_type: str = Field(
@@ -1118,6 +1141,7 @@ class GameEvent(BaseModel):
 
         Returns:
             bool: True if event involves money change, False otherwise.
+
         """
         return self.money_change != 0
 
@@ -1128,6 +1152,7 @@ class GameEvent(BaseModel):
 
         Returns:
             bool: True if event involves a property, False otherwise.
+
         """
         return self.property_involved is not None
 
@@ -1176,6 +1201,7 @@ class DiceRoll(BaseModel):
     Note:
         Rolling doubles three times in a row sends the player to jail.
         Doubles allow extra turns but also carry strategic risks.
+
     """
 
     die1: int = Field(
@@ -1201,6 +1227,7 @@ class DiceRoll(BaseModel):
 
         Returns:
             int: Sum of both dice (2-12).
+
         """
         return self.die1 + self.die2
 
@@ -1211,6 +1238,7 @@ class DiceRoll(BaseModel):
 
         Returns:
             bool: True if both dice show the same value, False otherwise.
+
         """
         return self.die1 == self.die2
 
@@ -1221,6 +1249,7 @@ class DiceRoll(BaseModel):
 
         Returns:
             str: Descriptive text of the dice roll result.
+
         """
         if self.is_doubles:
             return f"Rolled doubles {self.die1}s (total: {self.total})"
@@ -1228,8 +1257,8 @@ class DiceRoll(BaseModel):
 
 
 class Property(BaseModel):
-    """Comprehensive model for Monopoly board properties with development and
-    ownership tracking.
+    """Comprehensive model for Monopoly board properties with development and ownership
+    tracking.
 
     This model represents individual properties on the Monopoly board, including
     streets, railroads, utilities, and special spaces. It tracks ownership,
@@ -1312,6 +1341,7 @@ class Property(BaseModel):
     Note:
         Properties can only be developed when the owner has a complete color group monopoly.
         Houses must be built evenly across all properties in a monopoly group.
+
     """
 
     name: str = Field(
@@ -1410,6 +1440,7 @@ class Property(BaseModel):
 
         Returns:
             int: Current rent amount based on houses/hotel and property type.
+
         """
         if self.mortgaged or not self.owner:
             return 0
@@ -1433,6 +1464,7 @@ class Property(BaseModel):
 
         Returns:
             bool: True if property has houses or hotel, False otherwise.
+
         """
         return self.houses > 0 or self.hotel
 
@@ -1443,6 +1475,7 @@ class Property(BaseModel):
 
         Returns:
             int: Total amount spent on houses and hotels.
+
         """
         cost = self.houses * self.house_cost
         if self.hotel:
@@ -1452,18 +1485,18 @@ class Property(BaseModel):
     @computed_field
     @property
     def total_investment(self) -> int:
-        """Calculate total investment in property including purchase and
-        development.
+        """Calculate total investment in property including purchase and development.
 
         Returns:
             int: Total amount invested in property.
+
         """
         return self.price + self.development_cost
 
 
 class Player(BaseModel):
-    r"""Comprehensive model for individual players in Monopoly with complete
-    state tracking.
+    r"""Comprehensive model for individual players in Monopoly with complete state
+    tracking.
 
     This model represents a player's complete state in the Monopoly game, including
     financial position, property ownership, location, jail status, and strategic
@@ -1534,6 +1567,7 @@ class Player(BaseModel):
     Note:
         Players are eliminated from the game when they declare bankruptcy.
         The game ends when only one player remains solvent.
+
     """
 
     name: str = Field(
@@ -1613,18 +1647,19 @@ class Player(BaseModel):
 
         Returns:
             bool: True if player has sufficient cash, False otherwise.
+
         """
         return self.money >= amount
 
     def net_worth(self, properties_dict: dict[str, Property]) -> int:
-        """Calculate player's total net worth including properties and
-        development.
+        """Calculate player's total net worth including properties and development.
 
         Args:
             properties_dict (Dict[str, Property]): Dictionary of all properties by name.
 
         Returns:
             int: Total net worth including cash, properties, and development.
+
         """
         total = self.money
         for prop_name in self.properties:
@@ -1644,6 +1679,7 @@ class Player(BaseModel):
 
         Returns:
             bool: True if player is not bankrupt, False otherwise.
+
         """
         return not self.bankrupt
 
@@ -1654,6 +1690,7 @@ class Player(BaseModel):
 
         Returns:
             int: Count of owned properties.
+
         """
         return len(self.properties)
 
@@ -1664,6 +1701,7 @@ class Player(BaseModel):
 
         Returns:
             float: Ratio of cash to total net worth (0.0 to 1.0).
+
         """
         if self.money == 0:
             return 0.0
@@ -1680,6 +1718,7 @@ class Player(BaseModel):
 
         Returns:
             str: Description of current jail status.
+
         """
         if not self.in_jail:
             return "Free"
