@@ -1,6 +1,6 @@
 """Module exports."""
 
-from .core_board import (
+from haive.games.core.game.core_board import (
     Board,
     Config,
     GridBoard,
@@ -22,7 +22,7 @@ from .core_board import (
     size,
     validate_dimensions,
 )
-from .core_game import (
+from haive.games.core.game.core_game import (
     Config,
     Game,
     GameConfiguration,
@@ -67,7 +67,7 @@ from .core_game import (
     update_game_state,
     validate_player_count,
 )
-from .core_position import (
+from haive.games.core.game.core_position import (
     Config,
     GridPosition,
     HexPosition,
@@ -88,7 +88,7 @@ from .core_position import (
     validate_coordinates,
     validate_cube_coords,
 )
-from .core_space import (
+from haive.games.core.game.core_space import (
     Config,
     GridSpace,
     HexSpace,
@@ -105,7 +105,13 @@ from .core_space import (
     remove_piece,
     set_property,
 )
-from .piece import GamePiece, GamePieceProtocol, assign_to_player, can_move_to, place_at
+from haive.games.core.game.piece import (
+    GamePiece,
+    GamePieceProtocol,
+    assign_to_player,
+    can_move_to,
+    place_at,
+)
 
 __all__ = [
     "Board",
