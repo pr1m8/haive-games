@@ -38,21 +38,17 @@ Note:
     break gameplay mechanics.
 
 """
-
 import uuid
 from typing import Any
-
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import Field, computed_field, model_validator
-
 from haive.games.battleship.engines import build_battleship_engines
 from haive.games.battleship.state import BattleshipState
 
-
 class BattleshipAgentConfig(AgentConfig):
-    r"""Comprehensive configuration for Battleship game agents with extensive
+    """Comprehensive configuration for Battleship game agents with extensive
     customization.
 
     This configuration class provides complete control over Battleship game mechanics,
@@ -87,7 +83,7 @@ class BattleshipAgentConfig(AgentConfig):
             Contains engines for ship placement, move generation, and analysis.
 
     Examples:
-        Standard competitive configuration::\n
+        Standard competitive configuration::\\n
 
             config = BattleshipAgentConfig(
                 name="tournament_battleship",
@@ -97,7 +93,7 @@ class BattleshipAgentConfig(AgentConfig):
                 visualize_board=False
             )
 
-        Training and debugging configuration::\n
+        Training and debugging configuration::\\n
 
             config = BattleshipAgentConfig(
                 name="training_battleship",
@@ -107,7 +103,7 @@ class BattleshipAgentConfig(AgentConfig):
                 player2_name="Reference_Agent"
             )
 
-        Performance-optimized configuration::\n
+        Performance-optimized configuration::\\n
 
             config = BattleshipAgentConfig(
                 name="speed_battleship",
@@ -127,66 +123,18 @@ class BattleshipAgentConfig(AgentConfig):
         unfair advantages.
 
     """
+    name: str = Field(default='battleship_agent', min_length=1, max_length=50, description='Unique identifier for the agent instance used for logging and debugging', examples=['battleship_agent', 'tournament_battleship', 'training_agent'])
+    state_schema: type = Field(default=BattleshipState, description='Pydantic model class for game state management and validation')
+    player1_name: str = Field(default='Player 1', min_length=1, max_length=30, description='Display name for the first player, auto-generated from engine config', examples=['Admiral_Nelson', 'Strategic_AI', 'Human_Player'])
+    player2_name: str = Field(default='Player 2', min_length=1, max_length=30, description='Display name for the second player, auto-generated from engine config', examples=['Captain_Ahab', 'Tactical_AI', 'Computer_Opponent'])
+    enable_analysis: bool = Field(default=True, description='Enable strategic analysis during gameplay for better decision-making', examples=[True, False])
+    visualize_board: bool = Field(default=True, description='Enable board visualization during gameplay for debugging and monitoring', examples=[True, False])
+    runnable_config: RunnableConfig = Field(default={'configurable': {'recursion_limit': 10000, 'thread_id': None}}, description='LangChain runnable configuration with execution parameters and thread management')
+    engines: dict[str, AugLLMConfig] = Field(default_factory=build_battleship_engines, description='LLM engine configurations for ship placement, move generation, and analysis')
 
-    name: str = Field(
-        default="battleship_agent",
-        min_length=1,
-        max_length=50,
-        description="Unique identifier for the agent instance used for logging and debugging",
-        examples=["battleship_agent", "tournament_battleship", "training_agent"],
-    )
-
-    state_schema: type = Field(
-        default=BattleshipState,
-        description="Pydantic model class for game state management and validation",
-    )
-
-    player1_name: str = Field(
-        default="Player 1",
-        min_length=1,
-        max_length=30,
-        description="Display name for the first player, auto-generated from engine config",
-        examples=["Admiral_Nelson", "Strategic_AI", "Human_Player"],
-    )
-
-    player2_name: str = Field(
-        default="Player 2",
-        min_length=1,
-        max_length=30,
-        description="Display name for the second player, auto-generated from engine config",
-        examples=["Captain_Ahab", "Tactical_AI", "Computer_Opponent"],
-    )
-
-    enable_analysis: bool = Field(
-        default=True,
-        description="Enable strategic analysis during gameplay for better decision-making",
-        examples=[True, False],
-    )
-
-    visualize_board: bool = Field(
-        default=True,
-        description="Enable board visualization during gameplay for debugging and monitoring",
-        examples=[True, False],
-    )
-
-    runnable_config: RunnableConfig = Field(
-        default={
-            "configurable": {
-                "recursion_limit": 10000,
-                "thread_id": None,  # Will be set to UUID in model_validator
-            },
-        },
-        description="LangChain runnable configuration with execution parameters and thread management",
-    )
-
-    engines: dict[str, AugLLMConfig] = Field(
-        default_factory=build_battleship_engines,
-        description="LLM engine configurations for ship placement, move generation, and analysis",
-    )
-
-    @model_validator(mode="after")
+    @model_validator(mode='after')
     def update_player_names_from_engines(self) -> Any:
-        r"""Update player names based on LLM provider and model from engines.
+        """Update player names based on LLM provider and model from engines.
 
         Automatically generates meaningful player names based on the configured
         LLM engines, creating identifiers that include provider and model information.
@@ -196,7 +144,7 @@ class BattleshipAgentConfig(AgentConfig):
             BattleshipAgentConfig: Self with updated player names and thread configuration.
 
         Examples:
-            Configuration with OpenAI engines::\n
+            Configuration with OpenAI engines::\\n
 
                 config = BattleshipAgentConfig()
                 # After validation, player names might be:
@@ -204,31 +152,23 @@ class BattleshipAgentConfig(AgentConfig):
                 # player2_name = "Player 2"
 
         """
-        # Set thread_id if not already set
-        if (
-            not self.runnable_config.get("configurable", {}).get("thread_id")
-            or self.runnable_config["configurable"]["thread_id"] is None
-        ):
-            self.runnable_config["configurable"]["thread_id"] = str(uuid.uuid4())
-
-        # Safely update player names based on engine configuration
+        if not self.runnable_config.get('configurable', {}).get('thread_id') or self.runnable_config['configurable']['thread_id'] is None:
+            self.runnable_config['configurable']['thread_id'] = str(uuid.uuid4())
         try:
-            if self.engines and self.player1_name == "Player 1":
-                player1_engine = self.engines.get("player1_move")
-                if player1_engine and hasattr(player1_engine, "llm_config"):
+            if self.engines and self.player1_name == 'Player 1':
+                player1_engine = self.engines.get('player1_move')
+                if player1_engine and hasattr(player1_engine, 'llm_config'):
                     llm_config = player1_engine.llm_config
-                    if hasattr(llm_config, "model"):
-                        model = getattr(llm_config, "model", "unknown")
-                        self.player1_name = f"azure-{model}"
+                    if hasattr(llm_config, 'model'):
+                        model = getattr(llm_config, 'model', 'unknown')
+                        self.player1_name = f'azure-{model}'
         except Exception:
-            # If there's any issue accessing engine config, keep default names
             pass
-
         return self
 
     @classmethod
-    def competitive(cls) -> "BattleshipAgentConfig":
-        r"""Create a configuration optimized for competitive gameplay.
+    def competitive(cls) -> 'BattleshipAgentConfig':
+        """Create a configuration optimized for competitive gameplay.
 
         Generates a configuration suitable for tournaments and competitive matches,
         with analysis enabled but visualization disabled for performance.
@@ -237,7 +177,7 @@ class BattleshipAgentConfig(AgentConfig):
             BattleshipAgentConfig: Configuration optimized for competitive play.
 
         Examples:
-            Creating a tournament-ready configuration::\n
+            Creating a tournament-ready configuration::\\n
 
                 config = BattleshipAgentConfig.competitive()
                 agent = BattleshipAgent(config)
@@ -249,21 +189,11 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Tournament-appropriate naming
 
         """
-        return cls(
-            name="competitive_battleship",
-            enable_analysis=True,
-            visualize_board=False,
-            runnable_config={
-                "configurable": {
-                    "recursion_limit": 8000,
-                    "thread_id": f"competitive_{str(uuid.uuid4())[:8]}",
-                },
-            },
-        )
+        return cls(name='competitive_battleship', enable_analysis=True, visualize_board=False, runnable_config={'configurable': {'recursion_limit': 8000, 'thread_id': f'competitive_{str(uuid.uuid4())[:8]}'}})
 
     @classmethod
-    def training(cls) -> "BattleshipAgentConfig":
-        r"""Create a configuration optimized for training and development.
+    def training(cls) -> 'BattleshipAgentConfig':
+        """Create a configuration optimized for training and development.
 
         Generates a configuration suitable for agent training, debugging, and
         development work, with full analysis and visualization enabled.
@@ -272,7 +202,7 @@ class BattleshipAgentConfig(AgentConfig):
             BattleshipAgentConfig: Configuration optimized for training scenarios.
 
         Examples:
-            Creating a training configuration::\n
+            Creating a training configuration::\\n
 
                 config = BattleshipAgentConfig.training()
                 agent = BattleshipAgent(config)
@@ -284,21 +214,11 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Training-appropriate naming
 
         """
-        return cls(
-            name="training_battleship",
-            enable_analysis=True,
-            visualize_board=True,
-            runnable_config={
-                "configurable": {
-                    "recursion_limit": 15000,
-                    "thread_id": f"training_{str(uuid.uuid4())[:8]}",
-                },
-            },
-        )
+        return cls(name='training_battleship', enable_analysis=True, visualize_board=True, runnable_config={'configurable': {'recursion_limit': 15000, 'thread_id': f'training_{str(uuid.uuid4())[:8]}'}})
 
     @classmethod
-    def performance(cls) -> "BattleshipAgentConfig":
-        r"""Create a configuration optimized for maximum performance.
+    def performance(cls) -> 'BattleshipAgentConfig':
+        """Create a configuration optimized for maximum performance.
 
         Generates a configuration suitable for high-speed gameplay and benchmarking,
         with analysis and visualization disabled for optimal performance.
@@ -307,7 +227,7 @@ class BattleshipAgentConfig(AgentConfig):
             BattleshipAgentConfig: Configuration optimized for performance.
 
         Examples:
-            Creating a performance-optimized configuration::\n
+            Creating a performance-optimized configuration::\\n
 
                 config = BattleshipAgentConfig.performance()
                 agent = BattleshipAgent(config)
@@ -319,28 +239,18 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Performance-appropriate naming
 
         """
-        return cls(
-            name="performance_battleship",
-            enable_analysis=False,
-            visualize_board=False,
-            runnable_config={
-                "configurable": {
-                    "recursion_limit": 5000,
-                    "thread_id": f"performance_{str(uuid.uuid4())[:8]}",
-                },
-            },
-        )
+        return cls(name='performance_battleship', enable_analysis=False, visualize_board=False, runnable_config={'configurable': {'recursion_limit': 5000, 'thread_id': f'performance_{str(uuid.uuid4())[:8]}'}})
 
     @computed_field
     @property
     def configuration_summary(self) -> dict[str, str]:
-        r"""Get a summary of the current configuration settings.
+        """Get a summary of the current configuration settings.
 
         Returns:
             Dict[str, str]: Summary of key configuration parameters.
 
         Examples:
-            Checking configuration summary::\n
+            Checking configuration summary::\\n
 
                 config = BattleshipAgentConfig.competitive()
                 summary = config.configuration_summary
@@ -348,30 +258,9 @@ class BattleshipAgentConfig(AgentConfig):
                 print(f"Analysis: {summary['analysis_enabled']}")
 
         """
-        return {
-            "name": self.name,
-            "analysis_enabled": "Yes" if self.enable_analysis else "No",
-            "visualization_enabled": "Yes" if self.visualize_board else "No",
-            "recursion_limit": str(
-                self.runnable_config.get("configurable", {}).get(
-                    "recursion_limit",
-                    "Unknown",
-                ),
-            ),
-            "thread_id": (
-                self.runnable_config.get("configurable", {}).get(
-                    "thread_id",
-                    "Not set",
-                )[:8]
-                + "..."
-                if self.runnable_config.get("configurable", {}).get("thread_id")
-                else "Not set"
-            ),
-            "engine_count": str(len(self.engines)),
-        }
+        return {'name': self.name, 'analysis_enabled': 'Yes' if self.enable_analysis else 'No', 'visualization_enabled': 'Yes' if self.visualize_board else 'No', 'recursion_limit': str(self.runnable_config.get('configurable', {}).get('recursion_limit', 'Unknown')), 'thread_id': self.runnable_config.get('configurable', {}).get('thread_id', 'Not set')[:8] + '...' if self.runnable_config.get('configurable', {}).get('thread_id') else 'Not set', 'engine_count': str(len(self.engines))}
 
     class Config:
         """Pydantic configuration for flexible validation and type handling."""
-
         arbitrary_types_allowed = True
         validate_assignment = True

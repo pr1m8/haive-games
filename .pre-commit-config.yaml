@@ -1,20 +1,19 @@
+---
 default_language_version:
   python: python3.12
-
 repos:
   # Use ruff for both linting and formatting
   - repo: local
     hooks:
       - id: ruff-check
-        name: "Ruff Linter"
+        name: Ruff Linter
         entry: ruff check --fix
         language: system
         types: [python]
         stages: [pre-commit]
         pass_filenames: true
-
       - id: ruff-format
-        name: "Ruff Formatter"
+        name: Ruff Formatter
         entry: ruff format
         language: system
         types: [python]
@@ -25,7 +24,7 @@ repos:
   - repo: local
     hooks:
       - id: mypy
-        name: "MyPy Type Checker"
+        name: MyPy Type Checker
         entry: mypy
         language: system
         types: [python]

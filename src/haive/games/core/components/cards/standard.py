@@ -4,7 +4,7 @@ import functools
 from enum import Enum
 from typing import ClassVar
 
-from pydantic import validator
+from pydantic import field_validator
 
 from haive.games.core.components.models import Card, Deck
 
@@ -63,7 +63,8 @@ class StandardCard(Card):
         StandardRank.KING: 13,
     }
 
-    @validator("value", pre=True, always=True)
+    @classmethod
+    @field_validator("value", pre=True, always=True)
     def set_value(cls, v, values):
         """Auto-set value based on rank."""
         if v != 0:
@@ -75,7 +76,8 @@ class StandardCard(Card):
 
         return cls._rank_values.get(rank, 0)
 
-    @validator("is_face_card", pre=True, always=True)
+    @classmethod
+    @field_validator("is_face_card", pre=True, always=True)
     def set_face_card(cls, v, values):
         """Determine if this is a face card."""
         if "rank" not in values:
@@ -84,7 +86,8 @@ class StandardCard(Card):
         rank = values["rank"]
         return rank in [StandardRank.JACK, StandardRank.QUEEN, StandardRank.KING]
 
-    @validator("color", pre=True, always=True)
+    @classmethod
+    @field_validator("color", pre=True, always=True)
     def set_color(cls, v, values):
         """Set card color based on suit."""
         if v != "black":
@@ -98,7 +101,8 @@ class StandardCard(Card):
             return "red"
         return "black"
 
-    @validator("name", pre=True, always=True)
+    @classmethod
+    @field_validator("name", pre=True, always=True)
     def set_name(cls, v, values):
         """Set default name based on rank and suit."""
         if v:
