@@ -9,7 +9,7 @@ This module provides utility functions for the monopoly game, including:
 """
 
 import random
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from haive.games.monopoly.models import (
     DiceRoll,
@@ -18,7 +18,9 @@ from haive.games.monopoly.models import (
     PropertyColor,
     PropertyType,
 )
-from haive.games.monopoly.state import MonopolyState
+
+if TYPE_CHECKING:
+    from haive.games.monopoly.state import MonopolyState
 
 # Board positions and property definitions
 BOARD_PROPERTIES = {
@@ -451,7 +453,7 @@ def get_properties_by_color(color: PropertyColor) -> list[str]:
 
 
 def calculate_rent(
-    property: Property, state: MonopolyState, dice_roll: int | None = None
+    property: Property, state: "MonopolyState", dice_roll: int | None = None
 ) -> int:
     """Calculate rent for a property."""
     if not property.owner or property.mortgaged:
@@ -518,7 +520,9 @@ def shuffle_cards() -> tuple[list[str], list[str]]:
     return chance, community_chest
 
 
-def handle_special_position(position: int, player: Player, state: MonopolyState) -> str:
+def handle_special_position(
+    position: int, player: Player, state: "MonopolyState"
+) -> str:
     """Handle special board positions like GO, Jail, etc."""
     position_data = get_property_at_position(position)
     if not position_data:
@@ -546,7 +550,7 @@ def handle_special_position(position: int, player: Player, state: MonopolyState)
     return "no_action"
 
 
-def check_game_end(state: MonopolyState) -> tuple[bool, str | None]:
+def check_game_end(state: "MonopolyState") -> tuple[bool, str | None]:
     """Check if the game should end."""
     active_players = state.active_players
 
@@ -569,7 +573,7 @@ def get_building_cost(
 
 
 def can_trade_properties(
-    prop1: Property, prop2: Property, state: MonopolyState
+    prop1: Property, prop2: Property, state: "MonopolyState"
 ) -> bool:
     """Check if two properties can be traded."""
     # Can't trade mortgaged properties

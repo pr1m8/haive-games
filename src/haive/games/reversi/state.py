@@ -5,13 +5,15 @@ storage, and rendering utilities for the Reversi agent system.
 
 """
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import Field, field_validator
 
 from haive.games.framework.base.state import GameState
 from haive.games.reversi.models import ReversiMove
-from haive.games.reversi.state_manager import ReversiStateManager
+
+if TYPE_CHECKING:
+    from haive.games.reversi.state_manager import ReversiStateManager
 
 
 class ReversiState(GameState):
@@ -151,6 +153,8 @@ class ReversiState(GameState):
             ReversiState: Initialized state.
 
         """
+
+        from haive.games.reversi.state_manager import ReversiStateManager
 
         return ReversiStateManager.initialize(
             first_player=first_player, player_B=player_B, player_W=player_W
