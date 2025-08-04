@@ -38,31 +38,36 @@ Example:
 from haive.games.reversi.agent import ReversiAgent
 from haive.games.reversi.state_manager import ReversiStateManager
 
-# Quick demo for testing - avoid full game run
-print("Running Reversi quick demo...")
 
-try:
-    # Initialize the agent
-    agent = ReversiAgent()
-    print("✅ Reversi agent created successfully")
+def run_reversi_demo():
+    """Run a quick Reversi demo - only when called directly."""
+    print("Running Reversi quick demo...")
 
-    # Test state initialization
+    try:
+        # Initialize the agent
+        agent = ReversiAgent()
+        print("✅ Reversi agent created successfully")
 
-    initial_state = ReversiStateManager.initialize()
-    print(f"✅ Initial state created: {initial_state.turn} player's turn")
-    print(f"Board size: {len(initial_state.board)}x{len(initial_state.board[0])}")
+        # Test state initialization
+        initial_state = ReversiStateManager.initialize()
+        print(f"✅ Initial state created: {initial_state.turn} player's turn")
+        print(f"Board size: {len(initial_state.board)}x{len(initial_state.board[0])}")
 
-    # Test legal moves
-    legal_moves = ReversiStateManager.get_legal_moves(initial_state)
-    print(f"✅ Found {len(legal_moves)} legal moves for first player")
+        # Test legal moves
+        legal_moves = ReversiStateManager.get_legal_moves(initial_state)
+        print(f"✅ Found {len(legal_moves)} legal moves for first player")
 
-    if legal_moves:
-        move = legal_moves[0]
-        print(f"Example move: ({move.row}, {move.col})")
+        if legal_moves:
+            move = legal_moves[0]
+            print(f"Example move: ({move.row}, {move.col})")
 
-    print("✅ Reversi example completed successfully")
+        print("✅ Reversi example completed successfully")
 
-except Exception as e:
-    print(f"❌ Error in reversi demo: {e}")
-    # Don't fail completely for testing purposes
-    print("✅ Reversi example completed (with errors)")
+    except Exception as e:
+        print(f"❌ Error in reversi demo: {e}")
+        # Don't fail completely for testing purposes
+        print("✅ Reversi example completed (with errors)")
+
+
+if __name__ == "__main__":
+    run_reversi_demo()
