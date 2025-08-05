@@ -8,7 +8,7 @@ game.
 import random
 from dataclasses import dataclass, field
 
-from haive.core.engine.aug_llm import AugLLMEngine
+from haive.core.engine.aug_llm import AugLLMConfig
 
 from haive.games.clue.engines import clue_engines
 from haive.games.clue.models import (
@@ -30,8 +30,8 @@ class CluePlayer:
 
     name: str
     cards: list[ClueCard] = field(default_factory=list)
-    player_engine: AugLLMEngine | None = None
-    analysis_engine: AugLLMEngine | None = None
+    player_engine: AugLLMConfig | None = None
+    analysis_engine: AugLLMConfig | None = None
 
 
 @dataclass
@@ -100,8 +100,8 @@ class ClueGameController:
             player = CluePlayer(
                 name=name,
                 cards=[],
-                player_engine=AugLLMEngine(clue_engines[f"{engine_prefix}_player"]),
-                analysis_engine=AugLLMEngine(clue_engines[f"{engine_prefix}_analyzer"]),
+                player_engine=AugLLMConfig(clue_engines[f"{engine_prefix}_player"]),
+                analysis_engine=AugLLMConfig(clue_engines[f"{engine_prefix}_analyzer"]),
             )
             players.append(player)
 

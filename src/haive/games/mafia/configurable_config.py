@@ -10,7 +10,7 @@ from typing import Any
 from pydantic import Field
 
 from haive.games.core.agent.player_agent import PlayerAgentConfig
-from haive.games.mafia.config import MafiaConfig
+from haive.games.mafia.config import MafiaAgentConfig
 from haive.games.mafia.generic_engines import (
     create_generic_mafia_config_from_example,
     create_generic_mafia_engines,
@@ -18,7 +18,7 @@ from haive.games.mafia.generic_engines import (
 )
 
 
-class ConfigurableMafiaConfig(MafiaConfig):
+class ConfigurableMafiaConfig(MafiaAgentConfig):
     """Configurable Mafia configuration with dynamic LLM selection.
 
     This configuration allows users to specify different LLMs for different

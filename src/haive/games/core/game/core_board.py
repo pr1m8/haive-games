@@ -12,10 +12,11 @@ from abc import abstractmethod
 from collections.abc import Callable
 from typing import Any, Generic, TypeVar
 
-from game.core.piece import GamePiece
-from game.core.position import GridPosition, Position
-from game.core.space import GridSpace, Space
 from pydantic import BaseModel, Field, computed_field
+
+from haive.games.core.game.core.piece import GamePiece
+from haive.games.core.game.core.position import GridPosition, Position
+from haive.games.core.game.core.space import GridSpace, Space
 
 # Type variables for generics
 S = TypeVar("S", bound=Space)

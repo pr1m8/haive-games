@@ -22,7 +22,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
-from haive.games.mafia.models import MafiaAnalysis
+# from haive.games.mafia.models import MafiaAnalysis  # TODO: Define this model
 
 
 def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
@@ -74,7 +74,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
                     ),
                 ]
             ),
-            structured_output_model=MafiaAnalysis,
+            # structured_output_model=MafiaAnalysis,  # TODO: Define this model
         )
 
     if analyzer_type == "psychology":
@@ -103,7 +103,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
                     ),
                 ]
             ),
-            structured_output_model=MafiaAnalysis,
+            # structured_output_model=MafiaAnalysis,  # TODO: Define this model
         )
 
     if analyzer_type == "strategy":
@@ -134,7 +134,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
                     ),
                 ]
             ),
-            structured_output_model=MafiaAnalysis,
+            # structured_output_model=MafiaAnalysis,  # TODO: Define this model
         )
 
     if analyzer_type == "voting":
@@ -162,7 +162,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
                     ),
                 ]
             ),
-            structured_output_model=MafiaAnalysis,
+            # structured_output_model=MafiaAnalysis,  # TODO: Define this model
         )
 
     raise TypeError(f"Unknown analyzer type: {analyzer_type}")
