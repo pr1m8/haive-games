@@ -31,7 +31,6 @@ from haive.games.monopoly.models import (
     PropertyDecision,
     TradeResponse,
 )
-from haive.games.monopoly.player_agent import MonopolyPlayerAgent
 from haive.games.monopoly.state import MonopolyState
 from haive.games.monopoly.utils import (
     create_board,
