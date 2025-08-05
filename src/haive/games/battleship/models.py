@@ -31,8 +31,11 @@ Examples:
         print(f"Attack result: {outcome}")
 
 """
+
 from enum import Enum
+
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
+
 
 class ShipType(str, Enum):
     """Naval ship types in Battleship with varying sizes and strategic roles.
@@ -71,12 +74,22 @@ class ShipType(str, Enum):
         and target priority for AI decision-making.
 
     """
-    CARRIER = 'Carrier'
-    BATTLESHIP = 'Battleship'
-    CRUISER = 'Cruiser'
-    SUBMARINE = 'Submarine'
-    DESTROYER = 'Destroyer'
-SHIP_SIZES: dict[ShipType, int] = {ShipType.CARRIER: 5, ShipType.BATTLESHIP: 4, ShipType.CRUISER: 3, ShipType.SUBMARINE: 3, ShipType.DESTROYER: 2}
+
+    CARRIER = "Carrier"
+    BATTLESHIP = "Battleship"
+    CRUISER = "Cruiser"
+    SUBMARINE = "Submarine"
+    DESTROYER = "Destroyer"
+
+
+SHIP_SIZES: dict[ShipType, int] = {
+    ShipType.CARRIER: 5,
+    ShipType.BATTLESHIP: 4,
+    ShipType.CRUISER: 3,
+    ShipType.SUBMARINE: 3,
+    ShipType.DESTROYER: 2,
+}
+
 
 class Coordinates(BaseModel):
     """Represents a coordinate position on the Battleship game board.
@@ -120,8 +133,21 @@ class Coordinates(BaseModel):
         this coordinate system for human-readable game interfaces.
 
     """
-    row: int = Field(..., ge=0, le=9, description='Row index on the game board (0-9, top to bottom)', examples=[0, 3, 5, 7, 9])
-    col: int = Field(..., ge=0, le=9, description='Column index on the game board (0-9, left to right)', examples=[0, 2, 4, 6, 9])
+
+    row: int = Field(
+        ...,
+        ge=0,
+        le=9,
+        description="Row index on the game board (0-9, top to bottom)",
+        examples=[0, 3, 5, 7, 9],
+    )
+    col: int = Field(
+        ...,
+        ge=0,
+        le=9,
+        description="Column index on the game board (0-9, left to right)",
+        examples=[0, 2, 4, 6, 9],
+    )
 
     def to_tuple(self) -> tuple[int, int]:
         """Convert coordinates to tuple representation.
@@ -150,7 +176,7 @@ class Coordinates(BaseModel):
             "(3, 5)"
 
         """
-        return f'({self.row}, {self.col})'
+        return f"({self.row}, {self.col})"
 
     def __hash__(self) -> int:
         """Hash implementation for set operations and dictionary keys.
@@ -204,6 +230,7 @@ class Coordinates(BaseModel):
 
         """
         return self.row in [0, 9] or self.col in [0, 9]
+
 
 class Ship(BaseModel):
     """Represents a naval vessel on the Battleship game board.
@@ -259,12 +286,42 @@ class Ship(BaseModel):
         and be contiguous. Size must match the ship type's expected size.
 
     """
-    ship_type: ShipType = Field(..., description='The class/type of naval vessel', examples=[ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.DESTROYER])
-    size: int = Field(..., ge=2, le=5, description='Number of grid squares occupied by the ship (2-5)', examples=[2, 3, 4, 5])
-    coordinates: list[Coordinates] = Field(default_factory=list, min_length=2, max_length=5, description='All board positions occupied by this ship', examples=[[Coordinates(row=3, col=4), Coordinates(row=3, col=5)], [Coordinates(row=2, col=1), Coordinates(row=3, col=1), Coordinates(row=4, col=1)]])
-    hits: int = Field(default=0, ge=0, le=5, description='Number of successful attacks against this ship (0-5)', examples=[0, 1, 2, 3, 4])
 
-    @field_validator('size')
+    ship_type: ShipType = Field(
+        ...,
+        description="The class/type of naval vessel",
+        examples=[ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.DESTROYER],
+    )
+    size: int = Field(
+        ...,
+        ge=2,
+        le=5,
+        description="Number of grid squares occupied by the ship (2-5)",
+        examples=[2, 3, 4, 5],
+    )
+    coordinates: list[Coordinates] = Field(
+        default_factory=list,
+        min_length=2,
+        max_length=5,
+        description="All board positions occupied by this ship",
+        examples=[
+            [Coordinates(row=3, col=4), Coordinates(row=3, col=5)],
+            [
+                Coordinates(row=2, col=1),
+                Coordinates(row=3, col=1),
+                Coordinates(row=4, col=1),
+            ],
+        ],
+    )
+    hits: int = Field(
+        default=0,
+        ge=0,
+        le=5,
+        description="Number of successful attacks against this ship (0-5)",
+        examples=[0, 1, 2, 3, 4],
+    )
+
+    @field_validator("size")
     @classmethod
     def validate_size_matches_type(cls, v: int, info) -> int:
         """Validate ship size matches the expected size for its type.
@@ -281,11 +338,11 @@ class Ship(BaseModel):
 
         """
         if not 2 <= v <= 5:
-            raise ValueError('Ship size must be between 2 and 5')
+            raise ValueError("Ship size must be between 2 and 5")
         return v
 
-    @model_validator(mode='after')
-    def validate_ship_consistency(self) -> 'Ship':
+    @model_validator(mode="after")
+    def validate_ship_consistency(self) -> "Ship":
         """Validate ship size, coordinates, and type consistency.
 
         Returns:
@@ -297,9 +354,13 @@ class Ship(BaseModel):
         """
         expected_size = SHIP_SIZES.get(self.ship_type)
         if expected_size and self.size != expected_size:
-            raise ValueError(f'{self.ship_type} must have size {expected_size}, got {self.size}')
+            raise ValueError(
+                f"{self.ship_type} must have size {expected_size}, got {self.size}"
+            )
         if len(self.coordinates) != self.size:
-            raise ValueError(f'Ship has {len(self.coordinates)} coordinates but size is {self.size}')
+            raise ValueError(
+                f"Ship has {len(self.coordinates)} coordinates but size is {self.size}"
+            )
         if len(self.coordinates) >= 2:
             rows = [c.row for c in self.coordinates]
             cols = [c.col for c in self.coordinates]
@@ -307,14 +368,16 @@ class Ship(BaseModel):
                 sorted_cols = sorted(cols)
                 expected_cols = list(range(min(cols), max(cols) + 1))
                 if sorted_cols != expected_cols:
-                    raise ValueError('Horizontal ship coordinates must be contiguous')
+                    raise ValueError("Horizontal ship coordinates must be contiguous")
             elif len(set(cols)) == 1:
                 sorted_rows = sorted(rows)
                 expected_rows = list(range(min(rows), max(rows) + 1))
                 if sorted_rows != expected_rows:
-                    raise ValueError('Vertical ship coordinates must be contiguous')
+                    raise ValueError("Vertical ship coordinates must be contiguous")
             else:
-                raise ValueError('Ship coordinates must form a horizontal or vertical line')
+                raise ValueError(
+                    "Ship coordinates must form a horizontal or vertical line"
+                )
         return self
 
     @computed_field
@@ -365,11 +428,11 @@ class Ship(BaseModel):
 
         """
         if len(self.coordinates) <= 1:
-            return 'single'
+            return "single"
         rows = [c.row for c in self.coordinates]
         if len(set(rows)) == 1:
-            return 'horizontal'
-        return 'vertical'
+            return "horizontal"
+        return "vertical"
 
     def get_occupied_positions(self) -> list[tuple[int, int]]:
         """Get all board positions occupied by this ship.
@@ -398,7 +461,8 @@ class Ship(BaseModel):
             "Destroyer (2): ['(3, 4)', '(3, 5)']"
 
         """
-        return f'{self.ship_type} ({self.size}): {[str(c) for c in self.coordinates]}'
+        return f"{self.ship_type} ({self.size}): {[str(c) for c in self.coordinates]}"
+
 
 class ShipPlacement(BaseModel):
     """Represents a ship placement command for board setup.
@@ -453,12 +517,34 @@ class ShipPlacement(BaseModel):
         board boundaries, and maintain proper size and orientation.
 
     """
-    ship_type: ShipType = Field(..., description='The type of naval vessel being placed', examples=[ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER])
-    coordinates: list[Coordinates] = Field(..., min_length=2, max_length=5, description='All board positions the ship will occupy', examples=[[Coordinates(row=3, col=4), Coordinates(row=3, col=5)], [Coordinates(row=2, col=1), Coordinates(row=3, col=1)]])
 
-    @field_validator('coordinates')
+    ship_type: ShipType = Field(
+        ...,
+        description="The type of naval vessel being placed",
+        examples=[
+            ShipType.CARRIER,
+            ShipType.BATTLESHIP,
+            ShipType.CRUISER,
+            ShipType.SUBMARINE,
+            ShipType.DESTROYER,
+        ],
+    )
+    coordinates: list[Coordinates] = Field(
+        ...,
+        min_length=2,
+        max_length=5,
+        description="All board positions the ship will occupy",
+        examples=[
+            [Coordinates(row=3, col=4), Coordinates(row=3, col=5)],
+            [Coordinates(row=2, col=1), Coordinates(row=3, col=1)],
+        ],
+    )
+
+    @field_validator("coordinates")
     @classmethod
-    def validate_coordinates(cls, coords: list[Coordinates | dict]) -> list[Coordinates]:
+    def validate_coordinates(
+        cls, coords: list[Coordinates | dict]
+    ) -> list[Coordinates]:
         """Validate and normalize coordinate list.
 
         Args:
@@ -472,7 +558,7 @@ class ShipPlacement(BaseModel):
 
         """
         if not isinstance(coords, list):
-            raise ValueError('Coordinates must be a list')
+            raise ValueError("Coordinates must be a list")
         processed_coords = []
         for c in coords:
             if isinstance(c, Coordinates):
@@ -480,11 +566,11 @@ class ShipPlacement(BaseModel):
             elif isinstance(c, dict):
                 processed_coords.append(Coordinates(**c))
             else:
-                raise ValueError(f'Invalid coordinate format: {c}')
+                raise ValueError(f"Invalid coordinate format: {c}")
         return processed_coords
 
-    @model_validator(mode='after')
-    def validate_placement_rules(self) -> 'ShipPlacement':
+    @model_validator(mode="after")
+    def validate_placement_rules(self) -> "ShipPlacement":
         """Validate ship placement follows game rules.
 
         Returns:
@@ -496,7 +582,9 @@ class ShipPlacement(BaseModel):
         """
         expected_size = SHIP_SIZES[self.ship_type]
         if len(self.coordinates) != expected_size:
-            raise ValueError(f'{self.ship_type} requires {expected_size} coordinates, got {len(self.coordinates)}')
+            raise ValueError(
+                f"{self.ship_type} requires {expected_size} coordinates, got {len(self.coordinates)}"
+            )
         if len(self.coordinates) >= 2:
             rows = [c.row for c in self.coordinates]
             cols = [c.col for c in self.coordinates]
@@ -504,14 +592,14 @@ class ShipPlacement(BaseModel):
                 sorted_cols = sorted(cols)
                 expected_cols = list(range(min(cols), max(cols) + 1))
                 if sorted_cols != expected_cols:
-                    raise ValueError('Ship coordinates must be contiguous horizontally')
+                    raise ValueError("Ship coordinates must be contiguous horizontally")
             elif len(set(cols)) == 1:
                 sorted_rows = sorted(rows)
                 expected_rows = list(range(min(rows), max(rows) + 1))
                 if sorted_rows != expected_rows:
-                    raise ValueError('Ship coordinates must be contiguous vertically')
+                    raise ValueError("Ship coordinates must be contiguous vertically")
             else:
-                raise ValueError('Ship must be placed horizontally or vertically')
+                raise ValueError("Ship must be placed horizontally or vertically")
         return self
 
     def __str__(self) -> str:
@@ -527,7 +615,8 @@ class ShipPlacement(BaseModel):
             "Destroyer at ['(3, 4)', '(3, 5)']"
 
         """
-        return f'{self.ship_type} at {[str(c) for c in self.coordinates]}'
+        return f"{self.ship_type} at {[str(c) for c in self.coordinates]}"
+
 
 class ShipPlacementWrapper(BaseModel):
     """Wrapper for complete fleet placement returned by LLM agents.
@@ -568,10 +657,59 @@ class ShipPlacementWrapper(BaseModel):
         in the fleet, preventing duplicate or missing ships.
 
     """
-    placements: list[ShipPlacement] = Field(..., min_length=5, max_length=5, description='Complete list of ship placements for one fleet (exactly 5 ships)', examples=[[ShipPlacement(ship_type=ShipType.CARRIER, coordinates=[Coordinates(row=0, col=0), Coordinates(row=0, col=1), Coordinates(row=0, col=2), Coordinates(row=0, col=3), Coordinates(row=0, col=4)]), ShipPlacement(ship_type=ShipType.BATTLESHIP, coordinates=[Coordinates(row=1, col=0), Coordinates(row=1, col=1), Coordinates(row=1, col=2), Coordinates(row=1, col=3)]), ShipPlacement(ship_type=ShipType.CRUISER, coordinates=[Coordinates(row=2, col=0), Coordinates(row=2, col=1), Coordinates(row=2, col=2)]), ShipPlacement(ship_type=ShipType.SUBMARINE, coordinates=[Coordinates(row=3, col=0), Coordinates(row=3, col=1), Coordinates(row=3, col=2)]), ShipPlacement(ship_type=ShipType.DESTROYER, coordinates=[Coordinates(row=4, col=0), Coordinates(row=4, col=1)])]])
 
-    @model_validator(mode='after')
-    def validate_complete_fleet(self) -> 'ShipPlacementWrapper':
+    placements: list[ShipPlacement] = Field(
+        ...,
+        min_length=5,
+        max_length=5,
+        description="Complete list of ship placements for one fleet (exactly 5 ships)",
+        examples=[
+            [
+                ShipPlacement(
+                    ship_type=ShipType.CARRIER,
+                    coordinates=[
+                        Coordinates(row=0, col=0),
+                        Coordinates(row=0, col=1),
+                        Coordinates(row=0, col=2),
+                        Coordinates(row=0, col=3),
+                        Coordinates(row=0, col=4),
+                    ],
+                ),
+                ShipPlacement(
+                    ship_type=ShipType.BATTLESHIP,
+                    coordinates=[
+                        Coordinates(row=1, col=0),
+                        Coordinates(row=1, col=1),
+                        Coordinates(row=1, col=2),
+                        Coordinates(row=1, col=3),
+                    ],
+                ),
+                ShipPlacement(
+                    ship_type=ShipType.CRUISER,
+                    coordinates=[
+                        Coordinates(row=2, col=0),
+                        Coordinates(row=2, col=1),
+                        Coordinates(row=2, col=2),
+                    ],
+                ),
+                ShipPlacement(
+                    ship_type=ShipType.SUBMARINE,
+                    coordinates=[
+                        Coordinates(row=3, col=0),
+                        Coordinates(row=3, col=1),
+                        Coordinates(row=3, col=2),
+                    ],
+                ),
+                ShipPlacement(
+                    ship_type=ShipType.DESTROYER,
+                    coordinates=[Coordinates(row=4, col=0), Coordinates(row=4, col=1)],
+                ),
+            ]
+        ],
+    )
+
+    @model_validator(mode="after")
+    def validate_complete_fleet(self) -> "ShipPlacementWrapper":
         """Validate fleet contains exactly one ship of each type.
 
         Returns:
@@ -583,25 +721,32 @@ class ShipPlacementWrapper(BaseModel):
         """
         placements = self.placements
         if not isinstance(placements, list):
-            raise ValueError('Placements must be a list')
+            raise ValueError("Placements must be a list")
         ship_types = [p.ship_type for p in placements]
         all_ship_types = list(ShipType)
         if len(ship_types) != len(all_ship_types):
-            raise ValueError(f'Fleet must contain exactly {len(all_ship_types)} ships, got {len(ship_types)}')
+            raise ValueError(
+                f"Fleet must contain exactly {len(all_ship_types)} ships, got {len(ship_types)}"
+            )
         missing_types = set(all_ship_types) - set(ship_types)
         if missing_types:
-            raise ValueError(f'Missing ship types: {', '.join((t.value for t in missing_types))}')
+            raise ValueError(
+                f"Missing ship types: {', '.join((t.value for t in missing_types))}"
+            )
         duplicates = [t for t in ship_types if ship_types.count(t) > 1]
         if duplicates:
-            raise ValueError(f'Duplicate ship types: {', '.join((t.value for t in set(duplicates)))}')
+            raise ValueError(
+                f"Duplicate ship types: {', '.join((t.value for t in set(duplicates)))}"
+            )
         all_coords = set()
         for placement in placements:
             placement_coords = {c.to_tuple() for c in placement.coordinates}
             overlap = all_coords.intersection(placement_coords)
             if overlap:
-                raise ValueError(f'Ships overlap at coordinates: {overlap}')
+                raise ValueError(f"Ships overlap at coordinates: {overlap}")
             all_coords.update(placement_coords)
         return self
+
 
 class MoveResult(str, Enum):
     """Possible outcomes of an attack in Battleship.
@@ -642,10 +787,12 @@ class MoveResult(str, Enum):
         focused searching and sunk ships enabling area elimination.
 
     """
-    HIT = 'hit'
-    MISS = 'miss'
-    SUNK = 'sunk'
-    INVALID = 'invalid'
+
+    HIT = "hit"
+    MISS = "miss"
+    SUNK = "sunk"
+    INVALID = "invalid"
+
 
 class MoveCommand(BaseModel):
     """Represents an attack command targeting specific coordinates.
@@ -685,8 +832,21 @@ class MoveCommand(BaseModel):
         game board but don't check for previous attacks (handled by board state).
 
     """
-    row: int = Field(..., ge=0, le=9, description='Target row index on the game board (0-9)', examples=[0, 3, 5, 7, 9])
-    col: int = Field(..., ge=0, le=9, description='Target column index on the game board (0-9)', examples=[0, 2, 4, 6, 9])
+
+    row: int = Field(
+        ...,
+        ge=0,
+        le=9,
+        description="Target row index on the game board (0-9)",
+        examples=[0, 3, 5, 7, 9],
+    )
+    col: int = Field(
+        ...,
+        ge=0,
+        le=9,
+        description="Target column index on the game board (0-9)",
+        examples=[0, 2, 4, 6, 9],
+    )
 
     def to_coordinates(self) -> Coordinates:
         """Convert move command to Coordinates object.
@@ -715,7 +875,8 @@ class MoveCommand(BaseModel):
             "Attack (4, 6)"
 
         """
-        return f'Attack ({self.row}, {self.col})'
+        return f"Attack ({self.row}, {self.col})"
+
 
 class MoveOutcome(BaseModel):
     """Result of an executed attack with detailed outcome information.
@@ -761,13 +922,30 @@ class MoveOutcome(BaseModel):
         and adjust targeting priorities for remaining fleet.
 
     """
-    row: int = Field(..., ge=0, le=9, description='Row coordinate of the attack', examples=[3, 5, 7])
-    col: int = Field(..., ge=0, le=9, description='Column coordinate of the attack', examples=[2, 4, 8])
-    result: MoveResult = Field(..., description='Type of attack outcome', examples=[MoveResult.HIT, MoveResult.MISS, MoveResult.SUNK, MoveResult.INVALID])
-    sunk_ship: ShipType | None = Field(None, description='Type of ship destroyed by this attack, if any', examples=[ShipType.DESTROYER, ShipType.CRUISER, None])
 
-    @model_validator(mode='after')
-    def validate_sunk_ship_consistency(self) -> 'MoveOutcome':
+    row: int = Field(
+        ..., ge=0, le=9, description="Row coordinate of the attack", examples=[3, 5, 7]
+    )
+    col: int = Field(
+        ...,
+        ge=0,
+        le=9,
+        description="Column coordinate of the attack",
+        examples=[2, 4, 8],
+    )
+    result: MoveResult = Field(
+        ...,
+        description="Type of attack outcome",
+        examples=[MoveResult.HIT, MoveResult.MISS, MoveResult.SUNK, MoveResult.INVALID],
+    )
+    sunk_ship: ShipType | None = Field(
+        None,
+        description="Type of ship destroyed by this attack, if any",
+        examples=[ShipType.DESTROYER, ShipType.CRUISER, None],
+    )
+
+    @model_validator(mode="after")
+    def validate_sunk_ship_consistency(self) -> "MoveOutcome":
         """Validate sunk ship is only specified for SUNK results.
 
         Returns:
@@ -778,9 +956,9 @@ class MoveOutcome(BaseModel):
 
         """
         if self.result == MoveResult.SUNK and self.sunk_ship is None:
-            raise ValueError('SUNK result must specify which ship was sunk')
+            raise ValueError("SUNK result must specify which ship was sunk")
         if self.result != MoveResult.SUNK and self.sunk_ship is not None:
-            raise ValueError('sunk_ship should only be specified for SUNK results')
+            raise ValueError("sunk_ship should only be specified for SUNK results")
         return self
 
     def __str__(self) -> str:
@@ -798,10 +976,11 @@ class MoveOutcome(BaseModel):
             "(7, 2): sunk - Destroyer sunk!"
 
         """
-        result_str = f'({self.row}, {self.col}): {self.result}'
+        result_str = f"({self.row}, {self.col}): {self.result}"
         if self.sunk_ship:
-            result_str += f' - {self.sunk_ship} sunk!'
+            result_str += f" - {self.sunk_ship} sunk!"
         return result_str
+
 
 class Analysis(BaseModel):
     """Strategic analysis of the current Battleship game state.
@@ -858,12 +1037,34 @@ class Analysis(BaseModel):
         optimal search strategies.
 
     """
-    analysis: str = Field(..., min_length=10, max_length=1000, description='Detailed strategic assessment of the current game state', examples=['Hit detected. Target adjacent squares to find ship orientation.', 'Large ships likely in center area. Focus on coordinates with sufficient surrounding space.', 'Final destroyer remains. Systematic search of remaining coordinates recommended.'])
-    priority_targets: list[Coordinates] | None = Field(default_factory=list, max_length=20, description='High-priority coordinates for next attacks based on strategic analysis', examples=[[Coordinates(row=3, col=4), Coordinates(row=3, col=6)], [Coordinates(row=5, col=2), Coordinates(row=7, col=8)], []])
 
-    @field_validator('priority_targets')
+    analysis: str = Field(
+        ...,
+        min_length=10,
+        max_length=1000,
+        description="Detailed strategic assessment of the current game state",
+        examples=[
+            "Hit detected. Target adjacent squares to find ship orientation.",
+            "Large ships likely in center area. Focus on coordinates with sufficient surrounding space.",
+            "Final destroyer remains. Systematic search of remaining coordinates recommended.",
+        ],
+    )
+    priority_targets: list[Coordinates] | None = Field(
+        default_factory=list,
+        max_length=20,
+        description="High-priority coordinates for next attacks based on strategic analysis",
+        examples=[
+            [Coordinates(row=3, col=4), Coordinates(row=3, col=6)],
+            [Coordinates(row=5, col=2), Coordinates(row=7, col=8)],
+            [],
+        ],
+    )
+
+    @field_validator("priority_targets")
     @classmethod
-    def validate_targets(cls, targets: list[Coordinates | dict] | None) -> list[Coordinates]:
+    def validate_targets(
+        cls, targets: list[Coordinates | dict] | None
+    ) -> list[Coordinates]:
         """Validate and normalize priority target list.
 
         Args:
@@ -887,6 +1088,7 @@ class Analysis(BaseModel):
             except Exception:
                 continue
         return processed_targets
+
 
 class PlayerBoard(BaseModel):
     """Represents a player's complete board state in Battleship.
@@ -935,13 +1137,53 @@ class PlayerBoard(BaseModel):
         Each attack modifies the appropriate tracking lists.
 
     """
-    ships: list[Ship] = Field(default_factory=list, max_length=5, description="All ships placed on this player's board (maximum 5)", examples=[[], [Ship(ship_type=ShipType.DESTROYER, size=2, coordinates=[Coordinates(row=0, col=0), Coordinates(row=0, col=1)])]])
-    hits: list[Coordinates] = Field(default_factory=list, description='Coordinates where this board has been successfully attacked', examples=[[], [Coordinates(row=3, col=4), Coordinates(row=5, col=2)]])
-    misses: list[Coordinates] = Field(default_factory=list, description='Coordinates where attacks against this board missed', examples=[[], [Coordinates(row=1, col=1), Coordinates(row=7, col=8)]])
-    attacks: list[Coordinates] = Field(default_factory=list, description='All attacks made by this player (hits and misses combined)', examples=[[], [Coordinates(row=2, col=3), Coordinates(row=6, col=7)]])
-    successful_hits: list[Coordinates] = Field(default_factory=list, description='Successful attacks made by this player against opponent', examples=[[], [Coordinates(row=4, col=5), Coordinates(row=4, col=6)]])
-    failed_attacks: list[Coordinates] = Field(default_factory=list, description='Failed attacks (misses) made by this player', examples=[[], [Coordinates(row=0, col=0), Coordinates(row=9, col=9)]])
-    sunk_ships: list[ShipType] = Field(default_factory=list, max_length=5, description='Types of ships that have been completely destroyed on this board', examples=[[], [ShipType.DESTROYER, ShipType.SUBMARINE]])
+
+    ships: list[Ship] = Field(
+        default_factory=list,
+        max_length=5,
+        description="All ships placed on this player's board (maximum 5)",
+        examples=[
+            [],
+            [
+                Ship(
+                    ship_type=ShipType.DESTROYER,
+                    size=2,
+                    coordinates=[Coordinates(row=0, col=0), Coordinates(row=0, col=1)],
+                )
+            ],
+        ],
+    )
+    hits: list[Coordinates] = Field(
+        default_factory=list,
+        description="Coordinates where this board has been successfully attacked",
+        examples=[[], [Coordinates(row=3, col=4), Coordinates(row=5, col=2)]],
+    )
+    misses: list[Coordinates] = Field(
+        default_factory=list,
+        description="Coordinates where attacks against this board missed",
+        examples=[[], [Coordinates(row=1, col=1), Coordinates(row=7, col=8)]],
+    )
+    attacks: list[Coordinates] = Field(
+        default_factory=list,
+        description="All attacks made by this player (hits and misses combined)",
+        examples=[[], [Coordinates(row=2, col=3), Coordinates(row=6, col=7)]],
+    )
+    successful_hits: list[Coordinates] = Field(
+        default_factory=list,
+        description="Successful attacks made by this player against opponent",
+        examples=[[], [Coordinates(row=4, col=5), Coordinates(row=4, col=6)]],
+    )
+    failed_attacks: list[Coordinates] = Field(
+        default_factory=list,
+        description="Failed attacks (misses) made by this player",
+        examples=[[], [Coordinates(row=0, col=0), Coordinates(row=9, col=9)]],
+    )
+    sunk_ships: list[ShipType] = Field(
+        default_factory=list,
+        max_length=5,
+        description="Types of ships that have been completely destroyed on this board",
+        examples=[[], [ShipType.DESTROYER, ShipType.SUBMARINE]],
+    )
 
     def is_valid_placement(self, placement: ShipPlacement) -> bool:
         """Check if a ship placement is valid on this board.
@@ -966,7 +1208,9 @@ class PlayerBoard(BaseModel):
         if placement.ship_type in existing_types:
             return False
         proposed_coords = {c.to_tuple() for c in placement.coordinates}
-        existing_coords = {coord for ship in self.ships for coord in ship.get_occupied_positions()}
+        existing_coords = {
+            coord for ship in self.ships for coord in ship.get_occupied_positions()
+        }
         return not proposed_coords.intersection(existing_coords)
 
     def place_ship(self, placement: ShipPlacement) -> bool:
@@ -987,7 +1231,11 @@ class PlayerBoard(BaseModel):
         """
         if not self.is_valid_placement(placement):
             return False
-        ship = Ship(ship_type=placement.ship_type, size=SHIP_SIZES[placement.ship_type], coordinates=placement.coordinates)
+        ship = Ship(
+            ship_type=placement.ship_type,
+            size=SHIP_SIZES[placement.ship_type],
+            coordinates=placement.coordinates,
+        )
         self.ships.append(ship)
         return True
 
@@ -1023,7 +1271,12 @@ class PlayerBoard(BaseModel):
                     ship.hits += 1
                     if ship.is_sunk and ship.ship_type not in self.sunk_ships:
                         self.sunk_ships.append(ship.ship_type)
-                        return MoveOutcome(row=row, col=col, result=MoveResult.SUNK, sunk_ship=ship.ship_type)
+                        return MoveOutcome(
+                            row=row,
+                            col=col,
+                            result=MoveResult.SUNK,
+                            sunk_ship=ship.ship_type,
+                        )
                     return MoveOutcome(row=row, col=col, result=MoveResult.HIT)
         self.misses.append(coord)
         return MoveOutcome(row=row, col=col, result=MoveResult.MISS)
@@ -1091,6 +1344,7 @@ class PlayerBoard(BaseModel):
         """
         return len(self.hits)
 
+
 class GamePhase(str, Enum):
     """Current phase of the Battleship game.
 
@@ -1121,6 +1375,7 @@ class GamePhase(str, Enum):
         determine which operations are valid at any given time.
 
     """
-    SETUP = 'setup'
-    PLAYING = 'playing'
-    ENDED = 'ended'
+
+    SETUP = "setup"
+    PLAYING = "playing"
+    ENDED = "ended"

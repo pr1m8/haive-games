@@ -150,7 +150,6 @@ class MonopolyAgent(Agent[MonopolyGameAgentConfig]):
     def save_game_history(self, filename: str | None = None) -> None:
         """Save game history to a file."""
         if filename is None:
-
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"monopoly_game_{timestamp}.json"
 

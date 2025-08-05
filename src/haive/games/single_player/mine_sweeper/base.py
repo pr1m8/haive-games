@@ -1,19 +1,24 @@
 from __future__ import annotations
+
 import random
 import time
 import uuid
 from collections import deque
 from enum import Enum
 from typing import Any
+
 from game_framework_base import GamePiece, GridBoard, GridPosition, GridSpace
 from pydantic import BaseModel, Field, model_validator
 
+
 class CellState(str, Enum):
     """Possible states of a Minesweeper cell."""
-    HIDDEN = 'hidden'
-    REVEALED = 'revealed'
-    FLAGGED = 'flagged'
-    QUESTIONED = 'questioned'
+
+    HIDDEN = "hidden"
+    REVEALED = "revealed"
+    FLAGGED = "flagged"
+    QUESTIONED = "questioned"
+
 
 class MinePiece(GamePiece[GridPosition]):
     """Represents a mine in Minesweeper."""
@@ -24,10 +29,12 @@ class MinePiece(GamePiece[GridPosition]):
 
     def __str__(self) -> str:
         """String representation of a mine."""
-        return '*'
+        return "*"
+
 
 class MinesweeperCell(GridSpace[MinePiece]):
     """A cell in the Minesweeper grid."""
+
     has_mine: bool = False
     state: CellState = CellState.HIDDEN
     adjacent_mines: int = 0
@@ -88,48 +95,62 @@ class MinesweeperCell(GridSpace[MinePiece]):
     def get_display_value(self) -> str:
         """Get the display value for this cell based on its state."""
         if self.state == CellState.HIDDEN:
-            return '·'
+            return "·"
         if self.state == CellState.FLAGGED:
-            return 'F'
+            return "F"
         if self.state == CellState.QUESTIONED:
-            return '?'
+            return "?"
         if self.has_mine:
-            return '*'
+            return "*"
         if self.adjacent_mines == 0:
-            return ' '
+            return " "
         return str(self.adjacent_mines)
+
 
 class Difficulty(str, Enum):
     """Difficulty levels for Minesweeper."""
-    BEGINNER = 'beginner'
-    INTERMEDIATE = 'intermediate'
-    EXPERT = 'expert'
-    CUSTOM = 'custom'
+
+    BEGINNER = "beginner"
+    INTERMEDIATE = "intermediate"
+    EXPERT = "expert"
+    CUSTOM = "custom"
+
 
 class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
     """The Minesweeper game board."""
+
     revealed_count: int = 0
     flagged_count: int = 0
     total_mines: int = 0
     first_move_made: bool = False
-    DIFFICULTY_SETTINGS = {Difficulty.BEGINNER: {'rows': 9, 'cols': 9, 'mines': 10}, Difficulty.INTERMEDIATE: {'rows': 16, 'cols': 16, 'mines': 40}, Difficulty.EXPERT: {'rows': 16, 'cols': 30, 'mines': 99}}
+    DIFFICULTY_SETTINGS = {
+        Difficulty.BEGINNER: {"rows": 9, "cols": 9, "mines": 10},
+        Difficulty.INTERMEDIATE: {"rows": 16, "cols": 16, "mines": 40},
+        Difficulty.EXPERT: {"rows": 16, "cols": 30, "mines": 99},
+    }
 
-    def initialize_board(self, difficulty: Difficulty=Difficulty.BEGINNER, custom_rows: int | None=None, custom_cols: int | None=None, custom_mines: int | None=None) -> None:
+    def initialize_board(
+        self,
+        difficulty: Difficulty = Difficulty.BEGINNER,
+        custom_rows: int | None = None,
+        custom_cols: int | None = None,
+        custom_mines: int | None = None,
+    ) -> None:
         """Initialize the Minesweeper board based on difficulty."""
         if difficulty == Difficulty.CUSTOM:
             if custom_rows is None or custom_cols is None or custom_mines is None:
-                raise ValueError('Custom difficulty requires rows, cols, and mines')
+                raise ValueError("Custom difficulty requires rows, cols, and mines")
             self.rows = custom_rows
             self.cols = custom_cols
             self.total_mines = custom_mines
         else:
             settings = self.DIFFICULTY_SETTINGS[difficulty]
-            self.rows = settings['rows']
-            self.cols = settings['cols']
-            self.total_mines = settings['mines']
+            self.rows = settings["rows"]
+            self.cols = settings["cols"]
+            self.total_mines = settings["mines"]
         max_mines = self.rows * self.cols - 9
         if self.total_mines > max_mines:
-            raise ValueError(f'Too many mines for grid size. Maximum is {max_mines}')
+            raise ValueError(f"Too many mines for grid size. Maximum is {max_mines}")
         for row in range(self.rows):
             for col in range(self.cols):
                 position = GridPosition(row=row, col=col)
@@ -165,7 +186,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         all_positions = [(r, c) for r in range(self.rows) for c in range(self.cols)]
         valid_positions = [pos for pos in all_positions if pos not in safe_cells]
         if len(valid_positions) < self.total_mines:
-            raise ValueError('Not enough valid positions for mines')
+            raise ValueError("Not enough valid positions for mines")
         mine_positions = random.sample(valid_positions, self.total_mines)
         for row, col in mine_positions:
             cell = self.get_space_at(row, col)
@@ -227,7 +248,11 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
                             continue
                         if 0 <= adj_row < self.rows and 0 <= adj_col < self.cols:
                             adj_cell = self.get_space_at(adj_row, adj_col)
-                            if adj_cell and (not adj_cell.is_revealed()) and (not adj_cell.is_flagged()):
+                            if (
+                                adj_cell
+                                and (not adj_cell.is_revealed())
+                                and (not adj_cell.is_flagged())
+                            ):
                                 adj_cell.reveal()
                                 self.revealed_count += 1
                                 revealed_count += 1
@@ -306,7 +331,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
 
     def get_board_state(self) -> list[list[str]]:
         """Get the current visible board state as a 2D array."""
-        state = [['' for _ in range(self.cols)] for _ in range(self.rows)]
+        state = [["" for _ in range(self.cols)] for _ in range(self.rows)]
         for row in range(self.rows):
             for col in range(self.cols):
                 cell = self.get_space_at(row, col)
@@ -336,8 +361,10 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         """Get the number of unflagged mines (for display)."""
         return self.total_mines - self.flagged_count
 
+
 class MinesweeperGame(BaseModel):
     """Model for managing a Minesweeper game."""
+
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     board: MinesweeperBoard
     difficulty: Difficulty = Difficulty.BEGINNER
@@ -346,16 +373,27 @@ class MinesweeperGame(BaseModel):
     start_time: float | None = None
     end_time: float | None = None
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_game(self) -> MinesweeperGame:
         """Ensure game has valid components."""
         return self
 
     @classmethod
-    def new_game(cls, difficulty: Difficulty=Difficulty.BEGINNER, custom_rows: int | None=None, custom_cols: int | None=None, custom_mines: int | None=None) -> MinesweeperGame:
+    def new_game(
+        cls,
+        difficulty: Difficulty = Difficulty.BEGINNER,
+        custom_rows: int | None = None,
+        custom_cols: int | None = None,
+        custom_mines: int | None = None,
+    ) -> MinesweeperGame:
         """Create a new Minesweeper game with the specified difficulty."""
-        board = MinesweeperBoard(name='Minesweeper Board')
-        board.initialize_board(difficulty=difficulty, custom_rows=custom_rows, custom_cols=custom_cols, custom_mines=custom_mines)
+        board = MinesweeperBoard(name="Minesweeper Board")
+        board.initialize_board(
+            difficulty=difficulty,
+            custom_rows=custom_rows,
+            custom_cols=custom_cols,
+            custom_mines=custom_mines,
+        )
         game = cls(board=board, difficulty=difficulty)
         game.start_time = time.time()
         return game
@@ -427,7 +465,18 @@ class MinesweeperGame(BaseModel):
 
     def restart(self) -> None:
         """Restart the game with the same settings."""
-        self.board.initialize_board(difficulty=self.difficulty, custom_rows=self.board.rows if self.difficulty == Difficulty.CUSTOM else None, custom_cols=self.board.cols if self.difficulty == Difficulty.CUSTOM else None, custom_mines=self.board.total_mines if self.difficulty == Difficulty.CUSTOM else None)
+        self.board.initialize_board(
+            difficulty=self.difficulty,
+            custom_rows=(
+                self.board.rows if self.difficulty == Difficulty.CUSTOM else None
+            ),
+            custom_cols=(
+                self.board.cols if self.difficulty == Difficulty.CUSTOM else None
+            ),
+            custom_mines=(
+                self.board.total_mines if self.difficulty == Difficulty.CUSTOM else None
+            ),
+        )
         self.game_over = False
         self.win = False
         self.start_time = time.time()
@@ -442,22 +491,36 @@ class MinesweeperGame(BaseModel):
 
     def get_status(self) -> dict[str, Any]:
         """Get the current game status."""
-        return {'difficulty': self.difficulty, 'rows': self.board.rows, 'cols': self.board.cols, 'total_mines': self.board.total_mines, 'remaining_mines': self.board.get_remaining_mines(), 'revealed_count': self.board.revealed_count, 'flagged_count': self.board.flagged_count, 'game_over': self.game_over, 'win': self.win, 'elapsed_time': self.get_elapsed_time(), 'board': self.board.get_board_state()}
+        return {
+            "difficulty": self.difficulty,
+            "rows": self.board.rows,
+            "cols": self.board.cols,
+            "total_mines": self.board.total_mines,
+            "remaining_mines": self.board.get_remaining_mines(),
+            "revealed_count": self.board.revealed_count,
+            "flagged_count": self.board.flagged_count,
+            "game_over": self.game_over,
+            "win": self.win,
+            "elapsed_time": self.get_elapsed_time(),
+            "board": self.board.get_board_state(),
+        }
 
     def __str__(self) -> str:
         """String representation of the game."""
         result = []
-        result.append(f'Minesweeper ({self.difficulty.value}) - Mines remaining: {self.board.get_remaining_mines()}')
-        result.append(f'Time: {self.get_elapsed_time()} seconds')
+        result.append(
+            f"Minesweeper ({self.difficulty.value}) - Mines remaining: {self.board.get_remaining_mines()}"
+        )
+        result.append(f"Time: {self.get_elapsed_time()} seconds")
         for row in range(self.board.rows):
             row_str = []
             for col in range(self.board.cols):
                 cell = self.board.get_space_at(row, col)
                 if cell:
                     row_str.append(cell.get_display_value())
-            result.append('|' + '|'.join(row_str) + '|')
+            result.append("|" + "|".join(row_str) + "|")
         if self.win:
-            result.append('Congratulations! You won!')
+            result.append("Congratulations! You won!")
         elif self.game_over:
-            result.append('Game Over! You hit a mine!')
-        return '\n'.join(result)
+            result.append("Game Over! You hit a mine!")
+        return "\n".join(result)

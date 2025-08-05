@@ -38,14 +38,18 @@ Note:
     break gameplay mechanics.
 
 """
+
 import uuid
 from typing import Any
+
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
 from langchain_core.runnables import RunnableConfig
 from pydantic import Field, computed_field, model_validator
+
 from haive.games.battleship.engines import build_battleship_engines
 from haive.games.battleship.state import BattleshipState
+
 
 class BattleshipAgentConfig(AgentConfig):
     """Comprehensive configuration for Battleship game agents with extensive
@@ -123,16 +127,52 @@ class BattleshipAgentConfig(AgentConfig):
         unfair advantages.
 
     """
-    name: str = Field(default='battleship_agent', min_length=1, max_length=50, description='Unique identifier for the agent instance used for logging and debugging', examples=['battleship_agent', 'tournament_battleship', 'training_agent'])
-    state_schema: type = Field(default=BattleshipState, description='Pydantic model class for game state management and validation')
-    player1_name: str = Field(default='Player 1', min_length=1, max_length=30, description='Display name for the first player, auto-generated from engine config', examples=['Admiral_Nelson', 'Strategic_AI', 'Human_Player'])
-    player2_name: str = Field(default='Player 2', min_length=1, max_length=30, description='Display name for the second player, auto-generated from engine config', examples=['Captain_Ahab', 'Tactical_AI', 'Computer_Opponent'])
-    enable_analysis: bool = Field(default=True, description='Enable strategic analysis during gameplay for better decision-making', examples=[True, False])
-    visualize_board: bool = Field(default=True, description='Enable board visualization during gameplay for debugging and monitoring', examples=[True, False])
-    runnable_config: RunnableConfig = Field(default={'configurable': {'recursion_limit': 10000, 'thread_id': None}}, description='LangChain runnable configuration with execution parameters and thread management')
-    engines: dict[str, AugLLMConfig] = Field(default_factory=build_battleship_engines, description='LLM engine configurations for ship placement, move generation, and analysis')
 
-    @model_validator(mode='after')
+    name: str = Field(
+        default="battleship_agent",
+        min_length=1,
+        max_length=50,
+        description="Unique identifier for the agent instance used for logging and debugging",
+        examples=["battleship_agent", "tournament_battleship", "training_agent"],
+    )
+    state_schema: type = Field(
+        default=BattleshipState,
+        description="Pydantic model class for game state management and validation",
+    )
+    player1_name: str = Field(
+        default="Player 1",
+        min_length=1,
+        max_length=30,
+        description="Display name for the first player, auto-generated from engine config",
+        examples=["Admiral_Nelson", "Strategic_AI", "Human_Player"],
+    )
+    player2_name: str = Field(
+        default="Player 2",
+        min_length=1,
+        max_length=30,
+        description="Display name for the second player, auto-generated from engine config",
+        examples=["Captain_Ahab", "Tactical_AI", "Computer_Opponent"],
+    )
+    enable_analysis: bool = Field(
+        default=True,
+        description="Enable strategic analysis during gameplay for better decision-making",
+        examples=[True, False],
+    )
+    visualize_board: bool = Field(
+        default=True,
+        description="Enable board visualization during gameplay for debugging and monitoring",
+        examples=[True, False],
+    )
+    runnable_config: RunnableConfig = Field(
+        default={"configurable": {"recursion_limit": 10000, "thread_id": None}},
+        description="LangChain runnable configuration with execution parameters and thread management",
+    )
+    engines: dict[str, AugLLMConfig] = Field(
+        default_factory=build_battleship_engines,
+        description="LLM engine configurations for ship placement, move generation, and analysis",
+    )
+
+    @model_validator(mode="after")
     def update_player_names_from_engines(self) -> Any:
         """Update player names based on LLM provider and model from engines.
 
@@ -152,22 +192,25 @@ class BattleshipAgentConfig(AgentConfig):
                 # player2_name = "Player 2"
 
         """
-        if not self.runnable_config.get('configurable', {}).get('thread_id') or self.runnable_config['configurable']['thread_id'] is None:
-            self.runnable_config['configurable']['thread_id'] = str(uuid.uuid4())
+        if (
+            not self.runnable_config.get("configurable", {}).get("thread_id")
+            or self.runnable_config["configurable"]["thread_id"] is None
+        ):
+            self.runnable_config["configurable"]["thread_id"] = str(uuid.uuid4())
         try:
-            if self.engines and self.player1_name == 'Player 1':
-                player1_engine = self.engines.get('player1_move')
-                if player1_engine and hasattr(player1_engine, 'llm_config'):
+            if self.engines and self.player1_name == "Player 1":
+                player1_engine = self.engines.get("player1_move")
+                if player1_engine and hasattr(player1_engine, "llm_config"):
                     llm_config = player1_engine.llm_config
-                    if hasattr(llm_config, 'model'):
-                        model = getattr(llm_config, 'model', 'unknown')
-                        self.player1_name = f'azure-{model}'
+                    if hasattr(llm_config, "model"):
+                        model = getattr(llm_config, "model", "unknown")
+                        self.player1_name = f"azure-{model}"
         except Exception:
             pass
         return self
 
     @classmethod
-    def competitive(cls) -> 'BattleshipAgentConfig':
+    def competitive(cls) -> "BattleshipAgentConfig":
         """Create a configuration optimized for competitive gameplay.
 
         Generates a configuration suitable for tournaments and competitive matches,
@@ -189,10 +232,20 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Tournament-appropriate naming
 
         """
-        return cls(name='competitive_battleship', enable_analysis=True, visualize_board=False, runnable_config={'configurable': {'recursion_limit': 8000, 'thread_id': f'competitive_{str(uuid.uuid4())[:8]}'}})
+        return cls(
+            name="competitive_battleship",
+            enable_analysis=True,
+            visualize_board=False,
+            runnable_config={
+                "configurable": {
+                    "recursion_limit": 8000,
+                    "thread_id": f"competitive_{str(uuid.uuid4())[:8]}",
+                }
+            },
+        )
 
     @classmethod
-    def training(cls) -> 'BattleshipAgentConfig':
+    def training(cls) -> "BattleshipAgentConfig":
         """Create a configuration optimized for training and development.
 
         Generates a configuration suitable for agent training, debugging, and
@@ -214,10 +267,20 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Training-appropriate naming
 
         """
-        return cls(name='training_battleship', enable_analysis=True, visualize_board=True, runnable_config={'configurable': {'recursion_limit': 15000, 'thread_id': f'training_{str(uuid.uuid4())[:8]}'}})
+        return cls(
+            name="training_battleship",
+            enable_analysis=True,
+            visualize_board=True,
+            runnable_config={
+                "configurable": {
+                    "recursion_limit": 15000,
+                    "thread_id": f"training_{str(uuid.uuid4())[:8]}",
+                }
+            },
+        )
 
     @classmethod
-    def performance(cls) -> 'BattleshipAgentConfig':
+    def performance(cls) -> "BattleshipAgentConfig":
         """Create a configuration optimized for maximum performance.
 
         Generates a configuration suitable for high-speed gameplay and benchmarking,
@@ -239,7 +302,17 @@ class BattleshipAgentConfig(AgentConfig):
                 # - Performance-appropriate naming
 
         """
-        return cls(name='performance_battleship', enable_analysis=False, visualize_board=False, runnable_config={'configurable': {'recursion_limit': 5000, 'thread_id': f'performance_{str(uuid.uuid4())[:8]}'}})
+        return cls(
+            name="performance_battleship",
+            enable_analysis=False,
+            visualize_board=False,
+            runnable_config={
+                "configurable": {
+                    "recursion_limit": 5000,
+                    "thread_id": f"performance_{str(uuid.uuid4())[:8]}",
+                }
+            },
+        )
 
     @computed_field
     @property
@@ -258,9 +331,28 @@ class BattleshipAgentConfig(AgentConfig):
                 print(f"Analysis: {summary['analysis_enabled']}")
 
         """
-        return {'name': self.name, 'analysis_enabled': 'Yes' if self.enable_analysis else 'No', 'visualization_enabled': 'Yes' if self.visualize_board else 'No', 'recursion_limit': str(self.runnable_config.get('configurable', {}).get('recursion_limit', 'Unknown')), 'thread_id': self.runnable_config.get('configurable', {}).get('thread_id', 'Not set')[:8] + '...' if self.runnable_config.get('configurable', {}).get('thread_id') else 'Not set', 'engine_count': str(len(self.engines))}
+        return {
+            "name": self.name,
+            "analysis_enabled": "Yes" if self.enable_analysis else "No",
+            "visualization_enabled": "Yes" if self.visualize_board else "No",
+            "recursion_limit": str(
+                self.runnable_config.get("configurable", {}).get(
+                    "recursion_limit", "Unknown"
+                )
+            ),
+            "thread_id": (
+                self.runnable_config.get("configurable", {}).get(
+                    "thread_id", "Not set"
+                )[:8]
+                + "..."
+                if self.runnable_config.get("configurable", {}).get("thread_id")
+                else "Not set"
+            ),
+            "engine_count": str(len(self.engines)),
+        }
 
     class Config:
         """Pydantic configuration for flexible validation and type handling."""
+
         arbitrary_types_allowed = True
         validate_assignment = True

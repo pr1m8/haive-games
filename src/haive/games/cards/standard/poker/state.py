@@ -1,37 +1,47 @@
 from enum import Enum
 from typing import Any
+
 from pydantic import Field, model_validator
+
 from haive.games.cards.card.components.actions import CardAction
 from haive.games.cards.card.components.betting import WagerableGameState
 from haive.games.cards.card.components.standard import StandardCard
 from haive.games.cards.card.components.state import CardGameState
 from haive.games.cards.standard.poker.scoring import PokerHandEvaluator, PokerHandRank
 
+
 class PokerPhase(str, Enum):
     """Phases in a poker game."""
-    DEAL = 'deal'
-    PRE_FLOP = 'pre_flop'
-    FLOP = 'flop'
-    TURN = 'turn'
-    RIVER = 'river'
-    SHOWDOWN = 'showdown'
+
+    DEAL = "deal"
+    PRE_FLOP = "pre_flop"
+    FLOP = "flop"
+    TURN = "turn"
+    RIVER = "river"
+    SHOWDOWN = "showdown"
+
 
 class PokerBettingRound(str, Enum):
     """Betting rounds in poker."""
-    PRE_FLOP = 'pre_flop'
-    FLOP = 'flop'
-    TURN = 'turn'
-    RIVER = 'river'
+
+    PRE_FLOP = "pre_flop"
+    FLOP = "flop"
+    TURN = "turn"
+    RIVER = "river"
+
 
 class PokerVariant(str, Enum):
     """Types of poker games."""
-    TEXAS_HOLDEM = 'texas_holdem'
-    OMAHA = 'omaha'
-    SEVEN_CARD_STUD = 'seven_card_stud'
-    FIVE_CARD_DRAW = 'five_card_draw'
+
+    TEXAS_HOLDEM = "texas_holdem"
+    OMAHA = "omaha"
+    SEVEN_CARD_STUD = "seven_card_stud"
+    FIVE_CARD_DRAW = "five_card_draw"
+
 
 class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState):
     """State for poker games."""
+
     variant: PokerVariant = PokerVariant.TEXAS_HOLDEM
     community_cards: list[StandardCard] = Field(default_factory=list)
     phase: PokerPhase = PokerPhase.DEAL
@@ -48,8 +58,8 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
     last_raiser: str | None = None
     hand_rankings: dict[str, PokerHandRank] = Field(default_factory=dict)
 
-    @model_validator(mode='after')
-    def setup_active_players(self) -> 'PokerGameState':
+    @model_validator(mode="after")
+    def setup_active_players(self) -> "PokerGameState":
         """Ensure active_players is populated."""
         if not self.active_players and self.players:
             self.active_players = self.players.copy()
@@ -57,7 +67,7 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
 
     def start_game(self) -> None:
         """Start the poker game."""
-        if self.game_status != 'not_started':
+        if self.game_status != "not_started":
             return
         self._setup_positions()
         self._post_blinds()
@@ -105,7 +115,10 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
         active_positions = []
         for pos in positions:
             player_id = self.players[pos]
-            if player_id not in self.folded_players and player_id not in self.all_in_players:
+            if (
+                player_id not in self.folded_players
+                and player_id not in self.all_in_players
+            ):
                 active_positions.append(pos)
         return active_positions
 
@@ -129,7 +142,7 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
                 if card:
                     self.hands[player_id].add_card(card)
 
-    def deal_community_cards(self, count: int=1) -> list[StandardCard]:
+    def deal_community_cards(self, count: int = 1) -> list[StandardCard]:
         """Deal community cards."""
         cards = []
         for _ in range(count):
@@ -145,7 +158,14 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
         self.collect_bets()
         self.current_bet = 0
         self.last_raiser = None
-        phase_order = [PokerPhase.DEAL, PokerPhase.PRE_FLOP, PokerPhase.FLOP, PokerPhase.TURN, PokerPhase.RIVER, PokerPhase.SHOWDOWN]
+        phase_order = [
+            PokerPhase.DEAL,
+            PokerPhase.PRE_FLOP,
+            PokerPhase.FLOP,
+            PokerPhase.TURN,
+            PokerPhase.RIVER,
+            PokerPhase.SHOWDOWN,
+        ]
         current_idx = phase_order.index(self.phase)
         if current_idx < len(phase_order) - 1:
             self.phase = phase_order[current_idx + 1]
@@ -184,13 +204,45 @@ class PokerGameState(CardGameState[StandardCard, CardAction], WagerableGameState
         if not self.hand_rankings:
             return
         best_rank = max(self.hand_rankings.values())
-        winners = [player_id for player_id, rank in self.hand_rankings.items() if rank == best_rank]
+        winners = [
+            player_id
+            for player_id, rank in self.hand_rankings.items()
+            if rank == best_rank
+        ]
         self.distribute_pot(winners)
-        self.game_status = 'completed'
+        self.game_status = "completed"
         if len(winners) == 1:
             self.winner_id = winners[0]
 
     def get_player_view(self, player_id: str) -> dict[str, Any]:
         """Get the game state from a specific player's perspective."""
-        view = {'my_hand': [card.dict() for card in self.hands[player_id].cards] if player_id in self.hands else [], 'community_cards': [card.dict() for card in self.community_cards], 'pot': self.pot, 'current_bet': self.current_bet, 'current_bets': self.current_bets, 'my_chips': self.player_chips.get(player_id, 0), 'player_chips': self.player_chips, 'active_players': self.active_players, 'folded_players': self.folded_players, 'all_in_players': self.all_in_players, 'dealer': self.players[self.dealer_position] if self.dealer_position < len(self.players) else None, 'current_player': self.current_player_id, 'phase': self.phase, 'hand_rankings': {pid: str(rank) for pid, rank in self.hand_rankings.items()} if self.phase == PokerPhase.SHOWDOWN else {}, 'winner': self.winner_id}
+        view = {
+            "my_hand": (
+                [card.dict() for card in self.hands[player_id].cards]
+                if player_id in self.hands
+                else []
+            ),
+            "community_cards": [card.dict() for card in self.community_cards],
+            "pot": self.pot,
+            "current_bet": self.current_bet,
+            "current_bets": self.current_bets,
+            "my_chips": self.player_chips.get(player_id, 0),
+            "player_chips": self.player_chips,
+            "active_players": self.active_players,
+            "folded_players": self.folded_players,
+            "all_in_players": self.all_in_players,
+            "dealer": (
+                self.players[self.dealer_position]
+                if self.dealer_position < len(self.players)
+                else None
+            ),
+            "current_player": self.current_player_id,
+            "phase": self.phase,
+            "hand_rankings": (
+                {pid: str(rank) for pid, rank in self.hand_rankings.items()}
+                if self.phase == PokerPhase.SHOWDOWN
+                else {}
+            ),
+            "winner": self.winner_id,
+        }
         return view
