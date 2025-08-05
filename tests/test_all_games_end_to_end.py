@@ -469,18 +469,18 @@ class TestGameStates:
                     state = state_class()
 
                 # Verify basic state attributes
-                assert hasattr(
-                    state, "model_dump"
-                ), f"{game} state not a Pydantic model"
+                assert hasattr(state, "model_dump"), (
+                    f"{game} state not a Pydantic model"
+                )
 
                 # Verify game-specific attributes
                 if game in ["chess", "connect4", "tic_tac_toe", "reversi"]:
                     assert hasattr(state, "board"), f"{game} state missing board"
 
                 if game in ["chess", "connect4", "tic_tac_toe"]:
-                    assert hasattr(
-                        state, "current_player"
-                    ), f"{game} state missing current_player"
+                    assert hasattr(state, "current_player"), (
+                        f"{game} state missing current_player"
+                    )
 
             except Exception as e:
                 failed_states.append((game, str(e)))

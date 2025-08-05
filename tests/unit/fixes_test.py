@@ -286,9 +286,9 @@ def test_dict_input():
     # Verify result is a Command
     assert isinstance(result, Command), "Result should be a Command"
     # Verify player1_analysis field is in the update
-    assert (
-        "player1_analysis" in result.update
-    ), "player1_analysis should be in the Command update"
+    assert "player1_analysis" in result.update, (
+        "player1_analysis should be in the Command update"
+    )
 
     logger.info("Dictionary input test passed!")
 
@@ -308,9 +308,9 @@ def test_mancalastate_input():
     # Verify result is a Command
     assert isinstance(result, Command), "Result should be a Command"
     # Verify player1_analysis field is in the update
-    assert (
-        "player1_analysis" in result.update
-    ), "player1_analysis should be in the Command update"
+    assert "player1_analysis" in result.update, (
+        "player1_analysis should be in the Command update"
+    )
 
     logger.info("MancalaState input test passed!")
 
@@ -333,9 +333,9 @@ def test_command_input():
     # Verify result is a Command
     assert isinstance(result, Command), "Result should be a Command"
     # Verify player1_analysis field is in the update
-    assert (
-        "player1_analysis" in result.update
-    ), "player1_analysis should be in the Command update"
+    assert "player1_analysis" in result.update, (
+        "player1_analysis should be in the Command update"
+    )
 
     logger.info("Command input test passed!")
 
