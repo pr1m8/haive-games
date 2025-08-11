@@ -150,6 +150,8 @@ class WordConnectionsStateManager(GameStateManager[WordConnectionsState]):
             incorrect_guesses=[],
             mistakes_remaining=4,
             game_status="playing",
+            players=["player"],
+            turn="player",
         )
 
     @classmethod

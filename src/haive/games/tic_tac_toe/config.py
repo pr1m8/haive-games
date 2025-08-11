@@ -167,7 +167,7 @@ class TicTacToeConfig(GameConfig):
     )
 
     visualize: bool = Field(
-        default=True,
+        default=False,  # Disabled by default to prevent hangs during agent creation
         description="Display board state and moves in human-readable format during gameplay",
         examples=[True, False],
     )

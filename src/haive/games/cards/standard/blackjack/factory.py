@@ -1,8 +1,8 @@
 import time
 
-from haive.games.cards.blackjack.agent import BlackjackAgent
-from haive.games.cards.blackjack.config import BlackjackAgentConfig
-from haive.games.cards.blackjack.models import BlackjackGameState
+from haive.games.cards.standard.blackjack.agent import BlackjackAgent
+from haive.games.cards.standard.blackjack.config import BlackjackAgentConfig
+from haive.games.cards.standard.blackjack.models import BlackjackGameState
 
 
 def create_blackjack_agent(
@@ -110,6 +110,5 @@ if __name__ == "__main__":
         f"Dealer Total: {sum(card.point_value() for card in final_game_state.dealer_hand)}"
     )
 
-
-# Create and run a game with 4 players, 20 rounds, with visualization
-final_state = run_blackjack_game(num_players=4, max_rounds=20, visualize=True)
+    # Create and run a game with 4 players, 20 rounds, with visualization
+    final_state = run_blackjack_game(num_players=4, max_rounds=20, visualize=True)

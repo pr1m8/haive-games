@@ -6,9 +6,9 @@ from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.games.cards.blackjack.config import BlackjackAgentConfig
-from haive.games.cards.blackjack.models import BlackjackGameState, PlayerAction
-from haive.games.cards.blackjack.state_manager import BlackjackStateManager
+from haive.games.cards.standard.blackjack.config import BlackjackAgentConfig
+from haive.games.cards.standard.blackjack.models import BlackjackGameState, PlayerAction
+from haive.games.cards.standard.blackjack.state_manager import BlackjackStateManager
 from haive.games.framework.base import GameAgent
 
 

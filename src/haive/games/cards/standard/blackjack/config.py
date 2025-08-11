@@ -4,7 +4,13 @@ from haive.core.models.llm.base import AzureLLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
-from haive.games.cards.blackjack.models import BlackjackGameState, PlayerAction
+from haive.games.cards.standard.blackjack.models import BlackjackGameState, PlayerAction
+
+
+class BetAmount(BaseModel):
+    """Model for betting amount."""
+
+    amount: float = Field(ge=0, description="The bet amount")
 
 
 # Prompts for Betting
@@ -81,7 +87,7 @@ class BlackjackAgentConfig(AgentConfig):
                 name="betting_engine",
                 llm_config=AzureLLMConfig(model="gpt-4o"),
                 prompt_template=generate_betting_prompt(),
-                structured_output_model=float,  # Bet amount
+                structured_output_model=BetAmount,  # Bet amount
             ),
             "player_action_engine": AugLLMConfig(
                 name="player_action_engine",

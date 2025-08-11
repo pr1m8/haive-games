@@ -1,7 +1,7 @@
 import copy
 import random
 
-from haive.games.cards.blackjack.models import (
+from haive.games.cards.standard.blackjack.models import (
     BlackjackGameState,
     Card,
     CardSuit,

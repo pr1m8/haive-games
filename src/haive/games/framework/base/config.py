@@ -60,7 +60,9 @@ class GameConfig(AgentConfig):
         default=False, description="Whether to enable move analysis"
     )
 
-    visualize: bool = Field(default=True, description="Whether to visualize the game")
+    visualize: bool = Field(
+        default=False, description="Whether to visualize the game"
+    )  # Disabled by default to prevent hangs
     runnable_config: RunnableConfig = Field(
         default={"configurable": {"recursion_limit": 10000}}
     )

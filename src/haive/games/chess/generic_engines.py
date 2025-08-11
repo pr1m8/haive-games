@@ -99,11 +99,11 @@ Be specific and focus on the current position's tactical and strategic elements.
                 ),
                 (
                     "human",
-                    f"""Position (FEN): {current_board_fen}
+                    f"""Position (FEN): {{current_board_fen}}
 
-Recent moves: {recent_moves}
+Recent moves: {{recent_moves}}
 
-Captured pieces: {captured_pieces}
+Captured pieces: {{captured_pieces}}
 
 Analyze this position strategically from {player.upper()}'s perspective.""",
                 ),

@@ -1,21 +1,45 @@
-"""Go game state manager module.
+"""Go game state management module.
 
-This module provides state management functionality for Go games, including:
-    - Game state initialization
-    - Move application and validation
-    - Pass move handling
-    - Game end detection
-    - Capture counting
+This module provides comprehensive state management functionality for the ancient
+strategy game of Go (also known as Weiqi or Baduk), including move validation,
+stone capture mechanics, and game progression tracking.
+
+Go is an abstract strategy board game for two players in which the aim is to
+surround more territory than the opponent. The game is played on a 19×19 grid
+(though 13×13 and 9×9 are common variants) where players alternate placing black
+and white stones. Players capture opponents' stones by completely surrounding them.
+
+Classes:
+    GoGameStateManager: Main state management class for Go game operations.
 
 Example:
-    >>> from haive.games.go import GoGameStateManager
-    >>>
-    >>> # Initialize a new game
-    >>> state = GoGameStateManager.initialize(board_size=19)
-    >>>
-    >>> # Apply a move
-    >>> new_state = GoGameStateManager.apply_move(state, (3, 4))
+    Basic Go game setup and play:
 
+        >>> from haive.games.go.state_manager import GoGameStateManager
+        >>> from haive.games.go.models import GoMove
+        >>>
+        >>> # Initialize standard 19×19 Go game
+        >>> state = GoGameStateManager.initialize(board_size=19)
+        >>> print(f"Board size: {state.board_size}×{state.board_size}")
+        >>> print(f"Current player: {state.turn}")  # "black"
+        >>>
+        >>> # Make a move (place stone at coordinates)
+        >>> move_coords = (3, 4)  # (row, col)
+        >>> new_state = GoGameStateManager.apply_move(state, move_coords)
+        >>> print(f"Stone placed at {move_coords}")
+        >>>
+        >>> # Pass turn (no stone placed)
+        >>> pass_state = GoGameStateManager.apply_move(new_state, None)
+        >>> print(f"Pass count: {pass_state.passes}")
+
+Note:
+    - Standard board sizes: 19×19 (professional), 13×13, 9×9 (beginners)
+    - Players are "black" and "white" with black moving first
+    - Coordinates are (row, col) tuples using 0-based indexing
+    - Pass moves are represented as None coordinates
+    - Game ends when both players pass consecutively
+    - Stone capture follows the rule of liberty (breathing spaces)
+    - Uses Sente library for Go game logic and SGF format
 """
 
 from haive.games.go import go_engine as sente

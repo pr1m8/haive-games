@@ -1,7 +1,7 @@
-"""Cards games module exports."""
+"""Standard card games module exports."""
 
-# Re-export from standard games
-from haive.games.cards.standard import (
+# Re-export blackjack components
+from haive.games.cards.standard.blackjack import (
     BlackjackAgent,
     BlackjackAgentConfig,
     BlackjackGameState,

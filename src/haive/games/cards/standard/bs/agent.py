@@ -7,10 +7,10 @@ from haive.core.graph.dynamic_graph_builder import DynamicGraph
 from langgraph.graph import END
 from langgraph.types import Command
 
-from haive.games.cards.bs.config import BullshitAgentConfig
-from haive.games.cards.bs.models import PlayerClaimAction  # BullshitGameState,
-from haive.games.cards.bs.state import BullshitGameState
-from haive.games.cards.bs.state_manager import BullshitStateManager
+from haive.games.cards.standard.bs.config import BullshitAgentConfig
+from haive.games.cards.standard.bs.models import PlayerClaimAction  # BullshitGameState,
+from haive.games.cards.standard.bs.state import BullshitGameState
+from haive.games.cards.standard.bs.state_manager import BullshitStateManager
 from haive.games.framework.base import GameAgent
 
 

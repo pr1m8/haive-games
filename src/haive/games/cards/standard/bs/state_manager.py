@@ -1,13 +1,13 @@
 import copy
 import random
 
-from haive.games.cards.bs.models import (  # BullshitGameState,
+from haive.games.cards.standard.bs.models import (  # BullshitGameState,
     Card,
     ChallengeAction,
     PlayerClaimAction,
     PlayerState,
 )
-from haive.games.cards.bs.state import BullshitGameState
+from haive.games.cards.standard.bs.state import BullshitGameState
 
 
 class BullshitStateManager:
