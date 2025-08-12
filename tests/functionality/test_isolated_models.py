@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test Tic Tac Toe models in isolation."""
 
-import sys
 from pathlib import Path
+import sys
 
 # Add source to path
 src_path = Path(__file__).parent / "src"

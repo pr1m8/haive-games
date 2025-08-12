@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Simple standalone test for Tic Tac Toe game logic."""
 
-import sys
 from pathlib import Path
+import sys
 
 # Add the source directory to Python path
 src_path = Path(__file__).parent / "src"
@@ -11,7 +11,6 @@ sys.path.insert(0, str(src_path))
 
 def test_tic_tac_toe_basic_functionality():
     """Test basic Tic Tac Toe functionality without dependencies."""
-
     try:
         # Import only the core game logic
         from haive.games.tic_tac_toe.models import TicTacToeMove

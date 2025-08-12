@@ -101,7 +101,6 @@ def test_illegal_move():
 
 def test_check_game_status_win():
     """Test win detection in various patterns."""
-
     # Helper function to create a board with specific moves
     def make_board_with_moves(moves):
         state = TicTacToeStateManager.initialize()

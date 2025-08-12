@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""
-Quick test of multiple games to see winners.
-Focus on getting game results without getting stuck in loops.
-"""
+"""Quick test of multiple games to see winners.
+Focus on getting game results without getting stuck in loops."""
 
 from datetime import datetime
 import json

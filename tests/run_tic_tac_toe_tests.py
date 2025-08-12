@@ -25,7 +25,6 @@ TicTacToeAnalysis = models_module.TicTacToeAnalysis
 
 def test_tic_tac_toe_move():
     """Test TicTacToeMove model creation and string representation."""
-
     # X move
     move_x = TicTacToeMove(row=0, col=1, player="X")
     assert move_x.row == 0
@@ -64,7 +63,6 @@ def test_tic_tac_toe_move():
 
 def test_tic_tac_toe_analysis():
     """Test TicTacToeAnalysis model creation and validation."""
-
     # Create basic analysis
     analysis = TicTacToeAnalysis(
         winning_moves=[{"row": 0, "col": 0}],
@@ -137,7 +135,6 @@ def test_tic_tac_toe_analysis():
 
 def run_all_tests():
     """Run all tic tac toe model tests."""
-
     tests = [
         ("TicTacToeMove", test_tic_tac_toe_move),
         ("TicTacToeAnalysis", test_tic_tac_toe_analysis),

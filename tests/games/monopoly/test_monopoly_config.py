@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test script for MonopolyAgentConfig validation"""
+"""Test script for MonopolyAgentConfig validation."""
 
 from pathlib import Path
 import sys
