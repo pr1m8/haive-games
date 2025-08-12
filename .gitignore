@@ -87,7 +87,15 @@ check_registry_data.py
 credentials.json
 dist/
 docs/build/
+docs/_build/
+docs/source/_build/
+docs/source/api/
 docs/scratch/
+*.pdf
+*.tex
+sphinx*
+readthedocs-sphinx-search/
+*.rst~
 env/
 examples/outputs/
 external/
