@@ -84,7 +84,6 @@ class ChessGameStateManager:
             >>> assert state.board_fen.startswith("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR")
 
         """
-
         return ChessState(
             board_fen=chess.Board().fen(),
             turn="white",
@@ -134,7 +133,6 @@ class ChessGameStateManager:
             >>> assert new_state.game_status == "checkmate"
 
         """
-
         board = chess.Board(state.board_fen)
         move = chess.Move.from_uci(move_uci)
 
