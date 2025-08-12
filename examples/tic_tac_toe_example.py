@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""
-Tic-Tac-Toe Game Example - AI vs AI gameplay demonstration.
+"""Tic-Tac-Toe Game Example - AI vs AI gameplay demonstration.
 
 This example shows how to create and run a Tic-Tac-Toe game with
-AI agents playing against each other.
-"""
+AI agents playing against each other."""
 
 import asyncio
 
@@ -72,7 +70,6 @@ async def create_game_agent(
     name: str, symbol: str, strategy: str = "smart"
 ) -> SimpleAgent:
     """Create a game-playing agent."""
-
     if strategy == "smart":
         system_message = f"""You are an expert Tic-Tac-Toe player using symbol '{symbol}'.
 
@@ -101,8 +98,7 @@ Always respond with just the position number (1-9) for your move."""
 
 async def get_agent_move(agent: SimpleAgent, game: TicTacToeGame, symbol: str) -> int:
     """Get move from agent."""
-    board_state = f"""
-Current board:
+    board_state = f"""Current board:
 {" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(3)])}
 {" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(3, 6)])}
 {" | ".join([str(i + 1) if game.board[i] == " " else game.board[i] for i in range(6, 9)])}

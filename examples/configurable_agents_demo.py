@@ -31,7 +31,6 @@ from haive.games.tic_tac_toe.configurable_engines import get_example_tic_tac_toe
 
 def demonstrate_problem_solved():
     """Demonstrate how the configurable agent system solves the original problems."""
-
     print("🎯 CONFIGURABLE AGENTS SOLUTION DEMO")
     print("=" * 60)
     print()

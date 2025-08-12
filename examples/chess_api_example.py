@@ -16,7 +16,6 @@ from haive.games.api import create_chess_api
 
 async def main():
     """Run example chess API configurations."""
-
     # Create FastAPI app
     app = FastAPI(title="Chess Game API Example")
 

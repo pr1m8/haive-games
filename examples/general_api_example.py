@@ -18,7 +18,6 @@ from haive.games.api import create_general_game_api
 
 async def demo_api_usage():
     """Demonstrate using the general game API."""
-
     # Create the general API
     app, game_api = create_general_game_api()
 
