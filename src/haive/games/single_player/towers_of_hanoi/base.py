@@ -212,7 +212,7 @@ class HanoiBoard(Board[PegSpace[Disk], PegPosition, Disk]):
         occupied_spaces = [s for s in spaces if s.is_occupied()]
         if not occupied_spaces:
             return -1
-        return max((s.position.level for s in occupied_spaces))
+        return max(s.position.level for s in occupied_spaces)
 
     def initialize_board(self) -> None:
         """Initialize the Tower of Hanoi board with all disks on the first peg."""

@@ -273,7 +273,6 @@ def run_mafia_game(
 
 def main():
     """Main entry point for command-line execution."""
-
     parser = argparse.ArgumentParser(description="Run a Mafia game simulation")
     parser.add_argument(
         "--players",

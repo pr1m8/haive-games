@@ -3,8 +3,6 @@
 import os
 import sys
 
-from sphinx.application import Sphinx
-
 # Path setup
 sys.path.insert(0, os.path.abspath("../../src"))
 

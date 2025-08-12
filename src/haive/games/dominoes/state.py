@@ -71,7 +71,7 @@ from haive.games.framework.base.state import GameState
 
 
 class DominoesState(GameState):
-    """Comprehensive state management for Dominoes gameplay with strategic analysis
+    """Comprehensive state management for Dominoes gameplay with strategic analysis.
     support.
 
     This class provides complete state management for Dominoes games, supporting

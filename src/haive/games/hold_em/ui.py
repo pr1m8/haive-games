@@ -464,7 +464,6 @@ class HoldemRichUI:
 
     def _create_initial_state(self, agent: HoldemGameAgent) -> HoldemState:
         """Create initial game state from agent config."""
-
         players = []
         for i, player_config in enumerate(agent.config.player_configs):
             # FIXED: Ensure player_id matches the expected format and is not
@@ -589,7 +588,6 @@ class HoldemRichUI:
 
 def main():
     """Main function to run the UI demo."""
-
     # Create a demo game
     config = create_default_holdem_config(num_players=4, starting_chips=1000)
     agent = HoldemGameAgent(config)

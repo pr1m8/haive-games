@@ -283,7 +283,6 @@ class MonopolyRichUI:
 
     def _get_position_name(self, position: int) -> str:
         """Get the name of a board position."""
-
         pos_data = get_property_at_position(position)
         if pos_data:
             return f"{pos_data['name']} ({position})"

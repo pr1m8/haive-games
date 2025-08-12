@@ -74,7 +74,6 @@ def parse_arguments():
         Namespace with parsed arguments.
 
     """
-
     parser = argparse.ArgumentParser(description="Flow Free Puzzle Game")
 
     parser.add_argument(

@@ -1,8 +1,6 @@
-"""
-Common module.
+"""Common module.
 
 This module is part of the Haive framework.
-Location: haive-games/src/haive/games/common
-"""
+Location: haive-games/src/haive/games/common"""
 
 # This __init__.py was auto-generated to fix import issues

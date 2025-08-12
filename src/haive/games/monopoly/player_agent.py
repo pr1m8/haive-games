@@ -170,7 +170,7 @@ class MonopolyGameAgentConfig(AgentConfig):
     )
 
     def create_initial_state(self) -> MonopolyState:
-        """Create the initial game state with all required fields and proper
+        """Create the initial game state with all required fields and proper.
         validation.
         """
         # Create board and players

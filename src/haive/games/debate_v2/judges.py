@@ -21,7 +21,6 @@ logger.setLevel(logging.INFO)
 
 class JudgingCriteria(str, Enum):
     """Different criteria for judging debates."""
-
     LOGICAL_STRENGTH = "logical_strength"
     EVIDENCE_QUALITY = "evidence_quality"
     PERSUASIVENESS = "persuasiveness"
@@ -33,7 +32,6 @@ class JudgingCriteria(str, Enum):
 
 class JudgeType(str, Enum):
     """Different types of AI judges with different personalities."""
-
     ACADEMIC = "academic"  # Focuses on logic and evidence
     RHETORICAL = "rhetorical"  # Focuses on persuasion and style
     BALANCED = "balanced"  # Considers all factors equally
@@ -43,7 +41,6 @@ class JudgeType(str, Enum):
 
 class JudgeScore(BaseModel):
     """Individual judge's scoring for a debate."""
-
     judge_name: str
     judge_type: JudgeType
     criteria_scores: dict[JudgingCriteria, int] = Field(
@@ -59,7 +56,6 @@ class JudgeScore(BaseModel):
 
 class DebateJudgment(BaseModel):
     """Complete judgment of a debate by multiple judges."""
-
     topic: str
     players: list[str]
     judge_scores: dict[str, list[JudgeScore]] = Field(
@@ -73,7 +69,6 @@ class DebateJudgment(BaseModel):
 
 class AIDebateJudge:
     """AI judge that evaluates debate performances."""
-
     def __init__(
         self,
         name: str,
@@ -91,7 +86,6 @@ class AIDebateJudge:
 
     def _create_judge_agent(self) -> SimpleAgent:
         """Create the AI agent for this judge."""
-
         # Base personality traits
         personalities = {
             JudgeType.ACADEMIC: {
@@ -184,7 +178,6 @@ Be {personality["style"]} in your evaluation. Consider your {self.judge_type.val
         self, player_name: str, player_position: str, debate_transcript: str, topic: str
     ) -> JudgeScore:
         """Judge a single player's performance in the debate."""
-
         judgment_prompt = f"""🏛️ JUDGE EVALUATION REQUEST 🏛️
 
 DEBATE DETAILS:
@@ -260,7 +253,6 @@ Provide your evaluation in the specified JSON format."""
 
 class DebateJudgingPanel:
     """Panel of multiple AI judges for comprehensive debate evaluation."""
-
     def __init__(self, judges: list[AIDebateJudge]):
         self.judges = judges
 
@@ -273,7 +265,6 @@ class DebateJudgingPanel:
                        Must be odd number for proper tie-breaking.
 
         """
-
         # Ensure odd number for tie-breaking
         if num_judges % 2 == 0:
             logger.warning(
@@ -351,7 +342,6 @@ class DebateJudgingPanel:
         debate_transcript: str,
     ) -> DebateJudgment:
         """Get comprehensive judgment from all judges."""
-
         logger.info(f"🏛️ Judging panel evaluating debate: '{topic}'")
         logger.info(f"👥 Players: {', '.join(players)}")
         logger.info(f"⚖️ Judges: {', '.join([j.name for j in self.judges])}")
@@ -393,7 +383,6 @@ class DebateJudgingPanel:
         self, all_scores: dict[str, list[JudgeScore]]
     ) -> tuple[str, float, float]:
         """Calculate overall winner from all judge scores."""
-
         # Calculate average scores per player
         player_averages = {}
         player_votes = {}
@@ -437,7 +426,6 @@ class DebateJudgingPanel:
         margin: float,
     ) -> str:
         """Create a comprehensive summary of the judging results."""
-
         summary_parts = [
             "🏛️ **JUDICIAL PANEL DECISION** 🏛️",
             "",
@@ -500,7 +488,6 @@ def create_academic_judges(num_judges: int = 3) -> DebateJudgingPanel:
         num_judges: Number of judges (default: 3)
 
     """
-
     if num_judges % 2 == 0:
         logger.warning(
             f"Even number of judges ({num_judges}) can cause ties. Consider using {
@@ -552,7 +539,6 @@ def create_public_judges(num_judges: int = 3) -> DebateJudgingPanel:
         num_judges: Number of judges (default: 3)
 
     """
-
     if num_judges % 2 == 0:
         logger.warning(
             f"Even number of judges ({num_judges}) can cause ties. Consider using {

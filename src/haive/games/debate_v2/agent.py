@@ -260,7 +260,7 @@ class GameDebateAgent(DebateConversation):
             "survey",
         ]
         content_lower = content.lower()
-        return any((indicator in content_lower for indicator in evidence_indicators))
+        return any(indicator in content_lower for indicator in evidence_indicators)
 
     def _is_repetitive(self, content: str, speaker: str, state: DebateState) -> bool:
         """Detect if content is repetitive of previous arguments."""

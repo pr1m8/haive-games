@@ -423,7 +423,6 @@ def create_fallback_engines(
     player_name: str, player_style: str
 ) -> dict[str, AugLLMConfig]:
     """Create minimal fallback engines if the main engine creation fails."""
-
     logger.info(f"🔄 Creating fallback engines for {player_name}")
 
     # Use a simple model for fallback
@@ -486,7 +485,6 @@ def create_fallback_engines(
 
 def create_fallback_game_engines() -> dict[str, AugLLMConfig]:
     """Create minimal fallback game engines."""
-
     logger.info("🔄 Creating fallback game engines")
 
     fallback_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)

@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 from haive.games.checkers.engines import build_checkers_aug_llms
 from haive.games.checkers.state import CheckersState
 
-r"""Comprehensive configuration system for strategic Checkers gameplay and AI
+r"""Comprehensive configuration system for strategic Checkers gameplay and AI.
 agents.
 
 This module provides sophisticated configuration management for Checkers agents with
@@ -61,7 +61,7 @@ Note:
 
 
 class CheckersAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Checkers agents with comprehensive rule
+    r"""Advanced configuration system for Checkers agents with comprehensive rule.
     support.
 
     This class provides complete configuration management for Checkers gameplay,

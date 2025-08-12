@@ -61,7 +61,7 @@ from pydantic import BaseModel, Field, computed_field, field_validator
 
 
 class TicTacToeMove(BaseModel):
-    """Comprehensive representation of a Tic Tac Toe move with validation and game
+    """Comprehensive representation of a Tic Tac Toe move with validation and game.
     context.
 
     This model provides complete representation of moves in Tic Tac Toe, supporting
@@ -206,7 +206,7 @@ class TicTacToeMove(BaseModel):
 
 
 class TicTacToeAnalysis(BaseModel):
-    """Advanced strategic analysis model for Tic Tac Toe positions with game theory
+    """Advanced strategic analysis model for Tic Tac Toe positions with game theory.
     insights.
 
     This model provides comprehensive analysis of Tic Tac Toe positions using

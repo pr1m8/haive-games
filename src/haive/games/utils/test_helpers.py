@@ -129,7 +129,6 @@ def create_test_engines_simple(
         Dict[str, AugLLMConfig]: Dictionary of test engines
 
     """
-
     # Simple prompt template for testing
     test_prompt = ChatPromptTemplate.from_messages(
         [

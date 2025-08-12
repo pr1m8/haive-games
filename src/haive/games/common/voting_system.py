@@ -23,7 +23,6 @@ logger.setLevel(logging.INFO)
 
 class JudgePersonality(str, Enum):
     """Different AI judge personalities for game evaluation."""
-
     STRATEGIC = "strategic"  # Focuses on strategy and tactics
     ANALYTICAL = "analytical"  # Focuses on logic and analysis
     BALANCED = "balanced"  # Considers all factors equally
@@ -32,7 +31,6 @@ class JudgePersonality(str, Enum):
 
 class VoteChoice(BaseModel):
     """A judge's vote choice with reasoning."""
-
     choice: str = Field(description="The judge's choice (player name, option, etc.)")
     confidence: float = Field(ge=0.0, le=1.0, description="Confidence in the choice")
     reasoning: str = Field(description="Detailed reasoning for the choice")
@@ -43,7 +41,6 @@ class VoteChoice(BaseModel):
 
 class VotingResult(BaseModel):
     """Complete voting results from multiple judges."""
-
     topic: str = Field(description="What was being voted on")
     options: list[str] = Field(description="Available choices")
     judge_votes: dict[str, VoteChoice] = Field(description="Each judge's vote")
@@ -55,7 +52,6 @@ class VotingResult(BaseModel):
 
 class GameEvaluator(Protocol):
     """Protocol for game-specific evaluation logic."""
-
     def get_evaluation_criteria(self) -> list[str]:
         """Get the criteria this game should be judged on."""
         ...
@@ -71,7 +67,6 @@ class GameEvaluator(Protocol):
 
 class AIGameJudge:
     """AI judge that can evaluate any game type."""
-
     def __init__(
         self,
         name: str,
@@ -117,7 +112,7 @@ class AIGameJudge:
             f" with expertise in {self.expertise_area}" if self.expertise_area else ""
         )
 
-        system_message = f"""🎯 GAME JUDGE: {self.name.upper()} 🎯
+        system_message = f"""🎯 GAME JUDGE: {self.name.upper()} 🎯.
 
 You are {self.name}, a professional game judge{expertise_text}.
 
@@ -165,7 +160,7 @@ Be {personality_info["style"]} in your evaluation. Focus on {personality_info["f
         criteria_text = "\n".join([f"• {criterion}" for criterion in criteria])
         options_text = "\n".join([f"• {option}" for option in options])
 
-        evaluation_prompt = f"""🎯 GAME EVALUATION REQUEST 🎯
+        evaluation_prompt = f"""🎯 GAME EVALUATION REQUEST 🎯.
 
 EVALUATION TOPIC: {topic}
 
@@ -219,13 +214,12 @@ in the specified JSON format."""
 
 class GameVotingSystem:
     """Generalized voting system for any game type."""
-
     def __init__(self, judges: list[AIGameJudge]):
         self.judges = judges
 
     @classmethod
     def create_standard_judges(cls, num_judges: int = 3) -> "GameVotingSystem":
-        """Create standard judge panel with configurable size and randomized
+        """Create standard judge panel with configurable size and randomized.
         personalities.
 
         Args:
@@ -233,7 +227,6 @@ class GameVotingSystem:
                        Odd numbers recommended to prevent tie votes.
 
         """
-
         # Warn about even numbers that can cause ties
         if num_judges % 2 == 0:
             logger.warning(
@@ -322,7 +315,6 @@ class GameVotingSystem:
             num_judges: Number of judges to create (default: 3)
 
         """
-
         if num_judges % 2 == 0:
             logger.warning(
                 f"Even number of judges ({
@@ -568,7 +560,6 @@ class GameVotingSystem:
 # Game-specific evaluator implementations
 class DebateEvaluator:
     """Evaluator for debate games."""
-
     def get_evaluation_criteria(self) -> list[str]:
         return [
             "logical_strength",
@@ -590,7 +581,6 @@ class DebateEvaluator:
 
 class ChessEvaluator:
     """Evaluator for chess games."""
-
     def get_evaluation_criteria(self) -> list[str]:
         return [
             "strategic_depth",

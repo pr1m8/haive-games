@@ -125,7 +125,6 @@ class RandomAIPlayer(AIPlayer[S, M]):
             A randomly selected valid move, or None if no valid moves
 
         """
-
         if not valid_moves:
             return None
         return random.choice(valid_moves)

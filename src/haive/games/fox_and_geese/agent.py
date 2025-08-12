@@ -98,7 +98,6 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
     generate moves and analyze positions in the game.
 
     """
-
     def __init__(self, config: FoxAndGeeseConfig = FoxAndGeeseConfig()):
         """Initialize the Fox and Geese agent.
 
@@ -705,7 +704,6 @@ class FoxAndGeeseAgent(GameAgent[FoxAndGeeseConfig]):
             String representation of the analysis
 
         """
-
         # Try to extract structured data
         try:
             # If it's a FoxAndGeeseAnalysis already

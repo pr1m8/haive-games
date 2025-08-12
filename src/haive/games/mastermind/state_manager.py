@@ -231,7 +231,7 @@ class MastermindStateManager(GameStateManager[MastermindState]):
 
     @classmethod
     def get_possible_codes(cls, state: MastermindState) -> set[tuple[str, ...]]:
-        """Get all possible secret codes that are consistent with all guesses and
+        """Get all possible secret codes that are consistent with all guesses and.
         feedback so far.
 
         This is computationally expensive for a full game, so it's limited to use for analysis.

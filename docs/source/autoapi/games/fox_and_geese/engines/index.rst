@@ -1,0 +1,82 @@
+
+:py:mod:`games.fox_and_geese.engines`
+=====================================
+
+.. py:module:: games.fox_and_geese.engines
+
+Engines for the Fox and Geese game.
+
+This module defines the engines for the Fox and Geese game, which includes the move and
+analysis prompts.
+
+
+.. autolink-examples:: games.fox_and_geese.engines
+   :collapse:
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   games.fox_and_geese.engines.generate_fox_analysis_prompt
+   games.fox_and_geese.engines.generate_fox_move_prompt
+   games.fox_and_geese.engines.generate_geese_analysis_prompt
+   games.fox_and_geese.engines.generate_geese_move_prompt
+
+.. py:function:: generate_fox_analysis_prompt() -> langchain_core.prompts.ChatPromptTemplate
+
+   Generate a prompt for analyzing the Fox's position.
+
+   This function constructs a prompt template for the fox analysis engine, which
+   analyzes the current game state from the perspective of the fox player.
+
+
+
+   .. autolink-examples:: generate_fox_analysis_prompt
+      :collapse:
+
+.. py:function:: generate_fox_move_prompt() -> langchain_core.prompts.ChatPromptTemplate
+
+   Generate a prompt for the fox to make a move.
+
+   This function constructs a prompt template for the fox move engine, which generates
+   a move for the Fox and Geese game.
+
+
+
+   .. autolink-examples:: generate_fox_move_prompt
+      :collapse:
+
+.. py:function:: generate_geese_analysis_prompt() -> langchain_core.prompts.ChatPromptTemplate
+
+   Generate a prompt for analyzing the Geese's position.
+
+   This function constructs a prompt template for the geese analysis engine, which
+   analyzes the current game state from the perspective of the geese player.
+
+
+
+   .. autolink-examples:: generate_geese_analysis_prompt
+      :collapse:
+
+.. py:function:: generate_geese_move_prompt() -> langchain_core.prompts.ChatPromptTemplate
+
+   Generate a prompt for the geese to make a move.
+
+   This function constructs a prompt template for the geese move engine, which
+   generates a move for the Fox and Geese game.
+
+
+
+   .. autolink-examples:: generate_geese_move_prompt
+      :collapse:
+
+
+
+.. rubric:: Related Links
+
+.. autolink-examples:: games.fox_and_geese.engines
+   :collapse:
+   
+.. autolink-skip:: next

@@ -34,7 +34,6 @@ class JudgedGameDebateAgent(GameDebateAgent):
     multiple judge perspectives.
 
     """
-
     # Judge system configuration
     use_ai_judges: bool = Field(
         default=True,
@@ -253,7 +252,6 @@ class JudgedGameDebateAgent(GameDebateAgent):
         self, state: DebateState, judgment: DebateJudgment
     ) -> SystemMessage:
         """Create enhanced conclusion message with judge evaluation."""
-
         # Get final scores (either combined or judge-only)
         final_scores = getattr(state, "player_scores", {})
 
@@ -336,7 +334,6 @@ class JudgedGameDebateAgent(GameDebateAgent):
         **kwargs,
     ) -> "JudgedGameDebateAgent":
         """Create a tournament debate match with AI judge evaluation."""
-
         # Use the base factory method and enhance with judge configuration
         base_kwargs = {
             **kwargs,

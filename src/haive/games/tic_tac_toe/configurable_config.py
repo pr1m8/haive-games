@@ -196,7 +196,7 @@ def create_ttt_config_from_example(
 def create_ttt_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableTicTacToeConfig:
-    """Create a configurable Tic-Tac-Toe configuration from detailed player
+    """Create a configurable Tic-Tac-Toe configuration from detailed player.
     configurations.
 
     Args:

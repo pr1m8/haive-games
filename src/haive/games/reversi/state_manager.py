@@ -275,7 +275,7 @@ class ReversiStateManager(GameStateManager[ReversiState]):
     def _get_flips(
         cls, board: list[list[str | None]], row: int, col: int, player: str
     ) -> set[tuple[int, int]]:
-        """Get the positions of opponent's discs that would be flipped by placing
+        """Get the positions of opponent's discs that would be flipped by placing.
         player's disc at (row, col).
 
         Args:

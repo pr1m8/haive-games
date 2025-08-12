@@ -284,7 +284,7 @@ class MinesweeperBoard(GridBoard[MinesweeperCell, GridPosition, MinePiece]):
         return new_state == CellState.FLAGGED
 
     def chord(self, row: int, col: int) -> tuple[bool, int]:
-        """Perform a chord (middle-click) to reveal all unflagged neighbors. Only works
+        """Perform a chord (middle-click) to reveal all unflagged neighbors. Only works.
         if the number of flagged neighbors equals the cell's value.
 
         Args:

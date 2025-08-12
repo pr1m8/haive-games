@@ -63,7 +63,6 @@ class PlayerSubgraphState(BaseModel):
     information at each step, ultimately producing a final poker action decision.
 
     """
-
     # Input from main game
     game_state: HoldemState = Field(description="Current game state")
     player_id: str = Field(description="ID of the player making decision")
@@ -102,7 +101,6 @@ class HoldemPlayerAgentConfig(AgentConfig):
     varied player behaviors from conservative to aggressive play.
 
     """
-
     state_schema: type = Field(default=PlayerSubgraphState)
     player_name: str = Field(description="Name of this player")
     player_style: str = Field(
@@ -139,7 +137,6 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     and debugging of decision-making issues.
 
     """
-
     def __init__(self, config: HoldemPlayerAgentConfig):
         # Ensure the config uses the correct state schema
         config.state_schema = PlayerSubgraphState
@@ -545,7 +542,6 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
     def _prepare_opponent_context(self, game_state, opponents) -> dict[str, str]:
         """Prepare context dictionary for opponent analysis with error handling."""
-
         # Helper to safely get position info
         def _get_position_info(game_state):
             """Create position info summary from game state."""
@@ -770,7 +766,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
             raise RuntimeError(error_msg) from e
 
     def _normalize_decision(self, decision: Any) -> dict[str, Any]:
-        """Normalize different decision model formats to a consistent dictionary
+        """Normalize different decision model formats to a consistent dictionary.
         structure.
 
         This method handles the conversion of various structured output formats into
@@ -958,7 +954,7 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
     def _validate_decision(
         self, decision: dict[str, Any], game_state: HoldemState, player: PlayerState
     ) -> dict[str, Any]:
-        """Validate and correct a decision to ensure it's legal in the current game
+        """Validate and correct a decision to ensure it's legal in the current game.
         state.
 
         This method ensures that the LLM-generated decision is valid and legal according

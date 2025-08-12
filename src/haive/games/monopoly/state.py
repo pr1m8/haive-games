@@ -14,7 +14,7 @@ from haive.games.monopoly.models import (
 )
 from haive.games.monopoly.utils import calculate_rent, get_properties_by_color
 
-r"""Comprehensive state management system for Monopoly gameplay and real estate
+r"""Comprehensive state management system for Monopoly gameplay and real estate.
 economics.
 
 This module provides sophisticated state models for Monopoly games with complete
@@ -146,7 +146,7 @@ def add_strings(left: list[str], right: list[str]) -> list[str]:
 
 
 class MonopolyState(BaseModel):
-    r"""Comprehensive state model for Monopoly gameplay with economic analysis and
+    r"""Comprehensive state model for Monopoly gameplay with economic analysis and.
     strategic context.
 
     This class provides complete state management for Monopoly games, supporting
@@ -688,7 +688,6 @@ class MonopolyState(BaseModel):
 
     def player_owns_monopoly(self, player_name: str, color: str) -> bool:
         """Check if player owns all properties of a color group."""
-
         color_group = get_properties_by_color(color)
         owned_in_group = [
             prop.name
@@ -700,7 +699,6 @@ class MonopolyState(BaseModel):
 
     def get_rent_amount(self, property_name: str, dice_roll: int = 0) -> int:
         """Calculate rent amount for a property."""
-
         property_obj = self.get_property_by_name(property_name)
         if not property_obj:
             return 0
@@ -817,7 +815,7 @@ class MonopolyState(BaseModel):
         return result
 
     def update_player(self, player_index: int, player: Player) -> "MonopolyState":
-        """Update a player and return a new state instance with proper bounds
+        """Update a player and return a new state instance with proper bounds.
         checking.
         """
         # Validate player_index bounds

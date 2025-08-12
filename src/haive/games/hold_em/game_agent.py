@@ -71,7 +71,6 @@ class HoldemGameAgentConfig(AgentConfig):
     through helper functions in the config module.
 
     """
-
     state_schema: type = Field(default=HoldemState)
 
     # Game settings
@@ -120,7 +119,6 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
     and comprehensive error recovery mechanisms.
 
     """
-
     def __init__(self, config: HoldemGameAgentConfig):
         super().__init__(config)
 
@@ -581,7 +579,6 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
             RuntimeError: If player lookup fails or decision-making fails
 
         """
-
         # Ensure we have proper state object
         if isinstance(state, dict):
             state = HoldemState.model_validate(state)

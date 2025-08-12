@@ -84,7 +84,6 @@ class PokerStateManager:
             Tuple of (success, message)
 
         """
-
         # Create decision object
         decision = AgentDecision(action=action, amount=amount, reasoning="")
 
@@ -157,7 +156,7 @@ class PokerStateManager:
             return False, str(e)
 
     def complete_hand(self) -> dict[str, Any]:
-        """Complete the current hand (showdown or single winner)
+        """Complete the current hand (showdown or single winner).
 
         Returns:
             Hand result information

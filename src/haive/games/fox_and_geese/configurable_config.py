@@ -198,7 +198,7 @@ def create_fox_and_geese_config_from_example(
 def create_fox_and_geese_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableFoxAndGeeseConfig:
-    """Create a configurable FoxAndGeese configuration from detailed player
+    """Create a configurable FoxAndGeese configuration from detailed player.
     configurations.
 
     Args:

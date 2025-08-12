@@ -208,7 +208,7 @@ def create_mastermind_config_from_example(
 def create_mastermind_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig], **kwargs
 ) -> ConfigurableMastermindConfig:
-    """Create a configurable Mastermind configuration from detailed player
+    """Create a configurable Mastermind configuration from detailed player.
     configurations.
 
     Args:

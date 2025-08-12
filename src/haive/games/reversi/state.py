@@ -13,7 +13,7 @@ from haive.games.framework.base.state import GameState
 from haive.games.reversi.models import ReversiMove
 
 if TYPE_CHECKING:
-    from haive.games.reversi.state_manager import ReversiStateManager
+    pass
 
 
 class ReversiState(GameState):
@@ -153,7 +153,6 @@ class ReversiState(GameState):
             ReversiState: Initialized state.
 
         """
-
         from haive.games.reversi.state_manager import ReversiStateManager
 
         return ReversiStateManager.initialize(

@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-r"""Comprehensive data models for strategic Monopoly gameplay and real estate
+r"""Comprehensive data models for strategic Monopoly gameplay and real estate.
 management.
 
 This module provides sophisticated data models for the classic Monopoly board game,
@@ -842,7 +842,7 @@ class TradeResponse(BaseModel):
 
 
 class PlayerAnalysis(BaseModel):
-    """Comprehensive strategic analysis model for player position and game state
+    """Comprehensive strategic analysis model for player position and game state.
     evaluation.
 
     This model provides detailed analysis of a player's current position in the game,
@@ -1257,7 +1257,7 @@ class DiceRoll(BaseModel):
 
 
 class Property(BaseModel):
-    """Comprehensive model for Monopoly board properties with development and ownership
+    """Comprehensive model for Monopoly board properties with development and ownership.
     tracking.
 
     This model represents individual properties on the Monopoly board, including
@@ -1495,7 +1495,7 @@ class Property(BaseModel):
 
 
 class Player(BaseModel):
-    r"""Comprehensive model for individual players in Monopoly with complete state
+    r"""Comprehensive model for individual players in Monopoly with complete state.
     tracking.
 
     This model represents a player's complete state in the Monopoly game, including

@@ -92,7 +92,7 @@ class PlayCardAction(CardAction[TCard, TState]):
         if self.player_id not in state.hands:
             return False
         hand = state.hands[self.player_id]
-        return any((card.id == self.card_id for card in hand.cards))
+        return any(card.id == self.card_id for card in hand.cards)
 
     def execute(self, state: TState) -> ActionResult:
         """Play the card from hand."""

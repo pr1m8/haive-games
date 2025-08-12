@@ -297,7 +297,6 @@ class ClueConfig(GameConfig):
                 assert config.solution == custom_solution
 
         """
-
         if solution_dict is None:
             solution_dict = {
                 "suspect": ValidSuspect.COLONEL_MUSTARD.value,

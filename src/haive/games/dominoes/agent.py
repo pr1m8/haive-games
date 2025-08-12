@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 @register_agent(DominoesAgentConfig)
 class DominoesAgent(GameAgent[DominoesAgentConfig]):
     """Agent for playing dominoes."""
-
     def __init__(self, config: DominoesAgentConfig | None = None):
         # Use default config if not provided
         if config is None:
@@ -249,7 +248,6 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def extract_move(self, response: Any) -> DominoMove | Literal["pass"]:
         """Extract move from engine response."""
-
         # If the response is already a DominoesPlayerDecision
         if isinstance(response, DominoesPlayerDecision):
             if response.pass_turn:
@@ -456,7 +454,6 @@ class DominoesAgent(GameAgent[DominoesAgentConfig]):
 
     def _extract_analysis(self, response: Any) -> DominoesAnalysis:
         """Extract analysis from engine response."""
-
         # If the response is already a DominoesAnalysis
         if isinstance(response, DominoesAnalysis):
             return response

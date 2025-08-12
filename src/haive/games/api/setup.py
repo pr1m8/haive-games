@@ -151,7 +151,6 @@ def create_connect4_api(
         ... )
 
     """
-
     api_config = GameAPIConfig(
         app_name="Connect4",
         route_prefix="/api/connect4",
@@ -187,7 +186,6 @@ def create_tic_tac_toe_api(
         ... )
 
     """
-
     api_config = GameAPIConfig(
         app_name="TicTacToe",
         route_prefix="/api/tictactoe",

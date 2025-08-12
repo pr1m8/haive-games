@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 class GameInfo(BaseModel):
     """Information about an available game."""
-
     name: str = Field(description="Display name of the game")
     game_id: str = Field(description="Unique identifier for the game")
     description: str = Field(description="Description of the game")
@@ -39,7 +38,6 @@ class GameInfo(BaseModel):
 
 class GameSelectionRequest(BaseModel):
     """Request for creating a new game."""
-
     game_id: str = Field(description="ID of the game to create")
     config_mode: str = Field(
         default="simple",
@@ -61,7 +59,6 @@ class GameSelectionRequest(BaseModel):
 
 class GeneralGameAPI:
     """General API system that discovers and manages all games."""
-
     def __init__(
         self,
         app: FastAPI,
@@ -194,7 +191,6 @@ class GeneralGameAPI:
 
     def _register_routes(self):
         """Register API routes for all discovered games."""
-
         # Main games list endpoint
         @self.app.get(f"{self.route_prefix}/", response_model=list[GameInfo])
         async def list_games():
@@ -345,7 +341,6 @@ class GeneralGameAPI:
 
     def _setup_openapi(self):
         """Setup custom OpenAPI documentation."""
-
         def custom_openapi() -> Any:
             if self.app.openapi_schema:
                 return self.app.openapi_schema

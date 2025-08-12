@@ -13,7 +13,7 @@ from haive.games.monopoly.player_agent import MonopolyPlayerAgent, PlayerDecisio
 from haive.games.monopoly.state import MonopolyState
 from haive.games.monopoly.utils import create_board, create_players, shuffle_cards
 
-r"""Comprehensive configuration system for strategic Monopoly gameplay and real
+r"""Comprehensive configuration system for strategic Monopoly gameplay and real.
 estate management.
 
 This module provides sophisticated configuration management for Monopoly agents with
@@ -262,7 +262,7 @@ class MonopolyPlayerAgentConfig(AgentConfig):
 
 
 class MonopolyGameAgentConfig(AgentConfig):
-    r"""Advanced configuration system for Monopoly game agents with comprehensive rule
+    r"""Advanced configuration system for Monopoly game agents with comprehensive rule.
     support.
 
     This class provides complete configuration management for Monopoly gameplay,

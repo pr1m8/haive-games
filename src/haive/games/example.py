@@ -130,7 +130,6 @@ async def example_poker_tournament():
 
 def example_custom_game() -> Any:
     """Example 4: Creating a custom game - Number Guessing."""
-
     # Define custom game state
     class NumberGameState(GameState):
         target_number: int = Field(default=0)
@@ -265,7 +264,6 @@ def example_game_evaluation() -> None:
 
 def example_game_visualization() -> Any:
     """Example 6: Visualizing game states."""
-
     # Simple ASCII chess board visualization
     def visualize_chess_position(fen: str) -> str:
         """Convert FEN to ASCII board."""
@@ -336,10 +334,8 @@ def example_wordle_with_strategy() -> None:
 
 def example_game_with_observers() -> None:
     """Example 8: Games with observer pattern."""
-
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
-
         def on_move(self, state: dict[str, Any], move, player):
             pass
 
@@ -348,7 +344,6 @@ def example_game_with_observers() -> None:
 
     class StatisticsObserver(GameObserver):
         """Track game statistics."""
-
         def __init__(self) -> None:
             self.move_count = 0
             self.player_moves = {}
@@ -376,7 +371,6 @@ def example_game_with_observers() -> None:
 
 def example_parallel_games() -> Any:
     """Example 9: Running games in parallel."""
-
     async def run_game_async(game_id: int, config: TicTacToeConfig):
         """Run a single game asynchronously."""
         game = TicTacToeAgent(config)
@@ -407,7 +401,6 @@ def example_parallel_games() -> Any:
 
 def example_save_and_load() -> None:
     """Example 10: Saving and loading game states."""
-
     # Start a game
     config = ChessConfig(player_names=["White", "Black"])
     game = ChessAgent(config)
