@@ -731,12 +731,12 @@ class ShipPlacementWrapper(BaseModel):
         missing_types = set(all_ship_types) - set(ship_types)
         if missing_types:
             raise ValueError(
-                f"Missing ship types: {', '.join((t.value for t in missing_types))}"
+                f"Missing ship types: {', '.join(t.value for t in missing_types)}"
             )
         duplicates = [t for t in ship_types if ship_types.count(t) > 1]
         if duplicates:
             raise ValueError(
-                f"Duplicate ship types: {', '.join((t.value for t in set(duplicates)))}"
+                f"Duplicate ship types: {', '.join(t.value for t in set(duplicates))}"
             )
         all_coords = set()
         for placement in placements:
@@ -1294,7 +1294,7 @@ class PlayerBoard(BaseModel):
             ...     print("Game over!")
 
         """
-        return len(self.ships) > 0 and all((ship.is_sunk for ship in self.ships))
+        return len(self.ships) > 0 and all(ship.is_sunk for ship in self.ships)
 
     def get_occupied_positions(self) -> list[tuple[int, int]]:
         """Get all board positions occupied by ships.
@@ -1320,7 +1320,7 @@ class PlayerBoard(BaseModel):
             int: Number of ships not yet sunk.
 
         """
-        return sum((1 for ship in self.ships if not ship.is_sunk))
+        return sum(1 for ship in self.ships if not ship.is_sunk)
 
     @computed_field
     @property
@@ -1331,7 +1331,7 @@ class PlayerBoard(BaseModel):
             int: Total ship squares on the board.
 
         """
-        return sum((ship.size for ship in self.ships))
+        return sum(ship.size for ship in self.ships)
 
     @computed_field
     @property

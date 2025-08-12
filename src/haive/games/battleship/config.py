@@ -52,7 +52,7 @@ from haive.games.battleship.state import BattleshipState
 
 
 class BattleshipAgentConfig(AgentConfig):
-    """Comprehensive configuration for Battleship game agents with extensive
+    """Comprehensive configuration for Battleship game agents with extensive.
     customization.
 
     This configuration class provides complete control over Battleship game mechanics,

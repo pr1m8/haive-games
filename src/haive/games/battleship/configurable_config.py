@@ -214,7 +214,7 @@ def create_battleship_config_from_player_configs(
     player_configs: dict[str, PlayerAgentConfig],
     **kwargs,
 ) -> ConfigurableBattleshipConfig:
-    """Create a configurable Battleship configuration from detailed player
+    """Create a configurable Battleship configuration from detailed player.
     configurations.
 
     Args:
