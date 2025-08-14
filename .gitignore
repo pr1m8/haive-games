@@ -88,6 +88,12 @@ credentials.json
 dist/
 docs/build/
 docs/_build/
+docs/logs/
+docs/autoapi/
+docs/source/_static/
+docs/source/_tags/
+docs/source/autoapi/
+docs/source/changelog.rst
 docs/source/_build/
 docs/source/api/
 docs/scratch/
@@ -96,6 +102,11 @@ docs/scratch/
 sphinx*
 readthedocs-sphinx-search/
 *.rst~
+**/*.rst~
+
+# PyDevelop-Docs artifacts  
+.pydevelop/
+!.pydevelop/docs.yaml
 env/
 examples/outputs/
 external/
