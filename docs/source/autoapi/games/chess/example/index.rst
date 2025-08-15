@@ -1,24 +1,25 @@
-
-:py:mod:`games.chess.example`
-=============================
+games.chess.example
+===================
 
 .. py:module:: games.chess.example
 
-Example chess game runner.
+.. autoapi-nested-parse::
 
-This module provides an example of how to run a complete chess game
-using the Haive chess module, demonstrating:
-    - Agent configuration
-    - State initialization
-    - Game streaming
-    - Event monitoring
+   Example chess game runner.
 
-This is intended as a basic demonstration of the chess module's capabilities
-and can be used as a starting point for more complex implementations.
+   This module provides an example of how to run a complete chess game
+   using the Haive chess module, demonstrating:
+       - Agent configuration
+       - State initialization
+       - Game streaming
+       - Event monitoring
+
+   This is intended as a basic demonstration of the chess module's capabilities
+   and can be used as a starting point for more complex implementations.
 
 
-.. autolink-examples:: games.chess.example
-   :collapse:
+   .. autolink-examples:: games.chess.example
+      :collapse:
 
 
 Functions
@@ -27,6 +28,10 @@ Functions
 .. autoapisummary::
 
    games.chess.example.run_chess_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_chess_game(thread_id: str = None)
 
@@ -65,11 +70,3 @@ Functions
    .. autolink-examples:: run_chess_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.example
-   :collapse:
-   
-.. autolink-skip:: next

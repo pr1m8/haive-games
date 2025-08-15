@@ -1,19 +1,20 @@
-
-:py:mod:`games.battleship.engines`
-==================================
+games.battleship.engines
+========================
 
 .. py:module:: games.battleship.engines
 
-Battleship game engine configurations.
+.. autoapi-nested-parse::
 
-This module provides engine configurations for the Battleship game, including:
-    - Player decision engines
-    - Ship placement engines
-    - Analysis engines
+   Battleship game engine configurations.
+
+   This module provides engine configurations for the Battleship game, including:
+       - Player decision engines
+       - Ship placement engines
+       - Analysis engines
 
 
-.. autolink-examples:: games.battleship.engines
-   :collapse:
+   .. autolink-examples:: games.battleship.engines
+      :collapse:
 
 
 Functions
@@ -22,6 +23,10 @@ Functions
 .. autoapisummary::
 
    games.battleship.engines.build_battleship_engines
+
+
+Module Contents
+---------------
 
 .. py:function:: build_battleship_engines() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -42,11 +47,3 @@ Functions
    .. autolink-examples:: build_battleship_engines
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.engines
-   :collapse:
-   
-.. autolink-skip:: next

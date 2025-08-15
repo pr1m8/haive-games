@@ -1,15 +1,25 @@
-
-:py:mod:`games.cards`
-=====================
+games.cards
+===========
 
 .. py:module:: games.cards
 
-Cards games module exports.
+.. autoapi-nested-parse::
+
+   Cards games module exports.
 
 
-.. autolink-examples:: games.cards
-   :collapse:
+   .. autolink-examples:: games.cards
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/cards/models/index
+   /autoapi/games/cards/standard/index
+   /autoapi/games/cards/uno/index
 
 

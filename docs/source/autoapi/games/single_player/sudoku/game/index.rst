@@ -1,15 +1,25 @@
-
-:py:mod:`games.single_player.sudoku.game`
-=========================================
+games.single_player.sudoku.game
+===============================
 
 .. py:module:: games.single_player.sudoku.game
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.single_player.sudoku.game
-   :collapse:
+   .. autolink-examples:: games.single_player.sudoku.game
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/single_player/sudoku/game/board/index
+   /autoapi/games/single_player/sudoku/game/cell/index
+   /autoapi/games/single_player/sudoku/game/piece/index
 
 

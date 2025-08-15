@@ -1,6 +1,5 @@
-
-:py:mod:`games.single_player.wordle.models`
-===========================================
+games.single_player.wordle.models
+=================================
 
 .. py:module:: games.single_player.wordle.models
 
@@ -17,62 +16,121 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: WordConnectionsMove(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a move in Word Connections game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: WordConnectionsMove
+      :collapse:
+
+   .. py:method:: validate_words_length(v)
+      :classmethod:
+
+
+      Validate that exactly 4 words are provided.
+
+
+      .. autolink-examples:: validate_words_length
+         :collapse:
+
+
+   .. py:attribute:: category_guess
+      :type:  str
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for WordConnectionsMove:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_WordConnectionsMove {
-        node [shape=record];
-        "WordConnectionsMove" [label="WordConnectionsMove"];
-        "pydantic.BaseModel" -> "WordConnectionsMove";
-      }
-
-.. autopydantic_model:: games.single_player.wordle.models.WordConnectionsMove
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: words
+      :type:  list[str]
+      :value: None
 
 
 
+.. py:class:: WordConnectionsState
+
+   Bases: :py:obj:`haive.games.framework.base.GameState`
 
 
-.. toggle:: Show Inheritance Diagram
+   State for a Word Connections game.
 
-   Inheritance diagram for WordConnectionsState:
 
-   .. graphviz::
-      :align: center
+   .. autolink-examples:: WordConnectionsState
+      :collapse:
 
-      digraph inheritance_WordConnectionsState {
-        node [shape=record];
-        "WordConnectionsState" [label="WordConnectionsState"];
-        "haive.games.framework.base.GameState" -> "WordConnectionsState";
-      }
-
-.. autoclass:: games.single_player.wordle.models.WordConnectionsState
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:attribute:: categories
+      :type:  dict[str, list[str]]
+      :value: None
 
 
 
+   .. py:attribute:: difficulty_map
+      :type:  dict[str, str]
+      :value: None
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.single_player.wordle.models
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:property:: display_grid
+      :type: str
+
+
+      Display the current grid state.
+
+      .. autolink-examples:: display_grid
+         :collapse:
+
+
+   .. py:attribute:: found_categories
+      :type:  dict[str, list[str]]
+      :value: None
+
+
+
+   .. py:attribute:: game_status
+      :type:  Literal['playing', 'won', 'lost']
+      :value: None
+
+
+
+   .. py:attribute:: grid
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:attribute:: incorrect_guesses
+      :type:  list[list[str]]
+      :value: None
+
+
+
+   .. py:attribute:: mistakes_remaining
+      :type:  int
+      :value: None
+
+
+
+   .. py:property:: remaining_words
+      :type: list[str]
+
+
+      Get words not yet correctly categorized.
+
+      .. autolink-examples:: remaining_words
+         :collapse:
+
+

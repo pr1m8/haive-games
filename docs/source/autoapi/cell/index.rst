@@ -1,10 +1,6 @@
-
-:py:mod:`cell`
-==============
+cell
+====
 
 .. py:module:: cell
-
-
-
 
 

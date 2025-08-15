@@ -1,14 +1,23 @@
-
-:py:mod:`games.fox_and_geese.enhanced_example`
-==============================================
+games.fox_and_geese.enhanced_example
+====================================
 
 .. py:module:: games.fox_and_geese.enhanced_example
 
-Enhanced example runner for Fox and Geese game with Rich UI visualization.
+.. autoapi-nested-parse::
+
+   Enhanced example runner for Fox and Geese game with Rich UI visualization.
 
 
-.. autolink-examples:: games.fox_and_geese.enhanced_example
-   :collapse:
+   .. autolink-examples:: games.fox_and_geese.enhanced_example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.fox_and_geese.enhanced_example.parser
 
 
 Functions
@@ -18,6 +27,10 @@ Functions
 
    games.fox_and_geese.enhanced_example.demo_ui_features
    games.fox_and_geese.enhanced_example.run_fox_and_geese_game
+
+
+Module Contents
+---------------
 
 .. py:function:: demo_ui_features(delay: float = 0.5)
 
@@ -43,11 +56,5 @@ Functions
    .. autolink-examples:: run_fox_and_geese_game
       :collapse:
 
+.. py:data:: parser
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.fox_and_geese.enhanced_example
-   :collapse:
-   
-.. autolink-skip:: next

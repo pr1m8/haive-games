@@ -1,17 +1,28 @@
-
-:py:mod:`games.fox_and_geese.configurable_config`
-=================================================
+games.fox_and_geese.configurable_config
+=======================================
 
 .. py:module:: games.fox_and_geese.configurable_config
 
-Configurable FoxAndGeese configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable FoxAndGeese game configurations that replace hardcoded
-LLM settings with dynamic, configurable player agents.
+   Configurable FoxAndGeese configuration using the generic player agent system.
+
+   This module provides configurable FoxAndGeese game configurations that replace hardcoded
+   LLM settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.fox_and_geese.configurable_config
-   :collapse:
+   .. autolink-examples:: games.fox_and_geese.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.fox_and_geese.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.fox_and_geese.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.fox_and_geese.configurable_config.ConfigurableFoxAndGeeseConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableFoxAndGeeseConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableFoxAndGeeseConfig {
-        node [shape=record];
-        "ConfigurableFoxAndGeeseConfig" [label="ConfigurableFoxAndGeeseConfig"];
-        "haive.games.fox_and_geese.config.FoxAndGeeseConfig" -> "ConfigurableFoxAndGeeseConfig";
-      }
-
-.. autoclass:: games.fox_and_geese.configurable_config.ConfigurableFoxAndGeeseConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,136 @@ Functions
    games.fox_and_geese.configurable_config.create_fox_and_geese_config_from_player_configs
    games.fox_and_geese.configurable_config.get_example_config
    games.fox_and_geese.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableFoxAndGeeseConfig
+
+   Bases: :py:obj:`haive.games.fox_and_geese.config.FoxAndGeeseConfig`
+
+
+   Configurable FoxAndGeese configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the FoxAndGeese game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: fox_model
+
+      Model for fox (can be string or LLMConfig)
+
+   .. attribute:: geese_model
+
+      Model for geese (can be string or LLMConfig)
+
+   .. attribute:: fox_name
+
+      Name for fox
+
+   .. attribute:: geese_name
+
+      Name for geese
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: enable_analysis
+
+      Whether to enable strategic analysis
+
+   .. attribute:: visualize_game
+
+      Whether to visualize game state
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableFoxAndGeeseConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(fox_model: str, geese_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: fox_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: geese_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
 
 .. py:function:: create_advanced_fox_and_geese_config(**kwargs) -> ConfigurableFoxAndGeeseConfig
 
@@ -208,11 +324,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.fox_and_geese.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

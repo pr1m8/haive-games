@@ -1,30 +1,39 @@
-
-:py:mod:`games.battleship.example`
-==================================
+games.battleship.example
+========================
 
 .. py:module:: games.battleship.example
 
-Main script to run the Battleship game.
+.. autoapi-nested-parse::
 
-This module provides a standalone command-line interface for running
-the Battleship game with LLM-powered agents. It features:
-    - Rich text-based visualization of game boards and states
-    - Command-line options for customizing game behavior
-    - Progress tracking and game statistics
-    - Error handling and graceful termination
+   Main script to run the Battleship game.
 
-Run this script directly to start a Battleship game:
-    python -m haive.games.battleship.example
+   This module provides a standalone command-line interface for running
+   the Battleship game with LLM-powered agents. It features:
+       - Rich text-based visualization of game boards and states
+       - Command-line options for customizing game behavior
+       - Progress tracking and game statistics
+       - Error handling and graceful termination
 
-Command-line options:
-    --no-visual: Disable board visualization
-    --no-analysis: Disable strategic analysis
-    --debug: Enable debug mode with detailed logs
-    --delay: Set delay between game steps (default: 0.5s)
+   Run this script directly to start a Battleship game:
+       python -m haive.games.battleship.example
+
+   Command-line options:
+       --no-visual: Disable board visualization
+       --no-analysis: Disable strategic analysis
+       --debug: Enable debug mode with detailed logs
+       --delay: Set delay between game steps (default: 0.5s)
 
 
-.. autolink-examples:: games.battleship.example
-   :collapse:
+   .. autolink-examples:: games.battleship.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.battleship.example.console
 
 
 Functions
@@ -34,6 +43,10 @@ Functions
 
    games.battleship.example.main
    games.battleship.example.run_game
+
+
+Module Contents
+---------------
 
 .. py:function:: main()
 
@@ -84,11 +97,5 @@ Functions
    .. autolink-examples:: run_game
       :collapse:
 
+.. py:data:: console
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.example
-   :collapse:
-   
-.. autolink-skip:: next

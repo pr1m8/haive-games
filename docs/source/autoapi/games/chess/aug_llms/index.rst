@@ -1,31 +1,40 @@
-
-:py:mod:`games.chess.aug_llms`
-==============================
+games.chess.aug_llms
+====================
 
 .. py:module:: games.chess.aug_llms
 
-Chess game augmented LLM configurations module.
+.. autoapi-nested-parse::
 
-This module provides augmented LLM configurations for the chess game, including:
-    - Move generation prompts for white and black players
-    - Position analysis prompts for both sides
-    - Structured output models for moves and analysis
-    - Pre-configured LLM configurations for easy agent setup
+   Chess game augmented LLM configurations module.
 
-The module provides an alternative to the engines.py approach, with a focus
-on customizability and different prompt styles for chess gameplay.
+   This module provides augmented LLM configurations for the chess game, including:
+       - Move generation prompts for white and black players
+       - Position analysis prompts for both sides
+       - Structured output models for moves and analysis
+       - Pre-configured LLM configurations for easy agent setup
 
-.. rubric:: Example
+   The module provides an alternative to the engines.py approach, with a focus
+   on customizability and different prompt styles for chess gameplay.
 
->>> from haive.games.chess.aug_llms import aug_llm_configs
->>>
->>> # Access white player's move generation configuration
->>> white_config = aug_llm_configs["white_player"]
->>> white_prompt = white_config.prompt_template
+   .. rubric:: Example
+
+   >>> from haive.games.chess.aug_llms import aug_llm_configs
+   >>>
+   >>> # Access white player's move generation configuration
+   >>> white_config = aug_llm_configs["white_player"]
+   >>> white_prompt = white_config.prompt_template
 
 
-.. autolink-examples:: games.chess.aug_llms
-   :collapse:
+   .. autolink-examples:: games.chess.aug_llms
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.chess.aug_llms.aug_llm_configs
 
 
 Functions
@@ -36,6 +45,10 @@ Functions
    games.chess.aug_llms.build_chess_aug_llms_per_color
    games.chess.aug_llms.generate_analysis_prompt
    games.chess.aug_llms.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: build_chess_aug_llms_per_color(*, white_llm: haive.core.models.llm.base.LLMConfig | None = AzureLLMConfig(), black_llm: haive.core.models.llm.base.LLMConfig | None = DeepSeekLLMConfig()) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -124,11 +137,6 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: aug_llm_configs
+   :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.aug_llms
-   :collapse:
-   
-.. autolink-skip:: next

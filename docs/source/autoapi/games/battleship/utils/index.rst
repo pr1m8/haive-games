@@ -1,19 +1,20 @@
-
-:py:mod:`games.battleship.utils`
-================================
+games.battleship.utils
+======================
 
 .. py:module:: games.battleship.utils
 
-Battleship game utility functions.
+.. autoapi-nested-parse::
 
-This module provides helper functions for the Battleship game, including:
-    - Board visualization
-    - Coordinate formatting
-    - Game status checking
+   Battleship game utility functions.
+
+   This module provides helper functions for the Battleship game, including:
+       - Board visualization
+       - Coordinate formatting
+       - Game status checking
 
 
-.. autolink-examples:: games.battleship.utils
-   :collapse:
+   .. autolink-examples:: games.battleship.utils
+      :collapse:
 
 
 Functions
@@ -26,6 +27,10 @@ Functions
    games.battleship.utils.format_coordinates_list
    games.battleship.utils.format_ship_types
    games.battleship.utils.visualize_board
+
+
+Module Contents
+---------------
 
 .. py:function:: calculate_game_stats(move_history: list[tuple[str, dict[str, Any]]]) -> dict[str, Any]
 
@@ -88,11 +93,3 @@ Functions
    .. autolink-examples:: visualize_board
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.utils
-   :collapse:
-   
-.. autolink-skip:: next

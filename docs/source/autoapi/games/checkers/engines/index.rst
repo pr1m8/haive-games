@@ -1,23 +1,24 @@
-
-:py:mod:`games.checkers.engines`
-================================
+games.checkers.engines
+======================
 
 .. py:module:: games.checkers.engines
 
-Checkers game engines using AugLLMConfig.
+.. autoapi-nested-parse::
 
-This module provides LLM engine configurations for checkers game agents, including:
-    - Player engines for red and black
-    - Analyzer engines for position evaluation
-    - Prompt templates with checkers-specific instructions
-    - Structured output models for moves and analysis
+   Checkers game engines using AugLLMConfig.
 
-The engines use LLM configurations optimized for checkers gameplay,
-with prompt templates designed to generate high-quality moves and analysis.
+   This module provides LLM engine configurations for checkers game agents, including:
+       - Player engines for red and black
+       - Analyzer engines for position evaluation
+       - Prompt templates with checkers-specific instructions
+       - Structured output models for moves and analysis
+
+   The engines use LLM configurations optimized for checkers gameplay,
+   with prompt templates designed to generate high-quality moves and analysis.
 
 
-.. autolink-examples:: games.checkers.engines
-   :collapse:
+   .. autolink-examples:: games.checkers.engines
+      :collapse:
 
 
 Functions
@@ -28,6 +29,10 @@ Functions
    games.checkers.engines.build_checkers_aug_llms
    games.checkers.engines.generate_analysis_prompt
    games.checkers.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: build_checkers_aug_llms() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -120,11 +125,3 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.checkers.engines
-   :collapse:
-   
-.. autolink-skip:: next

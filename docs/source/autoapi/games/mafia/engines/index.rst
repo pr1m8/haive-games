@@ -1,32 +1,41 @@
-
-:py:mod:`games.mafia.engines`
-=============================
+games.mafia.engines
+===================
 
 .. py:module:: games.mafia.engines
 
-LLM engine configurations for the Mafia game.
+.. autoapi-nested-parse::
 
-This module defines the LLM configurations and prompts for each role in the
-Mafia game. It provides:
-    - Role-specific prompt templates
-    - LLM configurations for each role
-    - Structured output schemas for decisions
-    - Example prompts and responses
+   LLM engine configurations for the Mafia game.
 
-The module uses Azure OpenAI's GPT-4 model for all roles, with custom
-prompts designed to elicit appropriate role-playing behavior.
+   This module defines the LLM configurations and prompts for each role in the
+   Mafia game. It provides:
+       - Role-specific prompt templates
+       - LLM configurations for each role
+       - Structured output schemas for decisions
+       - Example prompts and responses
 
-.. rubric:: Example
+   The module uses Azure OpenAI's GPT-4 model for all roles, with custom
+   prompts designed to elicit appropriate role-playing behavior.
 
->>> from mafia.engines import aug_llm_configs
->>>
->>> # Get the villager player engine config
->>> villager_config = aug_llm_configs["villager"]["player"]
->>> print(villager_config.name)  # Shows "villager_player"
+   .. rubric:: Example
+
+   >>> from mafia.engines import aug_llm_configs
+   >>>
+   >>> # Get the villager player engine config
+   >>> villager_config = aug_llm_configs["villager"]["player"]
+   >>> print(villager_config.name)  # Shows "villager_player"
 
 
-.. autolink-examples:: games.mafia.engines
-   :collapse:
+   .. autolink-examples:: games.mafia.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.engines.aug_llm_configs
 
 
 Functions
@@ -39,6 +48,10 @@ Functions
    games.mafia.engines.generate_mafia_prompt
    games.mafia.engines.generate_narrator_prompt
    games.mafia.engines.generate_villager_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_detective_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
@@ -175,11 +188,5 @@ Functions
    .. autolink-examples:: generate_villager_prompt
       :collapse:
 
+.. py:data:: aug_llm_configs
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.engines
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,17 +1,28 @@
-
-:py:mod:`games.benchmark`
-=========================
+games.benchmark
+===============
 
 .. py:module:: games.benchmark
 
-Benchmark script for testing game agents.
+.. autoapi-nested-parse::
 
-This script runs benchmarks for the Monopoly and Poker agents to test their performance
-and identify issues.
+   Benchmark script for testing game agents.
+
+   This script runs benchmarks for the Monopoly and Poker agents to test their performance
+   and identify issues.
 
 
-.. autolink-examples:: games.benchmark
-   :collapse:
+   .. autolink-examples:: games.benchmark
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.benchmark.PROJECT_ROOT
+   games.benchmark.exit_code
+   games.benchmark.logger
 
 
 Functions
@@ -22,6 +33,10 @@ Functions
    games.benchmark.main
    games.benchmark.run_monopoly_benchmark
    games.benchmark.run_poker_benchmark
+
+
+Module Contents
+---------------
 
 .. py:function:: main()
 
@@ -47,11 +62,11 @@ Functions
    .. autolink-examples:: run_poker_benchmark
       :collapse:
 
+.. py:data:: PROJECT_ROOT
+
+.. py:data:: exit_code
+   :value: 0
 
 
-.. rubric:: Related Links
+.. py:data:: logger
 
-.. autolink-examples:: games.benchmark
-   :collapse:
-   
-.. autolink-skip:: next

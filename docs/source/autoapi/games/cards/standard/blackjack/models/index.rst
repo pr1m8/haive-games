@@ -1,6 +1,5 @@
-
-:py:mod:`games.cards.standard.blackjack.models`
-===============================================
+games.cards.standard.blackjack.models
+=====================================
 
 .. py:module:: games.cards.standard.blackjack.models
 
@@ -21,184 +20,321 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: BlackjackGameState(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents the overall state of a Blackjack game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: BlackjackGameState
+      :collapse:
+
+   .. py:attribute:: current_hand_index
+      :type:  int
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BlackjackGameState:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BlackjackGameState {
-        node [shape=record];
-        "BlackjackGameState" [label="BlackjackGameState"];
-        "pydantic.BaseModel" -> "BlackjackGameState";
-      }
-
-.. autopydantic_model:: games.cards.standard.blackjack.models.BlackjackGameState
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: current_player_index
+      :type:  int
+      :value: None
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for Card:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Card {
-        node [shape=record];
-        "Card" [label="Card"];
-        "pydantic.BaseModel" -> "Card";
-      }
-
-.. autopydantic_model:: games.cards.standard.blackjack.models.Card
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: dealer_hand
+      :type:  list[Card]
+      :value: None
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for CardSuit:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CardSuit {
-        node [shape=record];
-        "CardSuit" [label="CardSuit"];
-        "str" -> "CardSuit";
-        "enum.Enum" -> "CardSuit";
-      }
-
-.. autoclass:: games.cards.standard.blackjack.models.CardSuit
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. note::
-
-      **CardSuit** is an Enum defined in ``games.cards.standard.blackjack.models``.
+   .. py:attribute:: deck
+      :type:  list[Card]
+      :value: None
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PlayerAction:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PlayerAction {
-        node [shape=record];
-        "PlayerAction" [label="PlayerAction"];
-        "pydantic.BaseModel" -> "PlayerAction";
-      }
-
-.. autopydantic_model:: games.cards.standard.blackjack.models.PlayerAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: game_status
+      :type:  Literal['betting', 'playing', 'dealer_turn', 'game_over']
+      :value: None
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PlayerHand:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PlayerHand {
-        node [shape=record];
-        "PlayerHand" [label="PlayerHand"];
-        "pydantic.BaseModel" -> "PlayerHand";
-      }
-
-.. autopydantic_model:: games.cards.standard.blackjack.models.PlayerHand
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: players
+      :type:  list[PlayerState]
+      :value: None
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PlayerState:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PlayerState {
-        node [shape=record];
-        "PlayerState" [label="PlayerState"];
-        "pydantic.BaseModel" -> "PlayerState";
-      }
-
-.. autopydantic_model:: games.cards.standard.blackjack.models.PlayerState
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: round_winner
+      :type:  str | None
+      :value: None
 
 
 
+.. py:class:: Card(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
 
 
-.. rubric:: Related Links
+   Represents a playing card.
 
-.. autolink-examples:: games.cards.standard.blackjack.models
-   :collapse:
-   
-.. autolink-skip:: next
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Card
+      :collapse:
+
+   .. py:method:: __str__() -> str
+
+
+   .. py:method:: point_value() -> int
+
+      Calculate point value of the card.
+
+
+      .. autolink-examples:: point_value
+         :collapse:
+
+
+   .. py:attribute:: suit
+      :type:  CardSuit
+
+
+   .. py:attribute:: value
+      :type:  str
+
+
+.. py:class:: CardSuit
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   str(object='') -> str
+   str(bytes_or_buffer[, encoding[, errors]]) -> str
+
+   Create a new string object from the given object. If encoding or
+   errors is specified, then the object must expose a data buffer
+   that will be decoded using the given encoding and error handler.
+   Otherwise, returns the result of object.__str__() (if defined)
+   or repr(object).
+   encoding defaults to sys.getdefaultencoding().
+   errors defaults to 'strict'.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: CardSuit
+      :collapse:
+
+   .. py:attribute:: CLUBS
+      :value: 'clubs'
+
+
+
+   .. py:attribute:: DIAMONDS
+      :value: 'diamonds'
+
+
+
+   .. py:attribute:: HEARTS
+      :value: 'hearts'
+
+
+
+   .. py:attribute:: SPADES
+      :value: 'spades'
+
+
+
+.. py:class:: PlayerAction(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a player's action in Blackjack.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerAction
+      :collapse:
+
+   .. py:attribute:: action
+      :type:  Literal['hit', 'stand', 'double_down', 'split', 'surrender']
+      :value: None
+
+
+
+   .. py:attribute:: reasoning
+      :type:  str | None
+      :value: None
+
+
+
+.. py:class:: PlayerHand(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a player's hand in Blackjack.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerHand
+      :collapse:
+
+   .. py:method:: is_blackjack() -> bool
+
+      Check if the hand is a blackjack.
+
+
+      .. autolink-examples:: is_blackjack
+         :collapse:
+
+
+   .. py:method:: is_bust() -> bool
+
+      Check if the hand is bust.
+
+
+      .. autolink-examples:: is_bust
+         :collapse:
+
+
+   .. py:method:: total_value() -> int
+
+      Calculate the total value of the hand.
+
+
+      .. autolink-examples:: total_value
+         :collapse:
+
+
+   .. py:attribute:: bet
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: cards
+      :type:  list[Card]
+      :value: None
+
+
+
+   .. py:attribute:: is_active
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: is_split
+      :type:  bool
+      :value: None
+
+
+
+.. py:class:: PlayerState(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a player's state in the game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerState
+      :collapse:
+
+   .. py:method:: add_hand(hand: PlayerHand)
+
+      Add a hand to the player's state.
+
+
+      .. autolink-examples:: add_hand
+         :collapse:
+
+
+   .. py:attribute:: current_bet
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: hands
+      :type:  list[PlayerHand]
+      :value: None
+
+
+
+   .. py:attribute:: is_active
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: total_chips
+      :type:  float
+      :value: None
+
+
+

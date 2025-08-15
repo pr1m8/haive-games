@@ -1,6 +1,5 @@
-
-:py:mod:`games.core.players.agent`
-==================================
+games.core.players.agent
+========================
 
 .. py:module:: games.core.players.agent
 
@@ -16,34 +15,26 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: BasePlayerAgent(game_config: haive.games.core.agent.game_config.GameConfig, player_config: PlayerConfig)
+
+   Bases: :py:obj:`haive.agents.simple.config.SimpleAgentConfig`, :py:obj:`abc.ABC`
 
 
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BasePlayerAgent:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BasePlayerAgent {
-        node [shape=record];
-        "BasePlayerAgent" [label="BasePlayerAgent"];
-        "haive.agents.simple.config.SimpleAgentConfig" -> "BasePlayerAgent";
-        "abc.ABC" -> "BasePlayerAgent";
-      }
-
-.. autoclass:: games.core.players.agent.BasePlayerAgent
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Base class for player agents.
 
 
+   .. autolink-examples:: BasePlayerAgent
+      :collapse:
+
+   .. py:attribute:: analysis_prompt
+      :type:  langchain_core.prompts.ChatPromptTemplate
 
 
-.. rubric:: Related Links
+   .. py:attribute:: move_model
+      :type:  pydantic.BaseModel
 
-.. autolink-examples:: games.core.players.agent
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:attribute:: move_prompt
+      :type:  langchain_core.prompts.ChatPromptTemplate
+
+

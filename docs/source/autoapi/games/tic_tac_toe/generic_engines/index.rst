@@ -1,18 +1,30 @@
-
-:py:mod:`games.tic_tac_toe.generic_engines`
-===========================================
+games.tic_tac_toe.generic_engines
+=================================
 
 .. py:module:: games.tic_tac_toe.generic_engines
 
-Generic Tic Tac Toe engines using the new generic player agent system.
+.. autoapi-nested-parse::
 
-This module demonstrates how to use the generic player agent system for Tic Tac Toe,
-showing the same pattern working across different games with different player
-identifiers.
+   Generic Tic Tac Toe engines using the new generic player agent system.
+
+   This module demonstrates how to use the generic player agent system for Tic Tac Toe,
+   showing the same pattern working across different games with different player
+   identifiers.
 
 
-.. autolink-examples:: games.tic_tac_toe.generic_engines
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.tic_tac_toe.generic_engines.ttt_engine_factory
+   games.tic_tac_toe.generic_engines.ttt_players
+   games.tic_tac_toe.generic_engines.ttt_prompt_generator
+
 
 Classes
 -------
@@ -20,31 +32,6 @@ Classes
 .. autoapisummary::
 
    games.tic_tac_toe.generic_engines.TicTacToePromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for TicTacToePromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_TicTacToePromptGenerator {
-        node [shape=record];
-        "TicTacToePromptGenerator" [label="TicTacToePromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "TicTacToePromptGenerator";
-      }
-
-.. autoclass:: games.tic_tac_toe.generic_engines.TicTacToePromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -57,6 +44,67 @@ Functions
    games.tic_tac_toe.generic_engines.create_generic_ttt_engines
    games.tic_tac_toe.generic_engines.create_generic_ttt_engines_simple
    games.tic_tac_toe.generic_engines.create_multi_game_comparison
+
+
+Module Contents
+---------------
+
+.. py:class:: TicTacToePromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Tic Tac Toe-specific prompt generator using the generic system.
+
+
+   .. autolink-examples:: TicTacToePromptGenerator
+      :collapse:
+
+   .. py:method:: create_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Tic Tac Toe analysis prompt for the specified player.
+
+      :param player: Player symbol ("X" or "O")
+
+      :returns: Prompt template for position analysis
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_analysis_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Tic Tac Toe move prompt for the specified player.
+
+      :param player: Player symbol ("X" or "O")
+
+      :returns: Prompt template for move generation
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
+
+   .. py:method:: get_analysis_output_model() -> type
+
+      Get the structured output model for Tic Tac Toe analysis.
+
+
+      .. autolink-examples:: get_analysis_output_model
+         :collapse:
+
+
+   .. py:method:: get_move_output_model() -> type
+
+      Get the structured output model for Tic Tac Toe moves.
+
+
+      .. autolink-examples:: get_move_output_model
+         :collapse:
+
 
 .. py:function:: compare_chess_vs_ttt_patterns()
 
@@ -152,11 +200,9 @@ Functions
    .. autolink-examples:: create_multi_game_comparison
       :collapse:
 
+.. py:data:: ttt_engine_factory
 
+.. py:data:: ttt_players
 
-.. rubric:: Related Links
+.. py:data:: ttt_prompt_generator
 
-.. autolink-examples:: games.tic_tac_toe.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

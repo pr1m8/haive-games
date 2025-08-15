@@ -1,17 +1,27 @@
-
-:py:mod:`games.fox_and_geese.generic_engines`
-=============================================
+games.fox_and_geese.generic_engines
+===================================
 
 .. py:module:: games.fox_and_geese.generic_engines
 
-Generic FoxAndGeese engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for FoxAndGeese games, allowing
-for configurable LLM models and game-specific player identifiers.
+   Generic FoxAndGeese engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for FoxAndGeese games, allowing
+   for configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.fox_and_geese.generic_engines
-   :collapse:
+   .. autolink-examples:: games.fox_and_geese.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.fox_and_geese.generic_engines.fox_and_geese_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.fox_and_geese.generic_engines.FoxAndGeeseEngineFactory
    games.fox_and_geese.generic_engines.FoxAndGeesePlayerIdentifiers
    games.fox_and_geese.generic_engines.FoxAndGeesePromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for FoxAndGeeseEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_FoxAndGeeseEngineFactory {
-        node [shape=record];
-        "FoxAndGeeseEngineFactory" [label="FoxAndGeeseEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "FoxAndGeeseEngineFactory";
-      }
-
-.. autoclass:: games.fox_and_geese.generic_engines.FoxAndGeeseEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for FoxAndGeesePlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_FoxAndGeesePlayerIdentifiers {
-        node [shape=record];
-        "FoxAndGeesePlayerIdentifiers" [label="FoxAndGeesePlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "FoxAndGeesePlayerIdentifiers";
-      }
-
-.. autoclass:: games.fox_and_geese.generic_engines.FoxAndGeesePlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for FoxAndGeesePromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_FoxAndGeesePromptGenerator {
-        node [shape=record];
-        "FoxAndGeesePromptGenerator" [label="FoxAndGeesePromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "FoxAndGeesePromptGenerator";
-      }
-
-.. autoclass:: games.fox_and_geese.generic_engines.FoxAndGeesePromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.fox_and_geese.generic_engines.create_generic_fox_and_geese_engines
    games.fox_and_geese.generic_engines.create_generic_fox_and_geese_engines_simple
    games.fox_and_geese.generic_engines.create_mixed_fox_and_geese_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: FoxAndGeeseEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating FoxAndGeese game engines.
+
+
+   .. autolink-examples:: FoxAndGeeseEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: FoxAndGeesePlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for FoxAndGeese game.
+
+
+   .. autolink-examples:: FoxAndGeesePlayerIdentifiers
+      :collapse:
+
+.. py:class:: FoxAndGeesePromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for FoxAndGeese game.
+
+
+   .. autolink-examples:: FoxAndGeesePromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for FoxAndGeese game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for FoxAndGeese player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_fox_and_geese_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_fox_and_geese_engines
       :collapse:
 
+.. py:data:: fox_and_geese_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.fox_and_geese.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

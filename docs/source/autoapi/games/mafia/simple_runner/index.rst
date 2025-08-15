@@ -1,26 +1,35 @@
-
-:py:mod:`games.mafia.simple_runner`
-===================================
+games.mafia.simple_runner
+=========================
 
 .. py:module:: games.mafia.simple_runner
 
-Simple runner for the Mafia game that avoids LangGraph issues.
+.. autoapi-nested-parse::
 
-This module provides a simplified version of the Mafia game runner that
-avoids the streaming issues in LangGraph by:
-    - Using direct state manipulation instead of graph streaming
-    - Following the game logic manually through phases
-    - Providing the same visualization and game experience
+   Simple runner for the Mafia game that avoids LangGraph issues.
 
-.. rubric:: Example
+   This module provides a simplified version of the Mafia game runner that
+   avoids the streaming issues in LangGraph by:
+       - Using direct state manipulation instead of graph streaming
+       - Following the game logic manually through phases
+       - Providing the same visualization and game experience
 
-```bash
-python simple_runner.py --players 7 --days 3 --debug
-```
+   .. rubric:: Example
+
+   ```bash
+   python simple_runner.py --players 7 --days 3 --debug
+   ```
 
 
-.. autolink-examples:: games.mafia.simple_runner
-   :collapse:
+   .. autolink-examples:: games.mafia.simple_runner
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.simple_runner.logger
 
 
 Functions
@@ -30,6 +39,10 @@ Functions
 
    games.mafia.simple_runner.main
    games.mafia.simple_runner.run_mafia_game_simple
+
+
+Module Contents
+---------------
 
 .. py:function:: main() -> None
 
@@ -63,11 +76,5 @@ Functions
    .. autolink-examples:: run_mafia_game_simple
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.simple_runner
-   :collapse:
-   
-.. autolink-skip:: next

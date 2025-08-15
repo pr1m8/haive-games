@@ -1,9 +1,7 @@
-
-:py:mod:`games.monopoly.prompts`
-================================
+games.monopoly.prompts
+======================
 
 .. py:module:: games.monopoly.prompts
-
 
 
 Functions
@@ -15,6 +13,10 @@ Functions
    games.monopoly.prompts.generate_property_decision_prompt
    games.monopoly.prompts.generate_strategy_analysis_prompt
    games.monopoly.prompts.generate_turn_decision_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_move_decision_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
@@ -48,11 +50,3 @@ Functions
    .. autolink-examples:: generate_turn_decision_prompt
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.prompts
-   :collapse:
-   
-.. autolink-skip:: next

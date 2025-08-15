@@ -1,9 +1,15 @@
-
-:py:mod:`games.dominoes.engines`
-================================
+games.dominoes.engines
+======================
 
 .. py:module:: games.dominoes.engines
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.dominoes.engines.aug_llm_configs
 
 
 Functions
@@ -13,6 +19,10 @@ Functions
 
    games.dominoes.engines.generate_analysis_prompt
    games.dominoes.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -30,11 +40,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: aug_llm_configs
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.dominoes.engines
-   :collapse:
-   
-.. autolink-skip:: next

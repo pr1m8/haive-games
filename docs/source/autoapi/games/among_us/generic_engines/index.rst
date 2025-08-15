@@ -1,17 +1,27 @@
-
-:py:mod:`games.among_us.generic_engines`
-========================================
+games.among_us.generic_engines
+==============================
 
 .. py:module:: games.among_us.generic_engines
 
-Generic Among Us engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Among Us games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Among Us engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Among Us games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.among_us.generic_engines
-   :collapse:
+   .. autolink-examples:: games.among_us.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.among_us.generic_engines.among_us_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.among_us.generic_engines.AmongUsEngineFactory
    games.among_us.generic_engines.AmongUsPlayerIdentifiers
    games.among_us.generic_engines.AmongUsPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for AmongUsEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_AmongUsEngineFactory {
-        node [shape=record];
-        "AmongUsEngineFactory" [label="AmongUsEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "AmongUsEngineFactory";
-      }
-
-.. autoclass:: games.among_us.generic_engines.AmongUsEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for AmongUsPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_AmongUsPlayerIdentifiers {
-        node [shape=record];
-        "AmongUsPlayerIdentifiers" [label="AmongUsPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "AmongUsPlayerIdentifiers";
-      }
-
-.. autoclass:: games.among_us.generic_engines.AmongUsPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for AmongUsPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_AmongUsPromptGenerator {
-        node [shape=record];
-        "AmongUsPromptGenerator" [label="AmongUsPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "AmongUsPromptGenerator";
-      }
-
-.. autoclass:: games.among_us.generic_engines.AmongUsPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.among_us.generic_engines.create_generic_among_us_engines
    games.among_us.generic_engines.create_generic_among_us_engines_simple
    games.among_us.generic_engines.create_mixed_among_us_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: AmongUsEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Among Us game engines.
+
+
+   .. autolink-examples:: AmongUsEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: AmongUsPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Among Us game.
+
+
+   .. autolink-examples:: AmongUsPlayerIdentifiers
+      :collapse:
+
+.. py:class:: AmongUsPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Among Us game.
+
+
+   .. autolink-examples:: AmongUsPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Among Us game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Among Us player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_budget_among_us_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_among_us_engines
       :collapse:
 
+.. py:data:: among_us_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.among_us.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

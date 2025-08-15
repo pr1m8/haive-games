@@ -1,16 +1,25 @@
-
-:py:mod:`games.monopoly.run_game`
-=================================
+games.monopoly.run_game
+=======================
 
 .. py:module:: games.monopoly.run_game
 
-Run a Monopoly game with the fixed UI.
+.. autoapi-nested-parse::
 
-This script demonstrates how to run a Monopoly game with the fixed UI.
+   Run a Monopoly game with the fixed UI.
+
+   This script demonstrates how to run a Monopoly game with the fixed UI.
 
 
-.. autolink-examples:: games.monopoly.run_game
-   :collapse:
+   .. autolink-examples:: games.monopoly.run_game
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.run_game.logger
 
 
 Functions
@@ -20,6 +29,10 @@ Functions
 
    games.monopoly.run_game.main
 
+
+Module Contents
+---------------
+
 .. py:function:: main()
 
    Run a Monopoly game with the fixed UI.
@@ -28,11 +41,5 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.run_game
-   :collapse:
-   
-.. autolink-skip:: next

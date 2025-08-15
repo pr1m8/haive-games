@@ -1,30 +1,40 @@
-
-:py:mod:`games.framework.base.agent`
-====================================
+games.framework.base.agent
+==========================
 
 .. py:module:: games.framework.base.agent
 
-Base game agent module.
+.. autoapi-nested-parse::
 
-This module provides the foundational GameAgent class that implements common workflow patterns
-for game-specific agents. It handles game initialization, move generation, position analysis,
-and game flow control.
+   Base game agent module.
 
-.. rubric:: Example
+   This module provides the foundational GameAgent class that implements common workflow patterns
+   for game-specific agents. It handles game initialization, move generation, position analysis,
+   and game flow control.
 
->>> class ChessAgent(GameAgent[ChessConfig]):
-...     def __init__(self, config: ChessConfig):
-...         super().__init__(config)
-...         self.state_manager = ChessStateManager
+   .. rubric:: Example
 
-Typical usage:
-    - Inherit from GameAgent to create game-specific agents
-    - Override necessary methods like prepare_move_context and extract_move
-    - Use the setup_workflow method to customize the game flow
+   >>> class ChessAgent(GameAgent[ChessConfig]):
+   ...     def __init__(self, config: ChessConfig):
+   ...         super().__init__(config)
+   ...         self.state_manager = ChessStateManager
+
+   Typical usage:
+       - Inherit from GameAgent to create game-specific agents
+       - Override necessary methods like prepare_move_context and extract_move
+       - Use the setup_workflow method to customize the game flow
 
 
-.. autolink-examples:: games.framework.base.agent
-   :collapse:
+   .. autolink-examples:: games.framework.base.agent
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.framework.base.agent.T
+
 
 Classes
 -------
@@ -34,38 +44,406 @@ Classes
    games.framework.base.agent.GameAgent
 
 
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameAgent:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameAgent {
-        node [shape=record];
-        "GameAgent" [label="GameAgent"];
-        "haive.core.engine.agent.agent.Agent[haive.games.framework.base.config.GameConfig]" -> "GameAgent";
-        "Generic[T]" -> "GameAgent";
-      }
-
-.. autoclass:: games.framework.base.agent.GameAgent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Functions
 ---------
 
 .. autoapisummary::
 
    games.framework.base.agent.run_game
+
+
+Module Contents
+---------------
+
+.. py:class:: GameAgent(config: haive.games.framework.base.config.GameConfig)
+
+   Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`haive.games.framework.base.config.GameConfig`\ ], :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
+
+
+   Base game agent that implements common workflow patterns.
+
+   This class provides a foundation for building game-specific agents by implementing
+   common patterns for game initialization, move generation, position analysis, and
+   game flow control. Game-specific agents should inherit from this class and
+   override the necessary methods.
+
+   .. attribute:: config
+
+      Configuration for the game agent.
+
+      :type: GameConfig
+
+   .. attribute:: state_manager
+
+      Manager for handling game state transitions.
+
+   .. attribute:: engines
+
+      Dictionary of LLM engines for different functions.
+
+      :type: Dict[str, Any]
+
+   .. attribute:: graph
+
+      The workflow graph for the game.
+
+   .. rubric:: Example
+
+   >>> class ChessAgent(GameAgent[ChessConfig]):
+   ...     def __init__(self, config: ChessConfig):
+   ...         super().__init__(config)
+   ...         self.state_manager = ChessStateManager
+   ...
+   ...     def prepare_move_context(self, state, player):
+   ...         legal_moves = self.state_manager.get_legal_moves(state)
+   ...         return {"legal_moves": legal_moves}
+
+   Initialize the game agent.
+
+   :param config: Configuration for the game agent.
+                  Defaults to GameConfig().
+   :type config: GameConfig, optional
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GameAgent
+      :collapse:
+
+   .. py:method:: analyze_player1(state: T) -> langgraph.types.Command
+      :abstractmethod:
+
+
+      Analyze position for player 1.
+
+      This method should be implemented by subclasses to handle position
+      analysis specifically for player 1.
+
+      :param state: The current game state.
+      :type state: T
+
+      :returns: A command containing the updated game state with analysis.
+      :rtype: Command
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def analyze_player1(self, state):
+      ...     return self.analyze_position(state, "player1")
+
+
+      .. autolink-examples:: analyze_player1
+         :collapse:
+
+
+   .. py:method:: analyze_player2(state: T) -> langgraph.types.Command
+      :abstractmethod:
+
+
+      Analyze position for player 2.
+
+      This method should be implemented by subclasses to handle position
+      analysis specifically for player 2.
+
+      :param state: The current game state.
+      :type state: T
+
+      :returns: A command containing the updated game state with analysis.
+      :rtype: Command
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def analyze_player2(self, state):
+      ...     return self.analyze_position(state, "player2")
+
+
+      .. autolink-examples:: analyze_player2
+         :collapse:
+
+
+   .. py:method:: analyze_position(state: T, player: str) -> langgraph.types.Command
+
+      Analyze the position for the specified player.
+
+      This method handles position analysis including:
+      1. Getting the appropriate analyzer engine
+      2. Preparing the analysis context
+      3. Generating and storing the analysis
+
+      :param state: The current game state.
+      :type state: T
+      :param player: The player for whom to analyze the position.
+      :type player: str
+
+      :returns: A command containing the updated game state with analysis.
+      :rtype: Command
+
+      .. rubric:: Example
+
+      >>> def analyze_position(self, state, player):
+      ...     analyzer = self.engines.get(f"{player}_analyzer")
+      ...     analysis = analyzer.invoke({"position": state.board})
+      ...     return Command(update={f"{player}_analysis": analysis})
+
+
+      .. autolink-examples:: analyze_position
+         :collapse:
+
+
+   .. py:method:: extract_move(response: Any) -> Any
+      :abstractmethod:
+
+
+      Extract move from engine response.
+
+      This method should be implemented by subclasses to parse the LLM's
+      response and extract a valid move.
+
+      :param response: The raw response from the LLM engine.
+      :type response: Any
+
+      :returns: A valid move object for the game.
+      :rtype: Any
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def extract_move(self, response):
+      ...     move_text = response.get("move")
+      ...     return ChessMove.from_uci(move_text)
+
+
+      .. autolink-examples:: extract_move
+         :collapse:
+
+
+   .. py:method:: initialize_game(state: dict[str, Any]) -> langgraph.types.Command
+
+      Initialize a new game.
+
+      :param state: The initial state dictionary.
+      :type state: Dict[str, Any]
+
+      :returns: A command containing the initialized game state.
+      :rtype: Command
+
+      .. rubric:: Example
+
+      >>> def initialize_game(self, state):
+      ...     game_state = self.state_manager.initialize()
+      ...     return Command(update=game_state.dict())
+
+
+      .. autolink-examples:: initialize_game
+         :collapse:
+
+
+   .. py:method:: make_move(state: T, player: str) -> langgraph.types.Command
+
+      Make a move for the specified player.
+
+      This method handles the complete move generation process including:
+      1. Getting the appropriate engine for the player
+      2. Preparing the move context
+      3. Generating and validating the move
+      4. Applying the move to the game state
+
+      :param state: The current game state.
+      :type state: T
+      :param player: The player making the move.
+      :type player: str
+
+      :returns: A command containing the updated game state after the move.
+      :rtype: Command
+
+      .. rubric:: Example
+
+      >>> def make_move(self, state, player):
+      ...     engine = self.engines.get(f"{player}_player")
+      ...     move_context = self.prepare_move_context(state, player)
+      ...     response = engine.invoke(move_context)
+      ...     move = self.extract_move(response)
+      ...     new_state = self.state_manager.apply_move(state, move)
+      ...     return Command(update=new_state.dict())
+
+
+      .. autolink-examples:: make_move
+         :collapse:
+
+
+   .. py:method:: make_player1_move(state: T) -> langgraph.types.Command
+      :abstractmethod:
+
+
+      Make a move for player 1.
+
+      This method should be implemented by subclasses to handle moves
+      specifically for player 1.
+
+      :param state: The current game state.
+      :type state: T
+
+      :returns: A command containing the updated game state after the move.
+      :rtype: Command
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def make_player1_move(self, state):
+      ...     return self.make_move(state, "player1")
+
+
+      .. autolink-examples:: make_player1_move
+         :collapse:
+
+
+   .. py:method:: make_player2_move(state: T) -> langgraph.types.Command
+      :abstractmethod:
+
+
+      Make a move for player 2.
+
+      This method should be implemented by subclasses to handle moves
+      specifically for player 2.
+
+      :param state: The current game state.
+      :type state: T
+
+      :returns: A command containing the updated game state after the move.
+      :rtype: Command
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def make_player2_move(self, state):
+      ...     return self.make_move(state, "player2")
+
+
+      .. autolink-examples:: make_player2_move
+         :collapse:
+
+
+   .. py:method:: prepare_analysis_context(state: T, player: str) -> dict[str, Any]
+      :abstractmethod:
+
+
+      Prepare context for position analysis.
+
+      This method should be implemented by subclasses to provide the necessary
+      context for the LLM to analyze a position.
+
+      :param state: The current game state.
+      :type state: T
+      :param player: The player for whom to prepare the analysis context.
+      :type player: str
+
+      :returns: The context dictionary for position analysis.
+      :rtype: Dict[str, Any]
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def prepare_analysis_context(self, state, player):
+      ...     return {
+      ...         "board": state.board.to_fen(),
+      ...         "material_count": state.get_material_count(player),
+      ...         "previous_moves": state.move_history[-5:]
+      ...     }
+
+
+      .. autolink-examples:: prepare_analysis_context
+         :collapse:
+
+
+   .. py:method:: prepare_move_context(state: T, player: str) -> dict[str, Any]
+      :abstractmethod:
+
+
+      Prepare context for move generation.
+
+      This method should be implemented by subclasses to provide the necessary
+      context for the LLM to generate a move.
+
+      :param state: The current game state.
+      :type state: T
+      :param player: The player for whom to prepare the context.
+      :type player: str
+
+      :returns: The context dictionary for move generation.
+      :rtype: Dict[str, Any]
+
+      :raises NotImplementedError: This method must be implemented by subclasses.
+
+      .. rubric:: Example
+
+      >>> def prepare_move_context(self, state, player):
+      ...     legal_moves = self.state_manager.get_legal_moves(state)
+      ...     return {
+      ...         "board": state.board.to_fen(),
+      ...         "legal_moves": legal_moves,
+      ...         "player": player
+      ...     }
+
+
+      .. autolink-examples:: prepare_move_context
+         :collapse:
+
+
+   .. py:method:: setup_workflow()
+
+      Setup the standard game workflow with configurable analysis.
+
+      This method sets up the default game workflow including initialization,
+      player moves, and optional position analysis. Override this method to
+      implement custom game flows.
+
+      The default workflow includes:
+      1. Game initialization
+      2. Alternating player moves
+      3. Optional position analysis before each move
+      4. Game continuation checks between moves
+
+      .. rubric:: Example
+
+      >>> def setup_workflow(self):
+      ...     # Add custom nodes
+      ...     self.graph.add_node("custom_analysis", self.analyze_position)
+      ...     # Modify the workflow
+      ...     self.graph.add_edge("initialize_game", "custom_analysis")
+
+
+      .. autolink-examples:: setup_workflow
+         :collapse:
+
+
+   .. py:method:: should_continue_game(state: T) -> bool
+
+      Determine if the game should continue.
+
+      :param state: The current game state.
+      :type state: T
+
+      :returns: True if the game should continue, False otherwise.
+      :rtype: bool
+
+      .. rubric:: Example
+
+      >>> def should_continue_game(self, state):
+      ...     return state.moves_remaining > 0 and not state.checkmate
+
+
+      .. autolink-examples:: should_continue_game
+         :collapse:
+
 
 .. py:function:: run_game(agent: GameAgent, initial_state: dict[str, Any] | None = None)
 
@@ -100,11 +478,5 @@ Functions
    .. autolink-examples:: run_game
       :collapse:
 
+.. py:data:: T
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.framework.base.agent
-   :collapse:
-   
-.. autolink-skip:: next

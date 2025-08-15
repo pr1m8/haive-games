@@ -1,14 +1,15 @@
-
-:py:mod:`games.cards.standard.bs.example`
-=========================================
+games.cards.standard.bs.example
+===============================
 
 .. py:module:: games.cards.standard.bs.example
 
-Example of running a BS (Bullshit) card game AI vs AI.
+.. autoapi-nested-parse::
+
+   Example of running a BS (Bullshit) card game AI vs AI.
 
 
-.. autolink-examples:: games.cards.standard.bs.example
-   :collapse:
+   .. autolink-examples:: games.cards.standard.bs.example
+      :collapse:
 
 
 Functions
@@ -17,6 +18,10 @@ Functions
 .. autoapisummary::
 
    games.cards.standard.bs.example.run_bs_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_bs_game()
    :async:
@@ -28,11 +33,3 @@ Functions
    .. autolink-examples:: run_bs_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.cards.standard.bs.example
-   :collapse:
-   
-.. autolink-skip:: next

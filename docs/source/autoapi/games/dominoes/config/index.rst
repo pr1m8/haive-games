@@ -1,6 +1,5 @@
-
-:py:mod:`games.dominoes.config`
-===============================
+games.dominoes.config
+=====================
 
 .. py:module:: games.dominoes.config
 
@@ -16,33 +15,49 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: DominoesAgentConfig
+
+   Bases: :py:obj:`haive.games.framework.base.config.GameConfig`
+
+
+   Configuration for the dominoes agent.
+
+
+   .. autolink-examples:: DominoesAgentConfig
+      :collapse:
+
+   .. py:method:: default_config() -> Any
+      :classmethod:
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DominoesAgentConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoesAgentConfig {
-        node [shape=record];
-        "DominoesAgentConfig" [label="DominoesAgentConfig"];
-        "haive.games.framework.base.config.GameConfig" -> "DominoesAgentConfig";
-      }
-
-.. autoclass:: games.dominoes.config.DominoesAgentConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
 
 
 
+   .. py:attribute:: engines
+      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+      :value: None
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.dominoes.config
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:attribute:: hand_size
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: state_schema
+      :type:  type[haive.games.dominoes.state.DominoesState]
+      :value: None
+
+
+
+   .. py:attribute:: visualize
+      :type:  bool
+      :value: None
+
+
+

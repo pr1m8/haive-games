@@ -1,14 +1,23 @@
-
-:py:mod:`games.dominoes.enhanced_example`
-=========================================
+games.dominoes.enhanced_example
+===============================
 
 .. py:module:: games.dominoes.enhanced_example
 
-Example runner for Dominoes game with enhanced Rich UI visualization.
+.. autoapi-nested-parse::
+
+   Example runner for Dominoes game with enhanced Rich UI visualization.
 
 
-.. autolink-examples:: games.dominoes.enhanced_example
-   :collapse:
+   .. autolink-examples:: games.dominoes.enhanced_example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.dominoes.enhanced_example.parser
 
 
 Functions
@@ -18,6 +27,10 @@ Functions
 
    games.dominoes.enhanced_example.demo_ui_features
    games.dominoes.enhanced_example.run_dominoes_game
+
+
+Module Contents
+---------------
 
 .. py:function:: demo_ui_features(delay: float = 0.5)
 
@@ -43,11 +56,5 @@ Functions
    .. autolink-examples:: run_dominoes_game
       :collapse:
 
+.. py:data:: parser
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.dominoes.enhanced_example
-   :collapse:
-   
-.. autolink-skip:: next

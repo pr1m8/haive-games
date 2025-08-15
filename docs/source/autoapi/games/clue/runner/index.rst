@@ -1,16 +1,17 @@
-
-:py:mod:`games.clue.runner`
-===========================
+games.clue.runner
+=================
 
 .. py:module:: games.clue.runner
 
-Runner script for the Clue game.
+.. autoapi-nested-parse::
 
-This script demonstrates how to initialize and run a Clue game.
+   Runner script for the Clue game.
+
+   This script demonstrates how to initialize and run a Clue game.
 
 
-.. autolink-examples:: games.clue.runner
-   :collapse:
+   .. autolink-examples:: games.clue.runner
+      :collapse:
 
 
 Functions
@@ -20,6 +21,10 @@ Functions
 
    games.clue.runner.main
    games.clue.runner.run_clue_game
+
+
+Module Contents
+---------------
 
 .. py:function:: main()
    :async:
@@ -47,11 +52,3 @@ Functions
    .. autolink-examples:: run_clue_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.clue.runner
-   :collapse:
-   
-.. autolink-skip:: next

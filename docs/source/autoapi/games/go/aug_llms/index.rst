@@ -1,35 +1,44 @@
-
-:py:mod:`games.go.aug_llms`
-===========================
+games.go.aug_llms
+=================
 
 .. py:module:: games.go.aug_llms
 
-Go game LLM augmentations.
+.. autoapi-nested-parse::
 
-This module provides augmented LLM configurations for Go game agents, including:
-    - Move generation prompts for black and white players
-    - Position analysis prompts for both sides
-    - Structured output models for moves and analysis
-    - Pre-configured LLM configurations for easy agent setup
+   Go game LLM augmentations.
 
-.. rubric:: Example
+   This module provides augmented LLM configurations for Go game agents, including:
+       - Move generation prompts for black and white players
+       - Position analysis prompts for both sides
+       - Structured output models for moves and analysis
+       - Pre-configured LLM configurations for easy agent setup
 
->>> from haive.games.go.aug_llms import aug_llm_configs
->>>
->>> # Get black player's move generation config
->>> black_config = aug_llm_configs["black_player"]
->>>
->>> # Generate a prompt
->>> prompt = black_config.prompt_template.format(
-...     board_size=19,
-...     recent_moves=[(0, "black", (3, 4))],
-...     captured_stones={"black": 0, "white": 0},
-...     player_analysis="Territory is balanced"
-... )
+   .. rubric:: Example
+
+   >>> from haive.games.go.aug_llms import aug_llm_configs
+   >>>
+   >>> # Get black player's move generation config
+   >>> black_config = aug_llm_configs["black_player"]
+   >>>
+   >>> # Generate a prompt
+   >>> prompt = black_config.prompt_template.format(
+   ...     board_size=19,
+   ...     recent_moves=[(0, "black", (3, 4))],
+   ...     captured_stones={"black": 0, "white": 0},
+   ...     player_analysis="Territory is balanced"
+   ... )
 
 
-.. autolink-examples:: games.go.aug_llms
-   :collapse:
+   .. autolink-examples:: games.go.aug_llms
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.go.aug_llms.aug_llm_configs
 
 
 Functions
@@ -39,6 +48,10 @@ Functions
 
    games.go.aug_llms.generate_go_analysis_prompt
    games.go.aug_llms.generate_go_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_go_analysis_prompt(color: str) -> langchain.prompts.ChatPromptTemplate
 
@@ -119,11 +132,5 @@ Functions
    .. autolink-examples:: generate_go_move_prompt
       :collapse:
 
+.. py:data:: aug_llm_configs
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.go.aug_llms
-   :collapse:
-   
-.. autolink-skip:: next

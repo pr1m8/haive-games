@@ -1,15 +1,23 @@
-
-:py:mod:`games.single_player.mine_sweeper`
-==========================================
+games.single_player.mine_sweeper
+================================
 
 .. py:module:: games.single_player.mine_sweeper
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.single_player.mine_sweeper
-   :collapse:
+   .. autolink-examples:: games.single_player.mine_sweeper
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/single_player/mine_sweeper/base/index
 
 

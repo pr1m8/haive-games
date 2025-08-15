@@ -1,38 +1,39 @@
-
-:py:mod:`games.hold_em.aug_llms`
-================================
+games.hold_em.aug_llms
+======================
 
 .. py:module:: games.hold_em.aug_llms
 
-Texas Hold'em specialized augmented LLM configurations.
+.. autoapi-nested-parse::
 
-This module provides specialized augmented LLM configurations for Texas Hold'em poker,
-with customized prompts, output schemas, and model configurations for different
-aspects of poker gameplay:
-    - Hand evaluation and analysis
-    - Opponent modeling and profiling
-    - Betting strategy and decision-making
-    - Position-based play adaptation
-    - Pot odds and equity calculations
+   Texas Hold'em specialized augmented LLM configurations.
 
-These specialized configurations build on the base engines in engines.py but provide
-more targeted capabilities for specific poker reasoning tasks.
+   This module provides specialized augmented LLM configurations for Texas Hold'em poker,
+   with customized prompts, output schemas, and model configurations for different
+   aspects of poker gameplay:
+       - Hand evaluation and analysis
+       - Opponent modeling and profiling
+       - Betting strategy and decision-making
+       - Position-based play adaptation
+       - Pot odds and equity calculations
 
-.. rubric:: Example
+   These specialized configurations build on the base engines in engines.py but provide
+   more targeted capabilities for specific poker reasoning tasks.
 
->>> from haive.games.hold_em.aug_llms import get_hand_analyzer, get_bluff_detector
->>> from haive.core.engine.aug_llm import AugLLMConfig
->>>
->>> # Get a specialized hand analyzer
->>> hand_analyzer = get_hand_analyzer("advanced")
->>> result = hand_analyzer.invoke({
->>>     "hole_cards": ["Ah", "Kh"],
->>>     "community_cards": ["Qh", "Jh", "2s", "7c", "9d"],
->>> })
+   .. rubric:: Example
+
+   >>> from haive.games.hold_em.aug_llms import get_hand_analyzer, get_bluff_detector
+   >>> from haive.core.engine.aug_llm import AugLLMConfig
+   >>>
+   >>> # Get a specialized hand analyzer
+   >>> hand_analyzer = get_hand_analyzer("advanced")
+   >>> result = hand_analyzer.invoke({
+   >>>     "hole_cards": ["Ah", "Kh"],
+   >>>     "community_cards": ["Qh", "Jh", "2s", "7c", "9d"],
+   >>> })
 
 
-.. autolink-examples:: games.hold_em.aug_llms
-   :collapse:
+   .. autolink-examples:: games.hold_em.aug_llms
+      :collapse:
 
 
 Functions
@@ -47,6 +48,10 @@ Functions
    games.hold_em.aug_llms.get_opponent_profiler
    games.hold_em.aug_llms.get_situation_analyzer
    games.hold_em.aug_llms.get_table_dynamics_analyzer
+
+
+Module Contents
+---------------
 
 .. py:function:: get_betting_strategist(style: str = 'gto') -> haive.core.engine.aug_llm.AugLLMConfig
 
@@ -176,11 +181,3 @@ Functions
    .. autolink-examples:: get_table_dynamics_analyzer
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.hold_em.aug_llms
-   :collapse:
-   
-.. autolink-skip:: next

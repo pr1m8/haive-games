@@ -1,6 +1,5 @@
-
-:py:mod:`games.cards.standard.poker.actions`
-============================================
+games.cards.standard.poker.actions
+==================================
 
 .. py:module:: games.cards.standard.poker.actions
 
@@ -23,186 +22,286 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: AllInAction
 
+   Bases: :py:obj:`PokerAction`
 
 
-.. toggle:: Show Inheritance Diagram
+   Action to go all-in.
 
-   Inheritance diagram for AllInAction:
 
-   .. graphviz::
-      :align: center
+   .. autolink-examples:: AllInAction
+      :collapse:
 
-      digraph inheritance_AllInAction {
-        node [shape=record];
-        "AllInAction" [label="AllInAction"];
-        "PokerAction" -> "AllInAction";
-      }
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
 
-.. autoclass:: games.cards.standard.poker.actions.AllInAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      Execute all-in action.
 
 
+      .. autolink-examples:: execute
+         :collapse:
 
 
-.. toggle:: Show Inheritance Diagram
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
 
-   Inheritance diagram for BetAction:
 
-   .. graphviz::
-      :align: center
+.. py:class:: BetAction
 
-      digraph inheritance_BetAction {
-        node [shape=record];
-        "BetAction" [label="BetAction"];
-        "PokerAction" -> "BetAction";
-      }
+   Bases: :py:obj:`PokerAction`
 
-.. autoclass:: games.cards.standard.poker.actions.BetAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
+   Action to place a new bet.
 
 
+   .. autolink-examples:: BetAction
+      :collapse:
 
-.. toggle:: Show Inheritance Diagram
+   .. py:method:: can_execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> bool
 
-   Inheritance diagram for CallAction:
+      Check if player can bet.
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_CallAction {
-        node [shape=record];
-        "CallAction" [label="CallAction"];
-        "PokerAction" -> "CallAction";
-      }
+      .. autolink-examples:: can_execute
+         :collapse:
 
-.. autoclass:: games.cards.standard.poker.actions.CallAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
 
+      Execute bet action.
 
 
-.. toggle:: Show Inheritance Diagram
+      .. autolink-examples:: execute
+         :collapse:
 
-   Inheritance diagram for CheckAction:
 
-   .. graphviz::
-      :align: center
+   .. py:method:: validate_bet() -> BetAction
 
-      digraph inheritance_CheckAction {
-        node [shape=record];
-        "CheckAction" [label="CheckAction"];
-        "PokerAction" -> "CheckAction";
-      }
+      Validate bet amount.
 
-.. autoclass:: games.cards.standard.poker.actions.CheckAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
+      .. autolink-examples:: validate_bet
+         :collapse:
 
 
+   .. py:attribute:: amount
+      :type:  int
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for FoldAction:
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_FoldAction {
-        node [shape=record];
-        "FoldAction" [label="FoldAction"];
-        "PokerAction" -> "FoldAction";
-      }
+.. py:class:: CallAction
 
-.. autoclass:: games.cards.standard.poker.actions.FoldAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Bases: :py:obj:`PokerAction`
 
 
+   Action to call a bet.
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: CallAction
+      :collapse:
 
-   Inheritance diagram for PokerAction:
+   .. py:method:: can_execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> bool
 
-   .. graphviz::
-      :align: center
+      Check if player can call.
 
-      digraph inheritance_PokerAction {
-        node [shape=record];
-        "PokerAction" [label="PokerAction"];
-        "haive.games.cards.card.components.actions.CardAction[haive.games.cards.card.components.standard.StandardCard, haive.games.cards.standard.poker.state.PokerGameState]" -> "PokerAction";
-      }
 
-.. autoclass:: games.cards.standard.poker.actions.PokerAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: can_execute
+         :collapse:
 
 
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
 
+      Execute call action.
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for PokerActionType:
+      .. autolink-examples:: execute
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_PokerActionType {
-        node [shape=record];
-        "PokerActionType" [label="PokerActionType"];
-        "str" -> "PokerActionType";
-        "enum.Enum" -> "PokerActionType";
-      }
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
 
-.. autoclass:: games.cards.standard.poker.actions.PokerActionType
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-   .. note::
+.. py:class:: CheckAction
 
-      **PokerActionType** is an Enum defined in ``games.cards.standard.poker.actions``.
+   Bases: :py:obj:`PokerAction`
 
 
+   Action to check (pass without betting).
 
 
+   .. autolink-examples:: CheckAction
+      :collapse:
 
-.. toggle:: Show Inheritance Diagram
+   .. py:method:: can_execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> bool
 
-   Inheritance diagram for RaiseAction:
+      Check if player can check.
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_RaiseAction {
-        node [shape=record];
-        "RaiseAction" [label="RaiseAction"];
-        "PokerAction" -> "RaiseAction";
-      }
+      .. autolink-examples:: can_execute
+         :collapse:
 
-.. autoclass:: games.cards.standard.poker.actions.RaiseAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
 
+      Execute check action.
 
 
-.. rubric:: Related Links
+      .. autolink-examples:: execute
+         :collapse:
 
-.. autolink-examples:: games.cards.standard.poker.actions
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
+
+
+.. py:class:: FoldAction
+
+   Bases: :py:obj:`PokerAction`
+
+
+   Action to fold (forfeit hand).
+
+
+   .. autolink-examples:: FoldAction
+      :collapse:
+
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
+
+      Execute fold action.
+
+
+      .. autolink-examples:: execute
+         :collapse:
+
+
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
+
+
+.. py:class:: PokerAction
+
+   Bases: :py:obj:`haive.games.cards.card.components.actions.CardAction`\ [\ :py:obj:`haive.games.cards.card.components.standard.StandardCard`\ , :py:obj:`haive.games.cards.standard.poker.state.PokerGameState`\ ]
+
+
+   Base class for poker actions.
+
+
+   .. autolink-examples:: PokerAction
+      :collapse:
+
+   .. py:method:: can_execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> bool
+
+      Check if this action can be executed.
+
+
+      .. autolink-examples:: can_execute
+         :collapse:
+
+
+   .. py:attribute:: action_type
+      :type:  str
+      :value: 'poker_action'
+
+
+
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
+
+
+.. py:class:: PokerActionType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of poker actions.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PokerActionType
+      :collapse:
+
+   .. py:attribute:: ALL_IN
+      :value: 'all_in'
+
+
+
+   .. py:attribute:: BET
+      :value: 'bet'
+
+
+
+   .. py:attribute:: CALL
+      :value: 'call'
+
+
+
+   .. py:attribute:: CHECK
+      :value: 'check'
+
+
+
+   .. py:attribute:: FOLD
+      :value: 'fold'
+
+
+
+   .. py:attribute:: RAISE
+      :value: 'raise'
+
+
+
+.. py:class:: RaiseAction
+
+   Bases: :py:obj:`PokerAction`
+
+
+   Action to raise an existing bet.
+
+
+   .. autolink-examples:: RaiseAction
+      :collapse:
+
+   .. py:method:: can_execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> bool
+
+      Check if player can raise.
+
+
+      .. autolink-examples:: can_execute
+         :collapse:
+
+
+   .. py:method:: execute(state: haive.games.cards.standard.poker.state.PokerGameState) -> haive.games.cards.card.components.actions.ActionResult
+
+      Execute raise action.
+
+
+      .. autolink-examples:: execute
+         :collapse:
+
+
+   .. py:method:: validate_raise() -> RaiseAction
+
+      Validate raise amount.
+
+
+      .. autolink-examples:: validate_raise
+         :collapse:
+
+
+   .. py:attribute:: amount
+      :type:  int
+
+
+   .. py:attribute:: poker_action_type
+      :type:  PokerActionType
+
+

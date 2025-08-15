@@ -1,6 +1,5 @@
-
-:py:mod:`games.single_player.wordle.agent`
-==========================================
+games.single_player.wordle.agent
+================================
 
 .. py:module:: games.single_player.wordle.agent
 
@@ -16,33 +15,59 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: WordConnectionsAgent
+
+   Bases: :py:obj:`haive.games.framework.base.GameAgent`\ [\ :py:obj:`haive.games.single_player.wordle.config.WordConnectionsAgentConfig`\ ]
 
 
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for WordConnectionsAgent:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_WordConnectionsAgent {
-        node [shape=record];
-        "WordConnectionsAgent" [label="WordConnectionsAgent"];
-        "haive.games.framework.base.GameAgent[haive.games.single_player.wordle.config.WordConnectionsAgentConfig]" -> "WordConnectionsAgent";
-      }
-
-.. autoclass:: games.single_player.wordle.agent.WordConnectionsAgent
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Agent for playing the Word Connections game.
 
 
+   .. autolink-examples:: WordConnectionsAgent
+      :collapse:
+
+   .. py:method:: initialize_game(puzzle_data: dict = None) -> haive.games.single_player.wordle.models.WordConnectionsState
+
+      Initialize a new game.
 
 
-.. rubric:: Related Links
+      .. autolink-examples:: initialize_game
+         :collapse:
 
-.. autolink-examples:: games.single_player.wordle.agent
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:method:: play_turn(state: dict[str, Any]) -> dict[str, Any]
+
+      Play one turn of the game.
+
+
+      .. autolink-examples:: play_turn
+         :collapse:
+
+
+   .. py:method:: setup_routing() -> None
+
+      Set up the routing for the game.
+
+
+      .. autolink-examples:: setup_routing
+         :collapse:
+
+
+   .. py:method:: setup_workflow() -> None
+
+      Set up the game workflow using the graph_builder.
+
+
+      .. autolink-examples:: setup_workflow
+         :collapse:
+
+
+   .. py:method:: should_continue(state: dict[str, Any]) -> bool
+
+      Check if game should continue.
+
+
+      .. autolink-examples:: should_continue
+         :collapse:
+
+

@@ -1,21 +1,33 @@
-
-:py:mod:`games.monopoly.engines`
-================================
+games.monopoly.engines
+======================
 
 .. py:module:: games.monopoly.engines
 
-Monopoly engines and prompts module.
+.. autoapi-nested-parse::
 
-This module provides LLM configurations and prompts for monopoly player decisions,
-including:
-    - Property purchase decisions
-    - Jail action decisions
-    - Building decisions
-    - Trade negotiations
+   Monopoly engines and prompts module.
+
+   This module provides LLM configurations and prompts for monopoly player decisions,
+   including:
+       - Property purchase decisions
+       - Jail action decisions
+       - Building decisions
+       - Trade negotiations
 
 
-.. autolink-examples:: games.monopoly.engines
-   :collapse:
+   .. autolink-examples:: games.monopoly.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.engines.building_decision_prompt
+   games.monopoly.engines.jail_decision_prompt
+   games.monopoly.engines.property_decision_prompt
+   games.monopoly.engines.trade_decision_prompt
 
 
 Functions
@@ -25,6 +37,10 @@ Functions
 
    games.monopoly.engines.build_monopoly_player_aug_llms
 
+
+Module Contents
+---------------
+
 .. py:function:: build_monopoly_player_aug_llms() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
    Build LLM configs for monopoly player decisions.
@@ -33,11 +49,11 @@ Functions
    .. autolink-examples:: build_monopoly_player_aug_llms
       :collapse:
 
+.. py:data:: building_decision_prompt
 
+.. py:data:: jail_decision_prompt
 
-.. rubric:: Related Links
+.. py:data:: property_decision_prompt
 
-.. autolink-examples:: games.monopoly.engines
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: trade_decision_prompt
+

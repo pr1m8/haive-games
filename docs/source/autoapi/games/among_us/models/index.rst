@@ -1,91 +1,93 @@
-
-:py:mod:`games.among_us.models`
-===============================
+games.among_us.models
+=====================
 
 .. py:module:: games.among_us.models
 
-Comprehensive data models for Among Us social deduction gameplay.
+.. autoapi-nested-parse::
 
-This module provides sophisticated data models for the Among Us game implementation,
-supporting both cooperative crew tasks and deceptive impostor gameplay. The models
-enable structured data handling for complex social deduction mechanics, spatial
-navigation, task management, and strategic decision-making.
+   Comprehensive data models for Among Us social deduction gameplay.
 
-The models support:
-- Role-based gameplay (Crewmate vs Impostor)
-- Spatial navigation with rooms and vents
-- Task management with multiple task types
-- Sabotage systems with critical and non-critical events
-- Memory and observation tracking for deduction
-- Strategic analysis and decision-making
-- Meeting and voting mechanics
+   This module provides sophisticated data models for the Among Us game implementation,
+   supporting both cooperative crew tasks and deceptive impostor gameplay. The models
+   enable structured data handling for complex social deduction mechanics, spatial
+   navigation, task management, and strategic decision-making.
 
-.. rubric:: Examples
+   The models support:
+   - Role-based gameplay (Crewmate vs Impostor)
+   - Spatial navigation with rooms and vents
+   - Task management with multiple task types
+   - Sabotage systems with critical and non-critical events
+   - Memory and observation tracking for deduction
+   - Strategic analysis and decision-making
+   - Meeting and voting mechanics
 
-Creating a player with tasks::
+   .. rubric:: Examples
 
-    player = PlayerState(
-        id="player1",
-        role=PlayerRole.CREWMATE,
-        location="cafeteria",
-        tasks=[
-            Task(
-                id="task1",
-                type=TaskType.SHORT,
-                location="electrical",
-                description="Fix wiring"
-            )
-        ]
-    )
+   Creating a player with tasks::
 
-Impostor actions::
+       player = PlayerState(
+           id="player1",
+           role=PlayerRole.CREWMATE,
+           location="cafeteria",
+           tasks=[
+               Task(
+                   id="task1",
+                   type=TaskType.SHORT,
+                   location="electrical",
+                   description="Fix wiring"
+               )
+           ]
+       )
 
-    impostor = PlayerState(
-        id="impostor1",
-        role=PlayerRole.IMPOSTOR,
-        location="medbay"
-    )
+   Impostor actions::
 
-    # Check kill ability
-    if impostor.can_kill(kill_cooldown=0):
-        decision = AmongUsPlayerDecision(
-            action_type=AmongUsActionType.KILL,
-            target_player="player2",
-            reasoning="Isolated target in medbay"
-        )
+       impostor = PlayerState(
+           id="impostor1",
+           role=PlayerRole.IMPOSTOR,
+           location="medbay"
+       )
 
-Sabotage management::
+       # Check kill ability
+       if impostor.can_kill(kill_cooldown=0):
+           decision = AmongUsPlayerDecision(
+               action_type=AmongUsActionType.KILL,
+               target_player="player2",
+               reasoning="Isolated target in medbay"
+           )
 
-    sabotage = SabotageEvent(
-        type="reactor",
-        location="reactor",
-        timer=30,
-        resolution_points=[
-            SabotageResolutionPoint(
-                id="reactor_left",
-                location="reactor",
-                description="Left panel"
-            ),
-            SabotageResolutionPoint(
-                id="reactor_right",
-                location="reactor",
-                description="Right panel"
-            )
-        ]
-    )
+   Sabotage management::
 
-    # Check if critical
-    if sabotage.is_critical():
-        print("Emergency! Reactor meltdown imminent!")
+       sabotage = SabotageEvent(
+           type="reactor",
+           location="reactor",
+           timer=30,
+           resolution_points=[
+               SabotageResolutionPoint(
+                   id="reactor_left",
+                   location="reactor",
+                   description="Left panel"
+               ),
+               SabotageResolutionPoint(
+                   id="reactor_right",
+                   location="reactor",
+                   description="Right panel"
+               )
+           ]
+       )
 
-.. note::
+       # Check if critical
+       if sabotage.is_critical():
+           print("Emergency! Reactor meltdown imminent!")
 
-   All models use Pydantic for validation and support both JSON serialization
-   and integration with LLM-based strategic decision systems.
+   .. note::
+
+      All models use Pydantic for validation and support both JSON serialization
+      and integration with LLM-based strategic decision systems.
 
 
-.. autolink-examples:: games.among_us.models
-   :collapse:
+   .. autolink-examples:: games.among_us.models
+      :collapse:
+
 
 Classes
 -------
@@ -115,520 +117,2106 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: AmongUsActionType
 
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-.. toggle:: Show Inheritance Diagram
+   All possible player actions in Among Us.
 
-   Inheritance diagram for AmongUsActionType:
+   Actions are phase-dependent and role-restricted:
+   - Movement and tasks: Available to all during task phase
+   - Kill/Sabotage/Vent: Impostor-only actions
+   - Report/Meeting: Emergency actions
+   - Vote/Skip: Meeting phase only
 
-   .. graphviz::
-      :align: center
+   Values:
+       MOVE: Travel between connected rooms
+       DO_TASK: Perform assigned task (crewmates)
+       KILL: Eliminate a player (impostors)
+       SABOTAGE: Trigger map disruption (impostors)
+       USE_VENT: Enter/exit ventilation (impostors)
+       REPORT_BODY: Report a discovered body
+       CALL_MEETING: Call emergency meeting
+       VOTE: Vote to eject a player
+       SKIP_VOTE: Vote to skip ejection
 
-      digraph inheritance_AmongUsActionType {
-        node [shape=record];
-        "AmongUsActionType" [label="AmongUsActionType"];
-        "str" -> "AmongUsActionType";
-        "enum.Enum" -> "AmongUsActionType";
-      }
 
-.. autoclass:: games.among_us.models.AmongUsActionType
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Initialize self.  See help(type(self)) for accurate signature.
 
-   .. note::
 
-      **AmongUsActionType** is an Enum defined in ``games.among_us.models``.
+   .. autolink-examples:: __init__
+      :collapse:
 
 
+   .. autolink-examples:: AmongUsActionType
+      :collapse:
 
+   .. py:attribute:: CALL_MEETING
+      :value: 'call_meeting'
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for AmongUsAnalysis:
+   .. py:attribute:: DO_TASK
+      :value: 'do_task'
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_AmongUsAnalysis {
-        node [shape=record];
-        "AmongUsAnalysis" [label="AmongUsAnalysis"];
-        "pydantic.BaseModel" -> "AmongUsAnalysis";
-      }
 
-.. autopydantic_model:: games.among_us.models.AmongUsAnalysis
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: KILL
+      :value: 'kill'
 
 
 
+   .. py:attribute:: MOVE
+      :value: 'move'
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for AmongUsGamePhase:
+   .. py:attribute:: REPORT_BODY
+      :value: 'report_body'
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_AmongUsGamePhase {
-        node [shape=record];
-        "AmongUsGamePhase" [label="AmongUsGamePhase"];
-        "str" -> "AmongUsGamePhase";
-        "enum.Enum" -> "AmongUsGamePhase";
-      }
 
-.. autoclass:: games.among_us.models.AmongUsGamePhase
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:attribute:: SABOTAGE
+      :value: 'sabotage'
 
-   .. note::
 
-      **AmongUsGamePhase** is an Enum defined in ``games.among_us.models``.
 
+   .. py:attribute:: SKIP_VOTE
+      :value: 'skip_vote'
 
 
 
+   .. py:attribute:: USE_VENT
+      :value: 'use_vent'
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for AmongUsPlayerDecision:
 
-   .. graphviz::
-      :align: center
+   .. py:attribute:: VOTE
+      :value: 'vote'
 
-      digraph inheritance_AmongUsPlayerDecision {
-        node [shape=record];
-        "AmongUsPlayerDecision" [label="AmongUsPlayerDecision"];
-        "pydantic.BaseModel" -> "AmongUsPlayerDecision";
-      }
 
-.. autopydantic_model:: games.among_us.models.AmongUsPlayerDecision
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
 
+.. py:class:: AmongUsAnalysis(/, **data: Any)
 
+   Bases: :py:obj:`pydantic.BaseModel`
 
 
+   Comprehensive game state analysis for strategic planning.
 
-.. toggle:: Show Inheritance Diagram
+   Provides high-level analysis of the current game situation,
+   including win probability, player suspicions, and strategic
+   recommendations. Used by AI agents for decision-making.
 
-   Inheritance diagram for PlayerMemory:
+   .. attribute:: game_phase
 
-   .. graphviz::
-      :align: center
+      Current game phase.
 
-      digraph inheritance_PlayerMemory {
-        node [shape=record];
-        "PlayerMemory" [label="PlayerMemory"];
-        "pydantic.BaseModel" -> "PlayerMemory";
-      }
+      :type: AmongUsGamePhase
 
-.. autopydantic_model:: games.among_us.models.PlayerMemory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. attribute:: crew_advantage
 
+      Balance of power (-1 to +1).
 
+      :type: float
 
+   .. attribute:: task_completion_percentage
 
+      Overall task progress.
 
-.. toggle:: Show Inheritance Diagram
+      :type: float
 
-   Inheritance diagram for PlayerRole:
+   .. attribute:: suspected_impostors
 
-   .. graphviz::
-      :align: center
+      Likely impostor IDs.
 
-      digraph inheritance_PlayerRole {
-        node [shape=record];
-        "PlayerRole" [label="PlayerRole"];
-        "str" -> "PlayerRole";
-        "enum.Enum" -> "PlayerRole";
-      }
+      :type: List[str]
 
-.. autoclass:: games.among_us.models.PlayerRole
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. attribute:: trusted_players
 
-   .. note::
+      Confirmed crewmate IDs.
 
-      **PlayerRole** is an Enum defined in ``games.among_us.models``.
+      :type: List[str]
 
+   .. attribute:: active_sabotages
 
+      Current sabotage types.
 
+      :type: List[str]
 
+   .. attribute:: recommended_strategy
 
-.. toggle:: Show Inheritance Diagram
+      Strategic advice.
 
-   Inheritance diagram for PlayerState:
+      :type: str
 
-   .. graphviz::
-      :align: center
+   .. attribute:: risk_assessment
 
-      digraph inheritance_PlayerState {
-        node [shape=record];
-        "PlayerState" [label="PlayerState"];
-        "pydantic.BaseModel" -> "PlayerState";
-      }
+      Current danger evaluation.
 
-.. autopydantic_model:: games.among_us.models.PlayerState
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      :type: str
 
+   .. attribute:: priority_actions
 
+      Urgent actions needed.
 
+      :type: List[str]
 
+   .. rubric:: Examples
 
-.. toggle:: Show Inheritance Diagram
+   Early game analysis::
 
-   Inheritance diagram for Room:
+       analysis = AmongUsAnalysis(
+           game_phase=AmongUsGamePhase.TASKS,
+           crew_advantage=0.0,
+           task_completion_percentage=15.0,
+           suspected_impostors=[],
+           trusted_players=["Green"],  # Did visual task
+           active_sabotages=[],
+           recommended_strategy="Focus on tasks, stay in groups",
+           risk_assessment="Low risk, no suspicious behavior yet",
+           priority_actions=["Complete tasks", "Observe players"]
+       )
 
-   .. graphviz::
-      :align: center
+   Critical situation::
 
-      digraph inheritance_Room {
-        node [shape=record];
-        "Room" [label="Room"];
-        "pydantic.BaseModel" -> "Room";
-      }
+       analysis = AmongUsAnalysis(
+           game_phase=AmongUsGamePhase.TASKS,
+           crew_advantage=-0.7,
+           task_completion_percentage=80.0,
+           suspected_impostors=["Red", "Purple"],
+           trusted_players=["Blue", "Green"],
+           active_sabotages=["reactor"],
+           recommended_strategy="Fix reactor immediately!",
+           risk_assessment="Critical: reactor meltdown imminent",
+           priority_actions=["Fix reactor", "Stay together"]
+       )
 
-.. autopydantic_model:: games.among_us.models.Room
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   Meeting phase analysis::
 
+       analysis = AmongUsAnalysis(
+           game_phase=AmongUsGamePhase.VOTING,
+           crew_advantage=-0.3,
+           task_completion_percentage=60.0,
+           suspected_impostors=["Red"],
+           trusted_players=["Blue", "Green", "Yellow"],
+           active_sabotages=[],
+           recommended_strategy="Vote Red based on venting evidence",
+           risk_assessment="High stakes vote - wrong choice loses game",
+           priority_actions=["Vote Red", "Share observations"]
+       )
 
+   Create a new model by parsing and validating input data from keyword arguments.
 
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
 
+   `self` is explicitly positional-only to allow `self` as a field name.
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for RoomConnection:
+   .. autolink-examples:: __init__
+      :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_RoomConnection {
-        node [shape=record];
-        "RoomConnection" [label="RoomConnection"];
-        "pydantic.BaseModel" -> "RoomConnection";
-      }
+   .. autolink-examples:: AmongUsAnalysis
+      :collapse:
 
-.. autopydantic_model:: games.among_us.models.RoomConnection
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:method:: validate_priority_actions(v: list[str]) -> list[str]
+      :classmethod:
 
 
+      Ensure priority actions list is reasonable length.
 
+      :param v: Priority actions to validate.
+      :type v: List[str]
 
+      :returns: Validated actions list.
+      :rtype: List[str]
 
-.. toggle:: Show Inheritance Diagram
+      :raises ValueError: If too many priorities listed.
 
-   Inheritance diagram for SabotageEvent:
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: validate_priority_actions
+         :collapse:
 
-      digraph inheritance_SabotageEvent {
-        node [shape=record];
-        "SabotageEvent" [label="SabotageEvent"];
-        "pydantic.BaseModel" -> "SabotageEvent";
-      }
 
-.. autopydantic_model:: games.among_us.models.SabotageEvent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: active_sabotages
+      :type:  list[str]
+      :value: None
 
 
 
+   .. py:attribute:: crew_advantage
+      :type:  float
+      :value: None
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for SabotageResolutionPoint:
+   .. py:attribute:: game_phase
+      :type:  AmongUsGamePhase
+      :value: None
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_SabotageResolutionPoint {
-        node [shape=record];
-        "SabotageResolutionPoint" [label="SabotageResolutionPoint"];
-        "pydantic.BaseModel" -> "SabotageResolutionPoint";
-      }
 
-.. autopydantic_model:: games.among_us.models.SabotageResolutionPoint
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:property:: game_stage
+      :type: str
 
 
+      Classify game progression stage.
 
+      :returns: Early, mid, or late game classification.
+      :rtype: str
 
+      .. autolink-examples:: game_stage
+         :collapse:
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for SabotageStatus:
+   .. py:property:: is_emergency
+      :type: bool
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_SabotageStatus {
-        node [shape=record];
-        "SabotageStatus" [label="SabotageStatus"];
-        "str" -> "SabotageStatus";
-        "enum.Enum" -> "SabotageStatus";
-      }
+      Check if situation requires immediate action.
 
-.. autoclass:: games.among_us.models.SabotageStatus
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      :returns: True if critical sabotages active or crew disadvantaged.
+      :rtype: bool
 
-   .. note::
+      .. autolink-examples:: is_emergency
+         :collapse:
 
-      **SabotageStatus** is an Enum defined in ``games.among_us.models``.
 
+   .. py:attribute:: model_config
 
+      Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
 
+      .. autolink-examples:: model_config
+         :collapse:
 
 
-.. toggle:: Show Inheritance Diagram
+   .. py:attribute:: priority_actions
+      :type:  list[str]
+      :value: None
 
-   Inheritance diagram for SabotageType:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_SabotageType {
-        node [shape=record];
-        "SabotageType" [label="SabotageType"];
-        "str" -> "SabotageType";
-        "enum.Enum" -> "SabotageType";
-      }
+   .. py:attribute:: recommended_strategy
+      :type:  str
+      :value: None
 
-.. autoclass:: games.among_us.models.SabotageType
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-   .. note::
 
-      **SabotageType** is an Enum defined in ``games.among_us.models``.
+   .. py:attribute:: risk_assessment
+      :type:  str
+      :value: None
 
 
 
+   .. py:attribute:: suspected_impostors
+      :type:  list[str]
+      :value: None
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for Task:
+   .. py:attribute:: task_completion_percentage
+      :type:  float
+      :value: None
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_Task {
-        node [shape=record];
-        "Task" [label="Task"];
-        "pydantic.BaseModel" -> "Task";
-      }
 
-.. autopydantic_model:: games.among_us.models.Task
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: trusted_players
+      :type:  list[str]
+      :value: None
 
 
 
+   .. py:property:: win_probability
+      :type: dict[str, float]
 
 
-.. toggle:: Show Inheritance Diagram
+      Estimate win probability for each team.
 
-   Inheritance diagram for TaskStatus:
+      :returns: Win chances for crew and impostors.
+      :rtype: Dict[str, float]
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: win_probability
+         :collapse:
 
-      digraph inheritance_TaskStatus {
-        node [shape=record];
-        "TaskStatus" [label="TaskStatus"];
-        "str" -> "TaskStatus";
-        "enum.Enum" -> "TaskStatus";
-      }
 
-.. autoclass:: games.among_us.models.TaskStatus
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. py:class:: AmongUsGamePhase
 
-   .. note::
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
-      **TaskStatus** is an Enum defined in ``games.among_us.models``.
 
+   Current phase of gameplay.
 
+   Game alternates between task/action phases and discussion/voting.
 
+   Values:
+       TASKS: Normal gameplay with movement and actions
+       MEETING: Discussion phase after body report or emergency
+       VOTING: Active voting to eject a player
+       GAME_OVER: Game concluded with winner determined
 
 
-.. toggle:: Show Inheritance Diagram
+   Initialize self.  See help(type(self)) for accurate signature.
 
-   Inheritance diagram for TaskType:
 
-   .. graphviz::
-      :align: center
+   .. autolink-examples:: __init__
+      :collapse:
 
-      digraph inheritance_TaskType {
-        node [shape=record];
-        "TaskType" [label="TaskType"];
-        "str" -> "TaskType";
-        "enum.Enum" -> "TaskType";
-      }
 
-.. autoclass:: games.among_us.models.TaskType
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. autolink-examples:: AmongUsGamePhase
+      :collapse:
 
-   .. note::
+   .. py:attribute:: GAME_OVER
+      :value: 'game_over'
 
-      **TaskType** is an Enum defined in ``games.among_us.models``.
 
 
+   .. py:attribute:: MEETING
+      :value: 'meeting'
 
 
 
-.. toggle:: Show Inheritance Diagram
+   .. py:attribute:: TASKS
+      :value: 'tasks'
 
-   Inheritance diagram for Vent:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_Vent {
-        node [shape=record];
-        "Vent" [label="Vent"];
-        "pydantic.BaseModel" -> "Vent";
-      }
+   .. py:attribute:: VOTING
+      :value: 'voting'
 
-.. autopydantic_model:: games.among_us.models.Vent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
 
 
+.. py:class:: AmongUsPlayerDecision(/, **data: Any)
 
+   Bases: :py:obj:`pydantic.BaseModel`
 
 
-.. toggle:: Show Inheritance Diagram
+   Strategic decision model for player actions.
 
-   Inheritance diagram for VentConnection:
+   Encapsulates a player's chosen action with reasoning and confidence.
+   Used by AI agents to make informed decisions based on game state
+   and objectives. Includes justification for social deduction.
 
-   .. graphviz::
-      :align: center
+   .. attribute:: action_type
 
-      digraph inheritance_VentConnection {
-        node [shape=record];
-        "VentConnection" [label="VentConnection"];
-        "pydantic.BaseModel" -> "VentConnection";
-      }
+      Chosen action to perform.
 
-.. autopydantic_model:: games.among_us.models.VentConnection
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      :type: AmongUsActionType
 
+   .. attribute:: target_location
 
+      Destination for movement.
 
+      :type: Optional[str]
 
+   .. attribute:: target_player
 
-.. rubric:: Related Links
+      Target for kill/vote actions.
 
-.. autolink-examples:: games.among_us.models
-   :collapse:
-   
-.. autolink-skip:: next
+      :type: Optional[str]
+
+   .. attribute:: target_task
+
+      Task ID to attempt.
+
+      :type: Optional[str]
+
+   .. attribute:: reasoning
+
+      Strategic justification for action.
+
+      :type: str
+
+   .. attribute:: confidence
+
+      Confidence level in decision (0-1).
+
+      :type: float
+
+   .. rubric:: Examples
+
+   Crewmate task decision::
+
+       decision = AmongUsPlayerDecision(
+           action_type=AmongUsActionType.DO_TASK,
+           target_task="fix_wiring_1",
+           reasoning="Completing tasks helps crew win",
+           confidence=0.9
+       )
+
+   Impostor kill decision::
+
+       decision = AmongUsPlayerDecision(
+           action_type=AmongUsActionType.KILL,
+           target_player="Blue",
+           reasoning="Blue is isolated in electrical",
+           confidence=0.8
+       )
+
+   Strategic movement::
+
+       decision = AmongUsPlayerDecision(
+           action_type=AmongUsActionType.MOVE,
+           target_location="medbay",
+           reasoning="Need to establish alibi with visual task",
+           confidence=0.7
+       )
+
+   Voting decision::
+
+       decision = AmongUsPlayerDecision(
+           action_type=AmongUsActionType.VOTE,
+           target_player="Red",
+           reasoning="Red was seen venting by Green",
+           confidence=0.95
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: AmongUsPlayerDecision
+      :collapse:
+
+   .. py:method:: validate_location_for_action(v: str | None, info) -> str | None
+      :classmethod:
+
+
+      Ensure target location is provided for movement actions.
+
+      :param v: Target location value.
+      :type v: Optional[str]
+      :param info: Validation context with other fields.
+
+      :returns: Validated location.
+      :rtype: Optional[str]
+
+      :raises ValueError: If location missing for movement.
+
+
+      .. autolink-examples:: validate_location_for_action
+         :collapse:
+
+
+   .. py:attribute:: action_type
+      :type:  AmongUsActionType
+      :value: None
+
+
+
+   .. py:attribute:: confidence
+      :type:  float
+      :value: None
+
+
+
+   .. py:property:: is_aggressive_action
+      :type: bool
+
+
+      Check if action is aggressive/hostile.
+
+      :returns: True for kill/sabotage actions.
+      :rtype: bool
+
+      .. autolink-examples:: is_aggressive_action
+         :collapse:
+
+
+   .. py:attribute:: reasoning
+      :type:  str
+      :value: None
+
+
+
+   .. py:property:: requires_target_player
+      :type: bool
+
+
+      Check if action needs a target player.
+
+      :returns: True for kill/vote actions.
+      :rtype: bool
+
+      .. autolink-examples:: requires_target_player
+         :collapse:
+
+
+   .. py:attribute:: target_location
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: target_player
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: target_task
+      :type:  str | None
+      :value: None
+
+
+
+.. py:class:: PlayerMemory(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Cognitive model for player observations and deductions.
+
+   Tracks what a player has observed and deduced during gameplay,
+   forming the basis for social deduction. Memory includes direct
+   observations, suspicion levels, alibis, and movement patterns.
+
+   .. attribute:: observations
+
+      Chronological list of observations.
+
+      :type: List[str]
+
+   .. attribute:: player_suspicions
+
+      Suspicion levels (0-1) per player.
+
+      :type: Dict[str, float]
+
+   .. attribute:: player_alibis
+
+      Last known locations of players.
+
+      :type: Dict[str, str]
+
+   .. attribute:: location_history
+
+      Recent rooms visited by this player.
+
+      :type: List[str]
+
+   .. rubric:: Examples
+
+   Tracking suspicious behavior::
+
+       memory = PlayerMemory(
+           observations=[
+               "Saw Red near body in electrical",
+               "Blue was alone in medbay",
+               "Green completed visual task"
+           ],
+           player_suspicions={
+               "Red": 0.8,
+               "Blue": 0.4,
+               "Green": 0.0
+           }
+       )
+
+   Building alibis::
+
+       memory.player_alibis = {
+           "Red": "electrical",
+           "Blue": "medbay",
+           "Green": "cafeteria"
+       }
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerMemory
+      :collapse:
+
+   .. py:method:: validate_suspicion_levels(v: dict[str, float]) -> dict[str, float]
+      :classmethod:
+
+
+      Ensure suspicion levels are within valid range.
+
+      :param v: Suspicion dictionary to validate.
+      :type v: Dict[str, float]
+
+      :returns: Validated suspicion levels.
+      :rtype: Dict[str, float]
+
+      :raises ValueError: If suspicion level outside 0-1 range.
+
+
+      .. autolink-examples:: validate_suspicion_levels
+         :collapse:
+
+
+   .. py:attribute:: location_history
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:property:: most_suspicious
+      :type: str | None
+
+
+      Identify the most suspicious player.
+
+      :returns: Player ID with highest suspicion or None.
+      :rtype: Optional[str]
+
+      .. autolink-examples:: most_suspicious
+         :collapse:
+
+
+   .. py:attribute:: observations
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:attribute:: player_alibis
+      :type:  dict[str, str]
+      :value: None
+
+
+
+   .. py:attribute:: player_suspicions
+      :type:  dict[str, float]
+      :value: None
+
+
+
+   .. py:property:: trusted_players
+      :type: list[str]
+
+
+      List players with low suspicion (< 0.3).
+
+      :returns: IDs of trusted players.
+      :rtype: List[str]
+
+      .. autolink-examples:: trusted_players
+         :collapse:
+
+
+.. py:class:: PlayerRole
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Player roles defining objectives and abilities.
+
+   Determines the player's win condition and available actions:
+   - Crewmates: Complete tasks and identify impostors
+   - Impostors: Eliminate crew and avoid detection
+
+   Values:
+       CREWMATE: Innocent crew member focused on tasks
+       IMPOSTOR: Deceptive player who can kill and sabotage
+
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerRole
+      :collapse:
+
+   .. py:attribute:: CREWMATE
+      :value: 'crewmate'
+
+
+
+   .. py:attribute:: IMPOSTOR
+      :value: 'impostor'
+
+
+
+.. py:class:: PlayerState(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Complete state representation for a player in Among Us.
+
+   Encapsulates all information about a player including their role,
+   location, tasks, survival status, and cognitive state. Supports
+   both crewmate and impostor gameplay with appropriate abilities.
+
+   .. attribute:: id
+
+      Unique player identifier.
+
+      :type: str
+
+   .. attribute:: role
+
+      Crewmate or Impostor designation.
+
+      :type: PlayerRole
+
+   .. attribute:: location
+
+      Current room location.
+
+      :type: str
+
+   .. attribute:: tasks
+
+      Assigned tasks (empty for impostors).
+
+      :type: List[Task]
+
+   .. attribute:: is_alive
+
+      Whether player is still active.
+
+      :type: bool
+
+   .. attribute:: last_action
+
+      Most recent action taken.
+
+      :type: Optional[str]
+
+   .. attribute:: observations
+
+      Direct observations this turn.
+
+      :type: List[str]
+
+   .. attribute:: in_vent
+
+      Whether currently hiding in vent.
+
+      :type: bool
+
+   .. attribute:: current_vent
+
+      ID of occupied vent.
+
+      :type: Optional[str]
+
+   .. attribute:: memory
+
+      Cognitive state and deductions.
+
+      :type: PlayerMemory
+
+   .. rubric:: Examples
+
+   Crewmate with tasks::
+
+       crewmate = PlayerState(
+           id="Blue",
+           role=PlayerRole.CREWMATE,
+           location="electrical",
+           tasks=[
+               Task(id="wire1", type=TaskType.COMMON,
+                    location="electrical", description="Fix wiring"),
+               Task(id="scan1", type=TaskType.VISUAL,
+                    location="medbay", description="Submit to scan")
+           ]
+       )
+
+   Impostor in vent::
+
+       impostor = PlayerState(
+           id="Red",
+           role=PlayerRole.IMPOSTOR,
+           location="electrical",
+           tasks=[],
+           in_vent=True,
+           current_vent="electrical_vent"
+       )
+
+   Dead player::
+
+       ghost = PlayerState(
+           id="Green",
+           role=PlayerRole.CREWMATE,
+           location="cafeteria",
+           tasks=[],
+           is_alive=False
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PlayerState
+      :collapse:
+
+   .. py:method:: can_kill(kill_cooldown: int = 0) -> bool
+
+      Check if the player can perform a kill action.
+
+      Kill ability requires:
+      - Impostor role
+      - Being alive
+      - Kill cooldown expired
+      - Not currently in vent
+
+      :param kill_cooldown: Remaining cooldown seconds.
+      :type kill_cooldown: int
+
+      :returns: True if all conditions met for killing.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> impostor = PlayerState(id="Red", role=PlayerRole.IMPOSTOR,
+      ...                        location="electrical", is_alive=True)
+      >>> impostor.can_kill(kill_cooldown=0)
+      True
+      >>> impostor.can_kill(kill_cooldown=10)
+      False
+
+
+      .. autolink-examples:: can_kill
+         :collapse:
+
+
+   .. py:method:: can_use_vent() -> bool
+
+      Check if the player can use ventilation systems.
+
+      Vent usage requires:
+      - Impostor role
+      - Being alive
+
+      :returns: True if player can enter/exit vents.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> impostor = PlayerState(id="Red", role=PlayerRole.IMPOSTOR,
+      ...                        location="electrical", is_alive=True)
+      >>> impostor.can_use_vent()
+      True
+
+
+      .. autolink-examples:: can_use_vent
+         :collapse:
+
+
+   .. py:method:: is_crewmate() -> bool
+
+      Check if the player is a crewmate.
+
+      :returns: True if player has crewmate role.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> crew = PlayerState(id="Blue", role=PlayerRole.CREWMATE, location="cafeteria")
+      >>> crew.is_crewmate()
+      True
+
+
+      .. autolink-examples:: is_crewmate
+         :collapse:
+
+
+   .. py:method:: is_impostor() -> bool
+
+      Check if the player is an impostor.
+
+      :returns: True if player has impostor role.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> impostor = PlayerState(id="Red", role=PlayerRole.IMPOSTOR, location="cafeteria")
+      >>> impostor.is_impostor()
+      True
+
+
+      .. autolink-examples:: is_impostor
+         :collapse:
+
+
+   .. py:attribute:: current_vent
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: in_vent
+      :type:  bool
+      :value: None
+
+
+
+   .. py:property:: incomplete_tasks
+      :type: list[Task]
+
+
+      Get list of uncompleted tasks.
+
+      :returns: Tasks that still need completion.
+      :rtype: List[Task]
+
+      .. autolink-examples:: incomplete_tasks
+         :collapse:
+
+
+   .. py:attribute:: is_alive
+      :type:  bool
+      :value: None
+
+
+
+   .. py:property:: is_ghost
+      :type: bool
+
+
+      Check if player is a ghost (dead but still participating).
+
+      :returns: True if player is dead.
+      :rtype: bool
+
+      .. autolink-examples:: is_ghost
+         :collapse:
+
+
+   .. py:attribute:: last_action
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: location
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: memory
+      :type:  PlayerMemory
+      :value: None
+
+
+
+   .. py:attribute:: observations
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:attribute:: role
+      :type:  PlayerRole
+      :value: None
+
+
+
+   .. py:property:: task_completion_rate
+      :type: float
+
+
+      Calculate percentage of tasks completed.
+
+      :returns: Completion percentage (0.0-100.0).
+      :rtype: float
+
+      .. autolink-examples:: task_completion_rate
+         :collapse:
+
+
+   .. py:attribute:: tasks
+      :type:  list[Task]
+      :value: None
+
+
+
+.. py:class:: Room(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Physical location on the game map.
+
+   Rooms are the primary spaces where gameplay occurs. Players move
+   between rooms, complete tasks in specific rooms, and use room
+   layout for strategic positioning. Some rooms contain vents for
+   impostor movement.
+
+   .. attribute:: id
+
+      Unique room identifier.
+
+      :type: str
+
+   .. attribute:: name
+
+      Display name for the room.
+
+      :type: str
+
+   .. attribute:: connections
+
+      Adjacent room connections.
+
+      :type: List[RoomConnection]
+
+   .. attribute:: vents
+
+      IDs of vents in this room.
+
+      :type: List[str]
+
+   .. rubric:: Examples
+
+   Central hub room::
+
+       cafeteria = Room(
+           id="cafeteria",
+           name="Cafeteria",
+           connections=[
+               RoomConnection(target_room="upper_engine"),
+               RoomConnection(target_room="medbay"),
+               RoomConnection(target_room="admin")
+           ]
+       )
+
+   Task room with vent::
+
+       electrical = Room(
+           id="electrical",
+           name="Electrical",
+           connections=[
+               RoomConnection(target_room="storage"),
+               RoomConnection(target_room="lower_engine")
+           ],
+           vents=["electrical_vent"]
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Room
+      :collapse:
+
+   .. py:method:: get_connection(room_id: str) -> RoomConnection | None
+
+      Get the connection to another room if it exists.
+
+      :param room_id: ID of the target room.
+      :type room_id: str
+
+      :returns: Connection object or None.
+      :rtype: Optional[RoomConnection]
+
+      .. rubric:: Examples
+
+      >>> conn = cafeteria.get_connection("medbay")
+      >>> conn.distance
+      1
+
+
+      .. autolink-examples:: get_connection
+         :collapse:
+
+
+   .. py:method:: is_connected_to(room_id: str) -> bool
+
+      Check if this room directly connects to another room.
+
+      :param room_id: ID of the target room.
+      :type room_id: str
+
+      :returns: True if rooms are directly connected.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> cafeteria.is_connected_to("medbay")
+      True
+      >>> cafeteria.is_connected_to("reactor")
+      False
+
+
+      .. autolink-examples:: is_connected_to
+         :collapse:
+
+
+   .. py:property:: connection_count
+      :type: int
+
+
+      Count number of room connections.
+
+      :returns: Total adjacent rooms.
+      :rtype: int
+
+      .. autolink-examples:: connection_count
+         :collapse:
+
+
+   .. py:attribute:: connections
+      :type:  list[RoomConnection]
+      :value: None
+
+
+
+   .. py:property:: has_vent
+      :type: bool
+
+
+      Check if room contains any vents.
+
+      :returns: True if room has vents for impostor use.
+      :rtype: bool
+
+      .. autolink-examples:: has_vent
+         :collapse:
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: vents
+      :type:  list[str]
+      :value: None
+
+
+
+.. py:class:: RoomConnection(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Physical connection between adjacent rooms.
+
+   Represents hallways and passages between rooms, defining the map
+   topology. Connections can be blocked by door sabotages, forcing
+   players to find alternate routes.
+
+   .. attribute:: target_room
+
+      ID of the connected room.
+
+      :type: str
+
+   .. attribute:: distance
+
+      Travel time in seconds.
+
+      :type: int
+
+   .. attribute:: is_blocked
+
+      Whether passage is sabotage-blocked.
+
+      :type: bool
+
+   .. rubric:: Examples
+
+   Standard hallway::
+
+       connection = RoomConnection(
+           target_room="cafeteria",
+           distance=1
+       )
+
+   Long corridor::
+
+       connection = RoomConnection(
+           target_room="reactor",
+           distance=3
+       )
+
+   Sabotaged door::
+
+       connection = RoomConnection(
+           target_room="electrical",
+           distance=1,
+           is_blocked=True
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: RoomConnection
+      :collapse:
+
+   .. py:attribute:: distance
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: is_blocked
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: target_room
+      :type:  str
+      :value: None
+
+
+
+.. py:class:: SabotageEvent(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Active sabotage affecting gameplay.
+
+   Represents an ongoing sabotage that disrupts normal gameplay.
+   Critical sabotages have timers and can end the game, while
+   non-critical sabotages create tactical advantages.
+
+   .. attribute:: type
+
+      Type of sabotage from SabotageType.
+
+      :type: str
+
+   .. attribute:: location
+
+      Primary affected location.
+
+      :type: str
+
+   .. attribute:: timer
+
+      Seconds until critical failure.
+
+      :type: int
+
+   .. attribute:: resolved
+
+      Whether sabotage is fixed.
+
+      :type: bool
+
+   .. attribute:: resolution_points
+
+      Fix locations.
+
+      :type: List[SabotageResolutionPoint]
+
+   .. rubric:: Examples
+
+   Critical reactor sabotage::
+
+       sabotage = SabotageEvent(
+           type="reactor",
+           location="reactor",
+           timer=30,
+           resolution_points=[
+               SabotageResolutionPoint(
+                   id="reactor_left",
+                   location="reactor",
+                   description="Left panel"
+               ),
+               SabotageResolutionPoint(
+                   id="reactor_right",
+                   location="reactor",
+                   description="Right panel"
+               )
+           ]
+       )
+
+   Non-critical lights sabotage::
+
+       sabotage = SabotageEvent(
+           type="lights",
+           location="electrical",
+           timer=0,  # No timer for non-critical
+           resolution_points=[
+               SabotageResolutionPoint(
+                   id="light_panel",
+                   location="electrical",
+                   description="Fix light switches"
+               )
+           ]
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: SabotageEvent
+      :collapse:
+
+   .. py:method:: is_critical() -> bool
+
+      Check if this is a game-ending critical sabotage.
+
+      Critical sabotages (O2, Reactor) can end the game if not
+      resolved within the time limit.
+
+      :returns: True if sabotage is critical.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> reactor = SabotageEvent(type="reactor", location="reactor", timer=30)
+      >>> reactor.is_critical()
+      True
+      >>> lights = SabotageEvent(type="lights", location="electrical", timer=0)
+      >>> lights.is_critical()
+      False
+
+
+      .. autolink-examples:: is_critical
+         :collapse:
+
+
+   .. py:method:: is_resolved() -> bool
+
+      Check if the sabotage is fully resolved.
+
+      Sabotage is resolved when either marked resolved or all
+      resolution points are activated.
+
+      :returns: True if sabotage is fixed.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> sabotage = SabotageEvent(type="reactor", location="reactor", timer=30)
+      >>> sabotage.is_resolved()
+      False
+      >>> sabotage.resolved = True
+      >>> sabotage.is_resolved()
+      True
+
+
+      .. autolink-examples:: is_resolved
+         :collapse:
+
+
+   .. py:attribute:: location
+      :type:  str
+      :value: None
+
+
+
+   .. py:property:: points_remaining
+      :type: int
+
+
+      Count unresolved resolution points.
+
+      :returns: Number of points still needing activation.
+      :rtype: int
+
+      .. autolink-examples:: points_remaining
+         :collapse:
+
+
+   .. py:attribute:: resolution_points
+      :type:  list[SabotageResolutionPoint]
+      :value: None
+
+
+
+   .. py:attribute:: resolved
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: timer
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: type
+      :type:  str
+      :value: None
+
+
+
+   .. py:property:: urgency_level
+      :type: str
+
+
+      Determine urgency of addressing this sabotage.
+
+      :returns: Urgency classification.
+      :rtype: str
+
+      .. autolink-examples:: urgency_level
+         :collapse:
+
+
+.. py:class:: SabotageResolutionPoint(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Interactive point for resolving sabotages.
+
+   Critical sabotages require multiple resolution points to be
+   activated simultaneously (e.g., reactor needs two players).
+   Non-critical sabotages may have single resolution points.
+
+   .. attribute:: id
+
+      Unique identifier for this point.
+
+      :type: str
+
+   .. attribute:: location
+
+      Room containing the resolution point.
+
+      :type: str
+
+   .. attribute:: description
+
+      What needs to be done here.
+
+      :type: str
+
+   .. attribute:: resolved
+
+      Whether this point is activated.
+
+      :type: bool
+
+   .. attribute:: resolver_id
+
+      Player who resolved this.
+
+      :type: Optional[str]
+
+   .. rubric:: Examples
+
+   Reactor resolution point::
+
+       point = SabotageResolutionPoint(
+           id="reactor_left",
+           location="reactor",
+           description="Hold left reactor panel"
+       )
+
+   O2 resolution point::
+
+       point = SabotageResolutionPoint(
+           id="o2_admin",
+           location="admin",
+           description="Enter O2 code in admin"
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: SabotageResolutionPoint
+      :collapse:
+
+   .. py:attribute:: description
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: location
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: resolved
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: resolver_id
+      :type:  str | None
+      :value: None
+
+
+
+.. py:class:: SabotageStatus
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Current state of a sabotage event.
+
+   Values:
+       ACTIVE: Sabotage in effect, needs resolution
+       RESOLVED: Successfully fixed by crewmates
+       FAILED: Timer expired on critical sabotage (impostor win)
+
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: SabotageStatus
+      :collapse:
+
+   .. py:attribute:: ACTIVE
+      :value: 'active'
+
+
+
+   .. py:attribute:: FAILED
+      :value: 'failed'
+
+
+
+   .. py:attribute:: RESOLVED
+      :value: 'resolved'
+
+
+
+.. py:class:: SabotageType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of sabotage available to impostors.
+
+   Sabotages disrupt crewmate activities and create opportunities
+   for kills. Critical sabotages can end the game if not resolved.
+
+   Values:
+       LIGHTS: Reduces crewmate vision radius
+       COMMS: Hides task list and prevents meetings
+       OXYGEN: Critical - requires two-point fix within time limit
+       REACTOR: Critical - requires two-point fix within time limit
+       DOORS: Locks specific room doors temporarily
+
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: SabotageType
+      :collapse:
+
+   .. py:attribute:: COMMS
+      :value: 'comms'
+
+
+
+   .. py:attribute:: DOORS
+      :value: 'doors'
+
+
+
+   .. py:attribute:: LIGHTS
+      :value: 'lights'
+
+
+
+   .. py:attribute:: OXYGEN
+      :value: 'o2'
+
+
+
+   .. py:attribute:: REACTOR
+      :value: 'reactor'
+
+
+
+.. py:class:: Task(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Individual task assignment for crewmates.
+
+   Tasks are the primary objective for crewmates, requiring them to visit
+   specific locations and complete mini-games. Visual tasks can prove
+   innocence by showing animations to nearby players.
+
+   .. attribute:: id
+
+      Unique task identifier.
+
+      :type: str
+
+   .. attribute:: type
+
+      Category of task affecting behavior.
+
+      :type: TaskType
+
+   .. attribute:: location
+
+      Room where task must be performed.
+
+      :type: str
+
+   .. attribute:: description
+
+      Human-readable task description.
+
+      :type: str
+
+   .. attribute:: status
+
+      Current completion state.
+
+      :type: TaskStatus
+
+   .. attribute:: visual_indicator
+
+      Whether task shows visible proof.
+
+      :type: bool
+
+   .. rubric:: Examples
+
+   Visual task proving innocence::
+
+       task = Task(
+           id="medbay_scan",
+           type=TaskType.VISUAL,
+           location="medbay",
+           description="Submit to medbay scan",
+           visual_indicator=True
+       )
+
+   Common electrical task::
+
+       task = Task(
+           id="fix_wiring",
+           type=TaskType.COMMON,
+           location="electrical",
+           description="Fix wiring"
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Task
+      :collapse:
+
+   .. py:property:: completion_percentage
+      :type: float
+
+
+      Calculate task completion percentage.
+
+      :returns: 0.0 for not started, 0.5 for in progress, 1.0 for completed.
+      :rtype: float
+
+      .. autolink-examples:: completion_percentage
+         :collapse:
+
+
+   .. py:attribute:: description
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:property:: is_completed
+      :type: bool
+
+
+      Check if task is fully completed.
+
+      :returns: True if task status is COMPLETED.
+      :rtype: bool
+
+      .. autolink-examples:: is_completed
+         :collapse:
+
+
+   .. py:attribute:: location
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: status
+      :type:  TaskStatus
+      :value: None
+
+
+
+   .. py:attribute:: type
+      :type:  TaskType
+      :value: None
+
+
+
+   .. py:attribute:: visual_indicator
+      :type:  bool
+      :value: None
+
+
+
+.. py:class:: TaskStatus
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Task completion status for tracking progress.
+
+   Values:
+       NOT_STARTED: Task not yet attempted
+       IN_PROGRESS: Task partially completed
+       COMPLETED: Task fully finished
+
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: TaskStatus
+      :collapse:
+
+   .. py:attribute:: COMPLETED
+      :value: 'completed'
+
+
+
+   .. py:attribute:: IN_PROGRESS
+      :value: 'in_progress'
+
+
+
+   .. py:attribute:: NOT_STARTED
+      :value: 'not_started'
+
+
+
+.. py:class:: TaskType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of tasks with different characteristics.
+
+   Task types affect completion time and verification:
+   - Visual tasks provide visible proof of innocence
+   - Common tasks are shared by all crewmates
+   - Short/Long tasks vary in completion time
+
+   Values:
+       VISUAL: Tasks with visible animations (proves innocence)
+       COMMON: Tasks assigned to all crewmates
+       SHORT: Quick tasks (1-3 seconds)
+       LONG: Extended tasks (5-10 seconds)
+
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: TaskType
+      :collapse:
+
+   .. py:attribute:: COMMON
+      :value: 'common'
+
+
+
+   .. py:attribute:: LONG
+      :value: 'long'
+
+
+
+   .. py:attribute:: SHORT
+      :value: 'short'
+
+
+
+   .. py:attribute:: VISUAL
+      :value: 'visual'
+
+
+
+.. py:class:: Vent(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Ventilation system access point for impostor movement.
+
+   Vents are strategic tools exclusive to impostors, allowing rapid
+   movement between connected locations while avoiding detection.
+   Each vent can connect to multiple other vents forming a network.
+
+   .. attribute:: id
+
+      Unique vent identifier.
+
+      :type: str
+
+   .. attribute:: location
+
+      Room containing this vent.
+
+      :type: str
+
+   .. attribute:: connections
+
+      Available vent routes.
+
+      :type: List[VentConnection]
+
+   .. rubric:: Examples
+
+   Central vent hub::
+
+       vent = Vent(
+           id="electrical_vent",
+           location="electrical",
+           connections=[
+               VentConnection(target_vent_id="medbay_vent"),
+               VentConnection(target_vent_id="security_vent")
+           ]
+       )
+
+   Isolated vent::
+
+       vent = Vent(
+           id="reactor_vent",
+           location="reactor",
+           connections=[
+               VentConnection(
+                   target_vent_id="upper_engine_vent",
+                   travel_time=3
+               )
+           ]
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Vent
+      :collapse:
+
+   .. py:property:: connection_count
+      :type: int
+
+
+      Count number of connected vents.
+
+      :returns: Total number of vent connections.
+      :rtype: int
+
+      .. autolink-examples:: connection_count
+         :collapse:
+
+
+   .. py:attribute:: connections
+      :type:  list[VentConnection]
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:property:: is_connected
+      :type: bool
+
+
+      Check if vent has any connections.
+
+      :returns: True if vent connects to other vents.
+      :rtype: bool
+
+      .. autolink-examples:: is_connected
+         :collapse:
+
+
+   .. py:attribute:: location
+      :type:  str
+      :value: None
+
+
+
+.. py:class:: VentConnection(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Connection between two vents for impostor movement.
+
+   Vents provide secret passages for impostors to move quickly and
+   unseen between locations. Travel time simulates crawling through
+   ventilation systems.
+
+   .. attribute:: target_vent_id
+
+      ID of the connected vent.
+
+      :type: str
+
+   .. attribute:: travel_time
+
+      Seconds required to traverse connection.
+
+      :type: int
+
+   .. rubric:: Examples
+
+   Fast vent connection::
+
+       connection = VentConnection(
+           target_vent_id="medbay_vent",
+           travel_time=1
+       )
+
+   Distant vent connection::
+
+       connection = VentConnection(
+           target_vent_id="reactor_vent",
+           travel_time=4
+       )
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: VentConnection
+      :collapse:
+
+   .. py:attribute:: target_vent_id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: travel_time
+      :type:  int
+      :value: None
+
+
+

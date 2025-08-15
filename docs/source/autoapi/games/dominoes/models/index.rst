@@ -1,205 +1,317 @@
-
-:py:mod:`games.dominoes.models`
-===============================
+games.dominoes.models
+=====================
 
 .. py:module:: games.dominoes.models
 
-Comprehensive data models for the Dominoes tile game.
+.. autoapi-nested-parse::
 
-This module defines the complete set of data structures for traditional Dominoes
-gameplay, providing models for tile representation, game moves, strategic
-analysis, and game state management. The implementation supports standard
-double-six dominoes with traditional matching rules.
+   Comprehensive data models for the Dominoes tile game.
 
-Dominoes is a classic tile-matching game involving:
-- 28 tiles in a double-six set (0-0 through 6-6)
-- Line-building with matching endpoints
-- Strategic tile placement and blocking
-- Point-based scoring systems
+   This module defines the complete set of data structures for traditional Dominoes
+   gameplay, providing models for tile representation, game moves, strategic
+   analysis, and game state management. The implementation supports standard
+   double-six dominoes with traditional matching rules.
 
-Key Models:
-    DominoTile: Individual domino tile with two values
-    DominoMove: Player's tile placement action
-    DominoLinePosition: Position tracking on the domino line
-    DominoAnalysis: Strategic evaluation for AI decision-making
+   Dominoes is a classic tile-matching game involving:
+   - 28 tiles in a double-six set (0-0 through 6-6)
+   - Line-building with matching endpoints
+   - Strategic tile placement and blocking
+   - Point-based scoring systems
 
-.. rubric:: Examples
+   Key Models:
+       DominoTile: Individual domino tile with two values
+       DominoMove: Player's tile placement action
+       DominoLinePosition: Position tracking on the domino line
+       DominoAnalysis: Strategic evaluation for AI decision-making
 
-Working with tiles::
+   .. rubric:: Examples
 
-    from haive.games.dominoes.models import DominoTile
+   Working with tiles::
 
-    # Create standard tiles
-    double_six = DominoTile(left=6, right=6)
-    mixed_tile = DominoTile(left=3, right=5)
+       from haive.games.dominoes.models import DominoTile
 
-    # Check tile properties
-    assert double_six.is_double() == True
-    assert mixed_tile.sum() == 8
-    print(double_six)  # "[6|6]"
+       # Create standard tiles
+       double_six = DominoTile(left=6, right=6)
+       mixed_tile = DominoTile(left=3, right=5)
 
-Making moves::
+       # Check tile properties
+       assert double_six.is_double() == True
+       assert mixed_tile.sum() == 8
+       print(double_six)  # "[6|6]"
 
-    from haive.games.dominoes.models import DominoMove
+   Making moves::
 
-    move = DominoMove(
-        tile=DominoTile(left=4, right=2),
-        position="left",
-        player="player1"
-    )
+       from haive.games.dominoes.models import DominoMove
 
-Strategic analysis::
+       move = DominoMove(
+           tile=DominoTile(left=4, right=2),
+           position="left",
+           player="player1"
+       )
 
-    analysis = DominoAnalysis(
-        available_moves=5,
-        blocking_potential=3,
-        point_value=12,
-        strategy="Control high-value tiles"
-    )
+   Strategic analysis::
 
-The models provide comprehensive tile management and strategic gameplay
-support for AI-driven dominoes implementation.
+       analysis = DominoAnalysis(
+           available_moves=5,
+           blocking_potential=3,
+           point_value=12,
+           strategy="Control high-value tiles"
+       )
+
+   The models provide comprehensive tile management and strategic gameplay
+   support for AI-driven dominoes implementation.
 
 
-.. autolink-examples:: games.dominoes.models
-   :collapse:
+   .. autolink-examples:: games.dominoes.models
+      :collapse:
+
 
 Classes
 -------
 
 .. autoapisummary::
 
-   games.dominoes.models.DominoesAnalysis
-   games.dominoes.models.DominoesPlayerDecision
    games.dominoes.models.DominoMove
    games.dominoes.models.DominoTile
+   games.dominoes.models.DominoesAnalysis
+   games.dominoes.models.DominoesPlayerDecision
 
 
 Module Contents
 ---------------
 
+.. py:class:: DominoMove(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A move in dominoes.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: DominoMove
+      :collapse:
+
+   .. py:method:: __str__() -> str
+
+      String representation of the move.
+
+
+      .. autolink-examples:: __str__
+         :collapse:
+
+
+   .. py:attribute:: location
+      :type:  Literal['left', 'right']
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DominoMove:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoMove {
-        node [shape=record];
-        "DominoMove" [label="DominoMove"];
-        "pydantic.BaseModel" -> "DominoMove";
-      }
-
-.. autopydantic_model:: games.dominoes.models.DominoMove
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: tile
+      :type:  DominoTile
+      :value: None
 
 
 
+.. py:class:: DominoTile(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
 
 
-.. toggle:: Show Inheritance Diagram
+   A domino tile with two values.
 
-   Inheritance diagram for DominoTile:
+   Create a new model by parsing and validating input data from keyword arguments.
 
-   .. graphviz::
-      :align: center
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
 
-      digraph inheritance_DominoTile {
-        node [shape=record];
-        "DominoTile" [label="DominoTile"];
-        "pydantic.BaseModel" -> "DominoTile";
-      }
-
-.. autopydantic_model:: games.dominoes.models.DominoTile
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   `self` is explicitly positional-only to allow `self` as a field name.
 
 
+   .. autolink-examples:: __init__
+      :collapse:
 
 
+   .. autolink-examples:: DominoTile
+      :collapse:
 
-.. toggle:: Show Inheritance Diagram
+   .. py:method:: __eq__(other) -> bool
 
-   Inheritance diagram for DominoesAnalysis:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoesAnalysis {
-        node [shape=record];
-        "DominoesAnalysis" [label="DominoesAnalysis"];
-        "pydantic.BaseModel" -> "DominoesAnalysis";
-      }
-
-.. autopydantic_model:: games.dominoes.models.DominoesAnalysis
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      Check if two tiles are equal (ignoring order).
 
 
+      .. autolink-examples:: __eq__
+         :collapse:
 
 
+   .. py:method:: __str__() -> str
 
-.. toggle:: Show Inheritance Diagram
+      String representation of the tile.
 
-   Inheritance diagram for DominoesPlayerDecision:
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: __str__
+         :collapse:
 
-      digraph inheritance_DominoesPlayerDecision {
-        node [shape=record];
-        "DominoesPlayerDecision" [label="DominoesPlayerDecision"];
-        "pydantic.BaseModel" -> "DominoesPlayerDecision";
-      }
 
-.. autopydantic_model:: games.dominoes.models.DominoesPlayerDecision
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:method:: is_double() -> bool
+
+      Check if this is a double (same value on both sides).
+
+
+      .. autolink-examples:: is_double
+         :collapse:
+
+
+   .. py:method:: reversed() -> DominoTile
+
+      Get a new tile with left and right values swapped.
+
+
+      .. autolink-examples:: reversed
+         :collapse:
+
+
+   .. py:method:: sum() -> int
+
+      Get the sum of both values.
+
+
+      .. autolink-examples:: sum
+         :collapse:
+
+
+   .. py:attribute:: left
+      :type:  int
+      :value: None
 
 
 
+   .. py:attribute:: right
+      :type:  int
+      :value: None
 
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.dominoes.models
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:class:: DominoesAnalysis(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Analysis of a dominoes position.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: DominoesAnalysis
+      :collapse:
+
+   .. py:attribute:: blocking_potential
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: hand_strength
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: missing_values
+      :type:  list[int]
+      :value: None
+
+
+
+   .. py:attribute:: open_ends
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:attribute:: pip_count_assessment
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: reasoning
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: suggested_strategy
+      :type:  str
+      :value: None
+
+
+
+.. py:class:: DominoesPlayerDecision(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A player's decision in dominoes.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: DominoesPlayerDecision
+      :collapse:
+
+   .. py:method:: __str__() -> str
+
+      String representation of the decision.
+
+
+      .. autolink-examples:: __str__
+         :collapse:
+
+
+   .. py:attribute:: move
+      :type:  DominoMove | None
+      :value: None
+
+
+
+   .. py:attribute:: pass_turn
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: reasoning
+      :type:  str
+      :value: None
+
+
+

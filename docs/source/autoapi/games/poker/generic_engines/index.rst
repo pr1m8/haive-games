@@ -1,17 +1,27 @@
-
-:py:mod:`games.poker.generic_engines`
-=====================================
+games.poker.generic_engines
+===========================
 
 .. py:module:: games.poker.generic_engines
 
-Generic Poker engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Poker games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Poker engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Poker games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.poker.generic_engines
-   :collapse:
+   .. autolink-examples:: games.poker.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.poker.generic_engines.poker_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.poker.generic_engines.PokerEngineFactory
    games.poker.generic_engines.PokerPlayerIdentifiers
    games.poker.generic_engines.PokerPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PokerEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PokerEngineFactory {
-        node [shape=record];
-        "PokerEngineFactory" [label="PokerEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "PokerEngineFactory";
-      }
-
-.. autoclass:: games.poker.generic_engines.PokerEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PokerPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PokerPlayerIdentifiers {
-        node [shape=record];
-        "PokerPlayerIdentifiers" [label="PokerPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "PokerPlayerIdentifiers";
-      }
-
-.. autoclass:: games.poker.generic_engines.PokerPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PokerPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PokerPromptGenerator {
-        node [shape=record];
-        "PokerPromptGenerator" [label="PokerPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "PokerPromptGenerator";
-      }
-
-.. autoclass:: games.poker.generic_engines.PokerPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.poker.generic_engines.create_generic_poker_engines
    games.poker.generic_engines.create_generic_poker_engines_simple
    games.poker.generic_engines.create_mixed_poker_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: PokerEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Poker game engines.
+
+
+   .. autolink-examples:: PokerEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: PokerPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Poker game.
+
+
+   .. autolink-examples:: PokerPlayerIdentifiers
+      :collapse:
+
+.. py:class:: PokerPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Poker game.
+
+
+   .. autolink-examples:: PokerPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Poker game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Poker player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_poker_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_poker_engines
       :collapse:
 
+.. py:data:: poker_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.poker.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

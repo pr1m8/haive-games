@@ -1,14 +1,23 @@
-
-:py:mod:`games.nim.engines`
-===========================
+games.nim.engines
+=================
 
 .. py:module:: games.nim.engines
 
-Engines for the Nim game.
+.. autoapi-nested-parse::
+
+   Engines for the Nim game.
 
 
-.. autolink-examples:: games.nim.engines
-   :collapse:
+   .. autolink-examples:: games.nim.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.nim.engines.nim_engines
 
 
 Functions
@@ -18,6 +27,10 @@ Functions
 
    games.nim.engines.generate_analysis_prompt
    games.nim.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -41,11 +54,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: nim_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.nim.engines
-   :collapse:
-   
-.. autolink-skip:: next

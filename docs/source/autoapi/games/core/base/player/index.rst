@@ -1,10 +1,6 @@
-
-:py:mod:`games.core.base.player`
-================================
+games.core.base.player
+======================
 
 .. py:module:: games.core.base.player
-
-
-
 
 

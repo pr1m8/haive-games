@@ -1,36 +1,46 @@
-
-:py:mod:`games.clue.example`
-============================
+games.clue.example
+==================
 
 .. py:module:: games.clue.example
 
-Clue example module.
+.. autoapi-nested-parse::
 
-This module provides an example of running a Clue game with the rich UI visualization.
+   Clue example module.
 
-It demonstrates how to:
-    - Configure and initialize the Clue game
-    - Set up the game state
-    - Visualize the game with the rich UI
-    - Process game turns with guesses and responses
-    - Handle game over conditions
+   This module provides an example of running a Clue game with the rich UI visualization.
 
-The module uses a standard CLI interface with argument parsing
-to allow customization of game behavior.
+   It demonstrates how to:
+       - Configure and initialize the Clue game
+       - Set up the game state
+       - Visualize the game with the rich UI
+       - Process game turns with guesses and responses
+       - Handle game over conditions
 
-.. rubric:: Example
+   The module uses a standard CLI interface with argument parsing
+   to allow customization of game behavior.
 
-Run this script directly to start a Clue game:
-    python -m haive.games.clue.example
+   .. rubric:: Example
 
-Command-line options:
-    --debug: Enable debug mode with detailed logging
-    --turns: Set maximum number of turns (default: 10)
-    --delay: Set delay between moves in seconds (default: 1.0)
+   Run this script directly to start a Clue game:
+       python -m haive.games.clue.example
+
+   Command-line options:
+       --debug: Enable debug mode with detailed logging
+       --turns: Set maximum number of turns (default: 10)
+       --delay: Set delay between moves in seconds (default: 1.0)
 
 
-.. autolink-examples:: games.clue.example
-   :collapse:
+   .. autolink-examples:: games.clue.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.clue.example.logger
+   games.clue.example.parser
 
 
 Functions
@@ -39,6 +49,10 @@ Functions
 .. autoapisummary::
 
    games.clue.example.run_clue_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_clue_game(debug: bool = False, max_turns: int = 10, delay: float = 1.0)
 
@@ -66,11 +80,7 @@ Functions
    .. autolink-examples:: run_clue_game
       :collapse:
 
+.. py:data:: logger
 
+.. py:data:: parser
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.clue.example
-   :collapse:
-   
-.. autolink-skip:: next

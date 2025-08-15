@@ -1,17 +1,27 @@
-
-:py:mod:`games.nim.generic_engines`
-===================================
+games.nim.generic_engines
+=========================
 
 .. py:module:: games.nim.generic_engines
 
-Generic Nim engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Nim games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Nim engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Nim games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.nim.generic_engines
-   :collapse:
+   .. autolink-examples:: games.nim.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.nim.generic_engines.nim_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.nim.generic_engines.NimEngineFactory
    games.nim.generic_engines.NimPlayerIdentifiers
    games.nim.generic_engines.NimPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for NimEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_NimEngineFactory {
-        node [shape=record];
-        "NimEngineFactory" [label="NimEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "NimEngineFactory";
-      }
-
-.. autoclass:: games.nim.generic_engines.NimEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for NimPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_NimPlayerIdentifiers {
-        node [shape=record];
-        "NimPlayerIdentifiers" [label="NimPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "NimPlayerIdentifiers";
-      }
-
-.. autoclass:: games.nim.generic_engines.NimPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for NimPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_NimPromptGenerator {
-        node [shape=record];
-        "NimPromptGenerator" [label="NimPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "NimPromptGenerator";
-      }
-
-.. autoclass:: games.nim.generic_engines.NimPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.nim.generic_engines.create_generic_nim_engines
    games.nim.generic_engines.create_generic_nim_engines_simple
    games.nim.generic_engines.create_mixed_nim_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: NimEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Nim game engines.
+
+
+   .. autolink-examples:: NimEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: NimPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Nim game.
+
+
+   .. autolink-examples:: NimPlayerIdentifiers
+      :collapse:
+
+.. py:class:: NimPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Nim game.
+
+
+   .. autolink-examples:: NimPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Nim game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Nim player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_nim_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_nim_engines
       :collapse:
 
+.. py:data:: nim_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.nim.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

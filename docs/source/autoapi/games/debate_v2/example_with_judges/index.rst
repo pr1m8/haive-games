@@ -1,17 +1,26 @@
-
-:py:mod:`games.debate_v2.example_with_judges`
-=============================================
+games.debate_v2.example_with_judges
+===================================
 
 .. py:module:: games.debate_v2.example_with_judges
 
-Example usage of AI judge system for gamified debates.
+.. autoapi-nested-parse::
 
-This example demonstrates how to use AI judge panels for sophisticated winner
-determination in debate tournaments.
+   Example usage of AI judge system for gamified debates.
+
+   This example demonstrates how to use AI judge panels for sophisticated winner
+   determination in debate tournaments.
 
 
-.. autolink-examples:: games.debate_v2.example_with_judges
-   :collapse:
+   .. autolink-examples:: games.debate_v2.example_with_judges
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.debate_v2.example_with_judges.logger
 
 
 Functions
@@ -24,6 +33,10 @@ Functions
    games.debate_v2.example_with_judges.example_custom_judge_panel
    games.debate_v2.example_with_judges.example_judge_comparison
    games.debate_v2.example_with_judges.main
+
+
+Module Contents
+---------------
 
 .. py:function:: example_academic_judges()
    :async:
@@ -75,11 +88,5 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.debate_v2.example_with_judges
-   :collapse:
-   
-.. autolink-skip:: next

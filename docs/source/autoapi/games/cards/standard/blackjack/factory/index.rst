@@ -1,9 +1,15 @@
-
-:py:mod:`games.cards.standard.blackjack.factory`
-================================================
+games.cards.standard.blackjack.factory
+======================================
 
 .. py:module:: games.cards.standard.blackjack.factory
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.cards.standard.blackjack.factory.final_state
 
 
 Functions
@@ -13,6 +19,10 @@ Functions
 
    games.cards.standard.blackjack.factory.create_blackjack_agent
    games.cards.standard.blackjack.factory.run_blackjack_game
+
+
+Module Contents
+---------------
 
 .. py:function:: create_blackjack_agent(num_players: int = 2, max_rounds: int = 10, initial_chips: float = 1000.0, visualize: bool = True) -> haive.games.cards.standard.blackjack.agent.BlackjackAgent
 
@@ -44,11 +54,5 @@ Functions
    .. autolink-examples:: run_blackjack_game
       :collapse:
 
+.. py:data:: final_state
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.cards.standard.blackjack.factory
-   :collapse:
-   
-.. autolink-skip:: next

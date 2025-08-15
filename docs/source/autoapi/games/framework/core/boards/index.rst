@@ -1,18 +1,26 @@
-
-:py:mod:`games.framework.core.boards`
-=====================================
+games.framework.core.boards
+===========================
 
 .. py:module:: games.framework.core.boards
 
-Boards module.
+.. autoapi-nested-parse::
 
-This module is part of the Haive framework.
-Location: haive-games/src/haive/games/framework/core/boards
+   Boards module.
 
-
-.. autolink-examples:: games.framework.core.boards
-   :collapse:
+   This module is part of the Haive framework.
+   Location: haive-games/src/haive/games/framework/core/boards
 
 
+   .. autolink-examples:: games.framework.core.boards
+      :collapse:
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/framework/core/boards/grid/index
 
 

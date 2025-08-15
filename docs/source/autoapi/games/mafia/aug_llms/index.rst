@@ -1,31 +1,43 @@
-
-:py:mod:`games.mafia.aug_llms`
-==============================
+games.mafia.aug_llms
+====================
 
 .. py:module:: games.mafia.aug_llms
 
-Specialized LLM configurations for the Mafia game.
+.. autoapi-nested-parse::
 
-This module provides specialized augmented LLM configurations for different
-aspects of the Mafia game, including:
-    - Role-specific analyzer LLMs
-    - Strategic decision-making models
-    - Game state evaluators
+   Specialized LLM configurations for the Mafia game.
 
-These configurations extend the basic engines.py configurations with more
-sophisticated models tailored for specific game aspects.
+   This module provides specialized augmented LLM configurations for different
+   aspects of the Mafia game, including:
+       - Role-specific analyzer LLMs
+       - Strategic decision-making models
+       - Game state evaluators
 
-.. rubric:: Example
+   These configurations extend the basic engines.py configurations with more
+   sophisticated models tailored for specific game aspects.
 
->>> from haive.games.mafia.aug_llms import get_mafia_analyzer
->>>
->>> # Get an analyzer for evaluating player suspicion levels
->>> analyzer = get_mafia_analyzer("suspicion")
->>> analysis = analyzer.invoke(game_state)
+   .. rubric:: Example
+
+   >>> from haive.games.mafia.aug_llms import get_mafia_analyzer
+   >>>
+   >>> # Get an analyzer for evaluating player suspicion levels
+   >>> analyzer = get_mafia_analyzer("suspicion")
+   >>> analysis = analyzer.invoke(game_state)
 
 
-.. autolink-examples:: games.mafia.aug_llms
-   :collapse:
+   .. autolink-examples:: games.mafia.aug_llms
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.aug_llms.psychology_analyzer
+   games.mafia.aug_llms.strategy_analyzer
+   games.mafia.aug_llms.suspicion_analyzer
+   games.mafia.aug_llms.voting_analyzer
 
 
 Functions
@@ -34,6 +46,10 @@ Functions
 .. autoapisummary::
 
    games.mafia.aug_llms.get_mafia_analyzer
+
+
+Module Contents
+---------------
 
 .. py:function:: get_mafia_analyzer(analyzer_type: str) -> haive.core.engine.aug_llm.AugLLMConfig
 
@@ -60,11 +76,11 @@ Functions
    .. autolink-examples:: get_mafia_analyzer
       :collapse:
 
+.. py:data:: psychology_analyzer
 
+.. py:data:: strategy_analyzer
 
-.. rubric:: Related Links
+.. py:data:: suspicion_analyzer
 
-.. autolink-examples:: games.mafia.aug_llms
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: voting_analyzer
+

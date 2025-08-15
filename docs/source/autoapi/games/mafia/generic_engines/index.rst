@@ -1,17 +1,27 @@
-
-:py:mod:`games.mafia.generic_engines`
-=====================================
+games.mafia.generic_engines
+===========================
 
 .. py:module:: games.mafia.generic_engines
 
-Generic Mafia engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Mafia games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Mafia engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Mafia games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.mafia.generic_engines
-   :collapse:
+   .. autolink-examples:: games.mafia.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.generic_engines.mafia_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.mafia.generic_engines.MafiaEngineFactory
    games.mafia.generic_engines.MafiaPlayerIdentifiers
    games.mafia.generic_engines.MafiaPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MafiaEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MafiaEngineFactory {
-        node [shape=record];
-        "MafiaEngineFactory" [label="MafiaEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "MafiaEngineFactory";
-      }
-
-.. autoclass:: games.mafia.generic_engines.MafiaEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MafiaPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MafiaPlayerIdentifiers {
-        node [shape=record];
-        "MafiaPlayerIdentifiers" [label="MafiaPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "MafiaPlayerIdentifiers";
-      }
-
-.. autoclass:: games.mafia.generic_engines.MafiaPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MafiaPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MafiaPromptGenerator {
-        node [shape=record];
-        "MafiaPromptGenerator" [label="MafiaPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "MafiaPromptGenerator";
-      }
-
-.. autoclass:: games.mafia.generic_engines.MafiaPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.mafia.generic_engines.create_generic_mafia_engines
    games.mafia.generic_engines.create_generic_mafia_engines_simple
    games.mafia.generic_engines.create_mixed_mafia_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: MafiaEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Mafia game engines.
+
+
+   .. autolink-examples:: MafiaEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: MafiaPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Mafia game.
+
+
+   .. autolink-examples:: MafiaPlayerIdentifiers
+      :collapse:
+
+.. py:class:: MafiaPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Mafia game.
+
+
+   .. autolink-examples:: MafiaPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Mafia game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Mafia player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_mafia_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_mafia_engines
       :collapse:
 
+.. py:data:: mafia_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

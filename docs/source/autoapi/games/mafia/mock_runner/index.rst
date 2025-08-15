@@ -1,24 +1,34 @@
-
-:py:mod:`games.mafia.mock_runner`
-=================================
+games.mafia.mock_runner
+=======================
 
 .. py:module:: games.mafia.mock_runner
 
-Mock runner for the Mafia game.
+.. autoapi-nested-parse::
 
-This module provides a simplified version of the Mafia game runner that
-uses mock responses instead of actual LLMs, allowing for faster testing
-and demonstration without requiring API keys or internet access.
+   Mock runner for the Mafia game.
 
-.. rubric:: Example
+   This module provides a simplified version of the Mafia game runner that
+   uses mock responses instead of actual LLMs, allowing for faster testing
+   and demonstration without requiring API keys or internet access.
 
-```bash
-python mock_runner.py --players 5 --days 1 --debug
-```
+   .. rubric:: Example
+
+   ```bash
+   python mock_runner.py --players 5 --days 1 --debug
+   ```
 
 
-.. autolink-examples:: games.mafia.mock_runner
-   :collapse:
+   .. autolink-examples:: games.mafia.mock_runner
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.mock_runner.logger
+
 
 Classes
 -------
@@ -26,30 +36,6 @@ Classes
 .. autoapisummary::
 
    games.mafia.mock_runner.MockEngine
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MockEngine:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MockEngine {
-        node [shape=record];
-        "MockEngine" [label="MockEngine"];
-      }
-
-.. autoclass:: games.mafia.mock_runner.MockEngine
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -64,6 +50,30 @@ Functions
    games.mafia.mock_runner.generate_villager_response
    games.mafia.mock_runner.main
    games.mafia.mock_runner.run_mafia_game_mock
+
+
+Module Contents
+---------------
+
+.. py:class:: MockEngine(role)
+
+   A mock engine that returns predefined responses.
+
+
+   .. autolink-examples:: MockEngine
+      :collapse:
+
+   .. py:method:: invoke(context)
+
+      Generate a mock response based on the role.
+
+
+      .. autolink-examples:: invoke
+         :collapse:
+
+
+   .. py:attribute:: role
+
 
 .. py:function:: generate_detective_response(context: dict[str, Any]) -> haive.games.mafia.models.MafiaPlayerDecision
 
@@ -137,11 +147,5 @@ Functions
    .. autolink-examples:: run_mafia_game_mock
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.mock_runner
-   :collapse:
-   
-.. autolink-skip:: next

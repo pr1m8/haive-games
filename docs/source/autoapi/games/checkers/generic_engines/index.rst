@@ -1,18 +1,30 @@
-
-:py:mod:`games.checkers.generic_engines`
-========================================
+games.checkers.generic_engines
+==============================
 
 .. py:module:: games.checkers.generic_engines
 
-Generic Checkers engines using the new generic player agent system.
+.. autoapi-nested-parse::
 
-from typing import Any This module demonstrates how to use the generic player agent
-system for Checkers, showing the same pattern working across different games with
-different player identifiers.
+   Generic Checkers engines using the new generic player agent system.
+
+   from typing import Any This module demonstrates how to use the generic player agent
+   system for Checkers, showing the same pattern working across different games with
+   different player identifiers.
 
 
-.. autolink-examples:: games.checkers.generic_engines
-   :collapse:
+   .. autolink-examples:: games.checkers.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.checkers.generic_engines.checkers_engine_factory
+   games.checkers.generic_engines.checkers_players
+   games.checkers.generic_engines.checkers_prompt_generator
+
 
 Classes
 -------
@@ -20,31 +32,6 @@ Classes
 .. autoapisummary::
 
    games.checkers.generic_engines.CheckersPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for CheckersPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CheckersPromptGenerator {
-        node [shape=record];
-        "CheckersPromptGenerator" [label="CheckersPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "CheckersPromptGenerator";
-      }
-
-.. autoclass:: games.checkers.generic_engines.CheckersPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -57,6 +44,67 @@ Functions
    games.checkers.generic_engines.create_generic_checkers_engines
    games.checkers.generic_engines.create_generic_checkers_engines_simple
    games.checkers.generic_engines.create_multi_game_checkers_demo
+
+
+Module Contents
+---------------
+
+.. py:class:: CheckersPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Checkers-specific prompt generator using the generic system.
+
+
+   .. autolink-examples:: CheckersPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Checkers analysis prompt for the specified player.
+
+      :param player: Player color ("red" or "black")
+
+      :returns: Prompt template for position analysis
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_analysis_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Checkers move prompt for the specified player.
+
+      :param player: Player color ("red" or "black")
+
+      :returns: Prompt template for move generation
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
+
+   .. py:method:: get_analysis_output_model() -> type
+
+      Get the structured output model for Checkers analysis.
+
+
+      .. autolink-examples:: get_analysis_output_model
+         :collapse:
+
+
+   .. py:method:: get_move_output_model() -> type
+
+      Get the structured output model for Checkers moves.
+
+
+      .. autolink-examples:: get_move_output_model
+         :collapse:
+
 
 .. py:function:: compare_checkers_with_other_games() -> None
 
@@ -153,11 +201,9 @@ Functions
    .. autolink-examples:: create_multi_game_checkers_demo
       :collapse:
 
+.. py:data:: checkers_engine_factory
 
+.. py:data:: checkers_players
 
-.. rubric:: Related Links
+.. py:data:: checkers_prompt_generator
 
-.. autolink-examples:: games.checkers.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

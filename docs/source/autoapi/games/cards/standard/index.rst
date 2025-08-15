@@ -1,15 +1,25 @@
-
-:py:mod:`games.cards.standard`
-==============================
+games.cards.standard
+====================
 
 .. py:module:: games.cards.standard
 
-Standard card games module exports.
+.. autoapi-nested-parse::
+
+   Standard card games module exports.
 
 
-.. autolink-examples:: games.cards.standard
-   :collapse:
+   .. autolink-examples:: games.cards.standard
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/cards/standard/blackjack/index
+   /autoapi/games/cards/standard/bs/index
+   /autoapi/games/cards/standard/poker/index
 
 

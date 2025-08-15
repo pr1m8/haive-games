@@ -1,18 +1,27 @@
-
-:py:mod:`games.tic_tac_toe.engines`
-===================================
+games.tic_tac_toe.engines
+=========================
 
 .. py:module:: games.tic_tac_toe.engines
 
-Prompt generation and engine configuration for Tic Tac Toe agents.
+.. autoapi-nested-parse::
 
-This module defines prompt templates and model configurations for both move generation
-and board analysis. These are used by agents to communicate with LLMs in a structured
-and strategic way.
+   Prompt generation and engine configuration for Tic Tac Toe agents.
+
+   This module defines prompt templates and model configurations for both move generation
+   and board analysis. These are used by agents to communicate with LLMs in a structured
+   and strategic way.
 
 
-.. autolink-examples:: games.tic_tac_toe.engines
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.tic_tac_toe.engines.tictactoe_engines
 
 
 Functions
@@ -22,6 +31,10 @@ Functions
 
    games.tic_tac_toe.engines.generate_analysis_prompt
    games.tic_tac_toe.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player_symbol: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -51,11 +64,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: tictactoe_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.tic_tac_toe.engines
-   :collapse:
-   
-.. autolink-skip:: next

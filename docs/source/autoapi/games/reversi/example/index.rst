@@ -1,48 +1,49 @@
-
-:py:mod:`games.reversi.example`
-===============================
+games.reversi.example
+=====================
 
 .. py:module:: games.reversi.example
 
-Example Reversi (Othello) game demonstrating the Haive Reversi implementation.
+.. autoapi-nested-parse::
 
-This module provides a simple example of running a Reversi game with AI players
-using the Haive framework. Reversi, also known as Othello, is a strategy board
-game where players flip opponent pieces by trapping them between their own pieces.
+   Example Reversi (Othello) game demonstrating the Haive Reversi implementation.
 
-The example demonstrates:
-    - Creating a Reversi agent with default configuration
-    - Running a complete game with visual board display
-    - AI players making strategic moves
-    - Automatic piece flipping and rule enforcement
-    - Winner determination based on final piece count
+   This module provides a simple example of running a Reversi game with AI players
+   using the Haive framework. Reversi, also known as Othello, is a strategy board
+   game where players flip opponent pieces by trapping them between their own pieces.
 
-Usage:
-    Run directly:
-        $ python example.py
+   The example demonstrates:
+       - Creating a Reversi agent with default configuration
+       - Running a complete game with visual board display
+       - AI players making strategic moves
+       - Automatic piece flipping and rule enforcement
+       - Winner determination based on final piece count
 
-    Import and use:
-        >>> from haive.games.reversi.agent import ReversiAgent
-        >>> agent = ReversiAgent()
-        >>> final_state = agent.run_game(visualize=True)
+   Usage:
+       Run directly:
+           $ python example.py
 
-Game Rules:
-    - Players take turns placing pieces on the board
-    - Valid moves must flip at least one opponent piece
-    - Pieces are flipped when trapped between two of your pieces
-    - Game ends when no valid moves remain
-    - Winner has the most pieces on the board
+       Import and use:
+           >>> from haive.games.reversi.agent import ReversiAgent
+           >>> agent = ReversiAgent()
+           >>> final_state = agent.run_game(visualize=True)
 
-.. rubric:: Example
+   Game Rules:
+       - Players take turns placing pieces on the board
+       - Valid moves must flip at least one opponent piece
+       - Pieces are flipped when trapped between two of your pieces
+       - Game ends when no valid moves remain
+       - Winner has the most pieces on the board
 
->>> # Create and run a Reversi game
->>> agent = ReversiAgent()
->>> state = agent.run_game(visualize=True)
->>> print(f"Winner: {state.get('winner', 'Draw')}")
+   .. rubric:: Example
+
+   >>> # Create and run a Reversi game
+   >>> agent = ReversiAgent()
+   >>> state = agent.run_game(visualize=True)
+   >>> print(f"Winner: {state.get('winner', 'Draw')}")
 
 
-.. autolink-examples:: games.reversi.example
-   :collapse:
+   .. autolink-examples:: games.reversi.example
+      :collapse:
 
 
 Functions
@@ -52,6 +53,10 @@ Functions
 
    games.reversi.example.run_reversi_demo
 
+
+Module Contents
+---------------
+
 .. py:function:: run_reversi_demo()
 
    Run a quick Reversi demo - only when called directly.
@@ -60,11 +65,3 @@ Functions
    .. autolink-examples:: run_reversi_demo
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.reversi.example
-   :collapse:
-   
-.. autolink-skip:: next

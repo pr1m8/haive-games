@@ -1,15 +1,14 @@
-
-:py:mod:`games.cards.uno`
-=========================
+games.cards.uno
+===============
 
 .. py:module:: games.cards.uno
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.cards.uno
-   :collapse:
-
-
+   .. autolink-examples:: games.cards.uno
+      :collapse:
 
 

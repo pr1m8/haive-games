@@ -1,6 +1,5 @@
-
-:py:mod:`games.monopoly.game.types`
-===================================
+games.monopoly.game.types
+=========================
 
 .. py:module:: games.monopoly.game.types
 
@@ -18,93 +17,174 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: ActionType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of actions a player can take.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: ActionType
+      :collapse:
+
+   .. py:attribute:: AUCTION
+      :value: 'auction'
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ActionType:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ActionType {
-        node [shape=record];
-        "ActionType" [label="ActionType"];
-        "str" -> "ActionType";
-        "enum.Enum" -> "ActionType";
-      }
-
-.. autoclass:: games.monopoly.game.types.ActionType
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. note::
-
-      **ActionType** is an Enum defined in ``games.monopoly.game.types``.
+   .. py:attribute:: BUILD_HOUSE
+      :value: 'build_house'
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PropertyType:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PropertyType {
-        node [shape=record];
-        "PropertyType" [label="PropertyType"];
-        "str" -> "PropertyType";
-        "enum.Enum" -> "PropertyType";
-      }
-
-.. autoclass:: games.monopoly.game.types.PropertyType
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. note::
-
-      **PropertyType** is an Enum defined in ``games.monopoly.game.types``.
+   .. py:attribute:: BUY
+      :value: 'buy'
 
 
 
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for SpecialSquareType:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_SpecialSquareType {
-        node [shape=record];
-        "SpecialSquareType" [label="SpecialSquareType"];
-        "str" -> "SpecialSquareType";
-        "enum.Enum" -> "SpecialSquareType";
-      }
-
-.. autoclass:: games.monopoly.game.types.SpecialSquareType
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. note::
-
-      **SpecialSquareType** is an Enum defined in ``games.monopoly.game.types``.
+   .. py:attribute:: END_TURN
+      :value: 'end_turn'
 
 
 
+   .. py:attribute:: MORTGAGE
+      :value: 'mortgage'
 
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.monopoly.game.types
-   :collapse:
-   
-.. autolink-skip:: next
+   .. py:attribute:: PAY_JAIL_FEE
+      :value: 'pay_jail_fee'
+
+
+
+   .. py:attribute:: ROLL
+      :value: 'roll'
+
+
+
+   .. py:attribute:: ROLL_FOR_JAIL
+      :value: 'roll_for_jail'
+
+
+
+   .. py:attribute:: SELL_HOUSE
+      :value: 'sell_house'
+
+
+
+   .. py:attribute:: TRADE
+      :value: 'trade'
+
+
+
+   .. py:attribute:: UNMORTGAGE
+      :value: 'unmortgage'
+
+
+
+   .. py:attribute:: USE_JAIL_CARD
+      :value: 'use_jail_card'
+
+
+
+.. py:class:: PropertyType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of properties on the board.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PropertyType
+      :collapse:
+
+   .. py:attribute:: PROPERTY
+      :value: 'property'
+
+
+
+   .. py:attribute:: RAILROAD
+      :value: 'railroad'
+
+
+
+   .. py:attribute:: SPECIAL
+      :value: 'special'
+
+
+
+   .. py:attribute:: UTILITY
+      :value: 'utility'
+
+
+
+.. py:class:: SpecialSquareType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Types of special squares on the board.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: SpecialSquareType
+      :collapse:
+
+   .. py:attribute:: CHANCE
+      :value: 'chance'
+
+
+
+   .. py:attribute:: COMMUNITY_CHEST
+      :value: 'community_chest'
+
+
+
+   .. py:attribute:: FREE_PARKING
+      :value: 'free_parking'
+
+
+
+   .. py:attribute:: GO
+      :value: 'go'
+
+
+
+   .. py:attribute:: GO_TO_JAIL
+      :value: 'go_to_jail'
+
+
+
+   .. py:attribute:: INCOME_TAX
+      :value: 'income_tax'
+
+
+
+   .. py:attribute:: JAIL
+      :value: 'jail'
+
+
+
+   .. py:attribute:: LUXURY_TAX
+      :value: 'luxury_tax'
+
+
+

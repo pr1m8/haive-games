@@ -1,15 +1,14 @@
-
-:py:mod:`games.core.move`
-=========================
+games.core.move
+===============
 
 .. py:module:: games.core.move
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.core.move
-   :collapse:
-
-
+   .. autolink-examples:: games.core.move
+      :collapse:
 
 

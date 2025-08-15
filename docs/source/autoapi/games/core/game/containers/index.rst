@@ -1,15 +1,25 @@
-
-:py:mod:`games.core.game.containers`
-====================================
+games.core.game.containers
+==========================
 
 .. py:module:: games.core.game.containers
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.core.game.containers
-   :collapse:
+   .. autolink-examples:: games.core.game.containers
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/core/game/containers/base/index
+   /autoapi/games/core/game/containers/container/index
+   /autoapi/games/core/game/containers/deck/index
 
 

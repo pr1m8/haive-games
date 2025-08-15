@@ -1,17 +1,26 @@
-
-:py:mod:`games.fox_and_geese.engines`
-=====================================
+games.fox_and_geese.engines
+===========================
 
 .. py:module:: games.fox_and_geese.engines
 
-Engines for the Fox and Geese game.
+.. autoapi-nested-parse::
 
-This module defines the engines for the Fox and Geese game, which includes the move and
-analysis prompts.
+   Engines for the Fox and Geese game.
+
+   This module defines the engines for the Fox and Geese game, which includes the move and
+   analysis prompts.
 
 
-.. autolink-examples:: games.fox_and_geese.engines
-   :collapse:
+   .. autolink-examples:: games.fox_and_geese.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.fox_and_geese.engines.fox_and_geese_engines
 
 
 Functions
@@ -23,6 +32,10 @@ Functions
    games.fox_and_geese.engines.generate_fox_move_prompt
    games.fox_and_geese.engines.generate_geese_analysis_prompt
    games.fox_and_geese.engines.generate_geese_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_fox_analysis_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
@@ -72,11 +85,5 @@ Functions
    .. autolink-examples:: generate_geese_move_prompt
       :collapse:
 
+.. py:data:: fox_and_geese_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.fox_and_geese.engines
-   :collapse:
-   
-.. autolink-skip:: next

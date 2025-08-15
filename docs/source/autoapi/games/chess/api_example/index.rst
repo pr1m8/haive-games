@@ -1,17 +1,28 @@
-
-:py:mod:`games.chess.api_example`
-=================================
+games.chess.api_example
+=======================
 
 .. py:module:: games.chess.api_example
 
-FastAPI example for chess game with configurable LLMs.
+.. autoapi-nested-parse::
 
-This module demonstrates how to create API endpoints for chess games with configurable
-LLM providers and models.
+   FastAPI example for chess game with configurable LLMs.
+
+   This module demonstrates how to create API endpoints for chess games with configurable
+   LLM providers and models.
 
 
-.. autolink-examples:: games.chess.api_example
-   :collapse:
+   .. autolink-examples:: games.chess.api_example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.chess.api_example.active_games
+   games.chess.api_example.app
+
 
 Classes
 -------
@@ -23,155 +34,6 @@ Classes
    games.chess.api_example.GameStateResponse
    games.chess.api_example.LLMConfig
    games.chess.api_example.MoveStreamEvent
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for CreateGameRequest:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CreateGameRequest {
-        node [shape=record];
-        "CreateGameRequest" [label="CreateGameRequest"];
-        "pydantic.BaseModel" -> "CreateGameRequest";
-      }
-
-.. autopydantic_model:: games.chess.api_example.CreateGameRequest
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameResponse:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameResponse {
-        node [shape=record];
-        "GameResponse" [label="GameResponse"];
-        "pydantic.BaseModel" -> "GameResponse";
-      }
-
-.. autopydantic_model:: games.chess.api_example.GameResponse
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameStateResponse:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameStateResponse {
-        node [shape=record];
-        "GameStateResponse" [label="GameStateResponse"];
-        "pydantic.BaseModel" -> "GameStateResponse";
-      }
-
-.. autopydantic_model:: games.chess.api_example.GameStateResponse
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for LLMConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_LLMConfig {
-        node [shape=record];
-        "LLMConfig" [label="LLMConfig"];
-        "pydantic.BaseModel" -> "LLMConfig";
-      }
-
-.. autopydantic_model:: games.chess.api_example.LLMConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MoveStreamEvent:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MoveStreamEvent {
-        node [shape=record];
-        "MoveStreamEvent" [label="MoveStreamEvent"];
-        "pydantic.BaseModel" -> "MoveStreamEvent";
-      }
-
-.. autopydantic_model:: games.chess.api_example.MoveStreamEvent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
 
 
 Functions
@@ -186,6 +48,214 @@ Functions
    games.chess.api_example.list_providers
    games.chess.api_example.root
    games.chess.api_example.stream_game
+
+
+Module Contents
+---------------
+
+.. py:class:: CreateGameRequest(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Request to create a new chess game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: CreateGameRequest
+      :collapse:
+
+   .. py:attribute:: black_llm
+      :type:  LLMConfig
+      :value: None
+
+
+
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: max_moves
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: white_llm
+      :type:  LLMConfig
+      :value: None
+
+
+
+.. py:class:: GameResponse(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Response with game information.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GameResponse
+      :collapse:
+
+   .. py:attribute:: config
+      :type:  dict[str, Any]
+
+
+   .. py:attribute:: created_at
+      :type:  str
+
+
+   .. py:attribute:: game_id
+      :type:  str
+
+
+   .. py:attribute:: status
+      :type:  str
+
+
+.. py:class:: GameStateResponse(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Response with current game state.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GameStateResponse
+      :collapse:
+
+   .. py:attribute:: board_fen
+      :type:  str
+
+
+   .. py:attribute:: current_player
+      :type:  str
+
+
+   .. py:attribute:: game_id
+      :type:  str
+
+
+   .. py:attribute:: game_result
+      :type:  str | None
+
+
+   .. py:attribute:: move_count
+      :type:  int
+
+
+   .. py:attribute:: move_history
+      :type:  list[tuple[str, str]]
+
+
+   .. py:attribute:: status
+      :type:  str
+
+
+.. py:class:: LLMConfig(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   LLM configuration for a player.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: LLMConfig
+      :collapse:
+
+   .. py:attribute:: model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: provider
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float | None
+      :value: None
+
+
+
+.. py:class:: MoveStreamEvent(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Event streamed during game execution.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: MoveStreamEvent
+      :collapse:
+
+   .. py:attribute:: data
+      :type:  dict[str, Any]
+
+
+   .. py:attribute:: event
+      :type:  str
+
 
 .. py:function:: create_game(request: CreateGameRequest)
    :async:
@@ -257,11 +327,8 @@ Functions
    .. autolink-examples:: stream_game
       :collapse:
 
+.. py:data:: active_games
+   :type:  dict[str, dict[str, Any]]
 
+.. py:data:: app
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.api_example
-   :collapse:
-   
-.. autolink-skip:: next

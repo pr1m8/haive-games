@@ -1,17 +1,27 @@
-
-:py:mod:`games.api.setup`
-=========================
+games.api.setup
+===============
 
 .. py:module:: games.api.setup
 
-Game API setup utilities.
+.. autoapi-nested-parse::
 
-This module provides utilities for setting up game APIs using the standardized GameAPI
-system from haive-dataflow.
+   Game API setup utilities.
+
+   This module provides utilities for setting up game APIs using the standardized GameAPI
+   system from haive-dataflow.
 
 
-.. autolink-examples:: games.api.setup
-   :collapse:
+   .. autolink-examples:: games.api.setup
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.api.setup.app
+
 
 Classes
 -------
@@ -19,39 +29,6 @@ Classes
 .. autoapisummary::
 
    games.api.setup.GameAPIConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameAPIConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameAPIConfig {
-        node [shape=record];
-        "GameAPIConfig" [label="GameAPIConfig"];
-        "pydantic.BaseModel" -> "GameAPIConfig";
-      }
-
-.. autopydantic_model:: games.api.setup.GameAPIConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
 
 
 Functions
@@ -63,6 +40,68 @@ Functions
    games.api.setup.create_connect4_api
    games.api.setup.create_game_api
    games.api.setup.create_tic_tac_toe_api
+
+
+Module Contents
+---------------
+
+.. py:class:: GameAPIConfig(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Configuration for game API setup.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GameAPIConfig
+      :collapse:
+
+   .. py:attribute:: app_name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: cors_origins
+      :type:  list[str]
+      :value: None
+
+
+
+   .. py:attribute:: default_config_overrides
+      :type:  dict[str, Any] | None
+      :value: None
+
+
+
+   .. py:attribute:: enable_cors
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: route_prefix
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: ws_route_prefix
+      :type:  str
+      :value: None
+
+
 
 .. py:function:: create_chess_api(app: fastapi.FastAPI, config_overrides: dict[str, Any] | None = None, **kwargs) -> haive.dataflow.api.game_api.GameAPI
 
@@ -157,11 +196,5 @@ Functions
    .. autolink-examples:: create_tic_tac_toe_api
       :collapse:
 
+.. py:data:: app
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.api.setup
-   :collapse:
-   
-.. autolink-skip:: next

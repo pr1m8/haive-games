@@ -1,24 +1,33 @@
-
-:py:mod:`games.monopoly.simple_demo`
-====================================
+games.monopoly.simple_demo
+==========================
 
 .. py:module:: games.monopoly.simple_demo
 
-Simple demo for testing the Monopoly game without LangGraph integration.
+.. autoapi-nested-parse::
 
-This script demonstrates the core functionality of the Monopoly game:
-- Board setup
-- Player movement
-- Property purchasing
-- Rent payments
-- Game events
+   Simple demo for testing the Monopoly game without LangGraph integration.
 
-Usage:
-    python simple_demo.py
+   This script demonstrates the core functionality of the Monopoly game:
+   - Board setup
+   - Player movement
+   - Property purchasing
+   - Rent payments
+   - Game events
+
+   Usage:
+       python simple_demo.py
 
 
-.. autolink-examples:: games.monopoly.simple_demo
-   :collapse:
+   .. autolink-examples:: games.monopoly.simple_demo
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.simple_demo.console
 
 
 Functions
@@ -32,6 +41,10 @@ Functions
    games.monopoly.simple_demo.print_property
    games.monopoly.simple_demo.print_recent_events
    games.monopoly.simple_demo.run_demo
+
+
+Module Contents
+---------------
 
 .. py:function:: handle_property_landing(state: haive.games.monopoly.state.MonopolyState, position: int) -> list[haive.games.monopoly.models.GameEvent]
 
@@ -81,11 +94,5 @@ Functions
    .. autolink-examples:: run_demo
       :collapse:
 
+.. py:data:: console
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.simple_demo
-   :collapse:
-   
-.. autolink-skip:: next

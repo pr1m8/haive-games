@@ -1,19 +1,29 @@
-
-:py:mod:`games.hold_em.config`
-==============================
+games.hold_em.config
+====================
 
 .. py:module:: games.hold_em.config
 
-Texas Hold'em configuration module.
+.. autoapi-nested-parse::
 
-This module provides configuration classes for the Hold'em game, including:
-    - Game agent configuration
-    - Player agent configurations
-    - Engine configurations
+   Texas Hold'em configuration module.
+
+   This module provides configuration classes for the Hold'em game, including:
+       - Game agent configuration
+       - Player agent configurations
+       - Engine configurations
 
 
-.. autolink-examples:: games.hold_em.config
-   :collapse:
+   .. autolink-examples:: games.hold_em.config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.hold_em.config.logger
+
 
 Classes
 -------
@@ -21,39 +31,6 @@ Classes
 .. autoapisummary::
 
    games.hold_em.config.HoldemGameSettings
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HoldemGameSettings:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HoldemGameSettings {
-        node [shape=record];
-        "HoldemGameSettings" [label="HoldemGameSettings"];
-        "pydantic.BaseModel" -> "HoldemGameSettings";
-      }
-
-.. autopydantic_model:: games.hold_em.config.HoldemGameSettings
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
-
 
 
 Functions
@@ -70,6 +47,125 @@ Functions
    games.hold_em.config.create_tournament_config
    games.hold_em.config.validate_config
    games.hold_em.config.validate_player_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: HoldemGameSettings(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Settings for customizing Hold'em games.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: HoldemGameSettings
+      :collapse:
+
+   .. py:method:: to_game_config() -> haive.games.hold_em.game_agent.HoldemGameAgentConfig
+
+      Convert settings to a game configuration.
+
+
+      .. autolink-examples:: to_game_config
+         :collapse:
+
+
+   .. py:attribute:: ai_aggression
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: ai_variance
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: big_blind
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: decision_time
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: enable_hand_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: enable_opponent_modeling
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: enable_position_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: fast_fold
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: heads_up
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: max_hands
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: num_players
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: small_blind
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: starting_chips
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: tournament_mode
+      :type:  bool
+      :value: None
+
+
 
 .. py:function:: create_cash_game_config(num_players: int = 6, big_blind: int = 20, max_buy_in: int = 2000, min_buy_in: int = 400) -> haive.games.hold_em.game_agent.HoldemGameAgentConfig
 
@@ -143,11 +239,5 @@ Functions
    .. autolink-examples:: validate_player_engines
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.hold_em.config
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,17 +1,28 @@
-
-:py:mod:`games.mafia.configurable_config`
-=========================================
+games.mafia.configurable_config
+===============================
 
 .. py:module:: games.mafia.configurable_config
 
-Configurable Mafia configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Mafia game configurations that replace hardcoded LLM
-settings with dynamic, configurable player agents.
+   Configurable Mafia configuration using the generic player agent system.
+
+   This module provides configurable Mafia game configurations that replace hardcoded LLM
+   settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.mafia.configurable_config
-   :collapse:
+   .. autolink-examples:: games.mafia.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.mafia.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.mafia.configurable_config.ConfigurableMafiaConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableMafiaConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableMafiaConfig {
-        node [shape=record];
-        "ConfigurableMafiaConfig" [label="ConfigurableMafiaConfig"];
-        "haive.games.mafia.config.MafiaAgentConfig" -> "ConfigurableMafiaConfig";
-      }
-
-.. autoclass:: games.mafia.configurable_config.ConfigurableMafiaConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,136 @@ Functions
    games.mafia.configurable_config.create_mafia_config_from_player_configs
    games.mafia.configurable_config.get_example_config
    games.mafia.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableMafiaConfig
+
+   Bases: :py:obj:`haive.games.mafia.config.MafiaAgentConfig`
+
+
+   Configurable Mafia configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Mafia game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: mafia_model
+
+      Model for mafia (can be string or LLMConfig)
+
+   .. attribute:: town_model
+
+      Model for town (can be string or LLMConfig)
+
+   .. attribute:: mafia_name
+
+      Name for mafia
+
+   .. attribute:: town_name
+
+      Name for town
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: enable_analysis
+
+      Whether to enable strategic analysis
+
+   .. attribute:: visualize_game
+
+      Whether to visualize game state
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableMafiaConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(mafia_model: str, town_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: mafia_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: town_model
+      :type:  str | None
+      :value: None
+
+
 
 .. py:function:: create_advanced_mafia_config(**kwargs) -> ConfigurableMafiaConfig
 
@@ -207,11 +323,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

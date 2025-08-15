@@ -1,51 +1,60 @@
-
-:py:mod:`games.among_us.demo`
-=============================
+games.among_us.demo
+===================
 
 .. py:module:: games.among_us.demo
 
-Among Us social deduction game demo using the Haive framework.
+.. autoapi-nested-parse::
 
-This module demonstrates an implementation of the popular social deduction game
-Among Us, where crewmates try to complete tasks while impostors attempt to
-eliminate them. The game features AI-powered players that engage in discussion,
-voting, and strategic deception.
+   Among Us social deduction game demo using the Haive framework.
 
-The demo showcases:
-    - Multi-player social deduction gameplay with AI agents
-    - Task completion and sabotage mechanics
-    - Emergency meetings and discussion phases
-    - Voting system with accusations and defenses
-    - Rich terminal UI with game state visualization
-    - Different AI personalities (suspicious, trusting, analytical)
-    - Victory conditions for both crewmates and impostors
+   This module demonstrates an implementation of the popular social deduction game
+   Among Us, where crewmates try to complete tasks while impostors attempt to
+   eliminate them. The game features AI-powered players that engage in discussion,
+   voting, and strategic deception.
 
-Game Flow:
-    1. Players are assigned roles (crewmate or impostor)
-    2. Crewmates complete tasks while impostors sabotage
-    3. Emergency meetings are called when bodies are found
-    4. Players discuss and vote to eject suspected impostors
-    5. Game ends when all tasks complete or impostors outnumber crew
+   The demo showcases:
+       - Multi-player social deduction gameplay with AI agents
+       - Task completion and sabotage mechanics
+       - Emergency meetings and discussion phases
+       - Voting system with accusations and defenses
+       - Rich terminal UI with game state visualization
+       - Different AI personalities (suspicious, trusting, analytical)
+       - Victory conditions for both crewmates and impostors
 
-Usage:
-    Basic game (5 players, 1 impostor):
-        $ python demo.py
+   Game Flow:
+       1. Players are assigned roles (crewmate or impostor)
+       2. Crewmates complete tasks while impostors sabotage
+       3. Emergency meetings are called when bodies are found
+       4. Players discuss and vote to eject suspected impostors
+       5. Game ends when all tasks complete or impostors outnumber crew
 
-    Custom configuration:
-        $ python demo.py --players 8 --impostors 2 --difficulty hard
+   Usage:
+       Basic game (5 players, 1 impostor):
+           $ python demo.py
 
-    With specific map:
-        $ python demo.py --map skeld --tasks 10
+       Custom configuration:
+           $ python demo.py --players 8 --impostors 2 --difficulty hard
 
-.. rubric:: Example
+       With specific map:
+           $ python demo.py --map skeld --tasks 10
 
->>> # Run a standard Among Us game
->>> from haive.games.among_us.demo import run_among_us_demo
->>> run_among_us_demo(num_players=7, num_impostors=2)
+   .. rubric:: Example
+
+   >>> # Run a standard Among Us game
+   >>> from haive.games.among_us.demo import run_among_us_demo
+   >>> run_among_us_demo(num_players=7, num_impostors=2)
 
 
-.. autolink-examples:: games.among_us.demo
-   :collapse:
+   .. autolink-examples:: games.among_us.demo
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.among_us.demo.parser
 
 
 Functions
@@ -64,6 +73,10 @@ Functions
    games.among_us.demo.process_voting_phase
    games.among_us.demo.process_voting_phase_enhanced
    games.among_us.demo.run_among_us_demo
+
+
+Module Contents
+---------------
 
 .. py:function:: format_action(move, verbose=False)
 
@@ -203,11 +216,5 @@ Functions
    .. autolink-examples:: run_among_us_demo
       :collapse:
 
+.. py:data:: parser
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.among_us.demo
-   :collapse:
-   
-.. autolink-skip:: next

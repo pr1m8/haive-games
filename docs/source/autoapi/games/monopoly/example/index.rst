@@ -1,20 +1,29 @@
-
-:py:mod:`games.monopoly.example`
-================================
+games.monopoly.example
+======================
 
 .. py:module:: games.monopoly.example
 
-Example usage of the Monopoly agent.
+.. autoapi-nested-parse::
 
-This example demonstrates how to run a Monopoly game with AI agents.
-The game will use the Rich UI to display the game state.
+   Example usage of the Monopoly agent.
 
-Usage:
-    python example.py
+   This example demonstrates how to run a Monopoly game with AI agents.
+   The game will use the Rich UI to display the game state.
+
+   Usage:
+       python example.py
 
 
-.. autolink-examples:: games.monopoly.example
-   :collapse:
+   .. autolink-examples:: games.monopoly.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.example.logger
 
 
 Functions
@@ -24,6 +33,10 @@ Functions
 
    games.monopoly.example.main
 
+
+Module Contents
+---------------
+
 .. py:function:: main()
 
    Run the example Monopoly game with AI agents.
@@ -32,11 +45,5 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.example
-   :collapse:
-   
-.. autolink-skip:: next

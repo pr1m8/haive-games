@@ -1,18 +1,17 @@
-
-:py:mod:`games.hold_em.agent`
-=============================
+games.hold_em.agent
+===================
 
 .. py:module:: games.hold_em.agent
 
-Texas Hold'em Agent module - Main agent interface.
+.. autoapi-nested-parse::
 
-This module provides the main agent interface for Texas Hold'em poker games,
-wrapping the game agent and providing a simplified interface.
+   Texas Hold'em Agent module - Main agent interface.
 
-
-.. autolink-examples:: games.hold_em.agent
-   :collapse:
+   This module provides the main agent interface for Texas Hold'em poker games,
+   wrapping the game agent and providing a simplified interface.
 
 
+   .. autolink-examples:: games.hold_em.agent
+      :collapse:
 
 

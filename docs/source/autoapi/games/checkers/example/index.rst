@@ -1,31 +1,40 @@
-
-:py:mod:`games.checkers.example`
-================================
+games.checkers.example
+======================
 
 .. py:module:: games.checkers.example
 
-Comprehensive Checkers Game Examples - Strategic Gameplay and AI Analysis.
+.. autoapi-nested-parse::
 
-This module provides 8 comprehensive examples demonstrating the strategic aspects
-of the Checkers game, from basic gameplay to advanced tournament analysis,
-strategic decision-making, and educational gameplay patterns.
+   Comprehensive Checkers Game Examples - Strategic Gameplay and AI Analysis.
 
-The examples cover:
-1. Basic Checkers gameplay with LLM-powered players
-2. Advanced player personality configuration
-3. Tournament play with multiple game simulation
-4. Position analysis and strategic evaluation
-5. Educational mode with move explanations
-6. Performance testing and optimization
-7. Custom strategy implementation
-8. Game state management and persistence
+   This module provides 8 comprehensive examples demonstrating the strategic aspects
+   of the Checkers game, from basic gameplay to advanced tournament analysis,
+   strategic decision-making, and educational gameplay patterns.
 
-Each example includes detailed explanations of strategic concepts,
-gameplay mechanics, and configuration options for educational purposes.
+   The examples cover:
+   1. Basic Checkers gameplay with LLM-powered players
+   2. Advanced player personality configuration
+   3. Tournament play with multiple game simulation
+   4. Position analysis and strategic evaluation
+   5. Educational mode with move explanations
+   6. Performance testing and optimization
+   7. Custom strategy implementation
+   8. Game state management and persistence
+
+   Each example includes detailed explanations of strategic concepts,
+   gameplay mechanics, and configuration options for educational purposes.
 
 
-.. autolink-examples:: games.checkers.example
-   :collapse:
+   .. autolink-examples:: games.checkers.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.checkers.example.logger
 
 
 Functions
@@ -46,6 +55,10 @@ Functions
    games.checkers.example.main
    games.checkers.example.print_section_header
    games.checkers.example.print_subsection
+
+
+Module Contents
+---------------
 
 .. py:function:: create_tournament_config(player1_style: str, player2_style: str) -> haive.games.checkers.config.CheckersAgentConfig
 
@@ -217,11 +230,5 @@ Functions
    .. autolink-examples:: print_subsection
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.checkers.example
-   :collapse:
-   
-.. autolink-skip:: next

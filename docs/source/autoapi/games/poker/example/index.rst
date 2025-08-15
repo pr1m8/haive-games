@@ -1,41 +1,53 @@
-
-:py:mod:`games.poker.example`
-=============================
+games.poker.example
+===================
 
 .. py:module:: games.poker.example
 
-Example poker game demonstrating the Haive poker implementation.
+.. autoapi-nested-parse::
 
-This module provides a comprehensive example of running a poker game with
-AI-powered players using the Haive framework. It demonstrates:
-    - Creating and configuring poker agents with different playing styles
-    - Running a complete poker game with betting rounds
-    - Rich terminal UI with card visualization
-    - Hand evaluation and winner determination
-    - Game state tracking and analysis
+   Example poker game demonstrating the Haive poker implementation.
 
-The example supports various poker configurations including different
-numbers of players, starting chips, blind structures, and AI strategies.
+   This module provides a comprehensive example of running a poker game with
+   AI-powered players using the Haive framework. It demonstrates:
+       - Creating and configuring poker agents with different playing styles
+       - Running a complete poker game with betting rounds
+       - Rich terminal UI with card visualization
+       - Hand evaluation and winner determination
+       - Game state tracking and analysis
 
-Usage:
-    Basic game:
-        $ python example.py
+   The example supports various poker configurations including different
+   numbers of players, starting chips, blind structures, and AI strategies.
 
-    Custom configuration:
-        $ python example.py --players 6 --chips 1000 --blinds 10 20
+   Usage:
+       Basic game:
+           $ python example.py
 
-    With specific AI strategies:
-        $ python example.py --strategies aggressive conservative balanced random
+       Custom configuration:
+           $ python example.py --players 6 --chips 1000 --blinds 10 20
 
-.. rubric:: Example
+       With specific AI strategies:
+           $ python example.py --strategies aggressive conservative balanced random
 
->>> # Run a basic 4-player game
->>> from haive.games.poker.example import run_poker_game
->>> run_poker_game(num_players=4, starting_chips=1000)
+   .. rubric:: Example
+
+   >>> # Run a basic 4-player game
+   >>> from haive.games.poker.example import run_poker_game
+   >>> run_poker_game(num_players=4, starting_chips=1000)
 
 
-.. autolink-examples:: games.poker.example
-   :collapse:
+   .. autolink-examples:: games.poker.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.poker.example.live
+   games.poker.example.logger
+   games.poker.example.player_names
+   games.poker.example.ui
 
 
 Functions
@@ -52,6 +64,10 @@ Functions
    games.poker.example.run_text_game
    games.poker.example.update_ui
    games.poker.example.visualize_game_state
+
+
+Module Contents
+---------------
 
 .. py:function:: create_config_from_args(args, player_names)
 
@@ -119,11 +135,17 @@ Functions
    .. autolink-examples:: visualize_game_state
       :collapse:
 
+.. py:data:: live
+   :value: None
 
 
-.. rubric:: Related Links
+.. py:data:: logger
 
-.. autolink-examples:: games.poker.example
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: player_names
+   :value: ['Alice', 'Bob']
+
+
+.. py:data:: ui
+   :value: None
+
+

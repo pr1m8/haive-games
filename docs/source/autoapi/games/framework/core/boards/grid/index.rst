@@ -1,8 +1,15 @@
-
-:py:mod:`games.framework.core.boards.grid`
-==========================================
+games.framework.core.boards.grid
+================================
 
 .. py:module:: games.framework.core.boards.grid
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.framework.core.boards.grid.T
 
 
 Classes
@@ -16,33 +23,76 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: GridBoard
+
+   Bases: :py:obj:`haive.games.framework.core.board.Board`\ [\ :py:obj:`haive.games.framework.core.spaces.grid.GridSpace`\ [\ :py:obj:`T`\ ]\ , :py:obj:`haive.games.framework.core.positions.grid.GridPosition`\ , :py:obj:`T`\ ]
+
+
+   A grid-based board (Chess, Checkers, Scrabble).
+
+   This represents a rectangular grid of spaces.
 
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: GridBoard
+      :collapse:
 
-   Inheritance diagram for GridBoard:
+   .. py:method:: get_space_at(row: int, col: int) -> haive.games.framework.core.spaces.grid.GridSpace[T] | None
 
-   .. graphviz::
-      :align: center
+      Get the space at the specified grid coordinates.
 
-      digraph inheritance_GridBoard {
-        node [shape=record];
-        "GridBoard" [label="GridBoard"];
-        "haive.games.framework.core.board.Board[haive.games.framework.core.spaces.grid.GridSpace[T], haive.games.framework.core.positions.grid.GridPosition, T]" -> "GridBoard";
-      }
+      :param row: Row index
+      :param col: Column index
 
-.. autoclass:: games.framework.core.boards.grid.GridBoard
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      :returns: The space at the position, or None if no space exists there
 
 
+      .. autolink-examples:: get_space_at
+         :collapse:
 
 
-.. rubric:: Related Links
+   .. py:method:: get_space_at_position(position: haive.games.framework.core.positions.grid.GridPosition) -> haive.games.framework.core.spaces.grid.GridSpace[T] | None
 
-.. autolink-examples:: games.framework.core.boards.grid
-   :collapse:
-   
-.. autolink-skip:: next
+      Get the space at the specified grid coordinates.
+
+      :param position: Grid position to look up
+
+      :returns: The space at the position, or None if no space exists there
+
+
+      .. autolink-examples:: get_space_at_position
+         :collapse:
+
+
+   .. py:method:: initialize_grid(space_factory: collections.abc.Callable[[int, int], haive.games.framework.core.spaces.grid.GridSpace[T]] | None = None) -> None
+
+      Initialize a standard grid with the specified dimensions.
+
+      :param space_factory: Optional factory function to create spaces
+
+
+      .. autolink-examples:: initialize_grid
+         :collapse:
+
+
+   .. py:method:: validate_dimensions(v: int) -> int
+      :classmethod:
+
+
+      Ensure board dimensions are positive.
+
+
+      .. autolink-examples:: validate_dimensions
+         :collapse:
+
+
+   .. py:attribute:: cols
+      :type:  int
+
+
+   .. py:attribute:: rows
+      :type:  int
+
+
+.. py:data:: T
+

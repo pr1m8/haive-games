@@ -1,17 +1,26 @@
-
-:py:mod:`games.tic_tac_toe.configurable_engines`
-================================================
+games.tic_tac_toe.configurable_engines
+======================================
 
 .. py:module:: games.tic_tac_toe.configurable_engines
 
-Configurable Tic Tac Toe engines using the new player agent system.
+.. autoapi-nested-parse::
 
-This module provides Tic Tac Toe engine configurations that use configurable player
-agents instead of hardcoded LLM configurations.
+   Configurable Tic Tac Toe engines using the new player agent system.
+
+   This module provides Tic Tac Toe engine configurations that use configurable player
+   agents instead of hardcoded LLM configurations.
 
 
-.. autolink-examples:: games.tic_tac_toe.configurable_engines
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.configurable_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.tic_tac_toe.configurable_engines.EXAMPLE_TTT_CONFIGS
 
 
 Functions
@@ -26,6 +35,10 @@ Functions
    games.tic_tac_toe.configurable_engines.create_tic_tac_toe_move_prompt
    games.tic_tac_toe.configurable_engines.get_example_tic_tac_toe_engines
    games.tic_tac_toe.configurable_engines.get_tic_tac_toe_role_definitions
+
+
+Module Contents
+---------------
 
 .. py:function:: create_configurable_tic_tac_toe_engines(player_configs: dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig]) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -133,11 +146,5 @@ Functions
    .. autolink-examples:: get_tic_tac_toe_role_definitions
       :collapse:
 
+.. py:data:: EXAMPLE_TTT_CONFIGS
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.tic_tac_toe.configurable_engines
-   :collapse:
-   
-.. autolink-skip:: next

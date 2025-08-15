@@ -1,18 +1,17 @@
-
-:py:mod:`games.monopoly.agent`
-==============================
+games.monopoly.agent
+====================
 
 .. py:module:: games.monopoly.agent
 
-Monopoly Agent module - Main agent interface.
+.. autoapi-nested-parse::
 
-This module provides the main agent interface for Monopoly games,
-wrapping the game agent and providing a simplified interface.
+   Monopoly Agent module - Main agent interface.
 
-
-.. autolink-examples:: games.monopoly.agent
-   :collapse:
+   This module provides the main agent interface for Monopoly games,
+   wrapping the game agent and providing a simplified interface.
 
 
+   .. autolink-examples:: games.monopoly.agent
+      :collapse:
 
 

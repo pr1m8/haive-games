@@ -1,9 +1,7 @@
-
-:py:mod:`games.single_player.example`
-=====================================
+games.single_player.example
+===========================
 
 .. py:module:: games.single_player.example
-
 
 
 Functions
@@ -13,6 +11,10 @@ Functions
 
    games.single_player.example.run_auto_game
    games.single_player.example.run_interactive_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_auto_game(agent: SinglePlayerGameAgent)
 
@@ -35,11 +37,3 @@ Functions
    .. autolink-examples:: run_interactive_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.single_player.example
-   :collapse:
-   
-.. autolink-skip:: next

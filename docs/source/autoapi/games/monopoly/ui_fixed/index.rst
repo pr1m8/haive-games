@@ -1,17 +1,19 @@
-
-:py:mod:`games.monopoly.ui_fixed`
-=================================
+games.monopoly.ui_fixed
+=======================
 
 .. py:module:: games.monopoly.ui_fixed
 
-Rich UI for displaying a live Monopoly game.
+.. autoapi-nested-parse::
 
-This module provides a beautiful terminal interface for watching Monopoly games unfold
-in real-time using Rich.
+   Rich UI for displaying a live Monopoly game.
+
+   This module provides a beautiful terminal interface for watching Monopoly games unfold
+   in real-time using Rich.
 
 
-.. autolink-examples:: games.monopoly.ui_fixed
-   :collapse:
+   .. autolink-examples:: games.monopoly.ui_fixed
+      :collapse:
+
 
 Classes
 -------
@@ -21,36 +23,138 @@ Classes
    games.monopoly.ui_fixed.MonopolyRichUI
 
 
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MonopolyRichUI:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MonopolyRichUI {
-        node [shape=record];
-        "MonopolyRichUI" [label="MonopolyRichUI"];
-      }
-
-.. autoclass:: games.monopoly.ui_fixed.MonopolyRichUI
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Functions
 ---------
 
 .. autoapisummary::
 
    games.monopoly.ui_fixed.main
+
+
+Module Contents
+---------------
+
+.. py:class:: MonopolyRichUI
+
+   Beautiful Rich UI for displaying a live Monopoly game.
+
+
+   .. autolink-examples:: MonopolyRichUI
+      :collapse:
+
+   .. py:method:: _get_player_color(player_name: str) -> str
+
+      Get color for a player based on their name.
+
+
+      .. autolink-examples:: _get_player_color
+         :collapse:
+
+
+   .. py:method:: _get_position_name(position: int) -> str
+
+      Get the name of a board position.
+
+
+      .. autolink-examples:: _get_position_name
+         :collapse:
+
+
+   .. py:method:: _setup_layout()
+
+      Initialize the layout structure.
+
+
+      .. autolink-examples:: _setup_layout
+         :collapse:
+
+
+   .. py:method:: _update_layout()
+
+      Update all layout components with current state.
+
+
+      .. autolink-examples:: _update_layout
+         :collapse:
+
+
+   .. py:method:: render_board() -> rich.panel.Panel
+
+      Render a simplified board view.
+
+
+      .. autolink-examples:: render_board
+         :collapse:
+
+
+   .. py:method:: render_current_player() -> rich.panel.Panel
+
+      Render current player information.
+
+
+      .. autolink-examples:: render_current_player
+         :collapse:
+
+
+   .. py:method:: render_footer() -> rich.panel.Panel
+
+      Render the footer with controls and game info.
+
+
+      .. autolink-examples:: render_footer
+         :collapse:
+
+
+   .. py:method:: render_header() -> rich.panel.Panel
+
+      Render the game header.
+
+
+      .. autolink-examples:: render_header
+         :collapse:
+
+
+   .. py:method:: render_players() -> rich.panel.Panel
+
+      Render all players summary.
+
+
+      .. autolink-examples:: render_players
+         :collapse:
+
+
+   .. py:method:: render_recent_events() -> rich.panel.Panel
+
+      Render recent game events.
+
+
+      .. autolink-examples:: render_recent_events
+         :collapse:
+
+
+   .. py:method:: run(agent: haive.games.monopoly.main_agent.MonopolyAgent, delay: float = 2.0)
+
+      Run the live UI with the Monopoly agent.
+
+      :param agent: The Monopoly agent to run
+      :param delay: Delay between updates for readability
+
+
+      .. autolink-examples:: run
+         :collapse:
+
+
+   .. py:attribute:: console
+
+
+   .. py:attribute:: layout
+
+
+   .. py:attribute:: state
+      :type:  haive.games.monopoly.state.MonopolyState | None
+      :value: None
+
+
 
 .. py:function:: main()
 
@@ -60,11 +164,3 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.ui_fixed
-   :collapse:
-   
-.. autolink-skip:: next

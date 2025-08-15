@@ -1,14 +1,16 @@
-
-:py:mod:`games.single_player.towers_of_hanoi.move`
-==================================================
+games.single_player.towers_of_hanoi.move
+========================================
 
 .. py:module:: games.single_player.towers_of_hanoi.move
 
-Tower of Hanoi move model.
+.. autoapi-nested-parse::
+
+   Tower of Hanoi move model.
 
 
-.. autolink-examples:: games.single_player.towers_of_hanoi.move
-   :collapse:
+   .. autolink-examples:: games.single_player.towers_of_hanoi.move
+      :collapse:
+
 
 Classes
 -------
@@ -21,41 +23,53 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: HanoiMoveModel(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Model for structured output of Tower of Hanoi moves.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: HanoiMoveModel
+      :collapse:
+
+   .. py:method:: validate_from_peg(v: int) -> int
+      :classmethod:
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HanoiMoveModel:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HanoiMoveModel {
-        node [shape=record];
-        "HanoiMoveModel" [label="HanoiMoveModel"];
-        "pydantic.BaseModel" -> "HanoiMoveModel";
-      }
-
-.. autopydantic_model:: games.single_player.towers_of_hanoi.move.HanoiMoveModel
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:method:: validate_to_peg(v: int, info: Any) -> int
+      :classmethod:
 
 
 
+   .. py:attribute:: from_peg
+      :type:  int
+      :value: None
 
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.single_player.towers_of_hanoi.move
-   :collapse:
-   
-.. autolink-skip:: next
+   .. py:attribute:: reasoning
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: to_peg
+      :type:  int
+      :value: None
+
+
+

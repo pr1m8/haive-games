@@ -1,30 +1,32 @@
-
-:py:mod:`games.framework.base.config`
-=====================================
+games.framework.base.config
+===========================
 
 .. py:module:: games.framework.base.config
 
-Base configuration module for game agents.
+.. autoapi-nested-parse::
 
-This module provides the foundational configuration class for game agents,
-defining common settings and parameters that all game agents need.
+   Base configuration module for game agents.
 
-.. rubric:: Example
+   This module provides the foundational configuration class for game agents,
+   defining common settings and parameters that all game agents need.
 
->>> config = GameConfig(
-...     state_schema=ChessState,
-...     engines={"player1": player1_engine},
-...     enable_analysis=True
-... )
+   .. rubric:: Example
 
-Typical usage:
-    - Inherit from GameConfig to create game-specific configurations
-    - Override default values to customize game behavior
-    - Use as configuration for game agents
+   >>> config = GameConfig(
+   ...     state_schema=ChessState,
+   ...     engines={"player1": player1_engine},
+   ...     enable_analysis=True
+   ... )
+
+   Typical usage:
+       - Inherit from GameConfig to create game-specific configurations
+       - Override default values to customize game behavior
+       - Use as configuration for game agents
 
 
-.. autolink-examples:: games.framework.base.config
-   :collapse:
+   .. autolink-examples:: games.framework.base.config
+      :collapse:
+
 
 Classes
 -------
@@ -37,33 +39,95 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: GameConfig
+
+   Bases: :py:obj:`haive.core.engine.agent.agent.AgentConfig`
+
+
+   Base configuration for game agents.
+
+   This class defines the core configuration parameters that all game agents
+   need, including state schema, LLM engines, and analysis settings.
+
+   .. attribute:: state_schema
+
+      The state schema class for the game.
+
+      :type: Type[GameState]
+
+   .. attribute:: engines
+
+      Configurations for game LLMs.
+
+      :type: Dict[str, AugLLMConfig]
+
+   .. attribute:: enable_analysis
+
+      Whether to enable move analysis.
+
+      :type: bool
+
+   .. attribute:: visualize
+
+      Whether to visualize the game.
+
+      :type: bool
+
+   .. rubric:: Example
+
+   >>> class ChessConfig(GameConfig):
+   ...     state_schema: Type[GameState] = ChessState
+   ...     engines: Dict[str, AugLLMConfig] = {
+   ...         "player1": player1_engine,
+   ...         "player2": player2_engine
+   ...     }
+   ...     enable_analysis: bool = True
+
+
+   .. autolink-examples:: GameConfig
+      :collapse:
+
+   .. py:class:: Config
+
+      Pydantic configuration.
+
+
+      .. autolink-examples:: Config
+         :collapse:
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
 
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for GameConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameConfig {
-        node [shape=record];
-        "GameConfig" [label="GameConfig"];
-        "haive.core.engine.agent.agent.AgentConfig" -> "GameConfig";
-      }
-
-.. autoclass:: games.framework.base.config.GameConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
 
 
 
+   .. py:attribute:: engines
+      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+      :value: None
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.framework.base.config
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:attribute:: runnable_config
+      :type:  langchain_core.runnables.RunnableConfig
+      :value: None
+
+
+
+   .. py:attribute:: state_schema
+      :type:  type[haive.games.framework.base.state.GameState]
+      :value: None
+
+
+
+   .. py:attribute:: visualize
+      :type:  bool
+      :value: None
+
+
+

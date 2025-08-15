@@ -1,17 +1,28 @@
-
-:py:mod:`games.tic_tac_toe.configurable_config`
-===============================================
+games.tic_tac_toe.configurable_config
+=====================================
 
 .. py:module:: games.tic_tac_toe.configurable_config
 
-Configurable Tic-Tac-Toe configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Tic-Tac-Toe game configurations that replace hardcoded
-LLM settings with dynamic, configurable player agents.
+   Configurable Tic-Tac-Toe configuration using the generic player agent system.
+
+   This module provides configurable Tic-Tac-Toe game configurations that replace hardcoded
+   LLM settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.tic_tac_toe.configurable_config
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.tic_tac_toe.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.tic_tac_toe.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.tic_tac_toe.configurable_config.ConfigurableTicTacToeConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableTicTacToeConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableTicTacToeConfig {
-        node [shape=record];
-        "ConfigurableTicTacToeConfig" [label="ConfigurableTicTacToeConfig"];
-        "haive.games.tic_tac_toe.config.TicTacToeConfig" -> "ConfigurableTicTacToeConfig";
-      }
-
-.. autoclass:: games.tic_tac_toe.configurable_config.ConfigurableTicTacToeConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,160 @@ Functions
    games.tic_tac_toe.configurable_config.create_ttt_config_from_player_configs
    games.tic_tac_toe.configurable_config.get_example_config
    games.tic_tac_toe.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableTicTacToeConfig
+
+   Bases: :py:obj:`haive.games.tic_tac_toe.config.TicTacToeConfig`
+
+
+   Configurable Tic-Tac-Toe configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Tic-Tac-Toe game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: x_model
+
+      Model for X player (can be string or LLMConfig)
+
+   .. attribute:: o_model
+
+      Model for O player (can be string or LLMConfig)
+
+   .. attribute:: x_player_name
+
+      Name for the X player
+
+   .. attribute:: o_player_name
+
+      Name for the O player
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: max_moves
+
+      Maximum number of moves before draw
+
+   .. attribute:: enable_analysis
+
+      Whether to enable position analysis
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableTicTacToeConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(x_model: str, o_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: max_moves
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: o_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: o_player_name
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
+
+   .. py:attribute:: x_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: x_player_name
+      :type:  str | None
+      :value: None
+
+
 
 .. py:function:: create_budget_ttt_config(**kwargs) -> ConfigurableTicTacToeConfig
 
@@ -207,11 +347,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.tic_tac_toe.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

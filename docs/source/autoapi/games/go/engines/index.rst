@@ -1,23 +1,24 @@
-
-:py:mod:`games.go.engines`
-==========================
+games.go.engines
+================
 
 .. py:module:: games.go.engines
 
-Go game engines using AugLLMConfig.
+.. autoapi-nested-parse::
 
-This module provides LLM engine configurations for Go game agents, including:
-    - Player engines for black and white players
-    - Analyzer engines for position evaluation and strategy
-    - Prompt templates with Go-specific instructions
-    - Structured output models for moves and analysis
+   Go game engines using AugLLMConfig.
 
-The engines use LLM configurations optimized for strategic gameplay,
-with prompt templates designed to generate high-quality moves and analysis.
+   This module provides LLM engine configurations for Go game agents, including:
+       - Player engines for black and white players
+       - Analyzer engines for position evaluation and strategy
+       - Prompt templates with Go-specific instructions
+       - Structured output models for moves and analysis
+
+   The engines use LLM configurations optimized for strategic gameplay,
+   with prompt templates designed to generate high-quality moves and analysis.
 
 
-.. autolink-examples:: games.go.engines
-   :collapse:
+   .. autolink-examples:: games.go.engines
+      :collapse:
 
 
 Functions
@@ -32,6 +33,10 @@ Functions
    games.go.engines.get_analyzer_engine
    games.go.engines.get_black_engine
    games.go.engines.get_white_engine
+
+
+Module Contents
+---------------
 
 .. py:function:: build_go_aug_llms() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -101,11 +106,3 @@ Functions
    .. autolink-examples:: get_white_engine
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.go.engines
-   :collapse:
-   
-.. autolink-skip:: next

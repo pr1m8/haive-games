@@ -1,19 +1,20 @@
-
-:py:mod:`games.battleship.prompts`
-==================================
+games.battleship.prompts
+========================
 
 .. py:module:: games.battleship.prompts
 
-Battleship game prompt templates.
+.. autoapi-nested-parse::
 
-This module provides prompt templates for various game actions in Battleship, including:
-    - Ship placement
-    - Move selection
-    - Strategic analysis
+   Battleship game prompt templates.
+
+   This module provides prompt templates for various game actions in Battleship, including:
+       - Ship placement
+       - Move selection
+       - Strategic analysis
 
 
-.. autolink-examples:: games.battleship.prompts
-   :collapse:
+   .. autolink-examples:: games.battleship.prompts
+      :collapse:
 
 
 Functions
@@ -24,6 +25,10 @@ Functions
    games.battleship.prompts.generate_analysis_prompt
    games.battleship.prompts.generate_move_prompt
    games.battleship.prompts.generate_ship_placement_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -61,11 +66,3 @@ Functions
    .. autolink-examples:: generate_ship_placement_prompt
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.prompts
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,24 +1,33 @@
-
-:py:mod:`games.poker.engines`
-=============================
+games.poker.engines
+===================
 
 .. py:module:: games.poker.engines
 
-Poker agent LLM configurations and prompts.
+.. autoapi-nested-parse::
 
-This module defines the language model configurations and prompt templates
-for different poker playing styles and roles. It includes:
-    - Player prompt generation for different styles
-    - Hand analysis prompt generation
-    - LLM provider selection and configuration
-    - Agent configuration creation
+   Poker agent LLM configurations and prompts.
 
-The module supports multiple LLM providers (Azure, DeepSeek, Anthropic, Gemini, Mistral) and
-configures them with appropriate models and prompts for poker gameplay.
+   This module defines the language model configurations and prompt templates
+   for different poker playing styles and roles. It includes:
+       - Player prompt generation for different styles
+       - Hand analysis prompt generation
+       - LLM provider selection and configuration
+       - Agent configuration creation
+
+   The module supports multiple LLM providers (Azure, DeepSeek, Anthropic, Gemini, Mistral) and
+   configures them with appropriate models and prompts for poker gameplay.
 
 
-.. autolink-examples:: games.poker.engines
-   :collapse:
+   .. autolink-examples:: games.poker.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.poker.engines.poker_agent_configs
 
 
 Functions
@@ -34,6 +43,10 @@ Functions
    games.poker.engines.get_available_providers
    games.poker.engines.get_model_for_provider
    games.poker.engines.get_poker_llm_provider
+
+
+Module Contents
+---------------
 
 .. py:function:: create_default_agent_configs(config)
 
@@ -99,11 +112,5 @@ Functions
    .. autolink-examples:: get_poker_llm_provider
       :collapse:
 
+.. py:data:: poker_agent_configs
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.poker.engines
-   :collapse:
-   
-.. autolink-skip:: next

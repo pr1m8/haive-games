@@ -1,19 +1,28 @@
-
-:py:mod:`games.risk.example`
-============================
+games.risk.example
+==================
 
 .. py:module:: games.risk.example
 
-Example usage of the Risk agent.
+.. autoapi-nested-parse::
 
-This example demonstrates how to run a Risk game with AI agents.
+   Example usage of the Risk agent.
 
-Usage:
-    python example.py
+   This example demonstrates how to run a Risk game with AI agents.
+
+   Usage:
+       python example.py
 
 
-.. autolink-examples:: games.risk.example
-   :collapse:
+   .. autolink-examples:: games.risk.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.risk.example.logger
 
 
 Functions
@@ -23,6 +32,10 @@ Functions
 
    games.risk.example.main
 
+
+Module Contents
+---------------
+
 .. py:function:: main()
 
    Run example Risk game scenarios with AI agents.
@@ -31,11 +44,5 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.risk.example
-   :collapse:
-   
-.. autolink-skip:: next

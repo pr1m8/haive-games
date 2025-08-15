@@ -1,17 +1,28 @@
-
-:py:mod:`games.mastermind.configurable_config`
-==============================================
+games.mastermind.configurable_config
+====================================
 
 .. py:module:: games.mastermind.configurable_config
 
-Configurable Mastermind configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Mastermind game configurations that replace hardcoded
-LLM settings with dynamic, configurable player agents.
+   Configurable Mastermind configuration using the generic player agent system.
+
+   This module provides configurable Mastermind game configurations that replace hardcoded
+   LLM settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.mastermind.configurable_config
-   :collapse:
+   .. autolink-examples:: games.mastermind.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mastermind.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.mastermind.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.mastermind.configurable_config.ConfigurableMastermindConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableMastermindConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableMastermindConfig {
-        node [shape=record];
-        "ConfigurableMastermindConfig" [label="ConfigurableMastermindConfig"];
-        "haive.games.mastermind.config.MastermindConfig" -> "ConfigurableMastermindConfig";
-      }
-
-.. autoclass:: games.mastermind.configurable_config.ConfigurableMastermindConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,136 @@ Functions
    games.mastermind.configurable_config.create_mastermind_config_from_player_configs
    games.mastermind.configurable_config.get_example_config
    games.mastermind.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableMastermindConfig
+
+   Bases: :py:obj:`haive.games.mastermind.config.MastermindConfig`
+
+
+   Configurable Mastermind configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Mastermind game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: codemaker_model
+
+      Model for codemaker (can be string or LLMConfig)
+
+   .. attribute:: codebreaker_model
+
+      Model for codebreaker (can be string or LLMConfig)
+
+   .. attribute:: codemaker_name
+
+      Name for codemaker
+
+   .. attribute:: codebreaker_name
+
+      Name for codebreaker
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: enable_analysis
+
+      Whether to enable strategic analysis
+
+   .. attribute:: visualize_game
+
+      Whether to visualize game state
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableMastermindConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(codemaker_model: str, codebreaker_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: codebreaker_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: codemaker_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
 
 .. py:function:: create_advanced_mastermind_config(**kwargs) -> ConfigurableMastermindConfig
 
@@ -208,11 +324,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mastermind.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

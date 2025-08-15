@@ -1,53 +1,64 @@
-
-:py:mod:`games.tic_tac_toe.example`
-===================================
+games.tic_tac_toe.example
+=========================
 
 .. py:module:: games.tic_tac_toe.example
 
-Comprehensive examples for the Tic Tac Toe game module.
+.. autoapi-nested-parse::
 
-This module provides a complete set of examples demonstrating all aspects of the
-Tic Tac Toe game implementation, from basic gameplay to advanced features like
-strategic analysis, performance testing, and error handling.
+   Comprehensive examples for the Tic Tac Toe game module.
 
-The examples are organized into logical categories:
-- Basic gameplay examples
-- Rich UI demonstrations
-- Strategic analysis showcases
-- Performance and testing examples
-- Error handling and debugging
-- Advanced usage patterns
+   This module provides a complete set of examples demonstrating all aspects of the
+   Tic Tac Toe game implementation, from basic gameplay to advanced features like
+   strategic analysis, performance testing, and error handling.
 
-Each example includes detailed comments explaining the concepts and can be run
-independently or as part of the full demonstration suite.
+   The examples are organized into logical categories:
+   - Basic gameplay examples
+   - Rich UI demonstrations
+   - Strategic analysis showcases
+   - Performance and testing examples
+   - Error handling and debugging
+   - Advanced usage patterns
 
-Usage:
-    Run all examples:
-        python example.py
+   Each example includes detailed comments explaining the concepts and can be run
+   independently or as part of the full demonstration suite.
 
-    Run specific example:
-        python example.py basic
-        python example.py rich
-        python example.py analysis
-        python example.py performance
-        python example.py error-handling
-        python example.py tournament
-        python example.py async
-        python example.py custom-ai
+   Usage:
+       Run all examples:
+           python example.py
 
-Examples provided:
-    1. Basic Game - Simple game with minimal configuration
-    2. Rich UI Game - Beautiful terminal interface with animations
-    3. Strategic Analysis - Deep position analysis and explanations
-    4. Performance Testing - Benchmarking and optimization
-    5. Error Handling - Robust error management and debugging
-    6. Tournament Mode - Batch game execution and statistics
-    7. Async Execution - Concurrent game processing
-    8. Custom AI Configuration - Advanced engine customization
+       Run specific example:
+           python example.py basic
+           python example.py rich
+           python example.py analysis
+           python example.py performance
+           python example.py error-handling
+           python example.py tournament
+           python example.py async
+           python example.py custom-ai
+
+   Examples provided:
+       1. Basic Game - Simple game with minimal configuration
+       2. Rich UI Game - Beautiful terminal interface with animations
+       3. Strategic Analysis - Deep position analysis and explanations
+       4. Performance Testing - Benchmarking and optimization
+       5. Error Handling - Robust error management and debugging
+       6. Tournament Mode - Batch game execution and statistics
+       7. Async Execution - Concurrent game processing
+       8. Custom AI Configuration - Advanced engine customization
 
 
-.. autolink-examples:: games.tic_tac_toe.example
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.tic_tac_toe.example.agent
+   games.tic_tac_toe.example.console
+   games.tic_tac_toe.example.package_root
 
 
 Functions
@@ -65,6 +76,10 @@ Functions
    games.tic_tac_toe.example.example_8_custom_ai_configuration
    games.tic_tac_toe.example.main
    games.tic_tac_toe.example.run_all_examples
+
+
+Module Contents
+---------------
 
 .. py:function:: example_1_basic_game()
 
@@ -172,11 +187,9 @@ Functions
    .. autolink-examples:: run_all_examples
       :collapse:
 
+.. py:data:: agent
 
+.. py:data:: console
 
-.. rubric:: Related Links
+.. py:data:: package_root
 
-.. autolink-examples:: games.tic_tac_toe.example
-   :collapse:
-   
-.. autolink-skip:: next

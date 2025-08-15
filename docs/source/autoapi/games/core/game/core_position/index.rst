@@ -1,17 +1,19 @@
-
-:py:mod:`games.core.game.core_position`
-=======================================
+games.core.game.core_position
+=============================
 
 .. py:module:: games.core.game.core_position
 
-Position models for the game framework.
+.. autoapi-nested-parse::
 
-This module defines the base Position class and its specific implementations for
-different coordinate systems used in games.
+   Position models for the game framework.
+
+   This module defines the base Position class and its specific implementations for
+   different coordinate systems used in games.
 
 
-.. autolink-examples:: games.core.game.core_position
-   :collapse:
+   .. autolink-examples:: games.core.game.core_position
+      :collapse:
+
 
 Classes
 -------
@@ -27,104 +29,401 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: GridPosition(/, **data: Any)
+
+   Bases: :py:obj:`Position`
+
+
+   Position on a grid-based board with row and column coordinates.
+
+   Used in games like Chess, Checkers, Scrabble, etc. where the board is organized as a
+   rectangular grid of cells.
+
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GridPosition
+      :collapse:
+
+   .. py:method:: __eq__(other: object) -> bool
+
+      Grid positions are equal if they have the same row and column.
+
+
+      .. autolink-examples:: __eq__
+         :collapse:
+
+
+   .. py:method:: __hash__() -> int
+
+      Hash based on row and column.
+
+
+      .. autolink-examples:: __hash__
+         :collapse:
+
+
+   .. py:method:: chebyshev_distance(other: GridPosition) -> int
+
+      Calculate the Chebyshev distance to another grid position.
+
+      This is the maximum of the horizontal and vertical distances, which corresponds
+      to the number of moves a king in chess would need.
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GridPosition:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GridPosition {
-        node [shape=record];
-        "GridPosition" [label="GridPosition"];
-        "Position" -> "GridPosition";
-      }
-
-.. autoclass:: games.core.game.core_position.GridPosition
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: chebyshev_distance
+         :collapse:
 
 
+   .. py:method:: manhattan_distance(other: GridPosition) -> int
+
+      Calculate the Manhattan distance to another grid position.
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HexPosition:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HexPosition {
-        node [shape=record];
-        "HexPosition" [label="HexPosition"];
-        "Position" -> "HexPosition";
-      }
-
-.. autoclass:: games.core.game.core_position.HexPosition
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: manhattan_distance
+         :collapse:
 
 
+   .. py:method:: neighbors() -> dict[str, GridPosition]
+
+      Get all adjacent grid positions (orthogonal).
+
+      :returns: Dictionary mapping direction names to positions.
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for PointPosition:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PointPosition {
-        node [shape=record];
-        "PointPosition" [label="PointPosition"];
-        "Position" -> "PointPosition";
-      }
-
-.. autoclass:: games.core.game.core_position.PointPosition
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: neighbors
+         :collapse:
 
 
+   .. py:method:: neighbors_with_diagonals() -> dict[str, GridPosition]
+
+      Get all adjacent grid positions including diagonals.
+
+      :returns: Dictionary mapping direction names to positions.
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for Position:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Position {
-        node [shape=record];
-        "Position" [label="Position"];
-        "pydantic.BaseModel" -> "Position";
-      }
-
-.. autopydantic_model:: games.core.game.core_position.Position
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      .. autolink-examples:: neighbors_with_diagonals
+         :collapse:
 
 
+   .. py:method:: offset(row_offset: int, col_offset: int) -> GridPosition
+
+      Create a new position that is offset from this one.
+
+
+      .. autolink-examples:: offset
+         :collapse:
+
+
+   .. py:method:: validate_coordinates(v: int) -> int
+      :classmethod:
+
+
+      Ensure coordinates are valid.
+
+
+      .. autolink-examples:: validate_coordinates
+         :collapse:
+
+
+   .. py:attribute:: col
+      :type:  int
+
+
+   .. py:property:: coordinates
+      :type: tuple[int, int]
+
+
+      Get the row and column as a tuple.
+
+      .. autolink-examples:: coordinates
+         :collapse:
+
+
+   .. py:property:: display_coords
+      :type: str
+
+
+      Return human-readable coordinates.
+
+      For chess-style notation, this returns coordinates like 'A1', 'B2', etc. where
+      the column is a letter (A-Z) and the row is a number (1-based).
+
+      .. autolink-examples:: display_coords
+         :collapse:
+
+
+   .. py:attribute:: row
+      :type:  int
+
+
+.. py:class:: HexPosition(/, **data: Any)
+
+   Bases: :py:obj:`Position`
+
+
+   Position on a hexagonal grid using cube coordinates.
+
+   Used in games like Catan, hex-based war games, etc.
+
+   This uses cube coordinates (q, r, s) where q + r + s = 0.
+
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: HexPosition
+      :collapse:
+
+   .. py:method:: __eq__(other: object) -> bool
+
+      Hex positions are equal if they have the same q, r, and s.
+
+
+      .. autolink-examples:: __eq__
+         :collapse:
+
+
+   .. py:method:: __hash__() -> int
+
+      Hash based on q, r, and s coordinates.
+
+
+      .. autolink-examples:: __hash__
+         :collapse:
+
+
+   .. py:method:: distance(other: HexPosition) -> int
+
+      Calculate the distance to another hex position.
+
+
+      .. autolink-examples:: distance
+         :collapse:
+
+
+   .. py:method:: from_axial(q: int, r: int) -> HexPosition
+      :classmethod:
+
+
+      Create a hex position from axial coordinates (q, r).
+
+
+      .. autolink-examples:: from_axial
+         :collapse:
+
+
+   .. py:method:: neighbors() -> dict[str, HexPosition]
+
+      Get all adjacent hex positions.
+
+      :returns: Dictionary mapping direction names to positions.
+
+
+      .. autolink-examples:: neighbors
+         :collapse:
+
+
+   .. py:method:: validate_cube_coords(v: int, values: dict) -> int
+      :classmethod:
+
+
+      Ensure cube coordinates are valid (q + r + s = 0).
+
+
+      .. autolink-examples:: validate_cube_coords
+         :collapse:
+
+
+   .. py:property:: axial_coords
+      :type: tuple[int, int]
+
+
+      Get the axial coordinates (q, r) as a tuple.
+
+      .. autolink-examples:: axial_coords
+         :collapse:
+
+
+   .. py:attribute:: q
+      :type:  int
+
+
+   .. py:attribute:: r
+      :type:  int
+
+
+   .. py:attribute:: s
+      :type:  int
+
+
+.. py:class:: PointPosition(/, **data: Any)
+
+   Bases: :py:obj:`Position`
+
+
+   Position using floating point coordinates in a 2D space.
+
+   Used in games with continuous coordinates like territory maps or physics-based
+   games.
+
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PointPosition
+      :collapse:
+
+   .. py:method:: __eq__(other: object) -> bool
+
+      Point positions are equal if they have the same x and y.
+
+
+      .. autolink-examples:: __eq__
+         :collapse:
+
+
+   .. py:method:: __hash__() -> int
+
+      Hash based on x and y coordinates.
+
+
+      .. autolink-examples:: __hash__
+         :collapse:
+
+
+   .. py:method:: distance_to(other: PointPosition) -> float
+
+      Calculate the Euclidean distance to another point position.
+
+
+      .. autolink-examples:: distance_to
+         :collapse:
+
+
+   .. py:method:: offset(x_offset: float, y_offset: float) -> PointPosition
+
+      Create a new position that is offset from this one.
+
+
+      .. autolink-examples:: offset
+         :collapse:
+
+
+   .. py:property:: coordinates
+      :type: tuple[float, float]
+
+
+      Get the x and y as a tuple.
+
+      .. autolink-examples:: coordinates
+         :collapse:
+
+
+   .. py:attribute:: x
+      :type:  float
+
+
+   .. py:attribute:: y
+      :type:  float
+
+
+.. py:class:: Position(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Base class for all position types in games.
+
+   A Position represents a location in a game. Different games use different coordinate
+   systems, so this base class is extended for specific needs.
+
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Position
+      :collapse:
+
+   .. py:class:: Config
+
+      .. py:attribute:: frozen
+         :value: True
 
 
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.core.game.core_position
-   :collapse:
-   
-.. autolink-skip:: next
+   .. py:method:: __eq__(other: object) -> bool
+
+      Check if positions are equal.
+
+      Base implementation compares IDs; subclasses should override.
+
+
+
+      .. autolink-examples:: __eq__
+         :collapse:
+
+
+   .. py:method:: __hash__() -> int
+
+      Hash implementation for dictionary keys and sets.
+
+
+      .. autolink-examples:: __hash__
+         :collapse:
+
+
+   .. py:method:: serialize() -> dict[str, Any]
+
+      Convert the position to a serializable dictionary.
+
+
+      .. autolink-examples:: serialize
+         :collapse:
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+

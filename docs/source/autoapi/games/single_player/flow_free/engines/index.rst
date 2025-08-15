@@ -1,17 +1,26 @@
-
-:py:mod:`games.single_player.flow_free.engines`
-===============================================
+games.single_player.flow_free.engines
+=====================================
 
 .. py:module:: games.single_player.flow_free.engines
 
-Prompt generation and engine configuration for Flow Free.
+.. autoapi-nested-parse::
 
-This module defines prompt templates and LLM configurations for move generation and
-position analysis in the Flow Free game.
+   Prompt generation and engine configuration for Flow Free.
+
+   This module defines prompt templates and LLM configurations for move generation and
+   position analysis in the Flow Free game.
 
 
-.. autolink-examples:: games.single_player.flow_free.engines
-   :collapse:
+   .. autolink-examples:: games.single_player.flow_free.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.single_player.flow_free.engines.flow_free_engines
 
 
 Functions
@@ -21,6 +30,10 @@ Functions
 
    games.single_player.flow_free.engines.generate_analysis_prompt
    games.single_player.flow_free.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
@@ -42,11 +55,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: flow_free_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.single_player.flow_free.engines
-   :collapse:
-   
-.. autolink-skip:: next

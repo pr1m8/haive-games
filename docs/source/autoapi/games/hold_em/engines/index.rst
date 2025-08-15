@@ -1,17 +1,31 @@
-
-:py:mod:`games.hold_em.engines`
-===============================
+games.hold_em.engines
+=====================
 
 .. py:module:: games.hold_em.engines
 
-Texas Hold'em engines and prompts module - FIXED VERSION.
+.. autoapi-nested-parse::
 
-This module provides LLM configurations and prompts for Hold'em agents.
-Fixed variable naming consistency issues.
+   Texas Hold'em engines and prompts module - FIXED VERSION.
+
+   This module provides LLM configurations and prompts for Hold'em agents.
+   Fixed variable naming consistency issues.
 
 
-.. autolink-examples:: games.hold_em.engines
-   :collapse:
+   .. autolink-examples:: games.hold_em.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.hold_em.engines.hand_analysis_prompt
+   games.hold_em.engines.opponent_analysis_prompt
+   games.hold_em.engines.postflop_decision_prompt
+   games.hold_em.engines.preflop_decision_prompt
+   games.hold_em.engines.situation_analysis_prompt
+   games.hold_em.engines.tournament_decision_prompt
 
 
 Functions
@@ -27,6 +41,10 @@ Functions
    games.hold_em.engines.prepare_hand_context
    games.hold_em.engines.prepare_opponent_context
    games.hold_em.engines.prepare_situation_context
+
+
+Module Contents
+---------------
 
 .. py:function:: build_holdem_game_engines() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -92,11 +110,15 @@ Functions
    .. autolink-examples:: prepare_situation_context
       :collapse:
 
+.. py:data:: hand_analysis_prompt
 
+.. py:data:: opponent_analysis_prompt
 
-.. rubric:: Related Links
+.. py:data:: postflop_decision_prompt
 
-.. autolink-examples:: games.hold_em.engines
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: preflop_decision_prompt
+
+.. py:data:: situation_analysis_prompt
+
+.. py:data:: tournament_decision_prompt
+

@@ -1,17 +1,28 @@
-
-:py:mod:`games.clue.configurable_config`
-========================================
+games.clue.configurable_config
+==============================
 
 .. py:module:: games.clue.configurable_config
 
-Configurable Clue configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Clue game configurations that replace hardcoded LLM
-settings with dynamic, configurable player agents.
+   Configurable Clue configuration using the generic player agent system.
+
+   This module provides configurable Clue game configurations that replace hardcoded LLM
+   settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.clue.configurable_config
-   :collapse:
+   .. autolink-examples:: games.clue.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.clue.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.clue.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.clue.configurable_config.ConfigurableClueConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableClueConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableClueConfig {
-        node [shape=record];
-        "ConfigurableClueConfig" [label="ConfigurableClueConfig"];
-        "haive.games.clue.config.ClueConfig" -> "ConfigurableClueConfig";
-      }
-
-.. autoclass:: games.clue.configurable_config.ConfigurableClueConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,136 @@ Functions
    games.clue.configurable_config.create_experimental_clue_config
    games.clue.configurable_config.get_example_config
    games.clue.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableClueConfig
+
+   Bases: :py:obj:`haive.games.clue.config.ClueConfig`
+
+
+   Configurable Clue configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Clue game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: detective_model
+
+      Model for detective (can be string or LLMConfig)
+
+   .. attribute:: suspect_model
+
+      Model for suspect (can be string or LLMConfig)
+
+   .. attribute:: detective_name
+
+      Name for detective
+
+   .. attribute:: suspect_name
+
+      Name for suspect
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: enable_analysis
+
+      Whether to enable strategic analysis
+
+   .. attribute:: visualize_game
+
+      Whether to visualize game state
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableClueConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(detective_model: str, suspect_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: detective_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: suspect_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
 
 .. py:function:: create_advanced_clue_config(**kwargs) -> ConfigurableClueConfig
 
@@ -207,11 +323,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.clue.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

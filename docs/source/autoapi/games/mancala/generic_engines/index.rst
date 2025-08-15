@@ -1,17 +1,27 @@
-
-:py:mod:`games.mancala.generic_engines`
-=======================================
+games.mancala.generic_engines
+=============================
 
 .. py:module:: games.mancala.generic_engines
 
-Generic Mancala engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Mancala games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Mancala engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Mancala games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.mancala.generic_engines
-   :collapse:
+   .. autolink-examples:: games.mancala.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mancala.generic_engines.mancala_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.mancala.generic_engines.MancalaEngineFactory
    games.mancala.generic_engines.MancalaPlayerIdentifiers
    games.mancala.generic_engines.MancalaPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MancalaEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MancalaEngineFactory {
-        node [shape=record];
-        "MancalaEngineFactory" [label="MancalaEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "MancalaEngineFactory";
-      }
-
-.. autoclass:: games.mancala.generic_engines.MancalaEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MancalaPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MancalaPlayerIdentifiers {
-        node [shape=record];
-        "MancalaPlayerIdentifiers" [label="MancalaPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "MancalaPlayerIdentifiers";
-      }
-
-.. autoclass:: games.mancala.generic_engines.MancalaPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MancalaPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MancalaPromptGenerator {
-        node [shape=record];
-        "MancalaPromptGenerator" [label="MancalaPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "MancalaPromptGenerator";
-      }
-
-.. autoclass:: games.mancala.generic_engines.MancalaPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.mancala.generic_engines.create_generic_mancala_engines
    games.mancala.generic_engines.create_generic_mancala_engines_simple
    games.mancala.generic_engines.create_mixed_mancala_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: MancalaEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Mancala game engines.
+
+
+   .. autolink-examples:: MancalaEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: MancalaPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Mancala game.
+
+
+   .. autolink-examples:: MancalaPlayerIdentifiers
+      :collapse:
+
+.. py:class:: MancalaPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Mancala game.
+
+
+   .. autolink-examples:: MancalaPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Mancala game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Mancala player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_mancala_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_mancala_engines
       :collapse:
 
+.. py:data:: mancala_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mancala.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

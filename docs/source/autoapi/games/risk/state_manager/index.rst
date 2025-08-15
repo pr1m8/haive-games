@@ -1,17 +1,19 @@
-
-:py:mod:`games.risk.state_manager`
-==================================
+games.risk.state_manager
+========================
 
 .. py:module:: games.risk.state_manager
 
-State manager for the Risk game.
+.. autoapi-nested-parse::
 
-This module defines the RiskStateManager class that manages game state transitions, rule
-enforcement, and game progression.
+   State manager for the Risk game.
+
+   This module defines the RiskStateManager class that manages game state transitions, rule
+   enforcement, and game progression.
 
 
-.. autolink-examples:: games.risk.state_manager
-   :collapse:
+   .. autolink-examples:: games.risk.state_manager
+      :collapse:
+
 
 Classes
 -------
@@ -24,41 +26,235 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: RiskStateManager(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Manages state transitions and rule enforcement for the Risk game.
+
+   This class is responsible for applying moves to the game state,
+   enforcing game rules, and managing game progression through different phases.
+
+   .. attribute:: state
+
+      The current game state.
+
+   .. attribute:: config
+
+      Configuration settings for the game.
+
+   .. attribute:: move_history
+
+      History of all moves made in the game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: RiskStateManager
+      :collapse:
+
+   .. py:method:: _advance_to_next_player() -> None
+
+      Advance to the next active player.
+
+
+      .. autolink-examples:: _advance_to_next_player
+         :collapse:
+
+
+   .. py:method:: _apply_attack(move: haive.games.risk.models.RiskMove) -> None
+
+      Apply an attack move to the game state.
+
+      :param move: The attack move to apply.
+
+
+      .. autolink-examples:: _apply_attack
+         :collapse:
+
+
+   .. py:method:: _apply_fortify(move: haive.games.risk.models.RiskMove) -> None
+
+      Apply a fortify move to the game state.
+
+      :param move: The fortify move to apply.
+
+
+      .. autolink-examples:: _apply_fortify
+         :collapse:
+
+
+   .. py:method:: _apply_place_armies(move: haive.games.risk.models.RiskMove) -> None
+
+      Apply a place armies move to the game state.
+
+      :param move: The place armies move to apply.
+
+
+      .. autolink-examples:: _apply_place_armies
+         :collapse:
+
+
+   .. py:method:: _apply_trade_cards(move: haive.games.risk.models.RiskMove) -> None
+
+      Apply a trade cards move to the game state.
+
+      :param move: The trade cards move to apply.
+
+
+      .. autolink-examples:: _apply_trade_cards
+         :collapse:
+
+
+   .. py:method:: _calculate_reinforcements() -> None
+
+      Calculate reinforcements for the current player.
+
+
+      .. autolink-examples:: _calculate_reinforcements
+         :collapse:
+
+
+   .. py:method:: _check_game_over() -> None
+
+      Check if the game is over.
+
+
+      .. autolink-examples:: _check_game_over
+         :collapse:
+
+
+   .. py:method:: _end_turn() -> None
+
+      End the current player's turn and prepare for the next player.
+
+
+      .. autolink-examples:: _end_turn
+         :collapse:
+
+
+   .. py:method:: _validate_attack(move: haive.games.risk.models.RiskMove) -> None
+
+      Validate an attack move.
+
+      :param move: The move to validate.
+
+      :raises ValueError: If the move is invalid.
+
+
+      .. autolink-examples:: _validate_attack
+         :collapse:
+
+
+   .. py:method:: _validate_fortify(move: haive.games.risk.models.RiskMove) -> None
+
+      Validate a fortify move.
+
+      :param move: The move to validate.
+
+      :raises ValueError: If the move is invalid.
+
+
+      .. autolink-examples:: _validate_fortify
+         :collapse:
+
+
+   .. py:method:: _validate_move(move: haive.games.risk.models.RiskMove) -> None
+
+      Validate that a move is legal according to the game rules.
+
+      :param move: The move to validate.
+
+      :raises ValueError: If the move is invalid.
+
+
+      .. autolink-examples:: _validate_move
+         :collapse:
+
+
+   .. py:method:: _validate_place_armies(move: haive.games.risk.models.RiskMove) -> None
+
+      Validate a place armies move.
+
+      :param move: The move to validate.
+
+      :raises ValueError: If the move is invalid.
+
+
+      .. autolink-examples:: _validate_place_armies
+         :collapse:
+
+
+   .. py:method:: _validate_trade_cards(move: haive.games.risk.models.RiskMove) -> None
+
+      Validate a trade cards move.
+
+      :param move: The move to validate.
+
+      :raises ValueError: If the move is invalid.
+
+
+      .. autolink-examples:: _validate_trade_cards
+         :collapse:
+
+
+   .. py:method:: apply_move(move: haive.games.risk.models.RiskMove) -> haive.games.risk.state.RiskState
+
+      Apply a move to the current game state.
+
+      :param move: The move to apply.
+
+      :returns: The updated game state after applying the move.
+
+      :raises ValueError: If the move is invalid or violates game rules.
+
+
+      .. autolink-examples:: apply_move
+         :collapse:
+
+
+   .. py:method:: initialize(player_names: list[str], config: haive.games.risk.config.RiskConfig | None = None) -> RiskStateManager
+      :classmethod:
+
+
+      Initialize a new Risk game state manager.
+
+      :param player_names: List of player names.
+      :param config: Optional configuration for the game.
+                     If not provided, classic Risk rules will be used.
+
+      :returns: A new RiskStateManager with initialized state.
+
+      :raises ValueError: If the number of players is invalid.
+
+
+      .. autolink-examples:: initialize
+         :collapse:
+
+
+   .. py:attribute:: config
+      :type:  haive.games.risk.config.RiskConfig
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for RiskStateManager:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_RiskStateManager {
-        node [shape=record];
-        "RiskStateManager" [label="RiskStateManager"];
-        "pydantic.BaseModel" -> "RiskStateManager";
-      }
-
-.. autopydantic_model:: games.risk.state_manager.RiskStateManager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: move_history
+      :type:  list[haive.games.risk.models.RiskMove]
+      :value: None
 
 
 
+   .. py:attribute:: state
+      :type:  haive.games.risk.state.RiskState
 
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.risk.state_manager
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,20 +1,22 @@
-
-:py:mod:`games.chess.dynamic_config`
-====================================
+games.chess.dynamic_config
+==========================
 
 .. py:module:: games.chess.dynamic_config
 
-Dynamic configuration for chess game.
+.. autoapi-nested-parse::
 
-This module provides a flexible configuration system for chess that supports:
-- Legacy hardcoded engines (backward compatibility)
-- Simple model string configuration
-- Example-based configuration
-- Advanced PlayerAgentConfig configuration
+   Dynamic configuration for chess game.
+
+   This module provides a flexible configuration system for chess that supports:
+   - Legacy hardcoded engines (backward compatibility)
+   - Simple model string configuration
+   - Example-based configuration
+   - Advanced PlayerAgentConfig configuration
 
 
-.. autolink-examples:: games.chess.dynamic_config
-   :collapse:
+   .. autolink-examples:: games.chess.dynamic_config
+      :collapse:
+
 
 Classes
 -------
@@ -22,31 +24,6 @@ Classes
 .. autoapisummary::
 
    games.chess.dynamic_config.ChessConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ChessConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ChessConfig {
-        node [shape=record];
-        "ChessConfig" [label="ChessConfig"];
-        "haive.games.core.config.BaseGameConfig" -> "ChessConfig";
-      }
-
-.. autoclass:: games.chess.dynamic_config.ChessConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -61,6 +38,150 @@ Functions
    games.chess.dynamic_config.create_chess_config_with_players
    games.chess.dynamic_config.create_legacy_chess_config
    games.chess.dynamic_config.experimental_chess
+
+
+Module Contents
+---------------
+
+.. py:class:: ChessConfig
+
+   Bases: :py:obj:`haive.games.core.config.BaseGameConfig`
+
+
+   Dynamic configuration for chess game.
+
+   This configuration supports multiple modes:
+   1. Legacy: Use hardcoded engines from engines.py
+   2. Simple: Specify models as strings (white_model, black_model)
+   3. Example: Use predefined configurations (e.g., "gpt_vs_claude")
+   4. Advanced: Full PlayerAgentConfig specifications
+
+   .. attribute:: white_model
+
+      Model for white player (simple mode)
+
+   .. attribute:: black_model
+
+      Model for black player (simple mode)
+
+   .. attribute:: white_player_name
+
+      Display name for white player
+
+   .. attribute:: black_player_name
+
+      Display name for black player
+
+   .. attribute:: max_moves
+
+      Maximum moves before draw (default: 200)
+
+   .. attribute:: enable_fen_visualization
+
+      Show FEN strings in analysis
+
+
+   .. autolink-examples:: ChessConfig
+      :collapse:
+
+   .. py:method:: build_legacy_engines() -> list[Any]
+
+      Build legacy hardcoded engines.
+
+
+      .. autolink-examples:: build_legacy_engines
+         :collapse:
+
+
+   .. py:method:: create_engines_from_player_configs(player_configs: dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig]) -> list[Any]
+
+      Create engines from player configurations.
+
+
+      .. autolink-examples:: create_engines_from_player_configs
+         :collapse:
+
+
+   .. py:method:: create_simple_player_configs() -> dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig]
+
+      Create player configs from simple model strings.
+
+
+      .. autolink-examples:: create_simple_player_configs
+         :collapse:
+
+
+   .. py:method:: get_example_configs() -> dict[str, dict[str, Any]]
+
+      Define example chess configurations.
+
+
+      .. autolink-examples:: get_example_configs
+         :collapse:
+
+
+   .. py:method:: get_role_definitions() -> dict[str, haive.games.core.config.GamePlayerRole]
+
+      Define chess player roles.
+
+
+      .. autolink-examples:: get_role_definitions
+         :collapse:
+
+
+   .. py:attribute:: black_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: black_player_name
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: enable_fen_visualization
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: max_moves
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: state_schema
+      :type:  type[haive.games.chess.state.ChessState]
+      :value: None
+
+
+
+   .. py:attribute:: white_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: white_player_name
+      :type:  str | None
+      :value: None
+
+
 
 .. py:function:: budget_chess(**kwargs) -> ChessConfig
 
@@ -184,11 +305,3 @@ Functions
    .. autolink-examples:: experimental_chess
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.dynamic_config
-   :collapse:
-   
-.. autolink-skip:: next

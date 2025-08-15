@@ -1,15 +1,23 @@
-
-:py:mod:`games.single_player.testing`
-=====================================
+games.single_player.testing
+===========================
 
 .. py:module:: games.single_player.testing
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.single_player.testing
-   :collapse:
+   .. autolink-examples:: games.single_player.testing
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/single_player/testing/base/index
 
 

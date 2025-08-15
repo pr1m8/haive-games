@@ -1,17 +1,18 @@
-
-:py:mod:`games.chess.example_configurable_players`
-==================================================
+games.chess.example_configurable_players
+========================================
 
 .. py:module:: games.chess.example_configurable_players
 
-Example of using configurable chess players.
+.. autoapi-nested-parse::
 
-This example demonstrates how to create chess games with different LLM configurations
-for players without hardcoding them.
+   Example of using configurable chess players.
+
+   This example demonstrates how to create chess games with different LLM configurations
+   for players without hardcoding them.
 
 
-.. autolink-examples:: games.chess.example_configurable_players
-   :collapse:
+   .. autolink-examples:: games.chess.example_configurable_players
+      :collapse:
 
 
 Functions
@@ -27,6 +28,10 @@ Functions
    games.chess.example_configurable_players.example_6_same_model
    games.chess.example_configurable_players.main
    games.chess.example_configurable_players.run_short_game
+
+
+Module Contents
+---------------
 
 .. py:function:: example_1_simple_models()
 
@@ -94,11 +99,3 @@ Functions
    .. autolink-examples:: run_short_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.example_configurable_players
-   :collapse:
-   
-.. autolink-skip:: next

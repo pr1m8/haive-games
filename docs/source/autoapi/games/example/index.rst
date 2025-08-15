@@ -1,17 +1,18 @@
-
-:py:mod:`games.example`
-=======================
+games.example
+=============
 
 .. py:module:: games.example
 
-From typing import Any, Dict Haive Games Examples.
+.. autoapi-nested-parse::
 
-This file demonstrates comprehensive usage of the Haive Games framework, including quick
-starts, tournaments, custom games, and advanced patterns.
+   From typing import Any, Dict Haive Games Examples.
+
+   This file demonstrates comprehensive usage of the Haive Games framework, including quick
+   starts, tournaments, custom games, and advanced patterns.
 
 
-.. autolink-examples:: games.example
-   :collapse:
+   .. autolink-examples:: games.example
+      :collapse:
 
 
 Functions
@@ -30,6 +31,10 @@ Functions
    games.example.example_save_and_load
    games.example.example_wordle_with_strategy
    games.example.main
+
+
+Module Contents
+---------------
 
 .. py:function:: example_advanced_chess() -> None
 
@@ -121,11 +126,3 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.example
-   :collapse:
-   
-.. autolink-skip:: next

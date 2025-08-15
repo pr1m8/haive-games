@@ -1,25 +1,34 @@
-
-:py:mod:`games.battleship.debug`
-================================
+games.battleship.debug
+======================
 
 .. py:module:: games.battleship.debug
 
-Debug script for testing Battleship game.
+.. autoapi-nested-parse::
 
-This module provides a debugging interface for the Battleship game,
-with detailed logging and visualization of game state at each step.
-It's designed for:
-    - Diagnosing game logic issues
-    - Visualizing internal state transitions
-    - Testing new features and configurations
-    - Analyzing LLM decision making
+   Debug script for testing Battleship game.
 
-Run this script directly to start a debug session:
-    python -m haive.games.battleship.debug
+   This module provides a debugging interface for the Battleship game,
+   with detailed logging and visualization of game state at each step.
+   It's designed for:
+       - Diagnosing game logic issues
+       - Visualizing internal state transitions
+       - Testing new features and configurations
+       - Analyzing LLM decision making
+
+   Run this script directly to start a debug session:
+       python -m haive.games.battleship.debug
 
 
-.. autolink-examples:: games.battleship.debug
-   :collapse:
+   .. autolink-examples:: games.battleship.debug
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.battleship.debug.console
 
 
 Functions
@@ -28,6 +37,10 @@ Functions
 .. autoapisummary::
 
    games.battleship.debug.test_battleship
+
+
+Module Contents
+---------------
 
 .. py:function:: test_battleship()
 
@@ -55,11 +68,5 @@ Functions
    .. autolink-examples:: test_battleship
       :collapse:
 
+.. py:data:: console
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.debug
-   :collapse:
-   
-.. autolink-skip:: next

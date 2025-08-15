@@ -1,10 +1,6 @@
-
-:py:mod:`games.single_player.config`
-====================================
+games.single_player.config
+==========================
 
 .. py:module:: games.single_player.config
-
-
-
 
 

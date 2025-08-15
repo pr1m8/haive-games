@@ -1,17 +1,27 @@
-
-:py:mod:`games.battleship.generic_engines`
-==========================================
+games.battleship.generic_engines
+================================
 
 .. py:module:: games.battleship.generic_engines
 
-Generic Battleship engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Battleship games, allowing
-for configurable LLM models and game-specific player identifiers.
+   Generic Battleship engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Battleship games, allowing
+   for configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.battleship.generic_engines
-   :collapse:
+   .. autolink-examples:: games.battleship.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.battleship.generic_engines.battleship_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.battleship.generic_engines.BattleshipEngineFactory
    games.battleship.generic_engines.BattleshipPlayerIdentifiers
    games.battleship.generic_engines.BattleshipPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BattleshipEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BattleshipEngineFactory {
-        node [shape=record];
-        "BattleshipEngineFactory" [label="BattleshipEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "BattleshipEngineFactory";
-      }
-
-.. autoclass:: games.battleship.generic_engines.BattleshipEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BattleshipPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BattleshipPlayerIdentifiers {
-        node [shape=record];
-        "BattleshipPlayerIdentifiers" [label="BattleshipPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "BattleshipPlayerIdentifiers";
-      }
-
-.. autoclass:: games.battleship.generic_engines.BattleshipPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BattleshipPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BattleshipPromptGenerator {
-        node [shape=record];
-        "BattleshipPromptGenerator" [label="BattleshipPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "BattleshipPromptGenerator";
-      }
-
-.. autoclass:: games.battleship.generic_engines.BattleshipPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.battleship.generic_engines.create_generic_battleship_engines_simple
    games.battleship.generic_engines.create_mixed_battleship_engines
    games.battleship.generic_engines.create_naval_battleship_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: BattleshipEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Battleship game engines.
+
+
+   .. autolink-examples:: BattleshipEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: BattleshipPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Battleship game.
+
+
+   .. autolink-examples:: BattleshipPlayerIdentifiers
+      :collapse:
+
+.. py:class:: BattleshipPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Battleship game.
+
+
+   .. autolink-examples:: BattleshipPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Battleship game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Battleship player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_budget_battleship_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_naval_battleship_engines
       :collapse:
 
+.. py:data:: battleship_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.battleship.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

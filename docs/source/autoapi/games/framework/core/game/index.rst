@@ -1,8 +1,16 @@
-
-:py:mod:`games.framework.core.game`
-===================================
+games.framework.core.game
+=========================
 
 .. py:module:: games.framework.core.game
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.framework.core.game.M
+   games.framework.core.game.S
 
 
 Classes
@@ -18,98 +26,254 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: Game(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`S`\ , :py:obj:`M`\ ]
 
 
+   Base class for all games.
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for Game:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Game {
-        node [shape=record];
-        "Game" [label="Game"];
-        "pydantic.BaseModel" -> "Game";
-        "Generic[S, M]" -> "Game";
-      }
-
-.. autopydantic_model:: games.framework.core.game.Game
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   A Game represents a complete playable game with turns, moves, and state.
 
 
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
 
 
+   .. autolink-examples:: __init__
+      :collapse:
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for GameStatus:
+   .. autolink-examples:: Game
+      :collapse:
 
-   .. graphviz::
-      :align: center
+   .. py:class:: Config
 
-      digraph inheritance_GameStatus {
-        node [shape=record];
-        "GameStatus" [label="GameStatus"];
-        "str" -> "GameStatus";
-        "enum.Enum" -> "GameStatus";
-      }
-
-.. autoclass:: games.framework.core.game.GameStatus
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. note::
-
-      **GameStatus** is an Enum defined in ``games.framework.core.game``.
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
 
 
 
 
+   .. py:method:: add_player(player: Player) -> None
 
-.. toggle:: Show Inheritance Diagram
+      Add a player to the game.
 
-   Inheritance diagram for Player:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Player {
-        node [shape=record];
-        "Player" [label="Player"];
-        "pydantic.BaseModel" -> "Player";
-      }
-
-.. autopydantic_model:: games.framework.core.game.Player
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      :param player: The player to add
 
 
+      .. autolink-examples:: add_player
+         :collapse:
+
+
+   .. py:method:: check_game_over() -> bool
+
+      Check if the game is over.
+
+      :returns: True if the game is over, False otherwise
+
+
+      .. autolink-examples:: check_game_over
+         :collapse:
+
+
+   .. py:method:: end_turn() -> None
+
+      End the current turn and advance to the next player.
+
+
+      .. autolink-examples:: end_turn
+         :collapse:
+
+
+   .. py:method:: get_current_player() -> Player | None
+
+      Get the current player.
+
+      :returns: The current player, or None if no players
+
+
+      .. autolink-examples:: get_current_player
+         :collapse:
+
+
+   .. py:method:: make_move(move: M) -> bool
+
+      Make a move in the game.
+
+      Validates the move, applies it to the state, and updates the turn.
+
+      :param move: The move to make
+
+      :returns: True if the move was valid and applied, False otherwise
+
+
+      .. autolink-examples:: make_move
+         :collapse:
+
+
+   .. py:method:: start_game() -> None
+
+      Start the game.
+
+
+      .. autolink-examples:: start_game
+         :collapse:
+
+
+   .. py:method:: start_turn() -> haive.games.framework.core.turn.Turn[M]
+
+      Start a new turn for the current player.
+
+      :returns: The new turn
+
+
+      .. autolink-examples:: start_turn
+         :collapse:
+
+
+   .. py:attribute:: current_player_idx
+      :type:  int
+      :value: 0
 
 
 
-.. rubric:: Related Links
+   .. py:property:: current_turn
+      :type: haive.games.framework.core.turn.Turn[M] | None
 
-.. autolink-examples:: games.framework.core.game
-   :collapse:
-   
-.. autolink-skip:: next
+
+      Get the current turn, if any.
+
+      .. autolink-examples:: current_turn
+         :collapse:
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: players
+      :type:  list[Player]
+      :value: None
+
+
+
+   .. py:attribute:: state
+      :type:  S
+
+
+   .. py:attribute:: status
+      :type:  GameStatus
+
+
+   .. py:property:: turn_number
+      :type: int
+
+
+      Get the current turn number.
+
+      .. autolink-examples:: turn_number
+         :collapse:
+
+
+   .. py:attribute:: turns
+      :type:  list[haive.games.framework.core.turn.Turn[M]]
+      :value: None
+
+
+
+   .. py:attribute:: winner_id
+      :type:  str | None
+      :value: None
+
+
+
+.. py:class:: GameStatus
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Possible statuses of a game.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: GameStatus
+      :collapse:
+
+   .. py:attribute:: COMPLETED
+      :value: 'completed'
+
+
+
+   .. py:attribute:: IN_PROGRESS
+      :value: 'in_progress'
+
+
+
+   .. py:attribute:: NOT_STARTED
+      :value: 'not_started'
+
+
+
+   .. py:attribute:: PAUSED
+      :value: 'paused'
+
+
+
+.. py:class:: Player(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A player in a game.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Player
+      :collapse:
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: properties
+      :type:  dict[str, Any]
+      :value: None
+
+
+
+.. py:data:: M
+
+.. py:data:: S
+

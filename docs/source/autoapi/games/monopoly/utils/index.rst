@@ -1,20 +1,32 @@
-
-:py:mod:`games.monopoly.utils`
-==============================
+games.monopoly.utils
+====================
 
 .. py:module:: games.monopoly.utils
 
-Monopoly game utilities and board logic.
+.. autoapi-nested-parse::
 
-This module provides utility functions for the monopoly game, including:
-    - Board setup and property definitions
-    - Game logic calculations
-    - Card definitions and handling
-    - Rent calculations
+   Monopoly game utilities and board logic.
+
+   This module provides utility functions for the monopoly game, including:
+       - Board setup and property definitions
+       - Game logic calculations
+       - Card definitions and handling
+       - Rent calculations
 
 
-.. autolink-examples:: games.monopoly.utils
-   :collapse:
+   .. autolink-examples:: games.monopoly.utils
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.utils.BOARD_PROPERTIES
+   games.monopoly.utils.CHANCE_CARDS
+   games.monopoly.utils.COLOR_GROUPS
+   games.monopoly.utils.COMMUNITY_CHEST_CARDS
 
 
 Functions
@@ -34,6 +46,10 @@ Functions
    games.monopoly.utils.move_player
    games.monopoly.utils.roll_dice
    games.monopoly.utils.shuffle_cards
+
+
+Module Contents
+---------------
 
 .. py:function:: calculate_rent(property: haive.games.monopoly.models.Property, state: haive.games.monopoly.state.MonopolyState, dice_roll: int | None = None) -> int
 
@@ -131,11 +147,15 @@ Functions
    .. autolink-examples:: shuffle_cards
       :collapse:
 
+.. py:data:: BOARD_PROPERTIES
+
+.. py:data:: CHANCE_CARDS
+   :value: ['Advance to GO (Collect $200)', 'Advance to Illinois Avenue', 'Advance to St. Charles Place',...
 
 
-.. rubric:: Related Links
+.. py:data:: COLOR_GROUPS
 
-.. autolink-examples:: games.monopoly.utils
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: COMMUNITY_CHEST_CARDS
+   :value: ['Advance to GO (Collect $200)', 'Bank error in your favor', "Doctor's fee", 'From sale of stock...
+
+

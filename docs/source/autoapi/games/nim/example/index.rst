@@ -1,31 +1,41 @@
-
-:py:mod:`games.nim.example`
-===========================
+games.nim.example
+=================
 
 .. py:module:: games.nim.example
 
-Comprehensive Nim Game Examples - Mathematical Strategy and Game Theory Demonstration.
+.. autoapi-nested-parse::
 
-This module provides 8 comprehensive examples demonstrating the mathematical properties
-and strategic aspects of the Nim game, from basic gameplay to advanced analysis,
-perfect play algorithms, and educational game theory concepts.
+   Comprehensive Nim Game Examples - Mathematical Strategy and Game Theory Demonstration.
 
-The examples cover:
-1. Basic Standard Nim gameplay with optimal strategy
-2. Misère Nim with endgame analysis
-3. Mathematical analysis of positions using nim-sum
-4. Game theory demonstration with P/N positions
-5. Multiple pile variants and strategic considerations
-6. Performance analysis and algorithm benchmarking
-7. Educational game theory tutorial
-8. Advanced tournament and ML integration
+   This module provides 8 comprehensive examples demonstrating the mathematical properties
+   and strategic aspects of the Nim game, from basic gameplay to advanced analysis,
+   perfect play algorithms, and educational game theory concepts.
 
-Each example includes detailed explanations of the mathematical concepts,
-strategic reasoning, and implementation details for educational purposes.
+   The examples cover:
+   1. Basic Standard Nim gameplay with optimal strategy
+   2. Misère Nim with endgame analysis
+   3. Mathematical analysis of positions using nim-sum
+   4. Game theory demonstration with P/N positions
+   5. Multiple pile variants and strategic considerations
+   6. Performance analysis and algorithm benchmarking
+   7. Educational game theory tutorial
+   8. Advanced tournament and ML integration
+
+   Each example includes detailed explanations of the mathematical concepts,
+   strategic reasoning, and implementation details for educational purposes.
 
 
-.. autolink-examples:: games.nim.example
-   :collapse:
+   .. autolink-examples:: games.nim.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.nim.example.initial_piles
+   games.nim.example.logger
 
 
 Functions
@@ -48,6 +58,10 @@ Functions
    games.nim.example.print_section_header
    games.nim.example.print_subsection
    games.nim.example.run_all_examples
+
+
+Module Contents
+---------------
 
 .. py:function:: binary_representation(piles: list[int]) -> None
 
@@ -237,11 +251,9 @@ Functions
    .. autolink-examples:: run_all_examples
       :collapse:
 
+.. py:data:: initial_piles
+   :value: [3, 5, 7]
 
 
-.. rubric:: Related Links
+.. py:data:: logger
 
-.. autolink-examples:: games.nim.example
-   :collapse:
-   
-.. autolink-skip:: next

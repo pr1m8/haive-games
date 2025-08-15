@@ -1,22 +1,31 @@
-
-:py:mod:`games.hold_em.example`
-===============================
+games.hold_em.example
+=====================
 
 .. py:module:: games.hold_em.example
 
-Example usage of the Texas Hold'em poker implementation.
+.. autoapi-nested-parse::
 
-This example script demonstrates how to:
-    - Create and configure a Texas Hold'em game
-    - Set up player agents with different playing styles
-    - Run a complete game with the Rich UI
-    - Access and analyze game results
+   Example usage of the Texas Hold'em poker implementation.
 
-Run this script directly to see a Hold'em game in action.
+   This example script demonstrates how to:
+       - Create and configure a Texas Hold'em game
+       - Set up player agents with different playing styles
+       - Run a complete game with the Rich UI
+       - Access and analyze game results
+
+   Run this script directly to see a Hold'em game in action.
 
 
-.. autolink-examples:: games.hold_em.example
-   :collapse:
+   .. autolink-examples:: games.hold_em.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.hold_em.example.logger
 
 
 Functions
@@ -28,6 +37,10 @@ Functions
    games.hold_em.example.create_custom_game
    games.hold_em.example.main
    games.hold_em.example.run_example_game
+
+
+Module Contents
+---------------
 
 .. py:function:: analyze_game_results(agent: haive.games.hold_em.HoldemGameAgent)
 
@@ -76,11 +89,5 @@ Functions
    .. autolink-examples:: run_example_game
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.hold_em.example
-   :collapse:
-   
-.. autolink-skip:: next

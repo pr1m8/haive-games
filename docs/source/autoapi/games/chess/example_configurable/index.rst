@@ -1,17 +1,18 @@
-
-:py:mod:`games.chess.example_configurable`
-==========================================
+games.chess.example_configurable
+================================
 
 .. py:module:: games.chess.example_configurable
 
-Example of running chess with configurable LLMs.
+.. autoapi-nested-parse::
 
-This example demonstrates how to run chess games with different LLM providers and
-models, showing the flexibility of the new configuration system.
+   Example of running chess with configurable LLMs.
+
+   This example demonstrates how to run chess games with different LLM providers and
+   models, showing the flexibility of the new configuration system.
 
 
-.. autolink-examples:: games.chess.example_configurable
-   :collapse:
+   .. autolink-examples:: games.chess.example_configurable
+      :collapse:
 
 
 Functions
@@ -22,6 +23,10 @@ Functions
    games.chess.example_configurable.list_available_providers
    games.chess.example_configurable.run_advanced_chess_example
    games.chess.example_configurable.run_chess_with_custom_llms
+
+
+Module Contents
+---------------
 
 .. py:function:: list_available_providers()
 
@@ -54,11 +59,3 @@ Functions
    .. autolink-examples:: run_chess_with_custom_llms
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.example_configurable
-   :collapse:
-   
-.. autolink-skip:: next

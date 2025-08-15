@@ -1,6 +1,5 @@
-
-:py:mod:`games.core.components.cards.actions`
-=============================================
+games.core.components.cards.actions
+===================================
 
 .. py:module:: games.core.components.cards.actions
 
@@ -19,113 +18,203 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: ActionResult(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Result of executing a card action.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: ActionResult
+      :collapse:
+
+   .. py:attribute:: message
+      :type:  str
+      :value: ''
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ActionResult:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ActionResult {
-        node [shape=record];
-        "ActionResult" [label="ActionResult"];
-        "pydantic.BaseModel" -> "ActionResult";
-      }
-
-.. autopydantic_model:: games.core.components.cards.actions.ActionResult
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: state_updates
+      :type:  dict[str, Any]
+      :value: None
 
 
 
+   .. py:attribute:: success
+      :type:  bool
 
 
-.. toggle:: Show Inheritance Diagram
+.. py:class:: CardAction(/, **data: Any)
 
-   Inheritance diagram for CardAction:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CardAction {
-        node [shape=record];
-        "CardAction" [label="CardAction"];
-        "pydantic.BaseModel" -> "CardAction";
-        "Generic[haive.games.core.components.cards.base.TCard, haive.games.core.components.cards.base.TState]" -> "CardAction";
-      }
-
-.. autopydantic_model:: games.core.components.cards.actions.CardAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`haive.games.core.components.cards.base.TCard`\ , :py:obj:`haive.games.core.components.cards.base.TState`\ ]
 
 
+   Base model for card game actions.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
 
 
+   .. autolink-examples:: __init__
+      :collapse:
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for DrawCardAction:
+   .. autolink-examples:: CardAction
+      :collapse:
 
-   .. graphviz::
-      :align: center
+   .. py:class:: Config
 
-      digraph inheritance_DrawCardAction {
-        node [shape=record];
-        "DrawCardAction" [label="DrawCardAction"];
-        "CardAction[haive.games.core.components.cards.base.TCard, haive.games.core.components.cards.base.TState]" -> "DrawCardAction";
-      }
-
-.. autoclass:: games.core.components.cards.actions.DrawCardAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
 
 
 
 
-.. toggle:: Show Inheritance Diagram
+   .. py:method:: can_execute(state: haive.games.core.components.cards.base.TState) -> bool
 
-   Inheritance diagram for PlayCardAction:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_PlayCardAction {
-        node [shape=record];
-        "PlayCardAction" [label="PlayCardAction"];
-        "CardAction[haive.games.core.components.cards.base.TCard, haive.games.core.components.cards.base.TState]" -> "PlayCardAction";
-      }
-
-.. autoclass:: games.core.components.cards.actions.PlayCardAction
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      Check if this action can be executed in the current state.
 
 
+      .. autolink-examples:: can_execute
+         :collapse:
 
 
-.. rubric:: Related Links
+   .. py:method:: execute(state: haive.games.core.components.cards.base.TState) -> ActionResult
+      :abstractmethod:
 
-.. autolink-examples:: games.core.components.cards.actions
-   :collapse:
-   
-.. autolink-skip:: next
+
+      Execute this action on the game state.
+
+
+      .. autolink-examples:: execute
+         :collapse:
+
+
+   .. py:method:: validate_action() -> CardAction
+
+      Validate the action is properly formed.
+
+
+      .. autolink-examples:: validate_action
+         :collapse:
+
+
+   .. py:attribute:: action_type
+      :type:  str
+
+
+   .. py:attribute:: player_id
+      :type:  str
+
+
+.. py:class:: DrawCardAction
+
+   Bases: :py:obj:`CardAction`\ [\ :py:obj:`haive.games.core.components.cards.base.TCard`\ , :py:obj:`haive.games.core.components.cards.base.TState`\ ]
+
+
+   Action to draw a card from the deck.
+
+
+   .. autolink-examples:: DrawCardAction
+      :collapse:
+
+   .. py:method:: can_execute(state: haive.games.core.components.cards.base.TState) -> bool
+
+      Check if player can draw.
+
+
+      .. autolink-examples:: can_execute
+         :collapse:
+
+
+   .. py:method:: execute(state: haive.games.core.components.cards.base.TState) -> ActionResult
+
+      Draw card(s) from deck to player's hand.
+
+
+      .. autolink-examples:: execute
+         :collapse:
+
+
+   .. py:method:: validate_action() -> DrawCardAction
+
+      Validate draw count.
+
+
+      .. autolink-examples:: validate_action
+         :collapse:
+
+
+   .. py:attribute:: action_type
+      :type:  str
+      :value: 'draw_card'
+
+
+
+   .. py:attribute:: count
+      :type:  int
+      :value: 1
+
+
+
+.. py:class:: PlayCardAction
+
+   Bases: :py:obj:`CardAction`\ [\ :py:obj:`haive.games.core.components.cards.base.TCard`\ , :py:obj:`haive.games.core.components.cards.base.TState`\ ]
+
+
+   Action to play a card from hand.
+
+
+   .. autolink-examples:: PlayCardAction
+      :collapse:
+
+   .. py:method:: can_execute(state: haive.games.core.components.cards.base.TState) -> bool
+
+      Check if player can play the card.
+
+
+      .. autolink-examples:: can_execute
+         :collapse:
+
+
+   .. py:method:: execute(state: haive.games.core.components.cards.base.TState) -> ActionResult
+
+      Play the card from hand.
+
+
+      .. autolink-examples:: execute
+         :collapse:
+
+
+   .. py:attribute:: action_type
+      :type:  str
+      :value: 'play_card'
+
+
+
+   .. py:attribute:: card_id
+      :type:  str
+
+
+   .. py:attribute:: target_id
+      :type:  str | None
+      :value: None
+
+
+

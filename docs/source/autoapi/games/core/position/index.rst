@@ -1,15 +1,23 @@
-
-:py:mod:`games.core.position`
-=============================
+games.core.position
+===================
 
 .. py:module:: games.core.position
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.core.position
-   :collapse:
+   .. autolink-examples:: games.core.position
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/core/position/base/index
 
 

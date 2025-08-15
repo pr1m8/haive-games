@@ -1,17 +1,26 @@
-
-:py:mod:`games.clue.engines`
-============================
+games.clue.engines
+==================
 
 .. py:module:: games.clue.engines
 
-Engines for the Clue game.
+.. autoapi-nested-parse::
 
-This module contains the engines for the Clue game, including the player engines, guess
-engines, and analysis engines.
+   Engines for the Clue game.
+
+   This module contains the engines for the Clue game, including the player engines, guess
+   engines, and analysis engines.
 
 
-.. autolink-examples:: games.clue.engines
-   :collapse:
+   .. autolink-examples:: games.clue.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.clue.engines.clue_engines
 
 
 Functions
@@ -21,6 +30,10 @@ Functions
 
    games.clue.engines.generate_analysis_prompt
    games.clue.engines.generate_player_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
@@ -46,11 +59,6 @@ Functions
    .. autolink-examples:: generate_player_prompt
       :collapse:
 
+.. py:data:: clue_engines
+   :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.clue.engines
-   :collapse:
-   
-.. autolink-skip:: next

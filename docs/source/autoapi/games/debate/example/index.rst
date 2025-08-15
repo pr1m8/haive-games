@@ -1,9 +1,15 @@
-
-:py:mod:`games.debate.example`
-==============================
+games.debate.example
+====================
 
 .. py:module:: games.debate.example
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.debate.example.result
 
 
 Functions
@@ -14,6 +20,10 @@ Functions
    games.debate.example.run_debate
    games.debate.example.run_policy_debate
    games.debate.example.run_trial_debate
+
+
+Module Contents
+---------------
 
 .. py:function:: run_debate(topic: str, description: str = '', max_rounds: int = 2, num_debaters: int = 2, num_judges: int = 3)
 
@@ -52,11 +62,5 @@ Functions
    .. autolink-examples:: run_trial_debate
       :collapse:
 
+.. py:data:: result
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.debate.example
-   :collapse:
-   
-.. autolink-skip:: next

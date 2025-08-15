@@ -1,73 +1,75 @@
-
-:py:mod:`games.tic_tac_toe.state`
-=================================
+games.tic_tac_toe.state
+=======================
 
 .. py:module:: games.tic_tac_toe.state
 
-Comprehensive state management system for strategic Tic Tac Toe gameplay.
+.. autoapi-nested-parse::
 
-from typing import Any
-This module provides sophisticated state management for Tic Tac Toe games with
-complete support for game mechanics, strategic analysis, and LangGraph integration.
-The state system maintains game rules, move validation, and comprehensive game
-history for educational and competitive gameplay.
+   Comprehensive state management system for strategic Tic Tac Toe gameplay.
 
-The state system supports:
-- Complete 3x3 board representation with move validation
-- Turn-based gameplay with X and O player management
-- Move history tracking for game replay and analysis
-- Strategic analysis integration for both players
-- Win condition detection (rows, columns, diagonals)
-- Draw detection and game status management
-- LangGraph reducers for concurrent state updates
-- Error handling and recovery mechanisms
+   from typing import Any
+   This module provides sophisticated state management for Tic Tac Toe games with
+   complete support for game mechanics, strategic analysis, and LangGraph integration.
+   The state system maintains game rules, move validation, and comprehensive game
+   history for educational and competitive gameplay.
 
-.. rubric:: Examples
+   The state system supports:
+   - Complete 3x3 board representation with move validation
+   - Turn-based gameplay with X and O player management
+   - Move history tracking for game replay and analysis
+   - Strategic analysis integration for both players
+   - Win condition detection (rows, columns, diagonals)
+   - Draw detection and game status management
+   - LangGraph reducers for concurrent state updates
+   - Error handling and recovery mechanisms
 
-Initializing a new game::
+   .. rubric:: Examples
 
-    state = TicTacToeState.initialize(
-        first_player="X",
-        player_X="player1",
-        player_O="player2"
-    )
+   Initializing a new game::
 
-Making a move and checking status::
+       state = TicTacToeState.initialize(
+           first_player="X",
+           player_X="player1",
+           player_O="player2"
+       )
 
-    # Make a center move
-    state.board[1][1] = "X"
-    state.move_history.append(
-        TicTacToeMove(row=1, col=1, player="X")
-    )
+   Making a move and checking status::
 
-    # Check game state
-    if state.is_board_full:
-        state.game_status = "draw"
+       # Make a center move
+       state.board[1][1] = "X"
+       state.move_history.append(
+           TicTacToeMove(row=1, col=1, player="X")
+       )
 
-Analyzing board positions::
+       # Check game state
+       if state.is_board_full:
+           state.game_status = "draw"
 
-    empty_cells = state.empty_cells
-    print(f"Available moves: {empty_cells}")
+   Analyzing board positions::
 
-    # Pretty print the board
-    print(state.board_string)
+       empty_cells = state.empty_cells
+       print(f"Available moves: {empty_cells}")
 
-Managing player turns::
+       # Pretty print the board
+       print(state.board_string)
 
-    current = state.current_player_name
-    if state.turn == "X":
-        state.turn = "O"
-    else:
-        state.turn = "X"
+   Managing player turns::
 
-.. note::
+       current = state.current_player_name
+       if state.turn == "X":
+           state.turn = "O"
+       else:
+           state.turn = "X"
 
-   All state updates should use LangGraph Commands to ensure proper
-   reducer behavior and concurrent update handling.
+   .. note::
+
+      All state updates should use LangGraph Commands to ensure proper
+      reducer behavior and concurrent update handling.
 
 
-.. autolink-examples:: games.tic_tac_toe.state
-   :collapse:
+   .. autolink-examples:: games.tic_tac_toe.state
+      :collapse:
+
 
 Classes
 -------
@@ -75,31 +77,6 @@ Classes
 .. autoapisummary::
 
    games.tic_tac_toe.state.TicTacToeState
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for TicTacToeState:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_TicTacToeState {
-        node [shape=record];
-        "TicTacToeState" [label="TicTacToeState"];
-        "haive.games.framework.base.state.GameState" -> "TicTacToeState";
-      }
-
-.. autoclass:: games.tic_tac_toe.state.TicTacToeState
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -110,6 +87,473 @@ Functions
    games.tic_tac_toe.state.add_messages_reducer
    games.tic_tac_toe.state.replace_board_reducer
    games.tic_tac_toe.state.replace_reducer
+
+
+Module Contents
+---------------
+
+.. py:class:: TicTacToeState
+
+   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+
+
+   Comprehensive state model for Tic Tac Toe gameplay with LangGraph integration.
+
+   This class provides complete state management for Tic Tac Toe games, supporting
+   both traditional gameplay mechanics and advanced features for AI analysis. The
+   state system maintains game rules, validates moves, tracks history, and integrates
+   with LangGraph for distributed gameplay and concurrent updates.
+
+   The state model supports:
+   - 3x3 board representation with None/X/O values
+   - Turn management with alternating X and O players
+   - Move history for game replay and analysis
+   - Player-specific analysis storage
+   - Win/draw detection and game status tracking
+   - Error handling for invalid moves
+   - LangGraph reducers for proper state updates
+   - Pretty-printing for board visualization
+
+   All fields use explicit reducers to ensure proper behavior with LangGraph's
+   concurrent update system, preventing state corruption during parallel operations.
+
+   .. attribute:: players
+
+      Player identifiers with accumulating reducer.
+
+      :type: List[str]
+
+   .. attribute:: board
+
+      3x3 game board with replace reducer.
+
+      :type: List[List[Optional[str]]]
+
+   .. attribute:: turn
+
+      Current player's turn with replace reducer.
+
+      :type: Literal["X", "O"]
+
+   .. attribute:: game_status
+
+      Game state (ongoing/X_win/O_win/draw) with replace reducer.
+
+      :type: Literal
+
+   .. attribute:: move_history
+
+      Complete move history with accumulating reducer.
+
+      :type: List[TicTacToeMove]
+
+   .. attribute:: error_message
+
+      Error state with replace reducer.
+
+      :type: Optional[str]
+
+   .. attribute:: winner
+
+      Winner identifier with replace reducer.
+
+      :type: Optional[str]
+
+   .. attribute:: player_X
+
+      Player using X symbol with replace reducer.
+
+      :type: Literal
+
+   .. attribute:: player_O
+
+      Player using O symbol with replace reducer.
+
+      :type: Literal
+
+   .. attribute:: player1_analysis
+
+      Player 1's analyses with accumulating reducer.
+
+      :type: List[TicTacToeAnalysis]
+
+   .. attribute:: player2_analysis
+
+      Player 2's analyses with accumulating reducer.
+
+      :type: List[TicTacToeAnalysis]
+
+   .. rubric:: Examples
+
+   Creating and initializing a game::
+
+       state = TicTacToeState.initialize(
+           first_player="X",
+           player_X="Alice",
+           player_O="Bob"
+       )
+       assert state.turn == "X"
+       assert state.game_status == "ongoing"
+       assert all(cell is None for row in state.board for cell in row)
+
+   Making moves and updating state::
+
+       # X plays center
+       state.board[1][1] = "X"
+       state.move_history.append(
+           TicTacToeMove(row=1, col=1, player="X")
+       )
+       state.turn = "O"
+
+       # O plays corner
+       state.board[0][0] = "O"
+       state.move_history.append(
+           TicTacToeMove(row=0, col=0, player="O")
+       )
+       state.turn = "X"
+
+   Checking win conditions::
+
+       # X wins with diagonal
+       state.board = [
+           ["X", "O", None],
+           ["O", "X", None],
+           [None, None, "X"]
+       ]
+       state.game_status = "X_win"
+       state.winner = "player1"
+
+   Board visualization::
+
+       print(state.board_string)
+       # Output:
+       #    0 1 2
+       #   -------
+       # 0 |X|O| |
+       #   -------
+       # 1 |O|X| |
+       #   -------
+       # 2 | | |X|
+       #   -------
+
+   .. note::
+
+      State updates should be performed through LangGraph Commands to ensure
+      proper reducer behavior and prevent concurrent update conflicts.
+
+
+   .. autolink-examples:: TicTacToeState
+      :collapse:
+
+   .. py:method:: _default_board() -> list[list[str | None]]
+      :staticmethod:
+
+
+      Create default empty 3x3 board for a new game.
+
+      :returns: 3x3 grid with all cells set to None.
+      :rtype: list[list[str | None]]
+
+      .. rubric:: Examples
+
+      >>> board = TicTacToeState._default_board()
+      >>> len(board)
+      3
+      >>> all(len(row) == 3 for row in board)
+      True
+      >>> all(cell is None for row in board for cell in row)
+      True
+
+
+      .. autolink-examples:: _default_board
+         :collapse:
+
+
+   .. py:method:: _default_players() -> list[str]
+      :staticmethod:
+
+
+      Create default player list for a two-player game.
+
+      :returns: Default player identifiers ["player1", "player2"].
+      :rtype: list[str]
+
+
+      .. autolink-examples:: _default_players
+         :collapse:
+
+
+   .. py:method:: initialize(**kwargs) -> TicTacToeState
+      :classmethod:
+
+
+      Initialize a new Tic Tac Toe game with optional configuration.
+
+      Factory method to create a properly initialized game state with all
+      required fields set to appropriate starting values.
+
+      :param \*\*kwargs: Optional configuration parameters:
+                         first_player (Literal["X", "O"]): Which player goes first (default: "X").
+                         player_X (Literal["player1", "player2"]): Player using X (default: "player1").
+                         player_O (Literal["player1", "player2"]): Player using O (default: "player2").
+
+      :returns: Newly initialized game state ready for play.
+      :rtype: TicTacToeState
+
+      .. rubric:: Examples
+
+      Default initialization::
+
+          state = TicTacToeState.initialize()
+          assert state.turn == "X"
+          assert state.player_X == "player1"
+          assert state.player_O == "player2"
+
+      Custom player assignment::
+
+          state = TicTacToeState.initialize(
+              first_player="O",
+              player_X="player2",
+              player_O="player1"
+          )
+          assert state.turn == "O"
+          assert state.current_player_name == "player1"
+
+      Tournament setup::
+
+          state = TicTacToeState.initialize(
+              first_player="X",
+              player_X="player1",
+              player_O="player2"
+          )
+          # Ready for competitive play
+
+
+      .. autolink-examples:: initialize
+         :collapse:
+
+
+   .. py:method:: validate_board(board) -> Any
+      :classmethod:
+
+
+      Validate that the board is a proper 3x3 grid with valid symbols.
+
+      Ensures the board maintains the correct structure and contains only
+      valid values (None for empty, 'X', or 'O' for occupied cells).
+
+      :param board: The board to validate.
+      :type board: List[List[Optional[str]]]
+
+      :returns: Validated board or default empty board.
+      :rtype: List[List[Optional[str]]]
+
+      :raises ValueError: If the board structure is invalid or contains invalid values.
+
+      .. rubric:: Examples
+
+      Valid board::
+
+          board = [["X", None, "O"], [None, "X", None], ["O", None, "X"]]
+          # Passes validation
+
+      Invalid board (wrong size)::
+
+          board = [["X", "O"], ["O", "X"]]  # 2x2 instead of 3x3
+          # Raises ValueError: "Board must have 3 rows"
+
+      Invalid board (invalid symbol)::
+
+          board = [["X", "Y", "O"], [None, None, None], [None, None, None]]
+          # Raises ValueError: "Cell values must be None, 'X', or 'O', got Y"
+
+
+      .. autolink-examples:: validate_board
+         :collapse:
+
+
+   .. py:attribute:: board
+      :type:  Annotated[list[list[str | None]], replace_board_reducer]
+      :value: None
+
+
+
+   .. py:property:: board_string
+      :type: str
+
+
+      Get a pretty-printed string representation of the board.
+
+      Creates a human-readable ASCII representation of the current board state
+      with row and column indices for easy reference.
+
+      :returns: Multiline string representing the current board state.
+      :rtype: str
+
+      .. rubric:: Examples
+
+      Empty board::
+
+             0 1 2
+            -------
+          0 | | | |
+            -------
+          1 | | | |
+            -------
+          2 | | | |
+            -------
+
+      Game in progress::
+
+             0 1 2
+            -------
+          0 |X|O| |
+            -------
+          1 | |X| |
+            -------
+          2 |O| |X|
+            -------
+
+      .. autolink-examples:: board_string
+         :collapse:
+
+
+   .. py:property:: current_player_name
+      :type: str
+
+
+      Get the identifier of the player whose turn it is.
+
+      Maps the current turn symbol (X or O) to the assigned player identifier.
+
+      :returns: The player identifier ("player1" or "player2").
+      :rtype: str
+
+      .. rubric:: Examples
+
+      >>> state = TicTacToeState.initialize()
+      >>> state.turn = "X"
+      >>> state.current_player_name
+      'player1'
+
+      >>> state.turn = "O"
+      >>> state.current_player_name
+      'player2'
+
+      .. autolink-examples:: current_player_name
+         :collapse:
+
+
+   .. py:property:: empty_cells
+      :type: list[tuple[int, int]]
+
+
+      Return a list of coordinates for all empty cells on the board.
+
+      Useful for determining available moves and checking if the game can continue.
+
+      :returns: List of (row, col) tuples for empty cells.
+      :rtype: list[tuple[int, int]]
+
+      .. rubric:: Examples
+
+      >>> state = TicTacToeState.initialize()
+      >>> state.empty_cells
+      [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+
+      >>> state.board[1][1] = "X"
+      >>> len(state.empty_cells)
+      8
+
+      .. autolink-examples:: empty_cells
+         :collapse:
+
+
+   .. py:attribute:: error_message
+      :type:  Annotated[str | None, replace_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: game_status
+      :type:  Annotated[Literal['ongoing', 'X_win', 'O_win', 'draw'], replace_reducer]
+      :value: None
+
+
+
+   .. py:property:: is_board_full
+      :type: bool
+
+
+      Check whether the board is completely filled with no empty cells.
+
+      Used to detect draw conditions when no player has won.
+
+      :returns: True if all cells are occupied, False otherwise.
+      :rtype: bool
+
+      .. rubric:: Examples
+
+      >>> state = TicTacToeState.initialize()
+      >>> state.is_board_full
+      False
+
+      >>> # Fill the board
+      >>> state.board = [["X", "O", "X"], ["O", "X", "O"], ["O", "X", "X"]]
+      >>> state.is_board_full
+      True
+
+      .. autolink-examples:: is_board_full
+         :collapse:
+
+
+   .. py:attribute:: move_history
+      :type:  Annotated[list[haive.games.tic_tac_toe.models.TicTacToeMove], add_messages_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: player1_analysis
+      :type:  Annotated[list[haive.games.tic_tac_toe.models.TicTacToeAnalysis], add_messages_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: player2_analysis
+      :type:  Annotated[list[haive.games.tic_tac_toe.models.TicTacToeAnalysis], add_messages_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: player_O
+      :type:  Annotated[Literal['player1', 'player2'], replace_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: player_X
+      :type:  Annotated[Literal['player1', 'player2'], replace_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: players
+      :type:  Annotated[list[str], add_messages_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: turn
+      :type:  Annotated[Literal['X', 'O'], replace_reducer]
+      :value: None
+
+
+
+   .. py:attribute:: winner
+      :type:  Annotated[str | None, replace_reducer]
+      :value: None
+
+
 
 .. py:function:: add_messages_reducer(left: list, right: list) -> list
 
@@ -182,11 +626,3 @@ Functions
    .. autolink-examples:: replace_reducer
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.tic_tac_toe.state
-   :collapse:
-   
-.. autolink-skip:: next

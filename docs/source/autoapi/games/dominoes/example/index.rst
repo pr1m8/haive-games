@@ -1,14 +1,23 @@
-
-:py:mod:`games.dominoes.example`
-================================
+games.dominoes.example
+======================
 
 .. py:module:: games.dominoes.example
 
-Example runner for Dominoes game with rich UI visualization.
+.. autoapi-nested-parse::
+
+   Example runner for Dominoes game with rich UI visualization.
 
 
-.. autolink-examples:: games.dominoes.example
-   :collapse:
+   .. autolink-examples:: games.dominoes.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.dominoes.example.console
 
 
 Functions
@@ -17,6 +26,10 @@ Functions
 .. autoapisummary::
 
    games.dominoes.example.run_dominoes_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_dominoes_game(agent: haive.games.dominoes.agent.DominoesAgent, delay: float = 1.5)
 
@@ -29,11 +42,5 @@ Functions
    .. autolink-examples:: run_dominoes_game
       :collapse:
 
+.. py:data:: console
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.dominoes.example
-   :collapse:
-   
-.. autolink-skip:: next

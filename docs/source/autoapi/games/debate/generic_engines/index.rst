@@ -1,17 +1,27 @@
-
-:py:mod:`games.debate.generic_engines`
-======================================
+games.debate.generic_engines
+============================
 
 .. py:module:: games.debate.generic_engines
 
-Generic Debate engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Debate games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Debate engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Debate games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.debate.generic_engines
-   :collapse:
+   .. autolink-examples:: games.debate.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.debate.generic_engines.debate_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.debate.generic_engines.DebateEngineFactory
    games.debate.generic_engines.DebatePlayerIdentifiers
    games.debate.generic_engines.DebatePromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DebateEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DebateEngineFactory {
-        node [shape=record];
-        "DebateEngineFactory" [label="DebateEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "DebateEngineFactory";
-      }
-
-.. autoclass:: games.debate.generic_engines.DebateEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DebatePlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DebatePlayerIdentifiers {
-        node [shape=record];
-        "DebatePlayerIdentifiers" [label="DebatePlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "DebatePlayerIdentifiers";
-      }
-
-.. autoclass:: games.debate.generic_engines.DebatePlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DebatePromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DebatePromptGenerator {
-        node [shape=record];
-        "DebatePromptGenerator" [label="DebatePromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "DebatePromptGenerator";
-      }
-
-.. autoclass:: games.debate.generic_engines.DebatePromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.debate.generic_engines.create_generic_debate_engines
    games.debate.generic_engines.create_generic_debate_engines_simple
    games.debate.generic_engines.create_mixed_debate_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: DebateEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Debate game engines.
+
+
+   .. autolink-examples:: DebateEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: DebatePlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Debate game.
+
+
+   .. autolink-examples:: DebatePlayerIdentifiers
+      :collapse:
+
+.. py:class:: DebatePromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Debate game.
+
+
+   .. autolink-examples:: DebatePromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Debate game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Debate player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_debate_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_debate_engines
       :collapse:
 
+.. py:data:: debate_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.debate.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

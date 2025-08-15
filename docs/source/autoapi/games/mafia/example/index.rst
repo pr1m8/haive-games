@@ -1,35 +1,44 @@
-
-:py:mod:`games.mafia.example`
-=============================
+games.mafia.example
+===================
 
 .. py:module:: games.mafia.example
 
-Example implementation and runner for the Mafia game.
+.. autoapi-nested-parse::
 
-This module provides a complete example of how to set up and run a Mafia game,
-including:
-    - Game configuration and initialization
-    - Player setup with role assignment
-    - Game execution with visualization
-    - Debug logging and error handling
-    - Command-line interface for game parameters
+   Example implementation and runner for the Mafia game.
 
-.. rubric:: Example
+   This module provides a complete example of how to set up and run a Mafia game,
+   including:
+       - Game configuration and initialization
+       - Player setup with role assignment
+       - Game execution with visualization
+       - Debug logging and error handling
+       - Command-line interface for game parameters
 
-To run a game from the command line:
-```bash
-python example.py --players 7 --days 3 --debug
-```
+   .. rubric:: Example
 
-To run programmatically:
-```python
-from mafia.example import run_mafia_game
-run_mafia_game(player_count=7, max_days=3, debug=True)
-```
+   To run a game from the command line:
+   ```bash
+   python example.py --players 7 --days 3 --debug
+   ```
+
+   To run programmatically:
+   ```python
+   from mafia.example import run_mafia_game
+   run_mafia_game(player_count=7, max_days=3, debug=True)
+   ```
 
 
-.. autolink-examples:: games.mafia.example
-   :collapse:
+   .. autolink-examples:: games.mafia.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mafia.example.logger
 
 
 Functions
@@ -39,6 +48,10 @@ Functions
 
    games.mafia.example.main
    games.mafia.example.run_mafia_game
+
+
+Module Contents
+---------------
 
 .. py:function:: main()
 
@@ -73,11 +86,5 @@ Functions
    .. autolink-examples:: run_mafia_game
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mafia.example
-   :collapse:
-   
-.. autolink-skip:: next

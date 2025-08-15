@@ -1,55 +1,68 @@
-
-:py:mod:`games.connect4.example`
-================================
+games.connect4.example
+======================
 
 .. py:module:: games.connect4.example
 
-Comprehensive examples for the Connect4 game module.
+.. autoapi-nested-parse::
 
-This module provides a complete set of examples demonstrating all aspects of the
-Connect4 game implementation, from basic gameplay to advanced features like
-strategic analysis, performance testing, and error handling.
+   Comprehensive examples for the Connect4 game module.
 
-The examples are organized into logical categories:
-- Basic gameplay examples
-- Rich UI demonstrations
-- Strategic analysis showcases
-- Performance and testing examples
-- Error handling and debugging
-- Advanced usage patterns
-- Tournament and batch processing
-- Custom configuration examples
+   This module provides a complete set of examples demonstrating all aspects of the
+   Connect4 game implementation, from basic gameplay to advanced features like
+   strategic analysis, performance testing, and error handling.
 
-Each example includes detailed comments explaining the concepts and can be run
-independently or as part of the full demonstration suite.
+   The examples are organized into logical categories:
+   - Basic gameplay examples
+   - Rich UI demonstrations
+   - Strategic analysis showcases
+   - Performance and testing examples
+   - Error handling and debugging
+   - Advanced usage patterns
+   - Tournament and batch processing
+   - Custom configuration examples
 
-Usage:
-    Run all examples:
-        python example.py
+   Each example includes detailed comments explaining the concepts and can be run
+   independently or as part of the full demonstration suite.
 
-    Run specific example:
-        python example.py basic
-        python example.py rich-ui
-        python example.py analysis
-        python example.py performance
-        python example.py error-handling
-        python example.py tournament
-        python example.py custom-ai
-        python example.py async-batch
+   Usage:
+       Run all examples:
+           python example.py
 
-Examples provided:
-    1. Basic Game - Simple game with minimal configuration
-    2. Rich UI Game - Beautiful terminal interface with animations
-    3. Strategic Analysis - Deep position analysis and explanations
-    4. Performance Testing - Benchmarking and optimization
-    5. Error Handling - Robust error management and debugging
-    6. Tournament Mode - Multiple games and statistics
-    7. Custom AI Configuration - Advanced engine customization
-    8. Async Batch Processing - Concurrent game execution
+       Run specific example:
+           python example.py basic
+           python example.py rich-ui
+           python example.py analysis
+           python example.py performance
+           python example.py error-handling
+           python example.py tournament
+           python example.py custom-ai
+           python example.py async-batch
+
+   Examples provided:
+       1. Basic Game - Simple game with minimal configuration
+       2. Rich UI Game - Beautiful terminal interface with animations
+       3. Strategic Analysis - Deep position analysis and explanations
+       4. Performance Testing - Benchmarking and optimization
+       5. Error Handling - Robust error management and debugging
+       6. Tournament Mode - Multiple games and statistics
+       7. Custom AI Configuration - Advanced engine customization
+       8. Async Batch Processing - Concurrent game execution
 
 
-.. autolink-examples:: games.connect4.example
-   :collapse:
+   .. autolink-examples:: games.connect4.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.connect4.example.console
+   games.connect4.example.logger
+   games.connect4.example.package_root
+   games.connect4.example.result
+
 
 Classes
 -------
@@ -57,30 +70,6 @@ Classes
 .. autoapisummary::
 
    games.connect4.example.GameResult
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameResult:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameResult {
-        node [shape=record];
-        "GameResult" [label="GameResult"];
-      }
-
-.. autoclass:: games.connect4.example.GameResult
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -97,6 +86,42 @@ Functions
    games.connect4.example.example_7_custom_ai_configuration
    games.connect4.example.example_8_async_batch_processing
    games.connect4.example.main
+
+
+Module Contents
+---------------
+
+.. py:class:: GameResult
+
+   Data class to store game results.
+
+
+   .. autolink-examples:: GameResult
+      :collapse:
+
+   .. py:attribute:: duration
+      :type:  float
+
+
+   .. py:attribute:: moves
+      :type:  int
+
+
+   .. py:attribute:: red_analysis_count
+      :type:  int
+
+
+   .. py:attribute:: status
+      :type:  str
+
+
+   .. py:attribute:: winner
+      :type:  str | None
+
+
+   .. py:attribute:: yellow_analysis_count
+      :type:  int
+
 
 .. py:function:: example_1_basic_game()
 
@@ -196,11 +221,11 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
+.. py:data:: console
 
+.. py:data:: logger
 
-.. rubric:: Related Links
+.. py:data:: package_root
 
-.. autolink-examples:: games.connect4.example
-   :collapse:
-   
-.. autolink-skip:: next
+.. py:data:: result
+

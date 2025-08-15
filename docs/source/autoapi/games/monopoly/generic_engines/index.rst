@@ -1,17 +1,27 @@
-
-:py:mod:`games.monopoly.generic_engines`
-========================================
+games.monopoly.generic_engines
+==============================
 
 .. py:module:: games.monopoly.generic_engines
 
-Generic Monopoly engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Monopoly games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Monopoly engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Monopoly games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.monopoly.generic_engines
-   :collapse:
+   .. autolink-examples:: games.monopoly.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.monopoly.generic_engines.monopoly_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.monopoly.generic_engines.MonopolyEngineFactory
    games.monopoly.generic_engines.MonopolyPlayerIdentifiers
    games.monopoly.generic_engines.MonopolyPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MonopolyEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MonopolyEngineFactory {
-        node [shape=record];
-        "MonopolyEngineFactory" [label="MonopolyEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "MonopolyEngineFactory";
-      }
-
-.. autoclass:: games.monopoly.generic_engines.MonopolyEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MonopolyPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MonopolyPlayerIdentifiers {
-        node [shape=record];
-        "MonopolyPlayerIdentifiers" [label="MonopolyPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "MonopolyPlayerIdentifiers";
-      }
-
-.. autoclass:: games.monopoly.generic_engines.MonopolyPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for MonopolyPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MonopolyPromptGenerator {
-        node [shape=record];
-        "MonopolyPromptGenerator" [label="MonopolyPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "MonopolyPromptGenerator";
-      }
-
-.. autoclass:: games.monopoly.generic_engines.MonopolyPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -102,6 +45,97 @@ Functions
    games.monopoly.generic_engines.create_mixed_monopoly_engines
    games.monopoly.generic_engines.create_property_tycoon_monopoly_engines
    games.monopoly.generic_engines.create_real_estate_mogul_monopoly_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: MonopolyEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Monopoly game engines.
+
+
+   .. autolink-examples:: MonopolyEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: MonopolyPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Monopoly game.
+
+
+   .. autolink-examples:: MonopolyPlayerIdentifiers
+      :collapse:
+
+.. py:class:: MonopolyPromptGenerator(players: haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str])
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Monopoly game.
+
+
+   .. autolink-examples:: MonopolyPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt - alias for create_analyzer_prompt.
+
+
+      .. autolink-examples:: create_analysis_prompt
+         :collapse:
+
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Monopoly game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Monopoly player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
+
+   .. py:method:: get_analysis_output_model(role: str) -> type
+
+      Get analysis output model.
+
+
+      .. autolink-examples:: get_analysis_output_model
+         :collapse:
+
+
+   .. py:method:: get_move_output_model(role: str) -> type
+
+      Get move output model.
+
+
+      .. autolink-examples:: get_move_output_model
+         :collapse:
+
 
 .. py:function:: create_budget_monopoly_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -194,11 +228,5 @@ Functions
    .. autolink-examples:: create_real_estate_mogul_monopoly_engines
       :collapse:
 
+.. py:data:: monopoly_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,17 +1,29 @@
-
-:py:mod:`games.chess.generic_engines`
-=====================================
+games.chess.generic_engines
+===========================
 
 .. py:module:: games.chess.generic_engines
 
-Generic chess engines using the new generic player agent system.
+.. autoapi-nested-parse::
 
-This module demonstrates how to use the generic player agent system for chess, providing
-a clean, type-safe implementation that eliminates hardcoded LLM configurations.
+   Generic chess engines using the new generic player agent system.
+
+   This module demonstrates how to use the generic player agent system for chess, providing
+   a clean, type-safe implementation that eliminates hardcoded LLM configurations.
 
 
-.. autolink-examples:: games.chess.generic_engines
-   :collapse:
+   .. autolink-examples:: games.chess.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.chess.generic_engines.chess_engine_factory
+   games.chess.generic_engines.chess_players
+   games.chess.generic_engines.chess_prompt_generator
+
 
 Classes
 -------
@@ -19,31 +31,6 @@ Classes
 .. autoapisummary::
 
    games.chess.generic_engines.ChessPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ChessPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ChessPromptGenerator {
-        node [shape=record];
-        "ChessPromptGenerator" [label="ChessPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "ChessPromptGenerator";
-      }
-
-.. autoclass:: games.chess.generic_engines.ChessPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -57,6 +44,67 @@ Functions
    games.chess.generic_engines.create_role_specific_chess_engines
    games.chess.generic_engines.create_typed_chess_engines
    games.chess.generic_engines.demonstrate_generic_pattern
+
+
+Module Contents
+---------------
+
+.. py:class:: ChessPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Chess-specific prompt generator using the generic system.
+
+
+   .. autolink-examples:: ChessPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a chess analysis prompt for the specified player.
+
+      :param player: Player color ("white" or "black")
+
+      :returns: Prompt template for position analysis
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_analysis_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a chess move prompt for the specified player.
+
+      :param player: Player color ("white" or "black")
+
+      :returns: Prompt template for move generation
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
+
+   .. py:method:: get_analysis_output_model() -> type
+
+      Get the structured output model for chess analysis.
+
+
+      .. autolink-examples:: get_analysis_output_model
+         :collapse:
+
+
+   .. py:method:: get_move_output_model() -> type
+
+      Get the structured output model for chess moves.
+
+
+      .. autolink-examples:: get_move_output_model
+         :collapse:
+
 
 .. py:function:: create_generic_chess_config_from_example(example_name: str, temperature: float = 0.7) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -168,11 +216,9 @@ Functions
    .. autolink-examples:: demonstrate_generic_pattern
       :collapse:
 
+.. py:data:: chess_engine_factory
 
+.. py:data:: chess_players
 
-.. rubric:: Related Links
+.. py:data:: chess_prompt_generator
 
-.. autolink-examples:: games.chess.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

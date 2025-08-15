@@ -1,22 +1,23 @@
-
-:py:mod:`games.chess.utils`
-===========================
+games.chess.utils
+=================
 
 .. py:module:: games.chess.utils
 
-Chess game utility functions.
+.. autoapi-nested-parse::
 
-This module provides helper functions for the chess game, including:
-    - Game status determination
-    - Board visualization
-    - Move validation
+   Chess game utility functions.
 
-These utilities support the core functionality of the chess module
-by providing common operations used across different components.
+   This module provides helper functions for the chess game, including:
+       - Game status determination
+       - Board visualization
+       - Move validation
+
+   These utilities support the core functionality of the chess module
+   by providing common operations used across different components.
 
 
-.. autolink-examples:: games.chess.utils
-   :collapse:
+   .. autolink-examples:: games.chess.utils
+      :collapse:
 
 
 Functions
@@ -27,6 +28,10 @@ Functions
    games.chess.utils.determine_game_status
    games.chess.utils.generate_ascii_board
    games.chess.utils.validate_move
+
+
+Module Contents
+---------------
 
 .. py:function:: determine_game_status(board: chess.Board) -> str
 
@@ -146,11 +151,3 @@ Functions
    .. autolink-examples:: validate_move
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.utils
-   :collapse:
-   
-.. autolink-skip:: next

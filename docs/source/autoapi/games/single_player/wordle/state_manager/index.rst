@@ -1,6 +1,5 @@
-
-:py:mod:`games.single_player.wordle.state_manager`
-==================================================
+games.single_player.wordle.state_manager
+========================================
 
 .. py:module:: games.single_player.wordle.state_manager
 
@@ -16,33 +15,79 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: WordConnectionsStateManager
+
+   Bases: :py:obj:`haive.games.framework.base.GameStateManager`\ [\ :py:obj:`haive.games.single_player.wordle.models.WordConnectionsState`\ ]
 
 
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for WordConnectionsStateManager:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_WordConnectionsStateManager {
-        node [shape=record];
-        "WordConnectionsStateManager" [label="WordConnectionsStateManager"];
-        "haive.games.framework.base.GameStateManager[haive.games.single_player.wordle.models.WordConnectionsState]" -> "WordConnectionsStateManager";
-      }
-
-.. autoclass:: games.single_player.wordle.state_manager.WordConnectionsStateManager
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Manager for Word Connections game state.
 
 
+   .. autolink-examples:: WordConnectionsStateManager
+      :collapse:
+
+   .. py:method:: apply_move(state: haive.games.single_player.wordle.models.WordConnectionsState, move: haive.games.single_player.wordle.models.WordConnectionsMove) -> haive.games.single_player.wordle.models.WordConnectionsState
+      :classmethod:
 
 
-.. rubric:: Related Links
+      Apply a move to the game state.
 
-.. autolink-examples:: games.single_player.wordle.state_manager
-   :collapse:
-   
-.. autolink-skip:: next
+      :param state: Current game state
+      :param move: Move to apply
+
+      :returns: Updated game state
+
+
+      .. autolink-examples:: apply_move
+         :collapse:
+
+
+   .. py:method:: check_game_status(state: haive.games.single_player.wordle.models.WordConnectionsState) -> haive.games.single_player.wordle.models.WordConnectionsState
+      :classmethod:
+
+
+      Check and update game status.
+
+      :param state: Current game state
+
+      :returns: Updated game state
+
+
+      .. autolink-examples:: check_game_status
+         :collapse:
+
+
+   .. py:method:: get_hint(state: haive.games.single_player.wordle.models.WordConnectionsState) -> str
+      :classmethod:
+
+
+      Get a hint for the current state.
+
+      :param state: Current game state
+
+      :returns: Hint string
+
+
+      .. autolink-examples:: get_hint
+         :collapse:
+
+
+   .. py:method:: initialize(puzzle_index: int | None = None, **kwargs) -> haive.games.single_player.wordle.models.WordConnectionsState
+      :classmethod:
+
+
+      Initialize a new Word Connections game.
+
+      :param puzzle_index: Optional index of puzzle to use (0 = most recent)
+      :param \*\*kwargs: Additional options
+
+      :returns: Initialized game state
+
+
+      .. autolink-examples:: initialize
+         :collapse:
+
+
+   .. py:attribute:: NYT_PUZZLES
+
+

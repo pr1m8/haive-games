@@ -1,17 +1,27 @@
-
-:py:mod:`games.clue.generic_engines`
-====================================
+games.clue.generic_engines
+==========================
 
 .. py:module:: games.clue.generic_engines
 
-Generic Clue engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Clue games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Clue engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Clue games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.clue.generic_engines
-   :collapse:
+   .. autolink-examples:: games.clue.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.clue.generic_engines.clue_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.clue.generic_engines.ClueEngineFactory
    games.clue.generic_engines.CluePlayerIdentifiers
    games.clue.generic_engines.CluePromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ClueEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ClueEngineFactory {
-        node [shape=record];
-        "ClueEngineFactory" [label="ClueEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "ClueEngineFactory";
-      }
-
-.. autoclass:: games.clue.generic_engines.ClueEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for CluePlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CluePlayerIdentifiers {
-        node [shape=record];
-        "CluePlayerIdentifiers" [label="CluePlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "CluePlayerIdentifiers";
-      }
-
-.. autoclass:: games.clue.generic_engines.CluePlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for CluePromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_CluePromptGenerator {
-        node [shape=record];
-        "CluePromptGenerator" [label="CluePromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "CluePromptGenerator";
-      }
-
-.. autoclass:: games.clue.generic_engines.CluePromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.clue.generic_engines.create_generic_clue_engines
    games.clue.generic_engines.create_generic_clue_engines_simple
    games.clue.generic_engines.create_mixed_clue_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: ClueEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Clue game engines.
+
+
+   .. autolink-examples:: ClueEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: CluePlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Clue game.
+
+
+   .. autolink-examples:: CluePlayerIdentifiers
+      :collapse:
+
+.. py:class:: CluePromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Clue game.
+
+
+   .. autolink-examples:: CluePromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Clue game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Clue player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_clue_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_clue_engines
       :collapse:
 
+.. py:data:: clue_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.clue.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

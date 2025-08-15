@@ -1,17 +1,28 @@
-
-:py:mod:`games.among_us.configurable_config`
-============================================
+games.among_us.configurable_config
+==================================
 
 .. py:module:: games.among_us.configurable_config
 
-Configurable Among Us configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Among Us game configurations that replace hardcoded
-LLM settings with dynamic, configurable player agents.
+   Configurable Among Us configuration using the generic player agent system.
+
+   This module provides configurable Among Us game configurations that replace hardcoded
+   LLM settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.among_us.configurable_config
-   :collapse:
+   .. autolink-examples:: games.among_us.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.among_us.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.among_us.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.among_us.configurable_config.ConfigurableAmongUsConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurableAmongUsConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurableAmongUsConfig {
-        node [shape=record];
-        "ConfigurableAmongUsConfig" [label="ConfigurableAmongUsConfig"];
-        "haive.games.among_us.config.AmongUsConfig" -> "ConfigurableAmongUsConfig";
-      }
-
-.. autoclass:: games.among_us.configurable_config.ConfigurableAmongUsConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,160 @@ Functions
    games.among_us.configurable_config.create_experimental_among_us_config
    games.among_us.configurable_config.get_example_config
    games.among_us.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurableAmongUsConfig
+
+   Bases: :py:obj:`haive.games.among_us.config.AmongUsConfig`
+
+
+   Configurable Among Us configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Among Us game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: crewmate_model
+
+      Model for crewmate players (can be string or LLMConfig)
+
+   .. attribute:: impostor_model
+
+      Model for impostor players (can be string or LLMConfig)
+
+   .. attribute:: crewmate_player_name
+
+      Name for the crewmate players
+
+   .. attribute:: impostor_player_name
+
+      Name for the impostor players
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: max_rounds
+
+      Maximum number of rounds before game ends
+
+   .. attribute:: enable_analysis
+
+      Whether to enable game state analysis
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurableAmongUsConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(crewmate_model: str, impostor_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: crewmate_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: crewmate_player_name
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: impostor_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: impostor_player_name
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: max_rounds
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
 
 .. py:function:: create_among_us_config(crewmate_model: str = 'gpt-4o', impostor_model: str = 'claude-3-5-sonnet-20240620', **kwargs) -> ConfigurableAmongUsConfig
 
@@ -207,11 +347,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.among_us.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

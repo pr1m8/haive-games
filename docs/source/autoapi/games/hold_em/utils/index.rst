@@ -1,19 +1,20 @@
-
-:py:mod:`games.hold_em.utils`
-=============================
+games.hold_em.utils
+===================
 
 .. py:module:: games.hold_em.utils
 
-Texas Hold'em utility functions.
+.. autoapi-nested-parse::
 
-This module provides utility functions for the Hold'em game, including:
-    - Card and hand evaluation
-    - Game state utilities
-    - Poker calculations
+   Texas Hold'em utility functions.
+
+   This module provides utility functions for the Hold'em game, including:
+       - Card and hand evaluation
+       - Game state utilities
+       - Poker calculations
 
 
-.. autolink-examples:: games.hold_em.utils
-   :collapse:
+   .. autolink-examples:: games.hold_em.utils
+      :collapse:
 
 
 Functions
@@ -38,6 +39,10 @@ Functions
    games.hold_em.utils.is_position_late
    games.hold_em.utils.shuffle_deck
    games.hold_em.utils.validate_game_state
+
+
+Module Contents
+---------------
 
 .. py:function:: calculate_effective_stack(player: haive.games.hold_em.state.PlayerState, opponent: haive.games.hold_em.state.PlayerState) -> int
 
@@ -178,11 +183,3 @@ Functions
    .. autolink-examples:: validate_game_state
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.hold_em.utils
-   :collapse:
-   
-.. autolink-skip:: next

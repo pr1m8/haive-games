@@ -1,17 +1,27 @@
-
-:py:mod:`games.risk.generic_engines`
-====================================
+games.risk.generic_engines
+==========================
 
 .. py:module:: games.risk.generic_engines
 
-Generic Risk engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Risk games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Risk engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Risk games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.risk.generic_engines
-   :collapse:
+   .. autolink-examples:: games.risk.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.risk.generic_engines.risk_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.risk.generic_engines.RiskEngineFactory
    games.risk.generic_engines.RiskPlayerIdentifiers
    games.risk.generic_engines.RiskPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for RiskEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_RiskEngineFactory {
-        node [shape=record];
-        "RiskEngineFactory" [label="RiskEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "RiskEngineFactory";
-      }
-
-.. autoclass:: games.risk.generic_engines.RiskEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for RiskPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_RiskPlayerIdentifiers {
-        node [shape=record];
-        "RiskPlayerIdentifiers" [label="RiskPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "RiskPlayerIdentifiers";
-      }
-
-.. autoclass:: games.risk.generic_engines.RiskPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for RiskPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_RiskPromptGenerator {
-        node [shape=record];
-        "RiskPromptGenerator" [label="RiskPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "RiskPromptGenerator";
-      }
-
-.. autoclass:: games.risk.generic_engines.RiskPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.risk.generic_engines.create_generic_risk_engines
    games.risk.generic_engines.create_generic_risk_engines_simple
    games.risk.generic_engines.create_mixed_risk_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: RiskEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Risk game engines.
+
+
+   .. autolink-examples:: RiskEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: RiskPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Risk game.
+
+
+   .. autolink-examples:: RiskPlayerIdentifiers
+      :collapse:
+
+.. py:class:: RiskPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Risk game.
+
+
+   .. autolink-examples:: RiskPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Risk game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Risk player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_risk_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_risk_engines
       :collapse:
 
+.. py:data:: risk_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.risk.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

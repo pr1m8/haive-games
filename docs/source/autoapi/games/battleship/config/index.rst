@@ -1,53 +1,55 @@
-
-:py:mod:`games.battleship.config`
-=================================
+games.battleship.config
+=======================
 
 .. py:module:: games.battleship.config
 
-Battleship game agent configuration.
+.. autoapi-nested-parse::
 
-This module defines comprehensive configuration classes for Battleship game agents,
-providing extensive customization options for game rules, AI behavior, UI preferences,
-and performance settings.
+   Battleship game agent configuration.
 
-The configuration system supports:
-    - Board size and ship placement customization
-    - Multiple difficulty levels and AI strategies
-    - Turn time limits and timeout handling
-    - Analysis and logging capabilities
-    - UI themes and display preferences
-    - Performance optimization settings
+   This module defines comprehensive configuration classes for Battleship game agents,
+   providing extensive customization options for game rules, AI behavior, UI preferences,
+   and performance settings.
 
-Classes:
-    BattleshipAgentConfig: Main configuration class for Battleship agents
-    ShipConfiguration: Configuration for ship types and placement rules
-    GameRuleConfiguration: Game rule and validation settings
-    UIConfiguration: User interface and display settings
-    PerformanceConfiguration: Performance and optimization settings
+   The configuration system supports:
+       - Board size and ship placement customization
+       - Multiple difficulty levels and AI strategies
+       - Turn time limits and timeout handling
+       - Analysis and logging capabilities
+       - UI themes and display preferences
+       - Performance optimization settings
 
-.. rubric:: Example
+   Classes:
+       BattleshipAgentConfig: Main configuration class for Battleship agents
+       ShipConfiguration: Configuration for ship types and placement rules
+       GameRuleConfiguration: Game rule and validation settings
+       UIConfiguration: User interface and display settings
+       PerformanceConfiguration: Performance and optimization settings
 
-Creating a basic Battleship agent configuration:
+   .. rubric:: Example
 
-    config = BattleshipAgentConfig(
-        player_name="Admiral Hayes",
-        difficulty="intermediate",
-        board_size=10,
-        enable_analysis=True,
-        turn_timeout=30.0,
-    )
+   Creating a basic Battleship agent configuration:
 
-    agent = BattleshipAgent(config)
+       config = BattleshipAgentConfig(
+           player_name="Admiral Hayes",
+           difficulty="intermediate",
+           board_size=10,
+           enable_analysis=True,
+           turn_timeout=30.0,
+       )
 
-.. note::
+       agent = BattleshipAgent(config)
 
-   All configuration classes include comprehensive validation to ensure
-   game rule consistency and prevent invalid combinations that would
-   break gameplay mechanics.
+   .. note::
+
+      All configuration classes include comprehensive validation to ensure
+      game rule consistency and prevent invalid combinations that would
+      break gameplay mechanics.
 
 
-.. autolink-examples:: games.battleship.config
-   :collapse:
+   .. autolink-examples:: games.battleship.config
+      :collapse:
+
 
 Classes
 -------
@@ -60,33 +62,330 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: BattleshipAgentConfig
+
+   Bases: :py:obj:`haive.core.engine.agent.agent.AgentConfig`
+
+
+   Comprehensive configuration for Battleship game agents with extensive.
+   customization.
+
+   This configuration class provides complete control over Battleship game mechanics,
+   supporting various game modes, strategic analysis settings, visualization options,
+   and LLM engine configurations. It includes validation for game consistency and
+   provides factory methods for common Battleship scenarios.
+
+   The configuration system supports:
+   - Player identification and naming
+   - Strategic analysis and decision-making options
+   - Visualization and debugging settings
+   - LLM engine configurations for different game actions
+   - Performance optimization parameters
+   - Game state management and persistence
+
+   .. attribute:: name
+
+      Unique identifier for the agent instance.
+      Used for logging, debugging, and multi-agent coordination.
+
+      :type: str
+
+   .. attribute:: state_schema
+
+      Pydantic model class for game state management.
+      Defines the structure and validation rules for game state.
+
+      :type: type
+
+   .. attribute:: player1_name
+
+      Display name for the first player.
+      Used in visualization and game logging. Auto-generated from engine config.
+
+      :type: str
+
+   .. attribute:: player2_name
+
+      Display name for the second player.
+      Used in visualization and game logging. Auto-generated from engine config.
+
+      :type: str
+
+   .. attribute:: enable_analysis
+
+      Enable strategic analysis during gameplay.
+      When True, agents will perform detailed position analysis before moves.
+
+      :type: bool
+
+   .. attribute:: visualize_board
+
+      Enable board visualization during gameplay.
+      When True, displays game boards and move history in console.
+
+      :type: bool
+
+   .. attribute:: runnable_config
+
+      LangChain runnable configuration.
+      Controls execution parameters including recursion limits and thread IDs.
+
+      :type: RunnableConfig
+
+   .. attribute:: engines
+
+      LLM engine configurations for game actions.
+      Contains engines for ship placement, move generation, and analysis.
+
+      :type: Dict[str, AugLLMConfig]
+
+   .. rubric:: Examples
+
+   Standard competitive configuration::\n
+
+       config = BattleshipAgentConfig(
+           name="tournament_battleship",
+           player1_name="Strategic_AI",
+           player2_name="Tactical_AI",
+           enable_analysis=True,
+           visualize_board=False
+       )
+
+   Training and debugging configuration::\n
+
+       config = BattleshipAgentConfig(
+           name="training_battleship",
+           enable_analysis=True,
+           visualize_board=True,
+           player1_name="Learning_Agent",
+           player2_name="Reference_Agent"
+       )
+
+   Performance-optimized configuration::\n
+
+       config = BattleshipAgentConfig(
+           name="speed_battleship",
+           enable_analysis=False,
+           visualize_board=False,
+           runnable_config={
+               "configurable": {
+                   "recursion_limit": 5000,
+                   "thread_id": "speed_session"
+               }
+           }
+       )
+
+   .. note::
+
+      Configuration validation ensures game rule consistency and prevents
+      invalid combinations that would break gameplay mechanics or create
+      unfair advantages.
+
+
+   .. autolink-examples:: BattleshipAgentConfig
+      :collapse:
+
+   .. py:class:: Config
+
+      Pydantic configuration for flexible validation and type handling.
+
+
+      .. autolink-examples:: Config
+         :collapse:
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for BattleshipAgentConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_BattleshipAgentConfig {
-        node [shape=record];
-        "BattleshipAgentConfig" [label="BattleshipAgentConfig"];
-        "haive.core.engine.agent.agent.AgentConfig" -> "BattleshipAgentConfig";
-      }
-
-.. autoclass:: games.battleship.config.BattleshipAgentConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. py:attribute:: validate_assignment
+         :value: True
 
 
 
 
-.. rubric:: Related Links
+   .. py:method:: competitive() -> BattleshipAgentConfig
+      :classmethod:
 
-.. autolink-examples:: games.battleship.config
-   :collapse:
-   
-.. autolink-skip:: next
+
+      Create a configuration optimized for competitive gameplay.
+
+      Generates a configuration suitable for tournaments and competitive matches,
+      with analysis enabled but visualization disabled for performance.
+
+      :returns: Configuration optimized for competitive play.
+      :rtype: BattleshipAgentConfig
+
+      .. rubric:: Examples
+
+      Creating a tournament-ready configuration::\n
+
+          config = BattleshipAgentConfig.competitive()
+          agent = BattleshipAgent(config)
+
+          # Results in:
+          # - Analysis enabled for strategic depth
+          # - Visualization disabled for performance
+          # - Optimized recursion limits
+          # - Tournament-appropriate naming
+
+
+      .. autolink-examples:: competitive
+         :collapse:
+
+
+   .. py:method:: performance() -> BattleshipAgentConfig
+      :classmethod:
+
+
+      Create a configuration optimized for maximum performance.
+
+      Generates a configuration suitable for high-speed gameplay and benchmarking,
+      with analysis and visualization disabled for optimal performance.
+
+      :returns: Configuration optimized for performance.
+      :rtype: BattleshipAgentConfig
+
+      .. rubric:: Examples
+
+      Creating a performance-optimized configuration::\n
+
+          config = BattleshipAgentConfig.performance()
+          agent = BattleshipAgent(config)
+
+          # Results in:
+          # - Analysis disabled for speed
+          # - Visualization disabled for performance
+          # - Reduced recursion limits
+          # - Performance-appropriate naming
+
+
+      .. autolink-examples:: performance
+         :collapse:
+
+
+   .. py:method:: training() -> BattleshipAgentConfig
+      :classmethod:
+
+
+      Create a configuration optimized for training and development.
+
+      Generates a configuration suitable for agent training, debugging, and
+      development work, with full analysis and visualization enabled.
+
+      :returns: Configuration optimized for training scenarios.
+      :rtype: BattleshipAgentConfig
+
+      .. rubric:: Examples
+
+      Creating a training configuration::\n
+
+          config = BattleshipAgentConfig.training()
+          agent = BattleshipAgent(config)
+
+          # Results in:
+          # - Analysis enabled for learning
+          # - Visualization enabled for monitoring
+          # - Extended recursion limits
+          # - Training-appropriate naming
+
+
+      .. autolink-examples:: training
+         :collapse:
+
+
+   .. py:method:: update_player_names_from_engines() -> Any
+
+      Update player names based on LLM provider and model from engines.
+
+      Automatically generates meaningful player names based on the configured
+      LLM engines, creating identifiers that include provider and model information.
+      Also ensures thread_id is set for proper session management.
+
+      :returns: Self with updated player names and thread configuration.
+      :rtype: BattleshipAgentConfig
+
+      .. rubric:: Examples
+
+      Configuration with OpenAI engines::\n
+
+          config = BattleshipAgentConfig()
+          # After validation, player names might be:
+          # player1_name = "azure-gpt-4o"
+          # player2_name = "Player 2"
+
+
+      .. autolink-examples:: update_player_names_from_engines
+         :collapse:
+
+
+   .. py:property:: configuration_summary
+      :type: dict[str, str]
+
+
+      Get a summary of the current configuration settings.
+
+      :returns: Summary of key configuration parameters.
+      :rtype: Dict[str, str]
+
+      .. rubric:: Examples
+
+      Checking configuration summary::\n
+
+          config = BattleshipAgentConfig.competitive()
+          summary = config.configuration_summary
+          print(f"Mode: {summary['mode']}")
+          print(f"Analysis: {summary['analysis_enabled']}")
+
+      .. autolink-examples:: configuration_summary
+         :collapse:
+
+
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: engines
+      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: player1_name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: player2_name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: runnable_config
+      :type:  langchain_core.runnables.RunnableConfig
+      :value: None
+
+
+
+   .. py:attribute:: state_schema
+      :type:  type
+      :value: None
+
+
+
+   .. py:attribute:: visualize_board
+      :type:  bool
+      :value: None
+
+
+

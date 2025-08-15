@@ -1,17 +1,18 @@
-
-:py:mod:`games.chess.debug_schema`
-==================================
+games.chess.debug_schema
+========================
 
 .. py:module:: games.chess.debug_schema
 
-Debug script for chess game validation models.
+.. autoapi-nested-parse::
 
-This script prints the validation models and field requirements for better debugging of
-validation errors.
+   Debug script for chess game validation models.
+
+   This script prints the validation models and field requirements for better debugging of
+   validation errors.
 
 
-.. autolink-examples:: games.chess.debug_schema
-   :collapse:
+   .. autolink-examples:: games.chess.debug_schema
+      :collapse:
 
 
 Functions
@@ -21,6 +22,10 @@ Functions
 
    games.chess.debug_schema.debug_field
    games.chess.debug_schema.main
+
+
+Module Contents
+---------------
 
 .. py:function:: debug_field(field_name, model_class)
 
@@ -38,11 +43,3 @@ Functions
    .. autolink-examples:: main
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.debug_schema
-   :collapse:
-   
-.. autolink-skip:: next

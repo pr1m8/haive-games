@@ -1,9 +1,7 @@
-
-:py:mod:`games.debate.engines`
-==============================
+games.debate.engines
+====================
 
 .. py:module:: games.debate.engines
-
 
 
 Functions
@@ -18,6 +16,10 @@ Functions
    games.debate.engines.generate_moderator_prompt
    games.debate.engines.generate_persona_prompt
    games.debate.engines.generate_prosecutor_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: build_debate_engines() -> dict[str, dict[str, haive.core.engine.aug_llm.AugLLMConfig]]
 
@@ -39,11 +41,3 @@ Functions
 
 .. py:function:: generate_prosecutor_prompt() -> langchain_core.prompts.ChatPromptTemplate
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.debate.engines
-   :collapse:
-   
-.. autolink-skip:: next

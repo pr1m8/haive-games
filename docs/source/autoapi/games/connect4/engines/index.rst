@@ -1,9 +1,15 @@
-
-:py:mod:`games.connect4.engines`
-================================
+games.connect4.engines
+======================
 
 .. py:module:: games.connect4.engines
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.connect4.engines.aug_llm_configs
 
 
 Functions
@@ -13,6 +19,10 @@ Functions
 
    games.connect4.engines.generate_analysis_prompt
    games.connect4.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(color: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -30,11 +40,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: aug_llm_configs
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.connect4.engines
-   :collapse:
-   
-.. autolink-skip:: next

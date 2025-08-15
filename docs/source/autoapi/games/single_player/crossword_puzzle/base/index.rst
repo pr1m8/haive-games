@@ -1,8 +1,15 @@
-
-:py:mod:`games.single_player.crossword_puzzle.base`
-===================================================
+games.single_player.crossword_puzzle.base
+=========================================
 
 .. py:module:: games.single_player.crossword_puzzle.base
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.single_player.crossword_puzzle.base.CellType
 
 
 Classes
@@ -22,197 +29,400 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: CrosswordCell
 
+   Bases: :py:obj:`game_framework_base.GridSpace`\ [\ :py:obj:`CrosswordLetter`\ ]
 
 
-.. toggle:: Show Inheritance Diagram
+   A cell in a crossword puzzle.
 
-   Inheritance diagram for CrosswordCell:
 
-   .. graphviz::
-      :align: center
+   .. autolink-examples:: CrosswordCell
+      :collapse:
 
-      digraph inheritance_CrosswordCell {
-        node [shape=record];
-        "CrosswordCell" [label="CrosswordCell"];
-        "game_framework_base.GridSpace[CrosswordLetter]" -> "CrosswordCell";
-      }
+   .. py:attribute:: cell_type
+      :type:  CellType
+      :value: 'empty'
 
-.. autoclass:: games.single_player.crossword_puzzle.base.CrosswordCell
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
+   .. py:property:: current_letter
+      :type: str | None
 
 
-.. toggle:: Show Inheritance Diagram
+      Get the current letter in this cell, if any.
 
-   Inheritance diagram for CrosswordClue:
+      .. autolink-examples:: current_letter
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_CrosswordClue {
-        node [shape=record];
-        "CrosswordClue" [label="CrosswordClue"];
-        "pydantic.BaseModel" -> "CrosswordClue";
-      }
+   .. py:property:: is_block
+      :type: bool
 
-.. autopydantic_model:: games.single_player.crossword_puzzle.base.CrosswordClue
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
 
+      Check if this cell is a block (black square).
 
+      .. autolink-examples:: is_block
+         :collapse:
 
 
+   .. py:property:: is_filled
+      :type: bool
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for CrosswordGame:
+      Check if this cell has been filled by the player.
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: is_filled
+         :collapse:
 
-      digraph inheritance_CrosswordGame {
-        node [shape=record];
-        "CrosswordGame" [label="CrosswordGame"];
-        "game_framework_base.Game[game_framework_base.GridPosition, CrosswordLetter]" -> "CrosswordGame";
-      }
 
-.. autoclass:: games.single_player.crossword_puzzle.base.CrosswordGame
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:property:: is_letter_cell
+      :type: bool
 
 
+      Check if this cell can contain a letter.
 
+      .. autolink-examples:: is_letter_cell
+         :collapse:
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for CrosswordMove:
+   .. py:attribute:: number
+      :type:  int | None
+      :value: None
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_CrosswordMove {
-        node [shape=record];
-        "CrosswordMove" [label="CrosswordMove"];
-        "pydantic.BaseModel" -> "CrosswordMove";
-      }
 
-.. autopydantic_model:: games.single_player.crossword_puzzle.base.CrosswordMove
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+.. py:class:: CrosswordClue(/, **data: Any)
 
+   Bases: :py:obj:`pydantic.BaseModel`
 
 
+   A clue in a crossword puzzle.
 
+   Create a new model by parsing and validating input data from keyword arguments.
 
-.. toggle:: Show Inheritance Diagram
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
 
-   Inheritance diagram for CrosswordTemplate:
+   `self` is explicitly positional-only to allow `self` as a field name.
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_CrosswordTemplate {
-        node [shape=record];
-        "CrosswordTemplate" [label="CrosswordTemplate"];
-        "pydantic.BaseModel" -> "CrosswordTemplate";
-      }
+   .. autolink-examples:: __init__
+      :collapse:
 
-.. autopydantic_model:: games.single_player.crossword_puzzle.base.CrosswordTemplate
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
 
+   .. autolink-examples:: CrosswordClue
+      :collapse:
 
+   .. py:method:: validate_answer(v: str) -> str
+      :classmethod:
 
 
+      Ensure answer contains only letters and matches the length.
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for CrosswordWord:
+      .. autolink-examples:: validate_answer
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_CrosswordWord {
-        node [shape=record];
-        "CrosswordWord" [label="CrosswordWord"];
-        "pydantic.BaseModel" -> "CrosswordWord";
-      }
+   .. py:attribute:: answer
+      :type:  str
 
-.. autopydantic_model:: games.single_player.crossword_puzzle.base.CrosswordWord
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
 
+   .. py:attribute:: direction
+      :type:  Direction
 
 
+   .. py:property:: end_position
+      :type: game_framework_base.GridPosition
 
 
-.. toggle:: Show Inheritance Diagram
+      Calculate the ending position of the word.
 
-   Inheritance diagram for Direction:
+      .. autolink-examples:: end_position
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_Direction {
-        node [shape=record];
-        "Direction" [label="Direction"];
-        "str" -> "Direction";
-        "enum.Enum" -> "Direction";
-      }
+   .. py:attribute:: id
+      :type:  str
+      :value: None
 
-.. autoclass:: games.single_player.crossword_puzzle.base.Direction
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-   .. note::
 
-      **Direction** is an Enum defined in ``games.single_player.crossword_puzzle.base``.
+   .. py:attribute:: length
+      :type:  int
 
 
+   .. py:attribute:: number
+      :type:  int
 
 
+   .. py:attribute:: start_position
+      :type:  game_framework_base.GridPosition
 
-.. rubric:: Related Links
 
-.. autolink-examples:: games.single_player.crossword_puzzle.base
-   :collapse:
-   
-.. autolink-skip:: next
+   .. py:attribute:: text
+      :type:  str
+
+
+.. py:class:: CrosswordGame
+
+   Bases: :py:obj:`game_framework_base.Game`\ [\ :py:obj:`game_framework_base.GridPosition`\ , :py:obj:`CrosswordLetter`\ ]
+
+
+   Crossword puzzle game controller.
+
+
+   .. autolink-examples:: CrosswordGame
+      :collapse:
+
+   .. py:method:: check_all() -> dict[str, bool]
+
+      Check all filled letters against the solution.
+
+
+      .. autolink-examples:: check_all
+         :collapse:
+
+
+   .. py:method:: check_word(clue_id: str) -> bool
+
+      Check if a word is filled in correctly.
+
+
+      .. autolink-examples:: check_word
+         :collapse:
+
+
+   .. py:method:: is_valid_move(move: CrosswordMove | dict[str, any]) -> bool
+
+      Check if a move is valid.
+
+
+      .. autolink-examples:: is_valid_move
+         :collapse:
+
+
+   .. py:method:: make_move(move: CrosswordMove | dict[str, any]) -> bool
+
+      Make a move in the game.
+
+
+      .. autolink-examples:: make_move
+         :collapse:
+
+
+   .. py:method:: reset() -> None
+
+      Reset the game.
+
+
+      .. autolink-examples:: reset
+         :collapse:
+
+
+   .. py:method:: reveal_letter(position: game_framework_base.GridPosition) -> bool
+
+      Reveal the correct letter at a position.
+
+
+      .. autolink-examples:: reveal_letter
+         :collapse:
+
+
+   .. py:method:: reveal_word(clue_id: str) -> bool
+
+      Reveal all letters in a word.
+
+
+      .. autolink-examples:: reveal_word
+         :collapse:
+
+
+   .. py:method:: select_cell(position: game_framework_base.GridPosition) -> bool
+
+      Select a cell.
+
+
+      .. autolink-examples:: select_cell
+         :collapse:
+
+
+   .. py:method:: start_game() -> None
+
+      Start the game.
+
+
+      .. autolink-examples:: start_game
+         :collapse:
+
+
+   .. py:attribute:: board
+      :type:  CrosswordBoard
+
+
+   .. py:attribute:: check_as_you_type
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: selected_position
+      :type:  game_framework_base.GridPosition | None
+      :value: None
+
+
+
+.. py:class:: CrosswordMove(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A move in a crossword puzzle.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: CrosswordMove
+      :collapse:
+
+   .. py:attribute:: letter
+      :type:  str
+
+
+   .. py:attribute:: position
+      :type:  game_framework_base.GridPosition
+
+
+.. py:class:: CrosswordTemplate(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A pre-defined crossword template.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: CrosswordTemplate
+      :collapse:
+
+   .. py:method:: create_game() -> CrosswordGame
+
+      Create a game from this template.
+
+
+      .. autolink-examples:: create_game
+         :collapse:
+
+
+   .. py:attribute:: block_positions
+      :type:  list[tuple[int, int]]
+
+
+   .. py:attribute:: clues
+      :type:  list[dict[str, any]]
+
+
+   .. py:attribute:: cols
+      :type:  int
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: rows
+      :type:  int
+
+
+.. py:class:: CrosswordWord(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A word placement in a crossword puzzle.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: CrosswordWord
+      :collapse:
+
+   .. py:method:: validate_word() -> CrosswordWord
+
+      Ensure the word's length matches positions and letters.
+
+
+      .. autolink-examples:: validate_word
+         :collapse:
+
+
+   .. py:attribute:: clue
+      :type:  CrosswordClue
+
+
+   .. py:attribute:: letters
+      :type:  list[str]
+
+
+   .. py:attribute:: positions
+      :type:  list[game_framework_base.GridPosition]
+
+
+.. py:class:: Direction
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Direction of a word in a crossword.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: Direction
+      :collapse:
+
+   .. py:attribute:: ACROSS
+      :value: 'across'
+
+
+
+   .. py:attribute:: DOWN
+      :value: 'down'
+
+
+
+.. py:data:: CellType
+

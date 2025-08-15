@@ -1,17 +1,26 @@
-
-:py:mod:`games.single_player.flow_free.example`
-===============================================
+games.single_player.flow_free.example
+=====================================
 
 .. py:module:: games.single_player.flow_free.example
 
-Example script for running the Flow Free game agent.
+.. autoapi-nested-parse::
 
-This script demonstrates how to configure and run the Flow Free game agent in different
-modes and difficulty levels.
+   Example script for running the Flow Free game agent.
+
+   This script demonstrates how to configure and run the Flow Free game agent in different
+   modes and difficulty levels.
 
 
-.. autolink-examples:: games.single_player.flow_free.example
-   :collapse:
+   .. autolink-examples:: games.single_player.flow_free.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.single_player.flow_free.example.package_root
 
 
 Functions
@@ -22,6 +31,10 @@ Functions
    games.single_player.flow_free.example.create_config
    games.single_player.flow_free.example.main
    games.single_player.flow_free.example.parse_arguments
+
+
+Module Contents
+---------------
 
 .. py:function:: create_config(args)
 
@@ -54,11 +67,5 @@ Functions
    .. autolink-examples:: parse_arguments
       :collapse:
 
+.. py:data:: package_root
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.single_player.flow_free.example
-   :collapse:
-   
-.. autolink-skip:: next

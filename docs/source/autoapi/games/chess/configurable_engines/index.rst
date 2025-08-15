@@ -1,18 +1,27 @@
-
-:py:mod:`games.chess.configurable_engines`
-==========================================
+games.chess.configurable_engines
+================================
 
 .. py:module:: games.chess.configurable_engines
 
-Configurable chess engines using the new player agent system.
+.. autoapi-nested-parse::
 
-This module provides chess engine configurations that use configurable player agents
-instead of hardcoded LLM configurations, making it easy to switch LLMs for different
-players.
+   Configurable chess engines using the new player agent system.
+
+   This module provides chess engine configurations that use configurable player agents
+   instead of hardcoded LLM configurations, making it easy to switch LLMs for different
+   players.
 
 
-.. autolink-examples:: games.chess.configurable_engines
-   :collapse:
+   .. autolink-examples:: games.chess.configurable_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.chess.configurable_engines.EXAMPLE_CONFIGS
 
 
 Functions
@@ -28,6 +37,10 @@ Functions
    games.chess.configurable_engines.create_same_model_engines
    games.chess.configurable_engines.get_chess_role_definitions
    games.chess.configurable_engines.get_example_engines
+
+
+Module Contents
+---------------
 
 .. py:function:: create_anthropic_vs_openai_engines(white_model: str = 'claude-3-5-sonnet-20240620', black_model: str = 'gpt-4o', temperature: float = 0.7) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -149,11 +162,5 @@ Functions
    .. autolink-examples:: get_example_engines
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGS
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.configurable_engines
-   :collapse:
-   
-.. autolink-skip:: next

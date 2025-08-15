@@ -1,17 +1,26 @@
-
-:py:mod:`games.debate_v2.example`
-=================================
+games.debate_v2.example
+=======================
 
 .. py:module:: games.debate_v2.example
 
-Gamified Debate Examples - Modern Implementation.
+.. autoapi-nested-parse::
 
-This module demonstrates the new gamified debate system that works properly
-with topic handling and doesn't suffer from the DynamicGraph initialization issues.
+   Gamified Debate Examples - Modern Implementation.
+
+   This module demonstrates the new gamified debate system that works properly
+   with topic handling and doesn't suffer from the DynamicGraph initialization issues.
 
 
-.. autolink-examples:: games.debate_v2.example
-   :collapse:
+   .. autolink-examples:: games.debate_v2.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.debate_v2.example.logger
 
 
 Functions
@@ -24,6 +33,10 @@ Functions
    games.debate_v2.example.example_3_rapid_fire_debate
    games.debate_v2.example.main
    games.debate_v2.example.run_all_examples
+
+
+Module Contents
+---------------
 
 .. py:function:: example_1_simple_game_debate()
 
@@ -85,11 +98,5 @@ Functions
    .. autolink-examples:: run_all_examples
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.debate_v2.example
-   :collapse:
-   
-.. autolink-skip:: next

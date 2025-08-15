@@ -1,9 +1,15 @@
-
-:py:mod:`games.reversi.engines`
-===============================
+games.reversi.engines
+=====================
 
 .. py:module:: games.reversi.engines
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.reversi.engines.reversi_engines
 
 
 Functions
@@ -13,6 +19,10 @@ Functions
 
    games.reversi.engines.generate_analysis_prompt
    games.reversi.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player_symbol: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -30,11 +40,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: reversi_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.reversi.engines
-   :collapse:
-   
-.. autolink-skip:: next

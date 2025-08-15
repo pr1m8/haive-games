@@ -1,18 +1,20 @@
-
-:py:mod:`games.mancala.config`
-==============================
+games.mancala.config
+====================
 
 .. py:module:: games.mancala.config
 
-Configuration for the Mancala game agent.
+.. autoapi-nested-parse::
 
-This module defines the configuration for the Mancala game agent, which includes the
-game name, state schema, engine configurations, enable_analysis, visualize, and
-stones_per_pit.
+   Configuration for the Mancala game agent.
+
+   This module defines the configuration for the Mancala game agent, which includes the
+   game name, state schema, engine configurations, enable_analysis, visualize, and
+   stones_per_pit.
 
 
-.. autolink-examples:: games.mancala.config
-   :collapse:
+   .. autolink-examples:: games.mancala.config
+      :collapse:
+
 
 Classes
 -------
@@ -25,33 +27,69 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: MancalaConfig
+
+   Bases: :py:obj:`haive.games.framework.base.config.GameConfig`
+
+
+   Configuration for the Mancala game agent.
+
+   This class defines the configuration for the Mancala game agent, which includes the
+   game name, state schema, engine configurations, enable_analysis, visualize, and
+   stones_per_pit.
 
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: MancalaConfig
+      :collapse:
 
-   Inheritance diagram for MancalaConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_MancalaConfig {
-        node [shape=record];
-        "MancalaConfig" [label="MancalaConfig"];
-        "haive.games.framework.base.config.GameConfig" -> "MancalaConfig";
-      }
-
-.. autoclass:: games.mancala.config.MancalaConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:method:: default_config()
+      :classmethod:
 
 
+      Create a default configuration.
+
+      :returns: Default configuration for the Mancala game.
+      :rtype: MancalaConfig
 
 
-.. rubric:: Related Links
+      .. autolink-examples:: default_config
+         :collapse:
 
-.. autolink-examples:: games.mancala.config
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:attribute:: enable_analysis
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: engines
+      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: state_schema
+      :type:  type[haive.games.mancala.state.MancalaState]
+      :value: None
+
+
+
+   .. py:attribute:: stones_per_pit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: visualize
+      :type:  bool
+      :value: None
+
+
+

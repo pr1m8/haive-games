@@ -1,10 +1,6 @@
-
-:py:mod:`games.core.base.state_manager`
-=======================================
+games.core.base.state_manager
+=============================
 
 .. py:module:: games.core.base.state_manager
-
-
-
 
 

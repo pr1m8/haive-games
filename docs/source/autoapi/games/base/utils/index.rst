@@ -1,28 +1,29 @@
-
-:py:mod:`games.base.utils`
-==========================
+games.base.utils
+================
 
 .. py:module:: games.base.utils
 
-Utility functions for game agents.
+.. autoapi-nested-parse::
 
-This module provides utility functions for running and managing game agents,
-including game execution and state visualization.
+   Utility functions for game agents.
 
-.. rubric:: Example
+   This module provides utility functions for running and managing game agents,
+   including game execution and state visualization.
 
->>> agent = ChessAgent(config)
->>> run_game(agent)  # Run a new game
->>> run_game(agent, initial_state=saved_state)  # Continue from a saved state
+   .. rubric:: Example
 
-Typical usage:
-    - Use run_game to execute a complete game with an agent
-    - Provide optional initial state to continue from a specific point
-    - Monitor game progress through visualization and status updates
+   >>> agent = ChessAgent(config)
+   >>> run_game(agent)  # Run a new game
+   >>> run_game(agent, initial_state=saved_state)  # Continue from a saved state
+
+   Typical usage:
+       - Use run_game to execute a complete game with an agent
+       - Provide optional initial state to continue from a specific point
+       - Monitor game progress through visualization and status updates
 
 
-.. autolink-examples:: games.base.utils
-   :collapse:
+   .. autolink-examples:: games.base.utils
+      :collapse:
 
 
 Functions
@@ -31,6 +32,10 @@ Functions
 .. autoapisummary::
 
    games.base.utils.run_game
+
+
+Module Contents
+---------------
 
 .. py:function:: run_game(agent: GameAgent, initial_state: dict[str, Any] | None = None)
 
@@ -65,11 +70,3 @@ Functions
    .. autolink-examples:: run_game
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.base.utils
-   :collapse:
-   
-.. autolink-skip:: next

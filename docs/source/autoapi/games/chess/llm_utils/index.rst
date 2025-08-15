@@ -1,17 +1,18 @@
-
-:py:mod:`games.chess.llm_utils`
-===============================
+games.chess.llm_utils
+=====================
 
 .. py:module:: games.chess.llm_utils
 
-Chess-specific LLM utilities using the game LLM factory.
+.. autoapi-nested-parse::
 
-This module provides chess-specific utilities for creating and configuring LLMs for
-chess gameplay, building on the core LLM factory system.
+   Chess-specific LLM utilities using the game LLM factory.
+
+   This module provides chess-specific utilities for creating and configuring LLMs for
+   chess gameplay, building on the core LLM factory system.
 
 
-.. autolink-examples:: games.chess.llm_utils
-   :collapse:
+   .. autolink-examples:: games.chess.llm_utils
+      :collapse:
 
 
 Functions
@@ -23,6 +24,10 @@ Functions
    games.chess.llm_utils.create_chess_engines_simple
    games.chess.llm_utils.get_available_chess_providers
    games.chess.llm_utils.get_recommended_chess_models
+
+
+Module Contents
+---------------
 
 .. py:function:: create_chess_engines_from_config(white_config: dict[str, Any], black_config: dict[str, Any], enable_analysis: bool = True, analyzer_configs: dict[str, dict[str, Any]] | None = None) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -125,11 +130,3 @@ Functions
    .. autolink-examples:: get_recommended_chess_models
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.llm_utils
-   :collapse:
-   
-.. autolink-skip:: next

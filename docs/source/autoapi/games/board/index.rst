@@ -1,15 +1,14 @@
-
-:py:mod:`games.board`
-=====================
+games.board
+===========
 
 .. py:module:: games.board
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.board
-   :collapse:
-
-
+   .. autolink-examples:: games.board
+      :collapse:
 
 

@@ -1,9 +1,15 @@
-
-:py:mod:`games.connect4.factory`
-================================
+games.connect4.factory
+======================
 
 .. py:module:: games.connect4.factory
 
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.connect4.factory.logger
 
 
 Functions
@@ -13,6 +19,10 @@ Functions
 
    games.connect4.factory.run_connect4_game
 
+
+Module Contents
+---------------
+
 .. py:function:: run_connect4_game()
 
    Run a Connect 4 game using agent.run() with Postgres persistence.
@@ -21,11 +31,5 @@ Functions
    .. autolink-examples:: run_connect4_game
       :collapse:
 
+.. py:data:: logger
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.connect4.factory
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,17 +1,28 @@
-
-:py:mod:`games.poker.configurable_config`
-=========================================
+games.poker.configurable_config
+===============================
 
 .. py:module:: games.poker.configurable_config
 
-Configurable Poker configuration using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides configurable Poker game configurations that replace hardcoded LLM
-settings with dynamic, configurable player agents.
+   Configurable Poker configuration using the generic player agent system.
+
+   This module provides configurable Poker game configurations that replace hardcoded LLM
+   settings with dynamic, configurable player agents.
 
 
-.. autolink-examples:: games.poker.configurable_config
-   :collapse:
+   .. autolink-examples:: games.poker.configurable_config
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.poker.configurable_config.EXAMPLE_CONFIGURATIONS
+   games.poker.configurable_config.config1
+
 
 Classes
 -------
@@ -19,31 +30,6 @@ Classes
 .. autoapisummary::
 
    games.poker.configurable_config.ConfigurablePokerConfig
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ConfigurablePokerConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ConfigurablePokerConfig {
-        node [shape=record];
-        "ConfigurablePokerConfig" [label="ConfigurablePokerConfig"];
-        "haive.games.poker.config.PokerAgentConfig" -> "ConfigurablePokerConfig";
-      }
-
-.. autoclass:: games.poker.configurable_config.ConfigurablePokerConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -59,6 +45,136 @@ Functions
    games.poker.configurable_config.create_poker_config_from_player_configs
    games.poker.configurable_config.get_example_config
    games.poker.configurable_config.list_example_configurations
+
+
+Module Contents
+---------------
+
+.. py:class:: ConfigurablePokerConfig
+
+   Bases: :py:obj:`haive.games.poker.config.PokerAgentConfig`
+
+
+   Configurable Poker configuration with dynamic LLM selection.
+
+   This configuration allows users to specify different LLMs for different
+   roles in the Poker game, providing flexibility and avoiding hardcoded models.
+
+   .. attribute:: player1_model
+
+      Model for player1 (can be string or LLMConfig)
+
+   .. attribute:: player2_model
+
+      Model for player2 (can be string or LLMConfig)
+
+   .. attribute:: player1_name
+
+      Name for player1
+
+   .. attribute:: player2_name
+
+      Name for player2
+
+   .. attribute:: example_config
+
+      Optional example configuration name
+
+   .. attribute:: player_configs
+
+      Optional detailed player configurations
+
+   .. attribute:: temperature
+
+      Temperature for LLM generation
+
+   .. attribute:: enable_analysis
+
+      Whether to enable strategic analysis
+
+   .. attribute:: visualize_game
+
+      Whether to visualize game state
+
+   .. attribute:: recursion_limit
+
+      Python recursion limit for game execution
+
+
+   .. autolink-examples:: ConfigurablePokerConfig
+      :collapse:
+
+   .. py:method:: _extract_player_names_from_configs()
+
+      Extract player names from player configurations.
+
+
+      .. autolink-examples:: _extract_player_names_from_configs
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_example()
+
+      Generate player names based on example configuration.
+
+
+      .. autolink-examples:: _generate_player_names_from_example
+         :collapse:
+
+
+   .. py:method:: _generate_player_names_from_models(player1_model: str, player2_model: str)
+
+      Generate player names based on model names.
+
+
+      .. autolink-examples:: _generate_player_names_from_models
+         :collapse:
+
+
+   .. py:method:: model_post_init(__context: Any) -> None
+
+      Initialize engines after model creation.
+
+
+      .. autolink-examples:: model_post_init
+         :collapse:
+
+
+   .. py:attribute:: example_config
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player1_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player2_model
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: player_configs
+      :type:  dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig] | None
+      :value: None
+
+
+
+   .. py:attribute:: recursion_limit
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: temperature
+      :type:  float
+      :value: None
+
+
 
 .. py:function:: create_advanced_poker_config(**kwargs) -> ConfigurablePokerConfig
 
@@ -207,11 +323,7 @@ Functions
    .. autolink-examples:: list_example_configurations
       :collapse:
 
+.. py:data:: EXAMPLE_CONFIGURATIONS
 
+.. py:data:: config1
 
-.. rubric:: Related Links
-
-.. autolink-examples:: games.poker.configurable_config
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,15 +1,28 @@
-
-:py:mod:`games.framework.multi_player`
-======================================
+games.framework.multi_player
+============================
 
 .. py:module:: games.framework.multi_player
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.framework.multi_player
-   :collapse:
+   .. autolink-examples:: games.framework.multi_player
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/framework/multi_player/agent/index
+   /autoapi/games/framework/multi_player/config/index
+   /autoapi/games/framework/multi_player/factory/index
+   /autoapi/games/framework/multi_player/models/index
+   /autoapi/games/framework/multi_player/state/index
+   /autoapi/games/framework/multi_player/state_manager/index
 
 

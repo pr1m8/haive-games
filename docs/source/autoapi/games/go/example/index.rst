@@ -1,17 +1,31 @@
-
-:py:mod:`games.go.example`
-==========================
+games.go.example
+================
 
 .. py:module:: games.go.example
 
-Example of playing a Go game.
+.. autoapi-nested-parse::
 
-This script demonstrates how to initialize and run a Go game with the Haive framework.
+   Example of playing a Go game.
 
-
-.. autolink-examples:: games.go.example
-   :collapse:
+   This script demonstrates how to initialize and run a Go game with the Haive framework.
 
 
+   .. autolink-examples:: games.go.example
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.go.example.sgfmill_available
+
+
+Module Contents
+---------------
+
+.. py:data:: sgfmill_available
+   :value: True
 
 

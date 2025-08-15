@@ -1,6 +1,5 @@
-
-:py:mod:`games.monopoly.game.card`
-==================================
+games.monopoly.game.card
+========================
 
 .. py:module:: games.monopoly.game.card
 
@@ -16,32 +15,22 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: Card(text: str, action: str, value: Any = None)
+
+   Represents a Chance or Community Chest card.
+
+
+   .. autolink-examples:: Card
+      :collapse:
+
+   .. py:attribute:: action
+
+
+   .. py:attribute:: text
+
+
+   .. py:attribute:: value
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for Card:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Card {
-        node [shape=record];
-        "Card" [label="Card"];
-      }
-
-.. autoclass:: games.monopoly.game.card.Card
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.monopoly.game.card
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,17 +1,26 @@
-
-:py:mod:`games.mancala.engines`
-===============================
+games.mancala.engines
+=====================
 
 .. py:module:: games.mancala.engines
 
-Engines for the Mancala game.
+.. autoapi-nested-parse::
 
-This module defines the engines for the Mancala game, including the move and analysis
-prompts.
+   Engines for the Mancala game.
+
+   This module defines the engines for the Mancala game, including the move and analysis
+   prompts.
 
 
-.. autolink-examples:: games.mancala.engines
-   :collapse:
+   .. autolink-examples:: games.mancala.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mancala.engines.mancala_engines
 
 
 Functions
@@ -21,6 +30,10 @@ Functions
 
    games.mancala.engines.generate_analysis_prompt
    games.mancala.engines.generate_move_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -46,11 +59,5 @@ Functions
    .. autolink-examples:: generate_move_prompt
       :collapse:
 
+.. py:data:: mancala_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mancala.engines
-   :collapse:
-   
-.. autolink-skip:: next

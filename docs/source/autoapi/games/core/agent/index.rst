@@ -1,15 +1,25 @@
-
-:py:mod:`games.core.agent`
-==========================
+games.core.agent
+================
 
 .. py:module:: games.core.agent
 
-Module exports.
+.. autoapi-nested-parse::
+
+   Module exports.
 
 
-.. autolink-examples:: games.core.agent
-   :collapse:
+   .. autolink-examples:: games.core.agent
+      :collapse:
 
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/games/core/agent/game_config/index
+   /autoapi/games/core/agent/generic_player_agent/index
+   /autoapi/games/core/agent/player_agent/index
 
 

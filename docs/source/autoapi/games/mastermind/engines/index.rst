@@ -1,17 +1,26 @@
-
-:py:mod:`games.mastermind.engines`
-==================================
+games.mastermind.engines
+========================
 
 .. py:module:: games.mastermind.engines
 
-Engines for the Mastermind game.
+.. autoapi-nested-parse::
 
-This module contains the engines for the Mastermind game, including the codemaker
-engine, guess engines, and analyzer engines.
+   Engines for the Mastermind game.
+
+   This module contains the engines for the Mastermind game, including the codemaker
+   engine, guess engines, and analyzer engines.
 
 
-.. autolink-examples:: games.mastermind.engines
-   :collapse:
+   .. autolink-examples:: games.mastermind.engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.mastermind.engines.mastermind_engines
 
 
 Functions
@@ -22,6 +31,10 @@ Functions
    games.mastermind.engines.generate_analysis_prompt
    games.mastermind.engines.generate_codemaker_prompt
    games.mastermind.engines.generate_guess_prompt
+
+
+Module Contents
+---------------
 
 .. py:function:: generate_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
@@ -59,11 +72,5 @@ Functions
    .. autolink-examples:: generate_guess_prompt
       :collapse:
 
+.. py:data:: mastermind_engines
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.mastermind.engines
-   :collapse:
-   
-.. autolink-skip:: next

@@ -1,6 +1,5 @@
-
-:py:mod:`games.core.base.config`
-================================
+games.core.base.config
+======================
 
 .. py:module:: games.core.base.config
 
@@ -16,34 +15,26 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: GameAgentConfig
+
+   Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`, :py:obj:`abc.ABC`
+
+
+   Base configuration for game agents.
+
+
+   .. autolink-examples:: GameAgentConfig
+      :collapse:
+
+   .. py:attribute:: game
+      :type:  type[Game]
+      :value: None
 
 
 
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for GameAgentConfig:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_GameAgentConfig {
-        node [shape=record];
-        "GameAgentConfig" [label="GameAgentConfig"];
-        "haive.core.engine.agent.config.AgentConfig" -> "GameAgentConfig";
-        "abc.ABC" -> "GameAgentConfig";
-      }
-
-.. autoclass:: games.core.base.config.GameAgentConfig
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:attribute:: state_schema
+      :type:  type[haive.games.core.base.state.GameState]
+      :value: None
 
 
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.core.base.config
-   :collapse:
-   
-.. autolink-skip:: next

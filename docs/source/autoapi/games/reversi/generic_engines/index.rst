@@ -1,17 +1,27 @@
-
-:py:mod:`games.reversi.generic_engines`
-=======================================
+games.reversi.generic_engines
+=============================
 
 .. py:module:: games.reversi.generic_engines
 
-Generic Reversi engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Reversi games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Reversi engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Reversi games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.reversi.generic_engines
-   :collapse:
+   .. autolink-examples:: games.reversi.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.reversi.generic_engines.reversi_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.reversi.generic_engines.ReversiEngineFactory
    games.reversi.generic_engines.ReversiPlayerIdentifiers
    games.reversi.generic_engines.ReversiPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ReversiEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ReversiEngineFactory {
-        node [shape=record];
-        "ReversiEngineFactory" [label="ReversiEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "ReversiEngineFactory";
-      }
-
-.. autoclass:: games.reversi.generic_engines.ReversiEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ReversiPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ReversiPlayerIdentifiers {
-        node [shape=record];
-        "ReversiPlayerIdentifiers" [label="ReversiPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "ReversiPlayerIdentifiers";
-      }
-
-.. autoclass:: games.reversi.generic_engines.ReversiPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for ReversiPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_ReversiPromptGenerator {
-        node [shape=record];
-        "ReversiPromptGenerator" [label="ReversiPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "ReversiPromptGenerator";
-      }
-
-.. autoclass:: games.reversi.generic_engines.ReversiPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.reversi.generic_engines.create_generic_reversi_engines
    games.reversi.generic_engines.create_generic_reversi_engines_simple
    games.reversi.generic_engines.create_mixed_reversi_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: ReversiEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Reversi game engines.
+
+
+   .. autolink-examples:: ReversiEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: ReversiPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Reversi game.
+
+
+   .. autolink-examples:: ReversiPlayerIdentifiers
+      :collapse:
+
+.. py:class:: ReversiPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Reversi game.
+
+
+   .. autolink-examples:: ReversiPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Reversi game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Reversi player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_reversi_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_reversi_engines
       :collapse:
 
+.. py:data:: reversi_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.reversi.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

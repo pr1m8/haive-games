@@ -1,6 +1,5 @@
-
-:py:mod:`games.among_us.engines`
-================================
+games.among_us.engines
+======================
 
 .. py:module:: games.among_us.engines
 
@@ -16,32 +15,45 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: AmongUsEngines
+
+   Engines for the Among Us game.
+
+   This class creates and manages the LLM engines used for different player roles and
+   game phases.
 
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: AmongUsEngines
+      :collapse:
 
-   Inheritance diagram for AmongUsEngines:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_AmongUsEngines {
-        node [shape=record];
-        "AmongUsEngines" [label="AmongUsEngines"];
-      }
-
-.. autoclass:: games.among_us.engines.AmongUsEngines
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:method:: create_engines(llm_config: dict[str, Any] | None = None) -> dict[str, dict[str, haive.core.engine.aug_llm.AugLLMConfig]]
+      :classmethod:
 
 
+      Create the engines for the Among Us game.
+
+      :param llm_config: Optional configuration for the language model
+
+      :returns: A dictionary of engines organized by role and game phase
 
 
-.. rubric:: Related Links
+      .. autolink-examples:: create_engines
+         :collapse:
 
-.. autolink-examples:: games.among_us.engines
-   :collapse:
-   
-.. autolink-skip:: next
+
+   .. py:method:: create_runnable_engines(llm_config: dict[str, Any] | None = None) -> dict[str, dict[str, Any]]
+      :classmethod:
+
+
+      Create runnable engines for the Among Us game.
+
+      :param llm_config: Optional configuration for the language model
+
+      :returns: A dictionary of runnable engines organized by role and game phase
+
+
+      .. autolink-examples:: create_runnable_engines
+         :collapse:
+
+

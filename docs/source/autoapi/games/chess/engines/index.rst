@@ -1,23 +1,24 @@
-
-:py:mod:`games.chess.engines`
-=============================
+games.chess.engines
+===================
 
 .. py:module:: games.chess.engines
 
-Chess game engines using AugLLMConfig.
+.. autoapi-nested-parse::
 
-This module provides LLM engine configurations for chess game agents, including:
-    - Player engines for white and black
-    - Analyzer engines for position evaluation
-    - Prompt templates with chess-specific instructions
-    - Structured output models for moves and analysis
+   Chess game engines using AugLLMConfig.
 
-The engines use different LLM configurations optimized for their specific roles,
-with prompt templates designed to generate high-quality chess moves and analysis.
+   This module provides LLM engine configurations for chess game agents, including:
+       - Player engines for white and black
+       - Analyzer engines for position evaluation
+       - Prompt templates with chess-specific instructions
+       - Structured output models for moves and analysis
+
+   The engines use different LLM configurations optimized for their specific roles,
+   with prompt templates designed to generate high-quality chess moves and analysis.
 
 
-.. autolink-examples:: games.chess.engines
-   :collapse:
+   .. autolink-examples:: games.chess.engines
+      :collapse:
 
 
 Functions
@@ -30,6 +31,10 @@ Functions
    games.chess.engines.create_black_player_engine
    games.chess.engines.create_white_analyzer_engine
    games.chess.engines.create_white_player_engine
+
+
+Module Contents
+---------------
 
 .. py:function:: build_chess_aug_llms() -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -161,11 +166,3 @@ Functions
    .. autolink-examples:: create_white_player_engine
       :collapse:
 
-
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.chess.engines
-   :collapse:
-   
-.. autolink-skip:: next

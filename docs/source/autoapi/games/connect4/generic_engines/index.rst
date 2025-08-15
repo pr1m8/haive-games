@@ -1,17 +1,29 @@
-
-:py:mod:`games.connect4.generic_engines`
-========================================
+games.connect4.generic_engines
+==============================
 
 .. py:module:: games.connect4.generic_engines
 
-Generic Connect4 engines using the new generic player agent system.
+.. autoapi-nested-parse::
 
-This module demonstrates how to use the generic player agent system for Connect4,
-showing the same pattern working with red/yellow player identifiers.
+   Generic Connect4 engines using the new generic player agent system.
+
+   This module demonstrates how to use the generic player agent system for Connect4,
+   showing the same pattern working with red/yellow player identifiers.
 
 
-.. autolink-examples:: games.connect4.generic_engines
-   :collapse:
+   .. autolink-examples:: games.connect4.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.connect4.generic_engines.connect4_engine_factory
+   games.connect4.generic_engines.connect4_players
+   games.connect4.generic_engines.connect4_prompt_generator
+
 
 Classes
 -------
@@ -19,31 +31,6 @@ Classes
 .. autoapisummary::
 
    games.connect4.generic_engines.Connect4PromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for Connect4PromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_Connect4PromptGenerator {
-        node [shape=record];
-        "Connect4PromptGenerator" [label="Connect4PromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "Connect4PromptGenerator";
-      }
-
-.. autoclass:: games.connect4.generic_engines.Connect4PromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -54,6 +41,67 @@ Functions
    games.connect4.generic_engines.create_generic_connect4_config_from_example
    games.connect4.generic_engines.create_generic_connect4_engines
    games.connect4.generic_engines.create_generic_connect4_engines_simple
+
+
+Module Contents
+---------------
+
+.. py:class:: Connect4PromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Connect4-specific prompt generator using the generic system.
+
+
+   .. autolink-examples:: Connect4PromptGenerator
+      :collapse:
+
+   .. py:method:: create_analysis_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Connect4 analysis prompt for the specified player.
+
+      :param player: Player color ("red" or "yellow")
+
+      :returns: Prompt template for position analysis
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_analysis_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create a Connect4 move prompt for the specified player.
+
+      :param player: Player color ("red" or "yellow")
+
+      :returns: Prompt template for move generation
+      :rtype: ChatPromptTemplate
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
+
+   .. py:method:: get_analysis_output_model() -> type
+
+      Get the structured output model for Connect4 analysis.
+
+
+      .. autolink-examples:: get_analysis_output_model
+         :collapse:
+
+
+   .. py:method:: get_move_output_model() -> type
+
+      Get the structured output model for Connect4 moves.
+
+
+      .. autolink-examples:: get_move_output_model
+         :collapse:
+
 
 .. py:function:: create_generic_connect4_config_from_example(example_name: str, temperature: float = 0.7) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -125,11 +173,9 @@ Functions
    .. autolink-examples:: create_generic_connect4_engines_simple
       :collapse:
 
+.. py:data:: connect4_engine_factory
 
+.. py:data:: connect4_players
 
-.. rubric:: Related Links
+.. py:data:: connect4_prompt_generator
 
-.. autolink-examples:: games.connect4.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

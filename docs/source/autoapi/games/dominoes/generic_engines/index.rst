@@ -1,17 +1,27 @@
-
-:py:mod:`games.dominoes.generic_engines`
-========================================
+games.dominoes.generic_engines
+==============================
 
 .. py:module:: games.dominoes.generic_engines
 
-Generic Dominoes engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Dominoes games, allowing for
-configurable LLM models and game-specific player identifiers.
+   Generic Dominoes engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Dominoes games, allowing for
+   configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.dominoes.generic_engines
-   :collapse:
+   .. autolink-examples:: games.dominoes.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.dominoes.generic_engines.dominoes_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.dominoes.generic_engines.DominoesEngineFactory
    games.dominoes.generic_engines.DominoesPlayerIdentifiers
    games.dominoes.generic_engines.DominoesPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DominoesEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoesEngineFactory {
-        node [shape=record];
-        "DominoesEngineFactory" [label="DominoesEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "DominoesEngineFactory";
-      }
-
-.. autoclass:: games.dominoes.generic_engines.DominoesEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DominoesPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoesPlayerIdentifiers {
-        node [shape=record];
-        "DominoesPlayerIdentifiers" [label="DominoesPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "DominoesPlayerIdentifiers";
-      }
-
-.. autoclass:: games.dominoes.generic_engines.DominoesPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for DominoesPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_DominoesPromptGenerator {
-        node [shape=record];
-        "DominoesPromptGenerator" [label="DominoesPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "DominoesPromptGenerator";
-      }
-
-.. autoclass:: games.dominoes.generic_engines.DominoesPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -101,6 +44,70 @@ Functions
    games.dominoes.generic_engines.create_generic_dominoes_engines
    games.dominoes.generic_engines.create_generic_dominoes_engines_simple
    games.dominoes.generic_engines.create_mixed_dominoes_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: DominoesEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Dominoes game engines.
+
+
+   .. autolink-examples:: DominoesEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: DominoesPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Dominoes game.
+
+
+   .. autolink-examples:: DominoesPlayerIdentifiers
+      :collapse:
+
+.. py:class:: DominoesPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Dominoes game.
+
+
+   .. autolink-examples:: DominoesPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Dominoes game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Dominoes player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_advanced_dominoes_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -184,11 +191,5 @@ Functions
    .. autolink-examples:: create_mixed_dominoes_engines
       :collapse:
 
+.. py:data:: dominoes_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.dominoes.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

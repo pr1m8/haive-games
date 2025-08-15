@@ -1,17 +1,27 @@
-
-:py:mod:`games.hold_em.generic_engines`
-=======================================
+games.hold_em.generic_engines
+=============================
 
 .. py:module:: games.hold_em.generic_engines
 
-Generic Hold'em engine creation using the generic player agent system.
+.. autoapi-nested-parse::
 
-This module provides generic engine creation functions for Texas Hold'em games, allowing
-for configurable LLM models and game-specific player identifiers.
+   Generic Hold'em engine creation using the generic player agent system.
+
+   This module provides generic engine creation functions for Texas Hold'em games, allowing
+   for configurable LLM models and game-specific player identifiers.
 
 
-.. autolink-examples:: games.hold_em.generic_engines
-   :collapse:
+   .. autolink-examples:: games.hold_em.generic_engines
+      :collapse:
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.hold_em.generic_engines.holdem_factory
+
 
 Classes
 -------
@@ -21,73 +31,6 @@ Classes
    games.hold_em.generic_engines.HoldemEngineFactory
    games.hold_em.generic_engines.HoldemPlayerIdentifiers
    games.hold_em.generic_engines.HoldemPromptGenerator
-
-
-Module Contents
----------------
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HoldemEngineFactory:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HoldemEngineFactory {
-        node [shape=record];
-        "HoldemEngineFactory" [label="HoldemEngineFactory"];
-        "haive.games.core.agent.generic_player_agent.GenericGameEngineFactory[str, str]" -> "HoldemEngineFactory";
-      }
-
-.. autoclass:: games.hold_em.generic_engines.HoldemEngineFactory
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HoldemPlayerIdentifiers:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HoldemPlayerIdentifiers {
-        node [shape=record];
-        "HoldemPlayerIdentifiers" [label="HoldemPlayerIdentifiers"];
-        "haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers[str, str]" -> "HoldemPlayerIdentifiers";
-      }
-
-.. autoclass:: games.hold_em.generic_engines.HoldemPlayerIdentifiers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-
-
-.. toggle:: Show Inheritance Diagram
-
-   Inheritance diagram for HoldemPromptGenerator:
-
-   .. graphviz::
-      :align: center
-
-      digraph inheritance_HoldemPromptGenerator {
-        node [shape=record];
-        "HoldemPromptGenerator" [label="HoldemPromptGenerator"];
-        "haive.games.core.agent.generic_player_agent.GenericPromptGenerator[str, str]" -> "HoldemPromptGenerator";
-      }
-
-.. autoclass:: games.hold_em.generic_engines.HoldemPromptGenerator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 
 Functions
@@ -102,6 +45,70 @@ Functions
    games.hold_em.generic_engines.create_heads_up_holdem_engines
    games.hold_em.generic_engines.create_mixed_holdem_engines
    games.hold_em.generic_engines.create_poker_pro_holdem_engines
+
+
+Module Contents
+---------------
+
+.. py:class:: HoldemEngineFactory
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Factory for creating Texas Hold'em game engines.
+
+
+   .. autolink-examples:: HoldemEngineFactory
+      :collapse:
+
+   .. py:method:: get_structured_output_model(role: str) -> type
+
+      Get the structured output model for a specific role.
+
+
+      .. autolink-examples:: get_structured_output_model
+         :collapse:
+
+
+.. py:class:: HoldemPlayerIdentifiers
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Player identifiers for Texas Hold'em game.
+
+
+   .. autolink-examples:: HoldemPlayerIdentifiers
+      :collapse:
+
+.. py:class:: HoldemPromptGenerator
+
+   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+
+
+   Prompt generator for Texas Hold'em game.
+
+
+   .. autolink-examples:: HoldemPromptGenerator
+      :collapse:
+
+   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create analysis prompt for Hold'em game state.
+
+
+      .. autolink-examples:: create_analyzer_prompt
+         :collapse:
+
+
+   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+      Create move prompt for Hold'em player.
+
+
+      .. autolink-examples:: create_move_prompt
+         :collapse:
+
 
 .. py:function:: create_budget_holdem_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
@@ -194,11 +201,5 @@ Functions
    .. autolink-examples:: create_poker_pro_holdem_engines
       :collapse:
 
+.. py:data:: holdem_factory
 
-
-.. rubric:: Related Links
-
-.. autolink-examples:: games.hold_em.generic_engines
-   :collapse:
-   
-.. autolink-skip:: next

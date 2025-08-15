@@ -1,8 +1,15 @@
-
-:py:mod:`games.single_player.flow_free.base`
-============================================
+games.single_player.flow_free.base
+==================================
 
 .. py:module:: games.single_player.flow_free.base
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   games.single_player.flow_free.base.ConnectionType
 
 
 Classes
@@ -25,250 +32,463 @@ Classes
 Module Contents
 ---------------
 
+.. py:class:: EndpointType
 
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-.. toggle:: Show Inheritance Diagram
+   Type of endpoint.
 
-   Inheritance diagram for EndpointType:
+   Initialize self.  See help(type(self)) for accurate signature.
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_EndpointType {
-        node [shape=record];
-        "EndpointType" [label="EndpointType"];
-        "str" -> "EndpointType";
-        "enum.Enum" -> "EndpointType";
-      }
+   .. autolink-examples:: __init__
+      :collapse:
 
-.. autoclass:: games.single_player.flow_free.base.EndpointType
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-   .. note::
+   .. autolink-examples:: EndpointType
+      :collapse:
 
-      **EndpointType** is an Enum defined in ``games.single_player.flow_free.base``.
+   .. py:attribute:: END
+      :value: 'end'
 
 
 
+   .. py:attribute:: START
+      :value: 'start'
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for FlowBoard:
+.. py:class:: FlowBoard
 
-   .. graphviz::
-      :align: center
+   Bases: :py:obj:`game_framework_base.GridBoard`\ [\ :py:obj:`FlowGridSpace`\ [\ :py:obj:`FlowPiece`\ ]\ , :py:obj:`game_framework_base.GridPosition`\ , :py:obj:`FlowPiece`\ ]
 
-      digraph inheritance_FlowBoard {
-        node [shape=record];
-        "FlowBoard" [label="FlowBoard"];
-        "game_framework_base.GridBoard[FlowGridSpace[FlowPiece], game_framework_base.GridPosition, FlowPiece]" -> "FlowBoard";
-      }
 
-.. autoclass:: games.single_player.flow_free.base.FlowBoard
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   A Flow Free game board.
 
 
+   .. autolink-examples:: FlowBoard
+      :collapse:
 
+   .. py:method:: _check_flow_completion(flow_id: str) -> bool
 
-.. toggle:: Show Inheritance Diagram
+      Check if a flow is complete (connects the two endpoints).
 
-   Inheritance diagram for FlowEndpoint:
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: _check_flow_completion
+         :collapse:
 
-      digraph inheritance_FlowEndpoint {
-        node [shape=record];
-        "FlowEndpoint" [label="FlowEndpoint"];
-        "FlowPiece" -> "FlowEndpoint";
-      }
 
-.. autoclass:: games.single_player.flow_free.base.FlowEndpoint
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   .. py:method:: _update_pipe_connections(position: game_framework_base.GridPosition) -> None
 
+      Update the connections between pipes and endpoints.
 
 
+      .. autolink-examples:: _update_pipe_connections
+         :collapse:
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for FlowFreeGame:
+   .. py:method:: add_flow(color: str, start_pos: game_framework_base.GridPosition, end_pos: game_framework_base.GridPosition) -> str
 
-   .. graphviz::
-      :align: center
+      Add a new flow (pair of endpoints) to the board.
 
-      digraph inheritance_FlowFreeGame {
-        node [shape=record];
-        "FlowFreeGame" [label="FlowFreeGame"];
-        "game_framework_base.Game[game_framework_base.GridPosition, FlowPiece]" -> "FlowFreeGame";
-      }
 
-.. autoclass:: games.single_player.flow_free.base.FlowFreeGame
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: add_flow
+         :collapse:
 
 
+   .. py:method:: add_pipe_segment(flow_id: str, position: game_framework_base.GridPosition, direction: PipeDirection) -> bool
 
+      Add a pipe segment to a flow.
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for FlowFreeLevel:
+      .. autolink-examples:: add_pipe_segment
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_FlowFreeLevel {
-        node [shape=record];
-        "FlowFreeLevel" [label="FlowFreeLevel"];
-        "pydantic.BaseModel" -> "FlowFreeLevel";
-      }
+   .. py:method:: get_adjacent_positions(position: game_framework_base.GridPosition) -> list[game_framework_base.GridPosition]
 
-.. autopydantic_model:: games.single_player.flow_free.base.FlowFreeLevel
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+      Get all valid adjacent positions.
 
 
+      .. autolink-examples:: get_adjacent_positions
+         :collapse:
 
 
+   .. py:method:: initialize_grid() -> None
 
-.. toggle:: Show Inheritance Diagram
+      Initialize an empty grid.
 
-   Inheritance diagram for FlowFreeMove:
 
-   .. graphviz::
-      :align: center
+      .. autolink-examples:: initialize_grid
+         :collapse:
 
-      digraph inheritance_FlowFreeMove {
-        node [shape=record];
-        "FlowFreeMove" [label="FlowFreeMove"];
-        "pydantic.BaseModel" -> "FlowFreeMove";
-      }
 
-.. autopydantic_model:: games.single_player.flow_free.base.FlowFreeMove
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :model-show-field-summary:
-   :model-show-config-summary:
-   :model-show-validator-members:
-   :model-show-validator-summary:
-   :model-show-json:
-   :field-list-validators:
-   :field-show-constraints:
+   .. py:attribute:: flows
+      :type:  dict[str, dict[str, any]]
+      :value: None
 
 
 
+   .. py:property:: is_solved
+      :type: bool
 
 
-.. toggle:: Show Inheritance Diagram
+      Check if the puzzle is solved.
 
-   Inheritance diagram for FlowGridSpace:
+      .. autolink-examples:: is_solved
+         :collapse:
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_FlowGridSpace {
-        node [shape=record];
-        "FlowGridSpace" [label="FlowGridSpace"];
-        "game_framework_base.GridSpace[FlowPiece]" -> "FlowGridSpace";
-      }
+.. py:class:: FlowEndpoint
 
-.. autoclass:: games.single_player.flow_free.base.FlowGridSpace
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Bases: :py:obj:`FlowPiece`
 
 
+   An endpoint (colored dot) in Flow Free.
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: FlowEndpoint
+      :collapse:
 
-   Inheritance diagram for FlowPiece:
+   .. py:method:: can_move_to(position: game_framework_base.GridPosition, board: game_framework_base.Board) -> bool
 
-   .. graphviz::
-      :align: center
+      Endpoints can't be moved in Flow Free.
 
-      digraph inheritance_FlowPiece {
-        node [shape=record];
-        "FlowPiece" [label="FlowPiece"];
-        "game_framework_base.GamePiece[game_framework_base.GridPosition]" -> "FlowPiece";
-      }
 
-.. autoclass:: games.single_player.flow_free.base.FlowPiece
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: can_move_to
+         :collapse:
 
 
+   .. py:attribute:: connection_type
+      :type:  Literal[ConnectionType]
+      :value: 'endpoint'
 
 
-.. toggle:: Show Inheritance Diagram
 
-   Inheritance diagram for FlowPipe:
+   .. py:attribute:: endpoint_type
+      :type:  EndpointType
 
-   .. graphviz::
-      :align: center
 
-      digraph inheritance_FlowPipe {
-        node [shape=record];
-        "FlowPipe" [label="FlowPipe"];
-        "FlowPiece" -> "FlowPipe";
-      }
+.. py:class:: FlowFreeGame
 
-.. autoclass:: games.single_player.flow_free.base.FlowPipe
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   Bases: :py:obj:`game_framework_base.Game`\ [\ :py:obj:`game_framework_base.GridPosition`\ , :py:obj:`FlowPiece`\ ]
 
 
+   Flow Free game controller.
 
 
-.. toggle:: Show Inheritance Diagram
+   .. autolink-examples:: FlowFreeGame
+      :collapse:
 
-   Inheritance diagram for PipeDirection:
+   .. py:method:: _determine_pipe_direction(position: game_framework_base.GridPosition) -> PipeDirection
 
-   .. graphviz::
-      :align: center
+      Determine the direction of a pipe based on adjacent segments.
 
-      digraph inheritance_PipeDirection {
-        node [shape=record];
-        "PipeDirection" [label="PipeDirection"];
-        "str" -> "PipeDirection";
-        "enum.Enum" -> "PipeDirection";
-      }
 
-.. autoclass:: games.single_player.flow_free.base.PipeDirection
-   :members:
-   :undoc-members:
-   :show-inheritance:
+      .. autolink-examples:: _determine_pipe_direction
+         :collapse:
 
-   .. note::
 
-      **PipeDirection** is an Enum defined in ``games.single_player.flow_free.base``.
+   .. py:method:: add_flow(color: str, start_pos: game_framework_base.GridPosition, end_pos: game_framework_base.GridPosition) -> str
 
+      Add a new flow to the game.
 
 
+      .. autolink-examples:: add_flow
+         :collapse:
 
 
-.. rubric:: Related Links
+   .. py:method:: is_valid_move(move: FlowFreeMove) -> bool
 
-.. autolink-examples:: games.single_player.flow_free.base
-   :collapse:
-   
-.. autolink-skip:: next
+      Check if a move is valid.
+
+
+      .. autolink-examples:: is_valid_move
+         :collapse:
+
+
+   .. py:method:: make_move(move: FlowFreeMove) -> bool
+
+      Make a move in the game.
+
+
+      .. autolink-examples:: make_move
+         :collapse:
+
+
+   .. py:method:: reset() -> None
+
+      Reset the game.
+
+
+      .. autolink-examples:: reset
+         :collapse:
+
+
+   .. py:method:: select_flow(flow_id: str) -> bool
+
+      Select a flow to work with.
+
+
+      .. autolink-examples:: select_flow
+         :collapse:
+
+
+   .. py:method:: start_game() -> None
+
+      Start the game.
+
+
+      .. autolink-examples:: start_game
+         :collapse:
+
+
+   .. py:attribute:: board
+      :type:  FlowBoard
+
+
+   .. py:attribute:: current_flow_id
+      :type:  str | None
+      :value: None
+
+
+
+.. py:class:: FlowFreeLevel(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A pre-defined Flow Free level.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: FlowFreeLevel
+      :collapse:
+
+   .. py:method:: create_game() -> FlowFreeGame
+
+      Create a game from this level.
+
+
+      .. autolink-examples:: create_game
+         :collapse:
+
+
+   .. py:attribute:: cols
+      :type:  int
+
+
+   .. py:attribute:: flows
+      :type:  list[tuple[str, tuple[int, int], tuple[int, int]]]
+
+
+   .. py:attribute:: rows
+      :type:  int
+
+
+.. py:class:: FlowFreeMove(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   A move in Flow Free.
+
+   Create a new model by parsing and validating input data from keyword arguments.
+
+   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+   validated to form a valid model.
+
+   `self` is explicitly positional-only to allow `self` as a field name.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: FlowFreeMove
+      :collapse:
+
+   .. py:attribute:: flow_id
+      :type:  str
+
+
+   .. py:attribute:: position
+      :type:  game_framework_base.GridPosition
+
+
+.. py:class:: FlowGridSpace
+
+   Bases: :py:obj:`game_framework_base.GridSpace`\ [\ :py:obj:`FlowPiece`\ ]
+
+
+   A space on a Flow Free board.
+
+
+   .. autolink-examples:: FlowGridSpace
+      :collapse:
+
+   .. py:property:: color
+      :type: str | None
+
+
+      Get the color of the piece in this space.
+
+      .. autolink-examples:: color
+         :collapse:
+
+
+   .. py:property:: has_endpoint
+      :type: bool
+
+
+      Check if this space contains an endpoint.
+
+      .. autolink-examples:: has_endpoint
+         :collapse:
+
+
+   .. py:property:: has_pipe
+      :type: bool
+
+
+      Check if this space contains a pipe.
+
+      .. autolink-examples:: has_pipe
+         :collapse:
+
+
+.. py:class:: FlowPiece
+
+   Bases: :py:obj:`game_framework_base.GamePiece`\ [\ :py:obj:`game_framework_base.GridPosition`\ ]
+
+
+   Base class for Flow Free pieces (endpoints and pipes).
+
+
+   .. autolink-examples:: FlowPiece
+      :collapse:
+
+   .. py:method:: validate_color(v: str) -> str
+      :classmethod:
+
+
+      Validate color format.
+
+
+      .. autolink-examples:: validate_color
+         :collapse:
+
+
+   .. py:attribute:: color
+      :type:  str
+
+
+   .. py:attribute:: connection_type
+      :type:  ConnectionType
+
+
+   .. py:attribute:: flow_id
+      :type:  str
+
+
+.. py:class:: FlowPipe
+
+   Bases: :py:obj:`FlowPiece`
+
+
+   A pipe segment in Flow Free.
+
+
+   .. autolink-examples:: FlowPipe
+      :collapse:
+
+   .. py:method:: can_move_to(position: game_framework_base.GridPosition, board: FlowBoard) -> bool
+
+      Check if this pipe segment can be placed at the specified position.
+
+
+      .. autolink-examples:: can_move_to
+         :collapse:
+
+
+   .. py:attribute:: connected_directions
+      :type:  set[PipeDirection]
+      :value: None
+
+
+
+   .. py:attribute:: connection_type
+      :type:  Literal[ConnectionType]
+      :value: 'pipe'
+
+
+
+   .. py:attribute:: direction
+      :type:  PipeDirection
+
+
+   .. py:property:: is_corner
+      :type: bool
+
+
+      Check if this pipe forms a corner.
+
+      .. autolink-examples:: is_corner
+         :collapse:
+
+
+.. py:class:: PipeDirection
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Direction of a pipe segment.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. autolink-examples:: __init__
+      :collapse:
+
+
+   .. autolink-examples:: PipeDirection
+      :collapse:
+
+   .. py:attribute:: DOWN
+      :value: 'down'
+
+
+
+   .. py:attribute:: LEFT
+      :value: 'left'
+
+
+
+   .. py:attribute:: NONE
+      :value: 'none'
+
+
+
+   .. py:attribute:: RIGHT
+      :value: 'right'
+
+
+
+   .. py:attribute:: UP
+      :value: 'up'
+
+
+
+.. py:data:: ConnectionType
+
