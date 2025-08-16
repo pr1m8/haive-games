@@ -24,7 +24,9 @@ Key Features:
     - Player order customization
 
 Examples:
-    Basic configuration::
+    Basic configuration:
+
+    .. code-block:: python
 
         from haive.games.clue.config import ClueConfig
 
@@ -110,7 +112,9 @@ class ClueConfig(GameConfig):
             If None, a random solution will be generated.
 
     Examples:
-        Default configuration::
+        Default configuration:
+
+        .. code-block:: python
 
             config = ClueConfig()
             assert config.name == "clue"
@@ -206,7 +210,9 @@ class ClueConfig(GameConfig):
             ClueConfig: Casual game configuration.
 
         Examples:
-            Creating a casual game::
+            Creating a casual game:
+
+            .. code-block:: python
 
                 config = ClueConfig.casual_game()
                 assert config.max_turns == 25

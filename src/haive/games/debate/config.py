@@ -10,7 +10,9 @@ methods for common debate formats including standard debates, presidential
 debates, trial formats, and panel discussions.
 
 Examples:
-    Creating a standard debate configuration::
+    Creating a standard debate configuration:
+
+    .. code-block:: python
 
         config = DebateAgentConfig.default()
         agent = DebateAgent(config)
@@ -98,7 +100,9 @@ class DebateAgentConfig(AgentConfig):
             Automatically built by build_debate_engines but can be customized.
 
     Examples:
-        Basic debate configuration::
+        Basic debate configuration:
+
+        .. code-block:: python
 
             config = DebateAgentConfig(
                 name="climate_debate",

@@ -14,7 +14,9 @@ The configuration system supports:
 - Tournament-ready configuration presets
 
 Examples:
-    Basic game configuration::
+    Basic game configuration:
+
+    .. code-block:: python
 
         config = TicTacToeConfig(
             name="educational_game",
@@ -95,7 +97,9 @@ class TicTacToeConfig(GameConfig):
             Maps O symbol to player identifier.
 
     Examples:
-        Educational game with analysis::
+        Educational game with analysis:
+
+        .. code-block:: python
 
             config = TicTacToeConfig(
                 name="learning_game",
@@ -255,7 +259,9 @@ class TicTacToeConfig(GameConfig):
             TicTacToeConfig: Default game configuration instance.
 
         Examples:
-            Creating default game::
+            Creating default game:
+
+            .. code-block:: python
 
                 config = TicTacToeConfig.default_config()
                 assert config.enable_analysis == True

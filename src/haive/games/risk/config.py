@@ -10,7 +10,9 @@ methods for popular Risk variants including classic Risk, Risk 2210 A.D.,
 Risk: Legacy, and tournament configurations.
 
 Examples:
-    Creating a classic Risk configuration::
+    Creating a classic Risk configuration:
+
+    .. code-block:: python
 
         config = RiskConfig.classic()
         game = RiskGame(config)
@@ -126,7 +128,9 @@ class RiskConfig(BaseModel):
             Strategic variant increasing uncertainty and intelligence gathering.
 
     Examples:
-        Standard competitive configuration::
+        Standard competitive configuration:
+
+        .. code-block:: python
 
             config = RiskConfig(
                 player_count=4,
