@@ -3,157 +3,174 @@ games.single_player.state_manager
 
 .. py:module:: games.single_player.state_manager
 
-
-Classes
--------
-
-.. autoapisummary::
-
-   games.single_player.state_manager.SinglePlayerStateManager
+Module documentation for games.single_player.state_manager
 
 
-Module Contents
----------------
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
+
+      
+            
+            
+
+.. admonition:: Classes (1)
+   :class: note
+
+   .. autoapisummary::
+
+      games.single_player.state_manager.SinglePlayerStateManager
+
+            
+            
+
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SinglePlayerStateManager
 
-   Bases: :py:obj:`haive.games.framework.base.state_manager.GameStateManager`\ [\ :py:obj:`haive.games.base.state.WordConnectionsState`\ ]
+            Bases: :py:obj:`haive.games.framework.base.state_manager.GameStateManager`\ [\ :py:obj:`haive.games.base.state.WordConnectionsState`\ ]
 
 
-   Base state manager for single-player games.
+            Base state manager for single-player games.
 
-   This class extends the base GameStateManager with single-player specific
-   functionality such as hint generation, difficulty scaling, and interactive
-   input handling.
+            This class extends the base GameStateManager with single-player specific
+            functionality such as hint generation, difficulty scaling, and interactive
+            input handling.
 
-   .. method:: initialize
+            .. method:: initialize
 
-      Initialize a new game state
+               Initialize a new game state
 
-   .. method:: apply_move
+            .. method:: apply_move
 
-      Apply a move to the game state
+               Apply a move to the game state
 
-   .. method:: generate_hint
+            .. method:: generate_hint
 
-      Generate a hint for the current game state
+               Generate a hint for the current game state
 
-   .. method:: check_game_status
+            .. method:: check_game_status
 
-      Check and update the game status
+               Check and update the game status
 
-   .. method:: interactive_input
+            .. method:: interactive_input
 
-      Process interactive input from the player
-      
-      
+               Process interactive input from the player
+               
+               
 
 
-   .. autolink-examples:: SinglePlayerStateManager
-      :collapse:
+            .. py:method:: apply_move(state: re.T, move: Any) -> re.T
+               :classmethod:
 
-   .. py:method:: apply_move(state: re.T, move: Any) -> re.T
-      :classmethod:
+               :abstractmethod:
 
-      :abstractmethod:
 
+               Apply a move to the game state.
 
-      Apply a move to the game state.
+               :param state: Current game state
+               :param move: Move to apply
 
-      :param state: Current game state
-      :param move: Move to apply
+               :returns: Updated game state
 
-      :returns: Updated game state
 
 
-      .. autolink-examples:: apply_move
-         :collapse:
+            .. py:method:: check_game_status(state: re.T) -> re.T
+               :classmethod:
 
+               :abstractmethod:
 
-   .. py:method:: check_game_status(state: re.T) -> re.T
-      :classmethod:
 
-      :abstractmethod:
+               Check and update the game status.
 
+               :param state: Current game state
 
-      Check and update the game status.
+               :returns: Updated game state with status checked
 
-      :param state: Current game state
 
-      :returns: Updated game state with status checked
 
+            .. py:method:: generate_hint(state: re.T) -> tuple[re.T, str]
+               :classmethod:
 
-      .. autolink-examples:: check_game_status
-         :collapse:
 
+               Generate a hint for the current game state.
 
-   .. py:method:: generate_hint(state: re.T) -> tuple[re.T, str]
-      :classmethod:
+               :param state: Current game state
 
+               :returns: Tuple of (updated state, hint text)
 
-      Generate a hint for the current game state.
 
-      :param state: Current game state
 
-      :returns: Tuple of (updated state, hint text)
+            .. py:method:: get_legal_moves(state: re.T) -> list[Any]
+               :classmethod:
 
+               :abstractmethod:
 
-      .. autolink-examples:: generate_hint
-         :collapse:
 
+               Get all legal moves for the current state.
 
-   .. py:method:: get_legal_moves(state: re.T) -> list[Any]
-      :classmethod:
+               :param state: Current game state
 
-      :abstractmethod:
+               :returns: List of legal moves
 
 
-      Get all legal moves for the current state.
 
-      :param state: Current game state
+            .. py:method:: initialize(difficulty: GameDifficulty = GameDifficulty.MEDIUM, player_type: PlayerType = PlayerType.LLM, **kwargs) -> re.T
+               :classmethod:
 
-      :returns: List of legal moves
+               :abstractmethod:
 
 
-      .. autolink-examples:: get_legal_moves
-         :collapse:
+               Initialize a new game state.
 
+               :param difficulty: Difficulty level of the game
+               :param player_type: Type of player
+               :param \*\*kwargs: Additional game-specific initialization parameters
 
-   .. py:method:: initialize(difficulty: GameDifficulty = GameDifficulty.MEDIUM, player_type: PlayerType = PlayerType.LLM, **kwargs) -> re.T
-      :classmethod:
+               :returns: A new game state
 
-      :abstractmethod:
 
 
-      Initialize a new game state.
+            .. py:method:: interactive_input(state: re.T, user_input: str) -> re.T
+               :classmethod:
 
-      :param difficulty: Difficulty level of the game
-      :param player_type: Type of player
-      :param \*\*kwargs: Additional game-specific initialization parameters
 
-      :returns: A new game state
+               Process interactive input from the player.
 
+               This method handles general commands like 'hint', 'quit', etc.
+               Game-specific commands should be handled by overriding this method.
 
-      .. autolink-examples:: initialize
-         :collapse:
+               :param state: Current game state
+               :param user_input: User input string
 
+               :returns: Updated game state
 
-   .. py:method:: interactive_input(state: re.T, user_input: str) -> re.T
-      :classmethod:
 
 
-      Process interactive input from the player.
 
-      This method handles general commands like 'hint', 'quit', etc.
-      Game-specific commands should be handled by overriding this method.
 
-      :param state: Current game state
-      :param user_input: User input string
 
-      :returns: Updated game state
+----
 
+.. admonition:: Quick Reference
+   :class: tip
 
-      .. autolink-examples:: interactive_input
-         :collapse:
+   .. code-block:: python
 
+      from games.single_player.state_manager import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

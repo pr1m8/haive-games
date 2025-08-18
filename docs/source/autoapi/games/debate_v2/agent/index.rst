@@ -3,6 +3,19 @@ games.debate_v2.agent
 
 .. py:module:: games.debate_v2.agent
 
+Gamified Debate Agent - Modern Implementation.
+
+This module implements a gamified debate using the modern conversation agent
+pattern from haive-agents, providing proper topic handling and state management
+without the deprecated DynamicGraph system.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Gamified Debate Agent - Modern Implementation.
@@ -12,228 +25,221 @@ games.debate_v2.agent
    without the deprecated DynamicGraph system.
 
 
-   .. autolink-examples:: games.debate_v2.agent
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.debate_v2.agent.logger
+      games.debate_v2.agent.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.debate_v2.agent.GameDebateAgent
+      games.debate_v2.agent.GameDebateAgent
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameDebateAgent
 
-   Bases: :py:obj:`haive.agents.conversation.debate.agent.DebateConversation`
+            Bases: :py:obj:`haive.agents.conversation.debate.agent.DebateConversation`
 
 
-   Gamified debate agent with scoring and tournament features.
+            Gamified debate agent with scoring and tournament features.
 
-   This agent extends the conversation debate system with game-like features:
-   - Scoring system for arguments and rebuttals
-   - Tournament bracket support
-   - Performance statistics tracking
-   - Ranking and leaderboard capabilities
+            This agent extends the conversation debate system with game-like features:
+            - Scoring system for arguments and rebuttals
+            - Tournament bracket support
+            - Performance statistics tracking
+            - Ranking and leaderboard capabilities
 
 
 
-   .. autolink-examples:: GameDebateAgent
-      :collapse:
+            .. py:method:: __repr__() -> str
 
-   .. py:method:: __repr__() -> str
+               String representation of the game debate agent.
 
-      String representation of the game debate agent.
 
 
-      .. autolink-examples:: __repr__
-         :collapse:
+            .. py:method:: _calculate_argument_score(content: str, speaker: str, phase: str, state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
 
+               Calculate and assign scores for arguments/rebuttals.
 
-   .. py:method:: _calculate_argument_score(content: str, speaker: str, phase: str, state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
 
-      Calculate and assign scores for arguments/rebuttals.
 
+            .. py:method:: _create_initial_message() -> langchain_core.messages.BaseMessage
 
-      .. autolink-examples:: _calculate_argument_score
-         :collapse:
+               Create the gamified debate introduction message.
 
 
-   .. py:method:: _create_initial_message() -> langchain_core.messages.BaseMessage
 
-      Create the gamified debate introduction message.
+            .. py:method:: _custom_initialization(state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
 
+               Initialize game-specific state fields.
 
-      .. autolink-examples:: _create_initial_message
-         :collapse:
 
 
-   .. py:method:: _custom_initialization(state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
+            .. py:method:: _has_evidence(content: str) -> bool
 
-      Initialize game-specific state fields.
+               Detect if content cites evidence or sources.
 
 
-      .. autolink-examples:: _custom_initialization
-         :collapse:
 
+            .. py:method:: _is_repetitive(content: str, speaker: str, state: haive.agents.conversation.debate.state.DebateState) -> bool
 
-   .. py:method:: _has_evidence(content: str) -> bool
+               Detect if content is repetitive of previous arguments.
 
-      Detect if content cites evidence or sources.
 
 
-      .. autolink-examples:: _has_evidence
-         :collapse:
+            .. py:method:: _update_game_phase(state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
 
+               Update game phase based on debate progress.
 
-   .. py:method:: _is_repetitive(content: str, speaker: str, state: haive.agents.conversation.debate.state.DebateState) -> bool
 
-      Detect if content is repetitive of previous arguments.
 
+            .. py:method:: conclude_conversation(state: haive.agents.conversation.debate.state.DebateState) -> langgraph.types.Command
 
-      .. autolink-examples:: _is_repetitive
-         :collapse:
+               Create gamified conclusion with scores and winner declaration.
 
 
-   .. py:method:: _update_game_phase(state: haive.agents.conversation.debate.state.DebateState) -> dict[str, Any]
 
-      Update game phase based on debate progress.
+            .. py:method:: create_tournament_match(topic: str, player_a: tuple[str, str], player_b: tuple[str, str], match_id: str, bracket_position: str = 'tournament', **kwargs) -> GameDebateAgent
+               :classmethod:
 
 
-      .. autolink-examples:: _update_game_phase
-         :collapse:
+               Create a tournament debate match.
 
 
-   .. py:method:: conclude_conversation(state: haive.agents.conversation.debate.state.DebateState) -> langgraph.types.Command
 
-      Create gamified conclusion with scores and winner declaration.
+            .. py:method:: process_response(state: haive.agents.conversation.debate.state.DebateState) -> langgraph.types.Command
 
+               Process response with game scoring logic.
 
-      .. autolink-examples:: conclude_conversation
-         :collapse:
 
 
-   .. py:method:: create_tournament_match(topic: str, player_a: tuple[str, str], player_b: tuple[str, str], match_id: str, bracket_position: str = 'tournament', **kwargs) -> GameDebateAgent
-      :classmethod:
+            .. py:method:: setup_agent() -> None
 
+               Setup the game debate agent with proper state schema.
 
-      Create a tournament debate match.
 
 
-      .. autolink-examples:: create_tournament_match
-         :collapse:
+            .. py:method:: validate_game_setup() -> GameDebateAgent
 
+               Validate game configuration.
 
-   .. py:method:: process_response(state: haive.agents.conversation.debate.state.DebateState) -> langgraph.types.Command
 
-      Process response with game scoring logic.
 
+            .. py:attribute:: bonus_for_evidence
+               :type:  int
+               :value: None
 
-      .. autolink-examples:: process_response
-         :collapse:
 
 
-   .. py:method:: setup_agent() -> None
+            .. py:attribute:: bracket_position
+               :type:  str | None
+               :value: None
 
-      Setup the game debate agent with proper state schema.
 
 
-      .. autolink-examples:: setup_agent
-         :collapse:
+            .. py:attribute:: match_id
+               :type:  str | None
+               :value: None
 
 
-   .. py:method:: validate_game_setup() -> GameDebateAgent
 
-      Validate game configuration.
+            .. py:attribute:: mode
+               :type:  Literal['game_debate']
+               :value: None
 
 
-      .. autolink-examples:: validate_game_setup
-         :collapse:
 
+            .. py:attribute:: penalty_for_repetition
+               :type:  int
+               :value: None
 
-   .. py:attribute:: bonus_for_evidence
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: points_per_argument
+               :type:  int
+               :value: None
 
-   .. py:attribute:: bracket_position
-      :type:  str | None
-      :value: None
 
 
+            .. py:attribute:: points_per_rebuttal
+               :type:  int
+               :value: None
 
-   .. py:attribute:: match_id
-      :type:  str | None
-      :value: None
 
 
+            .. py:attribute:: save_replay
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: mode
-      :type:  Literal['game_debate']
-      :value: None
 
 
+            .. py:attribute:: scoring_enabled
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: penalty_for_repetition
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: state_schema
+               :type:  type[pydantic.BaseModel]
+               :value: None
 
-   .. py:attribute:: points_per_argument
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: tournament_mode
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: points_per_rebuttal
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: track_performance
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: save_replay
-      :type:  bool
-      :value: None
 
 
 
-   .. py:attribute:: scoring_enabled
-      :type:  bool
-      :value: None
-
-
-
-   .. py:attribute:: state_schema
-      :type:  type[pydantic.BaseModel]
-      :value: None
-
-
-
-   .. py:attribute:: tournament_mode
-      :type:  bool
-      :value: None
-
-
-
-   .. py:attribute:: track_performance
-      :type:  bool
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.debate_v2.agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

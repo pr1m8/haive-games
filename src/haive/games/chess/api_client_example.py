@@ -13,6 +13,11 @@ class ChessAPIClient:
     """Simple client for the Chess API."""
 
     def __init__(self, base_url: str = "http://localhost:8000"):
+        """  Init  .
+
+Args:
+    base_url: [TODO: Add description]
+"""
         self.base_url = base_url
 
     def list_providers(self):

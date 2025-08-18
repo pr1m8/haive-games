@@ -146,17 +146,44 @@ def example_custom_game() -> Any:
     # Create state manager
     class NumberGameStateManager(GameStateManager):
         def __init__(self, config: NumberGameConfig):
+            """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
             super().__init__(config)
 
             self.target = random.randint(config.min_number, config.max_number)
 
         def initialize_state(self) -> NumberGameState:
+            """Initialize State.
+
+Returns:
+    [TODO: Add return description]
+"""
             return NumberGameState(target_number=self.target)
 
         def is_game_over(self, state: NumberGameState) -> bool:
+            """Is Game Over.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return state.found or len(state.guesses) >= self.config.max_guesses
 
         def process_guess(self, state: NumberGameState, guess: int) -> NumberGameState:
+            """Process Guess.
+
+Args:
+    state: [TODO: Add description]
+    guess: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             state.guesses.append(guess)
 
             if guess == self.target:
@@ -170,11 +197,24 @@ def example_custom_game() -> Any:
             return state
 
         def get_valid_moves(self, state: NumberGameState) -> list[int]:
+            """Get Valid Moves.
+
+Args:
+    state: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return list(range(self.config.min_number, self.config.max_number + 1))
 
     # Create game agent
     class NumberGameAgent(GameAgent):
         def __init__(self, config: NumberGameConfig):
+            """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
             super().__init__(config)
             self.state_manager = NumberGameStateManager(config)
             self.engine = AugLLMConfig(
@@ -185,6 +225,11 @@ def example_custom_game() -> Any:
             )
 
         def run(self) -> Any:
+            """Run.
+
+Returns:
+    [TODO: Add return description]
+"""
             state = self.state_manager.initialize_state()
 
             while not self.state_manager.is_game_over(state):
@@ -337,22 +382,53 @@ def example_game_with_observers() -> None:
     class CommentaryObserver(GameObserver):
         """Provide live commentary on the game."""
         def on_move(self, state: dict[str, Any], move, player):
+            """On Move.
+
+Args:
+    state: [TODO: Add description]
+    move: [TODO: Add description]
+    player: [TODO: Add description]
+"""
             pass
 
         def on_game_end(self, state: dict[str, Any], winner):
+            """On Game End.
+
+Args:
+    state: [TODO: Add description]
+    winner: [TODO: Add description]
+"""
             pass
 
     class StatisticsObserver(GameObserver):
         """Track game statistics."""
         def __init__(self) -> None:
+            """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
             self.move_count = 0
             self.player_moves = {}
 
         def on_move(self, state: dict[str, Any], move, player):
+            """On Move.
+
+Args:
+    state: [TODO: Add description]
+    move: [TODO: Add description]
+    player: [TODO: Add description]
+"""
             self.move_count += 1
             self.player_moves[player] = self.player_moves.get(player, 0) + 1
 
         def on_game_end(self, state: dict[str, Any], winner):
+            """On Game End.
+
+Args:
+    state: [TODO: Add description]
+    winner: [TODO: Add description]
+"""
             for _player, _count in self.player_moves.items():
                 pass
 

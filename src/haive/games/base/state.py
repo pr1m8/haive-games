@@ -3,7 +3,7 @@
 This module provides the foundational state class for game agents,
 defining the core state attributes that all games need to track.
 
-Example:
+Examples:
     >>> state = GameState(
     ...     turn="player1",
     ...     game_status="ongoing",
@@ -62,7 +62,7 @@ class GameState(BaseModel, ABC):
         Returns:
             GameState: A fully initialized game state object.
 
-        Example:
+        Examples:
             >>> return Connect4State.initialize(first_player="red")
 
         """

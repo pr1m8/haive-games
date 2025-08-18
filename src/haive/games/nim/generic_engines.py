@@ -22,6 +22,8 @@ class NimPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Nim game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -97,6 +99,8 @@ class NimEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Nim game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = NimPlayerIdentifiers()
         prompt_generator = NimPromptGenerator()
         super().__init__(identifiers, prompt_generator)

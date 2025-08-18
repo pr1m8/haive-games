@@ -22,6 +22,11 @@ class CluePlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Clue game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="detective", player2="suspect")
 
 
@@ -97,6 +102,11 @@ class ClueEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Clue game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = CluePlayerIdentifiers()
         prompt_generator = CluePromptGenerator()
         super().__init__(identifiers, prompt_generator)

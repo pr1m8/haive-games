@@ -3,26 +3,42 @@ games.multi_player
 
 .. py:module:: games.multi_player
 
+Module exports.
+
+
+
 .. autoapi-nested-parse::
 
    Module exports.
 
 
-   .. autolink-examples:: games.multi_player
-      :collapse:
 
 
-Submodules
-----------
+.. admonition:: Submodules (6)
+   :class: note
 
-.. toctree::
-   :maxdepth: 1
+   .. toctree::
+      :maxdepth: 1
+      :titlesonly:
 
-   /autoapi/games/multi_player/agent/index
-   /autoapi/games/multi_player/config/index
-   /autoapi/games/multi_player/factory/index
-   /autoapi/games/multi_player/models/index
-   /autoapi/games/multi_player/state/index
-   /autoapi/games/multi_player/state_manager/index
+      /autoapi/games/multi_player/agent/index
+      /autoapi/games/multi_player/config/index
+      /autoapi/games/multi_player/factory/index
+      /autoapi/games/multi_player/models/index
+      /autoapi/games/multi_player/state/index
+      /autoapi/games/multi_player/state_manager/index
 
+      
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.multi_player import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

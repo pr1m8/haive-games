@@ -3,6 +3,39 @@ games.mafia.agent
 
 .. py:module:: games.mafia.agent
 
+Mafia game agent implementation.
+
+This module provides the core agent implementation for the Mafia game,
+handling:
+    - Game initialization and setup
+    - Player turn management
+    - Move generation and validation
+    - Game state visualization
+    - Role-specific behavior
+
+The agent uses LLMs to generate player decisions and narrator actions,
+creating an engaging and strategic game experience.
+
+.. rubric:: Example
+
+>>> from mafia.agent import MafiaAgent
+>>> from mafia.config import MafiaAgentConfig
+>>>
+>>> # Create and initialize agent
+>>> config = MafiaAgentConfig.default_config(player_count=7)
+>>> agent = MafiaAgent(config)
+>>>
+>>> # Run the game
+>>> for state in agent.app.stream(initial_state):
+...     agent.visualize_state(state)
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Mafia game agent implementation.
@@ -32,358 +65,353 @@ games.mafia.agent
    ...     agent.visualize_state(state)
 
 
-   .. autolink-examples:: games.mafia.agent
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mafia.agent.logger
+      games.mafia.agent.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mafia.agent.MafiaAgent
+      games.mafia.agent.MafiaAgent
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MafiaAgent(config: haive.games.mafia.config.MafiaAgentConfig)
 
-   Bases: :py:obj:`haive.games.framework.multi_player.agent.MultiPlayerGameAgent`\ [\ :py:obj:`haive.games.mafia.config.MafiaAgentConfig`\ ]
+            Bases: :py:obj:`haive.games.framework.multi_player.agent.MultiPlayerGameAgent`\ [\ :py:obj:`haive.games.mafia.config.MafiaAgentConfig`\ ]
 
 
-   Agent for playing Mafia.
+            Agent for playing Mafia.
 
-   This class implements the core game logic for Mafia, managing player
-   turns, move generation, and game progression.
+            This class implements the core game logic for Mafia, managing player
+            turns, move generation, and game progression.
 
-   The agent handles:
-       - Role assignment and management
-       - Turn sequencing and validation
-       - LLM-based decision making
-       - Game state visualization
-       - Win condition checking
+            The agent handles:
+                - Role assignment and management
+                - Turn sequencing and validation
+                - LLM-based decision making
+                - Game state visualization
+                - Win condition checking
 
-   .. attribute:: state_manager
+            .. attribute:: state_manager
 
-      Manager for game state
+               Manager for game state
 
-      :type: MafiaStateManager
+               :type: MafiaStateManager
 
-   .. attribute:: role_enum_mapping
+            .. attribute:: role_enum_mapping
 
-      Role to engine mapping
+               Role to engine mapping
 
-      :type: Dict[PlayerRole, str]
+               :type: Dict[PlayerRole, str]
 
-   .. attribute:: role_mapping
+            .. attribute:: role_mapping
 
-      Engine to role mapping
+               Engine to role mapping
 
-      :type: Dict[str, PlayerRole]
+               :type: Dict[str, PlayerRole]
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> config = MafiaAgentConfig.default_config(player_count=7)
-   >>> agent = MafiaAgent(config)
-   >>> initial_state = MafiaStateManager.initialize(
-   ...     ["Player_1", "Player_2", "Narrator"]
-   ... )
-   >>> for state in agent.app.stream(initial_state):
-   ...     agent.visualize_state(state)
+            >>> config = MafiaAgentConfig.default_config(player_count=7)
+            >>> agent = MafiaAgent(config)
+            >>> initial_state = MafiaStateManager.initialize(
+            ...     ["Player_1", "Player_2", "Narrator"]
+            ... )
+            >>> for state in agent.app.stream(initial_state):
+            ...     agent.visualize_state(state)
 
-   Initialize the Mafia agent.
+            Initialize the Mafia agent.
 
-   :param config: Configuration for the agent
-   :type config: MafiaAgentConfig
+            :param config: Configuration for the agent
+            :type config: MafiaAgentConfig
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> config = MafiaAgentConfig.default_config(player_count=7)
-   >>> agent = MafiaAgent(config)
+            >>> config = MafiaAgentConfig.default_config(player_count=7)
+            >>> agent = MafiaAgent(config)
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: determine_next_step_after_player_turn(state: haive.games.mafia.state.MafiaGameState) -> str
 
+               Determine what to do after a player's turn.
 
-   .. autolink-examples:: MafiaAgent
-      :collapse:
+               This method decides the next game action based on:
+                   - Current game phase
+                   - Completed actions
+                   - Game end conditions
+                   - Maximum day limit
 
-   .. py:method:: determine_next_step_after_player_turn(state: haive.games.mafia.state.MafiaGameState) -> str
+               :param state: Current game state
+               :type state: MafiaGameState
 
-      Determine what to do after a player's turn.
+               :returns: Next action ("end_game", "phase_transition", or "next_player")
+               :rtype: str
 
-      This method decides the next game action based on:
-          - Current game phase
-          - Completed actions
-          - Game end conditions
-          - Maximum day limit
+               .. rubric:: Example
 
-      :param state: Current game state
-      :type state: MafiaGameState
+               >>> next_step = agent.determine_next_step_after_player_turn(state)
+               >>> print(next_step)  # Shows what happens next
 
-      :returns: Next action ("end_game", "phase_transition", or "next_player")
-      :rtype: str
 
-      .. rubric:: Example
 
-      >>> next_step = agent.determine_next_step_after_player_turn(state)
-      >>> print(next_step)  # Shows what happens next
+            .. py:method:: extract_move(response: str, player_id: str) -> haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction
 
+               Extract move from engine response.
 
-      .. autolink-examples:: determine_next_step_after_player_turn
-         :collapse:
+               This method processes the LLM response into a valid game action,
+               handling:
+                   - Response validation
+                   - Action type conversion
+                   - Default action generation
+                   - Error handling
 
+               :param response: Raw response from the LLM
+               :param player_id: ID of the player making the move
+               :type player_id: str
 
-   .. py:method:: extract_move(response: str, player_id: str) -> haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction
+               :returns: Validated game action
+               :rtype: Union[MafiaAction, NarratorAction]
 
-      Extract move from engine response.
+               .. rubric:: Example
 
-      This method processes the LLM response into a valid game action,
-      handling:
-          - Response validation
-          - Action type conversion
-          - Default action generation
-          - Error handling
+               >>> response = engine.invoke(context)
+               >>> move = agent.extract_move(response, "Player_1")
+               >>> print(move.action_type)  # Shows the action type
 
-      :param response: Raw response from the LLM
-      :param player_id: ID of the player making the move
-      :type player_id: str
 
-      :returns: Validated game action
-      :rtype: Union[MafiaAction, NarratorAction]
 
-      .. rubric:: Example
+            .. py:method:: get_engine_for_player(role: haive.games.mafia.models.PlayerRole | str, function: str) -> Any | None
 
-      >>> response = engine.invoke(context)
-      >>> move = agent.extract_move(response, "Player_1")
-      >>> print(move.action_type)  # Shows the action type
+               Get the appropriate engine for a player based on role and function.
 
+               :param role: Player's role or role string
+               :type role: Union[PlayerRole, str]
+               :param function: Function type (e.g., "player")
+               :type function: str
 
-      .. autolink-examples:: extract_move
-         :collapse:
+               :returns: Engine configuration if found, None otherwise
+               :rtype: Optional[Any]
 
+               .. rubric:: Example
 
-   .. py:method:: get_engine_for_player(role: haive.games.mafia.models.PlayerRole | str, function: str) -> Any | None
+               >>> engine = agent.get_engine_for_player(
+               ...     PlayerRole.MAFIA, "player"
+               ... )
+               >>> print(engine.name)  # Shows "mafia_player"
 
-      Get the appropriate engine for a player based on role and function.
 
-      :param role: Player's role or role string
-      :type role: Union[PlayerRole, str]
-      :param function: Function type (e.g., "player")
-      :type function: str
 
-      :returns: Engine configuration if found, None otherwise
-      :rtype: Optional[Any]
+            .. py:method:: get_player_role(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> haive.games.mafia.models.PlayerRole
 
-      .. rubric:: Example
+               Get the role of a player.
 
-      >>> engine = agent.get_engine_for_player(
-      ...     PlayerRole.MAFIA, "player"
-      ... )
-      >>> print(engine.name)  # Shows "mafia_player"
+               :param state: Current game state
+               :type state: MafiaGameState
+               :param player_id: ID of the player to check
+               :type player_id: str
 
+               :returns: The player's role
+               :rtype: PlayerRole
 
-      .. autolink-examples:: get_engine_for_player
-         :collapse:
+               :raises Exception: If player not found in state
 
+               .. rubric:: Example
 
-   .. py:method:: get_player_role(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> haive.games.mafia.models.PlayerRole
+               >>> role = agent.get_player_role(state, "Player_1")
+               >>> print(role)  # Shows PlayerRole.VILLAGER
 
-      Get the role of a player.
 
-      :param state: Current game state
-      :type state: MafiaGameState
-      :param player_id: ID of the player to check
-      :type player_id: str
 
-      :returns: The player's role
-      :rtype: PlayerRole
+            .. py:method:: handle_narrator_turn(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-      :raises Exception: If player not found in state
+               Handle the narrator's turn.
 
-      .. rubric:: Example
+               This method manages narrator actions, including:
+                   - Phase transitions
+                   - Night action resolution
+                   - Public announcements
+                   - Game state updates
 
-      >>> role = agent.get_player_role(state, "Player_1")
-      >>> print(role)  # Shows PlayerRole.VILLAGER
+               :param state: Current game state
+               :type state: MafiaGameState
 
+               :returns: Updated game state after narrator action
+               :rtype: Dict[str, Any]
 
-      .. autolink-examples:: get_player_role
-         :collapse:
+               .. rubric:: Example
 
+               >>> new_state = agent.handle_narrator_turn(state)
+               >>> print(new_state["public_announcements"][-1])
 
-   .. py:method:: handle_narrator_turn(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-      Handle the narrator's turn.
 
-      This method manages narrator actions, including:
-          - Phase transitions
-          - Night action resolution
-          - Public announcements
-          - Game state updates
+            .. py:method:: handle_player_turn(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-      :param state: Current game state
-      :type state: MafiaGameState
+               Handle a player's turn with special Mafia logic.
 
-      :returns: Updated game state after narrator action
-      :rtype: Dict[str, Any]
+               This method manages a player's turn, including:
+                   - Role-specific behavior
+                   - Move generation and validation
+                   - State updates
+                   - Error handling
 
-      .. rubric:: Example
+               :param state: Current game state
+               :type state: MafiaGameState
 
-      >>> new_state = agent.handle_narrator_turn(state)
-      >>> print(new_state["public_announcements"][-1])
+               :returns: Updated game state after the turn
+               :rtype: Dict[str, Any]
 
+               .. rubric:: Example
 
-      .. autolink-examples:: handle_narrator_turn
-         :collapse:
+               >>> new_state = agent.handle_player_turn(state)
+               >>> print(new_state["game_phase"])  # Shows current phase
 
 
-   .. py:method:: handle_player_turn(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-      Handle a player's turn with special Mafia logic.
+            .. py:method:: prepare_move_context(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> dict[str, Any]
 
-      This method manages a player's turn, including:
-          - Role-specific behavior
-          - Move generation and validation
-          - State updates
-          - Error handling
+               Prepare context for move generation.
 
-      :param state: Current game state
-      :type state: MafiaGameState
+               This method gathers all relevant information for a player's move,
+               including:
+                   - Game state information
+                   - Player-specific knowledge
+                   - Legal moves
+                   - Recent history
 
-      :returns: Updated game state after the turn
-      :rtype: Dict[str, Any]
+               :param state: Current game state
+               :type state: MafiaGameState
+               :param player_id: ID of the player making the move
+               :type player_id: str
 
-      .. rubric:: Example
+               :returns: Context for move generation
+               :rtype: Dict[str, Any]
 
-      >>> new_state = agent.handle_player_turn(state)
-      >>> print(new_state["game_phase"])  # Shows current phase
+               .. rubric:: Example
 
+               >>> context = agent.prepare_move_context(state, "Player_1")
+               >>> print(context["phase"])  # Shows current game phase
 
-      .. autolink-examples:: handle_player_turn
-         :collapse:
 
 
-   .. py:method:: prepare_move_context(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> dict[str, Any]
+            .. py:method:: prepare_narrator_context(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-      Prepare context for move generation.
+               Prepare context for narrator actions.
 
-      This method gathers all relevant information for a player's move,
-      including:
-          - Game state information
-          - Player-specific knowledge
-          - Legal moves
-          - Recent history
+               This method gathers all information needed for narrator decisions,
+               including:
+                   - Complete game state
+                   - Player summaries
+                   - Phase-specific information
+                   - Action histories
 
-      :param state: Current game state
-      :type state: MafiaGameState
-      :param player_id: ID of the player making the move
-      :type player_id: str
+               :param state: Current game state
+               :type state: MafiaGameState
 
-      :returns: Context for move generation
-      :rtype: Dict[str, Any]
+               :returns: Context for narrator decisions
+               :rtype: Dict[str, Any]
 
-      .. rubric:: Example
+               .. rubric:: Example
 
-      >>> context = agent.prepare_move_context(state, "Player_1")
-      >>> print(context["phase"])  # Shows current game phase
+               >>> context = agent.prepare_narrator_context(state)
+               >>> print(context["phase"])  # Shows current game phase
 
 
-      .. autolink-examples:: prepare_move_context
-         :collapse:
 
+            .. py:method:: state_to_dict(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
 
-   .. py:method:: prepare_narrator_context(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
+               Convert state to dictionary consistently.
 
-      Prepare context for narrator actions.
+               This method handles various state formats and ensures consistent
+               dictionary conversion for the game graph.
 
-      This method gathers all information needed for narrator decisions,
-      including:
-          - Complete game state
-          - Player summaries
-          - Phase-specific information
-          - Action histories
+               :param state: State to convert
+               :type state: MafiaGameState
 
-      :param state: Current game state
-      :type state: MafiaGameState
+               :returns: Dictionary representation of the state
+               :rtype: Dict[str, Any]
 
-      :returns: Context for narrator decisions
-      :rtype: Dict[str, Any]
+               .. rubric:: Example
 
-      .. rubric:: Example
+               >>> state_dict = agent.state_to_dict(state)
+               >>> print(state_dict["game_phase"])
 
-      >>> context = agent.prepare_narrator_context(state)
-      >>> print(context["phase"])  # Shows current game phase
 
 
-      .. autolink-examples:: prepare_narrator_context
-         :collapse:
+            .. py:method:: visualize_state(state_obj, debug: bool = False)
 
+               Visualize the current game state.
 
-   .. py:method:: state_to_dict(state: haive.games.mafia.state.MafiaGameState) -> dict[str, Any]
+               This method creates a human-readable display of:
+                   - Game phase and status
+                   - Player information
+                   - Recent announcements
+                   - Game statistics
+                   - Voting results (if applicable)
 
-      Convert state to dictionary consistently.
+               :param state_obj: Game state (dict, MafiaGameState, or agent)
+               :param debug: Show debug information. Defaults to False.
+               :type debug: bool, optional
 
-      This method handles various state formats and ensures consistent
-      dictionary conversion for the game graph.
+               .. rubric:: Example
 
-      :param state: State to convert
-      :type state: MafiaGameState
+               >>> agent.visualize_state(state, debug=True)
 
-      :returns: Dictionary representation of the state
-      :rtype: Dict[str, Any]
 
-      .. rubric:: Example
 
-      >>> state_dict = agent.state_to_dict(state)
-      >>> print(state_dict["game_phase"])
+            .. py:attribute:: role_enum_mapping
 
 
-      .. autolink-examples:: state_to_dict
-         :collapse:
+            .. py:attribute:: role_mapping
 
 
-   .. py:method:: visualize_state(state_obj, debug: bool = False)
+            .. py:attribute:: state_manager
 
-      Visualize the current game state.
 
-      This method creates a human-readable display of:
-          - Game phase and status
-          - Player information
-          - Recent announcements
-          - Game statistics
-          - Voting results (if applicable)
 
-      :param state_obj: Game state (dict, MafiaGameState, or agent)
-      :param debug: Show debug information. Defaults to False.
-      :type debug: bool, optional
-
-      .. rubric:: Example
-
-      >>> agent.visualize_state(state, debug=True)
-
-
-      .. autolink-examples:: visualize_state
-         :collapse:
-
-
-   .. py:attribute:: role_enum_mapping
-
-
-   .. py:attribute:: role_mapping
-
-
-   .. py:attribute:: state_manager
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.mafia.agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

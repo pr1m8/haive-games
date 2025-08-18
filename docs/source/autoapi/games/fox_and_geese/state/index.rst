@@ -3,6 +3,71 @@ games.fox_and_geese.state
 
 .. py:module:: games.fox_and_geese.state
 
+Comprehensive state management system for Fox and Geese gameplay and strategic.
+analysis.
+
+This module provides sophisticated state models for the classic Fox and Geese game
+with complete support for position tracking, strategic analysis, and game flow
+management. The state system maintains both traditional game mechanics and
+advanced strategic context for AI decision-making.
+
+The Fox and Geese game is an asymmetric strategy game where:
+- One player controls the fox (trying to escape to the other side)
+- The other player controls multiple geese (trying to trap the fox)
+- The fox can capture geese by jumping over them
+- The geese win by blocking all fox movement
+- The fox wins by reaching the opposite side or reducing geese numbers
+
+The state system supports:
+- Complete position tracking for fox and geese
+- Strategic analysis history for both players
+- Move validation and game completion detection
+- Performance metrics and statistical analysis
+- Board visualization and position evaluation
+
+.. rubric:: Examples
+
+Creating a new game state::
+
+    state = FoxAndGeeseState.initialize()
+    assert state.turn == "fox"
+    assert state.game_status == "ongoing"
+    assert len(state.geese_positions) > 0
+
+Accessing position information::
+
+    # Check current positions
+    fox_pos = state.fox_position
+    geese_count = state.num_geese
+    board_display = state.board_string
+
+    # Strategic analysis
+    fox_mobility = state.fox_mobility_score
+    geese_formation = state.geese_formation_strength
+
+Tracking game progression::
+
+    # Check game completion
+    if state.is_game_over():
+        winner = state.winner
+        final_analysis = state.position_evaluation
+
+    # Move history analysis
+    recent_moves = state.get_recent_moves(3)
+    capture_count = state.total_captures
+
+.. note::
+
+   All state models use Pydantic v2 for validation and support both JSON
+   serialization and integration with LangGraph for distributed gameplay.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Comprehensive state management system for Fox and Geese gameplay and strategic.
@@ -64,495 +129,462 @@ games.fox_and_geese.state
       serialization and integration with LangGraph for distributed gameplay.
 
 
-   .. autolink-examples:: games.fox_and_geese.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.state.FoxAndGeeseState
+      games.fox_and_geese.state.FoxAndGeeseState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: FoxAndGeeseState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: FoxAndGeeseState(/, **data: Any)
 
-   Comprehensive state management for Fox and Geese gameplay with strategic.
-   analysis.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   This class provides complete state management for the classic Fox and Geese game,
-   supporting both traditional game mechanics and strategic analysis. The state system
-   maintains position tracking, strategic context, and performance metrics for
-   advanced AI decision-making and game analysis.
 
-   The Fox and Geese game features asymmetric gameplay:
-   - Fox: Single piece trying to escape to the opposite side or eliminate geese
-   - Geese: Multiple pieces trying to trap the fox and prevent escape
-   - Fox can capture geese by jumping over them (similar to checkers)
-   - Geese cannot capture but can block fox movement
-   - Victory conditions differ for each player
+            Comprehensive state management for Fox and Geese gameplay with strategic.
+            analysis.
 
-   The state system supports:
-   - Complete position tracking with validation for both fox and geese
-   - Strategic analysis history for both players with pattern recognition
-   - Move validation and legal move generation
-   - Game completion detection with multiple victory conditions
-   - Performance metrics and statistical analysis for gameplay optimization
-   - Board visualization and position evaluation for strategic assessment
+            This class provides complete state management for the classic Fox and Geese game,
+            supporting both traditional game mechanics and strategic analysis. The state system
+            maintains position tracking, strategic context, and performance metrics for
+            advanced AI decision-making and game analysis.
 
-   .. attribute:: players
+            The Fox and Geese game features asymmetric gameplay:
+            - Fox: Single piece trying to escape to the opposite side or eliminate geese
+            - Geese: Multiple pieces trying to trap the fox and prevent escape
+            - Fox can capture geese by jumping over them (similar to checkers)
+            - Geese cannot capture but can block fox movement
+            - Victory conditions differ for each player
 
-      Fixed list of players ["fox", "geese"].
-      Maintains consistent player identification.
+            The state system supports:
+            - Complete position tracking with validation for both fox and geese
+            - Strategic analysis history for both players with pattern recognition
+            - Move validation and legal move generation
+            - Game completion detection with multiple victory conditions
+            - Performance metrics and statistical analysis for gameplay optimization
+            - Board visualization and position evaluation for strategic assessment
 
-      :type: List[str]
+            .. attribute:: players
 
-   .. attribute:: fox_position
+               Fixed list of players ["fox", "geese"].
+               Maintains consistent player identification.
 
-      Current position of the fox piece.
-      Tracked with full coordinate validation.
+               :type: List[str]
 
-      :type: FoxAndGeesePosition
+            .. attribute:: fox_position
 
-   .. attribute:: geese_positions
+               Current position of the fox piece.
+               Tracked with full coordinate validation.
 
-      Current positions of all geese.
-      Maintained as a set for efficient position queries.
+               :type: FoxAndGeesePosition
 
-      :type: Set[FoxAndGeesePosition]
+            .. attribute:: geese_positions
 
-   .. attribute:: turn
+               Current positions of all geese.
+               Maintained as a set for efficient position queries.
 
-      Current player's turn.
-      Alternates between fox and geese players.
+               :type: Set[FoxAndGeesePosition]
 
-      :type: Literal["fox", "geese"]
+            .. attribute:: turn
 
-   .. attribute:: game_status
+               Current player's turn.
+               Alternates between fox and geese players.
 
-      Current game state with completion detection.
-      Tracks ongoing play and victory conditions.
+               :type: Literal["fox", "geese"]
 
-      :type: Literal
+            .. attribute:: game_status
 
-   .. attribute:: move_history
+               Current game state with completion detection.
+               Tracks ongoing play and victory conditions.
 
-      Complete chronological move history.
-      Includes all moves made during the game.
+               :type: Literal
 
-      :type: List[FoxAndGeeseMove]
+            .. attribute:: move_history
 
-   .. attribute:: winner
+               Complete chronological move history.
+               Includes all moves made during the game.
 
-      Winner identifier if game completed.
-      Set when victory conditions are met.
+               :type: List[FoxAndGeeseMove]
 
-      :type: Optional[str]
+            .. attribute:: winner
 
-   .. attribute:: num_geese
+               Winner identifier if game completed.
+               Set when victory conditions are met.
 
-      Current number of geese remaining on the board.
-      Updated when geese are captured by the fox.
+               :type: Optional[str]
 
-      :type: int
+            .. attribute:: num_geese
 
-   .. attribute:: fox_analysis
+               Current number of geese remaining on the board.
+               Updated when geese are captured by the fox.
 
-      Strategic analysis history for fox player.
-      Tracks reasoning and decision-making patterns.
+               :type: int
 
-      :type: List[str]
+            .. attribute:: fox_analysis
 
-   .. attribute:: geese_analysis
+               Strategic analysis history for fox player.
+               Tracks reasoning and decision-making patterns.
 
-      Strategic analysis history for geese player.
-      Tracks reasoning and decision-making patterns.
+               :type: List[str]
 
-      :type: List[str]
+            .. attribute:: geese_analysis
 
-   .. rubric:: Examples
+               Strategic analysis history for geese player.
+               Tracks reasoning and decision-making patterns.
 
-   Creating a new game state::
+               :type: List[str]
 
-       state = FoxAndGeeseState.initialize()
-       assert state.turn == "fox"
-       assert state.game_status == "ongoing"
-       assert state.fox_position.row == 3  # Center position
-       assert len(state.geese_positions) > 0
+            .. rubric:: Examples
 
-   Accessing position information::
+            Creating a new game state::
 
-       # Check current positions
-       fox_pos = state.fox_position
-       geese_count = state.num_geese
-       board_display = state.board_string
+                state = FoxAndGeeseState.initialize()
+                assert state.turn == "fox"
+                assert state.game_status == "ongoing"
+                assert state.fox_position.row == 3  # Center position
+                assert len(state.geese_positions) > 0
 
-       # Strategic metrics
-       fox_mobility = state.fox_mobility_score
-       geese_formation = state.geese_formation_strength
-       escape_distance = state.fox_escape_distance
+            Accessing position information::
 
-   Managing strategic analysis::
+                # Check current positions
+                fox_pos = state.fox_position
+                geese_count = state.num_geese
+                board_display = state.board_string
 
-       # Add analysis for fox player
-       state.fox_analysis.append("Fox should move toward weak geese formation")
+                # Strategic metrics
+                fox_mobility = state.fox_mobility_score
+                geese_formation = state.geese_formation_strength
+                escape_distance = state.fox_escape_distance
 
-       # Add analysis for geese player
-       state.geese_analysis.append("Geese should form blocking line")
+            Managing strategic analysis::
 
-       # Access latest strategic insights
-       latest_fox_analysis = state.get_latest_fox_analysis()
-       latest_geese_analysis = state.get_latest_geese_analysis()
+                # Add analysis for fox player
+                state.fox_analysis.append("Fox should move toward weak geese formation")
 
-   Game state queries::
+                # Add analysis for geese player
+                state.geese_analysis.append("Geese should form blocking line")
 
-       # Check game completion
-       if state.is_game_over():
-           winner = state.winner
-           final_analysis = state.position_evaluation
+                # Access latest strategic insights
+                latest_fox_analysis = state.get_latest_fox_analysis()
+                latest_geese_analysis = state.get_latest_geese_analysis()
 
-       # Strategic position analysis
-       mobility_analysis = state.mobility_analysis
-       capture_threats = state.capture_threat_analysis
-       formation_strength = state.formation_analysis
+            Game state queries::
 
-   Advanced game analysis::
+                # Check game completion
+                if state.is_game_over():
+                    winner = state.winner
+                    final_analysis = state.position_evaluation
 
-       # Performance metrics
-       stats = state.game_statistics
-       print(f"Total moves: {stats['total_moves']}")
-       print(f"Capture rate: {stats['capture_rate']:.1f}%")
+                # Strategic position analysis
+                mobility_analysis = state.mobility_analysis
+                capture_threats = state.capture_threat_analysis
+                formation_strength = state.formation_analysis
 
-       # Strategic evaluation
-       position_eval = state.position_evaluation
-       print(f"Fox advantage: {position_eval['fox_advantage']:.2f}")
-       print(f"Geese control: {position_eval['geese_control']:.2f}")
+            Advanced game analysis::
 
-   .. note::
+                # Performance metrics
+                stats = state.game_statistics
+                print(f"Total moves: {stats['total_moves']}")
+                print(f"Capture rate: {stats['capture_rate']:.1f}%")
 
-      The state uses Pydantic v2 for validation and supports both JSON serialization
-      and integration with LangGraph for distributed game systems. All position
-      operations maintain game rule consistency and strategic context.
+                # Strategic evaluation
+                position_eval = state.position_evaluation
+                print(f"Fox advantage: {position_eval['fox_advantage']:.2f}")
+                print(f"Geese control: {position_eval['geese_control']:.2f}")
 
+            .. note::
 
-   .. autolink-examples:: FoxAndGeeseState
-      :collapse:
+               The state uses Pydantic v2 for validation and supports both JSON serialization
+               and integration with LangGraph for distributed game systems. All position
+               operations maintain game rule consistency and strategic context.
 
-   .. py:method:: __repr__() -> str
+            Create a new model by parsing and validating input data from keyword arguments.
 
-      Detailed string representation of the game state.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      .. autolink-examples:: __repr__
-         :collapse:
 
+            .. py:method:: __repr__() -> str
 
-   .. py:method:: __str__() -> str
+               Detailed string representation of the game state.
 
-      String representation of the game state.
 
 
-      .. autolink-examples:: __str__
-         :collapse:
+            .. py:method:: __str__() -> str
 
+               String representation of the game state.
 
-   .. py:method:: get_latest_fox_analysis() -> str | None
 
-      Get the latest strategic analysis for fox player.
 
-      :returns: Latest fox analysis or None if no analysis exists.
-      :rtype: Optional[str]
+            .. py:method:: get_latest_fox_analysis() -> str | None
 
+               Get the latest strategic analysis for fox player.
 
-      .. autolink-examples:: get_latest_fox_analysis
-         :collapse:
+               :returns: Latest fox analysis or None if no analysis exists.
+               :rtype: Optional[str]
 
 
-   .. py:method:: get_latest_geese_analysis() -> str | None
 
-      Get the latest strategic analysis for geese player.
+            .. py:method:: get_latest_geese_analysis() -> str | None
 
-      :returns: Latest geese analysis or None if no analysis exists.
-      :rtype: Optional[str]
+               Get the latest strategic analysis for geese player.
 
+               :returns: Latest geese analysis or None if no analysis exists.
+               :rtype: Optional[str]
 
-      .. autolink-examples:: get_latest_geese_analysis
-         :collapse:
 
 
-   .. py:method:: get_recent_moves(count: int) -> list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
+            .. py:method:: get_recent_moves(count: int) -> list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
 
-      Get the most recent moves from the game history.
+               Get the most recent moves from the game history.
 
-      :param count: Number of recent moves to return.
-      :type count: int
+               :param count: Number of recent moves to return.
+               :type count: int
 
-      :returns: List of recent moves (up to count).
-      :rtype: List[FoxAndGeeseMove]
+               :returns: List of recent moves (up to count).
+               :rtype: List[FoxAndGeeseMove]
 
 
-      .. autolink-examples:: get_recent_moves
-         :collapse:
 
+            .. py:method:: initialize() -> FoxAndGeeseState
+               :classmethod:
 
-   .. py:method:: initialize() -> FoxAndGeeseState
-      :classmethod:
 
+               Initialize a new Fox and Geese game.
 
-      Initialize a new Fox and Geese game.
 
 
-      .. autolink-examples:: initialize
-         :collapse:
+            .. py:method:: is_game_over() -> bool
 
+               Check if the game is over.
 
-   .. py:method:: is_game_over() -> bool
+               :returns: True if game is over, False otherwise.
+               :rtype: bool
 
-      Check if the game is over.
 
-      :returns: True if game is over, False otherwise.
-      :rtype: bool
 
+            .. py:method:: model_dump(**kwargs) -> dict[str, Any]
 
-      .. autolink-examples:: is_game_over
-         :collapse:
+               Override model_dump to ensure proper serialization.
 
 
-   .. py:method:: model_dump(**kwargs) -> dict[str, Any]
 
-      Override model_dump to ensure proper serialization.
+            .. py:method:: model_validate(obj: Any, **kwargs) -> FoxAndGeeseState
+               :classmethod:
 
 
-      .. autolink-examples:: model_dump
-         :collapse:
+               Override model_validate to handle various input formats.
 
 
-   .. py:method:: model_validate(obj: Any, **kwargs) -> FoxAndGeeseState
-      :classmethod:
 
+            .. py:method:: serialize_fox_position(fox_position: haive.games.fox_and_geese.models.FoxAndGeesePosition) -> dict[str, Any]
 
-      Override model_validate to handle various input formats.
+               Serialize fox position as a dictionary.
 
 
-      .. autolink-examples:: model_validate
-         :collapse:
 
+            .. py:method:: serialize_geese_positions(geese_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition]) -> list[dict[str, Any]]
 
-   .. py:method:: serialize_fox_position(fox_position: haive.games.fox_and_geese.models.FoxAndGeesePosition) -> dict[str, Any]
+               Serialize geese positions as a list of dictionaries.
 
-      Serialize fox position as a dictionary.
 
 
-      .. autolink-examples:: serialize_fox_position
-         :collapse:
+            .. py:method:: serialize_move_history(move_history: list[haive.games.fox_and_geese.models.FoxAndGeeseMove]) -> list[dict[str, Any]]
 
+               Serialize move history as a list of dictionaries.
 
-   .. py:method:: serialize_geese_positions(geese_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition]) -> list[dict[str, Any]]
 
-      Serialize geese positions as a list of dictionaries.
 
+            .. py:method:: validate_fox_position(v: Any) -> haive.games.fox_and_geese.models.FoxAndGeesePosition
+               :classmethod:
 
-      .. autolink-examples:: serialize_geese_positions
-         :collapse:
 
+               Validate and convert fox position.
 
-   .. py:method:: serialize_move_history(move_history: list[haive.games.fox_and_geese.models.FoxAndGeeseMove]) -> list[dict[str, Any]]
 
-      Serialize move history as a list of dictionaries.
 
+            .. py:method:: validate_geese_positions(v: Any) -> set[haive.games.fox_and_geese.models.FoxAndGeesePosition]
+               :classmethod:
 
-      .. autolink-examples:: serialize_move_history
-         :collapse:
 
+               Validate and convert geese positions to a set.
 
-   .. py:method:: validate_fox_position(v: Any) -> haive.games.fox_and_geese.models.FoxAndGeesePosition
-      :classmethod:
 
 
-      Validate and convert fox position.
+            .. py:method:: validate_move_history(v: Any) -> list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
+               :classmethod:
 
 
-      .. autolink-examples:: validate_fox_position
-         :collapse:
+               Validate and convert move history.
 
 
-   .. py:method:: validate_geese_positions(v: Any) -> set[haive.games.fox_and_geese.models.FoxAndGeesePosition]
-      :classmethod:
 
+            .. py:property:: board_string
+               :type: str
 
-      Validate and convert geese positions to a set.
 
+               Get a string representation of the board.
 
-      .. autolink-examples:: validate_geese_positions
-         :collapse:
 
+            .. py:attribute:: fox_analysis
+               :type:  list[str]
+               :value: None
 
-   .. py:method:: validate_move_history(v: Any) -> list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
-      :classmethod:
 
 
-      Validate and convert move history.
+            .. py:property:: fox_escape_distance
+               :type: int
 
 
-      .. autolink-examples:: validate_move_history
-         :collapse:
+               Calculate minimum distance for fox to reach escape edge.
 
+               :returns: Minimum number of moves to reach the opposite edge.
+               :rtype: int
 
-   .. py:property:: board_string
-      :type: str
 
+            .. py:property:: fox_mobility_score
+               :type: float
 
-      Get a string representation of the board.
 
-      .. autolink-examples:: board_string
-         :collapse:
+               Calculate fox mobility score based on available moves.
 
+               :returns: Mobility score from 0.0 (trapped) to 1.0 (maximum mobility).
+               :rtype: float
 
-   .. py:attribute:: fox_analysis
-      :type:  list[str]
-      :value: None
 
+            .. py:attribute:: fox_position
+               :type:  haive.games.fox_and_geese.models.FoxAndGeesePosition
+               :value: None
 
 
-   .. py:property:: fox_escape_distance
-      :type: int
 
+            .. py:property:: game_statistics
+               :type: dict[str, int | float | str]
 
-      Calculate minimum distance for fox to reach escape edge.
 
-      :returns: Minimum number of moves to reach the opposite edge.
-      :rtype: int
+               Generate comprehensive game statistics.
 
-      .. autolink-examples:: fox_escape_distance
-         :collapse:
+               :returns: Game statistics and metrics.
+               :rtype: Dict[str, Union[int, float, str]]
 
 
-   .. py:property:: fox_mobility_score
-      :type: float
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'fox_win', 'geese_win']
+               :value: None
 
 
-      Calculate fox mobility score based on available moves.
 
-      :returns: Mobility score from 0.0 (trapped) to 1.0 (maximum mobility).
-      :rtype: float
+            .. py:attribute:: geese_analysis
+               :type:  list[str]
+               :value: None
 
-      .. autolink-examples:: fox_mobility_score
-         :collapse:
 
 
-   .. py:attribute:: fox_position
-      :type:  haive.games.fox_and_geese.models.FoxAndGeesePosition
-      :value: None
+            .. py:property:: geese_formation_strength
+               :type: float
 
 
+               Calculate geese formation strength for blocking fox.
 
-   .. py:property:: game_statistics
-      :type: dict[str, int | float | str]
+               :returns: Formation strength from 0.0 (weak) to 1.0 (strong).
+               :rtype: float
 
 
-      Generate comprehensive game statistics.
+            .. py:attribute:: geese_positions
+               :type:  set[haive.games.fox_and_geese.models.FoxAndGeesePosition]
+               :value: None
 
-      :returns: Game statistics and metrics.
-      :rtype: Dict[str, Union[int, float, str]]
 
-      .. autolink-examples:: game_statistics
-         :collapse:
 
+            .. py:attribute:: model_config
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'fox_win', 'geese_win']
-      :value: None
+               Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
 
 
+            .. py:attribute:: move_history
+               :type:  list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
+               :value: None
 
-   .. py:attribute:: geese_analysis
-      :type:  list[str]
-      :value: None
 
 
+            .. py:attribute:: num_geese
+               :type:  int
+               :value: None
 
-   .. py:property:: geese_formation_strength
-      :type: float
 
 
-      Calculate geese formation strength for blocking fox.
+            .. py:attribute:: players
+               :type:  list[str]
+               :value: None
 
-      :returns: Formation strength from 0.0 (weak) to 1.0 (strong).
-      :rtype: float
 
-      .. autolink-examples:: geese_formation_strength
-         :collapse:
 
+            .. py:property:: position_evaluation
+               :type: dict[str, str | float]
 
-   .. py:attribute:: geese_positions
-      :type:  set[haive.games.fox_and_geese.models.FoxAndGeesePosition]
-      :value: None
 
+               Generate strategic position evaluation.
 
+               :returns: Position evaluation metrics.
+               :rtype: Dict[str, Union[str, float]]
 
-   .. py:attribute:: model_config
 
+            .. py:property:: total_captures
+               :type: int
 
-   .. py:attribute:: move_history
-      :type:  list[haive.games.fox_and_geese.models.FoxAndGeeseMove]
-      :value: None
 
+               Count total number of geese captured by fox.
 
+               :returns: Number of geese captured during the game.
+               :rtype: int
 
-   .. py:attribute:: num_geese
-      :type:  int
-      :value: None
 
+            .. py:attribute:: turn
+               :type:  Literal['fox', 'geese']
+               :value: None
 
 
-   .. py:attribute:: players
-      :type:  list[str]
-      :value: None
 
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
 
-   .. py:property:: position_evaluation
-      :type: dict[str, str | float]
 
 
-      Generate strategic position evaluation.
 
-      :returns: Position evaluation metrics.
-      :rtype: Dict[str, Union[str, float]]
 
-      .. autolink-examples:: position_evaluation
-         :collapse:
+----
 
+.. admonition:: Quick Reference
+   :class: tip
 
-   .. py:property:: total_captures
-      :type: int
+   .. code-block:: python
 
+      from games.fox_and_geese.state import *
 
-      Count total number of geese captured by fox.
-
-      :returns: Number of geese captured during the game.
-      :rtype: int
-
-      .. autolink-examples:: total_captures
-         :collapse:
-
-
-   .. py:attribute:: turn
-      :type:  Literal['fox', 'geese']
-      :value: None
-
-
-
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
-
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

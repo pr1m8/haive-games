@@ -21,7 +21,7 @@ Usage:
     With specific AI strategies:
         $ python example.py --strategies aggressive conservative balanced random
 
-Example:
+Examples:
     >>> # Run a basic 4-player game
     >>> from haive.games.poker.example import run_poker_game
     >>> run_poker_game(num_players=4, starting_chips=1000)
@@ -67,6 +67,8 @@ live = None
 
 
 def main():
+    """Main.
+"""
     ai_player_names = ["Claude-3", "GPT-4o", "Gemini", "DeepSeek", "Mistral"]
     parser = argparse.ArgumentParser(
         description="Run a Texas Hold'em Poker game simulation"

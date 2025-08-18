@@ -11,10 +11,17 @@ class BasePlayerAgent(AgentConfig):
     # output_schema:
     #
     def __init__(self, config: AgentConfig):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         super().__init__(config)
         self.engines = config.engines
         self.graph = config.graph
 
     def setup_workflow(self):
+        """Setup Workflow.
+"""
         if self.graph is None:
             raise ValueError("Graph is not set")

@@ -33,11 +33,24 @@ class GridPosition(Position):
         return v
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, GridPosition):
             return False
         return self.row == other.row and self.col == other.col
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.row, self.col))
 
     @computed_field
@@ -73,11 +86,24 @@ class HexPosition(Position):
         return [HexPosition(q=self.q + dq, r=self.r + dr) for dq, dr in directions]
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, HexPosition):
             return False
         return self.q == other.q and self.r == other.r
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.q, self.r))
 
 
@@ -101,6 +127,14 @@ class PointPosition(Position):
         raise ValueError("Cannot calculate distance between 2D and 3D points")
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, PointPosition):
             return False
         if self.z is None and other.z is None:
@@ -108,6 +142,11 @@ class PointPosition(Position):
         return self.x == other.x and self.y == other.y and self.z == other.z
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.x, self.y, self.z))
 
 
@@ -117,9 +156,22 @@ class NodePosition(Position):
     node_id: str
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, NodePosition):
             return False
         return self.node_id == other.node_id
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash(self.node_id)

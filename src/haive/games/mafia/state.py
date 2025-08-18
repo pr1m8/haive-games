@@ -10,7 +10,7 @@ The state model tracks:
     - Public announcements
     - Night action outcomes
 
-Example:
+Examples:
     >>> from mafia.state import MafiaGameState
     >>> from mafia.models import PlayerRole, GamePhase
     >>>
@@ -73,7 +73,7 @@ class MafiaGameState(MultiPlayerGameState):
         day_number (int): Current day number
         winner (Optional[str]): Winner (village or mafia)
 
-    Example:
+    Examples:
         >>> state = MafiaGameState(
         ...     players=["Player_1", "Player_2", "Narrator"],
         ...     roles={"Player_1": PlayerRole.VILLAGER,
@@ -171,7 +171,7 @@ class MafiaGameState(MultiPlayerGameState):
             This should be called after any change that might affect player
             life status (e.g., night kills, voting execution).
 
-        Example:
+        Examples:
             >>> state.player_states["Player_1"].is_alive = False
             >>> state.update_alive_counts()
             >>> print(state.alive_village_count)  # Shows updated count
@@ -206,7 +206,7 @@ class MafiaGameState(MultiPlayerGameState):
         Args:
             announcement (str): The announcement to add
 
-        Example:
+        Examples:
             >>> state.add_public_announcement("Night falls on the village.")
             >>> print(state.public_announcements[-1])
 
@@ -224,7 +224,7 @@ class MafiaGameState(MultiPlayerGameState):
         Args:
             action (Union[MafiaAction, NarratorAction]): Action to log
 
-        Example:
+        Examples:
             >>> action = MafiaAction(
             ...     player_id="Player_1",
             ...     action_type=ActionType.VOTE,
@@ -288,7 +288,7 @@ class MafiaGameState(MultiPlayerGameState):
         Returns:
             MafiaGameState: A copy of the current state
 
-        Example:
+        Examples:
             >>> new_state = state.model_copy(deep=True)
 
         """

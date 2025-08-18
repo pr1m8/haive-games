@@ -15,6 +15,11 @@ class BetAmount(BaseModel):
 
 # Prompts for Betting
 def generate_betting_prompt() -> ChatPromptTemplate:
+    """Generate Betting Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -37,6 +42,11 @@ def generate_betting_prompt() -> ChatPromptTemplate:
 
 # Prompts for Player Actions
 def generate_player_action_prompt() -> ChatPromptTemplate:
+    """Generate Player Action Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (

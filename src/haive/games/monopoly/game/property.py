@@ -16,6 +16,19 @@ class Property:
         house_cost: int | None = None,
         special_type: SpecialSquareType | None = None,
     ):
+        """  Init  .
+
+Args:
+    name: [TODO: Add description]
+    position: [TODO: Add description]
+    property_type: [TODO: Add description]
+    price: [TODO: Add description]
+    color_group: [TODO: Add description]
+    rent_values: [TODO: Add description]
+    mortgage_value: [TODO: Add description]
+    house_cost: [TODO: Add description]
+    special_type: [TODO: Add description]
+"""
         self.name = name
         self.position = position
         self.property_type = property_type

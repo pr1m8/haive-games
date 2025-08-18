@@ -3,6 +3,18 @@ games.battleship.generic_engines
 
 .. py:module:: games.battleship.generic_engines
 
+Generic Battleship engine creation using the generic player agent system.
+
+This module provides generic engine creation functions for Battleship games, allowing
+for configurable LLM models and game-specific player identifiers.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">3 classes</span> • <span class="module-stat">6 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Generic Battleship engine creation using the generic player agent system.
@@ -11,185 +23,221 @@ games.battleship.generic_engines
    for configurable LLM models and game-specific player identifiers.
 
 
-   .. autolink-examples:: games.battleship.generic_engines
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.battleship.generic_engines.battleship_factory
+      games.battleship.generic_engines.battleship_factory
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (3)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.battleship.generic_engines.BattleshipEngineFactory
-   games.battleship.generic_engines.BattleshipPlayerIdentifiers
-   games.battleship.generic_engines.BattleshipPromptGenerator
+      games.battleship.generic_engines.BattleshipEngineFactory
+      games.battleship.generic_engines.BattleshipPlayerIdentifiers
+      games.battleship.generic_engines.BattleshipPromptGenerator
 
+            
 
-Functions
----------
+.. admonition:: Functions (6)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.battleship.generic_engines.create_budget_battleship_engines
-   games.battleship.generic_engines.create_generic_battleship_config_from_example
-   games.battleship.generic_engines.create_generic_battleship_engines
-   games.battleship.generic_engines.create_generic_battleship_engines_simple
-   games.battleship.generic_engines.create_mixed_battleship_engines
-   games.battleship.generic_engines.create_naval_battleship_engines
+      games.battleship.generic_engines.create_budget_battleship_engines
+      games.battleship.generic_engines.create_generic_battleship_config_from_example
+      games.battleship.generic_engines.create_generic_battleship_engines
+      games.battleship.generic_engines.create_generic_battleship_engines_simple
+      games.battleship.generic_engines.create_mixed_battleship_engines
+      games.battleship.generic_engines.create_naval_battleship_engines
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: BattleshipEngineFactory
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-   Factory for creating Battleship game engines.
+            Factory for creating Battleship game engines.
 
 
-   .. autolink-examples:: BattleshipEngineFactory
-      :collapse:
+            .. py:method:: get_structured_output_model(role: str) -> type
 
-   .. py:method:: get_structured_output_model(role: str) -> type
-
-      Get the structured output model for a specific role.
+               Get the structured output model for a specific role.
 
 
-      .. autolink-examples:: get_structured_output_model
-         :collapse:
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: BattleshipPlayerIdentifiers
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-   Player identifiers for Battleship game.
+            Player identifiers for Battleship game.
 
 
-   .. autolink-examples:: BattleshipPlayerIdentifiers
-      :collapse:
 
-.. py:class:: BattleshipPromptGenerator
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+.. py:class:: BattleshipPromptGenerator(players: GamePlayerIdentifiers[PlayerType, PlayerType2])
 
-
-   Prompt generator for Battleship game.
-
-
-   .. autolink-examples:: BattleshipPromptGenerator
-      :collapse:
-
-   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
-
-      Create analysis prompt for Battleship game state.
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-      .. autolink-examples:: create_analyzer_prompt
-         :collapse:
+            Prompt generator for Battleship game.
 
 
-   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+            .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
-      Create move prompt for Battleship player.
+               Create analysis prompt for Battleship game state.
 
 
-      .. autolink-examples:: create_move_prompt
-         :collapse:
 
+            .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+               Create move prompt for Battleship player.
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_budget_battleship_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create budget-friendly Battleship engines.
+            Create budget-friendly Battleship engines.
 
 
-   .. autolink-examples:: create_budget_battleship_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_battleship_config_from_example(example_name: str, temperature: float = 0.3) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Battleship engines from a predefined example configuration.
+            Create Battleship engines from a predefined example configuration.
 
-   :param example_name: Name of the example configuration
-   :param temperature: Generation temperature
+            :param example_name: Name of the example configuration
+            :param temperature: Generation temperature
 
-   :returns: Dictionary of Battleship engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Battleship engines
+            :rtype: Dict[str, AugLLMConfig]
 
-   Available examples:
-       - "gpt_vs_claude": GPT vs Claude
-       - "gpt_only": GPT for both players
-       - "claude_only": Claude for both players
-       - "budget": Cost-effective models
-       - "mixed": Different provider per role
-       - "naval_commanders": High-powered models for strategic gameplay
+            Available examples:
+                - "gpt_vs_claude": GPT vs Claude
+                - "gpt_only": GPT for both players
+                - "claude_only": Claude for both players
+                - "budget": Cost-effective models
+                - "mixed": Different provider per role
+                - "naval_commanders": High-powered models for strategic gameplay
 
 
 
-   .. autolink-examples:: create_generic_battleship_config_from_example
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_battleship_engines(player_configs: dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig]) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Battleship engines from detailed player configurations.
+            Create Battleship engines from detailed player configurations.
 
-   :param player_configs: Dictionary mapping role names to player configurations
+            :param player_configs: Dictionary mapping role names to player configurations
 
-   :returns: Dictionary of Battleship engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Battleship engines
+            :rtype: Dict[str, AugLLMConfig]
 
-   Expected roles:
-       - "player1_player": Player 1 configuration
-       - "player2_player": Player 2 configuration
-       - "player1_analyzer": Player 1 analyzer configuration
-       - "player2_analyzer": Player 2 analyzer configuration
+            Expected roles:
+                - "player1_player": Player 1 configuration
+                - "player2_player": Player 2 configuration
+                - "player1_analyzer": Player 1 analyzer configuration
+                - "player2_analyzer": Player 2 analyzer configuration
 
 
 
-   .. autolink-examples:: create_generic_battleship_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_battleship_engines_simple(player1_model: str, player2_model: str, temperature: float = 0.3) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Battleship engines with simple model specifications.
+            Create Battleship engines with simple model specifications.
 
-   :param player1_model: Model for player 1 and analyzer
-   :param player2_model: Model for player 2 and analyzer
-   :param temperature: Generation temperature
+            :param player1_model: Model for player 1 and analyzer
+            :param player2_model: Model for player 2 and analyzer
+            :param temperature: Generation temperature
 
-   :returns: Dictionary of Battleship engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Battleship engines
+            :rtype: Dict[str, AugLLMConfig]
 
 
-   .. autolink-examples:: create_generic_battleship_engines_simple
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_mixed_battleship_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create mixed-provider Battleship engines.
+            Create mixed-provider Battleship engines.
 
 
-   .. autolink-examples:: create_mixed_battleship_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_naval_battleship_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create naval commander-style Battleship engines with high-powered models.
+            Create naval commander-style Battleship engines with high-powered models.
 
 
-   .. autolink-examples:: create_naval_battleship_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: battleship_factory
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.battleship.generic_engines import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

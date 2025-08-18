@@ -5,6 +5,13 @@ class Player:
     """Represents a player in the game."""
 
     def __init__(self, name: str, index: int, starting_cash: int = 1500):
+        """  Init  .
+
+Args:
+    name: [TODO: Add description]
+    index: [TODO: Add description]
+    starting_cash: [TODO: Add description]
+"""
         self.name = name
         self.index = index
         self.cash = starting_cash

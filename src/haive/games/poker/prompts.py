@@ -128,19 +128,13 @@ For folding:
   "amount": 0,
   "reasoning": "My 7-2 offsuit is the worst starting hand. The UTG player raised, indicating strength."
 }
-```
-
-For calling:
-```json
+        For calling:json
 {
   "action": "call",
   "amount": 50,
   "reasoning": "I have top pair with a good kicker. The pot odds justify a call to see the river card."
 }
-```
-
-For raising:
-```json
+        For raising:json
 {
   "action": "raise",
   "amount": 200,

@@ -3,6 +3,25 @@ games.mafia.state_manager
 
 .. py:module:: games.mafia.state_manager
 
+State management for the Mafia game.
+
+This module provides the core state management functionality for the Mafia game,
+handling game state transitions, move validation, and game progression logic.
+
+The state manager is responsible for:
+    - Game initialization and setup
+    - Phase transitions (day/night cycles)
+    - Move validation and application
+    - Game state filtering for information hiding
+    - Win condition checking
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    State management for the Mafia game.
@@ -18,213 +37,213 @@ games.mafia.state_manager
        - Win condition checking
 
 
-   .. autolink-examples:: games.mafia.state_manager
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mafia.state_manager.MafiaStateManager
+      games.mafia.state_manager.MafiaStateManager
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MafiaStateManager
 
-   Bases: :py:obj:`haive.games.framework.multi_player.state_manager.MultiPlayerGameStateManager`\ [\ :py:obj:`haive.games.mafia.state.MafiaGameState`\ ]
+            Bases: :py:obj:`haive.games.framework.multi_player.state_manager.MultiPlayerGameStateManager`\ [\ :py:obj:`haive.games.mafia.state.MafiaGameState`\ ]
 
 
-   Manager for the Mafia game state.
+            Manager for the Mafia game state.
 
-   This class extends MultiPlayerGameStateManager to provide Mafia-specific
-   state management functionality. It handles game progression, move validation,
-   and state transitions.
+            This class extends MultiPlayerGameStateManager to provide Mafia-specific
+            state management functionality. It handles game progression, move validation,
+            and state transitions.
 
-   The manager maintains game state including:
-       - Player roles and alive/dead status
-       - Day/night cycle progression
-       - Vote tracking and resolution
-       - Night action resolution (kills, saves, investigations)
-       - Win condition checking
+            The manager maintains game state including:
+                - Player roles and alive/dead status
+                - Day/night cycle progression
+                - Vote tracking and resolution
+                - Night action resolution (kills, saves, investigations)
+                - Win condition checking
 
-   .. note::
+            .. note::
 
-      This class is designed to be used statically, with all methods being
-      class methods that take and return game states.
+               This class is designed to be used statically, with all methods being
+               class methods that take and return game states.
 
 
-   .. autolink-examples:: MafiaStateManager
-      :collapse:
+            .. py:method:: advance_phase(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
-   .. py:method:: advance_phase(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
 
+               Advance the game to the next phase.
 
-      Advance the game to the next phase.
+               This method handles the transition between game phases, including:
+                   - Setup → Night (first night)
+                   - Night → Day Discussion (with night action resolution)
+                   - Day Discussion → Day Voting
+                   - Day Voting → Night (with vote resolution)
+                   - Game Over checks at appropriate points
 
-      This method handles the transition between game phases, including:
-          - Setup → Night (first night)
-          - Night → Day Discussion (with night action resolution)
-          - Day Discussion → Day Voting
-          - Day Voting → Night (with vote resolution)
-          - Game Over checks at appropriate points
+               :param state: Current game state
 
-      :param state: Current game state
+               :returns: Updated game state with new phase and relevant changes
 
-      :returns: Updated game state with new phase and relevant changes
 
 
-      .. autolink-examples:: advance_phase
-         :collapse:
+            .. py:method:: apply_move(state: haive.games.mafia.state.MafiaGameState, player_id: str, move: haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
 
-   .. py:method:: apply_move(state: haive.games.mafia.state.MafiaGameState, player_id: str, move: haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
+               Apply a move to the game state.
 
+               This method validates and applies a player's move or narrator's action
+               to the game state, updating all relevant state fields.
 
-      Apply a move to the game state.
+               :param state: Current game state
+               :param player_id: ID of the player making the move
+               :param move: Move to apply
 
-      This method validates and applies a player's move or narrator's action
-      to the game state, updating all relevant state fields.
+               :returns: Updated game state after applying the move
 
-      :param state: Current game state
-      :param player_id: ID of the player making the move
-      :param move: Move to apply
 
-      :returns: Updated game state after applying the move
 
+            .. py:method:: check_game_status(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
-      .. autolink-examples:: apply_move
-         :collapse:
 
+               Check if the game has ended and determine the winner.
 
-   .. py:method:: check_game_status(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
+               This method checks win conditions:
+                   - Village wins if all mafia are dead
+                   - Mafia wins if they equal/outnumber villagers
 
+               :param state: Current game state
 
-      Check if the game has ended and determine the winner.
+               :returns: Updated state with game status and winner if game is over
 
-      This method checks win conditions:
-          - Village wins if all mafia are dead
-          - Mafia wins if they equal/outnumber villagers
 
-      :param state: Current game state
 
-      :returns: Updated state with game status and winner if game is over
+            .. py:method:: filter_state_for_player(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> dict[str, Any]
+               :classmethod:
 
 
-      .. autolink-examples:: check_game_status
-         :collapse:
+               Filter the state to include only information visible to a specific player.
 
+               This method implements information hiding, ensuring players only see
+               information they should have access to based on their role and the
+               game phase.
 
-   .. py:method:: filter_state_for_player(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> dict[str, Any]
-      :classmethod:
+               :param state: Full game state
+               :param player_id: ID of the player to filter for
 
+               :returns: Filtered state containing only visible information
 
-      Filter the state to include only information visible to a specific player.
 
-      This method implements information hiding, ensuring players only see
-      information they should have access to based on their role and the
-      game phase.
 
-      :param state: Full game state
-      :param player_id: ID of the player to filter for
+            .. py:method:: get_legal_moves(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> list[haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction]
+               :classmethod:
 
-      :returns: Filtered state containing only visible information
 
+               Get legal moves for a specific player.
 
-      .. autolink-examples:: filter_state_for_player
-         :collapse:
+               This method determines what moves are legal for a player based on:
+                   - Current game phase
+                   - Player's role
+                   - Player's alive/dead status
+                   - Previous actions in the current phase
 
+               :param state: Current game state
+               :param player_id: ID of the player to get moves for
 
-   .. py:method:: get_legal_moves(state: haive.games.mafia.state.MafiaGameState, player_id: str) -> list[haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction]
-      :classmethod:
+               :returns: List of legal moves (MafiaAction or NarratorAction)
 
 
-      Get legal moves for a specific player.
 
-      This method determines what moves are legal for a player based on:
-          - Current game phase
-          - Player's role
-          - Player's alive/dead status
-          - Previous actions in the current phase
+            .. py:method:: handle_phase_transition(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
-      :param state: Current game state
-      :param player_id: ID of the player to get moves for
 
-      :returns: List of legal moves (MafiaAction or NarratorAction)
+               Handle phase transition with error handling.
 
+               This method safely transitions the game phase, handling any errors
+               that might occur during the transition.
 
-      .. autolink-examples:: get_legal_moves
-         :collapse:
+               :param state: Current game state
 
+               :returns: Updated state after phase transition
 
-   .. py:method:: handle_phase_transition(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
+               :raises ValueError: If critical game state fields are missing
 
 
-      Handle phase transition with error handling.
 
-      This method safely transitions the game phase, handling any errors
-      that might occur during the transition.
+            .. py:method:: initialize(player_names: list[str], **kwargs) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
-      :param state: Current game state
 
-      :returns: Updated state after phase transition
+               Initialize a new Mafia game with the given players.
 
-      :raises ValueError: If critical game state fields are missing
+               This method sets up a new game state with:
+                   - Random role assignment
+                   - Initial player states
+                   - Game phase setup
+                   - Role knowledge distribution
 
+               :param player_names: List of player names/IDs
+               :param \*\*kwargs: Additional configuration options
+                                  include_all_roles: Force inclusion of all special roles
 
-      .. autolink-examples:: handle_phase_transition
-         :collapse:
+               :returns: Initial game state
 
+               :raises ValueError: If there aren't enough players (minimum 4)
 
-   .. py:method:: initialize(player_names: list[str], **kwargs) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
 
 
-      Initialize a new Mafia game with the given players.
+            .. py:method:: resolve_night_actions(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
+               :classmethod:
 
-      This method sets up a new game state with:
-          - Random role assignment
-          - Initial player states
-          - Game phase setup
-          - Role knowledge distribution
 
-      :param player_names: List of player names/IDs
-      :param \*\*kwargs: Additional configuration options
-                         include_all_roles: Force inclusion of all special roles
+               Resolve night actions and determine outcomes.
 
-      :returns: Initial game state
+               This method processes all night actions in the correct order:
+                   1. Mafia kill attempt
+                   2. Doctor save attempt
+                   3. Detective investigation results
 
-      :raises ValueError: If there aren't enough players (minimum 4)
+               :param state: Current game state with night actions recorded
 
+               :returns: Updated state with night actions resolved
 
-      .. autolink-examples:: initialize
-         :collapse:
 
 
-   .. py:method:: resolve_night_actions(state: haive.games.mafia.state.MafiaGameState) -> haive.games.mafia.state.MafiaGameState
-      :classmethod:
 
 
-      Resolve night actions and determine outcomes.
 
-      This method processes all night actions in the correct order:
-          1. Mafia kill attempt
-          2. Doctor save attempt
-          3. Detective investigation results
+----
 
-      :param state: Current game state with night actions recorded
+.. admonition:: Quick Reference
+   :class: tip
 
-      :returns: Updated state with night actions resolved
+   .. code-block:: python
 
+      from games.mafia.state_manager import *
 
-      .. autolink-examples:: resolve_night_actions
-         :collapse:
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

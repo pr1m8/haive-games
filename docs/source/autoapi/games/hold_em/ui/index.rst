@@ -3,6 +3,22 @@ games.hold_em.ui
 
 .. py:module:: games.hold_em.ui
 
+Texas Hold'em Rich UI for live game display.
+
+This module provides a beautiful Rich-based terminal UI for displaying
+Texas Hold'em games in real-time, showing:
+    - Player positions and chip stacks
+    - Community cards and pot
+    - Current action and betting
+    - Game phase and status
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Texas Hold'em Rich UI for live game display.
@@ -15,235 +31,212 @@ games.hold_em.ui
        - Game phase and status
 
 
-   .. autolink-examples:: games.hold_em.ui
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.ui.logger
+      games.hold_em.ui.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.ui.HoldemRichUI
+      games.hold_em.ui.HoldemRichUI
 
+            
 
-Functions
----------
+.. admonition:: Functions (1)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.ui.main
+      games.hold_em.ui.main
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HoldemRichUI
 
-   Beautiful Rich UI for displaying a live Texas Hold'em game.
+            Beautiful Rich UI for displaying a live Texas Hold'em game.
 
 
-   .. autolink-examples:: HoldemRichUI
-      :collapse:
+            .. py:method:: _create_initial_state(agent: haive.games.hold_em.game_agent.HoldemGameAgent) -> haive.games.hold_em.state.HoldemState
 
-   .. py:method:: _create_initial_state(agent: haive.games.hold_em.game_agent.HoldemGameAgent) -> haive.games.hold_em.state.HoldemState
+               Create initial game state from agent config.
 
-      Create initial game state from agent config.
 
 
-      .. autolink-examples:: _create_initial_state
-         :collapse:
+            .. py:method:: _format_last_action() -> rich.text.Text
 
+               Format the last action for display.
 
-   .. py:method:: _format_last_action() -> rich.text.Text
 
-      Format the last action for display.
 
+            .. py:method:: _format_player_short(player: haive.games.hold_em.state.PlayerState, game_state: haive.games.hold_em.state.HoldemState) -> str
 
-      .. autolink-examples:: _format_last_action
-         :collapse:
+               Format player for table display.
 
 
-   .. py:method:: _format_player_short(player: haive.games.hold_em.state.PlayerState, game_state: haive.games.hold_em.state.HoldemState) -> str
 
-      Format player for table display.
+            .. py:method:: _get_player_at_position(game_state: haive.games.hold_em.state.HoldemState, position: int) -> haive.games.hold_em.state.PlayerState | None
 
+               Get player at specific position.
 
-      .. autolink-examples:: _format_player_short
-         :collapse:
 
 
-   .. py:method:: _get_player_at_position(game_state: haive.games.hold_em.state.HoldemState, position: int) -> haive.games.hold_em.state.PlayerState | None
+            .. py:method:: _get_player_name_by_id(game_state: haive.games.hold_em.state.HoldemState, player_id: str) -> str
 
-      Get player at specific position.
+               Get player name by ID.
 
 
-      .. autolink-examples:: _get_player_at_position
-         :collapse:
 
+            .. py:method:: _setup_layout()
 
-   .. py:method:: _get_player_name_by_id(game_state: haive.games.hold_em.state.HoldemState, player_id: str) -> str
+               Initialize the layout structure.
 
-      Get player name by ID.
 
 
-      .. autolink-examples:: _get_player_name_by_id
-         :collapse:
+            .. py:method:: _suit_symbol(suit: str) -> str
 
+               Convert suit letter to symbol.
 
-   .. py:method:: _setup_layout()
 
-      Initialize the layout structure.
 
+            .. py:method:: _update_layout()
 
-      .. autolink-examples:: _setup_layout
-         :collapse:
+               Update all layout components with current state.
 
 
-   .. py:method:: _suit_symbol(suit: str) -> str
 
-      Convert suit letter to symbol.
+            .. py:method:: render_action_log() -> rich.panel.Panel
 
+               Render recent actions and decisions.
 
-      .. autolink-examples:: _suit_symbol
-         :collapse:
 
 
-   .. py:method:: _update_layout()
+            .. py:method:: render_community_cards() -> rich.panel.Panel
 
-      Update all layout components with current state.
+               Render community cards and board.
 
 
-      .. autolink-examples:: _update_layout
-         :collapse:
 
+            .. py:method:: render_footer() -> rich.panel.Panel
 
-   .. py:method:: render_action_log() -> rich.panel.Panel
+               Render the footer with controls and current action.
 
-      Render recent actions and decisions.
 
 
-      .. autolink-examples:: render_action_log
-         :collapse:
+            .. py:method:: render_game_stats() -> rich.panel.Panel
 
+               Render game statistics.
 
-   .. py:method:: render_community_cards() -> rich.panel.Panel
 
-      Render community cards and board.
 
+            .. py:method:: render_hand_history() -> rich.panel.Panel
 
-      .. autolink-examples:: render_community_cards
-         :collapse:
+               Render hand history summary.
 
 
-   .. py:method:: render_footer() -> rich.panel.Panel
 
-      Render the footer with controls and current action.
+            .. py:method:: render_header() -> rich.panel.Panel
 
+               Render the header with game title and phase.
 
-      .. autolink-examples:: render_footer
-         :collapse:
 
 
-   .. py:method:: render_game_stats() -> rich.panel.Panel
+            .. py:method:: render_player_info() -> rich.panel.Panel
 
-      Render game statistics.
+               Render detailed player information.
 
 
-      .. autolink-examples:: render_game_stats
-         :collapse:
 
+            .. py:method:: render_pot_info() -> rich.panel.Panel
 
-   .. py:method:: render_hand_history() -> rich.panel.Panel
+               Render pot size and betting information.
 
-      Render hand history summary.
 
 
-      .. autolink-examples:: render_hand_history
-         :collapse:
+            .. py:method:: render_table() -> rich.panel.Panel
 
+               Render the poker table with player positions.
 
-   .. py:method:: render_header() -> rich.panel.Panel
 
-      Render the header with game title and phase.
 
+            .. py:method:: run(agent: haive.games.hold_em.game_agent.HoldemGameAgent, delay: float = 2.0)
 
-      .. autolink-examples:: render_header
-         :collapse:
+               Run the live UI with the Hold'em agent.
 
+               :param agent: The HoldemGameAgent instance
+               :param delay: Delay between updates for readability
 
-   .. py:method:: render_player_info() -> rich.panel.Panel
 
-      Render detailed player information.
 
+            .. py:attribute:: console
 
-      .. autolink-examples:: render_player_info
-         :collapse:
 
+            .. py:attribute:: last_action
+               :type:  dict[str, Any] | None
+               :value: None
 
-   .. py:method:: render_pot_info() -> rich.panel.Panel
 
-      Render pot size and betting information.
 
+            .. py:attribute:: layout
 
-      .. autolink-examples:: render_pot_info
-         :collapse:
 
+            .. py:attribute:: state
+               :type:  dict[str, Any] | None
+               :value: None
 
-   .. py:method:: render_table() -> rich.panel.Panel
 
-      Render the poker table with player positions.
 
 
-      .. autolink-examples:: render_table
-         :collapse:
-
-
-   .. py:method:: run(agent: haive.games.hold_em.game_agent.HoldemGameAgent, delay: float = 2.0)
-
-      Run the live UI with the Hold'em agent.
-
-      :param agent: The HoldemGameAgent instance
-      :param delay: Delay between updates for readability
-
-
-      .. autolink-examples:: run
-         :collapse:
-
-
-   .. py:attribute:: console
-
-
-   .. py:attribute:: last_action
-      :type:  dict[str, Any] | None
-      :value: None
-
-
-
-   .. py:attribute:: layout
-
-
-   .. py:attribute:: state
-      :type:  dict[str, Any] | None
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: main()
 
-   Main function to run the UI demo.
+            Main function to run the UI demo.
 
 
-   .. autolink-examples:: main
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.hold_em.ui import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

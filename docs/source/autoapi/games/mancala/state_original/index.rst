@@ -3,6 +3,18 @@ games.mancala.state_original
 
 .. py:module:: games.mancala.state_original
 
+State for the Mancala game.
+
+This module defines the state for the Mancala game, which includes the board, turn, game
+status, move history, free turn, winner, and player analyses.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    State for the Mancala game.
@@ -11,249 +23,243 @@ games.mancala.state_original
    status, move history, free turn, winner, and player analyses.
 
 
-   .. autolink-examples:: games.mancala.state_original
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mancala.state_original.logger
+      games.mancala.state_original.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mancala.state_original.MancalaState
+      games.mancala.state_original.MancalaState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: MancalaState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: MancalaState(/, **data: Any)
 
-   State for a Mancala game.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   This class defines the structure of the Mancala game state, which includes the
-   board, turn, game status, move history, free turn, winner, and player analyses.
 
+            State for a Mancala game.
 
+            This class defines the structure of the Mancala game state, which includes the
+            board, turn, game status, move history, free turn, winner, and player analyses.
 
-   .. autolink-examples:: MancalaState
-      :collapse:
 
-   .. py:method:: __repr__() -> str
+            Create a new model by parsing and validating input data from keyword arguments.
 
-      Detailed representation of the state.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      .. autolink-examples:: __repr__
-         :collapse:
 
+            .. py:method:: __repr__() -> str
 
-   .. py:method:: __str__() -> str
+               Detailed representation of the state.
 
-      String representation of the state.
 
 
-      .. autolink-examples:: __str__
-         :collapse:
+            .. py:method:: __str__() -> str
 
+               String representation of the state.
 
-   .. py:method:: copy() -> MancalaState
 
-      Create a deep copy of the current state.
 
-      :returns: A new instance with the same values
-      :rtype: MancalaState
+            .. py:method:: copy() -> MancalaState
 
+               Create a deep copy of the current state.
 
-      .. autolink-examples:: copy
-         :collapse:
+               :returns: A new instance with the same values
+               :rtype: MancalaState
 
 
-   .. py:method:: get_valid_moves(player: str | None = None) -> list[int]
 
-      Get valid moves for the current or specified player.
+            .. py:method:: get_valid_moves(player: str | None = None) -> list[int]
 
-      :param player: Player to get moves for ("player1" or "player2").
-                     If None, uses current turn.
+               Get valid moves for the current or specified player.
 
-      :returns: List of valid pit indices that can be played
-      :rtype: List[int]
+               :param player: Player to get moves for ("player1" or "player2").
+                              If None, uses current turn.
 
+               :returns: List of valid pit indices that can be played
+               :rtype: List[int]
 
-      .. autolink-examples:: get_valid_moves
-         :collapse:
 
 
-   .. py:method:: get_winner() -> str | None
+            .. py:method:: get_winner() -> str | None
 
-      Determine the winner of the game.
+               Determine the winner of the game.
 
-      :returns: "player1", "player2", "draw", or None if game ongoing
-      :rtype: Optional[str]
+               :returns: "player1", "player2", "draw", or None if game ongoing
+               :rtype: Optional[str]
 
 
-      .. autolink-examples:: get_winner
-         :collapse:
 
+            .. py:method:: handle_analysis_data(data)
+               :classmethod:
 
-   .. py:method:: handle_analysis_data(data)
-      :classmethod:
 
+               Handle conversion of analysis data to proper types.
 
-      Handle conversion of analysis data to proper types.
 
 
-      .. autolink-examples:: handle_analysis_data
-         :collapse:
+            .. py:method:: handle_initialization_data(data)
+               :classmethod:
 
 
-   .. py:method:: handle_initialization_data(data)
-      :classmethod:
+               Handle special initialization patterns from the framework.
 
 
-      Handle special initialization patterns from the framework.
 
+            .. py:method:: initialize(stones_per_pit: int = 4, **kwargs) -> MancalaState
+               :classmethod:
 
-      .. autolink-examples:: handle_initialization_data
-         :collapse:
 
+               Initialize a new Mancala game state.
 
-   .. py:method:: initialize(stones_per_pit: int = 4, **kwargs) -> MancalaState
-      :classmethod:
+               :param stones_per_pit: Number of stones to place in each pit initially
+               :param \*\*kwargs: Additional keyword arguments for customization
 
+               :returns: A new initialized game state
+               :rtype: MancalaState
 
-      Initialize a new Mancala game state.
 
-      :param stones_per_pit: Number of stones to place in each pit initially
-      :param \*\*kwargs: Additional keyword arguments for customization
 
-      :returns: A new initialized game state
-      :rtype: MancalaState
+            .. py:method:: is_game_over() -> bool
 
+               Check if the game is over.
 
-      .. autolink-examples:: initialize
-         :collapse:
+               :returns: True if game is over, False otherwise
+               :rtype: bool
 
 
-   .. py:method:: is_game_over() -> bool
 
-      Check if the game is over.
+            .. py:method:: model_dump(**kwargs) -> dict[str, Any]
 
-      :returns: True if game is over, False otherwise
-      :rtype: bool
+               Override model_dump to ensure proper serialization.
 
 
-      .. autolink-examples:: is_game_over
-         :collapse:
 
+            .. py:method:: validate_board(v)
+               :classmethod:
 
-   .. py:method:: model_dump(**kwargs) -> dict[str, Any]
 
-      Override model_dump to ensure proper serialization.
+               Validate the board has exactly 14 positions.
 
 
-      .. autolink-examples:: model_dump
-         :collapse:
 
+            .. py:attribute:: board
+               :type:  list[int]
+               :value: None
 
-   .. py:method:: validate_board(v)
-      :classmethod:
 
 
-      Validate the board has exactly 14 positions.
+            .. py:property:: board_string
+               :type: str
 
 
-      .. autolink-examples:: validate_board
-         :collapse:
+               Get a string representation of the board.
 
 
-   .. py:attribute:: board
-      :type:  list[int]
-      :value: None
+            .. py:attribute:: free_turn
+               :type:  bool
+               :value: None
 
 
 
-   .. py:property:: board_string
-      :type: str
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'player1_win', 'player2_win', 'draw']
+               :value: None
 
 
-      Get a string representation of the board.
 
-      .. autolink-examples:: board_string
-         :collapse:
+            .. py:attribute:: move_history
+               :type:  list[haive.games.mancala.models.MancalaMove]
+               :value: None
 
 
-   .. py:attribute:: free_turn
-      :type:  bool
-      :value: None
 
+            .. py:attribute:: player1_analysis
+               :type:  list[haive.games.mancala.models.MancalaAnalysis]
+               :value: None
 
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'player1_win', 'player2_win', 'draw']
-      :value: None
 
+            .. py:property:: player1_score
+               :type: int
 
 
-   .. py:attribute:: move_history
-      :type:  list[haive.games.mancala.models.MancalaMove]
-      :value: None
+               Get player 1's score (store).
 
 
+            .. py:attribute:: player2_analysis
+               :type:  list[haive.games.mancala.models.MancalaAnalysis]
+               :value: None
 
-   .. py:attribute:: player1_analysis
-      :type:  list[haive.games.mancala.models.MancalaAnalysis]
-      :value: None
 
 
+            .. py:property:: player2_score
+               :type: int
 
-   .. py:property:: player1_score
-      :type: int
 
+               Get player 2's score (store).
 
-      Get player 1's score (store).
 
-      .. autolink-examples:: player1_score
-         :collapse:
+            .. py:attribute:: turn
+               :type:  Literal['player1', 'player2']
+               :value: None
 
 
-   .. py:attribute:: player2_analysis
-      :type:  list[haive.games.mancala.models.MancalaAnalysis]
-      :value: None
 
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
 
-   .. py:property:: player2_score
-      :type: int
 
 
-      Get player 2's score (store).
-
-      .. autolink-examples:: player2_score
-         :collapse:
-
-
-   .. py:attribute:: turn
-      :type:  Literal['player1', 'player2']
-      :value: None
-
-
-
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.mancala.state_original import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

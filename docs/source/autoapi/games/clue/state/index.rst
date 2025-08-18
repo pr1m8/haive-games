@@ -3,6 +3,73 @@ games.clue.state
 
 .. py:module:: games.clue.state
 
+Comprehensive state management for the Clue (Cluedo) mystery game.
+
+This module defines the state model for the Clue game, providing complete
+tracking of game progression, player cards, hypotheses, and game status.
+The state system supports both two-player and multi-player configurations
+with full game rule enforcement.
+
+The state model handles:
+- Secret solution management (murderer, weapon, room)
+- Player card distribution and tracking
+- Guess and response history
+- AI hypothesis generation and tracking
+- Turn management and game flow
+- Win condition evaluation
+- Game status and completion handling
+
+Key Features:
+    - Immutable solution hidden from players
+    - Dynamic card dealing and distribution
+    - Comprehensive guess and response logging
+    - AI hypothesis tracking for strategic play
+    - Turn-based progression with validation
+    - Multiple win conditions and game ending scenarios
+
+.. rubric:: Examples
+
+Initializing a new game::
+
+    from haive.games.clue.state import ClueState
+
+    # Create a new game with random solution
+    state = ClueState.initialize()
+
+    # Create a game with specific solution
+    from haive.games.clue.models import ClueSolution, ValidSuspect, ValidWeapon, ValidRoom
+
+    solution = ClueSolution(
+        suspect=ValidSuspect.COLONEL_MUSTARD,
+        weapon=ValidWeapon.KNIFE,
+        room=ValidRoom.KITCHEN
+    )
+    state = ClueState.initialize(solution=solution)
+
+Checking game status::
+
+    if state.is_game_over:
+        print(f"Game ended! Winner: {state.winner}")
+    else:
+        print(f"Turn {state.current_turn_number}: {state.current_player}'s turn")
+
+Accessing player information::
+
+    player1_cards = state.player1_cards
+    player2_cards = state.player2_cards
+    print(f"Player 1 has {len(player1_cards)} cards")
+    print(f"Player 2 has {len(player2_cards)} cards")
+
+The state model integrates seamlessly with the game agent system and provides
+all necessary information for AI decision-making and strategic gameplay.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Comprehensive state management for the Clue (Cluedo) mystery game.
@@ -66,341 +133,360 @@ games.clue.state
    all necessary information for AI decision-making and strategic gameplay.
 
 
-   .. autolink-examples:: games.clue.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.clue.state.ClueState
+      games.clue.state.ClueState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: ClueState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: ClueState(/, **data: Any)
 
-   Comprehensive state model for Clue game sessions.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   This class manages all aspects of a Clue game state, including the secret
-   solution, player cards, game progression, and AI reasoning. It provides
-   methods for game initialization, turn management, and win condition
-   evaluation.
 
-   The state model supports strategic gameplay by tracking player hypotheses,
-   guess history, and response patterns. This enables sophisticated AI
-   decision-making and deduction logic.
+            Comprehensive state model for Clue game sessions.
 
-   .. attribute:: solution
+            This class manages all aspects of a Clue game state, including the secret
+            solution, player cards, game progression, and AI reasoning. It provides
+            methods for game initialization, turn management, and win condition
+            evaluation.
 
-      The secret solution that players are trying to discover.
-      Contains the murderer (suspect), weapon, and room.
+            The state model supports strategic gameplay by tracking player hypotheses,
+            guess history, and response patterns. This enables sophisticated AI
+            decision-making and deduction logic.
 
-   .. attribute:: guesses
+            .. attribute:: solution
 
-      Complete history of all guesses made during the game.
-      Each guess contains a suspect, weapon, and room combination.
+               The secret solution that players are trying to discover.
+               Contains the murderer (suspect), weapon, and room.
 
-   .. attribute:: responses
+            .. attribute:: guesses
 
-      Responses to each guess, indicating whether cards were shown
-      and which player responded.
+               Complete history of all guesses made during the game.
+               Each guess contains a suspect, weapon, and room combination.
 
-   .. attribute:: player1_cards
+            .. attribute:: responses
 
-      List of cards held by player 1.
-      Used for responding to guesses and making deductions.
+               Responses to each guess, indicating whether cards were shown
+               and which player responded.
 
-   .. attribute:: player2_cards
+            .. attribute:: player1_cards
 
-      List of cards held by player 2.
-      Used for responding to guesses and making deductions.
+               List of cards held by player 1.
+               Used for responding to guesses and making deductions.
 
-   .. attribute:: current_player
+            .. attribute:: player2_cards
 
-      The player whose turn it is to make a guess.
-      Alternates between "player1" and "player2".
+               List of cards held by player 2.
+               Used for responding to guesses and making deductions.
 
-   .. attribute:: max_turns
+            .. attribute:: current_player
 
-      Maximum number of turns before the game ends in a draw.
-      Prevents infinite games and ensures completion.
+               The player whose turn it is to make a guess.
+               Alternates between "player1" and "player2".
 
-   .. attribute:: game_status
+            .. attribute:: max_turns
 
-      Current status of the game (ongoing, player1_win, player2_win).
-      Used to determine if the game has ended and who won.
+               Maximum number of turns before the game ends in a draw.
+               Prevents infinite games and ensures completion.
 
-   .. attribute:: winner
+            .. attribute:: game_status
 
-      The winning player, if any.
-      Set when a player makes a correct accusation.
+               Current status of the game (ongoing, player1_win, player2_win).
+               Used to determine if the game has ended and who won.
 
-   .. attribute:: player1_hypotheses
+            .. attribute:: winner
 
-      List of AI-generated hypotheses for player 1.
-      Tracks the AI's reasoning and deduction process.
+               The winning player, if any.
+               Set when a player makes a correct accusation.
 
-   .. attribute:: player2_hypotheses
+            .. attribute:: player1_hypotheses
 
-      List of AI-generated hypotheses for player 2.
-      Tracks the AI's reasoning and deduction process.
+               List of AI-generated hypotheses for player 1.
+               Tracks the AI's reasoning and deduction process.
 
-   .. rubric:: Examples
+            .. attribute:: player2_hypotheses
 
-   Creating a new game state::
+               List of AI-generated hypotheses for player 2.
+               Tracks the AI's reasoning and deduction process.
 
-       state = ClueState.initialize()
-       print(f"Solution: {state.solution}")
-       print(f"Player 1 cards: {state.player1_cards}")
-       print(f"Player 2 cards: {state.player2_cards}")
+            .. rubric:: Examples
 
-   Checking game progress::
+            Creating a new game state::
 
-       if state.is_game_over:
-           print(f"Game ended! Winner: {state.winner}")
-       else:
-           print(f"Turn {state.current_turn_number}: {state.current_player}'s turn")
+                state = ClueState.initialize()
+                print(f"Solution: {state.solution}")
+                print(f"Player 1 cards: {state.player1_cards}")
+                print(f"Player 2 cards: {state.player2_cards}")
 
-   Accessing game history::
+            Checking game progress::
 
-       for i, (guess, response) in enumerate(zip(state.guesses, state.responses)):
-           print(f"Turn {i+1}: {guess.suspect}, {guess.weapon}, {guess.room}")
-           print(f"Response: {response.responding_player}")
+                if state.is_game_over:
+                    print(f"Game ended! Winner: {state.winner}")
+                else:
+                    print(f"Turn {state.current_turn_number}: {state.current_player}'s turn")
 
-   .. note::
+            Accessing game history::
 
-      The solution is hidden from players during normal gameplay but is
-      accessible to the game engine for validation and scoring purposes.
+                for i, (guess, response) in enumerate(zip(state.guesses, state.responses)):
+                    print(f"Turn {i+1}: {guess.suspect}, {guess.weapon}, {guess.room}")
+                    print(f"Response: {response.responding_player}")
 
+            .. note::
 
-   .. autolink-examples:: ClueState
-      :collapse:
+               The solution is hidden from players during normal gameplay but is
+               accessible to the game engine for validation and scoring purposes.
 
-   .. py:method:: initialize(**kwargs) -> ClueState
-      :classmethod:
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Initialize a new Clue game state.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      Creates a new game state with a random or specified solution, deals cards
-      to players, and sets up the initial game conditions. The solution is
-      kept secret and the remaining cards are distributed between players.
 
-      :param \*\*kwargs: Keyword arguments for customization:
-                         solution (ClueSolution, optional): Predefined solution. If not provided,
-                             a random solution will be generated.
-                         first_player (str, optional): Which player goes first ("player1" or "player2").
-                             Defaults to "player1".
-                         max_turns (int, optional): Maximum number of turns before game ends.
-                             Defaults to 20.
+            .. py:method:: initialize(**kwargs) -> ClueState
+               :classmethod:
 
-      :returns: A new initialized game state ready for play.
-      :rtype: ClueState
 
-      .. rubric:: Examples
+               Initialize a new Clue game state.
 
-      Creating a random game::
+               Creates a new game state with a random or specified solution, deals cards
+               to players, and sets up the initial game conditions. The solution is
+               kept secret and the remaining cards are distributed between players.
 
-          state = ClueState.initialize()
-          print(f"Game initialized with random solution")
-          print(f"Player 1 has {len(state.player1_cards)} cards")
-          print(f"Player 2 has {len(state.player2_cards)} cards")
+               :param \*\*kwargs: Keyword arguments for customization:
+                                  solution (ClueSolution, optional): Predefined solution. If not provided,
+                                      a random solution will be generated.
+                                  first_player (str, optional): Which player goes first ("player1" or "player2").
+                                      Defaults to "player1".
+                                  max_turns (int, optional): Maximum number of turns before game ends.
+                                      Defaults to 20.
 
-      Creating a game with specific solution::
+               :returns: A new initialized game state ready for play.
+               :rtype: ClueState
 
-          from haive.games.clue.models import ClueSolution, ValidSuspect, ValidWeapon, ValidRoom
+               .. rubric:: Examples
 
-          solution = ClueSolution(
-              suspect=ValidSuspect.COLONEL_MUSTARD,
-              weapon=ValidWeapon.KNIFE,
-              room=ValidRoom.KITCHEN
-          )
-          state = ClueState.initialize(
-              solution=solution,
-              first_player="player2",
-              max_turns=15
-          )
+               Creating a random game::
 
-      Checking initialization results::
+                   state = ClueState.initialize()
+                   print(f"Game initialized with random solution")
+                   print(f"Player 1 has {len(state.player1_cards)} cards")
+                   print(f"Player 2 has {len(state.player2_cards)} cards")
 
-          state = ClueState.initialize()
+               Creating a game with specific solution::
 
-          # Verify solution is set
-          assert state.solution.suspect in ValidSuspect
-          assert state.solution.weapon in ValidWeapon
-          assert state.solution.room in ValidRoom
+                   from haive.games.clue.models import ClueSolution, ValidSuspect, ValidWeapon, ValidRoom
 
-          # Verify cards are distributed
-          total_cards = len(state.player1_cards) + len(state.player2_cards)
-          assert total_cards == 18  # 21 total cards - 3 solution cards
+                   solution = ClueSolution(
+                       suspect=ValidSuspect.COLONEL_MUSTARD,
+                       weapon=ValidWeapon.KNIFE,
+                       room=ValidRoom.KITCHEN
+                   )
+                   state = ClueState.initialize(
+                       solution=solution,
+                       first_player="player2",
+                       max_turns=15
+                   )
 
-          # Verify initial state
-          assert state.current_player == "player1"  # Default first player
-          assert state.game_status == "ongoing"
-          assert len(state.guesses) == 0
-          assert len(state.responses) == 0
+               Checking initialization results::
 
-      .. note::
+                   state = ClueState.initialize()
 
-         The solution cards are automatically removed from the deck before
-         dealing to players, ensuring they remain hidden. Card distribution
-         is as even as possible, with any extra cards going to player1.
+                   # Verify solution is set
+                   assert state.solution.suspect in ValidSuspect
+                   assert state.solution.weapon in ValidWeapon
+                   assert state.solution.room in ValidRoom
 
+                   # Verify cards are distributed
+                   total_cards = len(state.player1_cards) + len(state.player2_cards)
+                   assert total_cards == 18  # 21 total cards - 3 solution cards
 
-      .. autolink-examples:: initialize
-         :collapse:
+                   # Verify initial state
+                   assert state.current_player == "player1"  # Default first player
+                   assert state.game_status == "ongoing"
+                   assert len(state.guesses) == 0
+                   assert len(state.responses) == 0
 
+               .. note::
 
-   .. py:property:: board_string
-      :type: str
+                  The solution cards are automatically removed from the deck before
+                  dealing to players, ensuring they remain hidden. Card distribution
+                  is as even as possible, with any extra cards going to player1.
 
 
-      Get a string representation of the game board.
 
-      Creates a formatted string showing the history of guesses and responses,
-      useful for display purposes and debugging.
+            .. py:property:: board_string
+               :type: str
 
-      :returns: Formatted string representation of the game history.
-      :rtype: str
 
-      .. rubric:: Examples
+               Get a string representation of the game board.
 
-      Displaying game history::
+               Creates a formatted string showing the history of guesses and responses,
+               useful for display purposes and debugging.
 
-          state = ClueState.initialize()
-          # After some guesses...
-          print(state.board_string)
-          # Output:
-          # Turn 1: Colonel Mustard, Knife, Kitchen | Response: Alice
-          # Turn 2: Professor Plum, Candlestick, Library | Response: No card shown
+               :returns: Formatted string representation of the game history.
+               :rtype: str
 
-      .. autolink-examples:: board_string
-         :collapse:
+               .. rubric:: Examples
 
+               Displaying game history::
 
-   .. py:attribute:: current_player
-      :type:  Literal['player1', 'player2']
-      :value: None
+                   state = ClueState.initialize()
+                   # After some guesses...
+                   print(state.board_string)
+                   # Output:
+                   # Turn 1: Colonel Mustard, Knife, Kitchen | Response: Alice
+                   # Turn 2: Professor Plum, Candlestick, Library | Response: No card shown
 
 
+            .. py:attribute:: current_player
+               :type:  Literal['player1', 'player2']
+               :value: None
 
-   .. py:property:: current_turn_number
-      :type: int
 
 
-      Get the current turn number.
+            .. py:property:: current_turn_number
+               :type: int
 
-      The turn number is calculated based on the number of guesses made so far,
-      starting from 1 for the first turn.
 
-      :returns: The current turn number (1-based).
-      :rtype: int
+               Get the current turn number.
 
-      .. rubric:: Examples
+               The turn number is calculated based on the number of guesses made so far,
+               starting from 1 for the first turn.
 
-      Checking turn number::
+               :returns: The current turn number (1-based).
+               :rtype: int
 
-          state = ClueState.initialize()
-          print(f"Turn {state.current_turn_number}")  # "Turn 1"
+               .. rubric:: Examples
 
-          # After first guess
-          state.guesses.append(guess)
-          print(f"Turn {state.current_turn_number}")  # "Turn 2"
+               Checking turn number::
 
-      .. autolink-examples:: current_turn_number
-         :collapse:
+                   state = ClueState.initialize()
+                   print(f"Turn {state.current_turn_number}")  # "Turn 1"
 
+                   # After first guess
+                   state.guesses.append(guess)
+                   print(f"Turn {state.current_turn_number}")  # "Turn 2"
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'player1_win', 'player2_win']
-      :value: None
 
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'player1_win', 'player2_win']
+               :value: None
 
 
-   .. py:attribute:: guesses
-      :type:  list[haive.games.clue.models.ClueGuess]
-      :value: None
 
+            .. py:attribute:: guesses
+               :type:  list[haive.games.clue.models.ClueGuess]
+               :value: None
 
 
-   .. py:property:: is_game_over
-      :type: bool
 
+            .. py:property:: is_game_over
+               :type: bool
 
-      Check if the game is over.
 
-      The game is over when the status is no longer "ongoing", which happens
-      when a player wins or the maximum turns are reached.
+               Check if the game is over.
 
-      :returns: True if the game has ended, False otherwise.
-      :rtype: bool
+               The game is over when the status is no longer "ongoing", which happens
+               when a player wins or the maximum turns are reached.
 
-      .. rubric:: Examples
+               :returns: True if the game has ended, False otherwise.
+               :rtype: bool
 
-      Checking game status::
+               .. rubric:: Examples
 
-          state = ClueState.initialize()
-          if state.is_game_over:
-              print(f"Game ended! Winner: {state.winner}")
-          else:
-              print("Game is still in progress")
+               Checking game status::
 
-      .. autolink-examples:: is_game_over
-         :collapse:
+                   state = ClueState.initialize()
+                   if state.is_game_over:
+                       print(f"Game ended! Winner: {state.winner}")
+                   else:
+                       print("Game is still in progress")
 
 
-   .. py:attribute:: max_turns
-      :type:  int
-      :value: None
+            .. py:attribute:: max_turns
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: player1_cards
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: player1_cards
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: player1_hypotheses
-      :type:  list[dict[str, Any]]
-      :value: None
+            .. py:attribute:: player1_hypotheses
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: player2_cards
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: player2_cards
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: player2_hypotheses
-      :type:  list[dict[str, Any]]
-      :value: None
+            .. py:attribute:: player2_hypotheses
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: responses
-      :type:  list[haive.games.clue.models.ClueResponse]
-      :value: None
+            .. py:attribute:: responses
+               :type:  list[haive.games.clue.models.ClueResponse]
+               :value: None
 
 
 
-   .. py:attribute:: solution
-      :type:  haive.games.clue.models.ClueSolution
-      :value: None
+            .. py:attribute:: solution
+               :type:  haive.games.clue.models.ClueSolution
+               :value: None
 
 
 
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
 
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.clue.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

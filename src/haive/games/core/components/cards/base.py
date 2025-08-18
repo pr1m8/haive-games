@@ -32,6 +32,14 @@ class Card(BaseModel):
         return self.name
 
     def __eq__(self, other) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, Card):
             return False
         return self.id == other.id

@@ -16,6 +16,8 @@ class WordConnectionsUI:
     """Interactive UI for Word Connections game."""
 
     def __init__(self):
+        """  Init  .
+"""
         self.config = WordConnectionsAgentConfig(visualize=True)
         self.agent = WordConnectionsAgent(self.config)
         self.state: WordConnectionsState | None = None

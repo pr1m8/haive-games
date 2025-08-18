@@ -284,6 +284,8 @@ except ImportError:
         """Basic console UI for Mastermind game."""
 
         def __init__(self):
+            """  Init  .
+"""
             pass
 
         def display_game_state(self, state: MastermindState, show_secret: bool = False):

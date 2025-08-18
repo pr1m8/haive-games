@@ -84,7 +84,7 @@ class BaseGameConfig(AgentConfig, ABC):
         Returns:
             Dictionary mapping role names to GamePlayerRole definitions
 
-        Example:
+        Examples:
             {
                 "white_player": GamePlayerRole(name="white_player", display_name="White"),
                 "black_player": GamePlayerRole(name="black_player", display_name="Black"),
@@ -101,7 +101,7 @@ class BaseGameConfig(AgentConfig, ABC):
         Returns:
             Dictionary mapping example names to configuration parameters
 
-        Example:
+        Examples:
             {
                 "gpt_vs_claude": {
                     "player1_model": "gpt-4",

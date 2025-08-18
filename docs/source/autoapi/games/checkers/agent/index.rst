@@ -3,6 +3,26 @@ games.checkers.agent
 
 .. py:module:: games.checkers.agent
 
+Checkers agent implementation module.
+
+This module provides the main checkers agent implementation using LangGraph, including:
+    - Dynamic graph-based workflow for turn management
+    - LLM-powered player engines for move generation
+    - Position analysis and evaluation
+    - Error handling and retry logic
+    - Rich UI visualization
+    - Game flow orchestration
+
+The agent uses a state-based approach with LangGraph for managing the game workflow
+and supports both automated play and human interaction through a beautiful UI.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Checkers agent implementation module.
@@ -19,370 +39,348 @@ games.checkers.agent
    and supports both automated play and human interaction through a beautiful UI.
 
 
-   .. autolink-examples:: games.checkers.agent
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.checkers.agent.CheckersAgent
+      games.checkers.agent.CheckersAgent
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: CheckersAgent(config: haive.games.checkers.config.CheckersAgentConfig)
 
-   Bases: :py:obj:`haive.games.framework.base.GameAgent`\ [\ :py:obj:`haive.games.checkers.config.CheckersAgentConfig`\ ]
+            Bases: :py:obj:`haive.games.framework.base.GameAgent`\ [\ :py:obj:`haive.games.checkers.config.CheckersAgentConfig`\ ]
 
 
-   Agent for playing checkers with LLM-based players and rich UI.
+            Agent for playing checkers with LLM-based players and rich UI.
 
-   This agent implements a complete checkers game using language models for
-   move generation and position analysis. It uses LangGraph to create a
-   workflow graph that manages the game flow between players.
+            This agent implements a complete checkers game using language models for
+            move generation and position analysis. It uses LangGraph to create a
+            workflow graph that manages the game flow between players.
 
-   Features:
-       - LLM-powered checkers players with structured outputs
-       - Position analysis for better decision making
-       - Beautiful rich-text UI visualization
-       - Move validation and retry logic
-       - Game status tracking and termination
-       - Error handling and fallback moves
+            Features:
+                - LLM-powered checkers players with structured outputs
+                - Position analysis for better decision making
+                - Beautiful rich-text UI visualization
+                - Move validation and retry logic
+                - Game status tracking and termination
+                - Error handling and fallback moves
 
-   .. attribute:: config
+            .. attribute:: config
 
-      Configuration for the checkers agent
+               Configuration for the checkers agent
 
-      :type: CheckersAgentConfig
+               :type: CheckersAgentConfig
 
-   .. attribute:: state_manager
+            .. attribute:: state_manager
 
-      Manager for game state operations
+               Manager for game state operations
 
-      :type: CheckersStateManager
+               :type: CheckersStateManager
 
-   .. attribute:: ui
+            .. attribute:: ui
 
-      Rich UI for game visualization
+               Rich UI for game visualization
 
-      :type: CheckersUI
+               :type: CheckersUI
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      LLM engines for players and analyzers
+               LLM engines for players and analyzers
 
-      :type: dict
+               :type: dict
 
-   .. attribute:: graph
+            .. attribute:: graph
 
-      LangGraph workflow for the checkers game
+               LangGraph workflow for the checkers game
 
-      :type: DynamicGraph
+               :type: DynamicGraph
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   >>> # Create and run a checkers game
-   >>> agent = CheckersAgent(CheckersAgentConfig())
-   >>> final_state = agent.run_game(visualize=True)
-   >>>
-   >>> # Check the final game state
-   >>> print(f"Game winner: {final_state.get('winner')}")
+            >>> # Create and run a checkers game
+            >>> agent = CheckersAgent(CheckersAgentConfig())
+            >>> final_state = agent.run_game(visualize=True)
+            >>>
+            >>> # Check the final game state
+            >>> print(f"Game winner: {final_state.get('winner')}")
 
-   Initialize the checkers agent.
+            Initialize the checkers agent.
 
-   Sets up the state manager, UI, and other components needed for
-   the checkers game.
+            Sets up the state manager, UI, and other components needed for
+            the checkers game.
 
-   :param config: Configuration for the checkers agent
-   :type config: CheckersAgentConfig
+            :param config: Configuration for the checkers agent
+            :type config: CheckersAgentConfig
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: analyze_player1(state: dict[str, Any]) -> langgraph.types.Command
 
+               Analyze the position for player 1 (red).
 
-   .. autolink-examples:: CheckersAgent
-      :collapse:
+               Handles position analysis for the red player.
 
-   .. py:method:: analyze_player1(state: dict[str, Any]) -> langgraph.types.Command
+               :param state: Current game state
+               :type state: dict[str, Any]
 
-      Analyze the position for player 1 (red).
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
-      Handles position analysis for the red player.
 
-      :param state: Current game state
-      :type state: dict[str, Any]
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
+            .. py:method:: analyze_player2(state: dict[str, Any]) -> langgraph.types.Command
 
+               Analyze the position for player 2 (black).
 
-      .. autolink-examples:: analyze_player1
-         :collapse:
+               Handles position analysis for the black player.
 
+               :param state: Current game state
+               :type state: dict[str, Any]
 
-   .. py:method:: analyze_player2(state: dict[str, Any]) -> langgraph.types.Command
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
-      Analyze the position for player 2 (black).
 
-      Handles position analysis for the black player.
 
-      :param state: Current game state
-      :type state: dict[str, Any]
+            .. py:method:: analyze_position(state: haive.games.checkers.state.CheckersState, player: str) -> langgraph.types.Command
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
+               Analyze the position for a player.
 
+               Gets a detailed position analysis from the appropriate analyzer engine
+               and updates the game state with the analysis.
 
-      .. autolink-examples:: analyze_player2
-         :collapse:
+               :param state: Current game state
+               :type state: CheckersState
+               :param player: Player to analyze for ("red" or "black")
+               :type player: str
 
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
-   .. py:method:: analyze_position(state: haive.games.checkers.state.CheckersState, player: str) -> langgraph.types.Command
 
-      Analyze the position for a player.
 
-      Gets a detailed position analysis from the appropriate analyzer engine
-      and updates the game state with the analysis.
+            .. py:method:: extract_move(response: haive.games.checkers.models.CheckersPlayerDecision) -> haive.games.checkers.models.CheckersMove
 
-      :param state: Current game state
-      :type state: CheckersState
-      :param player: Player to analyze for ("red" or "black")
-      :type player: str
+               Extract a move from a player decision.
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
+               Gets the selected move from a player's decision object.
 
+               :param response: Player's move decision
+               :type response: CheckersPlayerDecision
 
-      .. autolink-examples:: analyze_position
-         :collapse:
+               :returns: The selected move
+               :rtype: CheckersMove
 
 
-   .. py:method:: extract_move(response: haive.games.checkers.models.CheckersPlayerDecision) -> haive.games.checkers.models.CheckersMove
 
-      Extract a move from a player decision.
+            .. py:method:: initialize_game(state: dict[str, Any]) -> langgraph.types.Command
 
-      Gets the selected move from a player's decision object.
+               Initialize a new checkers game.
 
-      :param response: Player's move decision
-      :type response: CheckersPlayerDecision
+               Creates a fresh checkers game state and routes to the first player's move.
 
-      :returns: The selected move
-      :rtype: CheckersMove
+               :param state: Initial state data (usually empty)
+               :type state: dict[str, Any]
 
+               :returns: LangGraph command with initialized game state
+               :rtype: Command
 
-      .. autolink-examples:: extract_move
-         :collapse:
 
 
-   .. py:method:: initialize_game(state: dict[str, Any]) -> langgraph.types.Command
+            .. py:method:: make_move(state: haive.games.checkers.state.CheckersState, player: str) -> langgraph.types.Command
 
-      Initialize a new checkers game.
+               Make a move with error handling and retry logic.
 
-      Creates a fresh checkers game state and routes to the first player's move.
+               Core method for generating and applying moves, with robust error handling
+               and visualization.
 
-      :param state: Initial state data (usually empty)
-      :type state: dict[str, Any]
+               The method:
+               1. Shows a thinking animation
+               2. Gets legal moves
+               3. Prepares context for the LLM
+               4. Gets a move decision from the appropriate engine
+               5. Validates and applies the move
+               6. Updates the game state
 
-      :returns: LangGraph command with initialized game state
-      :rtype: Command
+               Includes retry logic for invalid moves and fallback to the first legal
+               move if all attempts fail.
 
+               :param state: Current game state
+               :type state: CheckersState
+               :param player: Player to make the move ("red" or "black")
+               :type player: str
 
-      .. autolink-examples:: initialize_game
-         :collapse:
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
 
-   .. py:method:: make_move(state: haive.games.checkers.state.CheckersState, player: str) -> langgraph.types.Command
 
-      Make a move with error handling and retry logic.
+            .. py:method:: make_player1_move(state: dict[str, Any]) -> langgraph.types.Command
 
-      Core method for generating and applying moves, with robust error handling
-      and visualization.
+               Make a move for player 1 (red).
 
-      The method:
-      1. Shows a thinking animation
-      2. Gets legal moves
-      3. Prepares context for the LLM
-      4. Gets a move decision from the appropriate engine
-      5. Validates and applies the move
-      6. Updates the game state
+               Handles the red player's turn, routing appropriately based on the
+               current game state.
 
-      Includes retry logic for invalid moves and fallback to the first legal
-      move if all attempts fail.
+               :param state: Current game state
+               :type state: dict[str, Any]
 
-      :param state: Current game state
-      :type state: CheckersState
-      :param player: Player to make the move ("red" or "black")
-      :type player: str
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
 
 
-      .. autolink-examples:: make_move
-         :collapse:
+            .. py:method:: make_player2_move(state: dict[str, Any]) -> langgraph.types.Command
 
+               Make a move for player 2 (black).
 
-   .. py:method:: make_player1_move(state: dict[str, Any]) -> langgraph.types.Command
+               Handles the black player's turn, routing appropriately based on the
+               current game state.
 
-      Make a move for player 1 (red).
+               :param state: Current game state
+               :type state: dict[str, Any]
 
-      Handles the red player's turn, routing appropriately based on the
-      current game state.
+               :returns: LangGraph command with updated state and next node
+               :rtype: Command
 
-      :param state: Current game state
-      :type state: dict[str, Any]
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
 
+            .. py:method:: prepare_analysis_context(state: haive.games.checkers.state.CheckersState, player: str) -> dict[str, Any]
 
-      .. autolink-examples:: make_player1_move
-         :collapse:
+               Prepare context for position analysis.
 
+               Creates a context dictionary with all necessary information for
+               the analyzer engines to evaluate a position.
 
-   .. py:method:: make_player2_move(state: dict[str, Any]) -> langgraph.types.Command
+               :param state: Current game state
+               :type state: CheckersState
+               :param player: Player to analyze for ("red" or "black")
+               :type player: str
 
-      Make a move for player 2 (black).
+               :returns: Context dictionary for analysis
+               :rtype: dict[str, Any]
 
-      Handles the black player's turn, routing appropriately based on the
-      current game state.
 
-      :param state: Current game state
-      :type state: dict[str, Any]
 
-      :returns: LangGraph command with updated state and next node
-      :rtype: Command
+            .. py:method:: prepare_move_context(state: haive.games.checkers.state.CheckersState, player: str) -> dict[str, Any]
 
+               Prepare context for move generation.
 
-      .. autolink-examples:: make_player2_move
-         :collapse:
+               Creates a context dictionary with all necessary information for
+               the player engines to make a move decision.
 
+               :param state: Current game state
+               :type state: CheckersState
+               :param player: Player to make the move ("red" or "black")
+               :type player: str
 
-   .. py:method:: prepare_analysis_context(state: haive.games.checkers.state.CheckersState, player: str) -> dict[str, Any]
+               :returns: Context dictionary for move generation
+               :rtype: dict[str, Any]
 
-      Prepare context for position analysis.
 
-      Creates a context dictionary with all necessary information for
-      the analyzer engines to evaluate a position.
 
-      :param state: Current game state
-      :type state: CheckersState
-      :param player: Player to analyze for ("red" or "black")
-      :type player: str
+            .. py:method:: run_game(visualize: bool = True) -> dict[str, Any]
 
-      :returns: Context dictionary for analysis
-      :rtype: dict[str, Any]
+               Run the checkers game.
 
+               Runs a complete checkers game with optional visualization.
 
-      .. autolink-examples:: prepare_analysis_context
-         :collapse:
+               :param visualize: Whether to show the UI. Defaults to True.
+               :type visualize: bool, optional
 
+               :returns: Final game state
+               :rtype: dict[str, Any]
 
-   .. py:method:: prepare_move_context(state: haive.games.checkers.state.CheckersState, player: str) -> dict[str, Any]
+               .. rubric:: Examples
 
-      Prepare context for move generation.
+               >>> agent = CheckersAgent(CheckersAgentConfig())
+               >>> # Run with visualization
+               >>> final_state = agent.run_game(visualize=True)
+               >>> # Run without visualization
+               >>> final_state = agent.run_game(visualize=False)
 
-      Creates a context dictionary with all necessary information for
-      the player engines to make a move decision.
 
-      :param state: Current game state
-      :type state: CheckersState
-      :param player: Player to make the move ("red" or "black")
-      :type player: str
 
-      :returns: Context dictionary for move generation
-      :rtype: dict[str, Any]
+            .. py:method:: run_game_with_ui() -> dict[str, Any]
 
+               Run game with beautiful UI visualization.
 
-      .. autolink-examples:: prepare_move_context
-         :collapse:
+               Runs a complete checkers game with rich UI visualization,
+               streaming the state updates and displaying them in real-time.
 
+               :returns: Final game state
+               :rtype: dict[str, Any]
 
-   .. py:method:: run_game(visualize: bool = True) -> dict[str, Any]
+               .. rubric:: Examples
 
-      Run the checkers game.
+               >>> agent = CheckersAgent(CheckersAgentConfig())
+               >>> final_state = agent.run_game_with_ui()
+               >>> print(f"Winner: {final_state.get('winner')}")
 
-      Runs a complete checkers game with optional visualization.
 
-      :param visualize: Whether to show the UI. Defaults to True.
-      :type visualize: bool, optional
 
-      :returns: Final game state
-      :rtype: dict[str, Any]
+            .. py:method:: setup_workflow() -> None
 
-      .. rubric:: Examples
+               Set up the workflow graph for the checkers game.
 
-      >>> agent = CheckersAgent(CheckersAgentConfig())
-      >>> # Run with visualization
-      >>> final_state = agent.run_game(visualize=True)
-      >>> # Run without visualization
-      >>> final_state = agent.run_game(visualize=False)
+               Creates a LangGraph workflow with nodes for initialization, moves,
+               and analysis, with appropriate edges between them.
 
+               The graph flow follows this pattern:
+               initialize → player1_move → analyze_player2 → player2_move → analyze_player1 → loop
 
-      .. autolink-examples:: run_game
-         :collapse:
 
 
-   .. py:method:: run_game_with_ui() -> dict[str, Any]
 
-      Run game with beautiful UI visualization.
+            .. py:method:: visualize_state(state: dict[str, Any]) -> None
 
-      Runs a complete checkers game with rich UI visualization,
-      streaming the state updates and displaying them in real-time.
+               Use the rich UI to visualize the current game state.
 
-      :returns: Final game state
-      :rtype: dict[str, Any]
+               Displays the current board, game info, move history, and other
+               visual elements using the rich UI.
 
-      .. rubric:: Examples
+               :param state: Current game state
+               :type state: dict[str, Any]
 
-      >>> agent = CheckersAgent(CheckersAgentConfig())
-      >>> final_state = agent.run_game_with_ui()
-      >>> print(f"Winner: {final_state.get('winner')}")
 
 
-      .. autolink-examples:: run_game_with_ui
-         :collapse:
+            .. py:attribute:: state_manager
 
 
-   .. py:method:: setup_workflow() -> None
+            .. py:attribute:: ui
 
-      Set up the workflow graph for the checkers game.
 
-      Creates a LangGraph workflow with nodes for initialization, moves,
-      and analysis, with appropriate edges between them.
 
-      The graph flow follows this pattern:
-      initialize → player1_move → analyze_player2 → player2_move → analyze_player1 → loop
 
 
+----
 
-      .. autolink-examples:: setup_workflow
-         :collapse:
+.. admonition:: Quick Reference
+   :class: tip
 
+   .. code-block:: python
 
-   .. py:method:: visualize_state(state: dict[str, Any]) -> None
+      from games.checkers.agent import *
 
-      Use the rich UI to visualize the current game state.
-
-      Displays the current board, game info, move history, and other
-      visual elements using the rich UI.
-
-      :param state: Current game state
-      :type state: dict[str, Any]
-
-
-      .. autolink-examples:: visualize_state
-         :collapse:
-
-
-   .. py:attribute:: state_manager
-
-
-   .. py:attribute:: ui
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

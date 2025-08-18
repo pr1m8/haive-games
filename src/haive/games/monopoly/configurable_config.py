@@ -131,6 +131,14 @@ class ConfigurableMonopolyConfig(MonopolyGameAgentConfig):
         """Generate player names based on model names."""
 
         def model_to_name(model: str) -> str:
+            """Model To Name.
+
+Args:
+    model: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if "gpt" in model.lower():
                 return "GPT"
             if "claude" in model.lower():
@@ -170,7 +178,7 @@ def create_monopoly_config(
     Returns:
         ConfigurableMonopolyConfig: Configured Monopoly game
 
-    Example:
+    Examples:
         >>> config = create_monopoly_config("gpt-4o", "claude-3-opus", temperature=0.5)
         >>> config = create_monopoly_config(
         ...     "openai:gpt-4o",
@@ -205,7 +213,7 @@ def create_monopoly_config_from_example(
         - "real_estate_moguls": High-powered models for strategic gameplay
         - "property_tycoons": Specialized for property investment
 
-    Example:
+    Examples:
         >>> config = create_monopoly_config_from_example("budget", enable_trading=False)
         >>> config = create_monopoly_config_from_example("real_estate_moguls", enable_building=True)
 
@@ -231,7 +239,7 @@ def create_monopoly_config_from_player_configs(
         - "player1_analyzer": Player 1 analyzer configuration
         - "player2_analyzer": Player 2 analyzer configuration
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "player1_player": PlayerAgentConfig(
         ...         llm_config="gpt-4o",

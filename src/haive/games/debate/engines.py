@@ -11,6 +11,11 @@ from haive.games.debate.models import Statement
 # Moderator Prompts
 # ------------------------------
 def generate_moderator_prompt() -> ChatPromptTemplate:
+    """Generate Moderator Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -36,6 +41,14 @@ def generate_moderator_prompt() -> ChatPromptTemplate:
 # Debater Prompts
 # ------------------------------
 def generate_debater_prompt(position: str = None) -> ChatPromptTemplate:
+    """Generate Debater Prompt.
+
+Args:
+    position: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     position_guidance = ""
     if position == "pro":
         position_guidance = "You are arguing IN FAVOR of the topic. Present strong arguments supporting this position."
@@ -67,6 +80,11 @@ def generate_debater_prompt(position: str = None) -> ChatPromptTemplate:
 # Judge/Juror Prompts
 # ------------------------------
 def generate_judge_prompt() -> ChatPromptTemplate:
+    """Generate Judge Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -91,6 +109,11 @@ def generate_judge_prompt() -> ChatPromptTemplate:
 # Trial-Specific Prompts
 # ------------------------------
 def generate_prosecutor_prompt() -> ChatPromptTemplate:
+    """Generate Prosecutor Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -113,6 +136,11 @@ def generate_prosecutor_prompt() -> ChatPromptTemplate:
 
 
 def generate_defense_prompt() -> ChatPromptTemplate:
+    """Generate Defense Prompt.
+
+Returns:
+    [TODO: Add return description]
+"""
     return ChatPromptTemplate.from_messages(
         [
             (
@@ -139,6 +167,14 @@ def generate_defense_prompt() -> ChatPromptTemplate:
 # Persona-Specific Prompts
 # ------------------------------
 def generate_persona_prompt(persona_traits: dict[str, str]) -> ChatPromptTemplate:
+    """Generate Persona Prompt.
+
+Args:
+    persona_traits: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
     traits_description = ", ".join([f"{k}: {v}" for k, v in persona_traits.items()])
 
     return ChatPromptTemplate.from_messages(

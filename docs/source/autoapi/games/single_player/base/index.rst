@@ -3,6 +3,34 @@ games.single_player.base
 
 .. py:module:: games.single_player.base
 
+Single-player game framework for LLM-powered games.
+
+This module provides a core framework for building single-player games where
+an LLM can act as the player, the assistant, or the game engine. The framework
+is designed to be flexible, extensible, and independent of any multiplayer
+game concepts.
+
+.. rubric:: Example
+
+>>> from haive.agents.single_player import SinglePlayerGameAgent
+>>> class WordleAgent(SinglePlayerGameAgent):
+...     def __init__(self, config):
+...         super().__init__(config)
+...         self.state_manager = WordleStateManager
+
+Typical usage:
+    - Inherit from SinglePlayerGameState for game-specific state
+    - Inherit from SinglePlayerStateManager for game logic
+    - Inherit from SinglePlayerGameConfig for configuration
+    - Inherit from SinglePlayerGameAgent for the agent implementation
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">8 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Single-player game framework for LLM-powered games.
@@ -27,845 +55,788 @@ games.single_player.base
        - Inherit from SinglePlayerGameAgent for the agent implementation
 
 
-   .. autolink-examples:: games.single_player.base
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.single_player.base.T
+      games.single_player.base.T
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (8)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.single_player.base.GameDifficulty
-   games.single_player.base.GameMode
-   games.single_player.base.GameSourceType
-   games.single_player.base.PlayerType
-   games.single_player.base.SinglePlayerGameAgent
-   games.single_player.base.SinglePlayerGameConfig
-   games.single_player.base.SinglePlayerGameState
-   games.single_player.base.SinglePlayerStateManager
+      games.single_player.base.GameDifficulty
+      games.single_player.base.GameMode
+      games.single_player.base.GameSourceType
+      games.single_player.base.PlayerType
+      games.single_player.base.SinglePlayerGameAgent
+      games.single_player.base.SinglePlayerGameConfig
+      games.single_player.base.SinglePlayerGameState
+      games.single_player.base.SinglePlayerStateManager
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameDifficulty
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Difficulty level for a game.
+            Difficulty level for a game.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GameDifficulty
-      :collapse:
-
-   .. py:attribute:: EASY
-      :value: 'easy'
+            .. py:attribute:: EASY
+               :value: 'easy'
 
 
 
-   .. py:attribute:: EXPERT
-      :value: 'expert'
+            .. py:attribute:: EXPERT
+               :value: 'expert'
 
 
 
-   .. py:attribute:: HARD
-      :value: 'hard'
+            .. py:attribute:: HARD
+               :value: 'hard'
 
 
 
-   .. py:attribute:: MEDIUM
-      :value: 'medium'
+            .. py:attribute:: MEDIUM
+               :value: 'medium'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameMode
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Mode of operation for the game.
+            Mode of operation for the game.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GameMode
-      :collapse:
-
-   .. py:attribute:: ASSIST
-      :value: 'assist'
+            .. py:attribute:: ASSIST
+               :value: 'assist'
 
 
 
-   .. py:attribute:: AUTO
-      :value: 'auto'
+            .. py:attribute:: AUTO
+               :value: 'auto'
 
 
 
-   .. py:attribute:: INTERACTIVE
-      :value: 'interactive'
+            .. py:attribute:: INTERACTIVE
+               :value: 'interactive'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameSourceType
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Source of the game content.
+            Source of the game content.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GameSourceType
-      :collapse:
-
-   .. py:attribute:: CUSTOM
-      :value: 'custom'
+            .. py:attribute:: CUSTOM
+               :value: 'custom'
 
 
 
-   .. py:attribute:: EXTERNAL
-      :value: 'external'
+            .. py:attribute:: EXTERNAL
+               :value: 'external'
 
 
 
-   .. py:attribute:: INTERNAL
-      :value: 'internal'
+            .. py:attribute:: INTERNAL
+               :value: 'internal'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PlayerType
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Type of player in a single-player game.
+            Type of player in a single-player game.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: PlayerType
-      :collapse:
-
-   .. py:attribute:: HUMAN
-      :value: 'human'
+            .. py:attribute:: HUMAN
+               :value: 'human'
 
 
 
-   .. py:attribute:: HYBRID
-      :value: 'hybrid'
+            .. py:attribute:: HYBRID
+               :value: 'hybrid'
 
 
 
-   .. py:attribute:: LLM
-      :value: 'llm'
+            .. py:attribute:: LLM
+               :value: 'llm'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SinglePlayerGameAgent(config)
 
-   Base agent for single-player games.
+            Base agent for single-player games.
 
-   This class provides the core functionality for single-player game agents,
-   including state initialization, move handling, analysis, and visualization.
+            This class provides the core functionality for single-player game agents,
+            including state initialization, move handling, analysis, and visualization.
 
-   .. attribute:: config
+            .. attribute:: config
 
-      Configuration for the game agent
+               Configuration for the game agent
 
-   .. attribute:: state_manager
+            .. attribute:: state_manager
 
-      Manager for game state transitions
+               Manager for game state transitions
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      Dictionary of LLM engines for move generation and analysis
+               Dictionary of LLM engines for move generation and analysis
 
-   .. attribute:: graph
+            .. attribute:: graph
 
-      State graph for game flow
+               State graph for game flow
 
-   .. attribute:: app
+            .. attribute:: app
 
-      Compiled graph application
+               Compiled graph application
 
-   Initialize the game agent.
+            Initialize the game agent.
 
-   :param config: Configuration for the game agent
+            :param config: Configuration for the game agent
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _setup_output_paths()
 
+               Set up paths for output files.
 
-   .. autolink-examples:: SinglePlayerGameAgent
-      :collapse:
 
-   .. py:method:: _setup_output_paths()
 
-      Set up paths for output files.
+            .. py:method:: analyze_position(state: T) -> langgraph.types.Command
 
+               Analyze the current game state.
 
-      .. autolink-examples:: _setup_output_paths
-         :collapse:
+               :param state: Current game state
 
+               :returns: Command with the updated game state including analysis
 
-   .. py:method:: analyze_position(state: T) -> langgraph.types.Command
 
-      Analyze the current game state.
 
-      :param state: Current game state
+            .. py:method:: extract_move(response: Any) -> Any
+               :abstractmethod:
 
-      :returns: Command with the updated game state including analysis
 
+               Extract move from engine response.
 
-      .. autolink-examples:: analyze_position
-         :collapse:
+               :param response: Response from the engine
 
+               :returns: Extracted move
 
-   .. py:method:: extract_move(response: Any) -> Any
-      :abstractmethod:
 
 
-      Extract move from engine response.
+            .. py:method:: get_hint(state: T) -> langgraph.types.Command
 
-      :param response: Response from the engine
+               Get a hint for the current game state.
 
-      :returns: Extracted move
+               :param state: Current game state
 
+               :returns: Command with the updated game state including a hint
 
-      .. autolink-examples:: extract_move
-         :collapse:
 
 
-   .. py:method:: get_hint(state: T) -> langgraph.types.Command
+            .. py:method:: initialize_game(state: dict[str, Any]) -> langgraph.types.Command
 
-      Get a hint for the current game state.
+               Initialize a new game.
 
-      :param state: Current game state
+               :param state: Initial state (usually empty)
 
-      :returns: Command with the updated game state including a hint
+               :returns: Command with the initialized game state
 
 
-      .. autolink-examples:: get_hint
-         :collapse:
 
+            .. py:method:: interactive_command(state: T, command: str) -> langgraph.types.Command
 
-   .. py:method:: initialize_game(state: dict[str, Any]) -> langgraph.types.Command
+               Process an interactive command.
 
-      Initialize a new game.
+               :param state: Current game state
+               :param command: Command string
 
-      :param state: Initial state (usually empty)
+               :returns: Command with the updated game state
 
-      :returns: Command with the initialized game state
 
 
-      .. autolink-examples:: initialize_game
-         :collapse:
+            .. py:method:: make_player_move(state: T) -> langgraph.types.Command
 
+               Make a move for the player.
 
-   .. py:method:: interactive_command(state: T, command: str) -> langgraph.types.Command
+               In auto mode, this uses the LLM to generate a move.
+               In interactive mode, this just returns the state unchanged.
 
-      Process an interactive command.
+               :param state: Current game state
 
-      :param state: Current game state
-      :param command: Command string
+               :returns: Command with the updated game state
 
-      :returns: Command with the updated game state
 
 
-      .. autolink-examples:: interactive_command
-         :collapse:
+            .. py:method:: prepare_analysis_context(state: T) -> dict[str, Any]
+               :abstractmethod:
 
 
-   .. py:method:: make_player_move(state: T) -> langgraph.types.Command
+               Prepare context for analysis.
 
-      Make a move for the player.
+               :param state: Current game state
 
-      In auto mode, this uses the LLM to generate a move.
-      In interactive mode, this just returns the state unchanged.
+               :returns: Context dictionary for the analysis engine
 
-      :param state: Current game state
 
-      :returns: Command with the updated game state
 
+            .. py:method:: prepare_move_context(state: T) -> dict[str, Any]
+               :abstractmethod:
 
-      .. autolink-examples:: make_player_move
-         :collapse:
 
+               Prepare context for move generation.
 
-   .. py:method:: prepare_analysis_context(state: T) -> dict[str, Any]
-      :abstractmethod:
+               :param state: Current game state
 
+               :returns: Context dictionary for the move engine
 
-      Prepare context for analysis.
 
-      :param state: Current game state
 
-      :returns: Context dictionary for the analysis engine
+            .. py:method:: save_state_history() -> None
 
+               Save the current agent state to a JSON file.
 
-      .. autolink-examples:: prepare_analysis_context
-         :collapse:
 
 
-   .. py:method:: prepare_move_context(state: T) -> dict[str, Any]
-      :abstractmethod:
+            .. py:method:: setup_workflow()
 
+               Setup the workflow for the game.
 
-      Prepare context for move generation.
+               The workflow depends on the game mode:
+               - Auto: Initialize -> Analyze -> Move -> Check -> Repeat
+               - Interactive: Initialize -> Listen for commands
+               - Assist: Initialize -> Analyze -> Listen for commands
 
-      :param state: Current game state
 
-      :returns: Context dictionary for the move engine
 
 
-      .. autolink-examples:: prepare_move_context
-         :collapse:
+            .. py:method:: should_continue_game(state: T) -> bool
 
+               Check if the game should continue.
 
-   .. py:method:: save_state_history() -> None
+               :param state: Current game state
 
-      Save the current agent state to a JSON file.
+               :returns: True if the game should continue, False otherwise
 
 
-      .. autolink-examples:: save_state_history
-         :collapse:
 
+            .. py:method:: visualize_state(state: dict[str, Any]) -> None
+               :abstractmethod:
 
-   .. py:method:: setup_workflow()
 
-      Setup the workflow for the game.
+               Visualize the current game state.
 
-      The workflow depends on the game mode:
-      - Auto: Initialize -> Analyze -> Move -> Check -> Repeat
-      - Interactive: Initialize -> Listen for commands
-      - Assist: Initialize -> Analyze -> Listen for commands
+               :param state: Current game state
 
 
 
-      .. autolink-examples:: setup_workflow
-         :collapse:
+            .. py:attribute:: app
 
 
-   .. py:method:: should_continue_game(state: T) -> bool
+            .. py:attribute:: config
 
-      Check if the game should continue.
 
-      :param state: Current game state
+            .. py:attribute:: engines
 
-      :returns: True if the game should continue, False otherwise
 
+            .. py:attribute:: graph
 
-      .. autolink-examples:: should_continue_game
-         :collapse:
 
+            .. py:attribute:: memory
 
-   .. py:method:: visualize_state(state: dict[str, Any]) -> None
-      :abstractmethod:
 
+            .. py:attribute:: runnable_config
 
-      Visualize the current game state.
 
-      :param state: Current game state
+            .. py:attribute:: state_manager
+               :value: None
 
 
-      .. autolink-examples:: visualize_state
-         :collapse:
 
 
-   .. py:attribute:: app
-
-
-   .. py:attribute:: config
-
-
-   .. py:attribute:: engines
-
-
-   .. py:attribute:: graph
-
-
-   .. py:attribute:: memory
-
-
-   .. py:attribute:: runnable_config
-
-
-   .. py:attribute:: state_manager
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SinglePlayerGameConfig(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Configuration for single-player games.
+            Configuration for single-player games.
 
-   This class defines the core configuration parameters that all single-player
-   games need, including player type, game mode, and difficulty.
+            This class defines the core configuration parameters that all single-player
+            games need, including player type, game mode, and difficulty.
 
-   .. attribute:: state_schema
+            .. attribute:: state_schema
 
-      The state schema class for the game
+               The state schema class for the game
 
-   .. attribute:: player_type
+            .. attribute:: player_type
 
-      Type of player (human, LLM, hybrid)
+               Type of player (human, LLM, hybrid)
 
-   .. attribute:: game_mode
+            .. attribute:: game_mode
 
-      Mode of operation (interactive, auto, assist)
+               Mode of operation (interactive, auto, assist)
 
-   .. attribute:: difficulty
+            .. attribute:: difficulty
 
-      Difficulty level of the game
+               Difficulty level of the game
 
-   .. attribute:: max_hints
+            .. attribute:: max_hints
 
-      Maximum number of hints allowed
+               Maximum number of hints allowed
 
-   .. attribute:: auto_analyze
+            .. attribute:: auto_analyze
 
-      Whether to automatically analyze after each move
+               Whether to automatically analyze after each move
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      Configurations for game LLMs
+               Configurations for game LLMs
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: SinglePlayerGameConfig
-      :collapse:
-
-   .. py:attribute:: auto_analyze
-      :type:  bool
-      :value: None
+            .. py:attribute:: auto_analyze
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: difficulty
-      :type:  GameDifficulty
-      :value: None
+            .. py:attribute:: difficulty
+               :type:  GameDifficulty
+               :value: None
 
 
 
-   .. py:attribute:: engines
-      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
-      :value: None
+            .. py:attribute:: engines
+               :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+               :value: None
 
 
 
-   .. py:attribute:: game_mode
-      :type:  GameMode
-      :value: None
+            .. py:attribute:: game_mode
+               :type:  GameMode
+               :value: None
 
 
 
-   .. py:attribute:: game_source
-      :type:  GameSourceType
-      :value: None
+            .. py:attribute:: game_source
+               :type:  GameSourceType
+               :value: None
 
 
 
-   .. py:attribute:: max_hints
-      :type:  int
-      :value: None
+            .. py:attribute:: max_hints
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: output_dir
-      :type:  str
-      :value: None
+            .. py:attribute:: output_dir
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: player_type
-      :type:  PlayerType
-      :value: None
+            .. py:attribute:: player_type
+               :type:  PlayerType
+               :value: None
 
 
 
-   .. py:attribute:: runtime_config
-      :type:  dict[str, Any]
-      :value: None
+            .. py:attribute:: runtime_config
+               :type:  dict[str, Any]
+               :value: None
 
 
 
-   .. py:attribute:: save_history
-      :type:  bool
-      :value: None
+            .. py:attribute:: save_history
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: state_schema
-      :type:  type[SinglePlayerGameState]
-      :value: None
+            .. py:attribute:: state_schema
+               :type:  type[SinglePlayerGameState]
+               :value: None
 
 
 
-   .. py:attribute:: visualize
-      :type:  bool
-      :value: None
+            .. py:attribute:: visualize
+               :type:  bool
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SinglePlayerGameState(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Base state for single-player games.
+            Base state for single-player games.
 
-   This class defines the core state attributes that all single-player games
-   need to track, including game status, move history, and analysis.
+            This class defines the core state attributes that all single-player games
+            need to track, including game status, move history, and analysis.
 
-   .. attribute:: player_type
+            .. attribute:: player_type
 
-      Type of player (human, LLM, hybrid)
+               Type of player (human, LLM, hybrid)
 
-      :type: PlayerType
+               :type: PlayerType
 
-   .. attribute:: move_count
+            .. attribute:: move_count
 
-      Number of moves made
+               Number of moves made
 
-      :type: int
+               :type: int
 
-   .. attribute:: hint_count
+            .. attribute:: hint_count
 
-      Number of hints used
+               Number of hints used
 
-      :type: int
+               :type: int
 
-   .. attribute:: difficulty
+            .. attribute:: difficulty
 
-      Difficulty level of the game
+               Difficulty level of the game
 
-      :type: GameDifficulty
+               :type: GameDifficulty
 
-   .. attribute:: game_status
+            .. attribute:: game_status
 
-      Status of the game (ongoing, victory, defeat)
+               Status of the game (ongoing, victory, defeat)
 
-      :type: str
+               :type: str
 
-   .. attribute:: move_history
+            .. attribute:: move_history
 
-      History of moves made
+               History of moves made
 
-      :type: List[Dict]
+               :type: List[Dict]
 
-   .. attribute:: analysis_history
+            .. attribute:: analysis_history
 
-      History of analyses made
+               History of analyses made
 
-      :type: List[Dict]
+               :type: List[Dict]
 
-   .. attribute:: error_message
+            .. attribute:: error_message
 
-      Error message if any
+               Error message if any
 
-      :type: Optional[str]
+               :type: Optional[str]
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: increment_move_count() -> None
 
+               Increment the move count.
 
-   .. autolink-examples:: SinglePlayerGameState
-      :collapse:
 
-   .. py:method:: increment_move_count() -> None
 
-      Increment the move count.
+            .. py:method:: is_defeat() -> bool
 
+               Check if the game was lost.
 
-      .. autolink-examples:: increment_move_count
-         :collapse:
 
 
-   .. py:method:: is_defeat() -> bool
+            .. py:method:: is_game_over() -> bool
 
-      Check if the game was lost.
+               Check if the game is over.
 
 
-      .. autolink-examples:: is_defeat
-         :collapse:
 
+            .. py:method:: is_victory() -> bool
 
-   .. py:method:: is_game_over() -> bool
+               Check if the game was won.
 
-      Check if the game is over.
 
 
-      .. autolink-examples:: is_game_over
-         :collapse:
+            .. py:method:: use_hint() -> None
 
+               Use a hint.
 
-   .. py:method:: is_victory() -> bool
 
-      Check if the game was won.
 
+            .. py:attribute:: analysis_history
+               :type:  list[dict[str, Any]]
+               :value: None
 
-      .. autolink-examples:: is_victory
-         :collapse:
 
 
-   .. py:method:: use_hint() -> None
+            .. py:attribute:: difficulty
+               :type:  GameDifficulty
+               :value: None
 
-      Use a hint.
 
 
-      .. autolink-examples:: use_hint
-         :collapse:
+            .. py:attribute:: error_message
+               :type:  str | None
+               :value: None
 
 
-   .. py:attribute:: analysis_history
-      :type:  list[dict[str, Any]]
-      :value: None
 
+            .. py:attribute:: game_status
+               :type:  str
+               :value: None
 
 
-   .. py:attribute:: difficulty
-      :type:  GameDifficulty
-      :value: None
 
+            .. py:attribute:: hint_count
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: error_message
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: move_count
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: game_status
-      :type:  str
-      :value: None
 
+            .. py:attribute:: move_history
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
-   .. py:attribute:: hint_count
-      :type:  int
-      :value: None
 
+            .. py:attribute:: player_type
+               :type:  PlayerType
+               :value: None
 
 
-   .. py:attribute:: move_count
-      :type:  int
-      :value: None
 
 
-
-   .. py:attribute:: move_history
-      :type:  list[dict[str, Any]]
-      :value: None
-
-
-
-   .. py:attribute:: player_type
-      :type:  PlayerType
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SinglePlayerStateManager
 
-   Bases: :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
 
 
-   Base state manager for single-player games.
+            Base state manager for single-player games.
 
-   This class provides the interface for managing game state transitions
-   and operations. Each game should extend this with game-specific logic
-   by implementing the required methods.
+            This class provides the interface for managing game state transitions
+            and operations. Each game should extend this with game-specific logic
+            by implementing the required methods.
 
-   Type Parameters:
-       T: The type of the game state, must be a Pydantic BaseModel.
+            Type Parameters:
+                T: The type of the game state, must be a Pydantic BaseModel.
 
-   .. method:: initialize
+            .. method:: initialize
 
-      Initialize a new game state
+               Initialize a new game state
 
-   .. method:: apply_move
+            .. method:: apply_move
 
-      Apply a move to the game state
+               Apply a move to the game state
 
-   .. method:: generate_hint
+            .. method:: generate_hint
 
-      Generate a hint for the current game state
+               Generate a hint for the current game state
 
-   .. method:: check_game_status
+            .. method:: check_game_status
 
-      Check and update the game status
+               Check and update the game status
 
-   .. method:: interactive_input
+            .. method:: interactive_input
 
-      Process interactive input from the player
-      
-      
+               Process interactive input from the player
+               
+               
 
 
-   .. autolink-examples:: SinglePlayerStateManager
-      :collapse:
+            .. py:method:: apply_move(state: T, move: Any) -> T
+               :classmethod:
 
-   .. py:method:: apply_move(state: T, move: Any) -> T
-      :classmethod:
+               :abstractmethod:
 
-      :abstractmethod:
 
+               Apply a move to the game state.
 
-      Apply a move to the game state.
+               :param state: Current game state
+               :param move: Move to apply
 
-      :param state: Current game state
-      :param move: Move to apply
+               :returns: Updated game state
 
-      :returns: Updated game state
 
 
-      .. autolink-examples:: apply_move
-         :collapse:
+            .. py:method:: check_game_status(state: T) -> T
+               :classmethod:
 
+               :abstractmethod:
 
-   .. py:method:: check_game_status(state: T) -> T
-      :classmethod:
 
-      :abstractmethod:
+               Check and update the game status.
 
+               :param state: Current game state
 
-      Check and update the game status.
+               :returns: Updated game state with status checked
 
-      :param state: Current game state
 
-      :returns: Updated game state with status checked
 
+            .. py:method:: generate_hint(state: T) -> tuple[T, str]
+               :classmethod:
 
-      .. autolink-examples:: check_game_status
-         :collapse:
 
+               Generate a hint for the current game state.
 
-   .. py:method:: generate_hint(state: T) -> tuple[T, str]
-      :classmethod:
+               :param state: Current game state
 
+               :returns: Tuple of (updated state, hint text)
 
-      Generate a hint for the current game state.
 
-      :param state: Current game state
 
-      :returns: Tuple of (updated state, hint text)
+            .. py:method:: get_legal_moves(state: T) -> list[Any]
+               :classmethod:
 
+               :abstractmethod:
 
-      .. autolink-examples:: generate_hint
-         :collapse:
 
+               Get all legal moves for the current state.
 
-   .. py:method:: get_legal_moves(state: T) -> list[Any]
-      :classmethod:
+               :param state: Current game state
 
-      :abstractmethod:
+               :returns: List of legal moves
 
 
-      Get all legal moves for the current state.
 
-      :param state: Current game state
+            .. py:method:: initialize(difficulty: GameDifficulty = GameDifficulty.MEDIUM, player_type: PlayerType = PlayerType.LLM, **kwargs) -> T
+               :classmethod:
 
-      :returns: List of legal moves
+               :abstractmethod:
 
 
-      .. autolink-examples:: get_legal_moves
-         :collapse:
+               Initialize a new game state.
 
+               :param difficulty: Difficulty level of the game
+               :param player_type: Type of player
+               :param \*\*kwargs: Additional game-specific initialization parameters
 
-   .. py:method:: initialize(difficulty: GameDifficulty = GameDifficulty.MEDIUM, player_type: PlayerType = PlayerType.LLM, **kwargs) -> T
-      :classmethod:
+               :returns: A new game state
 
-      :abstractmethod:
 
 
-      Initialize a new game state.
+            .. py:method:: interactive_input(state: T, user_input: str) -> T
+               :classmethod:
 
-      :param difficulty: Difficulty level of the game
-      :param player_type: Type of player
-      :param \*\*kwargs: Additional game-specific initialization parameters
 
-      :returns: A new game state
+               Process interactive input from the player.
 
+               This method handles general commands like 'hint', 'quit', etc.
+               Game-specific commands should be handled by overriding this method.
 
-      .. autolink-examples:: initialize
-         :collapse:
+               :param state: Current game state
+               :param user_input: User input string
 
+               :returns: Updated game state
 
-   .. py:method:: interactive_input(state: T, user_input: str) -> T
-      :classmethod:
 
 
-      Process interactive input from the player.
 
-      This method handles general commands like 'hint', 'quit', etc.
-      Game-specific commands should be handled by overriding this method.
-
-      :param state: Current game state
-      :param user_input: User input string
-
-      :returns: Updated game state
-
-
-      .. autolink-examples:: interactive_input
-         :collapse:
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.single_player.base import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

@@ -76,6 +76,14 @@ class AIDebateJudge:
         expertise_area: str | None = None,
         strictness_level: float = 0.5,
     ):
+        """  Init  .
+
+Args:
+    name: [TODO: Add description]
+    judge_type: [TODO: Add description]
+    expertise_area: [TODO: Add description]
+    strictness_level: [TODO: Add description]
+"""
         self.name = name
         self.judge_type = judge_type
         self.expertise_area = expertise_area
@@ -254,6 +262,11 @@ Provide your evaluation in the specified JSON format."""
 class DebateJudgingPanel:
     """Panel of multiple AI judges for comprehensive debate evaluation."""
     def __init__(self, judges: list[AIDebateJudge]):
+        """  Init  .
+
+Args:
+    judges: [TODO: Add description]
+"""
         self.judges = judges
 
     @classmethod

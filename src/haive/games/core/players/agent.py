@@ -18,4 +18,10 @@ class BasePlayerAgent(SimpleAgentConfig, ABC):
     move_model: BaseModel
 
     def __init__(self, game_config: GameConfig, player_config: PlayerConfig):
+        """  Init  .
+
+Args:
+    game_config: [TODO: Add description]
+    player_config: [TODO: Add description]
+"""
         super().__init__(game_config, player_config)

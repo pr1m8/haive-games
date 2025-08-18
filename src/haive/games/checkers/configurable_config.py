@@ -126,6 +126,14 @@ class ConfigurableCheckersConfig(CheckersAgentConfig):
         """Generate player names based on model names."""
 
         def model_to_name(model: str) -> str:
+            """Model To Name.
+
+Args:
+    model: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if "gpt" in model.lower():
                 return "GPT"
             elif "claude" in model.lower():
@@ -159,7 +167,7 @@ def create_checkers_config(
     Returns:
         ConfigurableCheckersConfig: Configured Checkers game
 
-    Example:
+    Examples:
         >>> config = create_checkers_config("gpt-4o", "claude-3-opus", temperature=0.5)
         >>> config = create_checkers_config(
         ...     "openai:gpt-4o",
@@ -193,7 +201,7 @@ def create_checkers_config_from_example(
         - "mixed": Different provider per role
         - "checkers_masters": High-powered models for competitive play
 
-    Example:
+    Examples:
         >>> config = create_checkers_config_from_example("budget", max_moves=80)
         >>> config = create_checkers_config_from_example("gpt_vs_claude", enable_analysis=False)
 
@@ -219,7 +227,7 @@ def create_checkers_config_from_player_configs(
         - "red_analyzer": Red analyzer configuration
         - "black_analyzer": Black analyzer configuration
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "red_player": PlayerAgentConfig(
         ...         llm_config="gpt-4o",

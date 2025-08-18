@@ -4,7 +4,7 @@ This module provides the foundational data models used across game agents.
 It includes models for game state, player state, moves, and other common
 game-related data structures.
 
-Example:
+Examples:
     >>> board = Board(size=(8, 8))
     >>> player = Player(id="p1", name="Player 1")
     >>> state = GameState(board=board, players=[player])
@@ -35,7 +35,7 @@ class MoveModel(BaseModel, Generic[TMove], ABC):
         player_id (str): ID of the player making the move.
         timestamp (float): When the move was made.
 
-    Example:
+    Examples:
         >>> class ChessMove(BaseModel):
         ...     from_pos: str
         ...     to_pos: str
@@ -68,7 +68,7 @@ class Player(BaseModel):
         score (int): Current score or points.
         is_active (bool): Whether the player is still active in the game.
 
-    Example:
+    Examples:
         >>> player = Player(id="p1", name="Player 1", score=0)
 
     """
@@ -89,7 +89,7 @@ class Board(BaseModel):
         size (Tuple[int, int]): The dimensions of the board (width, height).
         grid (Optional[List[List[str]]]): Optional grid representation.
 
-    Example:
+    Examples:
         >>> board = Board(size=(8, 8))
         >>> chess_board = Board(size=(8, 8), grid=[["R", "N", "B", ...]])
 
@@ -121,7 +121,7 @@ class GameState(BaseModel):
         game_status (Literal["ongoing", "ended"]): Current game status.
         game_result (Optional[str]): Final result when game ends.
 
-    Example:
+    Examples:
         >>> state = GameState(
         ...     board=Board(size=(8, 8)),
         ...     players=[Player(id="p1", name="Player 1")],

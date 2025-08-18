@@ -77,7 +77,7 @@ Respond with your next action in a clear, structured format. For example:
 Remember to maintain your cover! You aren't evil - you're just playing your role in the game.
 """
 
-MEETING_PROMPT = """A meeting has been called in the Among Us game!
+MEETING_PROMPT = """A meeting has been called in the Among Us game!.
 
 Meeting Information:
 - Called by: {meeting_caller}
@@ -102,7 +102,7 @@ Guidelines:
 Respond with what you want to say to the group. Be strategic, but stay in character!
 """
 
-VOTING_PROMPT = """It's time to vote in the Among Us game!
+VOTING_PROMPT = """It's time to vote in the Among Us game!.
 
 Voting Information:
 - Players who have voted: {voted_players}

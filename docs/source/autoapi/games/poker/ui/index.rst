@@ -3,138 +3,140 @@ games.poker.ui
 
 .. py:module:: games.poker.ui
 
-
-Classes
--------
-
-.. autoapisummary::
-
-   games.poker.ui.PokerUI
+Module documentation for games.poker.ui
 
 
-Module Contents
----------------
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
+
+      
+            
+            
+
+.. admonition:: Classes (1)
+   :class: note
+
+   .. autoapisummary::
+
+      games.poker.ui.PokerUI
+
+            
+            
+
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PokerUI
 
-   Clean, readable UI for the poker game simulation.
+            Clean, readable UI for the poker game simulation.
 
 
-   .. autolink-examples:: PokerUI
-      :collapse:
+            .. py:method:: _format_card(card)
 
-   .. py:method:: _format_card(card)
+               Format a card with unicode symbols.
 
-      Format a card with unicode symbols.
 
 
-      .. autolink-examples:: _format_card
-         :collapse:
+            .. py:method:: _get_position_name(position, num_players)
 
+               Get the poker position name.
 
-   .. py:method:: _get_position_name(position, num_players)
 
-      Get the poker position name.
 
+            .. py:method:: _setup_layout()
 
-      .. autolink-examples:: _get_position_name
-         :collapse:
+               Set up the UI layout with clean, simple sections.
 
 
-   .. py:method:: _setup_layout()
 
-      Set up the UI layout with clean, simple sections.
+            .. py:method:: assign_ai_models(player_names)
 
+               Assign consistent AI models to players.
 
-      .. autolink-examples:: _setup_layout
-         :collapse:
 
 
-   .. py:method:: assign_ai_models(player_names)
+            .. py:method:: render_action_history()
 
-      Assign consistent AI models to players.
+               Render clean action history.
 
 
-      .. autolink-examples:: assign_ai_models
-         :collapse:
 
+            .. py:method:: render_active_player()
 
-   .. py:method:: render_action_history()
+               Render active player information.
 
-      Render clean action history.
 
 
-      .. autolink-examples:: render_action_history
-         :collapse:
+            .. py:method:: render_footer()
 
+               Render a simple footer with controls.
 
-   .. py:method:: render_active_player()
 
-      Render active player information.
 
+            .. py:method:: render_game_info()
 
-      .. autolink-examples:: render_active_player
-         :collapse:
+               Render clean game info panel.
 
 
-   .. py:method:: render_footer()
 
-      Render a simple footer with controls.
+            .. py:method:: render_header()
 
+               Render a clean header with title.
 
-      .. autolink-examples:: render_footer
-         :collapse:
 
 
-   .. py:method:: render_game_info()
+            .. py:method:: render_players()
 
-      Render clean game info panel.
+               Render players table with clear information.
 
 
-      .. autolink-examples:: render_game_info
-         :collapse:
 
+            .. py:method:: render_table()
 
-   .. py:method:: render_header()
+               Render poker table with community cards.
 
-      Render a clean header with title.
 
 
-      .. autolink-examples:: render_header
-         :collapse:
+            .. py:attribute:: animation_frame
+               :value: 0
 
 
-   .. py:method:: render_players()
 
-      Render players table with clear information.
+            .. py:attribute:: current_game_state
+               :value: None
 
 
-      .. autolink-examples:: render_players
-         :collapse:
 
+            .. py:attribute:: layout
 
-   .. py:method:: render_table()
 
-      Render poker table with community cards.
+            .. py:attribute:: player_models
 
 
-      .. autolink-examples:: render_table
-         :collapse:
 
 
-   .. py:attribute:: animation_frame
-      :value: 0
 
+----
 
+.. admonition:: Quick Reference
+   :class: tip
 
-   .. py:attribute:: current_game_state
-      :value: None
+   .. code-block:: python
 
+      from games.poker.ui import *
 
-
-   .. py:attribute:: layout
-
-
-   .. py:attribute:: player_models
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

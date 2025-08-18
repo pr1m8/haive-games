@@ -23,6 +23,8 @@ class ChessRichUI:
     """Beautiful Rich UI for displaying a live chess agent game."""
 
     def __init__(self):
+        """  Init  .
+"""
         self.console = Console()
         self.layout = Layout()
         self.state: ChessState | None = None

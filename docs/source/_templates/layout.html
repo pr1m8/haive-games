@@ -1,0 +1,28 @@
+{# Custom Furo layout with breadcrumbs #} {% extends "furo/base.html" %} {#
+Import sphinx-basic-ng breadcrumb component logic #} {% macro
+render_breadcrumbs() %} {# Generate breadcrumb navigation based on document
+structure #} {% set nav_pages = [] %} {# Add home/index page #} {% if pagename
+!= master_doc %} {% set nav_pages = nav_pages + [{"title": "Home", "url":
+pathto(master_doc)}] %} {% endif %} {# Add API Reference for autoapi pages #} {%
+if "autoapi" in pagename and pagename != "autoapi/index" %} {% set nav_pages =
+nav_pages + [{"title": "API Reference", "url": pathto("autoapi/index")}] %} {#
+Add intermediate path components #} {% set path_parts =
+pagename.replace("autoapi/", "").split("/") %} {% if path_parts|length > 1 %} {%
+for i in range(path_parts|length - 1) %} {% set partial_path = "autoapi/" +
+path_parts[:i+1]|join("/") %} {% set title = path_parts[i]|title %} {% set
+nav_pages = nav_pages + [{"title": title, "url": pathto(partial_path)}] %} {%
+endfor %} {% endif %} {% endif %} {# Render breadcrumb if we have navigation
+pages #} {% if nav_pages %}
+<nav class="bd-breadcrumbs" aria-label="breadcrumb">
+  <ol class="bd-breadcrumb">
+    {% for page in nav_pages %}
+    <li class="bd-breadcrumb-item">
+      <a href="{{ page.url }}" class="bd-breadcrumb-link">{{ page.title }}</a>
+    </li>
+    {% endfor %}
+    <li class="bd-breadcrumb-item active" aria-current="page">{{ title }}</li>
+  </ol>
+</nav>
+{% endif %} {% endmacro %} {# Override the page content block to add breadcrumbs
+#} {% block content %} {# Add breadcrumb navigation at the top of content #} {{
+render_breadcrumbs() }} {# Original content #} {{ super() }} {% endblock %}

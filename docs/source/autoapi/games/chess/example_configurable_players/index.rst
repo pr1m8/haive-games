@@ -3,6 +3,18 @@ games.chess.example_configurable_players
 
 .. py:module:: games.chess.example_configurable_players
 
+Example of using configurable chess players.
+
+This example demonstrates how to create chess games with different LLM configurations
+for players without hardcoding them.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">8 functions</span>   </div>
+
 .. autoapi-nested-parse::
 
    Example of using configurable chess players.
@@ -11,91 +23,129 @@ games.chess.example_configurable_players
    for players without hardcoding them.
 
 
-   .. autolink-examples:: games.chess.example_configurable_players
-      :collapse:
 
+      
+            
+            
+            
 
-Functions
----------
+.. admonition:: Functions (8)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.chess.example_configurable_players.example_1_simple_models
-   games.chess.example_configurable_players.example_2_canonical_strings
-   games.chess.example_configurable_players.example_3_example_configs
-   games.chess.example_configurable_players.example_4_custom_player_configs
-   games.chess.example_configurable_players.example_5_budget_friendly
-   games.chess.example_configurable_players.example_6_same_model
-   games.chess.example_configurable_players.main
-   games.chess.example_configurable_players.run_short_game
+      games.chess.example_configurable_players.example_1_simple_models
+      games.chess.example_configurable_players.example_2_canonical_strings
+      games.chess.example_configurable_players.example_3_example_configs
+      games.chess.example_configurable_players.example_4_custom_player_configs
+      games.chess.example_configurable_players.example_5_budget_friendly
+      games.chess.example_configurable_players.example_6_same_model
+      games.chess.example_configurable_players.main
+      games.chess.example_configurable_players.run_short_game
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_1_simple_models()
 
-   Example 1: Simple model strings.
+            Example 1: Simple model strings.
 
 
-   .. autolink-examples:: example_1_simple_models
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_2_canonical_strings()
 
-   Example 2: Canonical model strings with providers.
+            Example 2: Canonical model strings with providers.
 
 
-   .. autolink-examples:: example_2_canonical_strings
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_3_example_configs()
 
-   Example 3: Using predefined example configurations.
+            Example 3: Using predefined example configurations.
 
 
-   .. autolink-examples:: example_3_example_configs
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_4_custom_player_configs()
 
-   Example 4: Custom player agent configurations.
+            Example 4: Custom player agent configurations.
 
 
-   .. autolink-examples:: example_4_custom_player_configs
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_5_budget_friendly()
 
-   Example 5: Budget-friendly configuration.
+            Example 5: Budget-friendly configuration.
 
 
-   .. autolink-examples:: example_5_budget_friendly
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: example_6_same_model()
 
-   Example 6: Using the same model for all roles.
+            Example 6: Using the same model for all roles.
 
 
-   .. autolink-examples:: example_6_same_model
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: main()
 
-   Run all examples.
+            Run all examples.
 
 
-   .. autolink-examples:: main
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: run_short_game(config: haive.games.chess.configurable_config.ConfigurableChessConfig, max_moves: int = 10)
-   :async:
+            :async:
 
 
-   Run a short chess game to test the configuration.
+            Run a short chess game to test the configuration.
 
 
-   .. autolink-examples:: run_short_game
-      :collapse:
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.chess.example_configurable_players import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

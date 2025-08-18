@@ -3,6 +3,17 @@ games.fox_and_geese.ui
 
 .. py:module:: games.fox_and_geese.ui
 
+Rich UI module for Fox and Geese game visualization.
+
+This module provides rich console UI components for visualizing the Fox and Geese game.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Rich UI module for Fox and Geese game visualization.
@@ -10,183 +21,175 @@ games.fox_and_geese.ui
    This module provides rich console UI components for visualizing the Fox and Geese game.
 
 
-   .. autolink-examples:: games.fox_and_geese.ui
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.ui.logger
+      games.fox_and_geese.ui.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.ui.FoxAndGeeseUI
+      games.fox_and_geese.ui.FoxAndGeeseUI
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: FoxAndGeeseUI(console: rich.console.Console | None = None)
 
-   Rich UI for Fox and Geese game visualization.
+            Rich UI for Fox and Geese game visualization.
 
-   Initialize the UI.
+            Initialize the UI.
 
-   :param console: Optional Rich console instance
+            :param console: Optional Rich console instance
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
 
+               Check if a dict contains the required fields for FoxAndGeeseState.
 
-   .. autolink-examples:: FoxAndGeeseUI
-      :collapse:
+               :param data: Dictionary to check
 
-   .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
+               :returns: True if the dict appears to be a valid game state
 
-      Check if a dict contains the required fields for FoxAndGeeseState.
 
-      :param data: Dictionary to check
 
-      :returns: True if the dict appears to be a valid game state
+            .. py:method:: create_analysis_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
+               Create a panel showing the latest analysis.
 
-      .. autolink-examples:: _is_valid_game_state_dict
-         :collapse:
+               :param game_state: Current game state
 
+               :returns: Rich panel with analysis info
 
-   .. py:method:: create_analysis_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
-      Create a panel showing the latest analysis.
 
-      :param game_state: Current game state
+            .. py:method:: create_board_table(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.table.Table
 
-      :returns: Rich panel with analysis info
+               Create a rich visual representation of the board.
 
+               :param game_state: Current game state
 
-      .. autolink-examples:: create_analysis_panel
-         :collapse:
+               :returns: Rich table representing the board
 
 
-   .. py:method:: create_board_table(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.table.Table
 
-      Create a rich visual representation of the board.
+            .. py:method:: create_game_info_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
-      :param game_state: Current game state
+               Create a panel with game information.
 
-      :returns: Rich table representing the board
+               :param game_state: Current game state
 
+               :returns: Rich panel with game info
 
-      .. autolink-examples:: create_board_table
-         :collapse:
 
 
-   .. py:method:: create_game_info_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
+            .. py:method:: create_last_move_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
-      Create a panel with game information.
+               Create a panel showing the last move.
 
-      :param game_state: Current game state
+               :param game_state: Current game state
 
-      :returns: Rich panel with game info
+               :returns: Rich panel with last move info
 
 
-      .. autolink-examples:: create_game_info_panel
-         :collapse:
 
+            .. py:method:: create_layout(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.layout.Layout
 
-   .. py:method:: create_last_move_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
+               Create the complete rich UI layout.
 
-      Create a panel showing the last move.
+               :param game_state: Current game state
 
-      :param game_state: Current game state
+               :returns: Complete rich layout
 
-      :returns: Rich panel with last move info
 
 
-      .. autolink-examples:: create_last_move_panel
-         :collapse:
+            .. py:method:: display_final_results(final_state: Any) -> None
 
+               Display final game results.
 
-   .. py:method:: create_layout(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.layout.Layout
+               :param final_state: Final game state
 
-      Create the complete rich UI layout.
 
-      :param game_state: Current game state
 
-      :returns: Complete rich layout
+            .. py:method:: display_state(state_data: Any) -> bool
 
+               Display the game state using rich UI.
 
-      .. autolink-examples:: create_layout
-         :collapse:
+               :param state_data: State data in various formats
 
+               :returns: True if display was successful, False otherwise
 
-   .. py:method:: display_final_results(final_state: Any) -> None
 
-      Display final game results.
 
-      :param final_state: Final game state
+            .. py:method:: display_welcome() -> None
 
+               Display welcome message.
 
-      .. autolink-examples:: display_final_results
-         :collapse:
 
 
-   .. py:method:: display_state(state_data: Any) -> bool
+            .. py:method:: extract_game_state(state_data: Any) -> haive.games.fox_and_geese.state.FoxAndGeeseState | None
 
-      Display the game state using rich UI.
+               Extract FoxAndGeeseState from various input formats.
 
-      :param state_data: State data in various formats
+               :param state_data: State data in various formats
 
-      :returns: True if display was successful, False otherwise
+               :returns: FoxAndGeeseState instance or None if extraction fails
 
 
-      .. autolink-examples:: display_state
-         :collapse:
 
+            .. py:method:: print_debug_info(state_data: Any, context: str = '') -> None
 
-   .. py:method:: display_welcome() -> None
+               Print debug information about the state.
 
-      Display welcome message.
+               :param state_data: State data to debug
+               :param context: Context string for debugging
 
 
-      .. autolink-examples:: display_welcome
-         :collapse:
 
+            .. py:attribute:: console
 
-   .. py:method:: extract_game_state(state_data: Any) -> haive.games.fox_and_geese.state.FoxAndGeeseState | None
 
-      Extract FoxAndGeeseState from various input formats.
 
-      :param state_data: State data in various formats
-
-      :returns: FoxAndGeeseState instance or None if extraction fails
-
-
-      .. autolink-examples:: extract_game_state
-         :collapse:
-
-
-   .. py:method:: print_debug_info(state_data: Any, context: str = '') -> None
-
-      Print debug information about the state.
-
-      :param state_data: State data to debug
-      :param context: Context string for debugging
-
-
-      .. autolink-examples:: print_debug_info
-         :collapse:
-
-
-   .. py:attribute:: console
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.fox_and_geese.ui import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

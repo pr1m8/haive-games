@@ -3,6 +3,28 @@ games.cards.models.card
 
 .. py:module:: games.cards.models.card
 
+Card representation and operations for card games.
+
+This module provides classes for representing playing cards, including ranks,
+suits, and card values. It's designed to be used in various card game implementations
+with consistent handling of card comparisons and representations.
+
+.. rubric:: Example
+
+>>> from haive.games.cards.models.card import Card, Rank, Suit
+>>> card = Card(Rank.ACE, Suit.SPADES)
+>>> print(card)
+A`
+>>> card.value
+14
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">3 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Card representation and operations for card games.
@@ -21,338 +43,326 @@ games.cards.models.card
    14
 
 
-   .. autolink-examples:: games.cards.models.card
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (3)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.cards.models.card.Card
-   games.cards.models.card.Rank
-   games.cards.models.card.Suit
+      games.cards.models.card.Card
+      games.cards.models.card.Rank
+      games.cards.models.card.Suit
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Card(rank: Rank, suit: Suit)
 
-   A playing card with rank and suit.
+            A playing card with rank and suit.
 
-   Represents a standard playing card with rank and suit, providing methods
-   for comparison, display, and game-specific value calculations.
+            Represents a standard playing card with rank and suit, providing methods
+            for comparison, display, and game-specific value calculations.
 
-   .. attribute:: rank
+            .. attribute:: rank
 
-      The rank of the card (2-10, J, Q, K, A, Joker).
+               The rank of the card (2-10, J, Q, K, A, Joker).
 
-   .. attribute:: suit
+            .. attribute:: suit
 
-      The suit of the card (clubs, diamonds, hearts, spades, joker).
+               The suit of the card (clubs, diamonds, hearts, spades, joker).
 
-   .. attribute:: value
+            .. attribute:: value
 
-      The numeric value of the card for comparisons.
+               The numeric value of the card for comparisons.
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   >>> card = Card(Rank.ACE, Suit.SPADES)
-   >>> print(card)
-   A`
-   >>> card.value
-   14
-   >>> card.long_name
-   'Ace of Spades'
+            >>> card = Card(Rank.ACE, Suit.SPADES)
+            >>> print(card)
+            A`
+            >>> card.value
+            14
+            >>> card.long_name
+            'Ace of Spades'
 
-   Initialize a card with rank and suit.
+            Initialize a card with rank and suit.
 
-   :param rank: The rank of the card.
-   :param suit: The suit of the card.
+            :param rank: The rank of the card.
+            :param suit: The suit of the card.
 
-   :raises ValueError: If a standard card is created with Joker suit but not Joker rank.
+            :raises ValueError: If a standard card is created with Joker suit but not Joker rank.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: __eq__(other: object) -> bool
 
+               Check if two cards are equal.
 
-   .. autolink-examples:: Card
-      :collapse:
+               :param other: Another card to compare with.
 
-   .. py:method:: __eq__(other: object) -> bool
+               :returns: True if the cards have the same rank and suit, False otherwise.
 
-      Check if two cards are equal.
 
-      :param other: Another card to compare with.
 
-      :returns: True if the cards have the same rank and suit, False otherwise.
+            .. py:method:: __gt__(other: Card) -> bool
 
+               Check if this card has a higher value than another.
 
-      .. autolink-examples:: __eq__
-         :collapse:
+               :param other: Another card to compare with.
 
+               :returns: True if this card's value is greater than the other card's value.
 
-   .. py:method:: __gt__(other: Card) -> bool
 
-      Check if this card has a higher value than another.
 
-      :param other: Another card to compare with.
+            .. py:method:: __lt__(other: Card) -> bool
 
-      :returns: True if this card's value is greater than the other card's value.
+               Check if this card has a lower value than another.
 
+               :param other: Another card to compare with.
 
-      .. autolink-examples:: __gt__
-         :collapse:
+               :returns: True if this card's value is less than the other card's value.
 
 
-   .. py:method:: __lt__(other: Card) -> bool
 
-      Check if this card has a lower value than another.
+            .. py:method:: __repr__() -> str
 
-      :param other: Another card to compare with.
+               Return a detailed representation of the card.
 
-      :returns: True if this card's value is less than the other card's value.
+               :returns: A string representation for debugging.
 
 
-      .. autolink-examples:: __lt__
-         :collapse:
 
+            .. py:method:: __str__() -> str
 
-   .. py:method:: __repr__() -> str
+               Return a string representation of the card.
 
-      Return a detailed representation of the card.
+               :returns: A string with rank and suit symbols.
 
-      :returns: A string representation for debugging.
 
 
-      .. autolink-examples:: __repr__
-         :collapse:
+            .. py:method:: blackjack_value() -> int
 
+               Calculate the value of the card in Blackjack.
 
-   .. py:method:: __str__() -> str
+               Aces are worth 11 by default (caller should handle alternate values).
+               Face cards (J, Q, K) are worth 10.
 
-      Return a string representation of the card.
+               :returns: The card's value in Blackjack.
 
-      :returns: A string with rank and suit symbols.
 
 
-      .. autolink-examples:: __str__
-         :collapse:
+            .. py:method:: from_string(card_str: str) -> Card
+               :classmethod:
 
 
-   .. py:method:: blackjack_value() -> int
+               Create a card from a string representation.
 
-      Calculate the value of the card in Blackjack.
+               :param card_str: A string like "AH" (Ace of Hearts) or "10S" (Ten of Spades).
 
-      Aces are worth 11 by default (caller should handle alternate values).
-      Face cards (J, Q, K) are worth 10.
+               :returns: A new Card instance.
 
-      :returns: The card's value in Blackjack.
+               :raises ValueError: If the string format is invalid.
 
 
-      .. autolink-examples:: blackjack_value
-         :collapse:
 
+            .. py:method:: is_face_card() -> bool
 
-   .. py:method:: from_string(card_str: str) -> Card
-      :classmethod:
+               Check if the card is a face card (Jack, Queen, or King).
 
+               :returns: True if the card is a face card, False otherwise.
 
-      Create a card from a string representation.
 
-      :param card_str: A string like "AH" (Ace of Hearts) or "10S" (Ten of Spades).
 
-      :returns: A new Card instance.
+            .. py:property:: long_name
+               :type: str
 
-      :raises ValueError: If the string format is invalid.
 
+               Get the full name of the card.
 
-      .. autolink-examples:: from_string
-         :collapse:
+               :returns: A string with the full name (e.g., "Ace of Spades").
 
 
-   .. py:method:: is_face_card() -> bool
+            .. py:attribute:: rank
 
-      Check if the card is a face card (Jack, Queen, or King).
 
-      :returns: True if the card is a face card, False otherwise.
+            .. py:attribute:: suit
 
 
-      .. autolink-examples:: is_face_card
-         :collapse:
+            .. py:attribute:: value
 
 
-   .. py:property:: long_name
-      :type: str
 
-
-      Get the full name of the card.
-
-      :returns: A string with the full name (e.g., "Ace of Spades").
-
-      .. autolink-examples:: long_name
-         :collapse:
-
-
-   .. py:attribute:: rank
-
-
-   .. py:attribute:: suit
-
-
-   .. py:attribute:: value
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Rank(*args, **kwds)
 
-   Bases: :py:obj:`enum.Enum`
+            Bases: :py:obj:`enum.Enum`
 
 
-   Playing card ranks.
+            Playing card ranks.
 
-   Standard card ranks for a 52-card deck, with values that facilitate numeric
-   comparisons between cards.
-
-
-
-   .. autolink-examples:: Rank
-      :collapse:
-
-   .. py:method:: __str__() -> str
-
-      Return a string representation of the rank.
-
-      :returns: A string representation suitable for display.
-
-
-      .. autolink-examples:: __str__
-         :collapse:
-
-
-   .. py:attribute:: ACE
-      :value: 14
+            Standard card ranks for a 52-card deck, with values that facilitate numeric
+            comparisons between cards.
 
 
 
-   .. py:attribute:: EIGHT
-      :value: 8
+            .. py:method:: __str__() -> str
+
+               Return a string representation of the rank.
+
+               :returns: A string representation suitable for display.
 
 
 
-   .. py:attribute:: FIVE
-      :value: 5
+            .. py:attribute:: ACE
+               :value: 14
 
 
 
-   .. py:attribute:: FOUR
-      :value: 4
+            .. py:attribute:: EIGHT
+               :value: 8
 
 
 
-   .. py:attribute:: JACK
-      :value: 11
+            .. py:attribute:: FIVE
+               :value: 5
 
 
 
-   .. py:attribute:: JOKER
-      :value: 15
+            .. py:attribute:: FOUR
+               :value: 4
 
 
 
-   .. py:attribute:: KING
-      :value: 13
+            .. py:attribute:: JACK
+               :value: 11
 
 
 
-   .. py:attribute:: NINE
-      :value: 9
+            .. py:attribute:: JOKER
+               :value: 15
 
 
 
-   .. py:attribute:: QUEEN
-      :value: 12
+            .. py:attribute:: KING
+               :value: 13
 
 
 
-   .. py:attribute:: SEVEN
-      :value: 7
+            .. py:attribute:: NINE
+               :value: 9
 
 
 
-   .. py:attribute:: SIX
-      :value: 6
+            .. py:attribute:: QUEEN
+               :value: 12
 
 
 
-   .. py:attribute:: TEN
-      :value: 10
+            .. py:attribute:: SEVEN
+               :value: 7
 
 
 
-   .. py:attribute:: THREE
-      :value: 3
+            .. py:attribute:: SIX
+               :value: 6
 
 
 
-   .. py:attribute:: TWO
-      :value: 2
+            .. py:attribute:: TEN
+               :value: 10
 
 
+
+            .. py:attribute:: THREE
+               :value: 3
+
+
+
+            .. py:attribute:: TWO
+               :value: 2
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Suit(*args, **kwds)
 
-   Bases: :py:obj:`enum.Enum`
+            Bases: :py:obj:`enum.Enum`
 
 
-   Playing card suits.
+            Playing card suits.
 
-   Standard card suits for a 52-card deck, with optional support for additional special
-   suits in non-standard decks.
-
-
-
-   .. autolink-examples:: Suit
-      :collapse:
-
-   .. py:method:: __str__() -> str
-
-      Return the Unicode symbol for the suit.
-
-      :returns: The Unicode character representing the suit.
+            Standard card suits for a 52-card deck, with optional support for additional special
+            suits in non-standard decks.
 
 
-      .. autolink-examples:: __str__
-         :collapse:
+
+            .. py:method:: __str__() -> str
+
+               Return the Unicode symbol for the suit.
+
+               :returns: The Unicode character representing the suit.
 
 
-   .. py:attribute:: CLUBS
+
+            .. py:attribute:: CLUBS
 
 
-   .. py:attribute:: DIAMONDS
+            .. py:attribute:: DIAMONDS
 
 
-   .. py:attribute:: HEARTS
+            .. py:attribute:: HEARTS
 
 
-   .. py:attribute:: JOKER
+            .. py:attribute:: JOKER
 
 
-   .. py:attribute:: SPADES
+            .. py:attribute:: SPADES
 
 
-   .. py:property:: color
-      :type: str
+            .. py:property:: color
+               :type: str
 
 
-      Get the color of the suit (red or black).
+               Get the color of the suit (red or black).
 
-      :returns: "red" or "black".
-      :rtype: The color as a string
+               :returns: "red" or "black".
+               :rtype: The color as a string
 
-      .. autolink-examples:: color
-         :collapse:
 
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.cards.models.card import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

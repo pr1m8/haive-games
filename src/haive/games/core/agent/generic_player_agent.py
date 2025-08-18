@@ -96,6 +96,11 @@ class GenericPromptGenerator(Generic[PlayerType, PlayerType2], ABC):
     """
 
     def __init__(self, players: GamePlayerIdentifiers[PlayerType, PlayerType2]):
+        """  Init  .
+
+Args:
+    players: [TODO: Add description]
+"""
         self.players = players
 
     @abstractmethod
@@ -134,6 +139,14 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
         default_temperature: float = 0.7,
         analyzer_temperature: float = 0.3,
     ):
+        """  Init  .
+
+Args:
+    players: [TODO: Add description]
+    prompt_generator: [TODO: Add description]
+    default_temperature: [TODO: Add description]
+    analyzer_temperature: [TODO: Add description]
+"""
         self.players = players
         self.prompt_generator = prompt_generator
         self.default_temperature = default_temperature
@@ -191,7 +204,7 @@ class GenericGameEngineFactory(Generic[PlayerType, PlayerType2]):
         Returns:
             Dict[str, AugLLMConfig]: Dictionary of configured engines
 
-        Example:
+        Examples:
             >>> configs = {
             ...     "white_player": PlayerAgentConfig(llm_config="gpt-4"),
             ...     "black_player": PlayerAgentConfig(llm_config="claude-3-opus"),
@@ -479,7 +492,7 @@ def create_generic_game_config(
     Returns:
         Dict[str, AugLLMConfig]: Dictionary of engines
 
-    Example:
+    Examples:
         >>> chess_players = ChessPlayerIdentifiers()
         >>> chess_prompt_gen = ChessPromptGenerator(chess_players)
         >>> engines = create_generic_game_config(
@@ -501,6 +514,14 @@ def example_chess_usage():
 
     class ChessPromptGenerator(GenericPromptGenerator[str, str]):
         def create_move_prompt(self, player: str) -> ChatPromptTemplate:
+            """Create Move Prompt.
+
+Args:
+    player: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return ChatPromptTemplate.from_messages(
                 [
                     ("system", f"You are playing chess as {player.upper()}..."),
@@ -509,6 +530,14 @@ def example_chess_usage():
             )
 
         def create_analysis_prompt(self, player: str) -> ChatPromptTemplate:
+            """Create Analysis Prompt.
+
+Args:
+    player: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return ChatPromptTemplate.from_messages(
                 [
                     ("system", f"Analyze position for {player.upper()}..."),
@@ -517,9 +546,19 @@ def example_chess_usage():
             )
 
         def get_move_output_model(self) -> type:
+            """Get Move Output Model.
+
+Returns:
+    [TODO: Add return description]
+"""
             return ChessPlayerDecision
 
         def get_analysis_output_model(self) -> type:
+            """Get Analysis Output Model.
+
+Returns:
+    [TODO: Add return description]
+"""
             return SegmentedAnalysis
 
     # Usage
@@ -538,6 +577,14 @@ def example_custom_game_usage():
 
     class SPSPromptGenerator(GenericPromptGenerator[str, str]):
         def create_move_prompt(self, player: str) -> ChatPromptTemplate:
+            """Create Move Prompt.
+
+Args:
+    player: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return ChatPromptTemplate.from_messages(
                 [
                     ("system", f"You are player {player} in Stone-Paper-Scissors..."),
@@ -546,6 +593,14 @@ def example_custom_game_usage():
             )
 
         def create_analysis_prompt(self, player: str) -> ChatPromptTemplate:
+            """Create Analysis Prompt.
+
+Args:
+    player: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             return ChatPromptTemplate.from_messages(
                 [
                     ("system", f"Analyze strategy for {player}..."),
@@ -554,9 +609,19 @@ def example_custom_game_usage():
             )
 
         def get_move_output_model(self) -> type:
+            """Get Move Output Model.
+
+Returns:
+    [TODO: Add return description]
+"""
             return dict  # Simplified for example
 
         def get_analysis_output_model(self) -> type:
+            """Get Analysis Output Model.
+
+Returns:
+    [TODO: Add return description]
+"""
             return dict  # Simplified for example
 
     sps_prompt_gen = SPSPromptGenerator(sps_players)

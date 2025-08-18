@@ -3,6 +3,35 @@ games.base.state_manager
 
 .. py:module:: games.base.state_manager
 
+Base state manager module for game agents.
+
+This module provides the foundational state manager class that handles
+game state transitions and operations. It defines the interface that all
+game-specific state managers should implement.
+
+.. rubric:: Example
+
+>>> class ChessStateManager(GameStateManager[ChessMove]):
+...     @classmethod
+...     def initialize(cls) -> ChessState:
+...         return ChessState.new_game()
+...
+...     @classmethod
+...     def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
+...         return state.apply_move(move)
+
+Typical usage:
+    - Inherit from GameStateManager to create game-specific state managers
+    - Implement the required methods for state initialization and transitions
+    - Use in conjunction with game agents to manage game flow
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Base state manager module for game agents.
@@ -28,192 +57,209 @@ games.base.state_manager
        - Use in conjunction with game agents to manage game flow
 
 
-   .. autolink-examples:: games.base.state_manager
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.base.state_manager.T
+      games.base.state_manager.T
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.base.state_manager.GameStateManager
+      games.base.state_manager.GameStateManager
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameStateManager
 
-   Bases: :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
 
 
-   Base state manager that implements common game state operations.
+            Base state manager that implements common game state operations.
 
-   This class provides the interface for managing game state transitions
-   and operations. Each game should extend this with game-specific logic
-   by implementing the required methods.
+            This class provides the interface for managing game state transitions
+            and operations. Each game should extend this with game-specific logic
+            by implementing the required methods.
 
-   Type Parameters:
-       T: The type of the game state, must be a Pydantic BaseModel.
+            Type Parameters:
+                T: The type of the game state, must be a Pydantic BaseModel.
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> class ChessStateManager(GameStateManager[ChessState]):
-   ...     @classmethod
-   ...     def initialize(cls) -> ChessState:
-   ...         return ChessState.new_game()
-   ...
-   ...     @classmethod
-   ...     def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
-   ...         return state.apply_move(move)
-
-
-   .. autolink-examples:: GameStateManager
-      :collapse:
-
-   .. py:method:: apply_move(state: T, move: Any) -> T
-      :classmethod:
-
-      :abstractmethod:
+            >>> class ChessStateManager(GameStateManager[ChessState]):
+            ...     @classmethod
+            ...     def initialize(cls) -> ChessState:
+            ...         return ChessState.new_game()
+            ...
+            ...     @classmethod
+            ...     def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
+            ...         return state.apply_move(move)
 
 
-      Apply a move to the game state.
+            .. py:method:: apply_move(state: T, move: Any) -> T
+               :classmethod:
 
-      This method should create and return a new game state that reflects
-      the application of the given move to the current state.
-
-      :param state: The current game state.
-      :type state: T
-      :param move: The move to apply.
-      :type move: Any
-
-      :returns: A new game state after applying the move.
-      :rtype: T
-
-      :raises NotImplementedError: This method must be implemented by subclasses.
-
-      .. rubric:: Example
-
-      >>> @classmethod
-      ... def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
-      ...     new_board = state.board.make_move(move)
-      ...     return ChessState(
-      ...         board=new_board,
-      ...         turn="black" if state.turn == "white" else "white",
-      ...         move_history=state.move_history + [move]
-      ...     )
+               :abstractmethod:
 
 
-      .. autolink-examples:: apply_move
-         :collapse:
+               Apply a move to the game state.
+
+               This method should create and return a new game state that reflects
+               the application of the given move to the current state.
+
+               :param state: The current game state.
+               :type state: T
+               :param move: The move to apply.
+               :type move: Any
+
+               :returns: A new game state after applying the move.
+               :rtype: T
+
+               :raises NotImplementedError: This method must be implemented by subclasses.
+
+               .. rubric:: Example
+
+               >>> @classmethod
+               ... def apply_move(cls, state: ChessState, move: ChessMove) -> ChessState:
+               ...     new_board = state.board.make_move(move)
+               ...     return ChessState(
+               ...         board=new_board,
+               ...         turn="black" if state.turn == "white" else "white",
+               ...         move_history=state.move_history + [move]
+               ...     )
 
 
-   .. py:method:: check_game_status(state: T) -> T
-      :classmethod:
 
-      :abstractmethod:
+            .. py:method:: check_game_status(state: T) -> T
+               :classmethod:
 
-
-      Check and update the game status.
-
-      This method should examine the current game state and determine if
-      the game status needs to be updated (e.g., if someone has won or
-      if the game is a draw).
-
-      :param state: The current game state.
-      :type state: T
-
-      :returns: The game state with updated status.
-      :rtype: T
-
-      :raises NotImplementedError: This method must be implemented by subclasses.
-
-      .. rubric:: Example
-
-      >>> @classmethod
-      ... def check_game_status(cls, state: ChessState) -> ChessState:
-      ...     if state.board.is_checkmate():
-      ...         state.game_status = "checkmate"
-      ...     elif state.board.is_stalemate():
-      ...         state.game_status = "stalemate"
-      ...     return state
+               :abstractmethod:
 
 
-      .. autolink-examples:: check_game_status
-         :collapse:
+               Check and update the game status.
+
+               This method should examine the current game state and determine if
+               the game status needs to be updated (e.g., if someone has won or
+               if the game is a draw).
+
+               :param state: The current game state.
+               :type state: T
+
+               :returns: The game state with updated status.
+               :rtype: T
+
+               :raises NotImplementedError: This method must be implemented by subclasses.
+
+               .. rubric:: Example
+
+               >>> @classmethod
+               ... def check_game_status(cls, state: ChessState) -> ChessState:
+               ...     if state.board.is_checkmate():
+               ...         state.game_status = "checkmate"
+               ...     elif state.board.is_stalemate():
+               ...         state.game_status = "stalemate"
+               ...     return state
 
 
-   .. py:method:: get_legal_moves(state: T) -> list[Any]
-      :classmethod:
 
-      :abstractmethod:
+            .. py:method:: get_legal_moves(state: T) -> list[Any]
+               :classmethod:
 
-
-      Get all legal moves for the current state.
-
-      This method should return a list of all valid moves that can be made
-      from the current game state.
-
-      :param state: The current game state.
-      :type state: T
-
-      :returns: A list of legal moves.
-      :rtype: List[Any]
-
-      :raises NotImplementedError: This method must be implemented by subclasses.
-
-      .. rubric:: Example
-
-      >>> @classmethod
-      ... def get_legal_moves(cls, state: ChessState) -> List[ChessMove]:
-      ...     return state.board.get_legal_moves(state.turn)
+               :abstractmethod:
 
 
-      .. autolink-examples:: get_legal_moves
-         :collapse:
+               Get all legal moves for the current state.
+
+               This method should return a list of all valid moves that can be made
+               from the current game state.
+
+               :param state: The current game state.
+               :type state: T
+
+               :returns: A list of legal moves.
+               :rtype: List[Any]
+
+               :raises NotImplementedError: This method must be implemented by subclasses.
+
+               .. rubric:: Example
+
+               >>> @classmethod
+               ... def get_legal_moves(cls, state: ChessState) -> List[ChessMove]:
+               ...     return state.board.get_legal_moves(state.turn)
 
 
-   .. py:method:: initialize(**kwargs) -> T
-      :classmethod:
 
-      :abstractmethod:
+            .. py:method:: initialize(**kwargs) -> T
+               :classmethod:
 
-
-      Initialize a new game state.
-
-      This method should create and return a new instance of the game state
-      with initial values set appropriately for the start of a game.
-
-      :param \*\*kwargs: Additional keyword arguments for game-specific initialization.
-
-      :returns: A new instance of the game state.
-      :rtype: T
-
-      :raises NotImplementedError: This method must be implemented by subclasses.
-
-      .. rubric:: Example
-
-      >>> @classmethod
-      ... def initialize(cls) -> ChessState:
-      ...     return ChessState(
-      ...         board=Board.initial_setup(),
-      ...         turn="white",
-      ...         game_status="ongoing"
-      ...     )
+               :abstractmethod:
 
 
-      .. autolink-examples:: initialize
-         :collapse:
+               Initialize a new game state.
 
+               This method should create and return a new instance of the game state
+               with initial values set appropriately for the start of a game.
+
+               :param \*\*kwargs: Additional keyword arguments for game-specific initialization.
+
+               :returns: A new instance of the game state.
+               :rtype: T
+
+               :raises NotImplementedError: This method must be implemented by subclasses.
+
+               .. rubric:: Example
+
+               >>> @classmethod
+               ... def initialize(cls) -> ChessState:
+               ...     return ChessState(
+               ...         board=Board.initial_setup(),
+               ...         turn="white",
+               ...         game_status="ongoing"
+               ...     )
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.base.state_manager import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

@@ -3,193 +3,199 @@ games.hold_em.engine_logging
 
 .. py:module:: games.hold_em.engine_logging
 
+Enhanced engine invocation with Rich logging and debugging.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">2 classes</span> • <span class="module-stat">2 functions</span>   </div>
+
 .. autoapi-nested-parse::
 
    Enhanced engine invocation with Rich logging and debugging.
 
 
-   .. autolink-examples:: games.hold_em.engine_logging
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (2)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.engine_logging.EngineInvocationLogger
-   games.hold_em.engine_logging.LoggedAugLLMConfig
+      games.hold_em.engine_logging.EngineInvocationLogger
+      games.hold_em.engine_logging.LoggedAugLLMConfig
 
+            
 
-Functions
----------
+.. admonition:: Functions (2)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.engine_logging.enhance_game_engines
-   games.hold_em.engine_logging.enhance_player_engines
+      games.hold_em.engine_logging.enhance_game_engines
+      games.hold_em.engine_logging.enhance_player_engines
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: EngineInvocationLogger(console: rich.console.Console | None = None, debug_mode: bool = True)
 
-   Rich logging for engine invocations with debugging capabilities.
+            Rich logging for engine invocations with debugging capabilities.
 
 
-   .. autolink-examples:: EngineInvocationLogger
-      :collapse:
+            .. py:method:: _format_data_preview(data: Any) -> rich.text.Text
 
-   .. py:method:: _format_data_preview(data: Any) -> rich.text.Text
+               Format data for Rich display.
 
-      Format data for Rich display.
 
 
-      .. autolink-examples:: _format_data_preview
-         :collapse:
+            .. py:method:: _preview_data(data: Any) -> str
 
+               Create a preview string for data.
 
-   .. py:method:: _preview_data(data: Any) -> str
 
-      Create a preview string for data.
 
+            .. py:method:: create_enhanced_invoke(engine: haive.core.engine.aug_llm.AugLLMConfig) -> collections.abc.Callable
 
-      .. autolink-examples:: _preview_data
-         :collapse:
+               Create an enhanced invoke method with logging.
 
 
-   .. py:method:: create_enhanced_invoke(engine: haive.core.engine.aug_llm.AugLLMConfig) -> collections.abc.Callable
 
-      Create an enhanced invoke method with logging.
+            .. py:method:: enhance_engine(engine: haive.core.engine.aug_llm.AugLLMConfig) -> haive.core.engine.aug_llm.AugLLMConfig
 
+               Enhance an engine with logging capabilities.
 
-      .. autolink-examples:: create_enhanced_invoke
-         :collapse:
 
 
-   .. py:method:: enhance_engine(engine: haive.core.engine.aug_llm.AugLLMConfig) -> haive.core.engine.aug_llm.AugLLMConfig
+            .. py:method:: enhance_engines_dict(engines: dict[str, haive.core.engine.aug_llm.AugLLMConfig]) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-      Enhance an engine with logging capabilities.
+               Enhance all engines in a dictionary.
 
 
-      .. autolink-examples:: enhance_engine
-         :collapse:
 
+            .. py:method:: invocation_context(engine_name: str, input_data: Any)
 
-   .. py:method:: enhance_engines_dict(engines: dict[str, haive.core.engine.aug_llm.AugLLMConfig]) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+               Context manager for engine invocations.
 
-      Enhance all engines in a dictionary.
 
 
-      .. autolink-examples:: enhance_engines_dict
-         :collapse:
+            .. py:method:: log_invocation_end(invocation_info: dict[str, Any], result: Any, error: Exception | None = None)
 
+               Log the end of an engine invocation.
 
-   .. py:method:: invocation_context(engine_name: str, input_data: Any)
 
-      Context manager for engine invocations.
 
+            .. py:method:: log_invocation_start(engine_name: str, input_data: Any) -> dict[str, Any]
 
-      .. autolink-examples:: invocation_context
-         :collapse:
+               Log the start of an engine invocation.
 
 
-   .. py:method:: log_invocation_end(invocation_info: dict[str, Any], result: Any, error: Exception | None = None)
 
-      Log the end of an engine invocation.
+            .. py:method:: print_invocation_tree()
 
+               Print a tree view of all invocations.
 
-      .. autolink-examples:: log_invocation_end
-         :collapse:
 
 
-   .. py:method:: log_invocation_start(engine_name: str, input_data: Any) -> dict[str, Any]
+            .. py:method:: print_timing_summary()
 
-      Log the start of an engine invocation.
+               Print a summary of engine timing statistics.
 
 
-      .. autolink-examples:: log_invocation_start
-         :collapse:
 
+            .. py:attribute:: console
 
-   .. py:method:: print_invocation_tree()
 
-      Print a tree view of all invocations.
+            .. py:attribute:: current_depth
+               :value: 0
 
 
-      .. autolink-examples:: print_invocation_tree
-         :collapse:
 
+            .. py:attribute:: debug_mode
+               :value: True
 
-   .. py:method:: print_timing_summary()
 
-      Print a summary of engine timing statistics.
 
+            .. py:attribute:: invocation_history
+               :type:  list[dict[str, Any]]
+               :value: []
 
-      .. autolink-examples:: print_timing_summary
-         :collapse:
 
 
-   .. py:attribute:: console
+            .. py:attribute:: timing_stats
+               :type:  dict[str, list[float]]
 
 
-   .. py:attribute:: current_depth
-      :value: 0
 
-
-
-   .. py:attribute:: debug_mode
-      :value: True
-
-
-
-   .. py:attribute:: invocation_history
-      :type:  list[dict[str, Any]]
-      :value: []
-
-
-
-   .. py:attribute:: timing_stats
-      :type:  dict[str, list[float]]
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: LoggedAugLLMConfig(*args, logger: EngineInvocationLogger | None = None, **kwargs)
 
-   Bases: :py:obj:`haive.core.engine.aug_llm.AugLLMConfig`
+            Bases: :py:obj:`haive.core.engine.aug_llm.AugLLMConfig`
 
 
-   AugLLMConfig with enhanced logging capabilities.
+            AugLLMConfig with enhanced logging capabilities.
 
 
-   .. autolink-examples:: LoggedAugLLMConfig
-      :collapse:
+            .. py:method:: create_runnable(runnable_config=None)
 
-   .. py:method:: create_runnable(runnable_config=None)
-
-      Create runnable with logging enhancement.
+               Create runnable with logging enhancement.
 
 
-      .. autolink-examples:: create_runnable
-         :collapse:
+
+            .. py:attribute:: logger
 
 
-   .. py:attribute:: logger
 
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: enhance_game_engines(engines: dict[str, haive.core.engine.aug_llm.AugLLMConfig], logger: EngineInvocationLogger | None = None) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Enhance game engines with logging.
+            Enhance game engines with logging.
 
 
-   .. autolink-examples:: enhance_game_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: enhance_player_engines(engines: dict[str, haive.core.engine.aug_llm.AugLLMConfig], logger: EngineInvocationLogger | None = None) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Enhance player engines with logging.
+            Enhance player engines with logging.
 
 
-   .. autolink-examples:: enhance_player_engines
-      :collapse:
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.hold_em.engine_logging import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

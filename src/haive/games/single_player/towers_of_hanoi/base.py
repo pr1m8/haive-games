@@ -88,11 +88,24 @@ class PegPosition(Position):
         return v
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, PegPosition):
             return False
         return self.peg == other.peg and self.level == other.level
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.peg, self.level))
 
     @computed_field
@@ -382,6 +395,17 @@ class HanoiSolver(BaseModel):
         def move_tower(
             n: int, source: PegNumber, target: PegNumber, auxiliary: PegNumber
         ) -> None:
+            """Move Tower.
+
+Args:
+    n: [TODO: Add description]
+    source: [TODO: Add description]
+    target: [TODO: Add description]
+    auxiliary: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if n > 0:
                 move_tower(n - 1, source, auxiliary, target)
                 moves.append(HanoiMove(from_peg=source, to_peg=target))

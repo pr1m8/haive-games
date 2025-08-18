@@ -22,6 +22,8 @@ class ReversiPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Reversi game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="black", player2="white")
 
 
@@ -97,6 +99,8 @@ class ReversiEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Reversi game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = ReversiPlayerIdentifiers()
         prompt_generator = ReversiPromptGenerator()
         super().__init__(identifiers, prompt_generator)

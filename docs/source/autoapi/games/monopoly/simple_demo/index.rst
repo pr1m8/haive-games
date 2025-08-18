@@ -3,6 +3,25 @@ games.monopoly.simple_demo
 
 .. py:module:: games.monopoly.simple_demo
 
+Simple demo for testing the Monopoly game without LangGraph integration.
+
+This script demonstrates the core functionality of the Monopoly game:
+- Board setup
+- Player movement
+- Property purchasing
+- Rent payments
+- Game events
+
+Usage:
+    python simple_demo.py
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">6 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Simple demo for testing the Monopoly game without LangGraph integration.
@@ -18,81 +37,120 @@ games.monopoly.simple_demo
        python simple_demo.py
 
 
-   .. autolink-examples:: games.monopoly.simple_demo
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.simple_demo.console
+      games.monopoly.simple_demo.console
 
+            
+            
+            
 
-Functions
----------
+.. admonition:: Functions (6)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.simple_demo.handle_property_landing
-   games.monopoly.simple_demo.print_divider
-   games.monopoly.simple_demo.print_player_status
-   games.monopoly.simple_demo.print_property
-   games.monopoly.simple_demo.print_recent_events
-   games.monopoly.simple_demo.run_demo
+      games.monopoly.simple_demo.handle_property_landing
+      games.monopoly.simple_demo.print_divider
+      games.monopoly.simple_demo.print_player_status
+      games.monopoly.simple_demo.print_property
+      games.monopoly.simple_demo.print_recent_events
+      games.monopoly.simple_demo.run_demo
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: handle_property_landing(state: haive.games.monopoly.state.MonopolyState, position: int) -> list[haive.games.monopoly.models.GameEvent]
 
-   Handle a player landing on a property.
+            Handle a player landing on a property.
 
 
-   .. autolink-examples:: handle_property_landing
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: print_divider()
 
-   Print a divider line.
+            Print a divider line.
 
 
-   .. autolink-examples:: print_divider
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: print_player_status(state: haive.games.monopoly.state.MonopolyState)
 
-   Print current status of all players.
+            Print current status of all players.
 
 
-   .. autolink-examples:: print_player_status
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: print_property(property_obj: haive.games.monopoly.models.Property)
 
-   Print property details.
+            Print property details.
 
 
-   .. autolink-examples:: print_property
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: print_recent_events(events: list[haive.games.monopoly.models.GameEvent], count: int = 5)
 
-   Print recent game events.
+            Print recent game events.
 
 
-   .. autolink-examples:: print_recent_events
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: run_demo(turns: int = 20)
 
-   Run a simple Monopoly game demo.
+            Run a simple Monopoly game demo.
 
 
-   .. autolink-examples:: run_demo
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: console
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.monopoly.simple_demo import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

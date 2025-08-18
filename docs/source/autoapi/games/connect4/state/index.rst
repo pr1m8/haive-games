@@ -3,6 +3,31 @@ games.connect4.state
 
 .. py:module:: games.connect4.state
 
+Connect4 game state module.
+
+This module defines the core state representation for Connect4 games,
+including board representation, move tracking, and game status.
+
+.. rubric:: Example
+
+>>> from haive.games.connect4.state import Connect4State
+>>> from haive.games.connect4.models import Connect4Move
+>>>
+>>> # Initialize a new game
+>>> state = Connect4State.initialize()
+>>> state.board_string  # Get string representation
+>>>
+>>> # Check game properties
+>>> state.is_column_full(3)  # Check if column is full
+>>> state.get_next_row(3)    # Get next available row in column
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Connect4 game state module.
@@ -24,262 +49,278 @@ games.connect4.state
    >>> state.get_next_row(3)    # Get next available row in column
 
 
-   .. autolink-examples:: games.connect4.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.connect4.state.Connect4State
+      games.connect4.state.Connect4State
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: Connect4State
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: Connect4State(/, **data: Any)
 
-   State representation for a Connect4 game.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   This class represents the complete state of a Connect4 game, including:
-       - Board representation (6x7 grid)
-       - Current player's turn
-       - Game status and winner
-       - Move history
-       - Position analysis for both players
 
-   The board is represented as a 6x7 grid of cells, where each cell can be:
-       - None: Empty cell
-       - "red": Red player's piece
-       - "yellow": Yellow player's piece
+            State representation for a Connect4 game.
 
-   .. attribute:: board
+            This class represents the complete state of a Connect4 game, including:
+                - Board representation (6x7 grid)
+                - Current player's turn
+                - Game status and winner
+                - Move history
+                - Position analysis for both players
 
-      6x7 board representation (rows x columns)
+            The board is represented as a 6x7 grid of cells, where each cell can be:
+                - None: Empty cell
+                - "red": Red player's piece
+                - "yellow": Yellow player's piece
 
-      :type: list[list[str | None]]
+            .. attribute:: board
 
-   .. attribute:: turn
+               6x7 board representation (rows x columns)
 
-      Current player's turn
+               :type: list[list[str | None]]
 
-      :type: Literal["red", "yellow"]
+            .. attribute:: turn
 
-   .. attribute:: game_status
+               Current player's turn
 
-      Game status
+               :type: Literal["red", "yellow"]
 
-      :type: Literal["ongoing", "red_win", "yellow_win", "draw"]
+            .. attribute:: game_status
 
-   .. attribute:: move_history
+               Game status
 
-      History of moves made in the game
+               :type: Literal["ongoing", "red_win", "yellow_win", "draw"]
 
-      :type: list[Connect4Move]
+            .. attribute:: move_history
 
-   .. attribute:: red_analysis
+               History of moves made in the game
 
-      Analysis history for the red player
+               :type: list[Connect4Move]
 
-      :type: list[dict]
+            .. attribute:: red_analysis
 
-   .. attribute:: yellow_analysis
+               Analysis history for the red player
 
-      Analysis history for the yellow player
+               :type: list[dict]
 
-      :type: list[dict]
+            .. attribute:: yellow_analysis
 
-   .. attribute:: winner
+               Analysis history for the yellow player
 
-      Winner of the game, if any
+               :type: list[dict]
 
-      :type: Optional[str]
+            .. attribute:: winner
 
-   .. attribute:: error_message
+               Winner of the game, if any
 
-      Error message from the last operation
+               :type: Optional[str]
 
-      :type: Optional[str]
+            .. attribute:: error_message
 
-   .. rubric:: Examples
+               Error message from the last operation
 
-   >>> state = Connect4State.initialize()
-   >>> state.turn
-   'red'
-   >>> state.is_column_full(3)
-   False
+               :type: Optional[str]
 
+            .. rubric:: Examples
 
-   .. autolink-examples:: Connect4State
-      :collapse:
+            >>> state = Connect4State.initialize()
+            >>> state.turn
+            'red'
+            >>> state.is_column_full(3)
+            False
 
-   .. py:method:: get_next_row(column: int) -> int | None
+            Create a new model by parsing and validating input data from keyword arguments.
 
-      Get the next available row in a column.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Returns the row index where a piece would land if dropped in the
-      specified column, or None if the column is full.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      :param column: Column index (0-6)
 
-      :returns: Row index for the next piece, or None if column is full
-      :rtype: Optional[int]
+            .. py:method:: get_next_row(column: int) -> int | None
 
-      .. rubric:: Example
+               Get the next available row in a column.
 
-      >>> state = Connect4State.initialize()
-      >>> state.get_next_row(3)
-      5  # Bottom row (gravity effect)
+               Returns the row index where a piece would land if dropped in the
+               specified column, or None if the column is full.
 
+               :param column: Column index (0-6)
 
-      .. autolink-examples:: get_next_row
-         :collapse:
+               :returns: Row index for the next piece, or None if column is full
+               :rtype: Optional[int]
 
+               .. rubric:: Example
 
-   .. py:method:: initialize()
-      :classmethod:
+               >>> state = Connect4State.initialize()
+               >>> state.get_next_row(3)
+               5  # Bottom row (gravity effect)
 
 
-      Initialize a new Connect4 game.
 
-      Creates a new Connect4 game state with an empty board,
-      red player starting, and game status set to ongoing.
+            .. py:method:: initialize()
+               :classmethod:
 
-      :returns: A new game state
-      :rtype: Connect4State
 
-      .. rubric:: Example
+               Initialize a new Connect4 game.
 
-      >>> state = Connect4State.initialize()
-      >>> state.turn
-      'red'
-      >>> state.game_status
-      'ongoing'
+               Creates a new Connect4 game state with an empty board,
+               red player starting, and game status set to ongoing.
 
+               :returns: A new game state
+               :rtype: Connect4State
 
-      .. autolink-examples:: initialize
-         :collapse:
+               .. rubric:: Example
 
+               >>> state = Connect4State.initialize()
+               >>> state.turn
+               'red'
+               >>> state.game_status
+               'ongoing'
 
-   .. py:method:: is_column_full(column: int) -> bool
 
-      Check if a column is full.
 
-      :param column: Column index to check (0-6)
+            .. py:method:: is_column_full(column: int) -> bool
 
-      :returns: True if the column is full, False otherwise
-      :rtype: bool
+               Check if a column is full.
 
-      .. rubric:: Example
+               :param column: Column index to check (0-6)
 
-      >>> state = Connect4State.initialize()
-      >>> state.is_column_full(3)
-      False
+               :returns: True if the column is full, False otherwise
+               :rtype: bool
 
+               .. rubric:: Example
 
-      .. autolink-examples:: is_column_full
-         :collapse:
+               >>> state = Connect4State.initialize()
+               >>> state.is_column_full(3)
+               False
 
 
-   .. py:method:: validate_board_dimensions(board)
-      :classmethod:
 
+            .. py:method:: validate_board_dimensions(board)
+               :classmethod:
 
-      Validate board dimensions are 6x7.
 
-      :param board: Board to validate
+               Validate board dimensions are 6x7.
 
-      :returns: Validated board
-      :rtype: list[list[str | None]]
+               :param board: Board to validate
 
-      :raises ValueError: If board dimensions are invalid
+               :returns: Validated board
+               :rtype: list[list[str | None]]
 
+               :raises ValueError: If board dimensions are invalid
 
-      .. autolink-examples:: validate_board_dimensions
-         :collapse:
 
 
-   .. py:attribute:: board
-      :type:  list[list[str | None]]
-      :value: None
+            .. py:attribute:: board
+               :type:  list[list[str | None]]
+               :value: None
 
 
 
-   .. py:property:: board_string
-      :type: str
+            .. py:property:: board_string
+               :type: str
 
 
-      Get a string representation of the board.
+               Get a string representation of the board.
 
-      Returns a formatted string representation of the current board state,
-      with column and row indices, cell contents, and borders.
+               Returns a formatted string representation of the current board state,
+               with column and row indices, cell contents, and borders.
 
-      :returns: String representation of the board
-      :rtype: str
+               :returns: String representation of the board
+               :rtype: str
 
-      .. rubric:: Example
+               .. rubric:: Example
 
-      >>> state = Connect4State.initialize()
-      >>> # state.board_string displays:
-        0 1 2 3 4 5 6
-        -------------
-      0| | | | | | | |
-      1| | | | | | | |
-      2| | | | | | | |
-      3| | | | | | | |
-      4| | | | | | | |
-      5| | | | | | | |
-        -------------
-        0 1 2 3 4 5 6
+               >>> state = Connect4State.initialize()
+               >>> # state.board_string displays:
+                 0 1 2 3 4 5 6
+                 -------------
+               0| | | | | | | |
+               1| | | | | | | |
+               2| | | | | | | |
+               3| | | | | | | |
+               4| | | | | | | |
+               5| | | | | | | |
+                 -------------
+                 0 1 2 3 4 5 6
 
-      .. autolink-examples:: board_string
-         :collapse:
 
+            .. py:attribute:: error_message
+               :type:  str | None
+               :value: None
 
-   .. py:attribute:: error_message
-      :type:  str | None
-      :value: None
 
 
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'red_win', 'yellow_win', 'draw']
+               :value: None
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'red_win', 'yellow_win', 'draw']
-      :value: None
 
 
+            .. py:attribute:: move_history
+               :type:  list[haive.games.connect4.models.Connect4Move]
+               :value: None
 
-   .. py:attribute:: move_history
-      :type:  list[haive.games.connect4.models.Connect4Move]
-      :value: None
 
 
+            .. py:attribute:: red_analysis
+               :type:  list[dict]
+               :value: None
 
-   .. py:attribute:: red_analysis
-      :type:  list[dict]
-      :value: None
 
 
+            .. py:attribute:: turn
+               :type:  Literal['red', 'yellow']
+               :value: None
 
-   .. py:attribute:: turn
-      :type:  Literal['red', 'yellow']
-      :value: None
 
 
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
 
 
+            .. py:attribute:: yellow_analysis
+               :type:  list[dict]
+               :value: None
 
-   .. py:attribute:: yellow_analysis
-      :type:  list[dict]
-      :value: None
 
 
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.connect4.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

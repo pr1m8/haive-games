@@ -3,6 +3,18 @@ games.mancala.state
 
 .. py:module:: games.mancala.state
 
+State for the Mancala game.
+
+This module defines the state for the Mancala game, which includes the board, turn, game
+status, move history, free turn, winner, and player analyses.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    State for the Mancala game.
@@ -11,286 +23,291 @@ games.mancala.state
    status, move history, free turn, winner, and player analyses.
 
 
-   .. autolink-examples:: games.mancala.state
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mancala.state.logger
+      games.mancala.state.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mancala.state.MancalaState
+      games.mancala.state.MancalaState
 
+            
 
-Functions
----------
+.. admonition:: Functions (1)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mancala.state.extract_analysis_from_message
+      games.mancala.state.extract_analysis_from_message
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: MancalaState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: MancalaState(/, **data: Any)
 
-   State for a Mancala game.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   This class defines the structure of the Mancala game state,
-   which includes the board, turn, game status, move history,
-   free turn, winner, and player analyses.
 
-   .. attribute:: board
+            State for a Mancala game.
 
-      List of 14 integers representing the game board.
+            This class defines the structure of the Mancala game state,
+            which includes the board, turn, game status, move history,
+            free turn, winner, and player analyses.
 
-   .. attribute:: turn
+            .. attribute:: board
 
-      The current player's turn.
+               List of 14 integers representing the game board.
 
-   .. attribute:: game_status
+            .. attribute:: turn
 
-      The status of the game.
+               The current player's turn.
 
-   .. attribute:: move_history
+            .. attribute:: game_status
 
-      List of moves made in the game.
+               The status of the game.
 
-   .. attribute:: free_turn
+            .. attribute:: move_history
 
-      Whether the current player gets a free turn.
+               List of moves made in the game.
 
-   .. attribute:: winner
+            .. attribute:: free_turn
 
-      The winner of the game, if any.
+               Whether the current player gets a free turn.
 
-   .. attribute:: player1_analysis
+            .. attribute:: winner
 
-      Analysis data for player 1.
+               The winner of the game, if any.
 
-   .. attribute:: player2_analysis
+            .. attribute:: player1_analysis
 
-      Analysis data for player 2.
+               Analysis data for player 1.
 
+            .. attribute:: player2_analysis
 
-   .. autolink-examples:: MancalaState
-      :collapse:
+               Analysis data for player 2.
 
-   .. py:method:: _convert_analysis_list(analyses: list[Any], player: str) -> list[dict[str, Any]]
-      :classmethod:
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Convert a list of analysis objects to proper format.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      :param analyses: List of analysis objects to convert.
-      :param player: Player name for logging.
 
-      :returns: List of converted analysis dictionaries.
+            .. py:method:: _convert_analysis_list(analyses: list[Any], player: str) -> list[dict[str, Any]]
+               :classmethod:
 
 
-      .. autolink-examples:: _convert_analysis_list
-         :collapse:
+               Convert a list of analysis objects to proper format.
 
+               :param analyses: List of analysis objects to convert.
+               :param player: Player name for logging.
 
-   .. py:method:: _create_initial_board(stones_per_pit: int) -> list[int]
-      :classmethod:
+               :returns: List of converted analysis dictionaries.
 
 
-      Create the initial board configuration.
 
-      :param stones_per_pit: Number of stones per pit.
+            .. py:method:: _create_initial_board(stones_per_pit: int) -> list[int]
+               :classmethod:
 
-      :returns: Initial board configuration.
 
+               Create the initial board configuration.
 
-      .. autolink-examples:: _create_initial_board
-         :collapse:
+               :param stones_per_pit: Number of stones per pit.
 
+               :returns: Initial board configuration.
 
-   .. py:method:: determine_winner() -> Literal['player1', 'player2', 'draw']
 
-      Determine the winner of the game.
 
-      :returns: The winner of the game or 'draw' if tied.
+            .. py:method:: determine_winner() -> Literal['player1', 'player2', 'draw']
 
+               Determine the winner of the game.
 
-      .. autolink-examples:: determine_winner
-         :collapse:
+               :returns: The winner of the game or 'draw' if tied.
 
 
-   .. py:method:: display_board() -> str
 
-      Display the board in a human-readable format.
+            .. py:method:: display_board() -> str
 
-      :returns: A string representation of the current board state.
+               Display the board in a human-readable format.
 
+               :returns: A string representation of the current board state.
 
-      .. autolink-examples:: display_board
-         :collapse:
 
 
-   .. py:method:: get_scores() -> dict[str, int]
+            .. py:method:: get_scores() -> dict[str, int]
 
-      Get the current scores for both players.
+               Get the current scores for both players.
 
-      :returns: Dictionary with player1 and player2 scores.
+               :returns: Dictionary with player1 and player2 scores.
 
 
-      .. autolink-examples:: get_scores
-         :collapse:
 
+            .. py:method:: get_valid_moves(player: Literal['player1', 'player2']) -> list[int]
 
-   .. py:method:: get_valid_moves(player: Literal['player1', 'player2']) -> list[int]
+               Get valid moves for the specified player.
 
-      Get valid moves for the specified player.
+               :param player: The player to get valid moves for.
 
-      :param player: The player to get valid moves for.
+               :returns: List of valid pit indices the player can choose from.
 
-      :returns: List of valid pit indices the player can choose from.
 
 
-      .. autolink-examples:: get_valid_moves
-         :collapse:
+            .. py:method:: handle_analysis_data(data: Any) -> Any
+               :classmethod:
 
 
-   .. py:method:: handle_analysis_data(data: Any) -> Any
-      :classmethod:
+               Handle conversion of analysis data to proper types.
 
 
-      Handle conversion of analysis data to proper types.
 
+            .. py:method:: handle_initialization_data(data: Any) -> Any
+               :classmethod:
 
-      .. autolink-examples:: handle_analysis_data
-         :collapse:
 
+               Handle special initialization patterns from the framework.
 
-   .. py:method:: handle_initialization_data(data: Any) -> Any
-      :classmethod:
 
 
-      Handle special initialization patterns from the framework.
+            .. py:method:: initialize(**kwargs) -> MancalaState
+               :classmethod:
 
 
-      .. autolink-examples:: handle_initialization_data
-         :collapse:
+               Initialize the Mancala game state.
 
+               :param \*\*kwargs: Optional parameters including stones_per_pit.
 
-   .. py:method:: initialize(**kwargs) -> MancalaState
-      :classmethod:
+               :returns: A fully initialized Mancala game state.
+               :rtype: MancalaState
 
 
-      Initialize the Mancala game state.
 
-      :param \*\*kwargs: Optional parameters including stones_per_pit.
+            .. py:method:: is_game_over() -> bool
 
-      :returns: A fully initialized Mancala game state.
-      :rtype: MancalaState
+               Check if the game is over.
 
+               :returns: True if the game is over, False otherwise.
 
-      .. autolink-examples:: initialize
-         :collapse:
 
 
-   .. py:method:: is_game_over() -> bool
+            .. py:method:: validate_board(v: list[int]) -> list[int]
+               :classmethod:
 
-      Check if the game is over.
 
-      :returns: True if the game is over, False otherwise.
+               Validate that the board has exactly 14 positions.
 
+               :param v: The board to validate.
 
-      .. autolink-examples:: is_game_over
-         :collapse:
+               :returns: The validated board.
 
+               :raises ValueError: If board doesn't have exactly 14 positions.
 
-   .. py:method:: validate_board(v: list[int]) -> list[int]
-      :classmethod:
 
 
-      Validate that the board has exactly 14 positions.
+            .. py:attribute:: board
+               :type:  list[int]
+               :value: None
 
-      :param v: The board to validate.
 
-      :returns: The validated board.
 
-      :raises ValueError: If board doesn't have exactly 14 positions.
+            .. py:attribute:: free_turn
+               :type:  bool
+               :value: None
 
 
-      .. autolink-examples:: validate_board
-         :collapse:
 
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'ended']
+               :value: None
 
-   .. py:attribute:: board
-      :type:  list[int]
-      :value: None
 
 
+            .. py:attribute:: move_history
+               :type:  list[haive.games.mancala.models.MancalaMove]
+               :value: None
 
-   .. py:attribute:: free_turn
-      :type:  bool
-      :value: None
 
 
+            .. py:attribute:: player1_analyses
+               :type:  list[haive.games.mancala.models.MancalaAnalysis]
+               :value: None
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'ended']
-      :value: None
 
 
+            .. py:attribute:: player2_analyses
+               :type:  list[haive.games.mancala.models.MancalaAnalysis]
+               :value: None
 
-   .. py:attribute:: move_history
-      :type:  list[haive.games.mancala.models.MancalaMove]
-      :value: None
 
 
+            .. py:attribute:: turn
+               :type:  Literal['player1', 'player2']
+               :value: None
 
-   .. py:attribute:: player1_analyses
-      :type:  list[haive.games.mancala.models.MancalaAnalysis]
-      :value: None
 
 
+            .. py:attribute:: winner
+               :type:  Literal['player1', 'player2', 'draw', None]
+               :value: None
 
-   .. py:attribute:: player2_analyses
-      :type:  list[haive.games.mancala.models.MancalaAnalysis]
-      :value: None
 
 
 
-   .. py:attribute:: turn
-      :type:  Literal['player1', 'player2']
-      :value: None
-
-
-
-   .. py:attribute:: winner
-      :type:  Literal['player1', 'player2', 'draw', None]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: extract_analysis_from_message(analysis: Any) -> dict[str, Any] | None
 
-   Extract analysis data from an AIMessage object.
+            Extract analysis data from an AIMessage object.
 
-   :param analysis: The analysis object to extract from.
+            :param analysis: The analysis object to extract from.
 
-   :returns: Extracted analysis data or None if extraction fails.
+            :returns: Extracted analysis data or None if extraction fails.
 
 
-   .. autolink-examples:: extract_analysis_from_message
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.mancala.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

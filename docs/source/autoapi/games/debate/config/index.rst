@@ -3,6 +3,69 @@ games.debate.config
 
 .. py:module:: games.debate.config
 
+Configuration classes for debate agent setup and customization.
+
+This module provides comprehensive configuration options for debate agents,
+including format-specific presets, role assignments, timing controls, and
+engine configurations. The configuration system supports various debate
+formats from formal parliamentary debates to trial simulations.
+
+The configuration classes use Pydantic for validation and provide factory
+methods for common debate formats including standard debates, presidential
+debates, trial formats, and panel discussions.
+
+.. rubric:: Examples
+
+Creating a standard debate configuration:
+
+.. code-block:: python
+
+    config = DebateAgentConfig.default()
+    agent = DebateAgent(config)
+
+Creating a custom trial simulation::
+
+    config = DebateAgentConfig.trial()
+    config.time_limit = 600  # 10 minutes per phase
+    config.participant_roles["witness_1"] = "witness"
+    agent = DebateAgent(config)
+
+Creating a presidential debate format::
+
+    config = DebateAgentConfig.presidential()
+    config.allow_interruptions = True
+    config.moderator_role = "moderator"
+    agent = DebateAgent(config)
+
+Creating a custom configuration::
+
+    config = DebateAgentConfig(
+        name="custom_debate",
+        debate_format="oxford",
+        time_limit=300,
+        max_statements=5,
+        allow_interruptions=False,
+        voting_enabled=True,
+        participant_roles={
+            "pro_1": "pro", "pro_2": "pro",
+            "con_1": "con", "con_2": "con",
+            "moderator": "moderator"
+        }
+    )
+
+.. note::
+
+   All configuration classes inherit from AgentConfig and include automatic
+   engine setup through the build_debate_engines factory function.
+   Custom engine configurations can be provided to override defaults.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Configuration classes for debate agent setup and customization.
@@ -18,7 +81,9 @@ games.debate.config
 
    .. rubric:: Examples
 
-   Creating a standard debate configuration::
+   Creating a standard debate configuration:
+
+   .. code-block:: python
 
        config = DebateAgentConfig.default()
        agent = DebateAgent(config)
@@ -60,297 +125,305 @@ games.debate.config
       Custom engine configurations can be provided to override defaults.
 
 
-   .. autolink-examples:: games.debate.config
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.debate.config.DebateAgentConfig
+      games.debate.config.DebateAgentConfig
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: DebateAgentConfig
 
-   Bases: :py:obj:`haive.core.engine.agent.agent.AgentConfig`
+            Bases: :py:obj:`haive.core.engine.agent.agent.AgentConfig`
 
 
-   Comprehensive configuration for debate agents with format-specific settings.
+            Comprehensive configuration for debate agents with format-specific settings.
 
-   This configuration class provides extensive customization options for debate
-   agents, supporting various debate formats, role assignments, timing controls,
-   and engine configurations. It includes validation for debate-specific parameters
-   and provides factory methods for common debate formats.
+            This configuration class provides extensive customization options for debate
+            agents, supporting various debate formats, role assignments, timing controls,
+            and engine configurations. It includes validation for debate-specific parameters
+            and provides factory methods for common debate formats.
 
-   The configuration system supports:
-   - Multiple debate formats (standard, parliamentary, oxford, trial, presidential)
-   - Flexible role assignment system for participants
-   - Timing controls and statement limits
-   - Interruption and voting settings
-   - Custom engine configurations for different participant roles
+            The configuration system supports:
+            - Multiple debate formats (standard, parliamentary, oxford, trial, presidential)
+            - Flexible role assignment system for participants
+            - Timing controls and statement limits
+            - Interruption and voting settings
+            - Custom engine configurations for different participant roles
 
-   .. attribute:: debate_format
+            .. attribute:: debate_format
 
-      Format type determining debate structure and rules.
-      Supported formats: "standard", "parliamentary", "oxford", "trial",
-      "presidential", "panel", "lincoln_douglas".
+               Format type determining debate structure and rules.
+               Supported formats: "standard", "parliamentary", "oxford", "trial",
+               "presidential", "panel", "lincoln_douglas".
 
-      :type: str
+               :type: str
 
-   .. attribute:: time_limit
+            .. attribute:: time_limit
 
-      Maximum time in seconds per debate phase.
-      None means no time limit. Typical values: 60-600 seconds.
+               Maximum time in seconds per debate phase.
+               None means no time limit. Typical values: 60-600 seconds.
 
-      :type: Optional[int]
+               :type: Optional[int]
 
-   .. attribute:: max_statements
+            .. attribute:: max_statements
 
-      Maximum statements per participant per phase.
-      None means unlimited statements. Typical values: 1-5 statements.
+               Maximum statements per participant per phase.
+               None means unlimited statements. Typical values: 1-5 statements.
 
-      :type: Optional[int]
+               :type: Optional[int]
 
-   .. attribute:: allow_interruptions
+            .. attribute:: allow_interruptions
 
-      Whether participants can interrupt each other
-      during their statements. Common in presidential and panel formats.
+               Whether participants can interrupt each other
+               during their statements. Common in presidential and panel formats.
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: voting_enabled
+            .. attribute:: voting_enabled
 
-      Whether to include a voting phase at debate end.
-      Typically enabled for competitive debates, disabled for discussions.
+               Whether to include a voting phase at debate end.
+               Typically enabled for competitive debates, disabled for discussions.
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: moderator_role
+            .. attribute:: moderator_role
 
-      Specific role identifier for the moderator.
-      None means no dedicated moderator. Common value: "moderator".
+               Specific role identifier for the moderator.
+               None means no dedicated moderator. Common value: "moderator".
 
-      :type: Optional[str]
+               :type: Optional[str]
 
-   .. attribute:: participant_roles
+            .. attribute:: participant_roles
 
-      Mapping of participant IDs to their roles.
-      Keys are participant identifiers, values are role names like "pro",
-      "con", "judge", "moderator", "prosecutor", "defense", "witness".
+               Mapping of participant IDs to their roles.
+               Keys are participant identifiers, values are role names like "pro",
+               "con", "judge", "moderator", "prosecutor", "defense", "witness".
 
-      :type: Dict[str, str]
+               :type: Dict[str, str]
 
-   .. attribute:: state_schema
+            .. attribute:: state_schema
 
-      Pydantic model class for debate state.
-      Defaults to DebateState but can be customized for specific formats.
+               Pydantic model class for debate state.
+               Defaults to DebateState but can be customized for specific formats.
 
-      :type: Type[BaseModel]
+               :type: Type[BaseModel]
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      Engine configurations for different roles.
-      Automatically built by build_debate_engines but can be customized.
+               Engine configurations for different roles.
+               Automatically built by build_debate_engines but can be customized.
 
-      :type: Dict[str, AugLLMConfig]
+               :type: Dict[str, AugLLMConfig]
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   Basic debate configuration::
+            Basic debate configuration:
 
-       config = DebateAgentConfig(
-           name="climate_debate",
-           debate_format="oxford",
-           time_limit=300,
-           max_statements=3,
-           participant_roles={
-               "scientist": "pro",
-               "economist": "con",
-               "moderator": "moderator"
-           }
-       )
+            .. code-block:: python
 
-   Trial simulation configuration::
+                config = DebateAgentConfig(
+                    name="climate_debate",
+                    debate_format="oxford",
+                    time_limit=300,
+                    max_statements=3,
+                    participant_roles={
+                        "scientist": "pro",
+                        "economist": "con",
+                        "moderator": "moderator"
+                    }
+                )
 
-       config = DebateAgentConfig(
-           name="murder_trial",
-           debate_format="trial",
-           time_limit=600,
-           allow_interruptions=False,
-           participant_roles={
-               "prosecutor": "prosecutor",
-               "defense_attorney": "defense",
-               "judge": "judge",
-               "witness_1": "witness",
-               "witness_2": "witness"
-           }
-       )
+            Trial simulation configuration::
 
-   Parliamentary debate configuration::
+                config = DebateAgentConfig(
+                    name="murder_trial",
+                    debate_format="trial",
+                    time_limit=600,
+                    allow_interruptions=False,
+                    participant_roles={
+                        "prosecutor": "prosecutor",
+                        "defense_attorney": "defense",
+                        "judge": "judge",
+                        "witness_1": "witness",
+                        "witness_2": "witness"
+                    }
+                )
 
-       config = DebateAgentConfig(
-           name="parliament_session",
-           debate_format="parliamentary",
-           time_limit=180,
-           allow_interruptions=True,
-           voting_enabled=True,
-           participant_roles={
-               "pm": "government",
-               "deputy_pm": "government",
-               "leader_opposition": "opposition",
-               "deputy_opposition": "opposition",
-               "speaker": "moderator"
-           }
-       )
+            Parliamentary debate configuration::
 
-   .. note::
+                config = DebateAgentConfig(
+                    name="parliament_session",
+                    debate_format="parliamentary",
+                    time_limit=180,
+                    allow_interruptions=True,
+                    voting_enabled=True,
+                    participant_roles={
+                        "pm": "government",
+                        "deputy_pm": "government",
+                        "leader_opposition": "opposition",
+                        "deputy_opposition": "opposition",
+                        "speaker": "moderator"
+                    }
+                )
 
-      The configuration automatically sets up appropriate engines for each role
-      using the build_debate_engines factory. Custom engines can be provided
-      to override defaults for specific use cases or to add specialized capabilities.
+            .. note::
 
+               The configuration automatically sets up appropriate engines for each role
+               using the build_debate_engines factory. Custom engines can be provided
+               to override defaults for specific use cases or to add specialized capabilities.
 
-   .. autolink-examples:: DebateAgentConfig
-      :collapse:
 
-   .. py:method:: default()
-      :classmethod:
+            .. py:method:: default()
+               :classmethod:
 
 
-      Create a default configuration for standard debate.
+               Create a default configuration for standard debate.
 
 
-      .. autolink-examples:: default
-         :collapse:
 
+            .. py:method:: panel_discussion()
+               :classmethod:
 
-   .. py:method:: panel_discussion()
-      :classmethod:
 
+               Create a configuration for a panel discussion.
 
-      Create a configuration for a panel discussion.
 
 
-      .. autolink-examples:: panel_discussion
-         :collapse:
+            .. py:method:: presidential()
+               :classmethod:
 
 
-   .. py:method:: presidential()
-      :classmethod:
+               Create a configuration for presidential debate.
 
 
-      Create a configuration for presidential debate.
 
+            .. py:method:: trial()
+               :classmethod:
 
-      .. autolink-examples:: presidential
-         :collapse:
 
+               Create a configuration for a trial format.
 
-   .. py:method:: trial()
-      :classmethod:
 
 
-      Create a configuration for a trial format.
+            .. py:method:: validate_debate_format(v: str) -> str
+               :classmethod:
 
 
-      .. autolink-examples:: trial
-         :collapse:
+               Validate debate format is supported.
 
+               :param v: Debate format to validate.
+               :type v: str
 
-   .. py:method:: validate_debate_format(v: str) -> str
-      :classmethod:
+               :returns: Validated format string.
+               :rtype: str
 
+               :raises ValueError: If format is not supported.
 
-      Validate debate format is supported.
 
-      :param v: Debate format to validate.
-      :type v: str
 
-      :returns: Validated format string.
-      :rtype: str
+            .. py:method:: validate_participant_roles(v: dict[str, str]) -> dict[str, str]
+               :classmethod:
 
-      :raises ValueError: If format is not supported.
 
+               Validate participant role assignments.
 
-      .. autolink-examples:: validate_debate_format
-         :collapse:
+               :param v: Role assignments to validate.
+               :type v: Dict[str, str]
 
+               :returns: Validated role assignments.
+               :rtype: Dict[str, str]
 
-   .. py:method:: validate_participant_roles(v: dict[str, str]) -> dict[str, str]
-      :classmethod:
+               :raises ValueError: If role assignments are invalid.
 
 
-      Validate participant role assignments.
 
-      :param v: Role assignments to validate.
-      :type v: Dict[str, str]
+            .. py:attribute:: allow_interruptions
+               :type:  bool
+               :value: None
 
-      :returns: Validated role assignments.
-      :rtype: Dict[str, str]
 
-      :raises ValueError: If role assignments are invalid.
 
+            .. py:attribute:: debate_format
+               :type:  str
+               :value: None
 
-      .. autolink-examples:: validate_participant_roles
-         :collapse:
 
 
-   .. py:attribute:: allow_interruptions
-      :type:  bool
-      :value: None
+            .. py:attribute:: engines
+               :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+               :value: None
 
 
 
-   .. py:attribute:: debate_format
-      :type:  str
-      :value: None
+            .. py:attribute:: max_statements
+               :type:  int | None
+               :value: None
 
 
 
-   .. py:attribute:: engines
-      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
-      :value: None
+            .. py:attribute:: moderator_role
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: max_statements
-      :type:  int | None
-      :value: None
+            .. py:attribute:: participant_roles
+               :type:  dict[str, str]
+               :value: None
 
 
 
-   .. py:attribute:: moderator_role
-      :type:  str | None
-      :value: None
+            .. py:attribute:: state_schema
+               :type:  type[pydantic.BaseModel]
+               :value: None
 
 
 
-   .. py:attribute:: participant_roles
-      :type:  dict[str, str]
-      :value: None
+            .. py:attribute:: time_limit
+               :type:  int | None
+               :value: None
 
 
 
-   .. py:attribute:: state_schema
-      :type:  type[pydantic.BaseModel]
-      :value: None
+            .. py:attribute:: voting_enabled
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: time_limit
-      :type:  int | None
-      :value: None
 
 
 
-   .. py:attribute:: voting_enabled
-      :type:  bool
-      :value: None
+----
 
+.. admonition:: Quick Reference
+   :class: tip
 
+   .. code-block:: python
+
+      from games.debate.config import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

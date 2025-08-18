@@ -22,6 +22,8 @@ class FoxAndGeesePlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for FoxAndGeese game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="fox", player2="geese")
 
 
@@ -97,6 +99,8 @@ class FoxAndGeeseEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating FoxAndGeese game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = FoxAndGeesePlayerIdentifiers()
         prompt_generator = FoxAndGeesePromptGenerator()
         super().__init__(identifiers, prompt_generator)

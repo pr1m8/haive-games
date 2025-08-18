@@ -16,11 +16,27 @@ class HandRank(BaseModel, Generic[TCard]):
     secondary_cards: list[TCard] = Field(default_factory=list)
 
     def __lt__(self, other: "HandRank") -> bool:
+        """  Lt  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, HandRank):
             return NotImplemented
         return self.rank_value < other.rank_value
 
     def __eq__(self, other: "HandRank") -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, HandRank):
             return NotImplemented
         return self.rank_value == other.rank_value

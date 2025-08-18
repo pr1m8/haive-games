@@ -11,7 +11,7 @@ including:
 The models use Pydantic for validation and serialization, ensuring type safety
 and consistent data structures throughout the game.
 
-Example:
+Examples:
     >>> from poker.models import Card, Suit, CardValue
     >>>
     >>> # Create a card
@@ -174,7 +174,7 @@ class Card(BaseModel):
         suit (Suit): Card's suit
         value (CardValue): Card's value
 
-    Example:
+    Examples:
         >>> card = Card(suit=Suit.HEARTS, value=CardValue.ACE)
         >>> print(card)  # Shows "Ace of hearts"
         >>> print(card.numeric_value)  # Shows 14
@@ -213,7 +213,7 @@ class Hand(BaseModel):
     Attributes:
         cards (List[Card]): List of cards in the hand
 
-    Example:
+    Examples:
         >>> hand = Hand(cards=[
         ...     Card(suit=Suit.HEARTS, value=CardValue.ACE),
         ...     Card(suit=Suit.HEARTS, value=CardValue.KING)
@@ -249,7 +249,7 @@ class Player(BaseModel):
         total_bet (int): Total amount bet in current hand
         position (int): Position at table (0 = dealer)
 
-    Example:
+    Examples:
         >>> player = Player(
         ...     id="p1",
         ...     name="Alice",
@@ -298,7 +298,7 @@ class ActionRecord(BaseModel):
         amount (int): Chips bet/raised, if applicable
         phase (GamePhase): Game phase when action occurred
 
-    Example:
+    Examples:
         >>> record = ActionRecord(
         ...     player_id="p1",
         ...     action=PlayerAction.RAISE,
@@ -331,7 +331,7 @@ class HandRanking(BaseModel):
         high_cards (List[CardValue]): Cards used for tiebreaking
         description (str): Human-readable hand description
 
-    Example:
+    Examples:
         >>> ranking = HandRanking(
         ...     player_id="p1",
         ...     rank=HandRank.FLUSH,
@@ -360,7 +360,7 @@ class Pot(BaseModel):
         amount (int): Total chips in the pot
         eligible_players (List[str]): IDs of players who can win
 
-    Example:
+    Examples:
         >>> pot = Pot(
         ...     amount=500,
         ...     eligible_players=["p1", "p2", "p3"]
@@ -400,7 +400,7 @@ class PokerGameState(BaseModel):
         winners (List[str]): IDs of hand winners
         round_complete (bool): Whether betting round is finished
 
-    Example:
+    Examples:
         >>> state = PokerGameState(
         ...     players=[Player(id="p1", name="Alice")],
         ...     small_blind=5,
@@ -483,7 +483,7 @@ class PlayerObservation(BaseModel):
         is_active (bool): Whether player is in hand
         is_current_player (bool): Whether it's player's turn
 
-    Example:
+    Examples:
         >>> obs = PlayerObservation(
         ...     player_id="p1",
         ...     hand=Hand(cards=[ace_of_spades, king_of_hearts]),
@@ -529,7 +529,7 @@ class AgentDecision(BaseModel):
         amount (int): Bet/raise amount if applicable
         reasoning (str): Explanation of decision
 
-    Example:
+    Examples:
         >>> decision = AgentDecision(
         ...     action=PlayerAction.RAISE,
         ...     amount=100,
@@ -562,7 +562,7 @@ class AgentDecisionSchema(BaseModel):
         amount (int): Chips to bet/raise
         reasoning (str): Explanation of decision
 
-    Example:
+    Examples:
         >>> schema = AgentDecisionSchema(
         ...     action=PlayerAction.CALL,
         ...     amount=50,
@@ -598,7 +598,7 @@ class GameResult(BaseModel):
         hand_rankings (Dict[str, HandRanking]): Final hand evaluations
         total_hands_played (int): Number of hands completed
 
-    Example:
+    Examples:
         >>> result = GameResult(
         ...     winners=["p1"],
         ...     final_chips={"p1": 2000, "p2": 0},

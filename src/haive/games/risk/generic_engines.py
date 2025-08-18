@@ -22,6 +22,8 @@ class RiskPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Risk game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -97,6 +99,8 @@ class RiskEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Risk game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = RiskPlayerIdentifiers()
         prompt_generator = RiskPromptGenerator()
         super().__init__(identifiers, prompt_generator)

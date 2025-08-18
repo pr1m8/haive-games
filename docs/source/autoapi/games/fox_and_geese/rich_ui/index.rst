@@ -3,6 +3,18 @@ games.fox_and_geese.rich_ui
 
 .. py:module:: games.fox_and_geese.rich_ui
 
+Enhanced Rich UI module for Fox and Geese game visualization.
+
+This module provides an enhanced rich console UI for visualizing the Fox and Geese game,
+with better styling, animated piece movements, and improved game information display.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Enhanced Rich UI module for Fox and Geese game visualization.
@@ -11,327 +23,301 @@ games.fox_and_geese.rich_ui
    with better styling, animated piece movements, and improved game information display.
 
 
-   .. autolink-examples:: games.fox_and_geese.rich_ui
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.rich_ui.logger
+      games.fox_and_geese.rich_ui.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.rich_ui.FoxAndGeeseRichUI
+      games.fox_and_geese.rich_ui.FoxAndGeeseRichUI
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: FoxAndGeeseRichUI(console: rich.console.Console | None = None)
 
-   Enhanced Rich UI for Fox and Geese game visualization.
+            Enhanced Rich UI for Fox and Geese game visualization.
 
-   This class provides a visually appealing terminal UI for Fox and Geese games,
-   with styled components, animations, and comprehensive game information.
+            This class provides a visually appealing terminal UI for Fox and Geese games,
+            with styled components, animations, and comprehensive game information.
 
-   Features:
-       - Beautiful game board visualization with colored squares
-       - Animated piece movements for fox and geese
-       - Detailed game statistics and turn information
-       - Move history tracking with visual indicators
-       - Analysis visualization for both fox and geese strategies
-       - Thinking animations and move highlights
+            Features:
+                - Beautiful game board visualization with colored squares
+                - Animated piece movements for fox and geese
+                - Detailed game statistics and turn information
+                - Move history tracking with visual indicators
+                - Analysis visualization for both fox and geese strategies
+                - Thinking animations and move highlights
 
-   .. attribute:: console
+            .. attribute:: console
 
-      Rich console for output
+               Rich console for output
 
-      :type: Console
+               :type: Console
 
-   .. attribute:: colors
+            .. attribute:: colors
 
-      Color schemes for different UI elements
+               Color schemes for different UI elements
 
-      :type: dict
+               :type: dict
 
-   Initialize the UI.
+            Initialize the UI.
 
-   :param console: Optional Rich console instance
+            :param console: Optional Rich console instance
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _get_square_symbol(row: int, col: int) -> str
 
+               Get the symbol for a board square based on its position.
 
-   .. autolink-examples:: FoxAndGeeseRichUI
-      :collapse:
+               In Fox and Geese, pieces can move on any square but we use a checkered pattern
+               to make the board more visually appealing.
 
-   .. py:method:: _get_square_symbol(row: int, col: int) -> str
+               :param row: Row index
+               :param col: Column index
 
-      Get the symbol for a board square based on its position.
+               :returns: Symbol for the square
 
-      In Fox and Geese, pieces can move on any square but we use a checkered pattern
-      to make the board more visually appealing.
 
-      :param row: Row index
-      :param col: Column index
 
-      :returns: Symbol for the square
+            .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
 
+               Check if a dict contains the required fields for FoxAndGeeseState.
 
-      .. autolink-examples:: _get_square_symbol
-         :collapse:
+               :param data: Dictionary to check
 
+               :returns: True if the dict appears to be a valid game state
 
-   .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
 
-      Check if a dict contains the required fields for FoxAndGeeseState.
 
-      :param data: Dictionary to check
+            .. py:method:: animate_move(state_before: haive.games.fox_and_geese.state.FoxAndGeeseState, state_after: haive.games.fox_and_geese.state.FoxAndGeeseState, delay: float = 0.5) -> None
 
-      :returns: True if the dict appears to be a valid game state
+               Animate a move being made.
 
+               Shows a smooth transition between the before and after states with
+               visual indicators of what changed.
 
-      .. autolink-examples:: _is_valid_game_state_dict
-         :collapse:
+               :param state_before: Game state before the move
+               :param state_after: State after the move
+               :param delay: Delay in seconds for the animation
 
+               :returns: None
 
-   .. py:method:: animate_move(state_before: haive.games.fox_and_geese.state.FoxAndGeeseState, state_after: haive.games.fox_and_geese.state.FoxAndGeeseState, delay: float = 0.5) -> None
 
-      Animate a move being made.
 
-      Shows a smooth transition between the before and after states with
-      visual indicators of what changed.
+            .. py:method:: create_analysis_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
-      :param state_before: Game state before the move
-      :param state_after: State after the move
-      :param delay: Delay in seconds for the animation
+               Create an enhanced panel showing the latest analysis.
 
-      :returns: None
+               :param game_state: Current game state
 
+               :returns: Rich panel with detailed analysis
 
-      .. autolink-examples:: animate_move
-         :collapse:
 
 
-   .. py:method:: create_analysis_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
+            .. py:method:: create_board_table(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None) -> rich.table.Table
 
-      Create an enhanced panel showing the latest analysis.
+               Create an enhanced visual representation of the board.
 
-      :param game_state: Current game state
+               :param game_state: Current game state
+               :param highlight_positions: Optional positions to highlight (for showing moves)
+               :param capture_position: Optional position to highlight as a capture
 
-      :returns: Rich panel with detailed analysis
+               :returns: Rich table representing the board
 
 
-      .. autolink-examples:: create_analysis_panel
-         :collapse:
 
+            .. py:method:: create_game_info_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
-   .. py:method:: create_board_table(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None) -> rich.table.Table
+               Create an enhanced panel with game information.
 
-      Create an enhanced visual representation of the board.
+               :param game_state: Current game state
 
-      :param game_state: Current game state
-      :param highlight_positions: Optional positions to highlight (for showing moves)
-      :param capture_position: Optional position to highlight as a capture
+               :returns: Rich panel with detailed game info
 
-      :returns: Rich table representing the board
 
 
-      .. autolink-examples:: create_board_table
-         :collapse:
+            .. py:method:: create_layout(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> rich.layout.Layout
 
+               Create the enhanced complete rich UI layout.
 
-   .. py:method:: create_game_info_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
+               :param game_state: Current game state
+               :param highlight_positions: Optional positions to highlight
+               :param capture_position: Optional position being captured
+               :param legal_moves: Optional list of legal moves
 
-      Create an enhanced panel with game information.
+               :returns: Complete rich layout
 
-      :param game_state: Current game state
 
-      :returns: Rich panel with detailed game info
 
+            .. py:method:: create_legal_moves_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> rich.panel.Panel
 
-      .. autolink-examples:: create_game_info_panel
-         :collapse:
+               Create a panel showing legal moves for the current player.
 
+               :param game_state: Current game state
+               :param legal_moves: Optional list of legal moves
 
-   .. py:method:: create_layout(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> rich.layout.Layout
+               :returns: Rich panel with legal moves info
 
-      Create the enhanced complete rich UI layout.
 
-      :param game_state: Current game state
-      :param highlight_positions: Optional positions to highlight
-      :param capture_position: Optional position being captured
-      :param legal_moves: Optional list of legal moves
 
-      :returns: Complete rich layout
+            .. py:method:: create_move_history_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
 
+               Create an enhanced panel showing move history.
 
-      .. autolink-examples:: create_layout
-         :collapse:
+               :param game_state: Current game state
 
+               :returns: Rich panel with detailed move history
 
-   .. py:method:: create_legal_moves_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> rich.panel.Panel
 
-      Create a panel showing legal moves for the current player.
 
-      :param game_state: Current game state
-      :param legal_moves: Optional list of legal moves
+            .. py:method:: display_final_results(final_state: Any) -> None
 
-      :returns: Rich panel with legal moves info
+               Display enhanced final game results.
 
+               :param final_state: Final game state
 
-      .. autolink-examples:: create_legal_moves_panel
-         :collapse:
 
 
-   .. py:method:: create_move_history_panel(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> rich.panel.Panel
+            .. py:method:: display_game_with_animation(state_sequence: list[haive.games.fox_and_geese.state.FoxAndGeeseState], delay: float = 1.0) -> None
 
-      Create an enhanced panel showing move history.
+               Display a sequence of game states with smooth transitions.
 
-      :param game_state: Current game state
+               This is useful for replaying a game or showing a sequence of moves with
+               visual transitions between states.
 
-      :returns: Rich panel with detailed move history
+               :param state_sequence: List of game states in sequence
+               :param delay: Delay in seconds between states
 
+               :returns: None
 
-      .. autolink-examples:: create_move_history_panel
-         :collapse:
 
 
-   .. py:method:: display_final_results(final_state: Any) -> None
+            .. py:method:: display_state(state_data: Any, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> bool
 
-      Display enhanced final game results.
+               Display the game state using enhanced rich UI.
 
-      :param final_state: Final game state
+               :param state_data: State data in various formats
+               :param highlight_positions: Optional positions to highlight
+               :param capture_position: Optional position being captured
+               :param legal_moves: Optional list of legal moves
 
+               :returns: True if display was successful, False otherwise
 
-      .. autolink-examples:: display_final_results
-         :collapse:
 
 
-   .. py:method:: display_game_with_animation(state_sequence: list[haive.games.fox_and_geese.state.FoxAndGeeseState], delay: float = 1.0) -> None
+            .. py:method:: display_welcome() -> None
 
-      Display a sequence of game states with smooth transitions.
+               Display welcome message.
 
-      This is useful for replaying a game or showing a sequence of moves with
-      visual transitions between states.
 
-      :param state_sequence: List of game states in sequence
-      :param delay: Delay in seconds between states
 
-      :returns: None
+            .. py:method:: extract_game_state(state_data: Any) -> haive.games.fox_and_geese.state.FoxAndGeeseState | None
 
+               Extract FoxAndGeeseState from various input formats.
 
-      .. autolink-examples:: display_game_with_animation
-         :collapse:
+               :param state_data: State data in various formats
 
+               :returns: FoxAndGeeseState instance or None if extraction fails
 
-   .. py:method:: display_state(state_data: Any, highlight_positions: set[haive.games.fox_and_geese.models.FoxAndGeesePosition] | None = None, capture_position: haive.games.fox_and_geese.models.FoxAndGeesePosition | None = None, legal_moves: list[haive.games.fox_and_geese.models.FoxAndGeeseMove] | None = None) -> bool
 
-      Display the game state using enhanced rich UI.
 
-      :param state_data: State data in various formats
-      :param highlight_positions: Optional positions to highlight
-      :param capture_position: Optional position being captured
-      :param legal_moves: Optional list of legal moves
+            .. py:method:: run_fox_and_geese_game(agent, delay: float = 1.0) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-      :returns: True if display was successful, False otherwise
+               Run a complete Fox and Geese game with UI visualization.
 
+               This method handles the entire game flow, including initialization,
+               move animation, and final results display.
 
-      .. autolink-examples:: display_state
-         :collapse:
+               :param agent: The game agent that manages the game logic
+               :param delay: Delay in seconds between game states
 
+               :returns: Final game state
 
-   .. py:method:: display_welcome() -> None
 
-      Display welcome message.
 
+            .. py:method:: show_move(move: haive.games.fox_and_geese.models.FoxAndGeeseMove, state_before: haive.games.fox_and_geese.state.FoxAndGeeseState, state_after: haive.games.fox_and_geese.state.FoxAndGeeseState) -> None
 
-      .. autolink-examples:: display_welcome
-         :collapse:
+               Display an animated move being made.
 
+               Shows the move with highlighting of the relevant positions.
 
-   .. py:method:: extract_game_state(state_data: Any) -> haive.games.fox_and_geese.state.FoxAndGeeseState | None
+               :param move: The move being made
+               :param state_before: State before the move
+               :param state_after: State after the move
 
-      Extract FoxAndGeeseState from various input formats.
+               :returns: None
 
-      :param state_data: State data in various formats
 
-      :returns: FoxAndGeeseState instance or None if extraction fails
 
+            .. py:method:: show_thinking(player: str, message: str = 'Thinking...') -> None
 
-      .. autolink-examples:: extract_game_state
-         :collapse:
+               Display a thinking animation for the current player.
 
+               Shows a spinner animation with player-colored text to indicate
+               that the player is thinking about their move.
 
-   .. py:method:: run_fox_and_geese_game(agent, delay: float = 1.0) -> haive.games.fox_and_geese.state.FoxAndGeeseState
+               :param player: Current player ("fox" or "geese")
+               :type player: str
+               :param message: Custom message to display. Defaults to "Thinking...".
+               :type message: str, optional
 
-      Run a complete Fox and Geese game with UI visualization.
+               :returns: None
 
-      This method handles the entire game flow, including initialization,
-      move animation, and final results display.
 
-      :param agent: The game agent that manages the game logic
-      :param delay: Delay in seconds between game states
 
-      :returns: Final game state
+            .. py:attribute:: board_symbols
 
 
-      .. autolink-examples:: run_fox_and_geese_game
-         :collapse:
+            .. py:attribute:: colors
 
 
-   .. py:method:: show_move(move: haive.games.fox_and_geese.models.FoxAndGeeseMove, state_before: haive.games.fox_and_geese.state.FoxAndGeeseState, state_after: haive.games.fox_and_geese.state.FoxAndGeeseState) -> None
+            .. py:attribute:: console
 
-      Display an animated move being made.
 
-      Shows the move with highlighting of the relevant positions.
 
-      :param move: The move being made
-      :param state_before: State before the move
-      :param state_after: State after the move
-
-      :returns: None
-
-
-      .. autolink-examples:: show_move
-         :collapse:
-
-
-   .. py:method:: show_thinking(player: str, message: str = 'Thinking...') -> None
-
-      Display a thinking animation for the current player.
-
-      Shows a spinner animation with player-colored text to indicate
-      that the player is thinking about their move.
-
-      :param player: Current player ("fox" or "geese")
-      :type player: str
-      :param message: Custom message to display. Defaults to "Thinking...".
-      :type message: str, optional
-
-      :returns: None
-
-
-      .. autolink-examples:: show_thinking
-         :collapse:
-
-
-   .. py:attribute:: board_symbols
-
-
-   .. py:attribute:: colors
-
-
-   .. py:attribute:: console
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.fox_and_geese.rich_ui import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

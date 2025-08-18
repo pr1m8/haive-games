@@ -3,6 +3,29 @@ games.framework.multi_player.models
 
 .. py:module:: games.framework.multi_player.models
 
+Models for multi-player game framework.
+
+This module provides common enumerations and base models used across
+multi-player games. These models serve as building blocks for creating
+game-specific implementations.
+
+.. rubric:: Example
+
+>>> from haive.agents.agent_games.framework.multi_player.models import GamePhase
+>>>
+>>> # Use game phases in your game state
+>>> current_phase = GamePhase.SETUP
+>>> if current_phase == GamePhase.MAIN:
+...     # Handle main game phase
+...     pass
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Models for multi-player game framework.
@@ -22,92 +45,112 @@ games.framework.multi_player.models
    ...     pass
 
 
-   .. autolink-examples:: games.framework.multi_player.models
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.framework.multi_player.models.GamePhase
+      games.framework.multi_player.models.GamePhase
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GamePhase
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Common game phases that many games share.
+            Common game phases that many games share.
 
-   This enumeration defines standard game phases that are common across
-   different types of games. Games can extend or modify these phases
-   based on their specific needs.
+            This enumeration defines standard game phases that are common across
+            different types of games. Games can extend or modify these phases
+            based on their specific needs.
 
-   .. attribute:: SETUP
+            .. attribute:: SETUP
 
-      Initial game setup phase for player assignments, etc.
+               Initial game setup phase for player assignments, etc.
 
-      :type: str
+               :type: str
 
-   .. attribute:: MAIN
+            .. attribute:: MAIN
 
-      Main gameplay phase where core game actions occur.
+               Main gameplay phase where core game actions occur.
 
-      :type: str
+               :type: str
 
-   .. attribute:: SCORING
+            .. attribute:: SCORING
 
-      Phase for calculating and updating scores.
+               Phase for calculating and updating scores.
 
-      :type: str
+               :type: str
 
-   .. attribute:: END
+            .. attribute:: END
 
-      Game conclusion phase for final state updates.
+               Game conclusion phase for final state updates.
 
-      :type: str
+               :type: str
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> phase = GamePhase.SETUP
-   >>> if phase == GamePhase.MAIN:
-   ...     # Handle main game phase
-   ...     pass
-   >>> # Check if game is over
-   >>> is_game_over = phase == GamePhase.END
+            >>> phase = GamePhase.SETUP
+            >>> if phase == GamePhase.MAIN:
+            ...     # Handle main game phase
+            ...     pass
+            >>> # Check if game is over
+            >>> is_game_over = phase == GamePhase.END
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GamePhase
-      :collapse:
-
-   .. py:attribute:: END
-      :value: 'end'
+            .. py:attribute:: END
+               :value: 'end'
 
 
 
-   .. py:attribute:: MAIN
-      :value: 'main'
+            .. py:attribute:: MAIN
+               :value: 'main'
 
 
 
-   .. py:attribute:: SCORING
-      :value: 'scoring'
+            .. py:attribute:: SCORING
+               :value: 'scoring'
 
 
 
-   .. py:attribute:: SETUP
-      :value: 'setup'
+            .. py:attribute:: SETUP
+               :value: 'setup'
 
 
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.framework.multi_player.models import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

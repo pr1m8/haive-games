@@ -3,6 +3,34 @@ games.poker.models
 
 .. py:module:: games.poker.models
 
+Core data models for the Poker game implementation.
+
+This module defines the fundamental data structures and models used in the poker game,
+including:
+    - Card suits and values
+    - Hand rankings and game phases
+    - Player actions and states
+    - Game state tracking
+    - Decision models for LLM output
+
+The models use Pydantic for validation and serialization, ensuring type safety
+and consistent data structures throughout the game.
+
+.. rubric:: Example
+
+>>> from poker.models import Card, Suit, CardValue
+>>>
+>>> # Create a card
+>>> ace_of_spades = Card(suit=Suit.SPADES, value=CardValue.ACE)
+>>> print(ace_of_spades)  # Shows "Ace of spades"
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">16 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Core data models for the Poker game implementation.
@@ -27,1722 +55,1691 @@ games.poker.models
    >>> print(ace_of_spades)  # Shows "Ace of spades"
 
 
-   .. autolink-examples:: games.poker.models
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (16)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.poker.models.ActionRecord
-   games.poker.models.AgentDecision
-   games.poker.models.AgentDecisionSchema
-   games.poker.models.Card
-   games.poker.models.CardValue
-   games.poker.models.GamePhase
-   games.poker.models.GameResult
-   games.poker.models.Hand
-   games.poker.models.HandRank
-   games.poker.models.HandRanking
-   games.poker.models.Player
-   games.poker.models.PlayerAction
-   games.poker.models.PlayerObservation
-   games.poker.models.PokerGameState
-   games.poker.models.Pot
-   games.poker.models.Suit
+      games.poker.models.ActionRecord
+      games.poker.models.AgentDecision
+      games.poker.models.AgentDecisionSchema
+      games.poker.models.Card
+      games.poker.models.CardValue
+      games.poker.models.GamePhase
+      games.poker.models.GameResult
+      games.poker.models.Hand
+      games.poker.models.HandRank
+      games.poker.models.HandRanking
+      games.poker.models.Player
+      games.poker.models.PlayerAction
+      games.poker.models.PlayerObservation
+      games.poker.models.PokerGameState
+      games.poker.models.Pot
+      games.poker.models.Suit
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: ActionRecord(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Record of a player's action.
+            Record of a player's action.
 
-   Tracks a single action taken by a player during the game,
-   including the type of action, amount (if any), and game phase.
+            Tracks a single action taken by a player during the game,
+            including the type of action, amount (if any), and game phase.
 
-   .. attribute:: player_id
+            .. attribute:: player_id
 
-      ID of player who took action
+               ID of player who took action
 
-      :type: str
+               :type: str
 
-   .. attribute:: action
+            .. attribute:: action
 
-      Type of action taken
+               Type of action taken
 
-      :type: PlayerAction
+               :type: PlayerAction
 
-   .. attribute:: amount
+            .. attribute:: amount
 
-      Chips bet/raised, if applicable
+               Chips bet/raised, if applicable
 
-      :type: int
+               :type: int
 
-   .. attribute:: phase
+            .. attribute:: phase
 
-      Game phase when action occurred
+               Game phase when action occurred
 
-      :type: GamePhase
+               :type: GamePhase
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> record = ActionRecord(
-   ...     player_id="p1",
-   ...     action=PlayerAction.RAISE,
-   ...     amount=100,
-   ...     phase=GamePhase.FLOP
-   ... )
+            >>> record = ActionRecord(
+            ...     player_id="p1",
+            ...     action=PlayerAction.RAISE,
+            ...     amount=100,
+            ...     phase=GamePhase.FLOP
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: ActionRecord
-      :collapse:
-
-   .. py:attribute:: action
-      :type:  PlayerAction
-      :value: None
+            .. py:attribute:: action
+               :type:  PlayerAction
+               :value: None
 
 
 
-   .. py:attribute:: amount
-      :type:  int
-      :value: None
+            .. py:attribute:: amount
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: phase
-      :type:  GamePhase
-      :value: None
+            .. py:attribute:: phase
+               :type:  GamePhase
+               :value: None
 
 
 
-   .. py:attribute:: player_id
-      :type:  str
-      :value: None
+            .. py:attribute:: player_id
+               :type:  str
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: AgentDecision(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Agent's decision in the game.
+            Agent's decision in the game.
 
-   Represents a decision made by an AI agent, including the action,
-   bet amount (if any), and reasoning behind the decision.
+            Represents a decision made by an AI agent, including the action,
+            bet amount (if any), and reasoning behind the decision.
 
-   .. attribute:: action
+            .. attribute:: action
 
-      Chosen action
+               Chosen action
 
-      :type: PlayerAction
+               :type: PlayerAction
 
-   .. attribute:: amount
+            .. attribute:: amount
 
-      Bet/raise amount if applicable
+               Bet/raise amount if applicable
 
-      :type: int
+               :type: int
 
-   .. attribute:: reasoning
+            .. attribute:: reasoning
 
-      Explanation of decision
+               Explanation of decision
 
-      :type: str
+               :type: str
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> decision = AgentDecision(
-   ...     action=PlayerAction.RAISE,
-   ...     amount=100,
-   ...     reasoning="Strong hand, building pot"
-   ... )
-   >>> print(decision)  # Shows decision details
+            >>> decision = AgentDecision(
+            ...     action=PlayerAction.RAISE,
+            ...     amount=100,
+            ...     reasoning="Strong hand, building pot"
+            ... )
+            >>> print(decision)  # Shows decision details
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: AgentDecision
-      :collapse:
+            .. py:method:: __str__()
 
-   .. py:method:: __str__()
-
-      String representation of the decision.
-
-
-      .. autolink-examples:: __str__
-         :collapse:
-
-
-   .. py:attribute:: action
-      :type:  PlayerAction
-      :value: None
+               String representation of the decision.
 
 
 
-   .. py:attribute:: amount
-      :type:  int
-      :value: None
+            .. py:attribute:: action
+               :type:  PlayerAction
+               :value: None
 
 
 
-   .. py:attribute:: reasoning
-      :type:  str
-      :value: None
+            .. py:attribute:: amount
+               :type:  int
+               :value: None
 
 
+
+            .. py:attribute:: reasoning
+               :type:  str
+               :value: None
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: AgentDecisionSchema(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Schema for LLM decision output.
+            Schema for LLM decision output.
 
-   Defines the expected structure for decisions generated by the language
-   model, ensuring consistent and valid output format.
+            Defines the expected structure for decisions generated by the language
+            model, ensuring consistent and valid output format.
 
-   .. attribute:: action
+            .. attribute:: action
 
-      Type of action to take
+               Type of action to take
 
-      :type: PlayerAction
+               :type: PlayerAction
 
-   .. attribute:: amount
+            .. attribute:: amount
 
-      Chips to bet/raise
+               Chips to bet/raise
 
-      :type: int
+               :type: int
 
-   .. attribute:: reasoning
+            .. attribute:: reasoning
 
-      Explanation of decision
+               Explanation of decision
 
-      :type: str
+               :type: str
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> schema = AgentDecisionSchema(
-   ...     action=PlayerAction.CALL,
-   ...     amount=50,
-   ...     reasoning="Good pot odds with drawing hand"
-   ... )
+            >>> schema = AgentDecisionSchema(
+            ...     action=PlayerAction.CALL,
+            ...     amount=50,
+            ...     reasoning="Good pot odds with drawing hand"
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: AgentDecisionSchema
-      :collapse:
+            .. py:class:: Config
 
-   .. py:class:: Config
-
-      .. py:attribute:: json_schema_extra
+               .. py:attribute:: json_schema_extra
 
 
 
-   .. py:attribute:: action
-      :type:  PlayerAction
-      :value: None
+            .. py:attribute:: action
+               :type:  PlayerAction
+               :value: None
 
 
 
-   .. py:attribute:: amount
-      :type:  int
-      :value: None
+            .. py:attribute:: amount
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: reasoning
-      :type:  str
-      :value: None
+            .. py:attribute:: reasoning
+               :type:  str
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Card(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Playing card model.
+            Playing card model.
 
-   Represents a standard playing card with suit and value.
-   Provides methods for numeric value comparison.
+            Represents a standard playing card with suit and value.
+            Provides methods for numeric value comparison.
 
-   .. attribute:: suit
+            .. attribute:: suit
 
-      Card's suit
+               Card's suit
 
-      :type: Suit
+               :type: Suit
 
-   .. attribute:: value
+            .. attribute:: value
 
-      Card's value
+               Card's value
 
-      :type: CardValue
+               :type: CardValue
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> card = Card(suit=Suit.HEARTS, value=CardValue.ACE)
-   >>> print(card)  # Shows "Ace of hearts"
-   >>> print(card.numeric_value)  # Shows 14
+            >>> card = Card(suit=Suit.HEARTS, value=CardValue.ACE)
+            >>> print(card)  # Shows "Ace of hearts"
+            >>> print(card.numeric_value)  # Shows 14
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: Card
-      :collapse:
+            .. py:method:: __str__() -> str
 
-   .. py:method:: __str__() -> str
-
-      String representation of the card.
-
-
-      .. autolink-examples:: __str__
-         :collapse:
-
-
-   .. py:property:: numeric_value
-      :type: int
-
-
-      Get numeric value of card (2-14, with Ace being 14).
-
-      .. autolink-examples:: numeric_value
-         :collapse:
-
-
-   .. py:property:: numeric_value_low
-      :type: int
-
-
-      Get numeric value treating Ace as 1.
-
-      Used for A-2-3-4-5 straight calculations.
-
-      .. autolink-examples:: numeric_value_low
-         :collapse:
-
-
-   .. py:attribute:: suit
-      :type:  Suit
-      :value: None
+               String representation of the card.
 
 
 
-   .. py:attribute:: value
-      :type:  CardValue
-      :value: None
+            .. py:property:: numeric_value
+               :type: int
 
 
+               Get numeric value of card (2-14, with Ace being 14).
+
+
+            .. py:property:: numeric_value_low
+               :type: int
+
+
+               Get numeric value treating Ace as 1.
+
+               Used for A-2-3-4-5 straight calculations.
+
+
+            .. py:attribute:: suit
+               :type:  Suit
+               :value: None
+
+
+
+            .. py:attribute:: value
+               :type:  CardValue
+               :value: None
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: CardValue
 
-   Bases: :py:obj:`int`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`int`, :py:obj:`enum.Enum`
 
 
-   Card value enumeration.
+            Card value enumeration.
 
-   Represents standard playing card values from 2 to Ace. Inherits from int.Enum
-   for numeric comparison (e.g., King > Queen). Ace is highest by default (14)
-   but can be treated as 1 in certain contexts (e.g., A-2-3-4-5 straight).
+            Represents standard playing card values from 2 to Ace. Inherits from int.Enum
+            for numeric comparison (e.g., King > Queen). Ace is highest by default (14)
+            but can be treated as 1 in certain contexts (e.g., A-2-3-4-5 straight).
 
-   .. attribute:: TWO
+            .. attribute:: TWO
 
-      Value 2
+               Value 2
 
-      :type: int
+               :type: int
 
-   .. attribute:: THREE
+            .. attribute:: THREE
 
-      Value 3
+               Value 3
 
-      :type: int
+               :type: int
 
-   .. attribute:: ...
+            .. attribute:: ...
 
-      
+               
 
-   .. attribute:: KING
+            .. attribute:: KING
 
-      Value 13
+               Value 13
 
-      :type: int
+               :type: int
 
-   .. attribute:: ACE
+            .. attribute:: ACE
 
-      Value 14 (or 1 in some contexts)
+               Value 14 (or 1 in some contexts)
 
-      :type: int
+               :type: int
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: CardValue
-      :collapse:
-
-   .. py:attribute:: ACE
-      :value: 14
+            .. py:attribute:: ACE
+               :value: 14
 
 
 
-   .. py:attribute:: EIGHT
-      :value: 8
+            .. py:attribute:: EIGHT
+               :value: 8
 
 
 
-   .. py:attribute:: FIVE
-      :value: 5
+            .. py:attribute:: FIVE
+               :value: 5
 
 
 
-   .. py:attribute:: FOUR
-      :value: 4
+            .. py:attribute:: FOUR
+               :value: 4
 
 
 
-   .. py:attribute:: JACK
-      :value: 11
+            .. py:attribute:: JACK
+               :value: 11
 
 
 
-   .. py:attribute:: KING
-      :value: 13
+            .. py:attribute:: KING
+               :value: 13
 
 
 
-   .. py:attribute:: NINE
-      :value: 9
+            .. py:attribute:: NINE
+               :value: 9
 
 
 
-   .. py:attribute:: QUEEN
-      :value: 12
+            .. py:attribute:: QUEEN
+               :value: 12
 
 
 
-   .. py:attribute:: SEVEN
-      :value: 7
+            .. py:attribute:: SEVEN
+               :value: 7
 
 
 
-   .. py:attribute:: SIX
-      :value: 6
+            .. py:attribute:: SIX
+               :value: 6
 
 
 
-   .. py:attribute:: TEN
-      :value: 10
+            .. py:attribute:: TEN
+               :value: 10
 
 
 
-   .. py:attribute:: THREE
-      :value: 3
+            .. py:attribute:: THREE
+               :value: 3
 
 
 
-   .. py:attribute:: TWO
-      :value: 2
+            .. py:attribute:: TWO
+               :value: 2
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GamePhase
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Poker game phase enumeration.
+            Poker game phase enumeration.
 
-   Represents the different phases of a Texas Hold'em poker game.
-   Inherits from str.Enum for easy serialization and comparison.
+            Represents the different phases of a Texas Hold'em poker game.
+            Inherits from str.Enum for easy serialization and comparison.
 
-   .. attribute:: SETUP
+            .. attribute:: SETUP
 
-      Initial game setup
+               Initial game setup
 
-      :type: str
+               :type: str
 
-   .. attribute:: PREFLOP
+            .. attribute:: PREFLOP
 
-      Before community cards
+               Before community cards
 
-      :type: str
+               :type: str
 
-   .. attribute:: FLOP
+            .. attribute:: FLOP
 
-      First three community cards
+               First three community cards
 
-      :type: str
+               :type: str
 
-   .. attribute:: TURN
+            .. attribute:: TURN
 
-      Fourth community card
+               Fourth community card
 
-      :type: str
+               :type: str
 
-   .. attribute:: RIVER
+            .. attribute:: RIVER
 
-      Fifth community card
+               Fifth community card
 
-      :type: str
+               :type: str
 
-   .. attribute:: SHOWDOWN
+            .. attribute:: SHOWDOWN
 
-      Hand comparison
+               Hand comparison
 
-      :type: str
+               :type: str
 
-   .. attribute:: GAME_OVER
+            .. attribute:: GAME_OVER
 
-      Game completed
+               Game completed
 
-      :type: str
+               :type: str
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GamePhase
-      :collapse:
-
-   .. py:attribute:: FLOP
-      :value: 'flop'
+            .. py:attribute:: FLOP
+               :value: 'flop'
 
 
 
-   .. py:attribute:: GAME_OVER
-      :value: 'game_over'
+            .. py:attribute:: GAME_OVER
+               :value: 'game_over'
 
 
 
-   .. py:attribute:: PREFLOP
-      :value: 'preflop'
+            .. py:attribute:: PREFLOP
+               :value: 'preflop'
 
 
 
-   .. py:attribute:: RIVER
-      :value: 'river'
+            .. py:attribute:: RIVER
+               :value: 'river'
 
 
 
-   .. py:attribute:: SETUP
-      :value: 'setup'
+            .. py:attribute:: SETUP
+               :value: 'setup'
 
 
 
-   .. py:attribute:: SHOWDOWN
-      :value: 'showdown'
+            .. py:attribute:: SHOWDOWN
+               :value: 'showdown'
 
 
 
-   .. py:attribute:: TURN
-      :value: 'turn'
+            .. py:attribute:: TURN
+               :value: 'turn'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameResult(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Poker game result record.
+            Poker game result record.
 
-   Stores the final outcome of a completed game, including winners,
-   chip counts, and hand rankings.
+            Stores the final outcome of a completed game, including winners,
+            chip counts, and hand rankings.
 
-   .. attribute:: winners
+            .. attribute:: winners
 
-      IDs of winning players
+               IDs of winning players
 
-      :type: List[str]
+               :type: List[str]
 
-   .. attribute:: final_chips
+            .. attribute:: final_chips
 
-      Final chip counts by player
+               Final chip counts by player
 
-      :type: Dict[str, int]
+               :type: Dict[str, int]
 
-   .. attribute:: hand_rankings
+            .. attribute:: hand_rankings
 
-      Final hand evaluations
+               Final hand evaluations
 
-      :type: Dict[str, HandRanking]
+               :type: Dict[str, HandRanking]
 
-   .. attribute:: total_hands_played
+            .. attribute:: total_hands_played
 
-      Number of hands completed
+               Number of hands completed
 
-      :type: int
+               :type: int
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> result = GameResult(
-   ...     winners=["p1"],
-   ...     final_chips={"p1": 2000, "p2": 0},
-   ...     hand_rankings={"p1": ace_high_flush},
-   ...     total_hands_played=1
-   ... )
+            >>> result = GameResult(
+            ...     winners=["p1"],
+            ...     final_chips={"p1": 2000, "p2": 0},
+            ...     hand_rankings={"p1": ace_high_flush},
+            ...     total_hands_played=1
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: GameResult
-      :collapse:
-
-   .. py:attribute:: final_chips
-      :type:  dict[str, int]
-      :value: None
+            .. py:attribute:: final_chips
+               :type:  dict[str, int]
+               :value: None
 
 
 
-   .. py:attribute:: hand_rankings
-      :type:  dict[str, HandRanking]
-      :value: None
+            .. py:attribute:: hand_rankings
+               :type:  dict[str, HandRanking]
+               :value: None
 
 
 
-   .. py:attribute:: total_hands_played
-      :type:  int
-      :value: None
+            .. py:attribute:: total_hands_played
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: winners
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: winners
+               :type:  list[str]
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Hand(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Playing hand model.
+            Playing hand model.
 
-   Represents a collection of cards held by a player or on the board.
-   Limited to 7 cards maximum (2 hole cards + 5 community cards).
+            Represents a collection of cards held by a player or on the board.
+            Limited to 7 cards maximum (2 hole cards + 5 community cards).
 
-   .. attribute:: cards
+            .. attribute:: cards
 
-      List of cards in the hand
+               List of cards in the hand
 
-      :type: List[Card]
+               :type: List[Card]
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> hand = Hand(cards=[
-   ...     Card(suit=Suit.HEARTS, value=CardValue.ACE),
-   ...     Card(suit=Suit.HEARTS, value=CardValue.KING)
-   ... ])
-   >>> print(hand)  # Shows "Ace of hearts, King of hearts"
+            >>> hand = Hand(cards=[
+            ...     Card(suit=Suit.HEARTS, value=CardValue.ACE),
+            ...     Card(suit=Suit.HEARTS, value=CardValue.KING)
+            ... ])
+            >>> print(hand)  # Shows "Ace of hearts, King of hearts"
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: Hand
-      :collapse:
+            .. py:method:: __str__() -> str
 
-   .. py:method:: __str__() -> str
-
-      String representation of the hand.
+               String representation of the hand.
 
 
-      .. autolink-examples:: __str__
-         :collapse:
+
+            .. py:attribute:: cards
+               :type:  list[Card]
+               :value: None
 
 
-   .. py:attribute:: cards
-      :type:  list[Card]
-      :value: None
 
 
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HandRank
 
-   Bases: :py:obj:`int`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`int`, :py:obj:`enum.Enum`
 
 
-   Poker hand ranking enumeration.
+            Poker hand ranking enumeration.
 
-   Represents the standard poker hand rankings from high card to royal flush.
-   Inherits from int.Enum for easy comparison of hand strengths.
+            Represents the standard poker hand rankings from high card to royal flush.
+            Inherits from int.Enum for easy comparison of hand strengths.
 
-   .. attribute:: HIGH_CARD
+            .. attribute:: HIGH_CARD
 
-      Highest card in hand
+               Highest card in hand
 
-      :type: int
+               :type: int
 
-   .. attribute:: PAIR
+            .. attribute:: PAIR
 
-      Two cards of same value
+               Two cards of same value
 
-      :type: int
+               :type: int
 
-   .. attribute:: TWO_PAIR
+            .. attribute:: TWO_PAIR
 
-      Two different pairs
+               Two different pairs
 
-      :type: int
+               :type: int
 
-   .. attribute:: THREE_OF_A_KIND
+            .. attribute:: THREE_OF_A_KIND
 
-      Three cards of same value
+               Three cards of same value
 
-      :type: int
+               :type: int
 
-   .. attribute:: STRAIGHT
+            .. attribute:: STRAIGHT
 
-      Five sequential cards
+               Five sequential cards
 
-      :type: int
+               :type: int
 
-   .. attribute:: FLUSH
+            .. attribute:: FLUSH
 
-      Five cards of same suit
+               Five cards of same suit
 
-      :type: int
+               :type: int
 
-   .. attribute:: FULL_HOUSE
+            .. attribute:: FULL_HOUSE
 
-      Three of a kind plus a pair
+               Three of a kind plus a pair
 
-      :type: int
+               :type: int
 
-   .. attribute:: FOUR_OF_A_KIND
+            .. attribute:: FOUR_OF_A_KIND
 
-      Four cards of same value
+               Four cards of same value
 
-      :type: int
+               :type: int
 
-   .. attribute:: STRAIGHT_FLUSH
+            .. attribute:: STRAIGHT_FLUSH
 
-      Sequential cards of same suit
+               Sequential cards of same suit
 
-      :type: int
+               :type: int
 
-   .. attribute:: ROYAL_FLUSH
+            .. attribute:: ROYAL_FLUSH
 
-      A-K-Q-J-10 of same suit
+               A-K-Q-J-10 of same suit
 
-      :type: int
+               :type: int
 
-   Initialize self.  See help(type(self)) for accurate signature.
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:attribute:: FLUSH
+               :value: 5
 
 
-   .. autolink-examples:: HandRank
-      :collapse:
 
-   .. py:attribute:: FLUSH
-      :value: 5
+            .. py:attribute:: FOUR_OF_A_KIND
+               :value: 7
 
 
 
-   .. py:attribute:: FOUR_OF_A_KIND
-      :value: 7
+            .. py:attribute:: FULL_HOUSE
+               :value: 6
 
 
 
-   .. py:attribute:: FULL_HOUSE
-      :value: 6
+            .. py:attribute:: HIGH_CARD
+               :value: 0
 
 
 
-   .. py:attribute:: HIGH_CARD
-      :value: 0
+            .. py:attribute:: PAIR
+               :value: 1
 
 
 
-   .. py:attribute:: PAIR
-      :value: 1
+            .. py:attribute:: ROYAL_FLUSH
+               :value: 9
 
 
 
-   .. py:attribute:: ROYAL_FLUSH
-      :value: 9
+            .. py:attribute:: STRAIGHT
+               :value: 4
 
 
 
-   .. py:attribute:: STRAIGHT
-      :value: 4
+            .. py:attribute:: STRAIGHT_FLUSH
+               :value: 8
 
 
 
-   .. py:attribute:: STRAIGHT_FLUSH
-      :value: 8
+            .. py:attribute:: THREE_OF_A_KIND
+               :value: 3
 
 
 
-   .. py:attribute:: THREE_OF_A_KIND
-      :value: 3
+            .. py:attribute:: TWO_PAIR
+               :value: 2
 
 
 
-   .. py:attribute:: TWO_PAIR
-      :value: 2
 
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HandRanking(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Poker hand ranking result.
+            Poker hand ranking result.
 
-   Represents the evaluation of a player's best possible hand,
-   including rank, high cards for tiebreakers, and description.
+            Represents the evaluation of a player's best possible hand,
+            including rank, high cards for tiebreakers, and description.
 
-   .. attribute:: player_id
+            .. attribute:: player_id
 
-      ID of player whose hand was ranked
+               ID of player whose hand was ranked
 
-      :type: str
+               :type: str
 
-   .. attribute:: rank
+            .. attribute:: rank
 
-      Type of hand (pair, flush, etc.)
+               Type of hand (pair, flush, etc.)
 
-      :type: HandRank
+               :type: HandRank
 
-   .. attribute:: high_cards
+            .. attribute:: high_cards
 
-      Cards used for tiebreaking
+               Cards used for tiebreaking
 
-      :type: List[CardValue]
+               :type: List[CardValue]
 
-   .. attribute:: description
+            .. attribute:: description
 
-      Human-readable hand description
+               Human-readable hand description
 
-      :type: str
+               :type: str
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> ranking = HandRanking(
-   ...     player_id="p1",
-   ...     rank=HandRank.FLUSH,
-   ...     high_cards=[CardValue.ACE, CardValue.KING],
-   ...     description="Ace-high flush"
-   ... )
+            >>> ranking = HandRanking(
+            ...     player_id="p1",
+            ...     rank=HandRank.FLUSH,
+            ...     high_cards=[CardValue.ACE, CardValue.KING],
+            ...     description="Ace-high flush"
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: HandRanking
-      :collapse:
-
-   .. py:attribute:: description
-      :type:  str
-      :value: None
+            .. py:attribute:: description
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: high_cards
-      :type:  list[CardValue]
-      :value: None
+            .. py:attribute:: high_cards
+               :type:  list[CardValue]
+               :value: None
 
 
 
-   .. py:attribute:: player_id
-      :type:  str
-      :value: None
+            .. py:attribute:: player_id
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: rank
-      :type:  HandRank
-      :value: None
+            .. py:attribute:: rank
+               :type:  HandRank
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Player(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Player model for poker game.
+            Player model for poker game.
 
-   Represents a player in the game, tracking their cards, chips, and game status.
-   Includes betting information and position at the table.
+            Represents a player in the game, tracking their cards, chips, and game status.
+            Includes betting information and position at the table.
 
-   .. attribute:: id
+            .. attribute:: id
 
-      Unique identifier for the player
+               Unique identifier for the player
 
-      :type: str
+               :type: str
 
-   .. attribute:: name
+            .. attribute:: name
 
-      Display name of the player
+               Display name of the player
 
-      :type: str
+               :type: str
 
-   .. attribute:: chips
+            .. attribute:: chips
 
-      Current chip count, defaults to 1000
+               Current chip count, defaults to 1000
 
-      :type: int
+               :type: int
 
-   .. attribute:: hand
+            .. attribute:: hand
 
-      Player's hole cards
+               Player's hole cards
 
-      :type: Hand
+               :type: Hand
 
-   .. attribute:: is_active
+            .. attribute:: is_active
 
-      Whether player is still in current hand
+               Whether player is still in current hand
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: is_all_in
+            .. attribute:: is_all_in
 
-      Whether player has gone all-in
+               Whether player has gone all-in
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: current_bet
+            .. attribute:: current_bet
 
-      Amount bet in current round
+               Amount bet in current round
 
-      :type: int
+               :type: int
 
-   .. attribute:: total_bet
+            .. attribute:: total_bet
 
-      Total amount bet in current hand
+               Total amount bet in current hand
 
-      :type: int
+               :type: int
 
-   .. attribute:: position
+            .. attribute:: position
 
-      Position at table (0 = dealer)
+               Position at table (0 = dealer)
 
-      :type: int
+               :type: int
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> player = Player(
-   ...     id="p1",
-   ...     name="Alice",
-   ...     chips=1000,
-   ...     position=0
-   ... )
-   >>> print(player)  # Shows "Player Alice ($1000)"
+            >>> player = Player(
+            ...     id="p1",
+            ...     name="Alice",
+            ...     chips=1000,
+            ...     position=0
+            ... )
+            >>> print(player)  # Shows "Player Alice ($1000)"
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: __str__() -> str
 
+               String representation of the player.
 
-   .. autolink-examples:: Player
-      :collapse:
 
-   .. py:method:: __str__() -> str
 
-      String representation of the player.
+            .. py:attribute:: chips
+               :type:  int
+               :value: None
 
 
-      .. autolink-examples:: __str__
-         :collapse:
 
+            .. py:attribute:: current_bet
+               :type:  int
+               :value: None
 
-   .. py:attribute:: chips
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: hand
+               :type:  Hand
+               :value: None
 
-   .. py:attribute:: current_bet
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
-   .. py:attribute:: hand
-      :type:  Hand
-      :value: None
 
 
+            .. py:attribute:: is_active
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: id
-      :type:  str
-      :value: None
 
 
+            .. py:attribute:: is_all_in
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: is_active
-      :type:  bool
-      :value: None
 
 
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
-   .. py:attribute:: is_all_in
-      :type:  bool
-      :value: None
 
 
+            .. py:attribute:: position
+               :type:  int
+               :value: None
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
 
 
+            .. py:attribute:: total_bet
+               :type:  int
+               :value: None
 
-   .. py:attribute:: position
-      :type:  int
-      :value: None
 
 
 
-   .. py:attribute:: total_bet
-      :type:  int
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PlayerAction
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Player action enumeration.
+            Player action enumeration.
 
-   Represents the possible actions a player can take during their turn.
-   Inherits from str.Enum for easy serialization and comparison.
+            Represents the possible actions a player can take during their turn.
+            Inherits from str.Enum for easy serialization and comparison.
 
-   .. attribute:: FOLD
+            .. attribute:: FOLD
 
-      Give up hand
+               Give up hand
 
-      :type: str
+               :type: str
 
-   .. attribute:: CHECK
+            .. attribute:: CHECK
 
-      Pass action when no bet to call
+               Pass action when no bet to call
 
-      :type: str
+               :type: str
 
-   .. attribute:: CALL
+            .. attribute:: CALL
 
-      Match current bet
+               Match current bet
 
-      :type: str
+               :type: str
 
-   .. attribute:: BET
+            .. attribute:: BET
 
-      Place initial bet
+               Place initial bet
 
-      :type: str
+               :type: str
 
-   .. attribute:: RAISE
+            .. attribute:: RAISE
 
-      Increase current bet
+               Increase current bet
 
-      :type: str
+               :type: str
 
-   .. attribute:: ALL_IN
+            .. attribute:: ALL_IN
 
-      Bet all remaining chips
+               Bet all remaining chips
 
-      :type: str
+               :type: str
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: PlayerAction
-      :collapse:
-
-   .. py:attribute:: ALL_IN
-      :value: 'all_in'
+            .. py:attribute:: ALL_IN
+               :value: 'all_in'
 
 
 
-   .. py:attribute:: BET
-      :value: 'bet'
+            .. py:attribute:: BET
+               :value: 'bet'
 
 
 
-   .. py:attribute:: CALL
-      :value: 'call'
+            .. py:attribute:: CALL
+               :value: 'call'
 
 
 
-   .. py:attribute:: CHECK
-      :value: 'check'
+            .. py:attribute:: CHECK
+               :value: 'check'
 
 
 
-   .. py:attribute:: FOLD
-      :value: 'fold'
+            .. py:attribute:: FOLD
+               :value: 'fold'
 
 
 
-   .. py:attribute:: RAISE
-      :value: 'raise'
+            .. py:attribute:: RAISE
+               :value: 'raise'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PlayerObservation(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Player's view of the game state.
+            Player's view of the game state.
 
-   Represents what a specific player can observe about the current game
-   state, hiding information they shouldn't have access to (e.g., other
-   players' hole cards).
+            Represents what a specific player can observe about the current game
+            state, hiding information they shouldn't have access to (e.g., other
+            players' hole cards).
 
-   .. attribute:: player_id
+            .. attribute:: player_id
 
-      ID of observing player
+               ID of observing player
 
-      :type: str
+               :type: str
 
-   .. attribute:: hand
+            .. attribute:: hand
 
-      Player's hole cards
+               Player's hole cards
 
-      :type: Hand
+               :type: Hand
 
-   .. attribute:: chips
+            .. attribute:: chips
 
-      Player's chip count
+               Player's chip count
 
-      :type: int
+               :type: int
 
-   .. attribute:: position
+            .. attribute:: position
 
-      Player's position at table
+               Player's position at table
 
-      :type: int
+               :type: int
 
-   .. attribute:: position_name
+            .. attribute:: position_name
 
-      Name of position (e.g., "Button")
+               Name of position (e.g., "Button")
 
-      :type: str
+               :type: str
 
-   .. attribute:: community_cards
+            .. attribute:: community_cards
 
-      Shared cards on board
+               Shared cards on board
 
-      :type: List[Card]
+               :type: List[Card]
 
-   .. attribute:: visible_players
+            .. attribute:: visible_players
 
-      Observable player info
+               Observable player info
 
-      :type: List[Dict[str, Any]]
+               :type: List[Dict[str, Any]]
 
-   .. attribute:: phase
+            .. attribute:: phase
 
-      Current game phase
+               Current game phase
 
-      :type: GamePhase
+               :type: GamePhase
 
-   .. attribute:: current_bet
+            .. attribute:: current_bet
 
-      Amount to call
+               Amount to call
 
-      :type: int
+               :type: int
 
-   .. attribute:: pot_sizes
+            .. attribute:: pot_sizes
 
-      Sizes of all pots
+               Sizes of all pots
 
-      :type: List[int]
+               :type: List[int]
 
-   .. attribute:: recent_actions
+            .. attribute:: recent_actions
 
-      Recent action history
+               Recent action history
 
-      :type: List[ActionRecord]
+               :type: List[ActionRecord]
 
-   .. attribute:: min_raise
+            .. attribute:: min_raise
 
-      Minimum raise amount
+               Minimum raise amount
 
-      :type: int
+               :type: int
 
-   .. attribute:: is_active
+            .. attribute:: is_active
 
-      Whether player is in hand
+               Whether player is in hand
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: is_current_player
+            .. attribute:: is_current_player
 
-      Whether it's player's turn
+               Whether it's player's turn
 
-      :type: bool
+               :type: bool
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> obs = PlayerObservation(
-   ...     player_id="p1",
-   ...     hand=Hand(cards=[ace_of_spades, king_of_hearts]),
-   ...     position=0,
-   ...     position_name="Button"
-   ... )
+            >>> obs = PlayerObservation(
+            ...     player_id="p1",
+            ...     hand=Hand(cards=[ace_of_spades, king_of_hearts]),
+            ...     position=0,
+            ...     position_name="Button"
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:attribute:: chips
+               :type:  int
+               :value: None
 
 
-   .. autolink-examples:: PlayerObservation
-      :collapse:
 
-   .. py:attribute:: chips
-      :type:  int
-      :value: None
+            .. py:attribute:: community_cards
+               :type:  list[Card]
+               :value: None
 
 
 
-   .. py:attribute:: community_cards
-      :type:  list[Card]
-      :value: None
+            .. py:attribute:: current_bet
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: current_bet
-      :type:  int
-      :value: None
+            .. py:attribute:: hand
+               :type:  Hand
+               :value: None
 
 
 
-   .. py:attribute:: hand
-      :type:  Hand
-      :value: None
+            .. py:attribute:: is_active
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: is_active
-      :type:  bool
-      :value: None
+            .. py:attribute:: is_current_player
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: is_current_player
-      :type:  bool
-      :value: None
+            .. py:attribute:: min_raise
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: min_raise
-      :type:  int
-      :value: None
+            .. py:attribute:: phase
+               :type:  GamePhase
+               :value: None
 
 
 
-   .. py:attribute:: phase
-      :type:  GamePhase
-      :value: None
+            .. py:attribute:: player_id
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: player_id
-      :type:  str
-      :value: None
+            .. py:attribute:: position
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: position
-      :type:  int
-      :value: None
+            .. py:attribute:: position_name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: position_name
-      :type:  str
-      :value: None
+            .. py:attribute:: pot_sizes
+               :type:  list[int]
+               :value: None
 
 
 
-   .. py:attribute:: pot_sizes
-      :type:  list[int]
-      :value: None
+            .. py:attribute:: recent_actions
+               :type:  list[ActionRecord]
+               :value: None
 
 
 
-   .. py:attribute:: recent_actions
-      :type:  list[ActionRecord]
-      :value: None
+            .. py:attribute:: visible_players
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: visible_players
-      :type:  list[dict[str, Any]]
-      :value: None
 
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PokerGameState(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Texas Hold'em poker game state.
+            Texas Hold'em poker game state.
 
-   Comprehensive model of the current game state, including all player
-   information, community cards, betting status, and game progression.
+            Comprehensive model of the current game state, including all player
+            information, community cards, betting status, and game progression.
 
-   .. attribute:: players
+            .. attribute:: players
 
-      All players in the game
+               All players in the game
 
-      :type: List[Player]
+               :type: List[Player]
 
-   .. attribute:: active_players
+            .. attribute:: active_players
 
-      IDs of players still in hand
+               IDs of players still in hand
 
-      :type: List[str]
+               :type: List[str]
 
-   .. attribute:: dealer_position
+            .. attribute:: dealer_position
 
-      Position of dealer button
+               Position of dealer button
 
-      :type: int
+               :type: int
 
-   .. attribute:: current_player_idx
+            .. attribute:: current_player_idx
 
-      Index of player to act
+               Index of player to act
 
-      :type: int
+               :type: int
 
-   .. attribute:: community_cards
+            .. attribute:: community_cards
 
-      Shared cards on board
+               Shared cards on board
 
-      :type: List[Card]
+               :type: List[Card]
 
-   .. attribute:: deck
+            .. attribute:: deck
 
-      Remaining cards in deck
+               Remaining cards in deck
 
-      :type: List[Card]
+               :type: List[Card]
 
-   .. attribute:: phase
+            .. attribute:: phase
 
-      Current game phase
+               Current game phase
 
-      :type: GamePhase
+               :type: GamePhase
 
-   .. attribute:: pots
+            .. attribute:: pots
 
-      Main pot and side pots
+               Main pot and side pots
 
-      :type: List[Pot]
+               :type: List[Pot]
 
-   .. attribute:: current_bet
+            .. attribute:: current_bet
 
-      Amount to call
+               Amount to call
 
-      :type: int
+               :type: int
 
-   .. attribute:: small_blind
+            .. attribute:: small_blind
 
-      Small blind amount
+               Small blind amount
 
-      :type: int
+               :type: int
 
-   .. attribute:: big_blind
+            .. attribute:: big_blind
 
-      Big blind amount
+               Big blind amount
 
-      :type: int
+               :type: int
 
-   .. attribute:: min_raise
+            .. attribute:: min_raise
 
-      Minimum raise amount
+               Minimum raise amount
 
-      :type: int
+               :type: int
 
-   .. attribute:: action_history
+            .. attribute:: action_history
 
-      Record of all actions
+               Record of all actions
 
-      :type: List[ActionRecord]
+               :type: List[ActionRecord]
 
-   .. attribute:: last_aggressor
+            .. attribute:: last_aggressor
 
-      ID of last betting/raising player
+               ID of last betting/raising player
 
-      :type: Optional[str]
+               :type: Optional[str]
 
-   .. attribute:: hand_rankings
+            .. attribute:: hand_rankings
 
-      Final hand evaluations
+               Final hand evaluations
 
-      :type: Dict[str, HandRanking]
+               :type: Dict[str, HandRanking]
 
-   .. attribute:: winners
+            .. attribute:: winners
 
-      IDs of hand winners
+               IDs of hand winners
 
-      :type: List[str]
+               :type: List[str]
 
-   .. attribute:: round_complete
+            .. attribute:: round_complete
 
-      Whether betting round is finished
+               Whether betting round is finished
 
-      :type: bool
+               :type: bool
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> state = PokerGameState(
-   ...     players=[Player(id="p1", name="Alice")],
-   ...     small_blind=5,
-   ...     big_blind=10
-   ... )
+            >>> state = PokerGameState(
+            ...     players=[Player(id="p1", name="Alice")],
+            ...     small_blind=5,
+            ...     big_blind=10
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:attribute:: action_history
+               :type:  list[ActionRecord]
+               :value: None
 
 
-   .. autolink-examples:: PokerGameState
-      :collapse:
 
-   .. py:attribute:: action_history
-      :type:  list[ActionRecord]
-      :value: None
+            .. py:property:: active_player_count
+               :type: int
 
 
+               Get the number of active players in the game.
 
-   .. py:property:: active_player_count
-      :type: int
 
+            .. py:attribute:: active_players
+               :type:  list[str]
+               :value: None
 
-      Get the number of active players in the game.
 
-      .. autolink-examples:: active_player_count
-         :collapse:
 
+            .. py:attribute:: big_blind
+               :type:  int
+               :value: None
 
-   .. py:attribute:: active_players
-      :type:  list[str]
-      :value: None
 
 
+            .. py:attribute:: community_cards
+               :type:  list[Card]
+               :value: None
 
-   .. py:attribute:: big_blind
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: current_bet
+               :type:  int
+               :value: None
 
-   .. py:attribute:: community_cards
-      :type:  list[Card]
-      :value: None
 
 
+            .. py:attribute:: current_player_idx
+               :type:  int
+               :value: None
 
-   .. py:attribute:: current_bet
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: dealer_position
+               :type:  int
+               :value: None
 
-   .. py:attribute:: current_player_idx
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: deck
+               :type:  list[Card]
+               :value: None
 
-   .. py:attribute:: dealer_position
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: hand_rankings
+               :type:  dict[str, HandRanking]
+               :value: None
 
-   .. py:attribute:: deck
-      :type:  list[Card]
-      :value: None
 
 
+            .. py:attribute:: last_aggressor
+               :type:  str | None
+               :value: None
 
-   .. py:attribute:: hand_rankings
-      :type:  dict[str, HandRanking]
-      :value: None
 
 
+            .. py:attribute:: min_raise
+               :type:  int
+               :value: None
 
-   .. py:attribute:: last_aggressor
-      :type:  str | None
-      :value: None
 
 
+            .. py:attribute:: phase
+               :type:  GamePhase
+               :value: None
 
-   .. py:attribute:: min_raise
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: players
+               :type:  list[Player]
+               :value: None
 
-   .. py:attribute:: phase
-      :type:  GamePhase
-      :value: None
 
 
+            .. py:attribute:: pots
+               :type:  list[Pot]
+               :value: None
 
-   .. py:attribute:: players
-      :type:  list[Player]
-      :value: None
 
 
+            .. py:attribute:: round_complete
+               :type:  bool
+               :value: None
 
-   .. py:attribute:: pots
-      :type:  list[Pot]
-      :value: None
 
 
+            .. py:attribute:: small_blind
+               :type:  int
+               :value: None
 
-   .. py:attribute:: round_complete
-      :type:  bool
-      :value: None
 
 
+            .. py:attribute:: winners
+               :type:  list[str]
+               :value: None
 
-   .. py:attribute:: small_blind
-      :type:  int
-      :value: None
 
 
 
-   .. py:attribute:: winners
-      :type:  list[str]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Pot(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Poker pot model.
+            Poker pot model.
 
-   Represents a pot of chips in the game, tracking both the amount
-   and which players are eligible to win it (for side pots).
+            Represents a pot of chips in the game, tracking both the amount
+            and which players are eligible to win it (for side pots).
 
-   .. attribute:: amount
+            .. attribute:: amount
 
-      Total chips in the pot
+               Total chips in the pot
 
-      :type: int
+               :type: int
 
-   .. attribute:: eligible_players
+            .. attribute:: eligible_players
 
-      IDs of players who can win
+               IDs of players who can win
 
-      :type: List[str]
+               :type: List[str]
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> pot = Pot(
-   ...     amount=500,
-   ...     eligible_players=["p1", "p2", "p3"]
-   ... )
+            >>> pot = Pot(
+            ...     amount=500,
+            ...     eligible_players=["p1", "p2", "p3"]
+            ... )
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: Pot
-      :collapse:
-
-   .. py:attribute:: amount
-      :type:  int
-      :value: None
+            .. py:attribute:: amount
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: eligible_players
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: eligible_players
+               :type:  list[str]
+               :value: None
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Suit
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Card suit enumeration.
+            Card suit enumeration.
 
-   Represents the four standard playing card suits. Inherits from str.Enum
-   for easy serialization and string comparison.
+            Represents the four standard playing card suits. Inherits from str.Enum
+            for easy serialization and string comparison.
 
-   .. attribute:: HEARTS
+            .. attribute:: HEARTS
 
-      Hearts suit
+               Hearts suit
 
-      :type: str
+               :type: str
 
-   .. attribute:: DIAMONDS
+            .. attribute:: DIAMONDS
 
-      Diamonds suit
+               Diamonds suit
 
-      :type: str
+               :type: str
 
-   .. attribute:: CLUBS
+            .. attribute:: CLUBS
 
-      Clubs suit
+               Clubs suit
 
-      :type: str
+               :type: str
 
-   .. attribute:: SPADES
+            .. attribute:: SPADES
 
-      Spades suit
+               Spades suit
 
-      :type: str
+               :type: str
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: Suit
-      :collapse:
-
-   .. py:attribute:: CLUBS
-      :value: 'clubs'
+            .. py:attribute:: CLUBS
+               :value: 'clubs'
 
 
 
-   .. py:attribute:: DIAMONDS
-      :value: 'diamonds'
+            .. py:attribute:: DIAMONDS
+               :value: 'diamonds'
 
 
 
-   .. py:attribute:: HEARTS
-      :value: 'hearts'
+            .. py:attribute:: HEARTS
+               :value: 'hearts'
 
 
 
-   .. py:attribute:: SPADES
-      :value: 'spades'
+            .. py:attribute:: SPADES
+               :value: 'spades'
 
 
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.poker.models import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

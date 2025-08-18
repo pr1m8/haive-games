@@ -22,6 +22,11 @@ class MafiaPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Mafia game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="mafia", player2="town")
 
 
@@ -97,6 +102,11 @@ class MafiaEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Mafia game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = MafiaPlayerIdentifiers()
         prompt_generator = MafiaPromptGenerator()
         super().__init__(identifiers, prompt_generator)

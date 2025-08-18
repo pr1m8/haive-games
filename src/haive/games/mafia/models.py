@@ -7,7 +7,7 @@ This module defines the core data models and enums used in the Mafia game, inclu
     - State tracking for players and game
     - Decision models for LLM output
 
-Example:
+Examples:
     >>> from mafia.models import PlayerRole, GamePhase, MafiaAction
     >>>
     >>> # Create a player action
@@ -110,7 +110,7 @@ class PlayerState(BaseModel):
         known_roles (Dict[str, PlayerRole]): Roles known to this player
         investigation_results (Dict[str, bool]): Detective's investigation results
 
-    Example:
+    Examples:
         >>> state = PlayerState(
         ...     player_id="Player_1",
         ...     role=PlayerRole.DETECTIVE,
@@ -143,7 +143,7 @@ class MafiaAction(BaseModel):
         target_id (Optional[str]): Target player for the action
         message (Optional[str]): Content for speak actions
 
-    Example:
+    Examples:
         >>> action = MafiaAction(
         ...     player_id="Player_1",
         ...     action_type=ActionType.VOTE,
@@ -204,7 +204,7 @@ class NarratorAction(BaseModel):
         next_phase (Optional[GamePhase]): Phase to transition to
         round_number (int): Current round number
 
-    Example:
+    Examples:
         >>> action = NarratorAction(
         ...     announcement="Night falls on the village.",
         ...     phase_transition=True,
@@ -261,7 +261,7 @@ class MafiaPlayerDecision(BaseModel):
         action (MafiaAction): The action the player will take
         reasoning (Optional[str]): Explanation for the decision
 
-    Example:
+    Examples:
         >>> decision = MafiaPlayerDecision(
         ...     action=MafiaAction(...),
         ...     reasoning="Player seems suspicious based on voting pattern"
@@ -286,7 +286,7 @@ class NarratorDecision(BaseModel):
         action (NarratorAction): The action the narrator will take
         reasoning (Optional[str]): Explanation for the decision
 
-    Example:
+    Examples:
         >>> decision = NarratorDecision(
         ...     action=NarratorAction(...),
         ...     reasoning="All players have completed their night actions"
@@ -314,7 +314,7 @@ class MafiaPlayerDecisionSchema(BaseModel):
         message (Optional[str]): Content for speak actions
         reasoning (Optional[str]): Explanation for the decision
 
-    Example:
+    Examples:
         >>> schema = MafiaPlayerDecisionSchema(
         ...     action_type="vote",
         ...     target_id="Player_2",
@@ -379,7 +379,7 @@ class NarratorDecisionSchema(BaseModel):
         phase_transition (bool): Whether to move to next phase
         reasoning (Optional[str]): Explanation for the decision
 
-    Example:
+    Examples:
         >>> schema = NarratorDecisionSchema(
         ...     announcement="The village falls quiet as night approaches.",
         ...     phase_transition=True,

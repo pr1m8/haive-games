@@ -512,6 +512,12 @@ async def example_7_custom_strategy():
         """Base strategy class for custom implementations."""
 
         def __init__(self, name: str, description: str):
+            """  Init  .
+
+Args:
+    name: [TODO: Add description]
+    description: [TODO: Add description]
+"""
             self.name = name
             self.description = description
 

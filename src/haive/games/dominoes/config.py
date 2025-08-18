@@ -29,6 +29,11 @@ class DominoesAgentConfig(GameConfig):
 
     @classmethod
     def default_config(cls) -> Any:
+        """Default Config.
+
+Returns:
+    [TODO: Add return description]
+"""
         return cls(
             state_schema=DominoesState,
             engines=aug_llm_configs,

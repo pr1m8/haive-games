@@ -3,6 +3,31 @@ games.framework.base.state
 
 .. py:module:: games.framework.base.state
 
+Base state module for game agents.
+
+This module provides the foundational state class for game agents,
+defining the core state attributes that all games need to track.
+
+.. rubric:: Example
+
+>>> # GameState is abstract - inherit from it:
+>>> class ConcreteGameState(GameState):
+...     @classmethod
+...     def initialize(cls, **kwargs):
+...         return cls(turn="player1", game_status="ongoing")
+
+Typical usage:
+    - Inherit from GameState to create game-specific state classes
+    - Use as the state schema in game configurations
+    - Track game progress and history
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Base state module for game agents.
@@ -24,132 +49,149 @@ games.framework.base.state
        - Track game progress and history
 
 
-   .. autolink-examples:: games.framework.base.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.framework.base.state.GameState
+      games.framework.base.state.GameState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameState(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`abc.ABC`
+            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`abc.ABC`
 
 
-   Base game state that all game states should inherit from.
+            Base game state that all game states should inherit from.
 
-   This class defines the core state attributes that all games need to track,
-   including the current turn, game status, move history, and error handling.
+            This class defines the core state attributes that all games need to track,
+            including the current turn, game status, move history, and error handling.
 
-   .. attribute:: players
+            .. attribute:: players
 
-      List of players in the game.
+               List of players in the game.
 
-      :type: List[str]
+               :type: List[str]
 
-   .. attribute:: turn
+            .. attribute:: turn
 
-      Current player's turn.
+               Current player's turn.
 
-      :type: str
+               :type: str
 
-   .. attribute:: game_status
+            .. attribute:: game_status
 
-      Status of the game (e.g., "ongoing", "finished").
+               Status of the game (e.g., "ongoing", "finished").
 
-      :type: str
+               :type: str
 
-   .. attribute:: move_history
+            .. attribute:: move_history
 
-      History of moves made in the game.
+               History of moves made in the game.
 
-      :type: List[Any]
+               :type: List[Any]
 
-   .. attribute:: error_message
+            .. attribute:: error_message
 
-      Error message if any error occurred.
+               Error message if any error occurred.
 
-      :type: Optional[str]
+               :type: Optional[str]
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: GameState
-      :collapse:
+            .. py:class:: Config
 
-   .. py:class:: Config
-
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
 
 
 
-   .. py:method:: initialize(**kwargs) -> GameState
-      :classmethod:
+            .. py:method:: initialize(**kwargs) -> GameState
+               :classmethod:
 
-      :abstractmethod:
-
-
-      Abstract method that all subclasses must implement to initialize the game.
-      state.
-
-      :returns: A fully initialized game state object.
-      :rtype: GameState
-
-      .. rubric:: Example
-
-      >>> return Connect4State.initialize(first_player="red")
+               :abstractmethod:
 
 
-      .. autolink-examples:: initialize
-         :collapse:
+               Abstract method that all subclasses must implement to initialize the game.
+               state.
 
+               :returns: A fully initialized game state object.
+               :rtype: GameState
 
-   .. py:attribute:: error_message
-      :type:  str | None
-      :value: None
+               .. rubric:: Example
+
+               >>> return Connect4State.initialize(first_player="red")
 
 
 
-   .. py:attribute:: game_status
-      :type:  str
-      :value: None
+            .. py:attribute:: error_message
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: move_history
-      :type:  list[Any]
-      :value: None
+            .. py:attribute:: game_status
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: players
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: move_history
+               :type:  list[Any]
+               :value: None
 
 
 
-   .. py:attribute:: turn
-      :type:  str
-      :value: None
+            .. py:attribute:: players
+               :type:  list[str]
+               :value: None
 
 
+
+            .. py:attribute:: turn
+               :type:  str
+               :value: None
+
+
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.framework.base.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

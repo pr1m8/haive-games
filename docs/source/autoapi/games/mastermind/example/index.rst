@@ -3,6 +3,18 @@ games.mastermind.example
 
 .. py:module:: games.mastermind.example
 
+Example script for running the Mastermind game.
+
+This script demonstrates how to initialize and run the Mastermind game with various
+configuration options.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">2 functions</span>   </div>
+
 .. autoapi-nested-parse::
 
    Example script for running the Mastermind game.
@@ -11,35 +23,61 @@ games.mastermind.example
    configuration options.
 
 
-   .. autolink-examples:: games.mastermind.example
-      :collapse:
 
+      
+            
+            
+            
 
-Functions
----------
+.. admonition:: Functions (2)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mastermind.example.main
-   games.mastermind.example.parse_args
+      games.mastermind.example.main
+      games.mastermind.example.parse_args
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: main()
 
-   Run the Mastermind game with the specified configuration.
+            Run the Mastermind game with the specified configuration.
 
 
-   .. autolink-examples:: main
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: parse_args()
 
-   Parse command line arguments.
+            Parse command line arguments.
 
 
-   .. autolink-examples:: parse_args
-      :collapse:
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.mastermind.example import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

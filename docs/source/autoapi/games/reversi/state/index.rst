@@ -3,6 +3,18 @@ games.reversi.state
 
 .. py:module:: games.reversi.state
 
+Reversi (Othello) game state model.
+
+Defines board layout, current game status, turn tracking, move history, analysis
+storage, and rendering utilities for the Reversi agent system.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Reversi (Othello) game state model.
@@ -11,228 +23,244 @@ games.reversi.state
    storage, and rendering utilities for the Reversi agent system.
 
 
-   .. autolink-examples:: games.reversi.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.reversi.state.ReversiState
+      games.reversi.state.ReversiState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: ReversiState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.base.state.GameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: ReversiState(/, **data: Any)
 
-   State model for a game of Reversi/Othello.
+            Bases: :py:obj:`haive.games.framework.base.state.GameState`
 
-   .. attribute:: board
 
-      8x8 grid representing the game board.
+            State model for a game of Reversi/Othello.
 
-      :type: List[List[Optional[str]]]
+            .. attribute:: board
 
-   .. attribute:: turn
+               8x8 grid representing the game board.
 
-      The current player's turn ('B' or 'W').
+               :type: List[List[Optional[str]]]
 
-      :type: str
+            .. attribute:: turn
 
-   .. attribute:: game_status
+               The current player's turn ('B' or 'W').
 
-      Overall game status (ongoing, draw, B_win, W_win).
+               :type: str
 
-      :type: str
+            .. attribute:: game_status
 
-   .. attribute:: move_history
+               Overall game status (ongoing, draw, B_win, W_win).
 
-      History of all moves made.
+               :type: str
 
-      :type: List[ReversiMove]
+            .. attribute:: move_history
 
-   .. attribute:: winner
+               History of all moves made.
 
-      Winner symbol ('B' or 'W'), or None.
+               :type: List[ReversiMove]
 
-      :type: Optional[str]
+            .. attribute:: winner
 
-   .. attribute:: player_B
+               Winner symbol ('B' or 'W'), or None.
 
-      Identifier for the player using black discs.
+               :type: Optional[str]
 
-      :type: str
+            .. attribute:: player_B
 
-   .. attribute:: player_W
+               Identifier for the player using black discs.
 
-      Identifier for the player using white discs.
+               :type: str
 
-      :type: str
+            .. attribute:: player_W
 
-   .. attribute:: player1_analysis
+               Identifier for the player using white discs.
 
-      Analysis history by player1.
+               :type: str
 
-      :type: List[Dict[str, any]]
+            .. attribute:: player1_analysis
 
-   .. attribute:: player2_analysis
+               Analysis history by player1.
 
-      Analysis history by player2.
+               :type: List[Dict[str, any]]
 
-      :type: List[Dict[str, any]]
+            .. attribute:: player2_analysis
 
-   .. attribute:: skip_count
+               Analysis history by player2.
 
-      Number of consecutive turns skipped (used for endgame).
+               :type: List[Dict[str, any]]
 
-      :type: int
+            .. attribute:: skip_count
 
+               Number of consecutive turns skipped (used for endgame).
 
-   .. autolink-examples:: ReversiState
-      :collapse:
+               :type: int
 
-   .. py:method:: initialize(first_player: str = 'B', player_B: str = 'player1', player_W: str = 'player2') -> ReversiState
-      :classmethod:
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Class-level initializer for ReversiState.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      :param first_player: 'B' or 'W'. Who plays first.
-      :type first_player: str
-      :param player_B: Which player controls black.
-      :type player_B: str
-      :param player_W: Which player controls white.
-      :type player_W: str
 
-      :returns: Initialized state.
-      :rtype: ReversiState
+            .. py:method:: initialize(first_player: str = 'B', player_B: str = 'player1', player_W: str = 'player2') -> ReversiState
+               :classmethod:
 
 
-      .. autolink-examples:: initialize
-         :collapse:
+               Class-level initializer for ReversiState.
 
+               :param first_player: 'B' or 'W'. Who plays first.
+               :type first_player: str
+               :param player_B: Which player controls black.
+               :type player_B: str
+               :param player_W: Which player controls white.
+               :type player_W: str
 
-   .. py:method:: validate_board(board: list[list[str | None]]) -> list[list[str | None]]
-      :classmethod:
+               :returns: Initialized state.
+               :rtype: ReversiState
 
 
-      Validate that the board is an 8x8 grid with only valid values.
 
-      :param board: Input board state.
-      :type board: List[List[Optional[str]]]
+            .. py:method:: validate_board(board: list[list[str | None]]) -> list[list[str | None]]
+               :classmethod:
 
-      :returns: The validated board.
-      :rtype: List[List[Optional[str]]]
 
-      :raises ValueError: If the board structure or contents are invalid.
+               Validate that the board is an 8x8 grid with only valid values.
 
+               :param board: Input board state.
+               :type board: List[List[Optional[str]]]
 
-      .. autolink-examples:: validate_board
-         :collapse:
+               :returns: The validated board.
+               :rtype: List[List[Optional[str]]]
 
+               :raises ValueError: If the board structure or contents are invalid.
 
-   .. py:attribute:: board
-      :type:  list[list[str | None]]
-      :value: None
 
 
+            .. py:attribute:: board
+               :type:  list[list[str | None]]
+               :value: None
 
-   .. py:property:: board_string
-      :type: str
 
 
-      Get a human-readable string of the current board layout.
+            .. py:property:: board_string
+               :type: str
 
-      :returns: Formatted board as text.
-      :rtype: str
 
-      .. autolink-examples:: board_string
-         :collapse:
+               Get a human-readable string of the current board layout.
 
+               :returns: Formatted board as text.
+               :rtype: str
 
-   .. py:property:: current_player_name
-      :type: str
 
+            .. py:property:: current_player_name
+               :type: str
 
-      Get the current player's identifier.
 
-      :returns: Either 'player1' or 'player2'.
-      :rtype: str
+               Get the current player's identifier.
 
-      .. autolink-examples:: current_player_name
-         :collapse:
+               :returns: Either 'player1' or 'player2'.
+               :rtype: str
 
 
-   .. py:property:: disc_count
-      :type: dict[str, int]
+            .. py:property:: disc_count
+               :type: dict[str, int]
 
 
-      Count the number of discs of each color on the board.
+               Count the number of discs of each color on the board.
 
-      :returns: Dictionary with counts of 'B' and 'W'.
-      :rtype: Dict[str, int]
+               :returns: Dictionary with counts of 'B' and 'W'.
+               :rtype: Dict[str, int]
 
-      .. autolink-examples:: disc_count
-         :collapse:
 
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'B_win', 'W_win', 'draw']
+               :value: None
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'B_win', 'W_win', 'draw']
-      :value: None
 
 
+            .. py:attribute:: move_history
+               :type:  list[haive.games.reversi.models.ReversiMove]
+               :value: None
 
-   .. py:attribute:: move_history
-      :type:  list[haive.games.reversi.models.ReversiMove]
-      :value: None
 
 
+            .. py:attribute:: player1_analysis
+               :type:  list[dict[str, Any]]
+               :value: None
 
-   .. py:attribute:: player1_analysis
-      :type:  list[dict[str, Any]]
-      :value: None
 
 
+            .. py:attribute:: player2_analysis
+               :type:  list[dict[str, Any]]
+               :value: None
 
-   .. py:attribute:: player2_analysis
-      :type:  list[dict[str, Any]]
-      :value: None
 
 
+            .. py:attribute:: player_B
+               :type:  Literal['player1', 'player2']
+               :value: None
 
-   .. py:attribute:: player_B
-      :type:  Literal['player1', 'player2']
-      :value: None
 
 
+            .. py:attribute:: player_W
+               :type:  Literal['player1', 'player2']
+               :value: None
 
-   .. py:attribute:: player_W
-      :type:  Literal['player1', 'player2']
-      :value: None
 
 
+            .. py:attribute:: skip_count
+               :type:  int
+               :value: None
 
-   .. py:attribute:: skip_count
-      :type:  int
-      :value: None
 
 
+            .. py:attribute:: turn
+               :type:  Literal['B', 'W']
+               :value: None
 
-   .. py:attribute:: turn
-      :type:  Literal['B', 'W']
-      :value: None
 
 
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
 
 
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.reversi.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

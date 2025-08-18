@@ -136,6 +136,14 @@ class ConfigurableAmongUsConfig(AmongUsConfig):
         """Generate player names based on model names."""
 
         def model_to_name(model: str) -> str:
+            """Model To Name.
+
+Args:
+    model: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if "gpt" in model.lower():
                 return "GPT"
             elif "claude" in model.lower():
@@ -173,7 +181,7 @@ def create_among_us_config(
     Returns:
         ConfigurableAmongUsConfig: Configured Among Us game
 
-    Example:
+    Examples:
         >>> config = create_among_us_config("gpt-4o", "claude-3-opus", temperature=0.5)
         >>> config = create_among_us_config(
         ...     "openai:gpt-4o",
@@ -207,7 +215,7 @@ def create_among_us_config_from_example(
         - "mixed": Different provider per role
         - "detective_vs_mastermind": High-powered models for intense gameplay
 
-    Example:
+    Examples:
         >>> config = create_among_us_config_from_example("budget", max_rounds=40)
         >>> config = create_among_us_config_from_example("detective_vs_mastermind", enable_analysis=False)
 
@@ -233,7 +241,7 @@ def create_among_us_config_from_player_configs(
         - "crewmate_analyzer": Crewmate analyzer configuration
         - "impostor_analyzer": Impostor analyzer configuration
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "crewmate_player": PlayerAgentConfig(
         ...         llm_config="gpt-4o",

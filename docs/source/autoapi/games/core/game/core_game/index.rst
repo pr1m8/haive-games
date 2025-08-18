@@ -3,6 +3,18 @@ games.core.game.core_game
 
 .. py:module:: games.core.game.core_game
 
+Game engine for the game framework.
+
+This module defines the base Game class that serves as the central point for game logic,
+integrating all framework components.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">7 classes</span> • <span class="module-stat">6 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Game engine for the game framework.
@@ -11,851 +23,784 @@ games.core.game.core_game
    integrating all framework components.
 
 
-   .. autolink-examples:: games.core.game.core_game
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (6)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.core_game.C
-   games.core.game.core_game.M
-   games.core.game.core_game.P
-   games.core.game.core_game.PL
-   games.core.game.core_game.S
-   games.core.game.core_game.T
+      games.core.game.core_game.C
+      games.core.game.core_game.M
+      games.core.game.core_game.P
+      games.core.game.core_game.PL
+      games.core.game.core_game.S
+      games.core.game.core_game.T
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (7)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.core_game.Game
-   games.core.game.core_game.GameConfiguration
-   games.core.game.core_game.GameFactory
-   games.core.game.core_game.GameResult
-   games.core.game.core_game.GameStatus
-   games.core.game.core_game.RealTimeGame
-   games.core.game.core_game.TurnBasedGame
+      games.core.game.core_game.Game
+      games.core.game.core_game.GameConfiguration
+      games.core.game.core_game.GameFactory
+      games.core.game.core_game.GameResult
+      games.core.game.core_game.GameStatus
+      games.core.game.core_game.RealTimeGame
+      games.core.game.core_game.TurnBasedGame
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Game(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
+            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
 
 
-   Base class for all games.
+            Base class for all games.
 
-   The Game class ties together all game components and implements the core game loop.
-   It manages the game state, players, turns, and rules.
+            The Game class ties together all game components and implements the core game loop.
+            It manages the game state, players, turns, and rules.
 
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:class:: Config
 
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
-   .. autolink-examples:: Game
-      :collapse:
 
-   .. py:class:: Config
 
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
 
+            .. py:method:: _trigger_event(event: str, **kwargs) -> None
 
+               Trigger an event, calling all registered callbacks.
 
+               :param event: Event name
+               :param \*\*kwargs: Event data
 
-   .. py:method:: _trigger_event(event: str, **kwargs) -> None
 
-      Trigger an event, calling all registered callbacks.
 
-      :param event: Event name
-      :param \*\*kwargs: Event data
+            .. py:method:: abort() -> None
 
+               Abort the game.
 
-      .. autolink-examples:: _trigger_event
-         :collapse:
 
 
-   .. py:method:: abort() -> None
+            .. py:method:: add_player(player: PL) -> None
 
-      Abort the game.
+               Add a player to the game.
 
+               :param player: Player to add
 
-      .. autolink-examples:: abort
-         :collapse:
 
 
-   .. py:method:: add_player(player: PL) -> None
+            .. py:method:: check_end_condition() -> bool
+               :abstractmethod:
 
-      Add a player to the game.
 
-      :param player: Player to add
+               Check if the game has reached an end condition.
 
+               :returns: True if the game should end, False otherwise
 
-      .. autolink-examples:: add_player
-         :collapse:
 
 
-   .. py:method:: check_end_condition() -> bool
-      :abstractmethod:
+            .. py:method:: create_position(position_data: dict[str, Any]) -> P | None
+               :abstractmethod:
 
 
-      Check if the game has reached an end condition.
+               Create a Position object from a dictionary representation.
 
-      :returns: True if the game should end, False otherwise
+               :param position_data: Dictionary with position data
 
+               :returns: Position object, or None if invalid
 
-      .. autolink-examples:: check_end_condition
-         :collapse:
 
 
-   .. py:method:: create_position(position_data: dict[str, Any]) -> P | None
-      :abstractmethod:
+            .. py:method:: determine_winner() -> None
+               :abstractmethod:
 
 
-      Create a Position object from a dictionary representation.
+               Determine the winner(s) of the game.
 
-      :param position_data: Dictionary with position data
+               This should set the result and winners properties.
 
-      :returns: Position object, or None if invalid
 
 
-      .. autolink-examples:: create_position
-         :collapse:
 
+            .. py:method:: end_turn() -> None
 
-   .. py:method:: determine_winner() -> None
-      :abstractmethod:
+               End the current turn and move to the next player.
 
 
-      Determine the winner(s) of the game.
 
-      This should set the result and winners properties.
+            .. py:method:: finish(result: GameResult, winners: list[str] = None) -> None
 
+               Finish the game with a result.
 
+               :param result: Result of the game
+               :param winners: List of winning player IDs
 
-      .. autolink-examples:: determine_winner
-         :collapse:
 
 
-   .. py:method:: end_turn() -> None
+            .. py:method:: get_container(container_id: str) -> C | None
 
-      End the current turn and move to the next player.
+               Get a container by ID.
 
+               :param container_id: ID of the container
 
-      .. autolink-examples:: end_turn
-         :collapse:
+               :returns: The container, or None if not found
 
 
-   .. py:method:: finish(result: GameResult, winners: list[str] = None) -> None
 
-      Finish the game with a result.
+            .. py:method:: get_current_player() -> PL | None
 
-      :param result: Result of the game
-      :param winners: List of winning player IDs
+               Get the current player.
 
 
-      .. autolink-examples:: finish
-         :collapse:
 
+            .. py:method:: get_piece(piece_id: str) -> T | None
 
-   .. py:method:: get_container(container_id: str) -> C | None
+               Get a piece by ID.
 
-      Get a container by ID.
+               :param piece_id: ID of the piece
 
-      :param container_id: ID of the container
+               :returns: The piece, or None if not found
 
-      :returns: The container, or None if not found
 
 
-      .. autolink-examples:: get_container
-         :collapse:
+            .. py:method:: get_property(key: str, default: Any = None) -> Any
 
+               Get a game property.
 
-   .. py:method:: get_current_player() -> PL | None
+               :param key: Property name
+               :param default: Default value if property doesn't exist
 
-      Get the current player.
+               :returns: Property value or default
 
 
-      .. autolink-examples:: get_current_player
-         :collapse:
 
+            .. py:method:: get_state_for_player(player_id: str) -> dict[str, Any]
 
-   .. py:method:: get_piece(piece_id: str) -> T | None
+               Get a representation of the game state for a specific player.
 
-      Get a piece by ID.
+               This should include only information visible to that player.
 
-      :param piece_id: ID of the piece
+               :param player_id: ID of the player
 
-      :returns: The piece, or None if not found
+               :returns: Dictionary with game state information
 
 
-      .. autolink-examples:: get_piece
-         :collapse:
 
+            .. py:method:: get_valid_moves(player_id: str) -> list[M]
+               :abstractmethod:
 
-   .. py:method:: get_property(key: str, default: Any = None) -> Any
 
-      Get a game property.
+               Get all valid moves for a player.
 
-      :param key: Property name
-      :param default: Default value if property doesn't exist
+               :param player_id: ID of the player
 
-      :returns: Property value or default
+               :returns: List of valid moves
 
 
-      .. autolink-examples:: get_property
-         :collapse:
 
+            .. py:method:: initialize() -> None
 
-   .. py:method:: get_state_for_player(player_id: str) -> dict[str, Any]
+               Initialize the game.
 
-      Get a representation of the game state for a specific player.
+               This should be called after adding players and before starting the game.
 
-      This should include only information visible to that player.
 
-      :param player_id: ID of the player
 
-      :returns: Dictionary with game state information
 
+            .. py:method:: is_finished() -> bool
 
-      .. autolink-examples:: get_state_for_player
-         :collapse:
+               Check if the game is finished.
 
 
-   .. py:method:: get_valid_moves(player_id: str) -> list[M]
-      :abstractmethod:
 
+            .. py:method:: pause() -> None
 
-      Get all valid moves for a player.
+               Pause the game.
 
-      :param player_id: ID of the player
 
-      :returns: List of valid moves
 
+            .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
 
-      .. autolink-examples:: get_valid_moves
-         :collapse:
+               Process a move from a player.
 
+               :param move: Move to process
 
-   .. py:method:: initialize() -> None
+               :returns: Result of the move
 
-      Initialize the game.
 
-      This should be called after adding players and before starting the game.
 
+            .. py:method:: register_callback(event: str, callback: collections.abc.Callable) -> None
 
+               Register a callback for a game event.
 
-      .. autolink-examples:: initialize
-         :collapse:
+               :param event: Event name
+               :param callback: Callback function
 
 
-   .. py:method:: is_finished() -> bool
 
-      Check if the game is finished.
+            .. py:method:: resume() -> None
 
+               Resume a paused game.
 
-      .. autolink-examples:: is_finished
-         :collapse:
 
 
-   .. py:method:: pause() -> None
+            .. py:method:: set_property(key: str, value: Any) -> None
 
-      Pause the game.
+               Set a game property.
 
+               :param key: Property name
+               :param value: Property value
 
-      .. autolink-examples:: pause
-         :collapse:
 
 
-   .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
+            .. py:method:: setup_game() -> None
+               :abstractmethod:
 
-      Process a move from a player.
 
-      :param move: Move to process
+               Set up the game-specific components.
 
-      :returns: Result of the move
+               This should be implemented by subclasses to create the board, pieces, and other
+               game elements.
 
 
-      .. autolink-examples:: process_move
-         :collapse:
 
 
-   .. py:method:: register_callback(event: str, callback: collections.abc.Callable) -> None
+            .. py:method:: start() -> None
 
-      Register a callback for a game event.
+               Start the game.
 
-      :param event: Event name
-      :param callback: Callback function
 
 
-      .. autolink-examples:: register_callback
-         :collapse:
+            .. py:method:: start_turn() -> None
 
+               Start a new turn.
 
-   .. py:method:: resume() -> None
 
-      Resume a paused game.
 
+            .. py:method:: unregister_callback(event: str, callback: collections.abc.Callable) -> None
 
-      .. autolink-examples:: resume
-         :collapse:
+               Unregister a callback for a game event.
 
+               :param event: Event name
+               :param callback: Callback function
 
-   .. py:method:: set_property(key: str, value: Any) -> None
 
-      Set a game property.
 
-      :param key: Property name
-      :param value: Property value
+            .. py:attribute:: board
+               :type:  game.core.board.Board[S, P, T] | None
+               :value: None
 
 
-      .. autolink-examples:: set_property
-         :collapse:
 
+            .. py:attribute:: callbacks
+               :type:  dict[str, list[collections.abc.Callable]]
+               :value: None
 
-   .. py:method:: setup_game() -> None
-      :abstractmethod:
 
 
-      Set up the game-specific components.
+            .. py:attribute:: config
+               :type:  GameConfiguration
 
-      This should be implemented by subclasses to create the board, pieces, and other
-      game elements.
 
+            .. py:attribute:: containers
+               :type:  dict[str, C]
+               :value: None
 
 
-      .. autolink-examples:: setup_game
-         :collapse:
 
+            .. py:attribute:: current_player_index
+               :type:  int
+               :value: 0
 
-   .. py:method:: start() -> None
 
-      Start the game.
 
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
-      .. autolink-examples:: start
-         :collapse:
 
 
-   .. py:method:: start_turn() -> None
+            .. py:attribute:: move_history
+               :type:  list[game.core.move.MoveResult[M]]
+               :value: None
 
-      Start a new turn.
 
 
-      .. autolink-examples:: start_turn
-         :collapse:
+            .. py:attribute:: name
+               :type:  str
 
 
-   .. py:method:: unregister_callback(event: str, callback: collections.abc.Callable) -> None
+            .. py:attribute:: pieces
+               :type:  dict[str, T]
+               :value: None
 
-      Unregister a callback for a game event.
 
-      :param event: Event name
-      :param callback: Callback function
 
+            .. py:attribute:: players
+               :type:  list[PL]
+               :value: None
 
-      .. autolink-examples:: unregister_callback
-         :collapse:
 
 
-   .. py:attribute:: board
-      :type:  game.core.board.Board[S, P, T] | None
-      :value: None
+            .. py:attribute:: properties
+               :type:  dict[str, Any]
+               :value: None
 
 
 
-   .. py:attribute:: callbacks
-      :type:  dict[str, list[collections.abc.Callable]]
-      :value: None
+            .. py:attribute:: result
+               :type:  GameResult
 
 
+            .. py:attribute:: round_number
+               :type:  int
+               :value: 0
 
-   .. py:attribute:: config
-      :type:  GameConfiguration
 
 
-   .. py:attribute:: containers
-      :type:  dict[str, C]
-      :value: None
+            .. py:attribute:: scores
+               :type:  dict[str, int]
+               :value: None
 
 
 
-   .. py:attribute:: current_player_index
-      :type:  int
-      :value: 0
+            .. py:attribute:: status
+               :type:  GameStatus
 
 
+            .. py:attribute:: turn_number
+               :type:  int
+               :value: 0
 
-   .. py:attribute:: id
-      :type:  str
-      :value: None
 
 
+            .. py:attribute:: winners
+               :type:  list[str]
+               :value: None
 
-   .. py:attribute:: move_history
-      :type:  list[game.core.move.MoveResult[M]]
-      :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str
-
-
-   .. py:attribute:: pieces
-      :type:  dict[str, T]
-      :value: None
-
-
-
-   .. py:attribute:: players
-      :type:  list[PL]
-      :value: None
-
-
-
-   .. py:attribute:: properties
-      :type:  dict[str, Any]
-      :value: None
-
-
-
-   .. py:attribute:: result
-      :type:  GameResult
-
-
-   .. py:attribute:: round_number
-      :type:  int
-      :value: 0
-
-
-
-   .. py:attribute:: scores
-      :type:  dict[str, int]
-      :value: None
-
-
-
-   .. py:attribute:: status
-      :type:  GameStatus
-
-
-   .. py:attribute:: turn_number
-      :type:  int
-      :value: 0
-
-
-
-   .. py:attribute:: winners
-      :type:  list[str]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameConfiguration(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   Configuration options for a game.
+            Configuration options for a game.
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: GameConfiguration
-      :collapse:
+            .. py:method:: is_valid_player_count(count: int) -> bool
 
-   .. py:method:: is_valid_player_count(count: int) -> bool
-
-      Check if a player count is valid for this game.
-
-
-      .. autolink-examples:: is_valid_player_count
-         :collapse:
-
-
-   .. py:method:: validate_player_count(v: int) -> int
-      :classmethod:
-
-
-      Ensure player counts are valid.
-
-
-      .. autolink-examples:: validate_player_count
-         :collapse:
-
-
-   .. py:attribute:: allow_ai_players
-      :type:  bool
-      :value: True
+               Check if a player count is valid for this game.
 
 
 
-   .. py:attribute:: allow_network_players
-      :type:  bool
-      :value: True
+            .. py:method:: validate_player_count(v: int) -> int
+               :classmethod:
+
+
+               Ensure player counts are valid.
 
 
 
-   .. py:attribute:: enable_observers
-      :type:  bool
-      :value: True
+            .. py:attribute:: allow_ai_players
+               :type:  bool
+               :value: True
 
 
 
-   .. py:attribute:: max_players
-      :type:  int
-      :value: 2
+            .. py:attribute:: allow_network_players
+               :type:  bool
+               :value: True
 
 
 
-   .. py:attribute:: min_players
-      :type:  int
-      :value: 1
+            .. py:attribute:: enable_observers
+               :type:  bool
+               :value: True
 
 
 
-   .. py:attribute:: name
-      :type:  str
+            .. py:attribute:: max_players
+               :type:  int
+               :value: 2
 
 
-   .. py:attribute:: options
-      :type:  dict[str, Any]
-      :value: None
+
+            .. py:attribute:: min_players
+               :type:  int
+               :value: 1
 
 
+
+            .. py:attribute:: name
+               :type:  str
+
+
+            .. py:attribute:: options
+               :type:  dict[str, Any]
+               :value: None
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameFactory
 
-   Factory for creating game instances.
+            Factory for creating game instances.
 
 
-   .. autolink-examples:: GameFactory
-      :collapse:
-
-   .. py:method:: create_game(game_type: type[Game], config: GameConfiguration, **kwargs) -> Game
-      :staticmethod:
+            .. py:method:: create_game(game_type: type[Game], config: GameConfiguration, **kwargs) -> Game
+               :staticmethod:
 
 
-      Create a game instance.
+               Create a game instance.
 
-      :param game_type: Type of game to create
-      :param config: Game configuration
-      :param \*\*kwargs: Additional arguments for the game constructor
+               :param game_type: Type of game to create
+               :param config: Game configuration
+               :param \*\*kwargs: Additional arguments for the game constructor
 
-      :returns: Game instance
+               :returns: Game instance
 
 
-      .. autolink-examples:: create_game
-         :collapse:
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameResult
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Result of a finished game.
+            Result of a finished game.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GameResult
-      :collapse:
-
-   .. py:attribute:: DRAW
-      :value: 'draw'
+            .. py:attribute:: DRAW
+               :value: 'draw'
 
 
 
-   .. py:attribute:: UNDETERMINED
-      :value: 'undetermined'
+            .. py:attribute:: UNDETERMINED
+               :value: 'undetermined'
 
 
 
-   .. py:attribute:: WIN
-      :value: 'win'
+            .. py:attribute:: WIN
+               :value: 'win'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameStatus
 
-   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+            Bases: :py:obj:`str`, :py:obj:`enum.Enum`
 
 
-   Status of a game.
+            Status of a game.
 
-   Initialize self.  See help(type(self)) for accurate signature.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize self.  See help(type(self)) for accurate signature.
 
 
-   .. autolink-examples:: GameStatus
-      :collapse:
-
-   .. py:attribute:: ABORTED
-      :value: 'aborted'
+            .. py:attribute:: ABORTED
+               :value: 'aborted'
 
 
 
-   .. py:attribute:: FINISHED
-      :value: 'finished'
+            .. py:attribute:: FINISHED
+               :value: 'finished'
 
 
 
-   .. py:attribute:: IN_PROGRESS
-      :value: 'in_progress'
+            .. py:attribute:: IN_PROGRESS
+               :value: 'in_progress'
 
 
 
-   .. py:attribute:: NOT_STARTED
-      :value: 'not_started'
+            .. py:attribute:: NOT_STARTED
+               :value: 'not_started'
 
 
 
-   .. py:attribute:: PAUSED
-      :value: 'paused'
+            .. py:attribute:: PAUSED
+               :value: 'paused'
 
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: RealTimeGame
 
-   Bases: :py:obj:`Game`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
+            Bases: :py:obj:`Game`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
 
 
-   Base class for real-time games.
+            Base class for real-time games.
 
-   This adds functionality for games that don't use strict turns.
-
-
-
-   .. autolink-examples:: RealTimeGame
-      :collapse:
-
-   .. py:method:: is_action_on_cooldown(player_id: str, action_type: str) -> bool
-
-      Check if an action is on cooldown.
-
-      :param player_id: ID of the player
-      :param action_type: Type of action
-
-      :returns: True if the action is on cooldown, False otherwise
-
-
-      .. autolink-examples:: is_action_on_cooldown
-         :collapse:
-
-
-   .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
-
-      Process a move from a player, checking cooldowns.
-
-      :param move: Move to process
-
-      :returns: Result of the move
-
-
-      .. autolink-examples:: process_move
-         :collapse:
-
-
-   .. py:method:: set_cooldown(player_id: str, action_type: str, ticks: int) -> None
-
-      Set a cooldown for an action.
-
-      :param player_id: ID of the player
-      :param action_type: Type of action
-      :param ticks: Number of ticks until the action is available again
-
-
-      .. autolink-examples:: set_cooldown
-         :collapse:
-
-
-   .. py:method:: update(delta_time: float) -> None
-
-      Update the game state for a time step.
-
-      :param delta_time: Time in seconds since last update
-
-
-      .. autolink-examples:: update
-         :collapse:
-
-
-   .. py:method:: update_game_state(delta_time: float) -> None
-      :abstractmethod:
-
-
-      Update the game state for a time step.
-
-      :param delta_time: Time in seconds since last update
-
-
-      .. autolink-examples:: update_game_state
-         :collapse:
-
-
-   .. py:attribute:: action_cooldowns
-      :type:  dict[str, dict[str, int]]
-      :value: None
+            This adds functionality for games that don't use strict turns.
 
 
 
-   .. py:attribute:: current_tick
-      :type:  int
-      :value: 0
+            .. py:method:: is_action_on_cooldown(player_id: str, action_type: str) -> bool
+
+               Check if an action is on cooldown.
+
+               :param player_id: ID of the player
+               :param action_type: Type of action
+
+               :returns: True if the action is on cooldown, False otherwise
 
 
 
-   .. py:attribute:: tick_rate
-      :type:  float
-      :value: 60.0
+            .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
+
+               Process a move from a player, checking cooldowns.
+
+               :param move: Move to process
+
+               :returns: Result of the move
 
 
+
+            .. py:method:: set_cooldown(player_id: str, action_type: str, ticks: int) -> None
+
+               Set a cooldown for an action.
+
+               :param player_id: ID of the player
+               :param action_type: Type of action
+               :param ticks: Number of ticks until the action is available again
+
+
+
+            .. py:method:: update(delta_time: float) -> None
+
+               Update the game state for a time step.
+
+               :param delta_time: Time in seconds since last update
+
+
+
+            .. py:method:: update_game_state(delta_time: float) -> None
+               :abstractmethod:
+
+
+               Update the game state for a time step.
+
+               :param delta_time: Time in seconds since last update
+
+
+
+            .. py:attribute:: action_cooldowns
+               :type:  dict[str, dict[str, int]]
+               :value: None
+
+
+
+            .. py:attribute:: current_tick
+               :type:  int
+               :value: 0
+
+
+
+            .. py:attribute:: tick_rate
+               :type:  float
+               :value: 60.0
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: TurnBasedGame
 
-   Bases: :py:obj:`Game`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
+            Bases: :py:obj:`Game`\ [\ :py:obj:`P`\ , :py:obj:`T`\ , :py:obj:`S`\ , :py:obj:`C`\ , :py:obj:`M`\ , :py:obj:`PL`\ ]
 
 
-   Base class for turn-based games.
+            Base class for turn-based games.
 
-   This adds additional turn management functionality.
-
-
-
-   .. autolink-examples:: TurnBasedGame
-      :collapse:
-
-   .. py:method:: can_take_action(player_id: str) -> bool
-
-      Check if a player can take another action this turn.
-
-      :param player_id: ID of the player
-
-      :returns: True if the player can take an action, False otherwise
-
-
-      .. autolink-examples:: can_take_action
-         :collapse:
-
-
-   .. py:method:: end_turn() -> None
-
-      End the current turn and move to the next player.
-
-
-      .. autolink-examples:: end_turn
-         :collapse:
-
-
-   .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
-
-      Process a move from a player, tracking actions per turn.
-
-      :param move: Move to process
-
-      :returns: Result of the move
-
-
-      .. autolink-examples:: process_move
-         :collapse:
-
-
-   .. py:method:: record_action(player_id: str) -> None
-
-      Record an action taken by a player this turn.
-
-      :param player_id: ID of the player
-
-
-      .. autolink-examples:: record_action
-         :collapse:
-
-
-   .. py:method:: reverse_turn_order() -> None
-
-      Reverse the turn order direction.
-
-
-      .. autolink-examples:: reverse_turn_order
-         :collapse:
-
-
-   .. py:method:: skip_turn() -> None
-
-      Skip the current player's turn.
-
-
-      .. autolink-examples:: skip_turn
-         :collapse:
-
-
-   .. py:attribute:: max_actions_per_turn
-      :type:  int
-      :value: 1
+            This adds additional turn management functionality.
 
 
 
-   .. py:attribute:: turn_actions
-      :type:  dict[str, int]
-      :value: None
+            .. py:method:: can_take_action(player_id: str) -> bool
+
+               Check if a player can take another action this turn.
+
+               :param player_id: ID of the player
+
+               :returns: True if the player can take an action, False otherwise
 
 
 
-   .. py:attribute:: turn_direction
-      :type:  int
-      :value: 1
+            .. py:method:: end_turn() -> None
+
+               End the current turn and move to the next player.
 
 
 
-   .. py:attribute:: turn_timeout
-      :type:  int | None
-      :value: None
+            .. py:method:: process_move(move: M) -> game.core.move.MoveResult[M]
+
+               Process a move from a player, tracking actions per turn.
+
+               :param move: Move to process
+
+               :returns: Result of the move
 
 
+
+            .. py:method:: record_action(player_id: str) -> None
+
+               Record an action taken by a player this turn.
+
+               :param player_id: ID of the player
+
+
+
+            .. py:method:: reverse_turn_order() -> None
+
+               Reverse the turn order direction.
+
+
+
+            .. py:method:: skip_turn() -> None
+
+               Skip the current player's turn.
+
+
+
+            .. py:attribute:: max_actions_per_turn
+               :type:  int
+               :value: 1
+
+
+
+            .. py:attribute:: turn_actions
+               :type:  dict[str, int]
+               :value: None
+
+
+
+            .. py:attribute:: turn_direction
+               :type:  int
+               :value: 1
+
+
+
+            .. py:attribute:: turn_timeout
+               :type:  int | None
+               :value: None
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: C
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
+
 .. py:data:: M
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: P
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
+
 .. py:data:: PL
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: S
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
+
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.core.game.core_game import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

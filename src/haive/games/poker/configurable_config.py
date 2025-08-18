@@ -120,6 +120,14 @@ class ConfigurablePokerConfig(PokerAgentConfig):
         """Generate player names based on model names."""
 
         def model_to_name(model: str) -> str:
+            """Model To Name.
+
+Args:
+    model: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if "gpt" in model.lower():
                 return "GPT"
             elif "claude" in model.lower():
@@ -159,7 +167,7 @@ def create_poker_config(
     Returns:
         ConfigurablePokerConfig: Configured Poker game
 
-    Example:
+    Examples:
         >>> config = create_poker_config("gpt-4o", "claude-3-opus", temperature=0.5)
         >>> config = create_poker_config(
         ...     "openai:gpt-4o",
@@ -193,7 +201,7 @@ def create_poker_config_from_example(
         - "mixed": Different provider per role
         - "advanced": High-powered models for strategic gameplay
 
-    Example:
+    Examples:
         >>> config = create_poker_config_from_example("budget", enable_analysis=False)
         >>> config = create_poker_config_from_example("advanced", visualize_game=True)
 
@@ -219,7 +227,7 @@ def create_poker_config_from_player_configs(
         - "player1_analyzer": Player 1 analyzer configuration
         - "player2_analyzer": Player 2 analyzer configuration
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "player1_player": PlayerAgentConfig(
         ...         llm_config="gpt-4o",

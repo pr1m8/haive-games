@@ -49,7 +49,7 @@ PREVIOUS GAME EXAMPLES:
             ),
             (
                 "human",
-                """Current game state:
+                """Current game state:.
 {display_grid}
 
 Previous incorrect guesses:

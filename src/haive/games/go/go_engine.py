@@ -20,6 +20,11 @@ except ImportError:
     # Create dummy classes for when sgfmill is not available
     class DummySgfmill:
         def __getattr__(self, name):
+            """  Getattr  .
+
+Args:
+    name: [TODO: Add description]
+"""
             raise ImportError(
                 "sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"
             )
@@ -33,6 +38,11 @@ class GoGame:
     """Simple Go game wrapper using sgfmill."""
 
     def __init__(self, board_size: int = 19):
+        """  Init  .
+
+Args:
+    board_size: [TODO: Add description]
+"""
         if not SGFMILL_AVAILABLE:
             raise ImportError(
                 "sgfmill is required for Go game functionality. Please install it with: pip install sgfmill"

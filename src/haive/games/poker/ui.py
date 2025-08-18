@@ -10,6 +10,8 @@ class PokerUI:
     """Clean, readable UI for the poker game simulation."""
 
     def __init__(self):
+        """  Init  .
+"""
         self.layout = Layout()
         self.current_game_state = None
         self.animation_frame = 0

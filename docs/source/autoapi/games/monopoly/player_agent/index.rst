@@ -3,6 +3,22 @@ games.monopoly.player_agent
 
 .. py:module:: games.monopoly.player_agent
 
+Monopoly player agent implementation.
+
+This module provides the player agent (subgraph) for making individual
+player decisions in Monopoly, including:
+    - Property purchase decisions
+    - Jail decisions
+    - Building decisions
+    - Trade negotiations
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">4 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Monopoly player agent implementation.
@@ -15,388 +31,379 @@ games.monopoly.player_agent
        - Trade negotiations
 
 
-   .. autolink-examples:: games.monopoly.player_agent
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (4)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.player_agent.MonopolyGameAgentConfig
-   games.monopoly.player_agent.MonopolyPlayerAgent
-   games.monopoly.player_agent.MonopolyPlayerAgentConfig
-   games.monopoly.player_agent.PlayerDecisionState
+      games.monopoly.player_agent.MonopolyGameAgentConfig
+      games.monopoly.player_agent.MonopolyPlayerAgent
+      games.monopoly.player_agent.MonopolyPlayerAgentConfig
+      games.monopoly.player_agent.PlayerDecisionState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyGameAgentConfig
 
-   Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
+            Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
 
 
-   Configuration class for monopoly game agents.
+            Configuration class for monopoly game agents.
 
-   This class defines the configuration parameters for monopoly agents, including:
-       - Game settings (players, turn limits)
-       - Player decision configurations
-       - Board and game state initialization
+            This class defines the configuration parameters for monopoly agents, including:
+                - Game settings (players, turn limits)
+                - Player decision configurations
+                - Board and game state initialization
 
-   .. attribute:: state_schema
+            .. attribute:: state_schema
 
-      The state schema for the game
+               The state schema for the game
 
-      :type: type
+               :type: type
 
-   .. attribute:: player_names
+            .. attribute:: player_names
 
-      Names of players in the game
+               Names of players in the game
 
-      :type: List[str]
+               :type: List[str]
 
-   .. attribute:: max_turns
+            .. attribute:: max_turns
 
-      Maximum turns before ending game
+               Maximum turns before ending game
 
-      :type: int
+               :type: int
 
-   .. attribute:: enable_trading
+            .. attribute:: enable_trading
 
-      Whether to enable trade negotiations
+               Whether to enable trade negotiations
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: enable_building
+            .. attribute:: enable_building
 
-      Whether to enable house/hotel building
+               Whether to enable house/hotel building
 
-      :type: bool
+               :type: bool
 
 
-   .. autolink-examples:: MonopolyGameAgentConfig
-      :collapse:
+            .. py:class:: Config
 
-   .. py:class:: Config
+               Pydantic configuration class.
 
-      Pydantic configuration class.
 
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
-      .. autolink-examples:: Config
-         :collapse:
 
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
 
 
+            .. py:method:: create_initial_state() -> haive.games.monopoly.state.MonopolyState
 
+               Create the initial game state with all required fields and proper.
+               validation.
 
-   .. py:method:: create_initial_state() -> haive.games.monopoly.state.MonopolyState
 
-      Create the initial game state with all required fields and proper.
-      validation.
 
+            .. py:method:: create_player_agent() -> Any
 
-      .. autolink-examples:: create_initial_state
-         :collapse:
+               Create the player decision agent.
 
 
-   .. py:method:: create_player_agent() -> Any
 
-      Create the player decision agent.
+            .. py:method:: setup_player_agent_engines() -> None
 
+               Set up the engines for the player agent if not already configured.
 
-      .. autolink-examples:: create_player_agent
-         :collapse:
 
 
-   .. py:method:: setup_player_agent_engines() -> None
+            .. py:attribute:: enable_auctions
+               :type:  bool
+               :value: None
 
-      Set up the engines for the player agent if not already configured.
 
 
-      .. autolink-examples:: setup_player_agent_engines
-         :collapse:
+            .. py:attribute:: enable_building
+               :type:  bool
+               :value: None
 
 
-   .. py:attribute:: enable_auctions
-      :type:  bool
-      :value: None
 
+            .. py:attribute:: enable_trading
+               :type:  bool
+               :value: None
 
 
-   .. py:attribute:: enable_building
-      :type:  bool
-      :value: None
 
+            .. py:attribute:: max_turns
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: enable_trading
-      :type:  bool
-      :value: None
 
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
-   .. py:attribute:: max_turns
-      :type:  int
-      :value: None
 
+            .. py:attribute:: player_agent_config
+               :type:  MonopolyPlayerAgentConfig
+               :value: None
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
 
+            .. py:attribute:: player_names
+               :type:  list[str]
+               :value: None
 
 
-   .. py:attribute:: player_agent_config
-      :type:  MonopolyPlayerAgentConfig
-      :value: None
 
+            .. py:attribute:: runnable_config
+               :type:  langchain_core.runnables.RunnableConfig
+               :value: None
 
 
-   .. py:attribute:: player_names
-      :type:  list[str]
-      :value: None
 
+            .. py:attribute:: should_visualize_graph
+               :type:  bool
+               :value: None
 
 
-   .. py:attribute:: runnable_config
-      :type:  langchain_core.runnables.RunnableConfig
-      :value: None
 
+            .. py:attribute:: state_schema
+               :type:  type[pydantic.BaseModel]
+               :value: None
 
 
-   .. py:attribute:: should_visualize_graph
-      :type:  bool
-      :value: None
 
 
-
-   .. py:attribute:: state_schema
-      :type:  type[pydantic.BaseModel]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyPlayerAgent(config: MonopolyPlayerAgentConfig)
 
-   Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`MonopolyPlayerAgentConfig`\ ]
+            Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`MonopolyPlayerAgentConfig`\ ]
 
 
-   Player agent for making individual decisions in Monopoly.
+            Player agent for making individual decisions in Monopoly.
 
-   Initialize the player agent.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            Initialize the player agent.
 
 
-   .. autolink-examples:: MonopolyPlayerAgent
-      :collapse:
+            .. py:method:: _prepare_jail_context(decision_state: PlayerDecisionState) -> dict[str, Any]
 
-   .. py:method:: _prepare_jail_context(decision_state: PlayerDecisionState) -> dict[str, Any]
-
-      Prepare context for jail decision.
+               Prepare context for jail decision.
 
 
-      .. autolink-examples:: _prepare_jail_context
-         :collapse:
+
+            .. py:method:: _prepare_property_context(decision_state: PlayerDecisionState) -> dict[str, Any]
+
+               Prepare context for property decision.
 
 
-   .. py:method:: _prepare_property_context(decision_state: PlayerDecisionState) -> dict[str, Any]
 
-      Prepare context for property decision.
+            .. py:method:: get_decision_route(state: pydantic.BaseModel) -> str
 
-
-      .. autolink-examples:: _prepare_property_context
-         :collapse:
+               Get the route for the decision.
 
 
-   .. py:method:: get_decision_route(state: pydantic.BaseModel) -> str
 
-      Get the route for the decision.
+            .. py:method:: make_building_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-
-      .. autolink-examples:: get_decision_route
-         :collapse:
+               Make a building decision.
 
 
-   .. py:method:: make_building_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-      Make a building decision.
+            .. py:method:: make_jail_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-
-      .. autolink-examples:: make_building_decision
-         :collapse:
+               Make a jail-related decision.
 
 
-   .. py:method:: make_jail_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-      Make a jail-related decision.
+            .. py:method:: make_property_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-
-      .. autolink-examples:: make_jail_decision
-         :collapse:
+               Make a property purchase decision.
 
 
-   .. py:method:: make_property_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-      Make a property purchase decision.
+            .. py:method:: make_trade_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-
-      .. autolink-examples:: make_property_decision
-         :collapse:
+               Make a trade decision.
 
 
-   .. py:method:: make_trade_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-      Make a trade decision.
+            .. py:method:: route_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-
-      .. autolink-examples:: make_trade_decision
-         :collapse:
+               Route to appropriate decision node based on decision type.
 
 
-   .. py:method:: route_decision(state: pydantic.BaseModel) -> langgraph.types.Command
 
-      Route to appropriate decision node based on decision type.
+            .. py:method:: setup_workflow() -> None
 
-
-      .. autolink-examples:: route_decision
-         :collapse:
+               Set up the player decision workflow.
 
 
-   .. py:method:: setup_workflow() -> None
 
-      Set up the player decision workflow.
-
-
-      .. autolink-examples:: setup_workflow
-         :collapse:
+            .. py:attribute:: engines
 
 
-   .. py:attribute:: engines
 
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyPlayerAgentConfig
 
-   Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
+            Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
 
 
-   Configuration for monopoly player decision agent.
+            Configuration for monopoly player decision agent.
 
 
-   .. autolink-examples:: MonopolyPlayerAgentConfig
-      :collapse:
+            .. py:class:: Config
 
-   .. py:class:: Config
-
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
 
 
 
-   .. py:attribute:: engines
-      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
-      :value: None
+            .. py:attribute:: engines
+               :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+               :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: state_schema
-      :type:  type[pydantic.BaseModel]
-      :value: None
+            .. py:attribute:: state_schema
+               :type:  type[pydantic.BaseModel]
+               :value: None
 
 
 
-.. py:class:: PlayerDecisionState
 
-   Bases: :py:obj:`haive.core.schema.prebuilt.messages_state.MessagesState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: PlayerDecisionState(/, **data: Any)
 
-   State for player decision subgraph.
-
-
-   .. autolink-examples:: PlayerDecisionState
-      :collapse:
-
-   .. py:property:: decision
-      :type: haive.games.monopoly.models.PropertyDecision | haive.games.monopoly.models.JailDecision | haive.games.monopoly.models.BuildingDecision | haive.games.monopoly.models.TradeResponse | str | Any
+            Bases: :py:obj:`haive.core.schema.prebuilt.messages_state.MessagesState`
 
 
-      Get the decision.
+            State for player decision subgraph.
 
-      .. autolink-examples:: decision
-         :collapse:
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   .. py:attribute:: decision_type
-      :type:  haive.games.monopoly.models.PlayerActionType | Any
-      :value: None
-
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. py:attribute:: decisions
-      :type:  Annotated[list[haive.games.monopoly.models.PropertyDecision | haive.games.monopoly.models.JailDecision | haive.games.monopoly.models.BuildingDecision | haive.games.monopoly.models.TradeResponse | str | Any], operator.add]
-      :value: None
+            .. py:property:: decision
+               :type: haive.games.monopoly.models.PropertyDecision | haive.games.monopoly.models.JailDecision | haive.games.monopoly.models.BuildingDecision | haive.games.monopoly.models.TradeResponse | str | Any
 
 
+               Get the decision.
 
-   .. py:attribute:: dice_roll
-      :type:  int
-      :value: None
+
+            .. py:attribute:: decision_type
+               :type:  haive.games.monopoly.models.PlayerActionType | Any
+               :value: None
 
 
 
-   .. py:attribute:: error_message
-      :type:  str
-      :value: None
+            .. py:attribute:: decisions
+               :type:  Annotated[list[haive.games.monopoly.models.PropertyDecision | haive.games.monopoly.models.JailDecision | haive.games.monopoly.models.BuildingDecision | haive.games.monopoly.models.TradeResponse | str | Any], operator.add]
+               :value: None
 
 
 
-   .. py:attribute:: game_state
-      :type:  haive.games.monopoly.state.MonopolyState
-      :value: None
+            .. py:attribute:: dice_roll
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: player_money
-      :type:  int
-      :value: None
+            .. py:attribute:: error_message
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: player_name
-      :type:  str
-      :value: None
+            .. py:attribute:: game_state
+               :type:  haive.games.monopoly.state.MonopolyState
+               :value: None
 
 
 
-   .. py:attribute:: property_name
-      :type:  str
-      :value: None
+            .. py:attribute:: player_money
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: property_price
-      :type:  int
-      :value: None
+            .. py:attribute:: player_name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: reasoning
-      :type:  Annotated[list[str], operator.add]
-      :value: None
+            .. py:attribute:: property_name
+               :type:  str
+               :value: None
 
 
+
+            .. py:attribute:: property_price
+               :type:  int
+               :value: None
+
+
+
+            .. py:attribute:: reasoning
+               :type:  Annotated[list[str], operator.add]
+               :value: None
+
+
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.monopoly.player_agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

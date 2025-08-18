@@ -22,6 +22,8 @@ class MancalaPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Mancala game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -97,6 +99,8 @@ class MancalaEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Mancala game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = MancalaPlayerIdentifiers()
         prompt_generator = MancalaPromptGenerator()
         super().__init__(identifiers, prompt_generator)

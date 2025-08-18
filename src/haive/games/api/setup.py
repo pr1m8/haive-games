@@ -101,7 +101,7 @@ def create_chess_api(
     Returns:
         Configured GameAPI for chess
 
-    Example:
+    Examples:
         >>> app = FastAPI()
         >>> chess_api = create_chess_api(
         ...     app,
@@ -139,7 +139,7 @@ def create_connect4_api(
     Returns:
         Configured GameAPI for Connect4
 
-    Example:
+    Examples:
         >>> app = FastAPI()
         >>> connect4_api = create_connect4_api(
         ...     app,
@@ -174,7 +174,7 @@ def create_tic_tac_toe_api(
     Returns:
         Configured GameAPI for Tic-Tac-Toe
 
-    Example:
+    Examples:
         >>> app = FastAPI()
         >>> ttt_api = create_tic_tac_toe_api(
         ...     app,
@@ -219,6 +219,8 @@ if __name__ == "__main__":
 
     @app.get("/")
     async def root():
+        """Root.
+"""
         return {
             "message": "Haive Games API",
             "games": {

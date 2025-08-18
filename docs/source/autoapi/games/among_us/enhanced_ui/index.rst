@@ -3,6 +3,18 @@ games.among_us.enhanced_ui
 
 .. py:module:: games.among_us.enhanced_ui
 
+Enhanced Rich UI module for Among Us game visualization.
+
+This module provides an enhanced rich console UI for visualizing the Among Us game, with
+better styling, animated visualizations, and improved game information display.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Enhanced Rich UI module for Among Us game visualization.
@@ -11,316 +23,287 @@ games.among_us.enhanced_ui
    better styling, animated visualizations, and improved game information display.
 
 
-   .. autolink-examples:: games.among_us.enhanced_ui
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.among_us.enhanced_ui.logger
+      games.among_us.enhanced_ui.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.among_us.enhanced_ui.EnhancedAmongUsUI
+      games.among_us.enhanced_ui.EnhancedAmongUsUI
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: EnhancedAmongUsUI(console: rich.console.Console | None = None)
 
-   Enhanced UI for Among Us game with rich terminal graphics.
+            Enhanced UI for Among Us game with rich terminal graphics.
 
-   This class provides a visually appealing terminal UI for Among Us games,
-   with styled components, animations, and comprehensive game information.
+            This class provides a visually appealing terminal UI for Among Us games,
+            with styled components, animations, and comprehensive game information.
 
-   Features:
-       - Beautiful game map visualization with colored squares
-       - Animated transitions between game states
-       - Detailed player status display
-       - Vent and sabotage system visualization
-       - Meeting and voting interfaces
-       - Game over screens with detailed statistics
+            Features:
+                - Beautiful game map visualization with colored squares
+                - Animated transitions between game states
+                - Detailed player status display
+                - Vent and sabotage system visualization
+                - Meeting and voting interfaces
+                - Game over screens with detailed statistics
 
 
-   Initialize the UI.
+            Initialize the UI.
 
-   :param console: Optional Rich console instance
+            :param console: Optional Rich console instance
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _format_move_description(move: dict[str, Any], player_id: str, state: haive.games.among_us.state.AmongUsState) -> str
 
+               Format a move description for display.
 
-   .. autolink-examples:: EnhancedAmongUsUI
-      :collapse:
+               :param move: Move details
+               :param player_id: ID of the player making the move
+               :param state: Current game state
 
-   .. py:method:: _format_move_description(move: dict[str, Any], player_id: str, state: haive.games.among_us.state.AmongUsState) -> str
+               :returns: Formatted move description
 
-      Format a move description for display.
 
-      :param move: Move details
-      :param player_id: ID of the player making the move
-      :param state: Current game state
 
-      :returns: Formatted move description
+            .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
 
+               Check if a dict contains the required fields for AmongUsState.
 
-      .. autolink-examples:: _format_move_description
-         :collapse:
+               :param data: Dictionary to check
 
+               :returns: True if the dict appears to be a valid game state
 
-   .. py:method:: _is_valid_game_state_dict(data: dict) -> bool
 
-      Check if a dict contains the required fields for AmongUsState.
 
-      :param data: Dictionary to check
+            .. py:method:: animate_move(move: dict[str, Any], state_before: haive.games.among_us.state.AmongUsState, state_after: haive.games.among_us.state.AmongUsState, player_id: str, delay: float = 0.5) -> None
 
-      :returns: True if the dict appears to be a valid game state
+               Animate a move being made.
 
+               :param move: Move details
+               :param state_before: State before the move
+               :param state_after: State after the move
+               :param player_id: ID of the player making the move
+               :param delay: Delay for animation
 
-      .. autolink-examples:: _is_valid_game_state_dict
-         :collapse:
+               :returns: None
 
 
-   .. py:method:: animate_move(move: dict[str, Any], state_before: haive.games.among_us.state.AmongUsState, state_after: haive.games.among_us.state.AmongUsState, player_id: str, delay: float = 0.5) -> None
 
-      Animate a move being made.
+            .. py:method:: create_game_info_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
 
-      :param move: Move details
-      :param state_before: State before the move
-      :param state_after: State after the move
-      :param player_id: ID of the player making the move
-      :param delay: Delay for animation
+               Create a panel with general game information.
 
-      :returns: None
+               :param state: Current game state
 
+               :returns: Rich panel containing game information
 
-      .. autolink-examples:: animate_move
-         :collapse:
 
 
-   .. py:method:: create_game_info_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
+            .. py:method:: create_game_over_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
 
-      Create a panel with general game information.
+               Create a panel for the game over screen.
 
-      :param state: Current game state
+               :param state: Current game state
 
-      :returns: Rich panel containing game information
+               :returns: Rich panel for game over
 
 
-      .. autolink-examples:: create_game_info_panel
-         :collapse:
 
+            .. py:method:: create_layout(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None, legal_moves: list[dict[str, Any]] | None = None) -> rich.layout.Layout
 
-   .. py:method:: create_game_over_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
+               Create the complete layout for the game UI.
 
-      Create a panel for the game over screen.
+               :param state: Current game state
+               :param player_id: Optional ID of the current player's perspective
+               :param legal_moves: Optional list of legal moves for the player
 
-      :param state: Current game state
+               :returns: Complete rich layout
 
-      :returns: Rich panel for game over
 
 
-      .. autolink-examples:: create_game_over_panel
-         :collapse:
+            .. py:method:: create_legal_moves_panel(legal_moves: list[dict[str, Any]]) -> rich.panel.Panel
 
+               Create a panel showing legal moves.
 
-   .. py:method:: create_layout(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None, legal_moves: list[dict[str, Any]] | None = None) -> rich.layout.Layout
+               :param legal_moves: List of legal moves for the player
 
-      Create the complete layout for the game UI.
+               :returns: Rich panel showing legal moves
 
-      :param state: Current game state
-      :param player_id: Optional ID of the current player's perspective
-      :param legal_moves: Optional list of legal moves for the player
 
-      :returns: Complete rich layout
 
+            .. py:method:: create_map_visualization(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None) -> rich.panel.Panel
 
-      .. autolink-examples:: create_layout
-         :collapse:
+               Create a visual representation of the map with rooms, vents, and players.
 
+               :param state: Current game state
+               :param player_id: Optional ID of the player whose perspective to show
 
-   .. py:method:: create_legal_moves_panel(legal_moves: list[dict[str, Any]]) -> rich.panel.Panel
+               :returns: Rich panel containing the map visualization
 
-      Create a panel showing legal moves.
 
-      :param legal_moves: List of legal moves for the player
 
-      :returns: Rich panel showing legal moves
+            .. py:method:: create_meeting_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
 
+               Create a panel for the meeting phase.
 
-      .. autolink-examples:: create_legal_moves_panel
-         :collapse:
+               :param state: Current game state
 
+               :returns: Rich panel for the meeting
 
-   .. py:method:: create_map_visualization(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None) -> rich.panel.Panel
 
-      Create a visual representation of the map with rooms, vents, and players.
 
-      :param state: Current game state
-      :param player_id: Optional ID of the player whose perspective to show
+            .. py:method:: create_other_players_panel(state: haive.games.among_us.state.AmongUsState, player_id: str) -> rich.panel.Panel
 
-      :returns: Rich panel containing the map visualization
+               Create a panel showing information about other players.
 
+               :param state: Current game state
+               :param player_id: ID of the current player
 
-      .. autolink-examples:: create_map_visualization
-         :collapse:
+               :returns: Rich panel containing other player information
 
 
-   .. py:method:: create_meeting_panel(state: haive.games.among_us.state.AmongUsState) -> rich.panel.Panel
 
-      Create a panel for the meeting phase.
+            .. py:method:: create_player_info_panel(state: haive.games.among_us.state.AmongUsState, player_id: str) -> rich.panel.Panel
 
-      :param state: Current game state
+               Create a panel with detailed information about the player.
 
-      :returns: Rich panel for the meeting
+               :param state: Current game state
+               :param player_id: ID of the player to show info for
 
+               :returns: Rich panel containing player information
 
-      .. autolink-examples:: create_meeting_panel
-         :collapse:
 
 
-   .. py:method:: create_other_players_panel(state: haive.games.among_us.state.AmongUsState, player_id: str) -> rich.panel.Panel
+            .. py:method:: create_sabotage_panel(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None) -> rich.panel.Panel | None
 
-      Create a panel showing information about other players.
+               Create a panel showing active sabotage information if any.
 
-      :param state: Current game state
-      :param player_id: ID of the current player
+               :param state: Current game state
+               :param player_id: Optional ID of the current player
 
-      :returns: Rich panel containing other player information
+               :returns: Rich panel for sabotage or None if no active sabotage
 
 
-      .. autolink-examples:: create_other_players_panel
-         :collapse:
 
+            .. py:method:: display_final_results(final_state: Any) -> None
 
-   .. py:method:: create_player_info_panel(state: haive.games.among_us.state.AmongUsState, player_id: str) -> rich.panel.Panel
+               Display enhanced final game results.
 
-      Create a panel with detailed information about the player.
+               :param final_state: Final game state
 
-      :param state: Current game state
-      :param player_id: ID of the player to show info for
+               :returns: None
 
-      :returns: Rich panel containing player information
 
 
-      .. autolink-examples:: create_player_info_panel
-         :collapse:
+            .. py:method:: display_state(state_data: Any, player_id: str | None = None, legal_moves: list[dict[str, Any]] | None = None) -> bool
 
+               Display the game state using enhanced rich UI.
 
-   .. py:method:: create_sabotage_panel(state: haive.games.among_us.state.AmongUsState, player_id: str | None = None) -> rich.panel.Panel | None
+               :param state_data: State data in various formats
+               :param player_id: Optional ID of the player whose perspective to show
+               :param legal_moves: Optional list of legal moves for the player
 
-      Create a panel showing active sabotage information if any.
+               :returns: True if display was successful, False otherwise
 
-      :param state: Current game state
-      :param player_id: Optional ID of the current player
 
-      :returns: Rich panel for sabotage or None if no active sabotage
 
+            .. py:method:: display_welcome() -> None
 
-      .. autolink-examples:: create_sabotage_panel
-         :collapse:
+               Display welcome message and game introduction.
 
+               :returns: None
 
-   .. py:method:: display_final_results(final_state: Any) -> None
 
-      Display enhanced final game results.
 
-      :param final_state: Final game state
+            .. py:method:: extract_game_state(state_data: Any) -> haive.games.among_us.state.AmongUsState | None
 
-      :returns: None
+               Extract AmongUsState from various input formats.
 
+               :param state_data: State data in various formats
 
-      .. autolink-examples:: display_final_results
-         :collapse:
+               :returns: AmongUsState instance or None if extraction fails
 
 
-   .. py:method:: display_state(state_data: Any, player_id: str | None = None, legal_moves: list[dict[str, Any]] | None = None) -> bool
 
-      Display the game state using enhanced rich UI.
+            .. py:method:: run_among_us_game(agent, delay: float = 1.0) -> haive.games.among_us.state.AmongUsState
 
-      :param state_data: State data in various formats
-      :param player_id: Optional ID of the player whose perspective to show
-      :param legal_moves: Optional list of legal moves for the player
+               Run a complete Among Us game with UI visualization.
 
-      :returns: True if display was successful, False otherwise
+               :param agent: The game agent that manages the game logic
+               :param delay: Delay between game states
 
+               :returns: Final game state
 
-      .. autolink-examples:: display_state
-         :collapse:
 
 
-   .. py:method:: display_welcome() -> None
+            .. py:method:: show_thinking(player_id: str, message: str = 'Thinking...') -> None
 
-      Display welcome message and game introduction.
+               Display a thinking animation for the player.
 
-      :returns: None
+               :param player_id: ID of the player who is thinking
+               :param message: Message to display during thinking
 
+               :returns: None
 
-      .. autolink-examples:: display_welcome
-         :collapse:
 
 
-   .. py:method:: extract_game_state(state_data: Any) -> haive.games.among_us.state.AmongUsState | None
+            .. py:attribute:: colors
 
-      Extract AmongUsState from various input formats.
 
-      :param state_data: State data in various formats
+            .. py:attribute:: console
 
-      :returns: AmongUsState instance or None if extraction fails
 
+            .. py:attribute:: map_symbols
 
-      .. autolink-examples:: extract_game_state
-         :collapse:
 
+            .. py:attribute:: symbols
 
-   .. py:method:: run_among_us_game(agent, delay: float = 1.0) -> haive.games.among_us.state.AmongUsState
 
-      Run a complete Among Us game with UI visualization.
 
-      :param agent: The game agent that manages the game logic
-      :param delay: Delay between game states
-
-      :returns: Final game state
-
-
-      .. autolink-examples:: run_among_us_game
-         :collapse:
-
-
-   .. py:method:: show_thinking(player_id: str, message: str = 'Thinking...') -> None
-
-      Display a thinking animation for the player.
-
-      :param player_id: ID of the player who is thinking
-      :param message: Message to display during thinking
-
-      :returns: None
-
-
-      .. autolink-examples:: show_thinking
-         :collapse:
-
-
-   .. py:attribute:: colors
-
-
-   .. py:attribute:: console
-
-
-   .. py:attribute:: map_symbols
-
-
-   .. py:attribute:: symbols
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.among_us.enhanced_ui import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

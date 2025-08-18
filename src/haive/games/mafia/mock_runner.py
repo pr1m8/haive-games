@@ -4,7 +4,7 @@ This module provides a simplified version of the Mafia game runner that
 uses mock responses instead of actual LLMs, allowing for faster testing
 and demonstration without requiring API keys or internet access.
 
-Example:
+Examples:
     ```bash
     python mock_runner.py --players 5 --days 1 --debug
     ```
@@ -305,6 +305,11 @@ class MockEngine:
     """A mock engine that returns predefined responses."""
 
     def __init__(self, role):
+        """  Init  .
+
+Args:
+    role: [TODO: Add description]
+"""
         self.role = role
 
     def invoke(self, context):

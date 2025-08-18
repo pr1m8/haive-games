@@ -19,6 +19,8 @@ class HanoiUI:
     """Rich UI for Tower of Hanoi game."""
 
     def __init__(self):
+        """  Init  .
+"""
         self.game: HanoiGame | None = None
         self.agent: HanoiAgent | None = None
         self.state = {}

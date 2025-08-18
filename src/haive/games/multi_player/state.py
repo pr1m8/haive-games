@@ -8,7 +8,7 @@ supporting features like:
     - Public and private state management
     - Error handling
 
-Example:
+Examples:
     >>> from haive.agents.agent_games.framework.multi_player.state import MultiPlayerGameState
     >>>
     >>> # Create a game state
@@ -47,7 +47,7 @@ class MultiPlayerGameState(BaseModel):
         public_state (Dict[str, Any]): Public game state visible to all.
         error_message (Optional[str]): Error message if any.
 
-    Example:
+    Examples:
         >>> state = MultiPlayerGameState(
         ...     players=["player1", "player2"],
         ...     game_phase=GamePhase.SETUP
@@ -88,7 +88,7 @@ class MultiPlayerGameState(BaseModel):
         Returns:
             str: The current player's name/ID, or empty string if invalid index.
 
-        Example:
+        Examples:
             >>> state = MultiPlayerGameState(players=["p1", "p2"])
             >>> state.current_player
             'p1'
@@ -107,7 +107,7 @@ class MultiPlayerGameState(BaseModel):
         Returns:
             str: The next player's name/ID.
 
-        Example:
+        Examples:
             >>> state = MultiPlayerGameState(players=["p1", "p2", "p3"])
             >>> state.advance_player()
             'p2'
@@ -132,7 +132,7 @@ class MultiPlayerGameState(BaseModel):
         Returns:
             Dict[str, Any]: The player's private data, or empty dict if none exists.
 
-        Example:
+        Examples:
             >>> state = MultiPlayerGameState(players=["p1", "p2"])
             >>> state.player_data["p1"] = {"secret_info": 42}
             >>> state.get_player_private_data("p1")

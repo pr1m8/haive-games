@@ -3,6 +3,18 @@ games.core.game.containers.base
 
 .. py:module:: games.core.game.containers.base
 
+Container models for game pieces in the game framework.
+
+This module defines containers for game pieces like decks of cards, bags of tiles, and
+player hands.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">3 classes</span> • <span class="module-stat">2 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Container models for game pieces in the game framework.
@@ -11,411 +23,376 @@ games.core.game.containers.base
    player hands.
 
 
-   .. autolink-examples:: games.core.game.containers.base
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (2)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.containers.base.C
-   games.core.game.containers.base.T
+      games.core.game.containers.base.C
+      games.core.game.containers.base.T
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (3)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.containers.base.Deck
-   games.core.game.containers.base.GamePieceContainer
-   games.core.game.containers.base.PlayerHand
+      games.core.game.containers.base.Deck
+      games.core.game.containers.base.GamePieceContainer
+      games.core.game.containers.base.PlayerHand
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Deck
 
-   Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`C`\ ]
+            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`C`\ ]
 
 
-   A deck of cards.
+            A deck of cards.
 
-   This represents a collection of cards that can be drawn, shuffled, and dealt.
-
-
-
-   .. autolink-examples:: Deck
-      :collapse:
-
-   .. py:method:: deal(num_players: int, cards_per_player: int) -> list[list[C]]
-
-      Deal cards to multiple players.
-
-      :param num_players: Number of players to deal to
-      :param cards_per_player: Number of cards per player
-
-      :returns: List of lists, where each inner list contains a player's cards
-
-
-      .. autolink-examples:: deal
-         :collapse:
-
-
-   .. py:method:: discard(card: C) -> None
-
-      Add a card to the discard pile.
-
-      :param card: Card to discard
-
-
-      .. autolink-examples:: discard
-         :collapse:
-
-
-   .. py:method:: draw() -> C | None
-
-      Draw the top card and set its face up/down based on deck configuration.
-
-      :returns: The drawn card, or None if deck is empty
-
-
-      .. autolink-examples:: draw
-         :collapse:
-
-
-   .. py:method:: draw_bottom() -> C | None
-
-      Draw the bottom card.
-
-      :returns: The bottom card, or None if deck is empty
-
-
-      .. autolink-examples:: draw_bottom
-         :collapse:
-
-
-   .. py:method:: peek_bottom(count: int = 1) -> list[C]
-
-      Look at bottom cards without drawing.
-
-      :param count: Number of cards to peek at
-
-      :returns: List of cards from the bottom
-
-
-      .. autolink-examples:: peek_bottom
-         :collapse:
-
-
-   .. py:method:: peek_top(count: int = 1) -> list[C]
-
-      Look at top cards without drawing.
-
-      :param count: Number of cards to peek at
-
-      :returns: List of cards from the top
-
-
-      .. autolink-examples:: peek_top
-         :collapse:
-
-
-   .. py:method:: recycle_discards(shuffle: bool = True) -> None
-
-      Move all cards from discard pile back into the deck.
-
-      :param shuffle: Whether to shuffle the deck after recycling
-
-
-      .. autolink-examples:: recycle_discards
-         :collapse:
-
-
-   .. py:attribute:: discard_pile
-      :type:  list[C]
-      :value: None
+            This represents a collection of cards that can be drawn, shuffled, and dealt.
 
 
 
-   .. py:attribute:: face_down
-      :type:  bool
-      :value: True
+            .. py:method:: deal(num_players: int, cards_per_player: int) -> list[list[C]]
+
+               Deal cards to multiple players.
+
+               :param num_players: Number of players to deal to
+               :param cards_per_player: Number of cards per player
+
+               :returns: List of lists, where each inner list contains a player's cards
 
 
+
+            .. py:method:: discard(card: C) -> None
+
+               Add a card to the discard pile.
+
+               :param card: Card to discard
+
+
+
+            .. py:method:: draw() -> C | None
+
+               Draw the top card and set its face up/down based on deck configuration.
+
+               :returns: The drawn card, or None if deck is empty
+
+
+
+            .. py:method:: draw_bottom() -> C | None
+
+               Draw the bottom card.
+
+               :returns: The bottom card, or None if deck is empty
+
+
+
+            .. py:method:: peek_bottom(count: int = 1) -> list[C]
+
+               Look at bottom cards without drawing.
+
+               :param count: Number of cards to peek at
+
+               :returns: List of cards from the bottom
+
+
+
+            .. py:method:: peek_top(count: int = 1) -> list[C]
+
+               Look at top cards without drawing.
+
+               :param count: Number of cards to peek at
+
+               :returns: List of cards from the top
+
+
+
+            .. py:method:: recycle_discards(shuffle: bool = True) -> None
+
+               Move all cards from discard pile back into the deck.
+
+               :param shuffle: Whether to shuffle the deck after recycling
+
+
+
+            .. py:attribute:: discard_pile
+               :type:  list[C]
+               :value: None
+
+
+
+            .. py:attribute:: face_down
+               :type:  bool
+               :value: True
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GamePieceContainer(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
 
 
-   Base container for game pieces.
+            Base container for game pieces.
 
-   This represents a collection of game pieces like a deck of cards, a bag of tiles, or
-   a player's hand.
+            This represents a collection of game pieces like a deck of cards, a bag of tiles, or
+            a player's hand.
 
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:class:: Config
 
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
-   .. autolink-examples:: GamePieceContainer
-      :collapse:
 
-   .. py:class:: Config
 
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
 
+            .. py:method:: add(piece: T, position: str = 'top') -> None
 
+               Add a piece to this container.
 
+               :param piece: The piece to add
+               :param position: Where to add the piece ("top", "bottom", or "random")
 
-   .. py:method:: add(piece: T, position: str = 'top') -> None
+               :raises ValueError: If position is not valid
 
-      Add a piece to this container.
 
-      :param piece: The piece to add
-      :param position: Where to add the piece ("top", "bottom", or "random")
 
-      :raises ValueError: If position is not valid
+            .. py:method:: clear() -> None
 
+               Remove all pieces from the container.
 
-      .. autolink-examples:: add
-         :collapse:
 
 
-   .. py:method:: clear() -> None
+            .. py:method:: count() -> int
 
-      Remove all pieces from the container.
+               Count pieces in the container.
 
+               :returns: Number of pieces in the container
 
-      .. autolink-examples:: clear
-         :collapse:
 
 
-   .. py:method:: count() -> int
+            .. py:method:: draw() -> T | None
 
-      Count pieces in the container.
+               Draw the top piece.
 
-      :returns: Number of pieces in the container
+               :returns: The top piece, or None if container is empty
 
 
-      .. autolink-examples:: count
-         :collapse:
 
+            .. py:method:: draw_many(count: int) -> list[T]
 
-   .. py:method:: draw() -> T | None
+               Draw multiple pieces from the top.
 
-      Draw the top piece.
+               :param count: Number of pieces to draw
 
-      :returns: The top piece, or None if container is empty
+               :returns: List of drawn pieces
 
 
-      .. autolink-examples:: draw
-         :collapse:
 
+            .. py:method:: filter(predicate: collections.abc.Callable[[T], bool]) -> list[T]
 
-   .. py:method:: draw_many(count: int) -> list[T]
+               Filter pieces by predicate.
 
-      Draw multiple pieces from the top.
+               :param predicate: Function that returns True for pieces to include
 
-      :param count: Number of pieces to draw
+               :returns: List of pieces matching the predicate
 
-      :returns: List of drawn pieces
 
 
-      .. autolink-examples:: draw_many
-         :collapse:
+            .. py:method:: find(predicate: collections.abc.Callable[[T], bool]) -> T | None
 
+               Find a piece matching the predicate.
 
-   .. py:method:: filter(predicate: collections.abc.Callable[[T], bool]) -> list[T]
+               :param predicate: Function that returns True for the desired piece
 
-      Filter pieces by predicate.
+               :returns: The first matching piece, or None if not found
 
-      :param predicate: Function that returns True for pieces to include
 
-      :returns: List of pieces matching the predicate
 
+            .. py:method:: get_property(key: str, default: Any = None) -> Any
 
-      .. autolink-examples:: filter
-         :collapse:
+               Get a container property.
 
+               :param key: Property name
+               :param default: Default value if property doesn't exist
 
-   .. py:method:: find(predicate: collections.abc.Callable[[T], bool]) -> T | None
+               :returns: Property value or default
 
-      Find a piece matching the predicate.
 
-      :param predicate: Function that returns True for the desired piece
 
-      :returns: The first matching piece, or None if not found
+            .. py:method:: is_empty() -> bool
 
+               Check if container is empty.
 
-      .. autolink-examples:: find
-         :collapse:
+               :returns: True if the container is empty, False otherwise
 
 
-   .. py:method:: get_property(key: str, default: Any = None) -> Any
 
-      Get a container property.
+            .. py:method:: peek(count: int = 1) -> list[T]
 
-      :param key: Property name
-      :param default: Default value if property doesn't exist
+               Look at the top pieces without removing them.
 
-      :returns: Property value or default
+               :param count: Number of pieces to peek at
 
+               :returns: List of pieces from the top
 
-      .. autolink-examples:: get_property
-         :collapse:
 
 
-   .. py:method:: is_empty() -> bool
+            .. py:method:: remove(piece_id: str) -> T | None
 
-      Check if container is empty.
+               Remove a piece by ID.
 
-      :returns: True if the container is empty, False otherwise
+               :param piece_id: ID of the piece to remove
 
+               :returns: The removed piece, or None if not found
 
-      .. autolink-examples:: is_empty
-         :collapse:
 
 
-   .. py:method:: peek(count: int = 1) -> list[T]
+            .. py:method:: set_property(key: str, value: Any) -> None
 
-      Look at the top pieces without removing them.
+               Set a container property.
 
-      :param count: Number of pieces to peek at
+               :param key: Property name
+               :param value: Property value
 
-      :returns: List of pieces from the top
 
 
-      .. autolink-examples:: peek
-         :collapse:
+            .. py:method:: shuffle() -> None
 
+               Shuffle the pieces in the container.
 
-   .. py:method:: remove(piece_id: str) -> T | None
 
-      Remove a piece by ID.
 
-      :param piece_id: ID of the piece to remove
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
-      :returns: The removed piece, or None if not found
 
 
-      .. autolink-examples:: remove
-         :collapse:
+            .. py:attribute:: name
+               :type:  str
 
 
-   .. py:method:: set_property(key: str, value: Any) -> None
+            .. py:attribute:: pieces
+               :type:  list[T]
+               :value: None
 
-      Set a container property.
 
-      :param key: Property name
-      :param value: Property value
 
+            .. py:attribute:: properties
+               :type:  dict[str, Any]
+               :value: None
 
-      .. autolink-examples:: set_property
-         :collapse:
 
 
-   .. py:method:: shuffle() -> None
 
-      Shuffle the pieces in the container.
-
-
-      .. autolink-examples:: shuffle
-         :collapse:
-
-
-   .. py:attribute:: id
-      :type:  str
-      :value: None
-
-
-
-   .. py:attribute:: name
-      :type:  str
-
-
-   .. py:attribute:: pieces
-      :type:  list[T]
-      :value: None
-
-
-
-   .. py:attribute:: properties
-      :type:  dict[str, Any]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PlayerHand
 
-   Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`T`\ ]
 
 
-   A player's hand of pieces.
+            A player's hand of pieces.
 
-   This represents the collection of pieces a player holds, such as cards in a card
-   game or tiles in Scrabble.
-
-
-
-   .. autolink-examples:: PlayerHand
-      :collapse:
-
-   .. py:method:: add_piece(piece: T) -> None
-
-      Add a piece to the hand and assign ownership to the player.
-
-      :param piece: The piece to add
+            This represents the collection of pieces a player holds, such as cards in a card
+            game or tiles in Scrabble.
 
 
-      .. autolink-examples:: add_piece
-         :collapse:
+
+            .. py:method:: add_piece(piece: T) -> None
+
+               Add a piece to the hand and assign ownership to the player.
+
+               :param piece: The piece to add
 
 
-   .. py:method:: play_piece(piece_id: str) -> T | None
 
-      Play a piece (remove from hand).
+            .. py:method:: play_piece(piece_id: str) -> T | None
 
-      :param piece_id: ID of the piece to play
+               Play a piece (remove from hand).
 
-      :returns: The played piece, or None if not found
+               :param piece_id: ID of the piece to play
 
-
-      .. autolink-examples:: play_piece
-         :collapse:
+               :returns: The played piece, or None if not found
 
 
-   .. py:method:: play_pieces(piece_ids: list[str]) -> list[T]
 
-      Play multiple pieces.
+            .. py:method:: play_pieces(piece_ids: list[str]) -> list[T]
 
-      :param piece_ids: List of piece IDs to play
+               Play multiple pieces.
 
-      :returns: List of played pieces
+               :param piece_ids: List of piece IDs to play
 
-
-      .. autolink-examples:: play_pieces
-         :collapse:
+               :returns: List of played pieces
 
 
-   .. py:attribute:: player_id
-      :type:  str
 
+            .. py:attribute:: player_id
+               :type:  str
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: C
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
+
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.core.game.containers.base import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

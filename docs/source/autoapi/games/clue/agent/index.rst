@@ -3,6 +3,79 @@ games.clue.agent
 
 .. py:module:: games.clue.agent
 
+Comprehensive agent implementation for the Clue (Cluedo) mystery game.
+
+This module provides the complete agent implementation for the Clue game,
+managing game state, player interactions, AI decision-making, and visualization.
+The agent orchestrates the entire gameplay experience from initialization
+through completion, handling all game mechanics and player coordination.
+
+The agent system provides:
+- Game state initialization and management
+- Player action coordination and validation
+- AI decision-making and reasoning
+- Real-time game visualization and logging
+- Game completion detection and handling
+- Performance monitoring and optimization
+
+Key Features:
+    - Complete game orchestration from start to finish
+    - Real-time visualization with detailed game state display
+    - Robust error handling and edge case management
+    - Performance monitoring and game completion detection
+    - Comprehensive logging for debugging and analysis
+    - Integration with the Haive agent framework
+
+.. rubric:: Examples
+
+Basic agent usage::
+
+    from haive.games.clue.agent import ClueAgent
+    from haive.games.clue.config import ClueConfig
+
+    # Create agent with default configuration
+    agent = ClueAgent()
+
+    # Run a complete game
+    final_state = agent.run_game()
+    print(f"Game completed with status: {final_state['game_status']}")
+
+Custom configuration::
+
+    from haive.games.clue.config import ClueConfig
+
+    # Create custom configuration
+    config = ClueConfig.competitive_game(max_turns=15)
+    agent = ClueAgent(config)
+
+    # Run game without visualization for performance
+    final_state = agent.run_game(visualize=False)
+
+Game state management::
+
+    # Initialize game state
+    initial_state = agent.initialize_game({})
+
+    # Visualize current state
+    agent.visualize_state(initial_state)
+
+    # Check game completion
+    from haive.games.clue.state import ClueState
+    state = ClueState(**initial_state)
+    if state.is_game_over:
+        print(f"Game ended! Winner: {state.winner}")
+
+The agent integrates seamlessly with the Haive framework and provides complete
+functionality for running Clue games with AI players, visualization, and
+comprehensive state management.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Comprehensive agent implementation for the Clue (Cluedo) mystery game.
@@ -72,367 +145,383 @@ games.clue.agent
    comprehensive state management.
 
 
-   .. autolink-examples:: games.clue.agent
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.clue.agent.logger
+      games.clue.agent.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.clue.agent.ClueAgent
+      games.clue.agent.ClueAgent
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: ClueAgent(config: haive.games.clue.config.ClueConfig = ClueConfig())
 
-   Bases: :py:obj:`haive.games.framework.base.agent.GameAgent`\ [\ :py:obj:`haive.games.clue.config.ClueConfig`\ ]
+            Bases: :py:obj:`haive.games.framework.base.agent.GameAgent`\ [\ :py:obj:`haive.games.clue.config.ClueConfig`\ ]
 
 
-   Comprehensive agent for playing Clue (Cluedo) mystery games.
+            Comprehensive agent for playing Clue (Cluedo) mystery games.
 
-   This class implements the complete Clue game agent, managing all aspects
-   of gameplay including state management, player coordination, AI decision-making,
-   and visualization. The agent orchestrates the entire game experience from
-   initialization through completion.
+            This class implements the complete Clue game agent, managing all aspects
+            of gameplay including state management, player coordination, AI decision-making,
+            and visualization. The agent orchestrates the entire game experience from
+            initialization through completion.
 
-   The agent handles:
-   - Game state initialization with proper solution generation
-   - Player action coordination and turn management
-   - AI decision-making and reasoning processes
-   - Real-time game visualization and logging
-   - Game completion detection and result handling
-   - Performance monitoring and optimization
+            The agent handles:
+            - Game state initialization with proper solution generation
+            - Player action coordination and turn management
+            - AI decision-making and reasoning processes
+            - Real-time game visualization and logging
+            - Game completion detection and result handling
+            - Performance monitoring and optimization
 
-   The agent integrates with the Haive framework to provide a complete
-   gaming experience with configurable AI behavior, visualization options,
-   and comprehensive state management.
+            The agent integrates with the Haive framework to provide a complete
+            gaming experience with configurable AI behavior, visualization options,
+            and comprehensive state management.
 
-   .. attribute:: state_manager
+            .. attribute:: state_manager
 
-      The state management system for game logic.
-      Handles all game state transitions and validation.
+               The state management system for game logic.
+               Handles all game state transitions and validation.
 
-   .. attribute:: config
+            .. attribute:: config
 
-      The configuration object controlling agent behavior.
-      Defines game parameters, AI settings, and visualization options.
+               The configuration object controlling agent behavior.
+               Defines game parameters, AI settings, and visualization options.
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   Basic agent creation::
+            Basic agent creation::
 
-       from haive.games.clue.agent import ClueAgent
+                from haive.games.clue.agent import ClueAgent
 
-       # Create agent with default configuration
-       agent = ClueAgent()
+                # Create agent with default configuration
+                agent = ClueAgent()
 
-       # Run a complete game
-       final_state = agent.run_game()
-       print(f"Game status: {final_state['game_status']}")
+                # Run a complete game
+                final_state = agent.run_game()
+                print(f"Game status: {final_state['game_status']}")
 
-   Custom configuration::
+            Custom configuration::
 
-       from haive.games.clue.config import ClueConfig
+                from haive.games.clue.config import ClueConfig
 
-       # Create competitive configuration
-       config = ClueConfig.competitive_game(max_turns=15)
-       agent = ClueAgent(config)
+                # Create competitive configuration
+                config = ClueConfig.competitive_game(max_turns=15)
+                agent = ClueAgent(config)
 
-       # Run high-performance game
-       final_state = agent.run_game(visualize=False)
+                # Run high-performance game
+                final_state = agent.run_game(visualize=False)
 
-   Tutorial mode::
+            Tutorial mode::
 
-       # Create tutorial configuration
-       config = ClueConfig.tutorial_game()
-       agent = ClueAgent(config)
+                # Create tutorial configuration
+                config = ClueConfig.tutorial_game()
+                agent = ClueAgent(config)
 
-       # Run educational game with predetermined solution
-       final_state = agent.run_game(visualize=True)
+                # Run educational game with predetermined solution
+                final_state = agent.run_game(visualize=True)
 
-   .. note::
+            .. note::
 
-      The agent requires a configured state manager and proper game
-      configuration to function correctly. All game logic is delegated
-      to the state manager to maintain separation of concerns.
+               The agent requires a configured state manager and proper game
+               configuration to function correctly. All game logic is delegated
+               to the state manager to maintain separation of concerns.
 
-   Initialize the Clue agent with configuration.
+            Initialize the Clue agent with configuration.
 
-   Sets up the agent with the specified configuration and initializes
-   the state management system. The agent is ready to run games after
-   initialization.
+            Sets up the agent with the specified configuration and initializes
+            the state management system. The agent is ready to run games after
+            initialization.
 
-   :param config: The configuration for the Clue game.
-                  Controls game parameters, AI behavior, and visualization options.
-                  Defaults to standard configuration if not provided.
+            :param config: The configuration for the Clue game.
+                           Controls game parameters, AI behavior, and visualization options.
+                           Defaults to standard configuration if not provided.
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   Default initialization::
+            Default initialization::
 
-       agent = ClueAgent()
-       assert agent.config.max_turns == 20
-       assert agent.config.enable_analysis == True
-       assert agent.config.visualize == True
+                agent = ClueAgent()
+                assert agent.config.max_turns == 20
+                assert agent.config.enable_analysis == True
+                assert agent.config.visualize == True
 
-   Custom configuration::
+            Custom configuration::
 
-       from haive.games.clue.config import ClueConfig
+                from haive.games.clue.config import ClueConfig
 
-       config = ClueConfig(
-           max_turns=15,
-           enable_analysis=False,
-           visualize=False
-       )
-       agent = ClueAgent(config)
-       assert agent.config.max_turns == 15
+                config = ClueConfig(
+                    max_turns=15,
+                    enable_analysis=False,
+                    visualize=False
+                )
+                agent = ClueAgent(config)
+                assert agent.config.max_turns == 15
 
-   Factory method configuration::
+            Factory method configuration::
 
-       config = ClueConfig.competitive_game()
-       agent = ClueAgent(config)
-       assert agent.config.enable_analysis == False
+                config = ClueConfig.competitive_game()
+                agent = ClueAgent(config)
+                assert agent.config.enable_analysis == False
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: initialize_game(state: dict[str, Any]) -> dict[str, Any]
 
+               Initialize the Clue game with proper state setup.
 
-   .. autolink-examples:: ClueAgent
-      :collapse:
+               Creates a new game state with appropriate configuration settings,
+               including solution generation, card dealing, and player setup.
+               The initialization process sets up all necessary game components
+               for a complete Clue experience.
 
-   .. py:method:: initialize_game(state: dict[str, Any]) -> dict[str, Any]
+               :param state: Initial state dictionary (unused here but required for interface).
+                             Maintained for compatibility with the GameAgent interface.
 
-      Initialize the Clue game with proper state setup.
+               :returns:
 
-      Creates a new game state with appropriate configuration settings,
-      including solution generation, card dealing, and player setup.
-      The initialization process sets up all necessary game components
-      for a complete Clue experience.
+                         New game state dictionary ready for gameplay.
+                             Contains all game information including solution, player cards,
+                             and initial game parameters.
+               :rtype: dict[str, Any]
 
-      :param state: Initial state dictionary (unused here but required for interface).
-                    Maintained for compatibility with the GameAgent interface.
+               .. rubric:: Examples
 
-      :returns:
+               Basic initialization::
 
-                New game state dictionary ready for gameplay.
-                    Contains all game information including solution, player cards,
-                    and initial game parameters.
-      :rtype: dict[str, Any]
+                   agent = ClueAgent()
+                   initial_state = agent.initialize_game({})
 
-      .. rubric:: Examples
+                   # Verify game state structure
+                   assert "solution" in initial_state
+                   assert "player1_cards" in initial_state
+                   assert "player2_cards" in initial_state
+                   assert initial_state["current_player"] == "player1"
+                   assert initial_state["game_status"] == "ongoing"
 
-      Basic initialization::
+               Custom configuration initialization::
 
-          agent = ClueAgent()
-          initial_state = agent.initialize_game({})
+                   from haive.games.clue.config import ClueConfig
 
-          # Verify game state structure
-          assert "solution" in initial_state
-          assert "player1_cards" in initial_state
-          assert "player2_cards" in initial_state
-          assert initial_state["current_player"] == "player1"
-          assert initial_state["game_status"] == "ongoing"
+                   config = ClueConfig(
+                       first_player="player2",
+                       max_turns=15
+                   )
+                   agent = ClueAgent(config)
+                   initial_state = agent.initialize_game({})
 
-      Custom configuration initialization::
+                   assert initial_state["current_player"] == "player2"
+                   assert initial_state["max_turns"] == 15
 
-          from haive.games.clue.config import ClueConfig
+               Predetermined solution::
 
-          config = ClueConfig(
-              first_player="player2",
-              max_turns=15
-          )
-          agent = ClueAgent(config)
-          initial_state = agent.initialize_game({})
+                   from haive.games.clue.models import ValidSuspect, ValidWeapon, ValidRoom
 
-          assert initial_state["current_player"] == "player2"
-          assert initial_state["max_turns"] == 15
+                   solution = {
+                       "suspect": ValidSuspect.COLONEL_MUSTARD.value,
+                       "weapon": ValidWeapon.KNIFE.value,
+                       "room": ValidRoom.KITCHEN.value
+                   }
+                   config = ClueConfig(solution=solution)
+                   agent = ClueAgent(config)
+                   initial_state = agent.initialize_game({})
 
-      Predetermined solution::
+                   assert initial_state["solution"]["suspect"] == "Colonel Mustard"
+                   assert initial_state["solution"]["weapon"] == "Knife"
+                   assert initial_state["solution"]["room"] == "Kitchen"
 
-          from haive.games.clue.models import ValidSuspect, ValidWeapon, ValidRoom
+               .. note::
 
-          solution = {
-              "suspect": ValidSuspect.COLONEL_MUSTARD.value,
-              "weapon": ValidWeapon.KNIFE.value,
-              "room": ValidRoom.KITCHEN.value
-          }
-          config = ClueConfig(solution=solution)
-          agent = ClueAgent(config)
-          initial_state = agent.initialize_game({})
+                  The state parameter is unused in this implementation but is
+                  maintained for interface compatibility. All initialization
+                  parameters come from the agent's configuration object.
 
-          assert initial_state["solution"]["suspect"] == "Colonel Mustard"
-          assert initial_state["solution"]["weapon"] == "Knife"
-          assert initial_state["solution"]["room"] == "Kitchen"
 
-      .. note::
 
-         The state parameter is unused in this implementation but is
-         maintained for interface compatibility. All initialization
-         parameters come from the agent's configuration object.
+            .. py:method:: run_game(visualize: bool = True) -> dict[str, Any]
 
+               Run a complete Clue game with optional visualization and monitoring.
 
-      .. autolink-examples:: initialize_game
-         :collapse:
+               Executes a full game from initialization to completion, with optional
+               real-time visualization and comprehensive monitoring for game completion
+               and performance. The method handles all game flow and provides robust
+               error handling and loop detection.
 
+               :param visualize: Whether to visualize each game state.
+                                 Overrides the agent's configuration visualization setting.
+                                 True enables real-time game display, False runs silently.
 
-   .. py:method:: run_game(visualize: bool = True) -> dict[str, Any]
+               :returns:
 
-      Run a complete Clue game with optional visualization and monitoring.
+                         The final game state dictionary.
+                             Contains complete game results including winner, solution,
+                             and full game history.
+               :rtype: dict[str, Any]
 
-      Executes a full game from initialization to completion, with optional
-      real-time visualization and comprehensive monitoring for game completion
-      and performance. The method handles all game flow and provides robust
-      error handling and loop detection.
+               .. rubric:: Examples
 
-      :param visualize: Whether to visualize each game state.
-                        Overrides the agent's configuration visualization setting.
-                        True enables real-time game display, False runs silently.
+               Basic game execution::
 
-      :returns:
+                   agent = ClueAgent()
+                   final_state = agent.run_game()
 
-                The final game state dictionary.
-                    Contains complete game results including winner, solution,
-                    and full game history.
-      :rtype: dict[str, Any]
+                   # Check results
+                   print(f"Game status: {final_state['game_status']}")
+                   print(f"Winner: {final_state.get('winner', 'No winner')}")
+                   print(f"Total turns: {len(final_state['guesses'])}")
 
-      .. rubric:: Examples
+               Silent game execution::
 
-      Basic game execution::
+                   agent = ClueAgent()
+                   final_state = agent.run_game(visualize=False)
 
-          agent = ClueAgent()
-          final_state = agent.run_game()
+                   # Faster execution without visualization
+                   assert final_state['game_status'] in ['player1_win', 'player2_win']
 
-          # Check results
-          print(f"Game status: {final_state['game_status']}")
-          print(f"Winner: {final_state.get('winner', 'No winner')}")
-          print(f"Total turns: {len(final_state['guesses'])}")
+               Performance monitoring::
 
-      Silent game execution::
+                   import time
+                   start_time = time.time()
 
-          agent = ClueAgent()
-          final_state = agent.run_game(visualize=False)
+                   agent = ClueAgent()
+                   final_state = agent.run_game(visualize=False)
 
-          # Faster execution without visualization
-          assert final_state['game_status'] in ['player1_win', 'player2_win']
+                   duration = time.time() - start_time
+                   print(f"Game completed in {duration:.2f} seconds")
+                   print(f"Final turn: {len(final_state['guesses'])}")
 
-      Performance monitoring::
+               Configuration-based execution::
 
-          import time
-          start_time = time.time()
+                   # Use competitive configuration
+                   config = ClueConfig.competitive_game(max_turns=15)
+                   agent = ClueAgent(config)
+                   final_state = agent.run_game()
 
-          agent = ClueAgent()
-          final_state = agent.run_game(visualize=False)
+                   # Should finish within 15 turns
+                   assert len(final_state['guesses']) <= 15
 
-          duration = time.time() - start_time
-          print(f"Game completed in {duration:.2f} seconds")
-          print(f"Final turn: {len(final_state['guesses'])}")
+               .. note::
 
-      Configuration-based execution::
+                  The method includes infinite loop detection to prevent games
+                  from running indefinitely. If the maximum turns are reached
+                  or the game state stops changing, the game will be automatically
+                  terminated with appropriate logging.
 
-          # Use competitive configuration
-          config = ClueConfig.competitive_game(max_turns=15)
-          agent = ClueAgent(config)
-          final_state = agent.run_game()
 
-          # Should finish within 15 turns
-          assert len(final_state['guesses']) <= 15
 
-      .. note::
+            .. py:method:: visualize_state(state: dict[str, Any]) -> None
 
-         The method includes infinite loop detection to prevent games
-         from running indefinitely. If the maximum turns are reached
-         or the game state stops changing, the game will be automatically
-         terminated with appropriate logging.
+               Visualize the current game state with comprehensive display.
 
+               Provides a detailed visual representation of the current game state,
+               including game progress, player information, guess history, and
+               solution details (when appropriate). The visualization is designed
+               to be informative and easy to read.
 
-      .. autolink-examples:: run_game
-         :collapse:
+               :param state: The state dictionary to visualize.
+                             Must contain all necessary game state information.
 
+               .. rubric:: Examples
 
-   .. py:method:: visualize_state(state: dict[str, Any]) -> None
+               Basic visualization::
 
-      Visualize the current game state with comprehensive display.
+                   agent = ClueAgent()
+                   initial_state = agent.initialize_game({})
+                   agent.visualize_state(initial_state)
+                   # Outputs:
+                   # ==================================================
+                   # 🎮 Game: Clue v1.0.0
+                   # 📊 Turn: 1/20
+                   # 🎭 Current Player: player1
+                   # 📝 Status: ongoing
+                   # ==================================================
+                   # No guesses yet.
 
-      Provides a detailed visual representation of the current game state,
-      including game progress, player information, guess history, and
-      solution details (when appropriate). The visualization is designed
-      to be informative and easy to read.
+               Game in progress::
 
-      :param state: The state dictionary to visualize.
-                    Must contain all necessary game state information.
+                   # After some gameplay
+                   agent.visualize_state(current_state)
+                   # Outputs:
+                   # ==================================================
+                   # 🎮 Game: Clue v1.0.0
+                   # 📊 Turn: 5/20
+                   # 🎭 Current Player: player2
+                   # 📝 Status: ongoing
+                   # ==================================================
+                   # Turn 1: Colonel Mustard, Knife, Kitchen | Response: Alice
+                   # Turn 2: Professor Plum, Candlestick, Library | Response: No card shown
+                   # ...
 
-      .. rubric:: Examples
+               Game completion::
 
-      Basic visualization::
+                   # When game ends
+                   agent.visualize_state(final_state)
+                   # Outputs:
+                   # ==================================================
+                   # 🎮 Game: Clue v1.0.0
+                   # 📊 Turn: 8/20
+                   # 🎭 Current Player: player1
+                   # 📝 Status: player1_win
+                   # 🔑 Solution: Colonel Mustard, Knife, Kitchen
+                   # ==================================================
+                   # [Full game history displayed]
 
-          agent = ClueAgent()
-          initial_state = agent.initialize_game({})
-          agent.visualize_state(initial_state)
-          # Outputs:
-          # ==================================================
-          # 🎮 Game: Clue v1.0.0
-          # 📊 Turn: 1/20
-          # 🎭 Current Player: player1
-          # 📝 Status: ongoing
-          # ==================================================
-          # No guesses yet.
+               .. note::
 
-      Game in progress::
+                  Visualization is controlled by the agent's configuration.
+                  If visualize=False, this method returns immediately without
+                  displaying anything. The display includes emoji icons for
+                  better readability and visual appeal.
 
-          # After some gameplay
-          agent.visualize_state(current_state)
-          # Outputs:
-          # ==================================================
-          # 🎮 Game: Clue v1.0.0
-          # 📊 Turn: 5/20
-          # 🎭 Current Player: player2
-          # 📝 Status: ongoing
-          # ==================================================
-          # Turn 1: Colonel Mustard, Knife, Kitchen | Response: Alice
-          # Turn 2: Professor Plum, Candlestick, Library | Response: No card shown
-          # ...
 
-      Game completion::
 
-          # When game ends
-          agent.visualize_state(final_state)
-          # Outputs:
-          # ==================================================
-          # 🎮 Game: Clue v1.0.0
-          # 📊 Turn: 8/20
-          # 🎭 Current Player: player1
-          # 📝 Status: player1_win
-          # 🔑 Solution: Colonel Mustard, Knife, Kitchen
-          # ==================================================
-          # [Full game history displayed]
+            .. py:attribute:: state_manager
 
-      .. note::
 
-         Visualization is controlled by the agent's configuration.
-         If visualize=False, this method returns immediately without
-         displaying anything. The display includes emoji icons for
-         better readability and visual appeal.
 
-
-      .. autolink-examples:: visualize_state
-         :collapse:
-
-
-   .. py:attribute:: state_manager
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.clue.agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

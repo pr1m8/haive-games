@@ -461,6 +461,11 @@ def example_6_tournament_mode():
         # Create tournament runner
         class TournamentRunner:
             def __init__(self, agent: TicTacToeAgent):
+                """  Init  .
+
+Args:
+    agent: [TODO: Add description]
+"""
                 self.agent = agent
                 self.results = []
                 self.stats = {

@@ -3,6 +3,18 @@ games.single_player.flow_free.state
 
 .. py:module:: games.single_player.flow_free.state
 
+State model for Flow Free game.
+
+This module defines the game state for Flow Free, tracking the board, flows, and game
+progress.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">4 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    State model for Flow Free game.
@@ -11,387 +23,382 @@ games.single_player.flow_free.state
    progress.
 
 
-   .. autolink-examples:: games.single_player.flow_free.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (4)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.single_player.flow_free.state.Cell
-   games.single_player.flow_free.state.Flow
-   games.single_player.flow_free.state.FlowEndpoint
-   games.single_player.flow_free.state.FlowFreeState
+      games.single_player.flow_free.state.Cell
+      games.single_player.flow_free.state.Flow
+      games.single_player.flow_free.state.FlowEndpoint
+      games.single_player.flow_free.state.FlowFreeState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Cell(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   A cell on the Flow Free board.
+            A cell on the Flow Free board.
 
-   .. attribute:: position
+            .. attribute:: position
 
-      Position of the cell.
+               Position of the cell.
 
-   .. attribute:: flow_id
+            .. attribute:: flow_id
 
-      ID of the flow occupying this cell, if any.
+               ID of the flow occupying this cell, if any.
 
-   .. attribute:: is_endpoint
+            .. attribute:: is_endpoint
 
-      Whether this cell contains an endpoint.
+               Whether this cell contains an endpoint.
 
-   .. attribute:: pipe_direction
+            .. attribute:: pipe_direction
 
-      Direction of the pipe in this cell, if any.
+               Direction of the pipe in this cell, if any.
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: Cell
-      :collapse:
-
-   .. py:attribute:: flow_id
-      :type:  str | None
-      :value: None
+            .. py:attribute:: flow_id
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: is_endpoint
-      :type:  bool
-      :value: False
+            .. py:attribute:: is_endpoint
+               :type:  bool
+               :value: False
 
 
 
-   .. py:attribute:: pipe_direction
-      :type:  haive.games.single_player.flow_free.models.PipeDirection | None
-      :value: None
+            .. py:attribute:: pipe_direction
+               :type:  haive.games.single_player.flow_free.models.PipeDirection | None
+               :value: None
 
 
 
-   .. py:attribute:: position
-      :type:  haive.games.single_player.flow_free.models.Position
+            .. py:attribute:: position
+               :type:  haive.games.single_player.flow_free.models.Position
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Flow(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   A flow in Flow Free, consisting of two endpoints and a path of pipes.
+            A flow in Flow Free, consisting of two endpoints and a path of pipes.
 
-   .. attribute:: id
+            .. attribute:: id
 
-      Unique identifier for the flow.
+               Unique identifier for the flow.
 
-   .. attribute:: color
+            .. attribute:: color
 
-      Color of the flow.
+               Color of the flow.
 
-   .. attribute:: start
+            .. attribute:: start
 
-      Starting endpoint.
+               Starting endpoint.
 
-   .. attribute:: end
+            .. attribute:: end
 
-      Ending endpoint.
+               Ending endpoint.
 
-   .. attribute:: path
+            .. attribute:: path
 
-      List of positions forming the path between endpoints.
+               List of positions forming the path between endpoints.
 
-   .. attribute:: completed
+            .. attribute:: completed
 
-      Whether the flow is complete (endpoints connected).
+               Whether the flow is complete (endpoints connected).
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
-
-
-   .. autolink-examples:: __init__
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: Flow
-      :collapse:
-
-   .. py:attribute:: color
-      :type:  str
+            .. py:attribute:: color
+               :type:  str
 
 
-   .. py:attribute:: completed
-      :type:  bool
-      :value: False
+            .. py:attribute:: completed
+               :type:  bool
+               :value: False
 
 
 
-   .. py:attribute:: end
-      :type:  FlowEndpoint
+            .. py:attribute:: end
+               :type:  FlowEndpoint
 
 
-   .. py:attribute:: id
-      :type:  str
-      :value: None
-
-
-
-   .. py:attribute:: path
-      :type:  list[haive.games.single_player.flow_free.models.Position]
-      :value: None
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: start
-      :type:  FlowEndpoint
+            .. py:attribute:: path
+               :type:  list[haive.games.single_player.flow_free.models.Position]
+               :value: None
 
+
+
+            .. py:attribute:: start
+               :type:  FlowEndpoint
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: FlowEndpoint(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`
+            Bases: :py:obj:`pydantic.BaseModel`
 
 
-   An endpoint (colored dot) in Flow Free.
+            An endpoint (colored dot) in Flow Free.
 
-   .. attribute:: position
+            .. attribute:: position
 
-      Position of the endpoint on the board.
+               Position of the endpoint on the board.
 
-   .. attribute:: is_start
+            .. attribute:: is_start
 
-      Whether this is the start endpoint (otherwise it's the end).
+               Whether this is the start endpoint (otherwise it's the end).
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:attribute:: is_start
+               :type:  bool
+               :value: True
 
 
-   .. autolink-examples:: FlowEndpoint
-      :collapse:
 
-   .. py:attribute:: is_start
-      :type:  bool
-      :value: True
+            .. py:attribute:: position
+               :type:  haive.games.single_player.flow_free.models.Position
 
 
 
-   .. py:attribute:: position
-      :type:  haive.games.single_player.flow_free.models.Position
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: FlowFreeState(/, **data: Any)
 
-.. py:class:: FlowFreeState
+            Bases: :py:obj:`haive.games.single_player.base.SinglePlayerGameState`
 
-   Bases: :py:obj:`haive.games.single_player.base.SinglePlayerGameState`
 
+            State for the Flow Free game.
 
-   State for the Flow Free game.
+            .. attribute:: rows
 
-   .. attribute:: rows
+               Number of rows in the grid.
 
-      Number of rows in the grid.
+            .. attribute:: cols
 
-   .. attribute:: cols
+               Number of columns in the grid.
 
-      Number of columns in the grid.
+            .. attribute:: grid
 
-   .. attribute:: grid
+               2D grid of cells.
 
-      2D grid of cells.
+            .. attribute:: flows
 
-   .. attribute:: flows
+               Dictionary of flows by ID.
 
-      Dictionary of flows by ID.
+            .. attribute:: current_flow_id
 
-   .. attribute:: current_flow_id
+               ID of the currently selected flow.
 
-      ID of the currently selected flow.
+            .. attribute:: puzzle_id
 
-   .. attribute:: puzzle_id
+               Identifier for the current puzzle.
 
-      Identifier for the current puzzle.
+            .. attribute:: hints_used
 
-   .. attribute:: hints_used
+               Number of hints used.
 
-      Number of hints used.
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   .. autolink-examples:: FlowFreeState
-      :collapse:
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-   .. py:method:: get_adjacent_positions(position: haive.games.single_player.flow_free.models.Position) -> list[haive.games.single_player.flow_free.models.Position]
 
-      Get all valid adjacent positions.
+            .. py:method:: get_adjacent_positions(position: haive.games.single_player.flow_free.models.Position) -> list[haive.games.single_player.flow_free.models.Position]
 
-      :param position: Position to get adjacent positions for.
+               Get all valid adjacent positions.
 
-      :returns: List of adjacent positions.
+               :param position: Position to get adjacent positions for.
 
+               :returns: List of adjacent positions.
 
-      .. autolink-examples:: get_adjacent_positions
-         :collapse:
 
 
-   .. py:method:: get_cell(position: haive.games.single_player.flow_free.models.Position) -> Cell | None
+            .. py:method:: get_cell(position: haive.games.single_player.flow_free.models.Position) -> Cell | None
 
-      Get the cell at the specified position.
+               Get the cell at the specified position.
 
-      :param position: Position to get the cell for.
+               :param position: Position to get the cell for.
 
-      :returns: The cell at the position, or None if out of bounds.
+               :returns: The cell at the position, or None if out of bounds.
 
 
-      .. autolink-examples:: get_cell
-         :collapse:
 
+            .. py:method:: is_cell_empty(position: haive.games.single_player.flow_free.models.Position) -> bool
 
-   .. py:method:: is_cell_empty(position: haive.games.single_player.flow_free.models.Position) -> bool
+               Check if a cell is empty.
 
-      Check if a cell is empty.
+               :param position: Position to check.
 
-      :param position: Position to check.
+               :returns: True if the cell is empty, False otherwise.
 
-      :returns: True if the cell is empty, False otherwise.
 
 
-      .. autolink-examples:: is_cell_empty
-         :collapse:
+            .. py:method:: is_cell_endpoint(position: haive.games.single_player.flow_free.models.Position) -> bool
 
+               Check if a cell contains an endpoint.
 
-   .. py:method:: is_cell_endpoint(position: haive.games.single_player.flow_free.models.Position) -> bool
+               :param position: Position to check.
 
-      Check if a cell contains an endpoint.
+               :returns: True if the cell contains an endpoint, False otherwise.
 
-      :param position: Position to check.
 
-      :returns: True if the cell contains an endpoint, False otherwise.
 
+            .. py:method:: to_display_string() -> str
 
-      .. autolink-examples:: is_cell_endpoint
-         :collapse:
+               Generate a string representation of the board for display.
 
+               :returns: A formatted string representation of the board.
 
-   .. py:method:: to_display_string() -> str
 
-      Generate a string representation of the board for display.
 
-      :returns: A formatted string representation of the board.
+            .. py:property:: board_fill_percentage
+               :type: float
 
 
-      .. autolink-examples:: to_display_string
-         :collapse:
+               Calculate the percentage of the board that is filled.
 
 
-   .. py:property:: board_fill_percentage
-      :type: float
+            .. py:attribute:: cols
+               :type:  int
+               :value: None
 
 
-      Calculate the percentage of the board that is filled.
 
-      .. autolink-examples:: board_fill_percentage
-         :collapse:
+            .. py:property:: completion_percentage
+               :type: float
 
 
-   .. py:attribute:: cols
-      :type:  int
-      :value: None
+               Calculate the percentage of flows completed.
 
 
+            .. py:attribute:: current_flow_id
+               :type:  str | None
+               :value: None
 
-   .. py:property:: completion_percentage
-      :type: float
 
 
-      Calculate the percentage of flows completed.
+            .. py:property:: filled_cells
+               :type: int
 
-      .. autolink-examples:: completion_percentage
-         :collapse:
 
+               Calculate the number of filled cells on the board.
 
-   .. py:attribute:: current_flow_id
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: flows
+               :type:  dict[str, Flow]
+               :value: None
 
 
-   .. py:property:: filled_cells
-      :type: int
 
+            .. py:attribute:: grid
+               :type:  list[list[Cell]]
+               :value: None
 
-      Calculate the number of filled cells on the board.
 
-      .. autolink-examples:: filled_cells
-         :collapse:
 
+            .. py:property:: is_solved
+               :type: bool
 
-   .. py:attribute:: flows
-      :type:  dict[str, Flow]
-      :value: None
 
+               Check if the puzzle is solved.
 
+               The puzzle is solved when all flows are completed and all cells are filled.
 
-   .. py:attribute:: grid
-      :type:  list[list[Cell]]
-      :value: None
 
+            .. py:attribute:: puzzle_id
+               :type:  str
+               :value: None
 
 
-   .. py:property:: is_solved
-      :type: bool
 
+            .. py:attribute:: rows
+               :type:  int
+               :value: None
 
-      Check if the puzzle is solved.
 
-      The puzzle is solved when all flows are completed and all cells are filled.
 
-      .. autolink-examples:: is_solved
-         :collapse:
+            .. py:property:: total_cells
+               :type: int
 
 
-   .. py:attribute:: puzzle_id
-      :type:  str
-      :value: None
+               Calculate the total number of cells on the board.
 
 
 
-   .. py:attribute:: rows
-      :type:  int
-      :value: None
 
 
+----
 
-   .. py:property:: total_cells
-      :type: int
+.. admonition:: Quick Reference
+   :class: tip
 
+   .. code-block:: python
 
-      Calculate the total number of cells on the board.
+      from games.single_player.flow_free.state import *
 
-      .. autolink-examples:: total_cells
-         :collapse:
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

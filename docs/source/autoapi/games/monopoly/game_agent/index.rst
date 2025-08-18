@@ -3,6 +3,18 @@ games.monopoly.game_agent
 
 .. py:module:: games.monopoly.game_agent
 
+Fixed Monopoly game agent implementation.
+
+This module provides the corrected main game agent for orchestrating a Monopoly game,
+with proper handling of BaseModel objects from LangGraph instead of dictionaries.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">2 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Fixed Monopoly game agent implementation.
@@ -11,229 +23,206 @@ games.monopoly.game_agent
    with proper handling of BaseModel objects from LangGraph instead of dictionaries.
 
 
-   .. autolink-examples:: games.monopoly.game_agent
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (2)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.game_agent.MonopolyGameAgent
-   games.monopoly.game_agent.MonopolyGameAgentConfig
+      games.monopoly.game_agent.MonopolyGameAgent
+      games.monopoly.game_agent.MonopolyGameAgentConfig
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyGameAgent(config: MonopolyGameAgentConfig)
 
-   Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`MonopolyGameAgentConfig`\ ]
+            Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`MonopolyGameAgentConfig`\ ]
 
 
-   Main game agent for orchestrating Monopoly.
+            Main game agent for orchestrating Monopoly.
 
-   Initialize the game agent.
+            Initialize the game agent.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: check_doubles(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
+               Check if doubles were rolled and handle accordingly.
 
-   .. autolink-examples:: MonopolyGameAgent
-      :collapse:
 
-   .. py:method:: check_doubles(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      Check if doubles were rolled and handle accordingly.
+            .. py:method:: check_game_end_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
+               Check if the game should end.
 
-      .. autolink-examples:: check_doubles
-         :collapse:
 
 
-   .. py:method:: check_game_end_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
+            .. py:method:: end_turn(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      Check if the game should end.
+               End the current player's turn.
 
 
-      .. autolink-examples:: check_game_end_node
-         :collapse:
 
+            .. py:method:: handle_jail_turn(state: haive.games.monopoly.state.MonopolyState) -> langgraph.types.Command
 
-   .. py:method:: end_turn(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
+               Handle a turn when player is in jail.
 
-      End the current player's turn.
 
 
-      .. autolink-examples:: end_turn
-         :collapse:
+            .. py:method:: handle_landing(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
+               Handle the player landing on a space.
 
-   .. py:method:: handle_jail_turn(state: haive.games.monopoly.state.MonopolyState) -> langgraph.types.Command
 
-      Handle a turn when player is in jail.
 
+            .. py:method:: handle_property_space(state: haive.games.monopoly.state.MonopolyState, property_name: str) -> langgraph.types.Command
 
-      .. autolink-examples:: handle_jail_turn
-         :collapse:
+               Handle landing on a property space.
 
 
-   .. py:method:: handle_landing(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      Handle the player landing on a space.
+            .. py:method:: handle_special_space(state: haive.games.monopoly.state.MonopolyState, space_name: str) -> langgraph.types.Command
 
+               Handle landing on special spaces like GO, Jail, etc.
 
-      .. autolink-examples:: handle_landing
-         :collapse:
 
 
-   .. py:method:: handle_property_space(state: haive.games.monopoly.state.MonopolyState, property_name: str) -> langgraph.types.Command
+            .. py:method:: move_player_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      Handle landing on a property space.
+               Move the current player based on dice roll.
 
 
-      .. autolink-examples:: handle_property_space
-         :collapse:
 
+            .. py:method:: offer_property_purchase(state: haive.games.monopoly.state.MonopolyState, property_obj) -> langgraph.types.Command
 
-   .. py:method:: handle_special_space(state: haive.games.monopoly.state.MonopolyState, space_name: str) -> langgraph.types.Command
+               Offer property purchase to current player.
 
-      Handle landing on special spaces like GO, Jail, etc.
 
 
-      .. autolink-examples:: handle_special_space
-         :collapse:
+            .. py:method:: pay_rent(state: haive.games.monopoly.state.MonopolyState, property_obj) -> langgraph.types.Command
 
+               Handle rent payment.
 
-   .. py:method:: move_player_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      Move the current player based on dice roll.
 
+            .. py:method:: roll_dice_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
-      .. autolink-examples:: move_player_node
-         :collapse:
+               Roll dice for the current player.
 
 
-   .. py:method:: offer_property_purchase(state: haive.games.monopoly.state.MonopolyState, property_obj) -> langgraph.types.Command
 
-      Offer property purchase to current player.
+            .. py:method:: route_after_doubles(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> str
 
+               Route based on doubles status.
 
-      .. autolink-examples:: offer_property_purchase
-         :collapse:
 
 
-   .. py:method:: pay_rent(state: haive.games.monopoly.state.MonopolyState, property_obj) -> langgraph.types.Command
+            .. py:method:: route_game_end(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> str
 
-      Handle rent payment.
+               Route based on game end status.
 
 
-      .. autolink-examples:: pay_rent
-         :collapse:
 
+            .. py:method:: setup_workflow() -> None
 
-   .. py:method:: roll_dice_node(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
+               Set up the main game workflow.
 
-      Roll dice for the current player.
 
 
-      .. autolink-examples:: roll_dice_node
-         :collapse:
+            .. py:method:: start_turn(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
 
+               Start a player's turn.
 
-   .. py:method:: route_after_doubles(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> str
 
-      Route based on doubles status.
 
+            .. py:attribute:: player_agent
 
-      .. autolink-examples:: route_after_doubles
-         :collapse:
 
 
-   .. py:method:: route_game_end(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> str
-
-      Route based on game end status.
-
-
-      .. autolink-examples:: route_game_end
-         :collapse:
-
-
-   .. py:method:: setup_workflow() -> None
-
-      Set up the main game workflow.
-
-
-      .. autolink-examples:: setup_workflow
-         :collapse:
-
-
-   .. py:method:: start_turn(state: haive.games.monopoly.state.MonopolyState | pydantic.BaseModel | dict[str, Any]) -> langgraph.types.Command
-
-      Start a player's turn.
-
-
-      .. autolink-examples:: start_turn
-         :collapse:
-
-
-   .. py:attribute:: player_agent
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyGameAgentConfig
 
-   Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
+            Bases: :py:obj:`haive.core.engine.agent.config.AgentConfig`
 
 
-   Configuration for monopoly game agent.
+            Configuration for monopoly game agent.
 
 
-   .. autolink-examples:: MonopolyGameAgentConfig
-      :collapse:
+            .. py:class:: Config
 
-   .. py:class:: Config
-
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
 
 
 
-   .. py:attribute:: enable_trading
-      :type:  bool
-      :value: None
+            .. py:attribute:: enable_trading
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: max_turns
-      :type:  int
-      :value: None
+            .. py:attribute:: max_turns
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: player_agent
-      :type:  Any
-      :value: None
+            .. py:attribute:: player_agent
+               :type:  Any
+               :value: None
 
 
 
-   .. py:attribute:: player_names
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: player_names
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: state_schema
-      :type:  type[pydantic.BaseModel]
-      :value: None
+            .. py:attribute:: state_schema
+               :type:  type[pydantic.BaseModel]
+               :value: None
 
 
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.monopoly.game_agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

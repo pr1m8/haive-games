@@ -12,7 +12,7 @@ aspects of poker gameplay:
 These specialized configurations build on the base engines in engines.py but provide
 more targeted capabilities for specific poker reasoning tasks.
 
-Example:
+Examples:
     >>> from haive.games.hold_em.aug_llms import get_hand_analyzer, get_bluff_detector
     >>> from haive.core.engine.aug_llm import AugLLMConfig
     >>>

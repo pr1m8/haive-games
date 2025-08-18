@@ -22,6 +22,8 @@ class PokerPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Poker game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -97,6 +99,8 @@ class PokerEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Poker game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = PokerPlayerIdentifiers()
         prompt_generator = PokerPromptGenerator()
         super().__init__(identifiers, prompt_generator)

@@ -3,6 +3,18 @@ games.fox_and_geese.agent
 
 .. py:module:: games.fox_and_geese.agent
 
+Fox and Geese game agent with fixed state handling and UI integration.
+
+This module defines the Fox and Geese game agent, which uses language models to generate
+moves and analyze positions in the game.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 functions</span> • <span class="module-stat">2 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Fox and Geese game agent with fixed state handling and UI integration.
@@ -11,363 +23,340 @@ games.fox_and_geese.agent
    moves and analyze positions in the game.
 
 
-   .. autolink-examples:: games.fox_and_geese.agent
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (2)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.agent.UI_AVAILABLE
-   games.fox_and_geese.agent.logger
+      games.fox_and_geese.agent.UI_AVAILABLE
+      games.fox_and_geese.agent.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.agent.FoxAndGeeseAgent
+      games.fox_and_geese.agent.FoxAndGeeseAgent
 
+            
 
-Functions
----------
+.. admonition:: Functions (1)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.fox_and_geese.agent.ensure_game_state
+      games.fox_and_geese.agent.ensure_game_state
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: FoxAndGeeseAgent(config: haive.games.fox_and_geese.config.FoxAndGeeseConfig = FoxAndGeeseConfig())
 
-   Bases: :py:obj:`haive.games.framework.base.agent.GameAgent`\ [\ :py:obj:`haive.games.fox_and_geese.config.FoxAndGeeseConfig`\ ]
+            Bases: :py:obj:`haive.games.framework.base.agent.GameAgent`\ [\ :py:obj:`haive.games.fox_and_geese.config.FoxAndGeeseConfig`\ ]
 
 
-   Agent for playing Fox and Geese.
+            Agent for playing Fox and Geese.
 
-   This class implements the Fox and Geese game agent, which uses language models to
-   generate moves and analyze positions in the game.
+            This class implements the Fox and Geese game agent, which uses language models to
+            generate moves and analyze positions in the game.
 
 
-   Initialize the Fox and Geese agent.
+            Initialize the Fox and Geese agent.
 
-   :param config: The configuration for the Fox and Geese game.
-   :type config: FoxAndGeeseConfig
+            :param config: The configuration for the Fox and Geese game.
+            :type config: FoxAndGeeseConfig
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _extract_analysis_data(response: Any, perspective: str) -> str
 
+               Extract analysis data from LLM response.
 
-   .. autolink-examples:: FoxAndGeeseAgent
-      :collapse:
+               :param response: Response from the LLM
+               :param perspective: The perspective of the analysis ('fox' or 'geese')
 
-   .. py:method:: _extract_analysis_data(response: Any, perspective: str) -> str
+               :returns: String representation of the analysis
 
-      Extract analysis data from LLM response.
 
-      :param response: Response from the LLM
-      :param perspective: The perspective of the analysis ('fox' or 'geese')
 
-      :returns: String representation of the analysis
+            .. py:method:: _get_legal_move_fallback(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, piece_type: str) -> haive.games.fox_and_geese.models.FoxAndGeeseMove
 
+               Get a legal move as a fallback when LLM fails.
 
-      .. autolink-examples:: _extract_analysis_data
-         :collapse:
+               :param game_state: Current game state
+               :param piece_type: Type of piece ('fox' or 'goose')
 
+               :returns: A legal move
+               :rtype: FoxAndGeeseMove
 
-   .. py:method:: _get_legal_move_fallback(game_state: haive.games.fox_and_geese.state.FoxAndGeeseState, piece_type: str) -> haive.games.fox_and_geese.models.FoxAndGeeseMove
 
-      Get a legal move as a fallback when LLM fails.
 
-      :param game_state: Current game state
-      :param piece_type: Type of piece ('fox' or 'goose')
+            .. py:method:: analyze_fox_position(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      :returns: A legal move
-      :rtype: FoxAndGeeseMove
+               Analyze the current position from the Fox's perspective.
 
+               :param state: Current game state
 
-      .. autolink-examples:: _get_legal_move_fallback
-         :collapse:
+               :returns: LangGraph command with fox analysis updates
+               :rtype: Command
 
 
-   .. py:method:: analyze_fox_position(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      Analyze the current position from the Fox's perspective.
+            .. py:method:: analyze_geese_position(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      :param state: Current game state
+               Analyze the current position from the Geese's perspective.
 
-      :returns: LangGraph command with fox analysis updates
-      :rtype: Command
+               :param state: Current game state
 
+               :returns: LangGraph command with geese analysis updates
+               :rtype: Command
 
-      .. autolink-examples:: analyze_fox_position
-         :collapse:
 
 
-   .. py:method:: analyze_geese_position(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
+            .. py:method:: analyze_player1(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      Analyze the current position from the Geese's perspective.
+               Analyze position for player 1 (fox).
 
-      :param state: Current game state
+               :param state: Current game state
 
-      :returns: LangGraph command with geese analysis updates
-      :rtype: Command
+               :returns: State updates with analysis
+               :rtype: Dict[str, Any]
 
 
-      .. autolink-examples:: analyze_geese_position
-         :collapse:
 
+            .. py:method:: analyze_player2(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-   .. py:method:: analyze_player1(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
+               Analyze position for player 2 (geese).
 
-      Analyze position for player 1 (fox).
+               :param state: Current game state
 
-      :param state: Current game state
+               :returns: State updates with analysis
+               :rtype: Dict[str, Any]
 
-      :returns: State updates with analysis
-      :rtype: Dict[str, Any]
 
 
-      .. autolink-examples:: analyze_player1
-         :collapse:
+            .. py:method:: extract_move(response: Any, piece_type: str = 'fox') -> haive.games.fox_and_geese.models.FoxAndGeeseMove
 
+               Extract move from engine response.
 
-   .. py:method:: analyze_player2(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
+               :param response: Response from the engine
+               :param piece_type: Type of piece making the move ('fox' or 'goose')
 
-      Analyze position for player 2 (geese).
+               :returns: Parsed move object
+               :rtype: FoxAndGeeseMove
 
-      :param state: Current game state
 
-      :returns: State updates with analysis
-      :rtype: Dict[str, Any]
 
+            .. py:method:: initialize_game(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> dict[str, Any]
 
-      .. autolink-examples:: analyze_player2
-         :collapse:
+               Initialize a new Fox and Geese game.
 
+               :param state: Input state (ignored for initialization)
 
-   .. py:method:: extract_move(response: Any, piece_type: str = 'fox') -> haive.games.fox_and_geese.models.FoxAndGeeseMove
+               :returns: State updates for the new game
+               :rtype: Dict[str, Any]
 
-      Extract move from engine response.
 
-      :param response: Response from the engine
-      :param piece_type: Type of piece making the move ('fox' or 'goose')
 
-      :returns: Parsed move object
-      :rtype: FoxAndGeeseMove
+            .. py:method:: make_fox_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
+               Make a move for the fox.
 
-      .. autolink-examples:: extract_move
-         :collapse:
+               :param state: Current game state
 
+               :returns: Updated game state after the move
+               :rtype: FoxAndGeeseState
 
-   .. py:method:: initialize_game(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> dict[str, Any]
 
-      Initialize a new Fox and Geese game.
 
-      :param state: Input state (ignored for initialization)
+            .. py:method:: make_geese_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-      :returns: State updates for the new game
-      :rtype: Dict[str, Any]
+               Make a move for the geese.
 
+               :param state: Current game state
 
-      .. autolink-examples:: initialize_game
-         :collapse:
+               :returns: Updated game state after the move
+               :rtype: FoxAndGeeseState
 
 
-   .. py:method:: make_fox_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-      Make a move for the fox.
+            .. py:method:: make_player1_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      :param state: Current game state
+               Make a move for player 1 (fox).
 
-      :returns: Updated game state after the move
-      :rtype: FoxAndGeeseState
+               :param state: Current game state
 
+               :returns: State updates after the move
+               :rtype: Dict[str, Any]
 
-      .. autolink-examples:: make_fox_move
-         :collapse:
 
 
-   .. py:method:: make_geese_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> haive.games.fox_and_geese.state.FoxAndGeeseState
+            .. py:method:: make_player2_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
 
-      Make a move for the geese.
+               Make a move for player 2 (geese).
 
-      :param state: Current game state
+               :param state: Current game state
 
-      :returns: Updated game state after the move
-      :rtype: FoxAndGeeseState
+               :returns: State updates after the move
+               :rtype: Dict[str, Any]
 
 
-      .. autolink-examples:: make_geese_move
-         :collapse:
 
+            .. py:method:: prepare_analysis_context(state: haive.games.fox_and_geese.state.FoxAndGeeseState, player: str) -> dict[str, Any]
 
-   .. py:method:: make_player1_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
+               Prepare context for position analysis.
 
-      Make a move for player 1 (fox).
+               :param state: Current game state
+               :param player: The player for whom to prepare the analysis context
 
-      :param state: Current game state
+               :returns: The context dictionary for position analysis
+               :rtype: Dict[str, Any]
 
-      :returns: State updates after the move
-      :rtype: Dict[str, Any]
 
 
-      .. autolink-examples:: make_player1_move
-         :collapse:
+            .. py:method:: prepare_move_context(state: haive.games.fox_and_geese.state.FoxAndGeeseState, player: str) -> dict[str, Any]
 
+               Prepare context for move generation.
 
-   .. py:method:: make_player2_move(state: haive.games.fox_and_geese.state.FoxAndGeeseState) -> langgraph.types.Command
+               :param state: Current game state
+               :param player: The player making the move ('fox' or 'geese')
 
-      Make a move for player 2 (geese).
+               :returns: Context dictionary for move generation
+               :rtype: Dict[str, Any]
 
-      :param state: Current game state
 
-      :returns: State updates after the move
-      :rtype: Dict[str, Any]
 
+            .. py:method:: run(input_data: dict[str, Any] | haive.games.fox_and_geese.state.FoxAndGeeseState | None = None, **kwargs) -> dict[str, Any]
 
-      .. autolink-examples:: make_player2_move
-         :collapse:
+               Run the Fox and Geese game.
 
+               :param input_data: Optional input data for the game (state dict or FoxAndGeeseState)
+               :param \*\*kwargs: Additional arguments (e.g., thread_id)
 
-   .. py:method:: prepare_analysis_context(state: haive.games.fox_and_geese.state.FoxAndGeeseState, player: str) -> dict[str, Any]
+               :returns: The final game state as a dictionary
 
-      Prepare context for position analysis.
 
-      :param state: Current game state
-      :param player: The player for whom to prepare the analysis context
 
-      :returns: The context dictionary for position analysis
-      :rtype: Dict[str, Any]
+            .. py:method:: run_game(visualize: bool = True) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
+               Run the full Fox and Geese game, optionally visualizing each step.
 
-      .. autolink-examples:: prepare_analysis_context
-         :collapse:
+               :param visualize: Whether to visualize the game state
 
+               :returns: Final game state after completion
+               :rtype: FoxAndGeeseState
 
-   .. py:method:: prepare_move_context(state: haive.games.fox_and_geese.state.FoxAndGeeseState, player: str) -> dict[str, Any]
 
-      Prepare context for move generation.
 
-      :param state: Current game state
-      :param player: The player making the move ('fox' or 'geese')
+            .. py:method:: run_game_with_ui(delay: float = 2.0) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-      :returns: Context dictionary for move generation
-      :rtype: Dict[str, Any]
+               Run the full Fox and Geese game with UI visualization.
 
+               :param delay: Delay between moves in seconds
 
-      .. autolink-examples:: prepare_move_context
-         :collapse:
+               :returns: Final game state after completion
+               :rtype: FoxAndGeeseState
 
 
-   .. py:method:: run(input_data: dict[str, Any] | haive.games.fox_and_geese.state.FoxAndGeeseState | None = None, **kwargs) -> dict[str, Any]
 
-      Run the Fox and Geese game.
+            .. py:method:: setup_workflow() -> None
 
-      :param input_data: Optional input data for the game (state dict or FoxAndGeeseState)
-      :param \*\*kwargs: Additional arguments (e.g., thread_id)
+               Set up the game workflow.
 
-      :returns: The final game state as a dictionary
+               Creates a dynamic graph with nodes for game initialization, move making, and
+               analysis. Uses the base GameAgent workflow pattern.
 
 
-      .. autolink-examples:: run
-         :collapse:
 
 
-   .. py:method:: run_game(visualize: bool = True) -> haive.games.fox_and_geese.state.FoxAndGeeseState
+            .. py:method:: should_continue_game(state: dict | haive.games.fox_and_geese.state.FoxAndGeeseState) -> bool
 
-      Run the full Fox and Geese game, optionally visualizing each step.
+               Determine if the game should continue.
 
-      :param visualize: Whether to visualize the game state
+               :param state: Current game state (dict or FoxAndGeeseState)
 
-      :returns: Final game state after completion
-      :rtype: FoxAndGeeseState
+               :returns: True if the game should continue, False otherwise
+               :rtype: bool
 
 
-      .. autolink-examples:: run_game
-         :collapse:
 
+            .. py:attribute:: console
 
-   .. py:method:: run_game_with_ui(delay: float = 2.0) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-      Run the full Fox and Geese game with UI visualization.
+            .. py:attribute:: engines
+               :value: None
 
-      :param delay: Delay between moves in seconds
 
-      :returns: Final game state after completion
-      :rtype: FoxAndGeeseState
 
+            .. py:attribute:: game_over
+               :value: False
 
-      .. autolink-examples:: run_game_with_ui
-         :collapse:
 
 
-   .. py:method:: setup_workflow() -> None
+            .. py:attribute:: state_manager
 
-      Set up the game workflow.
 
-      Creates a dynamic graph with nodes for game initialization, move making, and
-      analysis. Uses the base GameAgent workflow pattern.
+            .. py:attribute:: ui
 
 
 
-      .. autolink-examples:: setup_workflow
-         :collapse:
-
-
-   .. py:method:: should_continue_game(state: dict | haive.games.fox_and_geese.state.FoxAndGeeseState) -> bool
-
-      Determine if the game should continue.
-
-      :param state: Current game state (dict or FoxAndGeeseState)
-
-      :returns: True if the game should continue, False otherwise
-      :rtype: bool
-
-
-      .. autolink-examples:: should_continue_game
-         :collapse:
-
-
-   .. py:attribute:: console
-
-
-   .. py:attribute:: engines
-
-
-   .. py:attribute:: game_over
-      :value: False
-
-
-
-   .. py:attribute:: state_manager
-
-
-   .. py:attribute:: ui
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: ensure_game_state(state_input: dict[str, Any] | haive.games.fox_and_geese.state.FoxAndGeeseState) -> haive.games.fox_and_geese.state.FoxAndGeeseState
 
-   Ensure input is converted to FoxAndGeeseState.
+            Ensure input is converted to FoxAndGeeseState.
 
-   :param state_input: State input as dict or FoxAndGeeseState
+            :param state_input: State input as dict or FoxAndGeeseState
 
-   :returns: FoxAndGeeseState instance
+            :returns: FoxAndGeeseState instance
 
 
-   .. autolink-examples:: ensure_game_state
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: UI_AVAILABLE
-   :value: True
+            :value: True
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.fox_and_geese.agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

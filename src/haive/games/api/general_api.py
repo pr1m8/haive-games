@@ -342,6 +342,11 @@ class GeneralGameAPI:
     def _setup_openapi(self):
         """Setup custom OpenAPI documentation."""
         def custom_openapi() -> Any:
+            """Custom Openapi.
+
+Returns:
+    [TODO: Add return description]
+"""
             if self.app.openapi_schema:
                 return self.app.openapi_schema
 
@@ -435,7 +440,7 @@ def create_general_game_api(
     Returns:
         Tuple of (FastAPI app, GeneralGameAPI instance)
 
-    Example:
+    Examples:
         >>> app, game_api = create_general_game_api()
         >>> # Now you have endpoints for all games!
 
@@ -463,6 +468,8 @@ def create_general_game_api(
     # Add root endpoint
     @app.get("/")
     async def root():
+        """Root.
+"""
         return {
             "message": "Haive Games API",
             "documentation": "/docs",

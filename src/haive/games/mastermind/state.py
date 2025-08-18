@@ -129,6 +129,18 @@ class MastermindState(GameState):
         max_turns: int = 10,
         secret_code: list[str] | ColorCode | dict | None = None,
     ) -> "MastermindState":
+        """Initialize.
+
+Args:
+    codemaker: [TODO: Add description]
+    colors: [TODO: Add description]
+    code_length: [TODO: Add description]
+    max_turns: [TODO: Add description]
+    secret_code: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         colors = colors or ["red", "blue", "green", "yellow", "purple", "orange"]
         codebreaker = "player2" if codemaker == "player1" else "player1"
 

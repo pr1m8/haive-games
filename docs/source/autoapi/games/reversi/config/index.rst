@@ -3,6 +3,18 @@ games.reversi.config
 
 .. py:module:: games.reversi.config
 
+Configuration model for the Reversi (Othello) game agent.
+
+Defines game metadata, initial settings, and engine bindings used to drive the game loop
+and decision-making by language models.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Configuration model for the Reversi (Othello) game agent.
@@ -11,139 +23,160 @@ games.reversi.config
    and decision-making by language models.
 
 
-   .. autolink-examples:: games.reversi.config
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.reversi.config.ReversiConfig
+      games.reversi.config.ReversiConfig
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: ReversiConfig
 
-   Bases: :py:obj:`haive.games.framework.base.config.GameConfig`
+            Bases: :py:obj:`haive.games.framework.base.config.GameConfig`
 
 
-   Configuration for the Reversi/Othello game agent.
+            Configuration for the Reversi/Othello game agent.
 
-   .. attribute:: name
+            .. attribute:: name
 
-      Name of the game.
+               Name of the game.
 
-      :type: str
+               :type: str
 
-   .. attribute:: state_schema
+            .. attribute:: state_schema
 
-      The state model used for gameplay.
+               The state model used for gameplay.
 
-      :type: Type[ReversiState]
+               :type: Type[ReversiState]
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      Mapping of engine names to LLM configurations.
+               Mapping of engine names to LLM configurations.
 
-      :type: Dict[str, AugLLMConfig]
+               :type: Dict[str, AugLLMConfig]
 
-   .. attribute:: enable_analysis
+            .. attribute:: enable_analysis
 
-      Whether to run post-move analysis.
+               Whether to run post-move analysis.
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: visualize
+            .. attribute:: visualize
 
-      Whether to render the board visually in the console.
+               Whether to render the board visually in the console.
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: first_player
+            .. attribute:: first_player
 
-      Symbol of the player who starts (Black or White).
+               Symbol of the player who starts (Black or White).
 
-      :type: Literal['B', 'W']
+               :type: Literal['B', 'W']
 
-   .. attribute:: player_B
+            .. attribute:: player_B
 
-      Who controls the Black pieces.
+               Who controls the Black pieces.
 
-      :type: Literal['player1', 'player2']
+               :type: Literal['player1', 'player2']
 
-   .. attribute:: player_W
+            .. attribute:: player_W
 
-      Who controls the White pieces.
+               Who controls the White pieces.
 
-      :type: Literal['player1', 'player2']
-
-
-   .. autolink-examples:: ReversiConfig
-      :collapse:
-
-   .. py:method:: default_config()
-      :classmethod:
+               :type: Literal['player1', 'player2']
 
 
-      Create a default configuration for Reversi.
-
-      :returns: An instance with standard engine bindings and player layout.
-      :rtype: ReversiConfig
+            .. py:method:: default_config()
+               :classmethod:
 
 
-      .. autolink-examples:: default_config
-         :collapse:
+               Create a default configuration for Reversi.
 
-
-   .. py:attribute:: enable_analysis
-      :type:  bool
-      :value: None
+               :returns: An instance with standard engine bindings and player layout.
+               :rtype: ReversiConfig
 
 
 
-   .. py:attribute:: engines
-      :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
-      :value: None
+            .. py:attribute:: enable_analysis
+               :type:  bool
+               :value: None
 
 
 
-   .. py:attribute:: first_player
-      :type:  Literal['B', 'W']
-      :value: None
+            .. py:attribute:: engines
+               :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
+               :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
+            .. py:attribute:: first_player
+               :type:  Literal['B', 'W']
+               :value: None
 
 
 
-   .. py:attribute:: player_B
-      :type:  Literal['player1', 'player2']
-      :value: None
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: player_W
-      :type:  Literal['player1', 'player2']
-      :value: None
+            .. py:attribute:: player_B
+               :type:  Literal['player1', 'player2']
+               :value: None
 
 
 
-   .. py:attribute:: state_schema
-      :type:  type[haive.games.reversi.state.ReversiState]
-      :value: None
+            .. py:attribute:: player_W
+               :type:  Literal['player1', 'player2']
+               :value: None
 
 
 
-   .. py:attribute:: visualize
-      :type:  bool
-      :value: None
+            .. py:attribute:: state_schema
+               :type:  type[haive.games.reversi.state.ReversiState]
+               :value: None
 
 
+
+            .. py:attribute:: visualize
+               :type:  bool
+               :value: None
+
+
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.reversi.config import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

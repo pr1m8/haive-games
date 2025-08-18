@@ -67,6 +67,14 @@ class Player:
     bankrupt: bool = False
 
     def can_afford(self, amount: int) -> bool:
+        """Can Afford.
+
+Args:
+    amount: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         return self.money >= amount
 
 
@@ -77,10 +85,20 @@ class DiceRoll:
 
     @property
     def total(self) -> int:
+        """Total.
+
+Returns:
+    [TODO: Add return description]
+"""
         return self.die1 + self.die2
 
     @property
     def is_doubles(self) -> bool:
+        """Is Doubles.
+
+Returns:
+    [TODO: Add return description]
+"""
         return self.die1 == self.die2
 
 
@@ -105,6 +123,11 @@ class GameState:
 
     @property
     def current_player(self) -> Player:
+        """Current Player.
+
+Returns:
+    [TODO: Add return description]
+"""
         if not self.players:
             return Player(name="Unknown")
         if 0 <= self.current_player_index < len(self.players):
@@ -113,9 +136,19 @@ class GameState:
 
     @property
     def active_players(self) -> list[Player]:
+        """Active Players.
+
+Returns:
+    [TODO: Add return description]
+"""
         return [p for p in self.players if not p.bankrupt]
 
     def next_player(self) -> None:
+        """Next Player.
+
+Returns:
+    [TODO: Add return description]
+"""
         if len(self.active_players) <= 1:
             return
         if not self.players:

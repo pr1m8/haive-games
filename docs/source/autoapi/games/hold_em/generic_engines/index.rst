@@ -3,6 +3,18 @@ games.hold_em.generic_engines
 
 .. py:module:: games.hold_em.generic_engines
 
+Generic Hold'em engine creation using the generic player agent system.
+
+This module provides generic engine creation functions for Texas Hold'em games, allowing
+for configurable LLM models and game-specific player identifiers.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">3 classes</span> • <span class="module-stat">7 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Generic Hold'em engine creation using the generic player agent system.
@@ -11,195 +23,233 @@ games.hold_em.generic_engines
    for configurable LLM models and game-specific player identifiers.
 
 
-   .. autolink-examples:: games.hold_em.generic_engines
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.generic_engines.holdem_factory
+      games.hold_em.generic_engines.holdem_factory
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (3)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.generic_engines.HoldemEngineFactory
-   games.hold_em.generic_engines.HoldemPlayerIdentifiers
-   games.hold_em.generic_engines.HoldemPromptGenerator
+      games.hold_em.generic_engines.HoldemEngineFactory
+      games.hold_em.generic_engines.HoldemPlayerIdentifiers
+      games.hold_em.generic_engines.HoldemPromptGenerator
 
+            
 
-Functions
----------
+.. admonition:: Functions (7)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.hold_em.generic_engines.create_budget_holdem_engines
-   games.hold_em.generic_engines.create_generic_holdem_config_from_example
-   games.hold_em.generic_engines.create_generic_holdem_engines
-   games.hold_em.generic_engines.create_generic_holdem_engines_simple
-   games.hold_em.generic_engines.create_heads_up_holdem_engines
-   games.hold_em.generic_engines.create_mixed_holdem_engines
-   games.hold_em.generic_engines.create_poker_pro_holdem_engines
+      games.hold_em.generic_engines.create_budget_holdem_engines
+      games.hold_em.generic_engines.create_generic_holdem_config_from_example
+      games.hold_em.generic_engines.create_generic_holdem_engines
+      games.hold_em.generic_engines.create_generic_holdem_engines_simple
+      games.hold_em.generic_engines.create_heads_up_holdem_engines
+      games.hold_em.generic_engines.create_mixed_holdem_engines
+      games.hold_em.generic_engines.create_poker_pro_holdem_engines
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HoldemEngineFactory
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericGameEngineFactory`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-   Factory for creating Texas Hold'em game engines.
+            Factory for creating Texas Hold'em game engines.
 
 
-   .. autolink-examples:: HoldemEngineFactory
-      :collapse:
+            .. py:method:: get_structured_output_model(role: str) -> type
 
-   .. py:method:: get_structured_output_model(role: str) -> type
-
-      Get the structured output model for a specific role.
+               Get the structured output model for a specific role.
 
 
-      .. autolink-examples:: get_structured_output_model
-         :collapse:
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HoldemPlayerIdentifiers
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GamePlayerIdentifiers`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-   Player identifiers for Texas Hold'em game.
+            Player identifiers for Texas Hold'em game.
 
 
-   .. autolink-examples:: HoldemPlayerIdentifiers
-      :collapse:
 
-.. py:class:: HoldemPromptGenerator
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
-   Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
+.. py:class:: HoldemPromptGenerator(players: GamePlayerIdentifiers[PlayerType, PlayerType2])
 
-
-   Prompt generator for Texas Hold'em game.
-
-
-   .. autolink-examples:: HoldemPromptGenerator
-      :collapse:
-
-   .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
-
-      Create analysis prompt for Hold'em game state.
+            Bases: :py:obj:`haive.games.core.agent.generic_player_agent.GenericPromptGenerator`\ [\ :py:obj:`str`\ , :py:obj:`str`\ ]
 
 
-      .. autolink-examples:: create_analyzer_prompt
-         :collapse:
+            Prompt generator for Texas Hold'em game.
 
 
-   .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+            .. py:method:: create_analyzer_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
 
-      Create move prompt for Hold'em player.
+               Create analysis prompt for Hold'em game state.
 
 
-      .. autolink-examples:: create_move_prompt
-         :collapse:
 
+            .. py:method:: create_move_prompt(player: str) -> langchain_core.prompts.ChatPromptTemplate
+
+               Create move prompt for Hold'em player.
+
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_budget_holdem_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create budget-friendly Hold'em engines.
+            Create budget-friendly Hold'em engines.
 
 
-   .. autolink-examples:: create_budget_holdem_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_holdem_config_from_example(example_name: str, temperature: float = 0.4) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Hold'em engines from a predefined example configuration.
+            Create Hold'em engines from a predefined example configuration.
 
-   :param example_name: Name of the example configuration
-   :param temperature: Generation temperature
+            :param example_name: Name of the example configuration
+            :param temperature: Generation temperature
 
-   :returns: Dictionary of Hold'em engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Hold'em engines
+            :rtype: Dict[str, AugLLMConfig]
 
-   Available examples:
-       - "gpt_vs_claude": GPT vs Claude
-       - "gpt_only": GPT for both players
-       - "claude_only": Claude for both players
-       - "budget": Cost-effective models
-       - "mixed": Different provider per role
-       - "poker_pros": High-powered models for strategic gameplay
-       - "heads_up": Specialized for heads-up play
+            Available examples:
+                - "gpt_vs_claude": GPT vs Claude
+                - "gpt_only": GPT for both players
+                - "claude_only": Claude for both players
+                - "budget": Cost-effective models
+                - "mixed": Different provider per role
+                - "poker_pros": High-powered models for strategic gameplay
+                - "heads_up": Specialized for heads-up play
 
 
 
-   .. autolink-examples:: create_generic_holdem_config_from_example
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_holdem_engines(player_configs: dict[str, haive.games.core.agent.player_agent.PlayerAgentConfig]) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Hold'em engines from detailed player configurations.
+            Create Hold'em engines from detailed player configurations.
 
-   :param player_configs: Dictionary mapping role names to player configurations
+            :param player_configs: Dictionary mapping role names to player configurations
 
-   :returns: Dictionary of Hold'em engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Hold'em engines
+            :rtype: Dict[str, AugLLMConfig]
 
-   Expected roles:
-       - "player1_player": Player 1 configuration
-       - "player2_player": Player 2 configuration
-       - "player1_analyzer": Player 1 analyzer configuration
-       - "player2_analyzer": Player 2 analyzer configuration
+            Expected roles:
+                - "player1_player": Player 1 configuration
+                - "player2_player": Player 2 configuration
+                - "player1_analyzer": Player 1 analyzer configuration
+                - "player2_analyzer": Player 2 analyzer configuration
 
 
 
-   .. autolink-examples:: create_generic_holdem_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_generic_holdem_engines_simple(player1_model: str, player2_model: str, temperature: float = 0.4) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create Hold'em engines with simple model specifications.
+            Create Hold'em engines with simple model specifications.
 
-   :param player1_model: Model for player 1 and analyzer
-   :param player2_model: Model for player 2 and analyzer
-   :param temperature: Generation temperature
+            :param player1_model: Model for player 1 and analyzer
+            :param player2_model: Model for player 2 and analyzer
+            :param temperature: Generation temperature
 
-   :returns: Dictionary of Hold'em engines
-   :rtype: Dict[str, AugLLMConfig]
+            :returns: Dictionary of Hold'em engines
+            :rtype: Dict[str, AugLLMConfig]
 
 
-   .. autolink-examples:: create_generic_holdem_engines_simple
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_heads_up_holdem_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create specialized Hold'em engines for heads-up play.
+            Create specialized Hold'em engines for heads-up play.
 
 
-   .. autolink-examples:: create_heads_up_holdem_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_mixed_holdem_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create mixed-provider Hold'em engines.
+            Create mixed-provider Hold'em engines.
 
 
-   .. autolink-examples:: create_mixed_holdem_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_poker_pro_holdem_engines(**kwargs) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-   Create poker professional-style Hold'em engines with high-powered models.
+            Create poker professional-style Hold'em engines with high-powered models.
 
 
-   .. autolink-examples:: create_poker_pro_holdem_engines
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: holdem_factory
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.hold_em.generic_engines import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

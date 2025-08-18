@@ -3,6 +3,46 @@ games.clue.ui
 
 .. py:module:: games.clue.ui
 
+Clue rich UI visualization module.
+
+This module provides a visually appealing terminal UI for Clue games,
+with styled components, animations, and comprehensive game information.
+
+It uses the Rich library to create a console-based UI with:
+    - Game board visualization with players, suspects, weapons, and rooms
+    - Guess history with detailed responses
+    - Player cards and deduction notes
+    - Game status and information
+    - Thinking animations and guess visualization
+
+.. rubric:: Example
+
+>>> from haive.games.clue.ui import ClueUI
+>>> from haive.games.clue.state import ClueState
+>>>
+>>> ui = ClueUI()
+>>> state = ClueState.initialize()
+>>> ui.display_state(state)  # Display the initial game state
+>>>
+>>> # Show thinking animation for player
+>>> ui.show_thinking("player1")
+>>>
+>>> # Display a guess
+>>> from haive.games.clue.models import ClueGuess, ValidSuspect, ValidWeapon, ValidRoom
+>>> guess = ClueGuess(
+>>>     suspect=ValidSuspect.COLONEL_MUSTARD,
+>>>     weapon=ValidWeapon.KNIFE,
+>>>     room=ValidRoom.KITCHEN
+>>> )
+>>> ui.show_guess(guess, "player1")
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Clue rich UI visualization module.
@@ -39,326 +79,304 @@ games.clue.ui
    >>> ui.show_guess(guess, "player1")
 
 
-   .. autolink-examples:: games.clue.ui
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.clue.ui.ClueUI
+      games.clue.ui.ClueUI
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: ClueUI
 
-   Rich UI for beautiful Clue game visualization.
+            Rich UI for beautiful Clue game visualization.
 
-   This class provides a visually appealing terminal UI for Clue games,
-   with styled components, animations, and comprehensive game information.
+            This class provides a visually appealing terminal UI for Clue games,
+            with styled components, animations, and comprehensive game information.
 
-   Features:
-       - Game board visualization with suspects, weapons, and rooms
-       - Guess history with detailed responses
-       - Player cards and deduction notes
-       - Game status and information
-       - Thinking animations and guess visualization
+            Features:
+                - Game board visualization with suspects, weapons, and rooms
+                - Guess history with detailed responses
+                - Player cards and deduction notes
+                - Game status and information
+                - Thinking animations and guess visualization
 
-   .. attribute:: console
+            .. attribute:: console
 
-      Rich console for output
+               Rich console for output
 
-      :type: Console
+               :type: Console
 
-   .. attribute:: layout
+            .. attribute:: layout
 
-      Layout manager for UI components
+               Layout manager for UI components
 
-      :type: Layout
+               :type: Layout
 
-   .. attribute:: colors
+            .. attribute:: colors
 
-      Color schemes for different UI elements
+               Color schemes for different UI elements
 
-      :type: dict
+               :type: dict
 
-   .. rubric:: Examples
+            .. rubric:: Examples
 
-   >>> ui = ClueUI()
-   >>> state = ClueState.initialize()
-   >>> ui.display_state(state)  # Display the initial game state
+            >>> ui = ClueUI()
+            >>> state = ClueState.initialize()
+            >>> ui.display_state(state)  # Display the initial game state
 
-   Initialize the Clue UI with default settings.
+            Initialize the Clue UI with default settings.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _render_deductions(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
+               Render deductions and analysis panel.
 
-   .. autolink-examples:: ClueUI
-      :collapse:
+               :param state: Current game state
 
-   .. py:method:: _render_deductions(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+               :returns: Deductions panel
+               :rtype: Panel
 
-      Render deductions and analysis panel.
 
-      :param state: Current game state
 
-      :returns: Deductions panel
-      :rtype: Panel
+            .. py:method:: _render_game_info(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
+               Render game information panel.
 
-      .. autolink-examples:: _render_deductions
-         :collapse:
+               :param state: Current game state
 
+               :returns: Game information panel
+               :rtype: Panel
 
-   .. py:method:: _render_game_info(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      Render game information panel.
 
-      :param state: Current game state
+            .. py:method:: _render_guess_history(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      :returns: Game information panel
-      :rtype: Panel
+               Render the guess history panel.
 
+               :param state: Current game state
 
-      .. autolink-examples:: _render_game_info
-         :collapse:
+               :returns: Guess history panel
+               :rtype: Panel
 
 
-   .. py:method:: _render_guess_history(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      Render the guess history panel.
+            .. py:method:: _render_header(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      :param state: Current game state
+               Render the game header with title and status.
 
-      :returns: Guess history panel
-      :rtype: Panel
+               :param state: Current game state
 
+               :returns: Styled header panel
+               :rtype: Panel
 
-      .. autolink-examples:: _render_guess_history
-         :collapse:
 
 
-   .. py:method:: _render_header(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+            .. py:method:: _render_player_cards(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      Render the game header with title and status.
+               Render player cards panel.
 
-      :param state: Current game state
+               :param state: Current game state
 
-      :returns: Styled header panel
-      :rtype: Panel
+               :returns: Player cards panel
+               :rtype: Panel
 
 
-      .. autolink-examples:: _render_header
-         :collapse:
 
+            .. py:method:: _render_rooms(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-   .. py:method:: _render_player_cards(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+               Render the rooms panel.
 
-      Render player cards panel.
+               :param state: Current game state
 
-      :param state: Current game state
+               :returns: Rooms panel
+               :rtype: Panel
 
-      :returns: Player cards panel
-      :rtype: Panel
 
 
-      .. autolink-examples:: _render_player_cards
-         :collapse:
+            .. py:method:: _render_suspects(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
+               Render the suspects panel.
 
-   .. py:method:: _render_rooms(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+               :param state: Current game state
 
-      Render the rooms panel.
+               :returns: Suspects panel
+               :rtype: Panel
 
-      :param state: Current game state
 
-      :returns: Rooms panel
-      :rtype: Panel
 
+            .. py:method:: _render_weapons(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
 
-      .. autolink-examples:: _render_rooms
-         :collapse:
+               Render the weapons panel.
 
+               :param state: Current game state
 
-   .. py:method:: _render_suspects(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+               :returns: Weapons panel
+               :rtype: Panel
 
-      Render the suspects panel.
 
-      :param state: Current game state
 
-      :returns: Suspects panel
-      :rtype: Panel
+            .. py:method:: _setup_layout()
 
+               Set up the layout structure for the UI.
 
-      .. autolink-examples:: _render_suspects
-         :collapse:
 
 
-   .. py:method:: _render_weapons(state: haive.games.clue.state.ClueState) -> rich.panel.Panel
+            .. py:method:: display_state(state: haive.games.clue.state.ClueState | dict[str, Any]) -> None
 
-      Render the weapons panel.
+               Display the current game state with rich formatting.
 
-      :param state: Current game state
+               Renders the complete game state including suspects, weapons, rooms,
+               guess history, player cards, and game information in a formatted layout.
 
-      :returns: Weapons panel
-      :rtype: Panel
+               :param state: Current game state
+               :type state: Union[ClueState, Dict[str, Any]]
 
+               :returns: None
 
-      .. autolink-examples:: _render_weapons
-         :collapse:
+               .. rubric:: Example
 
+               >>> ui = ClueUI()
+               >>> state = ClueState.initialize()
+               >>> ui.display_state(state)
 
-   .. py:method:: _setup_layout()
 
-      Set up the layout structure for the UI.
 
+            .. py:method:: show_game_over(state: haive.games.clue.state.ClueState) -> None
 
-      .. autolink-examples:: _setup_layout
-         :collapse:
+               Display game over message with result.
 
+               Shows a game over panel with the winner highlighted in their color,
+               and reveals the solution.
 
-   .. py:method:: display_state(state: haive.games.clue.state.ClueState | dict[str, Any]) -> None
+               :param state: Final game state
+               :type state: ClueState
 
-      Display the current game state with rich formatting.
+               :returns: None
 
-      Renders the complete game state including suspects, weapons, rooms,
-      guess history, player cards, and game information in a formatted layout.
+               .. rubric:: Example
 
-      :param state: Current game state
-      :type state: Union[ClueState, Dict[str, Any]]
+               >>> ui = ClueUI()
+               >>> state = ClueState.initialize()
+               >>> state.game_status = "player1_win"
+               >>> state.winner = "player1"
+               >>> ui.show_game_over(state)
 
-      :returns: None
 
-      .. rubric:: Example
 
-      >>> ui = ClueUI()
-      >>> state = ClueState.initialize()
-      >>> ui.display_state(state)
+            .. py:method:: show_guess(guess: haive.games.clue.models.ClueGuess, player: str) -> None
 
+               Display a guess being made.
 
-      .. autolink-examples:: display_state
-         :collapse:
+               Shows a formatted message indicating which player made a guess,
+               including the suspect, weapon, and room.
 
+               :param guess: The guess being made
+               :type guess: ClueGuess
+               :param player: Player making the guess ("player1" or "player2")
+               :type player: str
 
-   .. py:method:: show_game_over(state: haive.games.clue.state.ClueState) -> None
+               :returns: None
 
-      Display game over message with result.
+               .. rubric:: Example
 
-      Shows a game over panel with the winner highlighted in their color,
-      and reveals the solution.
+               >>> ui = ClueUI()
+               >>> guess = ClueGuess(
+               ...     suspect=ValidSuspect.COLONEL_MUSTARD,
+               ...     weapon=ValidWeapon.KNIFE,
+               ...     room=ValidRoom.KITCHEN
+               ... )
+               >>> ui.show_guess(guess, "player1")
 
-      :param state: Final game state
-      :type state: ClueState
 
-      :returns: None
 
-      .. rubric:: Example
+            .. py:method:: show_response(response: haive.games.clue.models.ClueResponse, player: str) -> None
 
-      >>> ui = ClueUI()
-      >>> state = ClueState.initialize()
-      >>> state.game_status = "player1_win"
-      >>> state.winner = "player1"
-      >>> ui.show_game_over(state)
+               Display a response to a guess.
 
+               Shows a formatted message indicating the response to a guess,
+               including which player responded and what card was shown.
 
-      .. autolink-examples:: show_game_over
-         :collapse:
+               :param response: The response to the guess
+               :type response: ClueResponse
+               :param player: Player who made the guess ("player1" or "player2")
+               :type player: str
 
+               :returns: None
 
-   .. py:method:: show_guess(guess: haive.games.clue.models.ClueGuess, player: str) -> None
+               .. rubric:: Example
 
-      Display a guess being made.
+               >>> ui = ClueUI()
+               >>> response = ClueResponse(
+               ...     is_correct=False,
+               ...     responding_player="player2",
+               ...     refuting_card=ClueCard(name="Knife", card_type=CardType.WEAPON)
+               ... )
+               >>> ui.show_response(response, "player1")
 
-      Shows a formatted message indicating which player made a guess,
-      including the suspect, weapon, and room.
 
-      :param guess: The guess being made
-      :type guess: ClueGuess
-      :param player: Player making the guess ("player1" or "player2")
-      :type player: str
 
-      :returns: None
+            .. py:method:: show_thinking(player: str, message: str = 'Thinking...') -> None
 
-      .. rubric:: Example
+               Display a thinking animation for the current player.
 
-      >>> ui = ClueUI()
-      >>> guess = ClueGuess(
-      ...     suspect=ValidSuspect.COLONEL_MUSTARD,
-      ...     weapon=ValidWeapon.KNIFE,
-      ...     room=ValidRoom.KITCHEN
-      ... )
-      >>> ui.show_guess(guess, "player1")
+               Shows a spinner animation with player-colored text to indicate
+               that the player is thinking about their guess.
 
+               :param player: Current player ("player1" or "player2")
+               :type player: str
+               :param message: Custom message to display. Defaults to "Thinking...".
+               :type message: str, optional
 
-      .. autolink-examples:: show_guess
-         :collapse:
+               :returns: None
 
+               .. rubric:: Example
 
-   .. py:method:: show_response(response: haive.games.clue.models.ClueResponse, player: str) -> None
+               >>> ui = ClueUI()
+               >>> ui.show_thinking("player1", "Analyzing clues...")
 
-      Display a response to a guess.
 
-      Shows a formatted message indicating the response to a guess,
-      including which player responded and what card was shown.
 
-      :param response: The response to the guess
-      :type response: ClueResponse
-      :param player: Player who made the guess ("player1" or "player2")
-      :type player: str
+            .. py:attribute:: colors
 
-      :returns: None
 
-      .. rubric:: Example
+            .. py:attribute:: console
 
-      >>> ui = ClueUI()
-      >>> response = ClueResponse(
-      ...     is_correct=False,
-      ...     responding_player="player2",
-      ...     refuting_card=ClueCard(name="Knife", card_type=CardType.WEAPON)
-      ... )
-      >>> ui.show_response(response, "player1")
 
+            .. py:attribute:: layout
 
-      .. autolink-examples:: show_response
-         :collapse:
 
 
-   .. py:method:: show_thinking(player: str, message: str = 'Thinking...') -> None
 
-      Display a thinking animation for the current player.
 
-      Shows a spinner animation with player-colored text to indicate
-      that the player is thinking about their guess.
+----
 
-      :param player: Current player ("player1" or "player2")
-      :type player: str
-      :param message: Custom message to display. Defaults to "Thinking...".
-      :type message: str, optional
+.. admonition:: Quick Reference
+   :class: tip
 
-      :returns: None
+   .. code-block:: python
 
-      .. rubric:: Example
+      from games.clue.ui import *
 
-      >>> ui = ClueUI()
-      >>> ui.show_thinking("player1", "Analyzing clues...")
-
-
-      .. autolink-examples:: show_thinking
-         :collapse:
-
-
-   .. py:attribute:: colors
-
-
-   .. py:attribute:: console
-
-
-   .. py:attribute:: layout
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

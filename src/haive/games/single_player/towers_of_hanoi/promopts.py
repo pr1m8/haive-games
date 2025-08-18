@@ -22,7 +22,7 @@ Provide strategic analysis including:
         ),
         (
             "human",
-            """Current Board:
+            """Current Board:.
 {board_state}
 
 Moves: {move_count}/{optimal_moves} (optimal)
@@ -40,7 +40,7 @@ HANOI_MOVE_PROMPT = ChatPromptTemplate.from_messages(
         MessagesPlaceholder(variable_name="messages", optional=True),
         (
             "human",
-            """Current Board:
+            """Current Board:.
 {board_state}
 
 Valid moves:

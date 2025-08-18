@@ -3,6 +3,18 @@ games.single_player.flow_free.config
 
 .. py:module:: games.single_player.flow_free.config
 
+Configuration for Flow Free game agent.
+
+This module defines the configuration for the Flow Free game agent, including player
+type, game mode, and difficulty settings.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Configuration for Flow Free game agent.
@@ -11,181 +23,203 @@ games.single_player.flow_free.config
    type, game mode, and difficulty settings.
 
 
-   .. autolink-examples:: games.single_player.flow_free.config
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.single_player.flow_free.config.FlowFreeConfig
+      games.single_player.flow_free.config.FlowFreeConfig
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: FlowFreeConfig
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.single_player.base.SinglePlayerGameConfig`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: FlowFreeConfig(/, **data: Any)
 
-   Configuration for the Flow Free game agent.
+            Bases: :py:obj:`haive.games.single_player.base.SinglePlayerGameConfig`
 
-   .. attribute:: name
 
-      Name of the game agent.
+            Configuration for the Flow Free game agent.
 
-   .. attribute:: state_schema
+            .. attribute:: name
 
-      State schema for the game.
+               Name of the game agent.
 
-   .. attribute:: player_type
+            .. attribute:: state_schema
 
-      Type of player.
+               State schema for the game.
 
-   .. attribute:: game_mode
+            .. attribute:: player_type
 
-      Mode of operation.
+               Type of player.
 
-   .. attribute:: difficulty
+            .. attribute:: game_mode
 
-      Difficulty level of the game.
+               Mode of operation.
 
-   .. attribute:: max_hints
+            .. attribute:: difficulty
 
-      Maximum number of hints allowed.
+               Difficulty level of the game.
 
-   .. attribute:: auto_analyze
+            .. attribute:: max_hints
 
-      Whether to automatically analyze after each move.
+               Maximum number of hints allowed.
 
-   .. attribute:: rows
+            .. attribute:: auto_analyze
 
-      Number of rows in the grid.
+               Whether to automatically analyze after each move.
 
-   .. attribute:: cols
+            .. attribute:: rows
 
-      Number of columns in the grid.
+               Number of rows in the grid.
 
-   .. attribute:: num_flows
+            .. attribute:: cols
 
-      Number of flows to include. If None, determined by difficulty.
+               Number of columns in the grid.
 
-   .. attribute:: engines
+            .. attribute:: num_flows
 
-      Configurations for game LLMs.
+               Number of flows to include. If None, determined by difficulty.
 
+            .. attribute:: engines
 
-   .. autolink-examples:: FlowFreeConfig
-      :collapse:
+               Configurations for game LLMs.
 
-   .. py:method:: default_config()
-      :classmethod:
+            Create a new model by parsing and validating input data from keyword arguments.
 
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Create a default configuration for a new Flow Free game.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      :returns: An instance of the default game configuration.
-      :rtype: FlowFreeConfig
 
+            .. py:method:: default_config()
+               :classmethod:
 
-      .. autolink-examples:: default_config
-         :collapse:
 
+               Create a default configuration for a new Flow Free game.
 
-   .. py:method:: easy_config()
-      :classmethod:
+               :returns: An instance of the default game configuration.
+               :rtype: FlowFreeConfig
 
 
-      Create an easy configuration for a new Flow Free game.
 
-      :returns: An instance of the easy game configuration.
-      :rtype: FlowFreeConfig
+            .. py:method:: easy_config()
+               :classmethod:
 
 
-      .. autolink-examples:: easy_config
-         :collapse:
+               Create an easy configuration for a new Flow Free game.
 
+               :returns: An instance of the easy game configuration.
+               :rtype: FlowFreeConfig
 
-   .. py:method:: interactive_config()
-      :classmethod:
 
 
-      Create an interactive configuration for a new Flow Free game.
+            .. py:method:: interactive_config()
+               :classmethod:
 
-      :returns: An instance of the interactive game configuration.
-      :rtype: FlowFreeConfig
 
+               Create an interactive configuration for a new Flow Free game.
 
-      .. autolink-examples:: interactive_config
-         :collapse:
+               :returns: An instance of the interactive game configuration.
+               :rtype: FlowFreeConfig
 
 
-   .. py:attribute:: auto_analyze
-      :type:  bool
-      :value: None
 
+            .. py:attribute:: auto_analyze
+               :type:  bool
+               :value: None
 
 
-   .. py:attribute:: cols
-      :type:  int
-      :value: None
 
+            .. py:attribute:: cols
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: difficulty
-      :type:  haive.games.single_player.base.GameDifficulty
-      :value: None
 
+            .. py:attribute:: difficulty
+               :type:  haive.games.single_player.base.GameDifficulty
+               :value: None
 
 
-   .. py:attribute:: engines
-      :type:  dict
-      :value: None
 
+            .. py:attribute:: engines
+               :type:  dict
+               :value: None
 
 
-   .. py:attribute:: game_mode
-      :type:  haive.games.single_player.base.GameMode
-      :value: None
 
+            .. py:attribute:: game_mode
+               :type:  haive.games.single_player.base.GameMode
+               :value: None
 
 
-   .. py:attribute:: max_hints
-      :type:  int
-      :value: None
 
+            .. py:attribute:: max_hints
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: name
-      :type:  str
-      :value: None
 
+            .. py:attribute:: name
+               :type:  str
+               :value: None
 
 
-   .. py:attribute:: num_flows
-      :type:  int | None
-      :value: None
 
+            .. py:attribute:: num_flows
+               :type:  int | None
+               :value: None
 
 
-   .. py:attribute:: player_type
-      :type:  haive.games.single_player.base.PlayerType
-      :value: None
 
+            .. py:attribute:: player_type
+               :type:  haive.games.single_player.base.PlayerType
+               :value: None
 
 
-   .. py:attribute:: rows
-      :type:  int
-      :value: None
 
+            .. py:attribute:: rows
+               :type:  int
+               :value: None
 
 
-   .. py:attribute:: state_schema
-      :type:  type[haive.games.single_player.flow_free.state.FlowFreeState]
-      :value: None
 
+            .. py:attribute:: state_schema
+               :type:  type[haive.games.single_player.flow_free.state.FlowFreeState]
+               :value: None
 
+
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.single_player.flow_free.config import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

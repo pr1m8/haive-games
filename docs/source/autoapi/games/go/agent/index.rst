@@ -3,6 +3,33 @@ games.go.agent
 
 .. py:module:: games.go.agent
 
+Go game agent implementation.
+
+This module provides a Go game agent that supports:
+    - Standard Go game rules and mechanics
+    - Black and white player moves
+    - Optional position analysis
+    - Game state tracking and visualization
+    - SGF format support via sente library
+
+.. rubric:: Example
+
+>>> from haive.games.go import GoAgent, GoAgentConfig
+>>>
+>>> # Create a Go agent with analysis enabled
+>>> config = GoAgentConfig(include_analysis=True)
+>>> agent = GoAgent(config)
+>>>
+>>> # Run a game
+>>> run_go_game(agent)
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 functions</span> • <span class="module-stat">1 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Go game agent implementation.
@@ -26,311 +53,308 @@ games.go.agent
    >>> run_go_game(agent)
 
 
-   .. autolink-examples:: games.go.agent
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (1)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.go.agent.logger
+      games.go.agent.logger
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.go.agent.GoAgent
+      games.go.agent.GoAgent
 
+            
 
-Functions
----------
+.. admonition:: Functions (1)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.go.agent.run_go_game
+      games.go.agent.run_go_game
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GoAgent(config: haive.games.go.config.GoAgentConfig)
 
-   Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`haive.games.go.config.GoAgentConfig`\ ]
+            Bases: :py:obj:`haive.core.engine.agent.agent.Agent`\ [\ :py:obj:`haive.games.go.config.GoAgentConfig`\ ]
 
 
-   Go game agent implementation.
+            Go game agent implementation.
 
-   This class provides the core functionality for playing Go games, including:
-       - Move generation for both black and white players
-       - Position analysis and evaluation
-       - Game state management and validation
-       - Workflow control for game progression
+            This class provides the core functionality for playing Go games, including:
+                - Move generation for both black and white players
+                - Position analysis and evaluation
+                - Game state management and validation
+                - Workflow control for game progression
 
-   .. attribute:: config
+            .. attribute:: config
 
-      Configuration for the Go agent
+               Configuration for the Go agent
 
-      :type: GoAgentConfig
+               :type: GoAgentConfig
 
-   .. attribute:: engines
+            .. attribute:: engines
 
-      LLM engines for players and analysis
+               LLM engines for players and analysis
 
-      :type: Dict[str, Any]
+               :type: Dict[str, Any]
 
-   .. attribute:: graph
+            .. attribute:: graph
 
-      Game workflow graph
+               Game workflow graph
 
-      :type: StateGraph
+               :type: StateGraph
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> config = GoAgentConfig(
-   ...     include_analysis=True,
-   ...     board_size=19
-   ... )
-   >>> agent = GoAgent(config)
-   >>> run_go_game(agent)
+            >>> config = GoAgentConfig(
+            ...     include_analysis=True,
+            ...     board_size=19
+            ... )
+            >>> agent = GoAgent(config)
+            >>> run_go_game(agent)
 
-   Initialize the Go agent.
+            Initialize the Go agent.
 
-   :param config: Configuration for the Go agent.
-   :type config: GoAgentConfig
+            :param config: Configuration for the Go agent.
+            :type config: GoAgentConfig
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: analyze_black_position(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
+               Analyze black's position if analysis is enabled.
 
-   .. autolink-examples:: GoAgent
-      :collapse:
+               :param state: Current game state.
+               :type state: GoGameState
 
-   .. py:method:: analyze_black_position(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
+               :returns: Command to update the game state with black's analysis.
+               :rtype: Command
 
-      Analyze black's position if analysis is enabled.
 
-      :param state: Current game state.
-      :type state: GoGameState
 
-      :returns: Command to update the game state with black's analysis.
-      :rtype: Command
+            .. py:method:: analyze_position(state: haive.games.go.state.GoGameState, color: str) -> langgraph.types.Command
 
+               Analyze the current position for a player.
 
-      .. autolink-examples:: analyze_black_position
-         :collapse:
+               :param state: Current game state.
+               :type state: GoGameState
+               :param color: Player color ("black" or "white").
+               :type color: str
 
+               :returns: Command to update the game state with the analysis.
+               :rtype: Command
 
-   .. py:method:: analyze_position(state: haive.games.go.state.GoGameState, color: str) -> langgraph.types.Command
+               :raises ValueError: If no LLM engine is found for analysis.
 
-      Analyze the current position for a player.
+               .. rubric:: Notes
 
-      :param state: Current game state.
-      :type state: GoGameState
-      :param color: Player color ("black" or "white").
-      :type color: str
+               - Maintains a history of the last 4 analyses
+               - Provides territory evaluation and strategic advice
+               - Identifies strong and weak positions
 
-      :returns: Command to update the game state with the analysis.
-      :rtype: Command
 
-      :raises ValueError: If no LLM engine is found for analysis.
 
-      .. rubric:: Notes
+            .. py:method:: analyze_white_position(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      - Maintains a history of the last 4 analyses
-      - Provides territory evaluation and strategic advice
-      - Identifies strong and weak positions
+               Analyze white's position if analysis is enabled.
 
+               :param state: Current game state.
+               :type state: GoGameState
 
-      .. autolink-examples:: analyze_position
-         :collapse:
+               :returns: Command to update the game state with white's analysis.
+               :rtype: Command
 
 
-   .. py:method:: analyze_white_position(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      Analyze white's position if analysis is enabled.
+            .. py:method:: check_game_status(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      :param state: Current game state.
-      :type state: GoGameState
+               Check and update the Go game status.
 
-      :returns: Command to update the game state with white's analysis.
-      :rtype: Command
+               :param state: Current game state.
+               :type state: GoGameState
 
+               :returns: Command to update the game status.
+               :rtype: Command
 
-      .. autolink-examples:: analyze_white_position
-         :collapse:
+               .. rubric:: Notes
 
+               - Uses sente library to validate game state
+               - Detects game end conditions (resignation, passes)
+               - Updates status to "ended" when game is complete
 
-   .. py:method:: check_game_status(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      Check and update the Go game status.
 
-      :param state: Current game state.
-      :type state: GoGameState
+            .. py:method:: initialize_game(state: haive.games.go.state.GoGameState | None = None) -> langgraph.types.Command
 
-      :returns: Command to update the game status.
-      :rtype: Command
+               Initialize a new game of Go.
 
-      .. rubric:: Notes
+               :param state: Optional initial state. If None,
+                             creates a new game with standard settings.
+               :type state: Optional[GoGameState]
 
-      - Uses sente library to validate game state
-      - Detects game end conditions (resignation, passes)
-      - Updates status to "ended" when game is complete
+               :returns: Command to update the game state with initial settings.
+               :rtype: Command
 
 
-      .. autolink-examples:: check_game_status
-         :collapse:
 
+            .. py:method:: make_black_move(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-   .. py:method:: initialize_game(state: haive.games.go.state.GoGameState | None = None) -> langgraph.types.Command
+               Handle black's move in the game.
 
-      Initialize a new game of Go.
+               :param state: Current game state.
+               :type state: GoGameState
 
-      :param state: Optional initial state. If None,
-                    creates a new game with standard settings.
-      :type state: Optional[GoGameState]
+               :returns: Command to update the game state with black's move.
+               :rtype: Command
 
-      :returns: Command to update the game state with initial settings.
-      :rtype: Command
 
 
-      .. autolink-examples:: initialize_game
-         :collapse:
+            .. py:method:: make_move(state: haive.games.go.state.GoGameState, color: str) -> langgraph.types.Command
 
+               Execute a move for the given player.
 
-   .. py:method:: make_black_move(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
+               :param state: Current game state.
+               :type state: GoGameState
+               :param color: Player color ("black" or "white").
+               :type color: str
 
-      Handle black's move in the game.
+               :returns: Command to update the game state with the new move.
+               :rtype: Command
 
-      :param state: Current game state.
-      :type state: GoGameState
+               :raises ValueError: If no LLM engine is found for the player.
 
-      :returns: Command to update the game state with black's move.
-      :rtype: Command
+               .. rubric:: Notes
 
+               - Provides the last 5 moves as context to the LLM
+               - Includes recent position analysis if available
+               - Validates moves through the state manager
 
-      .. autolink-examples:: make_black_move
-         :collapse:
 
 
-   .. py:method:: make_move(state: haive.games.go.state.GoGameState, color: str) -> langgraph.types.Command
+            .. py:method:: make_white_move(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      Execute a move for the given player.
+               Handle white's move in the game.
 
-      :param state: Current game state.
-      :type state: GoGameState
-      :param color: Player color ("black" or "white").
-      :type color: str
+               :param state: Current game state.
+               :type state: GoGameState
 
-      :returns: Command to update the game state with the new move.
-      :rtype: Command
+               :returns: Command to update the game state with white's move.
+               :rtype: Command
 
-      :raises ValueError: If no LLM engine is found for the player.
 
-      .. rubric:: Notes
 
-      - Provides the last 5 moves as context to the LLM
-      - Includes recent position analysis if available
-      - Validates moves through the state manager
+            .. py:method:: setup_workflow() -> None
 
+               Define the Go game workflow.
 
-      .. autolink-examples:: make_move
-         :collapse:
+               Sets up the game flow graph with nodes for:
+                   - Game initialization
+                   - Black and white moves
+                   - Position analysis (if enabled)
+                   - Game status checks
 
+               The workflow supports two main paths:
+                   1. Basic: Initialize -> Black Move -> White Move -> Repeat
+                   2. With Analysis: Initialize -> Black Move -> Black Analysis ->
+                      White Move -> White Analysis -> Repeat
 
-   .. py:method:: make_white_move(state: haive.games.go.state.GoGameState) -> langgraph.types.Command
 
-      Handle white's move in the game.
 
-      :param state: Current game state.
-      :type state: GoGameState
 
-      :returns: Command to update the game state with white's move.
-      :rtype: Command
+            .. py:method:: should_continue_game(state: haive.games.go.state.GoGameState) -> bool
 
+               Determine if the game should continue.
 
-      .. autolink-examples:: make_white_move
-         :collapse:
+               :param state: Current game state.
+               :type state: GoGameState
 
+               :returns: True if game is ongoing, False otherwise.
+               :rtype: bool
 
-   .. py:method:: setup_workflow() -> None
 
-      Define the Go game workflow.
 
-      Sets up the game flow graph with nodes for:
-          - Game initialization
-          - Black and white moves
-          - Position analysis (if enabled)
-          - Game status checks
 
-      The workflow supports two main paths:
-          1. Basic: Initialize -> Black Move -> White Move -> Repeat
-          2. With Analysis: Initialize -> Black Move -> Black Analysis ->
-             White Move -> White Analysis -> Repeat
-
-
-
-      .. autolink-examples:: setup_workflow
-         :collapse:
-
-
-   .. py:method:: should_continue_game(state: haive.games.go.state.GoGameState) -> bool
-
-      Determine if the game should continue.
-
-      :param state: Current game state.
-      :type state: GoGameState
-
-      :returns: True if game is ongoing, False otherwise.
-      :rtype: bool
-
-
-      .. autolink-examples:: should_continue_game
-         :collapse:
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: run_go_game(agent: GoAgent) -> None
 
-   Run a Go game with visualization and structured output.
+            Run a Go game with visualization and structured output.
 
-   This function manages the game loop and provides rich visualization
-   of the game state, including:
-       - Board visualization using ASCII art
-       - Move history tracking
-       - Position analysis display
-       - Captured stones counting
-       - Game status updates
+            This function manages the game loop and provides rich visualization
+            of the game state, including:
+                - Board visualization using ASCII art
+                - Move history tracking
+                - Position analysis display
+                - Captured stones counting
+                - Game status updates
 
-   :param agent: The Go agent to run the game with.
-   :type agent: GoAgent
+            :param agent: The Go agent to run the game with.
+            :type agent: GoAgent
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> agent = GoAgent(GoAgentConfig(include_analysis=True))
-   >>> run_go_game(agent)
+            >>> agent = GoAgent(GoAgentConfig(include_analysis=True))
+            >>> run_go_game(agent)
 
-   🔷 Current Board Position:
-   . . . . . . . . .
-   . . . . . . . . .
-   . . + . . . + . .
-   . . . . . . . . .
-   . . . . + . . . .
-   . . . . . . . . .
-   . . + . . . + . .
-   . . . . . . . . .
-   . . . . . . . . .
+            🔷 Current Board Position:
+            . . . . . . . . .
+            . . . . . . . . .
+            . . + . . . + . .
+            . . . . . . . . .
+            . . . . + . . . .
+            . . . . . . . . .
+            . . + . . . + . .
+            . . . . . . . . .
+            . . . . . . . . .
 
-   🎮 Current Player: Black
-   📌 Game Status: ongoing
-   --------------------------------------------------
+            🎮 Current Player: Black
+            📌 Game Status: ongoing
+            --------------------------------------------------
 
 
-   .. autolink-examples:: run_go_game
-      :collapse:
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: logger
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.go.agent import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

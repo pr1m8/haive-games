@@ -118,6 +118,14 @@ class ConfigurableFoxAndGeeseConfig(FoxAndGeeseConfig):
         """Generate player names based on model names."""
 
         def model_to_name(model: str) -> str:
+            """Model To Name.
+
+Args:
+    model: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             if "gpt" in model.lower():
                 return "GPT"
             elif "claude" in model.lower():
@@ -153,7 +161,7 @@ def create_fox_and_geese_config(
     Returns:
         ConfigurableFoxAndGeeseConfig: Configured FoxAndGeese game
 
-    Example:
+    Examples:
         >>> config = create_fox_and_geese_config("gpt-4o", "claude-3-opus", temperature=0.5)
         >>> config = create_fox_and_geese_config(
         ...     "openai:gpt-4o",
@@ -187,7 +195,7 @@ def create_fox_and_geese_config_from_example(
         - "mixed": Different provider per role
         - "advanced": High-powered models for strategic gameplay
 
-    Example:
+    Examples:
         >>> config = create_fox_and_geese_config_from_example("budget", enable_analysis=False)
         >>> config = create_fox_and_geese_config_from_example("advanced", visualize_game=True)
 
@@ -214,7 +222,7 @@ def create_fox_and_geese_config_from_player_configs(
         - "fox_analyzer": Player 1 analyzer configuration
         - "geese_analyzer": Player 2 analyzer configuration
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "fox_player": PlayerAgentConfig(
         ...         llm_config="gpt-4o",

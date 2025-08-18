@@ -22,6 +22,8 @@ class BattleshipPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Battleship game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -99,6 +101,8 @@ class BattleshipEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Battleship game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = BattleshipPlayerIdentifiers()
         prompt_generator = BattleshipPromptGenerator()
         super().__init__(identifiers, prompt_generator)

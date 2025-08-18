@@ -15,7 +15,7 @@ The agent uses a multi-step analysis process, with each step handled by a specia
 LLM engine to generate the final poker decision. This design allows for detailed reasoning
 about poker strategy based on the current game state.
 
-Example:
+Examples:
     >>> from haive.games.hold_em.player_agent import HoldemPlayerAgent, HoldemPlayerAgentConfig
     >>> from haive.games.hold_em.engines import build_player_engines
     >>>
@@ -138,6 +138,11 @@ class HoldemPlayerAgent(Agent[HoldemPlayerAgentConfig]):
 
     """
     def __init__(self, config: HoldemPlayerAgentConfig):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         # Ensure the config uses the correct state schema
         config.state_schema = PlayerSubgraphState
         super().__init__(config)

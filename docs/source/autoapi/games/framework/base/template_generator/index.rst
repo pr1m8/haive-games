@@ -3,6 +3,40 @@ games.framework.base.template_generator
 
 .. py:module:: games.framework.base.template_generator
 
+Template generator for game agents (EXPERIMENTAL).
+
+This experimental module provides a template generator for creating new game
+implementations. It automates the creation of boilerplate code and ensures
+consistency across different game implementations.
+
+.. warning::
+
+   This module is experimental and its API may change without notice.
+   Use with caution in production environments.
+
+.. rubric:: Example
+
+>>> # Create templates for a new chess game
+>>> generator = GameTemplateGenerator(
+...     game_name="Chess",
+...     player1_name="white",
+...     player2_name="black",
+...     enable_analysis=True
+... )
+>>> generator.generate_templates()
+
+Typical usage:
+    - Initialize the generator with game details
+    - Generate all template files at once
+    - Customize the generated code for your specific game
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Template generator for game agents (EXPERIMENTAL).
@@ -33,252 +67,254 @@ games.framework.base.template_generator
        - Customize the generated code for your specific game
 
 
-   .. autolink-examples:: games.framework.base.template_generator
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.framework.base.template_generator.GameTemplateGenerator
+      games.framework.base.template_generator.GameTemplateGenerator
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GameTemplateGenerator(game_name: str, player1_name: str = 'player1', player2_name: str = 'player2', enable_analysis: bool = True)
 
-   Experimental template generator for new board game implementations.
+            Experimental template generator for new board game implementations.
 
-   This class automates the creation of boilerplate code for implementing
-   new board games within the framework. It generates a complete set of
-   files with proper structure, documentation, and type hints.
+            This class automates the creation of boilerplate code for implementing
+            new board games within the framework. It generates a complete set of
+            files with proper structure, documentation, and type hints.
 
-   .. warning::
+            .. warning::
 
-      This class is experimental and its API may change without notice.
-      Generated code may need manual adjustments for specific games.
+               This class is experimental and its API may change without notice.
+               Generated code may need manual adjustments for specific games.
 
-   .. attribute:: game_name
+            .. attribute:: game_name
 
-      The name of the game (used for class names).
+               The name of the game (used for class names).
 
-      :type: str
+               :type: str
 
-   .. attribute:: player1_name
+            .. attribute:: player1_name
 
-      Name for player 1.
+               Name for player 1.
 
-      :type: str
+               :type: str
 
-   .. attribute:: player2_name
+            .. attribute:: player2_name
 
-      Name for player 2.
+               Name for player 2.
 
-      :type: str
+               :type: str
 
-   .. attribute:: enable_analysis
+            .. attribute:: enable_analysis
 
-      Whether to include analysis in templates.
+               Whether to include analysis in templates.
 
-      :type: bool
+               :type: bool
 
-   .. attribute:: game_slug
+            .. attribute:: game_slug
 
-      Slugified version of the game name for file paths.
+               Slugified version of the game name for file paths.
 
-      :type: str
+               :type: str
 
-   .. attribute:: game_class_name
+            .. attribute:: game_class_name
 
-      CamelCase version of game name for class names.
+               CamelCase version of game name for class names.
 
-      :type: str
+               :type: str
 
-   .. attribute:: base_dir
+            .. attribute:: base_dir
 
-      Base directory for generated files.
+               Base directory for generated files.
 
-      :type: str
+               :type: str
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> generator = GameTemplateGenerator("Tic Tac Toe")
-   >>> generator.generate_templates()
-   ✅ Generated template files for Tic Tac Toe in src/haive/agents/agent_games/tic_tac_toe
+            >>> generator = GameTemplateGenerator("Tic Tac Toe")
+            >>> generator.generate_templates()
+            ✅ Generated template files for Tic Tac Toe in src/haive/agents/agent_games/tic_tac_toe
 
-   Initialize the template generator.
+            Initialize the template generator.
 
-   :param game_name: The name of the game (used for class names).
-   :type game_name: str
-   :param player1_name: Name for player 1. Defaults to "player1".
-   :type player1_name: str, optional
-   :param player2_name: Name for player 2. Defaults to "player2".
-   :type player2_name: str, optional
-   :param enable_analysis: Whether to include analysis in templates.
-                           Defaults to True.
-   :type enable_analysis: bool, optional
+            :param game_name: The name of the game (used for class names).
+            :type game_name: str
+            :param player1_name: Name for player 1. Defaults to "player1".
+            :type player1_name: str, optional
+            :param player2_name: Name for player 2. Defaults to "player2".
+            :type player2_name: str, optional
+            :param enable_analysis: Whether to include analysis in templates.
+                                    Defaults to True.
+            :type enable_analysis: bool, optional
 
-   .. rubric:: Example
+            .. rubric:: Example
 
-   >>> generator = GameTemplateGenerator(
-   ...     game_name="Chess",
-   ...     player1_name="white",
-   ...     player2_name="black"
-   ... )
+            >>> generator = GameTemplateGenerator(
+            ...     game_name="Chess",
+            ...     player1_name="white",
+            ...     player2_name="black"
+            ... )
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: _generate_agent_file() -> None
 
+               Generate the agent.py file with the main agent class.
 
-   .. autolink-examples:: GameTemplateGenerator
-      :collapse:
+               This method creates a file containing the game agent class with:
+               - Move generation and extraction
+               - Position analysis (if enabled)
+               - Game state visualization
+               - Integration with the framework
 
-   .. py:method:: _generate_agent_file() -> None
+               The generated code includes proper error handling and logging.
 
-      Generate the agent.py file with the main agent class.
 
-      This method creates a file containing the game agent class with:
-      - Move generation and extraction
-      - Position analysis (if enabled)
-      - Game state visualization
-      - Integration with the framework
 
-      The generated code includes proper error handling and logging.
 
+            .. py:method:: _generate_config_file() -> None
 
+               Generate the config.py file with agent configuration.
 
-      .. autolink-examples:: _generate_agent_file
-         :collapse:
+               This method creates a file containing:
+               - LLM prompt templates for moves and analysis
+               - AugLLM configurations for players and analyzers
+               - Game-specific agent configuration class
 
+               The generated code includes default configurations that can be customized.
 
-   .. py:method:: _generate_config_file() -> None
 
-      Generate the config.py file with agent configuration.
 
-      This method creates a file containing:
-      - LLM prompt templates for moves and analysis
-      - AugLLM configurations for players and analyzers
-      - Game-specific agent configuration class
 
-      The generated code includes default configurations that can be customized.
+            .. py:method:: _generate_example_file() -> None
 
+               Generate an example.py file to demonstrate agent usage.
 
+               This method creates a file containing:
+               - Example game setup and configuration
+               - Game execution with visualization
+               - State history saving
 
-      .. autolink-examples:: _generate_config_file
-         :collapse:
+               The generated code serves as a starting point for using the agent.
 
 
-   .. py:method:: _generate_example_file() -> None
 
-      Generate an example.py file to demonstrate agent usage.
 
-      This method creates a file containing:
-      - Example game setup and configuration
-      - Game execution with visualization
-      - State history saving
+            .. py:method:: _generate_models_file() -> None
 
-      The generated code serves as a starting point for using the agent.
+               Generate the models.py file with game-specific data models.
 
+               This method creates a file containing Pydantic models for:
+               - Game moves
+               - Player decisions
+               - Game state
+               - Analysis (if enabled)
 
+               The generated models include proper type hints, field descriptions,
+               and validation rules.
 
-      .. autolink-examples:: _generate_example_file
-         :collapse:
 
 
-   .. py:method:: _generate_models_file() -> None
 
-      Generate the models.py file with game-specific data models.
+            .. py:method:: _generate_state_manager_file() -> None
 
-      This method creates a file containing Pydantic models for:
-      - Game moves
-      - Player decisions
-      - Game state
-      - Analysis (if enabled)
+               Generate the state.py file with game state management logic.
 
-      The generated models include proper type hints, field descriptions,
-      and validation rules.
+               This method creates a file containing the state manager class with:
+               - Game initialization logic
+               - Move application logic
+               - Legal move generation
+               - Game status checking
 
+               The generated code includes placeholders for game-specific logic.
 
 
-      .. autolink-examples:: _generate_models_file
-         :collapse:
 
 
-   .. py:method:: _generate_state_manager_file() -> None
+            .. py:method:: generate_templates(output_dir: str = None) -> None
 
-      Generate the state.py file with game state management logic.
+               Generate all template files for the game.
 
-      This method creates a file containing the state manager class with:
-      - Game initialization logic
-      - Move application logic
-      - Legal move generation
-      - Game status checking
+               This method creates a complete set of files needed for a new game
+               implementation, including models, state management, configuration,
+               and example usage.
 
-      The generated code includes placeholders for game-specific logic.
+               :param output_dir: Optional directory to write files to.
+                                  If not provided, uses the standard package structure.
+               :type output_dir: str, optional
 
+               .. rubric:: Example
 
+               >>> generator = GameTemplateGenerator("Chess")
+               >>> # Generate in default location
+               >>> generator.generate_templates()
+               >>> # Generate in custom location
+               >>> generator.generate_templates("my_games/chess")
 
-      .. autolink-examples:: _generate_state_manager_file
-         :collapse:
 
 
-   .. py:method:: generate_templates(output_dir: str = None) -> None
+            .. py:attribute:: base_dir
+               :value: 'src/haive/agents/agent_games/Uninferable'
 
-      Generate all template files for the game.
 
-      This method creates a complete set of files needed for a new game
-      implementation, including models, state management, configuration,
-      and example usage.
 
-      :param output_dir: Optional directory to write files to.
-                         If not provided, uses the standard package structure.
-      :type output_dir: str, optional
+            .. py:attribute:: enable_analysis
+               :value: True
 
-      .. rubric:: Example
 
-      >>> generator = GameTemplateGenerator("Chess")
-      >>> # Generate in default location
-      >>> generator.generate_templates()
-      >>> # Generate in custom location
-      >>> generator.generate_templates("my_games/chess")
 
+            .. py:attribute:: game_class_name
+               :value: ''
 
-      .. autolink-examples:: generate_templates
-         :collapse:
 
 
-   .. py:attribute:: base_dir
-      :value: 'src/haive/agents/agent_games/Uninferable'
+            .. py:attribute:: game_name
 
 
+            .. py:attribute:: game_slug
 
-   .. py:attribute:: enable_analysis
-      :value: True
 
+            .. py:attribute:: player1_name
+               :value: 'player1'
 
 
-   .. py:attribute:: game_class_name
-      :value: ''
 
+            .. py:attribute:: player2_name
+               :value: 'player2'
 
 
-   .. py:attribute:: game_name
 
 
-   .. py:attribute:: game_slug
 
 
-   .. py:attribute:: player1_name
-      :value: 'player1'
+----
 
+.. admonition:: Quick Reference
+   :class: tip
 
+   .. code-block:: python
 
-   .. py:attribute:: player2_name
-      :value: 'player2'
+      from games.framework.base.template_generator import *
 
-
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

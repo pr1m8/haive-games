@@ -34,6 +34,11 @@ logger = logging.getLogger(__name__)
 class DominoesAgent(GameAgent[DominoesAgentConfig]):
     """Agent for playing dominoes."""
     def __init__(self, config: DominoesAgentConfig | None = None):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         # Use default config if not provided
         if config is None:
             config = DominoesAgentConfig()

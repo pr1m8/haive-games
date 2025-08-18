@@ -8,14 +8,11 @@ including:
     - Debug logging and error handling
     - Command-line interface for game parameters
 
-Example:
+Examples:
     To run a game from the command line:
     ```bash
     python example.py --players 7 --days 3 --debug
-    ```
-
-    To run programmatically:
-    ```python
+            To run programmatically:python
     from mafia.example import run_mafia_game
     run_mafia_game(player_count=7, max_days=3, debug=True)
     ```

@@ -17,7 +17,7 @@ The game agent creates and manages subgraph agents for each player, allowing the
 to make independent decisions within the overall game context. It handles all
 aspects of the game rules, ensuring proper sequencing of rounds and actions.
 
-Example:
+Examples:
     >>> from haive.games.hold_em.game_agent import HoldemGameAgent
     >>> from haive.games.hold_em.config import create_default_holdem_config
     >>>
@@ -120,6 +120,11 @@ class HoldemGameAgent(Agent[HoldemGameAgentConfig]):
 
     """
     def __init__(self, config: HoldemGameAgentConfig):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         super().__init__(config)
 
         # Debug tracking

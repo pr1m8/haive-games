@@ -28,6 +28,11 @@ class MonopolyPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Monopoly game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -35,6 +40,11 @@ class MonopolyPromptGenerator(GenericPromptGenerator[str, str]):
     """Prompt generator for Monopoly game."""
 
     def __init__(self, players: GamePlayerIdentifiers[str, str]):
+        """  Init  .
+
+Args:
+    players: [TODO: Add description]
+"""
         super().__init__(players)
 
     def create_move_prompt(self, player: str) -> ChatPromptTemplate:
@@ -134,6 +144,11 @@ class MonopolyEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Monopoly game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = MonopolyPlayerIdentifiers()
         prompt_generator = MonopolyPromptGenerator(identifiers)
         super().__init__(identifiers, prompt_generator)

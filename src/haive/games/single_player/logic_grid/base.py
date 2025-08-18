@@ -30,6 +30,14 @@ class LogicGridPosition(Position):
         return v
 
     def __eq__(self, other: object) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, LogicGridPosition):
             return False
         return (
@@ -38,6 +46,11 @@ class LogicGridPosition(Position):
         )
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.category1_index, self.category2_index))
 
     @computed_field

@@ -3,6 +3,18 @@ games.core.game.core_space
 
 .. py:module:: games.core.game.core_space
 
+Space models for the game framework.
+
+This module defines the base Space class and specific implementations for different
+types of board spaces.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">4 classes</span> • <span class="module-stat">2 attributes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Space models for the game framework.
@@ -11,289 +23,292 @@ games.core.game.core_space
    types of board spaces.
 
 
-   .. autolink-examples:: games.core.game.core_space
-      :collapse:
 
+      
 
-Attributes
-----------
+.. admonition:: Attributes (2)
+   :class: tip
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.core_space.P
-   games.core.game.core_space.T
+      games.core.game.core_space.P
+      games.core.game.core_space.T
 
+            
+            
 
-Classes
--------
+.. admonition:: Classes (4)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.core.game.core_space.GridSpace
-   games.core.game.core_space.HexSpace
-   games.core.game.core_space.Space
-   games.core.game.core_space.SpaceProtocol
+      games.core.game.core_space.GridSpace
+      games.core.game.core_space.HexSpace
+      games.core.game.core_space.Space
+      games.core.game.core_space.SpaceProtocol
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GridSpace
 
-   Bases: :py:obj:`Space`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
+            Bases: :py:obj:`Space`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
 
 
-   A space on a grid-based board.
+            A space on a grid-based board.
 
-   Used for games like Chess, Checkers, Scrabble, etc.
-
-
-
-   .. autolink-examples:: GridSpace
-      :collapse:
-
-   .. py:method:: get_grid_position() -> tuple[int, int]
-
-      Get the grid coordinates of this space.
-
-      :returns: Tuple of (row, col)
+            Used for games like Chess, Checkers, Scrabble, etc.
 
 
-      .. autolink-examples:: get_grid_position
-         :collapse:
+
+            .. py:method:: get_grid_position() -> tuple[int, int]
+
+               Get the grid coordinates of this space.
+
+               :returns: Tuple of (row, col)
 
 
-   .. py:property:: coordinates
-      :type: str
+
+            .. py:property:: coordinates
+               :type: str
 
 
-      Get human-readable coordinates for this space.
+               Get human-readable coordinates for this space.
 
-      :returns: String like "A1", "B2", etc.
+               :returns: String like "A1", "B2", etc.
 
-      .. autolink-examples:: coordinates
-         :collapse:
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: HexSpace
 
-   Bases: :py:obj:`Space`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
+            Bases: :py:obj:`Space`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
 
 
-   A space on a hexagonal board.
+            A space on a hexagonal board.
 
-   Used for games like Catan, hex-based war games, etc.
-
-
-
-   .. autolink-examples:: HexSpace
-      :collapse:
-
-   .. py:property:: coordinates
-      :type: tuple[int, int, int]
+            Used for games like Catan, hex-based war games, etc.
 
 
-      Get the hex coordinates of this space.
 
-      :returns: Tuple of (q, r, s) in cube coordinates
+            .. py:property:: coordinates
+               :type: tuple[int, int, int]
 
-      .. autolink-examples:: coordinates
-         :collapse:
 
+               Get the hex coordinates of this space.
+
+               :returns: Tuple of (q, r, s) in cube coordinates
+
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Space(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
+            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
 
 
-   A space on a game board where pieces can be placed.
+            A space on a game board where pieces can be placed.
 
-   A Space represents a location on a board that can hold a game piece. It has a
-   position and can be connected to other spaces.
+            A Space represents a location on a board that can hold a game piece. It has a
+            position and can be connected to other spaces.
 
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:class:: Config
 
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
-   .. autolink-examples:: Space
-      :collapse:
 
-   .. py:class:: Config
 
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
 
+            .. py:method:: add_connection(space_id: str) -> None
 
+               Add a connection to another space.
 
+               :param space_id: ID of the space to connect to
 
-   .. py:method:: add_connection(space_id: str) -> None
 
-      Add a connection to another space.
 
-      :param space_id: ID of the space to connect to
+            .. py:method:: get_property(key: str, default: Any = None) -> Any
 
+               Get a property value.
 
-      .. autolink-examples:: add_connection
-         :collapse:
+               :param key: Property name
+               :param default: Default value if property doesn't exist
 
+               :returns: Property value or default
 
-   .. py:method:: get_property(key: str, default: Any = None) -> Any
 
-      Get a property value.
 
-      :param key: Property name
-      :param default: Default value if property doesn't exist
+            .. py:method:: is_connected_to(space_id: str) -> bool
 
-      :returns: Property value or default
+               Check if this space is connected to another space.
 
+               :param space_id: ID of the space to check
 
-      .. autolink-examples:: get_property
-         :collapse:
+               :returns: True if connected, False otherwise
 
 
-   .. py:method:: is_connected_to(space_id: str) -> bool
 
-      Check if this space is connected to another space.
+            .. py:method:: is_occupied() -> bool
 
-      :param space_id: ID of the space to check
+               Check if this space is occupied by a piece.
 
-      :returns: True if connected, False otherwise
+               :returns: True if the space has a piece, False otherwise
 
 
-      .. autolink-examples:: is_connected_to
-         :collapse:
 
+            .. py:method:: place_piece(piece: T) -> bool
 
-   .. py:method:: is_occupied() -> bool
+               Place a piece on this space.
 
-      Check if this space is occupied by a piece.
+               :param piece: The piece to place
 
-      :returns: True if the space has a piece, False otherwise
+               :returns: True if placement was successful, False otherwise
 
 
-      .. autolink-examples:: is_occupied
-         :collapse:
 
+            .. py:method:: remove_connection(space_id: str) -> None
 
-   .. py:method:: place_piece(piece: T) -> bool
+               Remove a connection to another space.
 
-      Place a piece on this space.
+               :param space_id: ID of the space to disconnect from
 
-      :param piece: The piece to place
 
-      :returns: True if placement was successful, False otherwise
 
+            .. py:method:: remove_piece() -> T | None
 
-      .. autolink-examples:: place_piece
-         :collapse:
+               Remove and return the piece on this space.
 
+               :returns: The removed piece, or None if no piece was on the space
 
-   .. py:method:: remove_connection(space_id: str) -> None
 
-      Remove a connection to another space.
 
-      :param space_id: ID of the space to disconnect from
+            .. py:method:: set_property(key: str, value: Any) -> None
 
+               Set a property value.
 
-      .. autolink-examples:: remove_connection
-         :collapse:
+               :param key: Property name
+               :param value: Property value
 
 
-   .. py:method:: remove_piece() -> T | None
 
-      Remove and return the piece on this space.
+            .. py:attribute:: connections
+               :type:  set[str]
+               :value: None
 
-      :returns: The removed piece, or None if no piece was on the space
 
 
-      .. autolink-examples:: remove_piece
-         :collapse:
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
 
-   .. py:method:: set_property(key: str, value: Any) -> None
 
-      Set a property value.
+            .. py:attribute:: name
+               :type:  str | None
+               :value: None
 
-      :param key: Property name
-      :param value: Property value
 
 
-      .. autolink-examples:: set_property
-         :collapse:
+            .. py:attribute:: piece
+               :type:  T | None
+               :value: None
 
 
-   .. py:attribute:: connections
-      :type:  set[str]
-      :value: None
 
+            .. py:attribute:: position
+               :type:  P
 
 
-   .. py:attribute:: id
-      :type:  str
-      :value: None
+            .. py:attribute:: properties
+               :type:  dict[str, Any]
+               :value: None
 
 
 
-   .. py:attribute:: name
-      :type:  str | None
-      :value: None
 
-
-
-   .. py:attribute:: piece
-      :type:  T | None
-      :value: None
-
-
-
-   .. py:attribute:: position
-      :type:  P
-
-
-   .. py:attribute:: properties
-      :type:  dict[str, Any]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: SpaceProtocol
 
-   Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
+            Bases: :py:obj:`Protocol`, :py:obj:`Generic`\ [\ :py:obj:`P`\ , :py:obj:`T`\ ]
 
 
-   Protocol defining the required interface for board spaces.
+            Protocol defining the required interface for board spaces.
 
 
-   .. autolink-examples:: SpaceProtocol
-      :collapse:
-
-   .. py:method:: is_occupied() -> bool
+            .. py:method:: is_occupied() -> bool
 
 
-   .. py:method:: place_piece(piece: T) -> bool
+            .. py:method:: place_piece(piece: T) -> bool
 
 
-   .. py:method:: remove_piece() -> T | None
+            .. py:method:: remove_piece() -> T | None
 
 
-   .. py:attribute:: id
-      :type:  str
+            .. py:attribute:: id
+               :type:  str
 
 
-   .. py:attribute:: position
-      :type:  P
+            .. py:attribute:: position
+               :type:  P
 
+
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: P
 
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
+
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.core.game.core_space import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

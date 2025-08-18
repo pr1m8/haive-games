@@ -228,6 +228,14 @@ class FoxAndGeeseMove(BaseModel):
         }"
 
     def __eq__(self, other) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, FoxAndGeeseMove):
             return False
         return (
@@ -238,6 +246,11 @@ class FoxAndGeeseMove(BaseModel):
         )
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash((self.from_pos, self.to_pos, self.piece_type, self.capture))
 
 
@@ -268,6 +281,14 @@ class FoxAndGeeseAnalysis(BaseModel):
     explanation: str = Field(description="Detailed explanation of the analysis")
 
     def __eq__(self, other) -> bool:
+        """  Eq  .
+
+Args:
+    other: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if not isinstance(other, FoxAndGeeseAnalysis):
             return False
         return (
@@ -281,6 +302,11 @@ class FoxAndGeeseAnalysis(BaseModel):
         )
 
     def __hash__(self) -> int:
+        """  Hash  .
+
+Returns:
+    [TODO: Add return description]
+"""
         return hash(
             (
                 self.advantage,

@@ -3,12 +3,27 @@ games.cards.uno
 
 .. py:module:: games.cards.uno
 
+Module exports.
+
+
+
 .. autoapi-nested-parse::
 
    Module exports.
 
 
-   .. autolink-examples:: games.cards.uno
-      :collapse:
 
+      
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.cards.uno import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

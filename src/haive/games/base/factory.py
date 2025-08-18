@@ -6,7 +6,7 @@ This module provides a factory class for creating game agents with standardized
 workflows and configurations. It simplifies the process of creating new game
 agents by providing a flexible, composable pattern.
 
-Example:
+Examples:
     >>> # Create a new chess agent
     >>> chess_agent = GameAgentFactory.create_game_agent(
     ...     name="ChessAgent",
@@ -62,7 +62,7 @@ class GameAgentFactory:
     - Flexible workflow definition with conditional edges
     - Registration of agents with their configs
 
-    Example:
+    Examples:
         >>> # Create a new chess agent
         >>> chess_agent = GameAgentFactory.create_game_agent(
         ...     name="ChessAgent",
@@ -109,7 +109,7 @@ class GameAgentFactory:
         Returns:
             Type[Agent]: A new agent class with all methods and workflow configured.
 
-        Example:
+        Examples:
             >>> # Create a chess agent with analysis
             >>> chess_agent = GameAgentFactory.create_game_agent(
             ...     name="ChessAgent",
@@ -146,23 +146,53 @@ class GameAgentFactory:
 
         # Define methods for the agent class
         def __init__(self, config: dict[str, Any]):
+            """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
             # Initialize as GameAgent
             GameAgent.__init__(self, config)
             self.state_manager = state_manager
 
         def make_player1_move(self, state: dict[str, Any]):
+            """Make Player1 Move.
+
+Args:
+    state: [TODO: Add description]
+"""
             return self.make_move(state, player1_name)
 
         def make_player2_move(self, state: dict[str, Any]):
+            """Make Player2 Move.
+
+Args:
+    state: [TODO: Add description]
+"""
             return self.make_move(state, player2_name)
 
         def analyze_player1(self, state: dict[str, Any]):
+            """Analyze Player1.
+
+Args:
+    state: [TODO: Add description]
+"""
             return self.analyze_position(state, player1_name)
 
         def analyze_player2(self, state: dict[str, Any]):
+            """Analyze Player2.
+
+Args:
+    state: [TODO: Add description]
+"""
             return self.analyze_position(state, player2_name)
 
         def setup_workflow(self) -> None:
+            """Setup Workflow.
+
+Returns:
+    [TODO: Add return description]
+"""
             # Use DynamicGraph to build the workflow
             graph_builder = DynamicGraph(
                 components=[self.config.engine], state_schema=self.config.state_schema
@@ -270,7 +300,7 @@ class GameAgentFactory:
         Returns:
             StateGraph: The modified graph with standard workflow added.
 
-        Example:
+        Examples:
             >>> # Create a basic graph and add standard workflow
             >>> graph = StateGraph()
             >>> graph = GameAgentFactory.create_standard_workflow(

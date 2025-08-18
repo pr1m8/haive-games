@@ -31,7 +31,7 @@ Usage:
     With specific map:
         $ python demo.py --map skeld --tasks 10
 
-Example:
+Examples:
     >>> # Run a standard Among Us game
     >>> from haive.games.among_us.demo import run_among_us_demo
     >>> run_among_us_demo(num_players=7, num_impostors=2)

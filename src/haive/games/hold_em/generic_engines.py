@@ -26,6 +26,11 @@ class HoldemPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Texas Hold'em game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -117,6 +122,11 @@ class HoldemEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Texas Hold'em game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = HoldemPlayerIdentifiers()
         prompt_generator = HoldemPromptGenerator()
         super().__init__(identifiers, prompt_generator)

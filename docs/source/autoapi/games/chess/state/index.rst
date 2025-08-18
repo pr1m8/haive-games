@@ -3,6 +3,25 @@ games.chess.state
 
 .. py:module:: games.chess.state
 
+Chess game state models.
+
+This module defines the state schema for chess games, including:
+    - Board state representation using FEN notation
+    - Move history tracking
+    - Game status management
+    - Position analysis storage
+    - Player turn tracking
+
+The state schema provides a complete representation of a chess game state
+that can be used by the agent and state manager.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Chess game state models.
@@ -18,236 +37,258 @@ games.chess.state
    that can be used by the agent and state manager.
 
 
-   .. autolink-examples:: games.chess.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.chess.state.ChessState
+      games.chess.state.ChessState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: ChessState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.core.schema.state_schema.StateSchema`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: ChessState(/, **data: Any)
 
-   State schema for the chess game.
+            Bases: :py:obj:`haive.core.schema.state_schema.StateSchema`
 
-   This class extends StateSchema to provide a comprehensive representation
-   of a chess game, including board state, move history, game status, and
-   analysis information.
 
-   .. attribute:: board_fens
+            State schema for the chess game.
 
-      List of FEN board states, with the most recent at the end.
+            This class extends StateSchema to provide a comprehensive representation
+            of a chess game, including board state, move history, game status, and
+            analysis information.
 
-      :type: List[str]
+            .. attribute:: board_fens
 
-   .. attribute:: move_history
+               List of FEN board states, with the most recent at the end.
 
-      List of (player_color, UCI move) tuples.
+               :type: List[str]
 
-      :type: List[tuple[str, str]]
+            .. attribute:: move_history
 
-   .. attribute:: current_player
+               List of (player_color, UCI move) tuples.
 
-      Color of the player making the current move.
+               :type: List[tuple[str, str]]
 
-      :type: Literal["white", "black"]
+            .. attribute:: current_player
 
-   .. attribute:: turn
+               Color of the player making the current move.
 
-      Current turn color.
+               :type: Literal["white", "black"]
 
-      :type: Literal["white", "black"]
+            .. attribute:: turn
 
-   .. attribute:: game_status
+               Current turn color.
 
-      Current status of the game.
+               :type: Literal["white", "black"]
 
-      :type: Literal["ongoing", "check", "checkmate", "stalemate", "draw"]
+            .. attribute:: game_status
 
-   .. attribute:: game_result
+               Current status of the game.
 
-      Final game result (white_win, black_win, draw) if game is over.
+               :type: Literal["ongoing", "check", "checkmate", "stalemate", "draw"]
 
-      :type: Optional[str]
+            .. attribute:: game_result
 
-   .. attribute:: white_analysis
+               Final game result (white_win, black_win, draw) if game is over.
 
-      Position analysis from white's perspective.
+               :type: Optional[str]
 
-      :type: List[Dict[str, Any]]
+            .. attribute:: white_analysis
 
-   .. attribute:: black_analysis
+               Position analysis from white's perspective.
 
-      Position analysis from black's perspective.
+               :type: List[Dict[str, Any]]
 
-      :type: List[Dict[str, Any]]
+            .. attribute:: black_analysis
 
-   .. attribute:: captured_pieces
+               Position analysis from black's perspective.
 
-      Pieces captured by each player.
+               :type: List[Dict[str, Any]]
 
-      :type: Dict[str, List[str]]
+            .. attribute:: captured_pieces
 
-   .. attribute:: error_message
+               Pieces captured by each player.
 
-      Error message if any error occurred.
+               :type: Dict[str, List[str]]
 
-      :type: Optional[str]
+            .. attribute:: error_message
 
-   .. attribute:: legal_moves
+               Error message if any error occurred.
 
-      String representation of legal moves in current position.
+               :type: Optional[str]
 
-      :type: Optional[str]
+            .. attribute:: legal_moves
 
-   .. attribute:: recent_moves
+               String representation of legal moves in current position.
 
-      Recent moves formatted for LLM context.
+               :type: Optional[str]
 
-      :type: Optional[str]
+            .. attribute:: recent_moves
 
-   .. rubric:: Examples
+               Recent moves formatted for LLM context.
 
-   >>> from haive.games.chess import ChessState
-   >>> state = ChessState()
-   >>> state.board_fen
-   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-   >>> board = state.get_board()
-   >>> board.is_check()
-   False
+               :type: Optional[str]
 
+            .. rubric:: Examples
 
-   .. autolink-examples:: ChessState
-      :collapse:
+            >>> from haive.games.chess import ChessState
+            >>> state = ChessState()
+            >>> state.board_fen
+            'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+            >>> board = state.get_board()
+            >>> board.is_check()
+            False
 
-   .. py:method:: get_board() -> chess.Board
+            Create a new model by parsing and validating input data from keyword arguments.
 
-      Get a chess.Board object for the current position.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-      Creates a Python-chess Board object initialized with the current FEN position.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
-      :returns: Board object representing the current position.
-      :rtype: chess.Board
 
-      :raises ValueError: If the FEN string is invalid or cannot be parsed.
+            .. py:method:: get_board() -> chess.Board
 
-      .. rubric:: Example
+               Get a chess.Board object for the current position.
 
-      >>> state = ChessState()
-      >>> board = state.get_board()
-      >>> board.is_game_over()
-      False
+               Creates a Python-chess Board object initialized with the current FEN position.
 
+               :returns: Board object representing the current position.
+               :rtype: chess.Board
 
-      .. autolink-examples:: get_board
-         :collapse:
+               :raises ValueError: If the FEN string is invalid or cannot be parsed.
 
+               .. rubric:: Example
 
-   .. py:attribute:: black_analysis
-      :type:  list[dict[str, Any]]
-      :value: None
+               >>> state = ChessState()
+               >>> board = state.get_board()
+               >>> board.is_game_over()
+               False
 
 
 
-   .. py:property:: board_fen
-      :type: str
+            .. py:attribute:: black_analysis
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
-      Get the current board state as FEN notation.
 
-      :returns: The FEN representation of the current board position.
-      :rtype: str
+            .. py:property:: board_fen
+               :type: str
 
-      .. autolink-examples:: board_fen
-         :collapse:
 
+               Get the current board state as FEN notation.
 
-   .. py:attribute:: board_fens
-      :type:  list[str]
-      :value: None
+               :returns: The FEN representation of the current board position.
+               :rtype: str
 
 
+            .. py:attribute:: board_fens
+               :type:  list[str]
+               :value: None
 
-   .. py:attribute:: captured_pieces
-      :type:  dict[str, list[str]]
-      :value: None
 
 
+            .. py:attribute:: captured_pieces
+               :type:  dict[str, list[str]]
+               :value: None
 
-   .. py:property:: current_board_fen
-      :type: str
 
 
-      Alias for board_fen for backwards compatibility.
+            .. py:property:: current_board_fen
+               :type: str
 
-      :returns: The FEN representation of the current board position.
-      :rtype: str
 
-      .. autolink-examples:: current_board_fen
-         :collapse:
+               Alias for board_fen for backwards compatibility.
 
+               :returns: The FEN representation of the current board position.
+               :rtype: str
 
-   .. py:attribute:: current_player
-      :type:  Literal['white', 'black']
-      :value: None
 
+            .. py:attribute:: current_player
+               :type:  Literal['white', 'black']
+               :value: None
 
 
-   .. py:attribute:: error_message
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: error_message
+               :type:  str | None
+               :value: None
 
 
-   .. py:attribute:: game_result
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: game_result
+               :type:  str | None
+               :value: None
 
 
-   .. py:attribute:: game_status
-      :type:  Literal['ongoing', 'check', 'checkmate', 'stalemate', 'draw']
-      :value: None
 
+            .. py:attribute:: game_status
+               :type:  Literal['ongoing', 'check', 'checkmate', 'stalemate', 'draw']
+               :value: None
 
 
-   .. py:attribute:: legal_moves
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: legal_moves
+               :type:  str | None
+               :value: None
 
 
-   .. py:attribute:: move_history
-      :type:  list[tuple[str, str]]
-      :value: None
 
+            .. py:attribute:: move_history
+               :type:  list[tuple[str, str]]
+               :value: None
 
 
-   .. py:attribute:: recent_moves
-      :type:  str | None
-      :value: None
 
+            .. py:attribute:: recent_moves
+               :type:  str | None
+               :value: None
 
 
-   .. py:attribute:: turn
-      :type:  Literal['white', 'black']
-      :value: None
 
+            .. py:attribute:: turn
+               :type:  Literal['white', 'black']
+               :value: None
 
 
-   .. py:attribute:: white_analysis
-      :type:  list[dict[str, Any]]
-      :value: None
 
+            .. py:attribute:: white_analysis
+               :type:  list[dict[str, Any]]
+               :value: None
 
+
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.chess.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

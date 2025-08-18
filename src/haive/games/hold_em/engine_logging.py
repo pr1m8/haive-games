@@ -19,6 +19,12 @@ class EngineInvocationLogger:
     """Rich logging for engine invocations with debugging capabilities."""
 
     def __init__(self, console: Console | None = None, debug_mode: bool = True):
+        """  Init  .
+
+Args:
+    console: [TODO: Add description]
+    debug_mode: [TODO: Add description]
+"""
         self.console = console or Console()
         self.debug_mode = debug_mode
         self.invocation_history: list[dict[str, Any]] = []
@@ -133,6 +139,15 @@ class EngineInvocationLogger:
 
         @wraps(original_invoke)
         def logged_invoke(input_data: Any, runnable_config: Any | None = None) -> Any:
+            """Logged Invoke.
+
+Args:
+    input_data: [TODO: Add description]
+    runnable_config: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
             with self.invocation_context(engine.name, input_data) as invocation_info:
                 try:
                     result = original_invoke(input_data, runnable_config)
@@ -268,6 +283,8 @@ class LoggedAugLLMConfig(AugLLMConfig):
     """AugLLMConfig with enhanced logging capabilities."""
 
     def __init__(self, *args, logger: EngineInvocationLogger | None = None, **kwargs):
+        """  Init  .
+"""
         super().__init__(*args, **kwargs)
         self.logger = logger or EngineInvocationLogger()
 
@@ -285,6 +302,11 @@ class LoggedAugLLMConfig(AugLLMConfig):
             original_runnable_invoke = runnable.invoke
 
             def logged_runnable_invoke(input_data, **kwargs):
+                """Logged Runnable Invoke.
+
+Args:
+    input_data: [TODO: Add description]
+"""
                 with self.logger.invocation_context(
                     f"{self.name}_runnable", input_data
                 ):

@@ -15,6 +15,14 @@ class HanoiMoveModel(BaseModel):
     @field_validator("from_peg")
     @classmethod
     def validate_from_peg(cls, v: int) -> int:
+        """Validate From Peg.
+
+Args:
+    v: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if v not in [1, 2, 3]:
             raise ValueError("Source peg must be 1, 2, or 3")
         return v
@@ -22,6 +30,15 @@ class HanoiMoveModel(BaseModel):
     @field_validator("to_peg")
     @classmethod
     def validate_to_peg(cls, v: int, info: Any) -> int:
+        """Validate To Peg.
+
+Args:
+    v: [TODO: Add description]
+    info: [TODO: Add description]
+
+Returns:
+    [TODO: Add return description]
+"""
         if v not in [1, 2, 3]:
             raise ValueError("Destination peg must be 1, 2, or 3")
         if "from_peg" in info.data and v == info.data["from_peg"]:

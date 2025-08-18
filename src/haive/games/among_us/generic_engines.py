@@ -22,6 +22,8 @@ class AmongUsPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Among Us game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="crewmate", player2="impostor")
 
 
@@ -130,6 +132,8 @@ class AmongUsEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Among Us game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = AmongUsPlayerIdentifiers()
         prompt_generator = AmongUsPromptGenerator()
         super().__init__(identifiers, prompt_generator)

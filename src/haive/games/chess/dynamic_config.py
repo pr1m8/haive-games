@@ -191,7 +191,7 @@ def create_chess_config(
     Returns:
         ChessConfig instance
 
-    Example:
+    Examples:
         >>> config = create_chess_config("gpt-4", "claude-3-opus")
         >>> config = create_chess_config(
         ...     "openai:gpt-4o",
@@ -221,7 +221,7 @@ def create_chess_config_from_example(example_name: str, **kwargs) -> ChessConfig
         - "budget": Cost-effective models
         - "mixed": Different providers
 
-    Example:
+    Examples:
         >>> config = create_chess_config_from_example("budget")
         >>> config = create_chess_config_from_example("gpt_vs_claude", max_moves=150)
 
@@ -247,7 +247,7 @@ def create_chess_config_with_players(
         - "white_analyzer": White analyzer configuration (optional)
         - "black_analyzer": Black analyzer configuration (optional)
 
-    Example:
+    Examples:
         >>> player_configs = {
         ...     "white_player": PlayerAgentConfig(
         ...         llm_config="gpt-4",

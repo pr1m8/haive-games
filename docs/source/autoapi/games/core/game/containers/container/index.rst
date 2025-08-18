@@ -3,273 +3,261 @@ games.core.game.containers.container
 
 .. py:module:: games.core.game.containers.container
 
-
-Attributes
-----------
-
-.. autoapisummary::
-
-   games.core.game.containers.container.T
+Module documentation for games.core.game.containers.container
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   games.core.game.containers.container.Deck
-   games.core.game.containers.container.GamePieceContainer
-   games.core.game.containers.container.PlayerHand
-   games.core.game.containers.container.TileBag
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">4 classes</span> • <span class="module-stat">1 attributes</span>   </div>
 
 
-Module Contents
----------------
+      
+
+.. admonition:: Attributes (1)
+   :class: tip
+
+   .. autoapisummary::
+
+      games.core.game.containers.container.T
+
+            
+            
+
+.. admonition:: Classes (4)
+   :class: note
+
+   .. autoapisummary::
+
+      games.core.game.containers.container.Deck
+      games.core.game.containers.container.GamePieceContainer
+      games.core.game.containers.container.PlayerHand
+      games.core.game.containers.container.TileBag
+
+            
+            
+
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: Deck
 
-   Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Card`\ ]
+            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Card`\ ]
 
 
-   A deck of cards.
+            A deck of cards.
 
 
-   .. autolink-examples:: Deck
-      :collapse:
-
-   .. py:method:: create_standard_deck() -> Deck
-      :classmethod:
+            .. py:method:: create_standard_deck() -> Deck
+               :classmethod:
 
 
-      Create a standard 52-card deck.
+               Create a standard 52-card deck.
 
 
-      .. autolink-examples:: create_standard_deck
-         :collapse:
+
+            .. py:method:: deal(num_players: int, cards_per_player: int) -> list[list[Card]]
+
+               Deal cards to multiple players.
 
 
-   .. py:method:: deal(num_players: int, cards_per_player: int) -> list[list[Card]]
 
-      Deal cards to multiple players.
+            .. py:method:: draw() -> Card | None
 
-
-      .. autolink-examples:: deal
-         :collapse:
+               Draw the top card.
 
 
-   .. py:method:: draw() -> Card | None
 
-      Draw the top card.
-
-
-      .. autolink-examples:: draw
-         :collapse:
+            .. py:attribute:: face_down
+               :type:  bool
+               :value: True
 
 
-   .. py:attribute:: face_down
-      :type:  bool
-      :value: True
 
 
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: GamePieceContainer(/, **data: Any)
 
-   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
 
 
-   Base container for game pieces.
+            Base container for game pieces.
 
-   Create a new model by parsing and validating input data from keyword arguments.
+            Create a new model by parsing and validating input data from keyword arguments.
 
-   Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-   validated to form a valid model.
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
-   `self` is explicitly positional-only to allow `self` as a field name.
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
-   .. autolink-examples:: __init__
-      :collapse:
+            .. py:method:: add(piece: T, position: str = 'top') -> None
 
+               Add a piece to this container.
 
-   .. autolink-examples:: GamePieceContainer
-      :collapse:
 
-   .. py:method:: add(piece: T, position: str = 'top') -> None
 
-      Add a piece to this container.
+            .. py:method:: count() -> int
 
+               Count pieces in the container.
 
-      .. autolink-examples:: add
-         :collapse:
 
 
-   .. py:method:: count() -> int
+            .. py:method:: draw() -> T | None
 
-      Count pieces in the container.
+               Draw the top piece.
 
 
-      .. autolink-examples:: count
-         :collapse:
 
+            .. py:method:: draw_many(count: int) -> list[T]
 
-   .. py:method:: draw() -> T | None
+               Draw multiple pieces.
 
-      Draw the top piece.
 
 
-      .. autolink-examples:: draw
-         :collapse:
+            .. py:method:: filter(predicate: collections.abc.Callable[[T], bool]) -> list[T]
 
+               Filter pieces by predicate.
 
-   .. py:method:: draw_many(count: int) -> list[T]
 
-      Draw multiple pieces.
 
+            .. py:method:: find(predicate: collections.abc.Callable[[T], bool]) -> T | None
 
-      .. autolink-examples:: draw_many
-         :collapse:
+               Find a piece matching the predicate.
 
 
-   .. py:method:: filter(predicate: collections.abc.Callable[[T], bool]) -> list[T]
 
-      Filter pieces by predicate.
+            .. py:method:: is_empty() -> bool
 
+               Check if container is empty.
 
-      .. autolink-examples:: filter
-         :collapse:
 
 
-   .. py:method:: find(predicate: collections.abc.Callable[[T], bool]) -> T | None
+            .. py:method:: peek(count: int = 1) -> list[T]
 
-      Find a piece matching the predicate.
+               Look at the top pieces without removing them.
 
 
-      .. autolink-examples:: find
-         :collapse:
 
+            .. py:method:: remove(piece_id: str) -> T | None
 
-   .. py:method:: is_empty() -> bool
+               Remove a piece by ID.
 
-      Check if container is empty.
 
 
-      .. autolink-examples:: is_empty
-         :collapse:
+            .. py:method:: shuffle() -> None
 
+               Shuffle the pieces.
 
-   .. py:method:: peek(count: int = 1) -> list[T]
 
-      Look at the top pieces without removing them.
 
+            .. py:attribute:: id
+               :type:  str
+               :value: None
 
-      .. autolink-examples:: peek
-         :collapse:
 
 
-   .. py:method:: remove(piece_id: str) -> T | None
+            .. py:attribute:: name
+               :type:  str
 
-      Remove a piece by ID.
 
+            .. py:attribute:: pieces
+               :type:  list[T]
+               :value: None
 
-      .. autolink-examples:: remove
-         :collapse:
 
 
-   .. py:method:: shuffle() -> None
 
-      Shuffle the pieces.
-
-
-      .. autolink-examples:: shuffle
-         :collapse:
-
-
-   .. py:attribute:: id
-      :type:  str
-      :value: None
-
-
-
-   .. py:attribute:: name
-      :type:  str
-
-
-   .. py:attribute:: pieces
-      :type:  list[T]
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: PlayerHand
 
-   Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`T`\ ]
+            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`T`\ ]
 
 
-   A player's hand of pieces.
+            A player's hand of pieces.
 
 
-   .. autolink-examples:: PlayerHand
-      :collapse:
+            .. py:method:: add_piece(piece: T) -> None
 
-   .. py:method:: add_piece(piece: T) -> None
-
-      Add a piece to the hand and assign ownership.
+               Add a piece to the hand and assign ownership.
 
 
-      .. autolink-examples:: add_piece
-         :collapse:
+
+            .. py:method:: can_play(piece_id: str, position: Position, board: Board) -> bool
+
+               Check if a piece can be played at the given position.
 
 
-   .. py:method:: can_play(piece_id: str, position: Position, board: Board) -> bool
 
-      Check if a piece can be played at the given position.
+            .. py:method:: play_piece(piece_id: str) -> T | None
 
-
-      .. autolink-examples:: can_play
-         :collapse:
+               Play a piece (remove from hand).
 
 
-   .. py:method:: play_piece(piece_id: str) -> T | None
 
-      Play a piece (remove from hand).
-
-
-      .. autolink-examples:: play_piece
-         :collapse:
+            .. py:attribute:: player_id
+               :type:  str
 
 
-   .. py:attribute:: player_id
-      :type:  str
 
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: TileBag
 
-   Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Tile`\ ]
+            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Tile`\ ]
 
 
-   A bag of tiles (Scrabble, Mahjong).
+            A bag of tiles (Scrabble, Mahjong).
 
 
-   .. autolink-examples:: TileBag
-      :collapse:
+            .. py:method:: draw_many_random(count: int) -> list[Tile]
 
-   .. py:method:: draw_many_random(count: int) -> list[Tile]
-
-      Draw multiple random tiles.
+               Draw multiple random tiles.
 
 
-      .. autolink-examples:: draw_many_random
-         :collapse:
+
+            .. py:method:: draw_random() -> Tile | None
+
+               Draw a random tile from the bag.
 
 
-   .. py:method:: draw_random() -> Tile | None
-
-      Draw a random tile from the bag.
 
 
-      .. autolink-examples:: draw_random
-         :collapse:
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: T
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.core.game.containers.container import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

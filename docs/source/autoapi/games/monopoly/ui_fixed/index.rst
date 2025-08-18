@@ -3,6 +3,18 @@ games.monopoly.ui_fixed
 
 .. py:module:: games.monopoly.ui_fixed
 
+Rich UI for displaying a live Monopoly game.
+
+This module provides a beautiful terminal interface for watching Monopoly games unfold
+in real-time using Rich.
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span> • <span class="module-stat">1 functions</span>   </div>
+
 .. autoapi-nested-parse::
 
    Rich UI for displaying a live Monopoly game.
@@ -11,156 +23,149 @@ games.monopoly.ui_fixed
    in real-time using Rich.
 
 
-   .. autolink-examples:: games.monopoly.ui_fixed
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.ui_fixed.MonopolyRichUI
+      games.monopoly.ui_fixed.MonopolyRichUI
 
+            
 
-Functions
----------
+.. admonition:: Functions (1)
+   :class: info
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.monopoly.ui_fixed.main
+      games.monopoly.ui_fixed.main
 
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
+
+   .. grid:: 1 2 2 3
+      :gutter: 2
+
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:class:: MonopolyRichUI
 
-   Beautiful Rich UI for displaying a live Monopoly game.
+            Beautiful Rich UI for displaying a live Monopoly game.
 
 
-   .. autolink-examples:: MonopolyRichUI
-      :collapse:
+            .. py:method:: _get_player_color(player_name: str) -> str
 
-   .. py:method:: _get_player_color(player_name: str) -> str
+               Get color for a player based on their name.
 
-      Get color for a player based on their name.
 
 
-      .. autolink-examples:: _get_player_color
-         :collapse:
+            .. py:method:: _get_position_name(position: int) -> str
 
+               Get the name of a board position.
 
-   .. py:method:: _get_position_name(position: int) -> str
 
-      Get the name of a board position.
 
+            .. py:method:: _setup_layout()
 
-      .. autolink-examples:: _get_position_name
-         :collapse:
+               Initialize the layout structure.
 
 
-   .. py:method:: _setup_layout()
 
-      Initialize the layout structure.
+            .. py:method:: _update_layout()
 
+               Update all layout components with current state.
 
-      .. autolink-examples:: _setup_layout
-         :collapse:
 
 
-   .. py:method:: _update_layout()
+            .. py:method:: render_board() -> rich.panel.Panel
 
-      Update all layout components with current state.
+               Render a simplified board view.
 
 
-      .. autolink-examples:: _update_layout
-         :collapse:
 
+            .. py:method:: render_current_player() -> rich.panel.Panel
 
-   .. py:method:: render_board() -> rich.panel.Panel
+               Render current player information.
 
-      Render a simplified board view.
 
 
-      .. autolink-examples:: render_board
-         :collapse:
+            .. py:method:: render_footer() -> rich.panel.Panel
 
+               Render the footer with controls and game info.
 
-   .. py:method:: render_current_player() -> rich.panel.Panel
 
-      Render current player information.
 
+            .. py:method:: render_header() -> rich.panel.Panel
 
-      .. autolink-examples:: render_current_player
-         :collapse:
+               Render the game header.
 
 
-   .. py:method:: render_footer() -> rich.panel.Panel
 
-      Render the footer with controls and game info.
+            .. py:method:: render_players() -> rich.panel.Panel
 
+               Render all players summary.
 
-      .. autolink-examples:: render_footer
-         :collapse:
 
 
-   .. py:method:: render_header() -> rich.panel.Panel
+            .. py:method:: render_recent_events() -> rich.panel.Panel
 
-      Render the game header.
+               Render recent game events.
 
 
-      .. autolink-examples:: render_header
-         :collapse:
 
+            .. py:method:: run(agent: haive.games.monopoly.main_agent.MonopolyAgent, delay: float = 2.0)
 
-   .. py:method:: render_players() -> rich.panel.Panel
+               Run the live UI with the Monopoly agent.
 
-      Render all players summary.
+               :param agent: The Monopoly agent to run
+               :param delay: Delay between updates for readability
 
 
-      .. autolink-examples:: render_players
-         :collapse:
 
+            .. py:attribute:: console
 
-   .. py:method:: render_recent_events() -> rich.panel.Panel
 
-      Render recent game events.
+            .. py:attribute:: layout
 
 
-      .. autolink-examples:: render_recent_events
-         :collapse:
+            .. py:attribute:: state
+               :type:  haive.games.monopoly.state.MonopolyState | None
+               :value: None
 
 
-   .. py:method:: run(agent: haive.games.monopoly.main_agent.MonopolyAgent, delay: float = 2.0)
 
-      Run the live UI with the Monopoly agent.
 
-      :param agent: The Monopoly agent to run
-      :param delay: Delay between updates for readability
-
-
-      .. autolink-examples:: run
-         :collapse:
-
-
-   .. py:attribute:: console
-
-
-   .. py:attribute:: layout
-
-
-   .. py:attribute:: state
-      :type:  haive.games.monopoly.state.MonopolyState | None
-      :value: None
-
-
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: main()
 
-   Run a Monopoly game with the Rich UI.
+            Run a Monopoly game with the Rich UI.
 
 
-   .. autolink-examples:: main
-      :collapse:
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.monopoly.ui_fixed import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

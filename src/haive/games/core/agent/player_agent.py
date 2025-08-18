@@ -196,7 +196,7 @@ class PlayerAgentFactory:
         Returns:
             Dict[str, AugLLMConfig]: Dictionary of engines
 
-        Example:
+        Examples:
             >>> roles = {
             ...     "white_player": GamePlayerRole(
             ...         role_name="white_player",
@@ -308,7 +308,7 @@ def create_simple_player_configs(
     Returns:
         Dict[str, PlayerAgentConfig]: Player configurations
 
-    Example:
+    Examples:
         >>> configs = create_simple_player_configs("gpt-4", "claude-3-opus", temperature=0.7)
         >>> # Creates configs for white_player, black_player, white_analyzer, black_analyzer
 

@@ -38,6 +38,11 @@ class Connect4Agent(GameAgent[Connect4AgentConfig]):
     """
 
     def __init__(self, config: Connect4AgentConfig):
+        """  Init  .
+
+Args:
+    config: [TODO: Add description]
+"""
         super().__init__(config)
         # logger.debug("Engines initialized", extra={"engines": list(self.engines.keys())})
         self.state_manager = Connect4StateManager

@@ -3,6 +3,39 @@ games.mafia.state
 
 .. py:module:: games.mafia.state
 
+Game state models for the Mafia game.
+
+This module defines the core state model for the Mafia game, extending the
+base MultiPlayerGameState with Mafia-specific functionality.
+
+The state model tracks:
+    - Player roles and statuses
+    - Game phase and progression
+    - Voting and action history
+    - Public announcements
+    - Night action outcomes
+
+.. rubric:: Example
+
+>>> from mafia.state import MafiaGameState
+>>> from mafia.models import PlayerRole, GamePhase
+>>>
+>>> # Create a new game state
+>>> state = MafiaGameState(
+...     players=["Player_1", "Player_2", "Narrator"],
+...     roles={"Player_1": PlayerRole.VILLAGER,
+...            "Player_2": PlayerRole.MAFIA,
+...            "Narrator": PlayerRole.NARRATOR},
+...     game_phase=GamePhase.SETUP
+... )
+
+
+
+.. raw:: html
+   
+   <div class="autoapi-module-summary">
+<span class="module-stat">1 classes</span>   </div>
+
 .. autoapi-nested-parse::
 
    Game state models for the Mafia game.
@@ -32,413 +65,432 @@ games.mafia.state
    ... )
 
 
-   .. autolink-examples:: games.mafia.state
-      :collapse:
 
+      
+            
+            
 
-Classes
--------
+.. admonition:: Classes (1)
+   :class: note
 
-.. autoapisummary::
+   .. autoapisummary::
 
-   games.mafia.state.MafiaGameState
+      games.mafia.state.MafiaGameState
 
+            
+            
 
-Module Contents
----------------
+.. dropdown:: :octicon:`book` Complete API Documentation
+   :open:
+   :class-title: sd-font-weight-bold sd-text-info
+   :class-container: sd-border-info
 
-.. py:class:: MafiaGameState
+   .. grid:: 1 2 2 3
+      :gutter: 2
 
-   Bases: :py:obj:`haive.games.framework.multi_player.state.MultiPlayerGameState`
+      .. grid-item-card:: 
+         :class-card: sd-border-0 sd-shadow-sm
+         :class-title: sd-text-center sd-font-weight-bold
 
+.. py:class:: MafiaGameState(/, **data: Any)
 
-   State model for a Mafia game.
+            Bases: :py:obj:`haive.games.framework.multi_player.state.MultiPlayerGameState`
 
-   This class extends MultiPlayerGameState to provide Mafia-specific state
-   tracking, including roles, votes, and game progression.
 
-   .. attribute:: players
+            State model for a Mafia game.
 
-      List of player names/IDs
+            This class extends MultiPlayerGameState to provide Mafia-specific state
+            tracking, including roles, votes, and game progression.
 
-      :type: List[str]
+            .. attribute:: players
 
-   .. attribute:: current_player_idx
+               List of player names/IDs
 
-      Index of current player in players list
+               :type: List[str]
 
-      :type: int
+            .. attribute:: current_player_idx
 
-   .. attribute:: game_status
+               Index of current player in players list
 
-      Status of the game (ongoing, ended)
+               :type: int
 
-      :type: str
+            .. attribute:: game_status
 
-   .. attribute:: move_history
+               Status of the game (ongoing, ended)
 
-      History of moves
+               :type: str
 
-      :type: List[Dict[str, Any]]
+            .. attribute:: move_history
 
-   .. attribute:: round_number
+               History of moves
 
-      Current round number
+               :type: List[Dict[str, Any]]
 
-      :type: int
+            .. attribute:: round_number
 
-   .. attribute:: player_data
+               Current round number
 
-      Player-specific data
+               :type: int
 
-      :type: Dict[str, Dict[str, Any]]
+            .. attribute:: player_data
 
-   .. attribute:: public_state
+               Player-specific data
 
-      Public game state visible to all
+               :type: Dict[str, Dict[str, Any]]
 
-      :type: Dict[str, Any]
+            .. attribute:: public_state
 
-   .. attribute:: error_message
+               Public game state visible to all
 
-      Error message if any
+               :type: Dict[str, Any]
 
-      :type: Optional[str]
+            .. attribute:: error_message
 
-   .. attribute:: game_phase
+               Error message if any
 
-      Current phase of the game
+               :type: Optional[str]
 
-      :type: GamePhase
+            .. attribute:: game_phase
 
-   .. attribute:: roles
+               Current phase of the game
 
-      Mapping of player IDs to roles
+               :type: GamePhase
 
-      :type: Dict[str, PlayerRole]
+            .. attribute:: roles
 
-   .. attribute:: player_states
+               Mapping of player IDs to roles
 
-      Player state information
+               :type: Dict[str, PlayerRole]
 
-      :type: Dict[str, PlayerState]
+            .. attribute:: player_states
 
-   .. attribute:: votes
+               Player state information
 
-      Player votes during voting phase
+               :type: Dict[str, PlayerState]
 
-      :type: Dict[str, str]
+            .. attribute:: votes
 
-   .. attribute:: action_history
+               Player votes during voting phase
 
-      History of all actions
+               :type: Dict[str, str]
 
-      :type: List[Dict[str, Any]]
+            .. attribute:: action_history
 
-   .. attribute:: public_announcements
+               History of all actions
 
-      Public game announcements
+               :type: List[Dict[str, Any]]
 
-      :type: List[str]
+            .. attribute:: public_announcements
 
-   .. attribute:: alive_mafia_count
+               Public game announcements
 
-      Number of mafia members alive
+               :type: List[str]
 
-      :type: int
+            .. attribute:: alive_mafia_count
 
-   .. attribute:: alive_village_count
+               Number of mafia members alive
 
-      Number of villagers alive
+               :type: int
 
-      :type: int
+            .. attribute:: alive_village_count
 
-   .. attribute:: alive_doctor_count
+               Number of villagers alive
 
-      Number of doctors alive
+               :type: int
 
-      :type: int
+            .. attribute:: alive_doctor_count
 
-   .. attribute:: alive_detective_count
+               Number of doctors alive
 
-      Number of detectives alive
+               :type: int
 
-      :type: int
+            .. attribute:: alive_detective_count
 
-   .. attribute:: killed_at_night
+               Number of detectives alive
 
-      Player targeted by mafia
+               :type: int
 
-      :type: Optional[str]
+            .. attribute:: killed_at_night
 
-   .. attribute:: saved_at_night
+               Player targeted by mafia
 
-      Player saved by doctor
+               :type: Optional[str]
 
-      :type: Optional[str]
+            .. attribute:: saved_at_night
 
-   .. attribute:: night_deaths
+               Player saved by doctor
 
-      Players who died during the night
+               :type: Optional[str]
 
-      :type: List[str]
+            .. attribute:: night_deaths
 
-   .. attribute:: day_number
+               Players who died during the night
 
-      Current day number
+               :type: List[str]
 
-      :type: int
+            .. attribute:: day_number
 
-   .. attribute:: winner
+               Current day number
 
-      Winner (village or mafia)
+               :type: int
 
-      :type: Optional[str]
+            .. attribute:: winner
 
-   .. rubric:: Example
+               Winner (village or mafia)
 
-   >>> state = MafiaGameState(
-   ...     players=["Player_1", "Player_2", "Narrator"],
-   ...     roles={"Player_1": PlayerRole.VILLAGER,
-   ...            "Player_2": PlayerRole.MAFIA,
-   ...            "Narrator": PlayerRole.NARRATOR},
-   ...     game_phase=GamePhase.SETUP
-   ... )
-   >>> print(state.game_phase)  # Shows SETUP
+               :type: Optional[str]
 
+            .. rubric:: Example
 
-   .. autolink-examples:: MafiaGameState
-      :collapse:
+            >>> state = MafiaGameState(
+            ...     players=["Player_1", "Player_2", "Narrator"],
+            ...     roles={"Player_1": PlayerRole.VILLAGER,
+            ...            "Player_2": PlayerRole.MAFIA,
+            ...            "Narrator": PlayerRole.NARRATOR},
+            ...     game_phase=GamePhase.SETUP
+            ... )
+            >>> print(state.game_phase)  # Shows SETUP
 
-   .. py:class:: Config
+            Create a new model by parsing and validating input data from keyword arguments.
 
-      .. py:attribute:: arbitrary_types_allowed
-         :value: True
+            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
+            validated to form a valid model.
 
+            `self` is explicitly positional-only to allow `self` as a field name.
 
 
+            .. py:class:: Config
 
-   .. py:method:: add_public_announcement(announcement: str) -> None
+               .. py:attribute:: arbitrary_types_allowed
+                  :value: True
 
-      Add an announcement to the public record.
 
-      :param announcement: The announcement to add
-      :type announcement: str
 
-      .. rubric:: Example
 
-      >>> state.add_public_announcement("Night falls on the village.")
-      >>> print(state.public_announcements[-1])
+            .. py:method:: add_public_announcement(announcement: str) -> None
 
+               Add an announcement to the public record.
 
-      .. autolink-examples:: add_public_announcement
-         :collapse:
+               :param announcement: The announcement to add
+               :type announcement: str
 
+               .. rubric:: Example
 
-   .. py:method:: log_action(action: haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction) -> None
+               >>> state.add_public_announcement("Night falls on the village.")
+               >>> print(state.public_announcements[-1])
 
-      Log an action in the game history.
 
-      This method records player and narrator actions in both the action_history
-      and move_history, ensuring proper serialization of complex objects.
 
-      :param action: Action to log
-      :type action: Union[MafiaAction, NarratorAction]
+            .. py:method:: log_action(action: haive.games.mafia.models.MafiaAction | haive.games.mafia.models.NarratorAction) -> None
 
-      .. rubric:: Example
+               Log an action in the game history.
 
-      >>> action = MafiaAction(
-      ...     player_id="Player_1",
-      ...     action_type=ActionType.VOTE,
-      ...     target_id="Player_2",
-      ...     phase=GamePhase.DAY_VOTING,
-      ...     round_number=1
-      ... )
-      >>> state.log_action(action)
+               This method records player and narrator actions in both the action_history
+               and move_history, ensuring proper serialization of complex objects.
 
+               :param action: Action to log
+               :type action: Union[MafiaAction, NarratorAction]
 
-      .. autolink-examples:: log_action
-         :collapse:
+               .. rubric:: Example
 
+               >>> action = MafiaAction(
+               ...     player_id="Player_1",
+               ...     action_type=ActionType.VOTE,
+               ...     target_id="Player_2",
+               ...     phase=GamePhase.DAY_VOTING,
+               ...     round_number=1
+               ... )
+               >>> state.log_action(action)
 
-   .. py:method:: model_copy(*, deep: bool = False, **kwargs)
 
-      Create a copy of the model.
 
-      :param deep: Whether to create a deep copy. Defaults to False.
-      :type deep: bool, optional
-      :param \*\*kwargs: Additional arguments to pass to model_copy
+            .. py:method:: model_copy(*, deep: bool = False, **kwargs)
 
-      :returns: A copy of the current state
-      :rtype: MafiaGameState
+               Create a copy of the model.
 
-      .. rubric:: Example
+               :param deep: Whether to create a deep copy. Defaults to False.
+               :type deep: bool, optional
+               :param \*\*kwargs: Additional arguments to pass to model_copy
 
-      >>> new_state = state.model_copy(deep=True)
+               :returns: A copy of the current state
+               :rtype: MafiaGameState
 
+               .. rubric:: Example
 
-      .. autolink-examples:: model_copy
-         :collapse:
+               >>> new_state = state.model_copy(deep=True)
 
 
-   .. py:method:: update_alive_counts()
 
-      Update the count of alive players in different roles.
+            .. py:method:: update_alive_counts()
 
-      This method recalculates the number of alive players in each role
-      category based on the current player states.
+               Update the count of alive players in different roles.
 
-      .. note::
+               This method recalculates the number of alive players in each role
+               category based on the current player states.
 
-         This should be called after any change that might affect player
-         life status (e.g., night kills, voting execution).
+               .. note::
 
-      .. rubric:: Example
+                  This should be called after any change that might affect player
+                  life status (e.g., night kills, voting execution).
 
-      >>> state.player_states["Player_1"].is_alive = False
-      >>> state.update_alive_counts()
-      >>> print(state.alive_village_count)  # Shows updated count
+               .. rubric:: Example
 
+               >>> state.player_states["Player_1"].is_alive = False
+               >>> state.update_alive_counts()
+               >>> print(state.alive_village_count)  # Shows updated count
 
-      .. autolink-examples:: update_alive_counts
-         :collapse:
 
 
-   .. py:attribute:: action_history
-      :type:  list[dict[str, Any]]
-      :value: None
+            .. py:attribute:: action_history
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: alive_detective_count
-      :type:  int
-      :value: None
+            .. py:attribute:: alive_detective_count
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: alive_doctor_count
-      :type:  int
-      :value: None
+            .. py:attribute:: alive_doctor_count
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: alive_mafia_count
-      :type:  int
-      :value: None
+            .. py:attribute:: alive_mafia_count
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: alive_village_count
-      :type:  int
-      :value: None
+            .. py:attribute:: alive_village_count
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: current_player_idx
-      :type:  int
-      :value: None
+            .. py:attribute:: current_player_idx
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: day_number
-      :type:  int
-      :value: None
+            .. py:attribute:: day_number
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: error_message
-      :type:  str | None
-      :value: None
+            .. py:attribute:: error_message
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: game_phase
-      :type:  haive.games.mafia.models.GamePhase
-      :value: None
+            .. py:attribute:: game_phase
+               :type:  haive.games.mafia.models.GamePhase
+               :value: None
 
 
 
-   .. py:attribute:: game_status
-      :type:  str
-      :value: None
+            .. py:attribute:: game_status
+               :type:  str
+               :value: None
 
 
 
-   .. py:attribute:: killed_at_night
-      :type:  str | None
-      :value: None
+            .. py:attribute:: killed_at_night
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: move_history
-      :type:  list[dict[str, Any]]
-      :value: None
+            .. py:attribute:: move_history
+               :type:  list[dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: night_deaths
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: night_deaths
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: player_data
-      :type:  dict[str, dict[str, Any]]
-      :value: None
+            .. py:attribute:: player_data
+               :type:  dict[str, dict[str, Any]]
+               :value: None
 
 
 
-   .. py:attribute:: player_states
-      :type:  dict[str, haive.games.mafia.models.PlayerState]
-      :value: None
+            .. py:attribute:: player_states
+               :type:  dict[str, haive.games.mafia.models.PlayerState]
+               :value: None
 
 
 
-   .. py:attribute:: players
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: players
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: public_announcements
-      :type:  list[str]
-      :value: None
+            .. py:attribute:: public_announcements
+               :type:  list[str]
+               :value: None
 
 
 
-   .. py:attribute:: public_state
-      :type:  dict[str, Any]
-      :value: None
+            .. py:attribute:: public_state
+               :type:  dict[str, Any]
+               :value: None
 
 
 
-   .. py:attribute:: roles
-      :type:  dict[str, haive.games.mafia.models.PlayerRole]
-      :value: None
+            .. py:attribute:: roles
+               :type:  dict[str, haive.games.mafia.models.PlayerRole]
+               :value: None
 
 
 
-   .. py:attribute:: round_number
-      :type:  int
-      :value: None
+            .. py:attribute:: round_number
+               :type:  int
+               :value: None
 
 
 
-   .. py:attribute:: saved_at_night
-      :type:  str | None
-      :value: None
+            .. py:attribute:: saved_at_night
+               :type:  str | None
+               :value: None
 
 
 
-   .. py:attribute:: votes
-      :type:  dict[str, str]
-      :value: None
+            .. py:attribute:: votes
+               :type:  dict[str, str]
+               :value: None
 
 
 
-   .. py:attribute:: winner
-      :type:  str | None
-      :value: None
+            .. py:attribute:: winner
+               :type:  str | None
+               :value: None
 
 
+
+
+
+
+----
+
+.. admonition:: Quick Reference
+   :class: tip
+
+   .. code-block:: python
+
+      from games.mafia.state import *
+
+      # Module provides type hints for mypy compatibility
+      # View source: https://github.com/haive-ai/haive
 

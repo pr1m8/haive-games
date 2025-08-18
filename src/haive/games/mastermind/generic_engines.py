@@ -22,6 +22,11 @@ class MastermindPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Mastermind game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="codemaker", player2="codebreaker")
 
 
@@ -97,6 +102,11 @@ class MastermindEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Mastermind game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = MastermindPlayerIdentifiers()
         prompt_generator = MastermindPromptGenerator()
         super().__init__(identifiers, prompt_generator)

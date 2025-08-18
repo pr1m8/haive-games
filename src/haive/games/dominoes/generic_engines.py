@@ -22,6 +22,11 @@ class DominoesPlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Dominoes game."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         super().__init__(player1="player1", player2="player2")
 
 
@@ -97,6 +102,11 @@ class DominoesEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Dominoes game engines."""
 
     def __init__(self) -> None:
+        """  Init  .
+
+Returns:
+    [TODO: Add return description]
+"""
         identifiers = DominoesPlayerIdentifiers()
         prompt_generator = DominoesPromptGenerator()
         super().__init__(identifiers, prompt_generator)

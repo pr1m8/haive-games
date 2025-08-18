@@ -22,6 +22,8 @@ class DebatePlayerIdentifiers(GamePlayerIdentifiers[str, str]):
     """Player identifiers for Debate game."""
 
     def __init__(self):
+        """  Init  .
+"""
         super().__init__(player1="debater1", player2="debater2")
 
 
@@ -97,6 +99,8 @@ class DebateEngineFactory(GenericGameEngineFactory[str, str]):
     """Factory for creating Debate game engines."""
 
     def __init__(self):
+        """  Init  .
+"""
         identifiers = DebatePlayerIdentifiers()
         prompt_generator = DebatePromptGenerator()
         super().__init__(identifiers, prompt_generator)
