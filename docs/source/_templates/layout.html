@@ -1,28 +1,60 @@
-{# Custom Furo layout with breadcrumbs #} {% extends "furo/base.html" %} {#
-Import sphinx-basic-ng breadcrumb component logic #} {% macro
-render_breadcrumbs() %} {# Generate breadcrumb navigation based on document
-structure #} {% set nav_pages = [] %} {# Add home/index page #} {% if pagename
-!= master_doc %} {% set nav_pages = nav_pages + [{"title": "Home", "url":
-pathto(master_doc)}] %} {% endif %} {# Add API Reference for autoapi pages #} {%
-if "autoapi" in pagename and pagename != "autoapi/index" %} {% set nav_pages =
-nav_pages + [{"title": "API Reference", "url": pathto("autoapi/index")}] %} {#
-Add intermediate path components #} {% set path_parts =
-pagename.replace("autoapi/", "").split("/") %} {% if path_parts|length > 1 %} {%
-for i in range(path_parts|length - 1) %} {% set partial_path = "autoapi/" +
-path_parts[:i+1]|join("/") %} {% set title = path_parts[i]|title %} {% set
-nav_pages = nav_pages + [{"title": title, "url": pathto(partial_path)}] %} {%
-endfor %} {% endif %} {% endif %} {# Render breadcrumb if we have navigation
-pages #} {% if nav_pages %}
-<nav class="bd-breadcrumbs" aria-label="breadcrumb">
-  <ol class="bd-breadcrumb">
-    {% for page in nav_pages %}
-    <li class="bd-breadcrumb-item">
-      <a href="{{ page.url }}" class="bd-breadcrumb-link">{{ page.title }}</a>
+{% extends "!layout.html" %} {# Add breadcrumbs to the top of content #} {%
+block content %}
+<nav aria-label="breadcrumb" class="breadcrumb-container">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ pathto(master_doc) }}">{{ project }}</a>
+    </li>
+    {% for doc in parents %}
+    <li class="breadcrumb-item">
+      <a href="{{ doc.link|e }}">{{ doc.title }}</a>
     </li>
     {% endfor %}
-    <li class="bd-breadcrumb-item active" aria-current="page">{{ title }}</li>
+    <li class="breadcrumb-item active">{{ title|striptags|e }}</li>
   </ol>
 </nav>
-{% endif %} {% endmacro %} {# Override the page content block to add breadcrumbs
-#} {% block content %} {# Add breadcrumb navigation at the top of content #} {{
-render_breadcrumbs() }} {# Original content #} {{ super() }} {% endblock %}
+{{ super() }} {% endblock %} {# Add CSS for breadcrumbs #} {% block extrahead %}
+{{ super() }}
+<style>
+  .breadcrumb-container {
+    margin: 0 0 1rem 0;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-background-secondary);
+    border-radius: 0.25rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    display: inline-block;
+    padding: 0 0.5rem;
+    color: var(--color-foreground-secondary);
+    content: "/";
+  }
+
+  .breadcrumb-item a {
+    color: var(--color-brand-primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb-item a:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb-item.active {
+    color: var(--color-foreground-primary);
+  }
+</style>
+{% endblock %}

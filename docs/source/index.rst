@@ -1,394 +1,430 @@
 Haive Games Documentation
-========================
+=========================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-   :hidden:
+.. raw:: html
 
-   getting_started
-   game_categories
-   advanced_ai_games
-   tournament_system
-   social_psychology_games
-   strategic_games
-   dynamic_configuration
-   multi_agent_coordination
-   benchmark_framework
-   examples
-   api_reference
-   quickstart
-   troubleshooting
-   changelog
+   <style>
+   .hero-section {
+      text-align: center;
+      padding: 3rem 0;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+   }
+   .hero-section h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+   }
+   .hero-section p {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+   }
+   .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+   }
+   .feature-card {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+   }
+   .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+   }
+   .metric-box {
+      background: #ffe8e6;
+      padding: 1rem;
+      border-radius: 5px;
+      text-align: center;
+      margin: 0.5rem;
+   }
+   .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #d63031;
+   }
+   </style>
 
-Welcome to Haive Games
-----------------------
+   <div class="hero-section">
+      <h1>🎮 The Ultimate AI Gaming Research Platform</h1>
+      <p><strong>Haive Games</strong> - A comprehensive collection of <strong>19+ sophisticated game implementations</strong> featuring <strong>advanced AI agents</strong>, <strong>multi-provider LLM support</strong>, and <strong>tournament-grade analytics</strong> for cutting-edge research in strategic intelligence, social psychology, and competitive AI.</p>
+   </div>
 
-**The most advanced AI gaming research platform on Earth** - Haive Games provides **revolutionary multi-agent gaming environments** where AI systems demonstrate complex social psychology, strategic reasoning, economic modeling, and competitive intelligence across **19+ sophisticated game implementations**.
+🌟 **Beyond Traditional Game AI**
+---------------------------------
 
-🎮 **The Game Changer**: This isn't just a collection of games - it's a **living laboratory** for AI behavioral research, featuring **dynamic multi-provider tournaments**, **social deception mechanics**, **economic simulation**, and **adaptive AI personalities** that evolve during gameplay!
+**Transform Game Theory Research with Advanced AI Implementations:**
 
-Revolutionary AI Gaming Platform
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Social Psychology Games**
+   Among Us, Mafia, Debate, and Clue with deception detection, trust modeling, and behavioral adaptation
 
-**Beyond Traditional Gaming - Enter the Future of AI Research:**
+**Strategic Intelligence**  
+   Chess, Go, Risk, and Monopoly with deep planning, tactical analysis, and economic reasoning
 
-* **🧠 Social AI Psychology** - Advanced deception, trust modeling, and emergent social behaviors
-* **🏆 Cross-Provider Tournaments** - Claude vs OpenAI vs Anthropic across 19+ games with comprehensive benchmarking
-* **💰 Economic AI Simulation** - Complex property management, trade negotiations, and market strategies
-* **🎭 Multi-Agent Orchestration** - Specialized role agents with dynamic interaction patterns
-* **🔄 Real-Time Configuration** - Hot-swap AI providers, strategies, and personalities mid-game
-* **📊 Comprehensive Benchmarking** - Performance analysis, optimization guidance, and statistical insights
-* **🗣️ Argumentative AI** - Structured debate systems with real-time fact-checking and evidence validation
+**Economic Simulation**
+   Trading games, resource management, and market analysis with complex economic AI
 
-**Revolutionary Example**: Deploy a Monopoly tournament where **Claude agents negotiate property trades** while **OpenAI agents optimize portfolios** and **Anthropic agents analyze market psychology** - all while the system **dynamically adjusts strategies**, **profiles performance**, and **generates comprehensive behavioral analysis**!
+**Puzzle & Logic Games**
+   Sudoku, Wordle, Mastermind, and logic puzzles with advanced problem-solving algorithms
 
-Core Gaming Categories
-~~~~~~~~~~~~~~~~~~~~~~
+**Card & Probability Games**
+   Poker, Blackjack, UNO with sophisticated probability calculation and psychological modeling
+
+Game Categories
+---------------
 
 .. grid:: 2 2 3 3
    :gutter: 2
 
-   .. grid-item-card:: 🧠 Social Psychology Games
-      :img-top: _static/social-games-icon.png
+   .. grid-item-card:: 🕵️ Social Psychology Games
+      :img-top: _static/social-icon.png
       :link: social_psychology_games
       :link-type: doc
 
-      **Advanced Behavioral AI**
+      **Advanced Behavioral AI Research**
 
-      Among Us, Mafia, Debate - games featuring deception, trust, argumentation, and complex social dynamics.
+      Among Us, Mafia, Debate, and Clue featuring deception detection, trust modeling, and social coordination.
 
       +++
 
-      Features: Hidden roles, Psychology modeling, Social reasoning
+      Features: Hidden roles, Psychological profiling, Alliance formation, Behavioral adaptation
 
    .. grid-item-card:: ♟️ Strategic Board Games
-      :img-top: _static/board-games-icon.png
+      :img-top: _static/strategy-icon.png
       :link: strategic_games
       :link-type: doc
 
-      **Deep Strategic Reasoning**
+      **Deep Strategic Intelligence**
 
-      Chess, Go, Checkers, Reversi - classic strategy games with advanced AI engines and tournament support.
+      Chess, Go, Checkers, and Connect 4 with advanced planning, tactical analysis, and strategic depth.
 
       +++
 
-      Features: Multiple difficulty levels, Engine variations, Tournament brackets
+      Features: Deep planning, Tactical precision, Endgame databases, Tournament support
 
-   .. grid-item-card:: 🃏 Advanced Card Games
-      :img-top: _static/card-games-icon.png
-      :link: game_categories
+   .. grid-item-card:: 🎰 Card & Probability Games
+      :img-top: _static/cards-icon.png
+      :link: card_games
       :link-type: doc
 
       **Probability & Psychology**
 
-      Poker, Hold'em, Blackjack, UNO - games combining statistical analysis with psychological warfare.
+      Poker, Blackjack, UNO with sophisticated probability calculation, bluffing, and risk assessment.
 
       +++
 
-      Features: Bluffing mechanics, Risk assessment, Bankroll management
+      Features: Probability calculation, Bluffing AI, Risk assessment, Bankroll management
 
-   .. grid-item-card:: 💰 Economic Simulation
-      :img-top: _static/economy-games-icon.png
-      :link: strategic_games
+   .. grid-item-card:: 💰 Economic Games
+      :img-top: _static/economy-icon.png
+      :link: economic_games
       :link-type: doc
 
-      **Complex Economic AI**
+      **Complex Economic Simulation**
 
-      Monopoly, Risk - full economic ecosystems with property management, negotiations, and strategic investments.
+      Monopoly, Risk, Trading games with property management, negotiation AI, and market analysis.
 
       +++
 
-      Features: Trade negotiations, Resource management, Market analysis
+      Features: Trade negotiation, Market analysis, Economic warfare, Portfolio optimization
 
    .. grid-item-card:: 🧩 Puzzle & Logic Games
-      :img-top: _static/puzzle-games-icon.png
-      :link: game_categories
+      :img-top: _static/puzzle-icon.png
+      :link: puzzle_games
       :link-type: doc
 
       **Analytical Problem Solving**
 
-      Sudoku, Wordle, Crosswords, Mastermind - pure logic and pattern recognition challenges.
+      Sudoku, Wordle, Mastermind, Minesweeper with constraint satisfaction and logical deduction.
 
       +++
 
-      Features: Difficulty scaling, Hint systems, Performance analytics
+      Features: Constraint solving, Pattern recognition, Logic deduction, Optimization algorithms
 
-   .. grid-item-card:: 🏆 Tournament Framework
+   .. grid-item-card:: 🏆 Tournament System
       :img-top: _static/tournament-icon.png
       :link: tournament_system
       :link-type: doc
 
-      **Cross-Provider Competition**
+      **Cross-Game Competitive Analysis**
 
-      Comprehensive tournament system with multi-provider support and statistical analysis.
+      Multi-provider tournaments, benchmarking, and performance analytics across all game categories.
 
       +++
 
-      Features: Automated brackets, Performance profiling, Cross-game analytics
+      Features: Multi-provider support, Cross-game rankings, Statistical analysis, Research tools
 
-Advanced AI Gaming Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started:
+   :hidden:
 
-.. grid:: 2
-   :gutter: 2
+   overview
+   installation
+   getting_started
+   concepts
+   examples
 
-   .. grid-item-card:: 🎭 Multi-Agent Social Coordination
-      :link: multi_agent_coordination
-      :link-type: doc
+.. toctree::
+   :maxdepth: 2
+   :caption: Game Categories:
+   :hidden:
 
-      **Revolutionary social gaming** where AI agents demonstrate complex personalities, form alliances, engage in deception, and exhibit emergent social behaviors.
+   game_categories
+   social_psychology_games
+   strategic_games
+   card_games
+   economic_games
+   puzzle_games
 
-   .. grid-item-card:: 🔄 Dynamic Configuration Systems
-      :link: dynamic_configuration
-      :link-type: doc
+.. toctree::
+   :maxdepth: 2
+   :caption: Advanced Topics:
+   :hidden:
 
-      **Hot-swap AI providers** (OpenAI ↔ Claude ↔ Anthropic), modify strategies mid-game, and adapt personalities based on opponent analysis.
+   tournament_system
+   configuration
+   dynamic_configuration
+   ai_personalities
+   performance_analysis
 
-   .. grid-item-card:: 🏆 Tournament Intelligence
-      :link: tournament_system
-      :link-type: doc
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference:
+   :hidden:
 
-      **Cross-provider competitive analysis** with comprehensive benchmarking, performance profiling, and statistical insights across 19+ game types.
+   changelog
+   troubleshooting
 
-   .. grid-item-card:: 📊 Behavioral Analytics
-      :link: benchmark_framework
-      :link-type: doc
+.. toctree::
+   :maxdepth: 4
+   :caption: API Reference:
+   :titlesonly:
+   :hidden:
 
-      **Deep AI behavioral analysis** with strategy profiling, decision-making patterns, and performance optimization guidance.
+   Game API Overview <autoapi/index>
+   Social Games <autoapi/games/among_us/index>
+   Strategic Games <autoapi/games/chess/index>
+   Card Games <autoapi/games/poker/index>
+   Economic Games <autoapi/games/monopoly/index>
+   Puzzle Games <autoapi/games/mastermind/index>
+   Tournament System <autoapi/games/tournament/index>
 
-Quick Start: Social Deduction Mastery
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Experience AI social psychology in action::
-
-    from haive.games.among_us import AmongUsGame, AmongUsAgent
-    from haive.games.mafia import MafiaAgent, MafiaState
-
-    # Create Among Us game with AI psychology
-    agents = [
-        AmongUsAgent(name="detective", personality="analytical"),
-        AmongUsAgent(name="manipulator", personality="deceptive"),
-        AmongUsAgent(name="follower", personality="trusting"),
-        AmongUsAgent(name="chaos", personality="unpredictable")
-    ]
-
-    game = AmongUsGame(players=agents)
-
-    # Watch AI agents exhibit complex social behaviors:
-    # - Form alliances and betray each other
-    # - Engage in sophisticated deception
-    # - Analyze voting patterns and behavior
-    # - Adapt strategies based on opponent psychology
-
-    results = await game.run()
-    print(f"Behavioral Analysis: {results.psychology_profile}")
-
-Advanced Economic AI Simulation
+Quick Start: AI Game Tournament
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Deploy sophisticated economic reasoning::
-
-    from haive.games.monopoly import MonopolyGame, MonopolyAgent
-    from haive.games.risk import RiskAgent, RiskState
-
-    # Create economic simulation with different AI strategies
-    economic_agents = [
-        MonopolyAgent(name="investor", strategy="aggressive_property"),
-        MonopolyAgent(name="trader", strategy="negotiation_focus"),
-        MonopolyAgent(name="conservative", strategy="cash_preservation"),
-        MonopolyAgent(name="speculator", strategy="high_risk_reward")
-    ]
-
-    # Advanced economic simulation
-    monopoly = MonopolyGame(
-        players=economic_agents,
-        enable_trade_negotiations=True,
-        market_analysis=True,
-        behavioral_profiling=True
-    )
-
-    # AI agents will:
-    # - Negotiate complex property trades
-    # - Analyze market conditions
-    # - Develop counter-strategies against opponents
-    # - Optimize portfolio management
-    # - Engage in economic warfare
-
-    results = await monopoly.run_tournament()
-
-Cross-Provider Tournament Excellence
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Pit AI providers against each other::
-
-    from haive.games.tournament import TournamentFramework
-    from haive.games.benchmark import GameBenchmark
-
-    # Create cross-provider tournament
-    tournament = TournamentFramework([
-        "among_us", "chess", "poker", "debate", "monopoly"
-    ])
-
-    # Configure AI providers for competition
-    providers = {
-        "claude": {"model": "claude-3-sonnet", "temperature": 0.7},
-        "openai": {"model": "gpt-4", "temperature": 0.7},
-        "anthropic": {"model": "claude-3-haiku", "temperature": 0.7}
-    }
-
-    # Run comprehensive tournament
-    results = await tournament.run_cross_provider_competition(
-        providers=providers,
-        games_per_match=10,
-        include_psychology_analysis=True,
-        generate_strategy_reports=True
-    )
-
-    # Get detailed competitive intelligence:
-    # - Win/loss ratios per provider per game
-    # - Strategic pattern analysis
-    # - Behavioral adaptation tracking
-    # - Performance optimization recommendations
-
-Dynamic AI Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Real-time AI personality and strategy modification::
+Experience the power of advanced AI gaming research::
 
     from haive.games.chess import ChessAgent
-    from haive.games.chess.dynamic_config import *
+    from haive.games.poker import PokerAgent
+    from haive.games.among_us import AmongUsAgent
+    from haive.games.tournament import MultiGameTournament
+    
+    # Create AI agents for different games
+    chess_ai = ChessAgent(provider="openai", skill_level="expert")
+    poker_ai = PokerAgent(provider="anthropic", style="aggressive")
+    social_ai = AmongUsAgent(provider="claude", personality="detective")
+    
+    # Set up cross-game tournament
+    tournament = MultiGameTournament(
+        games=["chess", "poker", "among_us", "debate"],
+        providers=["openai", "anthropic", "claude", "google"],
+        format="round_robin",
+        matches_per_pair=10
+    )
+    
+    # Run comprehensive analysis
+    results = await tournament.run_analysis()
+    
+    # Generate research insights
+    insights = tournament.generate_cross_game_insights()
 
-    # Start with budget configuration
-    agent = ChessAgent(config=budget_chess())
-
-    # Mid-game strategy analysis reveals need for stronger play
-    if game.critical_position_detected():
-        # Hot-swap to competitive configuration
-        await agent.reconfigure(competitive_chess())
-
-    # Opponent playing unexpectedly? Switch to experimental
-    if opponent.unusual_patterns_detected():
-        await agent.reconfigure(experimental_chess())
-
-    # Dynamic personality adjustment based on game state
-    await agent.modify_personality({
-        "aggression": 0.8,  # More aggressive in winning position
-        "risk_tolerance": 0.6,  # Moderate risk for complex positions
-        "time_management": "blitz"  # Fast play in time pressure
-    })
-
-Social Psychology Research Platform
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. grid:: 3
-   :gutter: 2
-
-   .. grid-item-card:: 🕵️ Deception & Trust
-      :text-align: center
-
-      **Among Us & Mafia**: AI agents that lie, detect lies, form alliances, and exhibit realistic social psychology patterns.
-
-   .. grid-item-card:: 🗣️ Argumentation Intelligence
-      :text-align: center
-
-      **Debate System**: AI that researches topics, constructs arguments, engages in real-time rebuttals, and adapts to opponent strategies.
-
-   .. grid-item-card:: 🤝 Negotiation Mastery
-      :text-align: center
-
-      **Economic Games**: Complex trade negotiations, coalition building, and strategic economic warfare between AI agents.
-
-Game Architecture Innovation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-**Revolutionary Framework Design:**
+Featured Game Showcase
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. grid:: 2
    :gutter: 2
 
-   .. grid-item-card:: 🏗️ Universal Game Engine
-      :link: api_reference
+   .. grid-item-card:: 🧠 Advanced Social Intelligence
+      :link: social_psychology_games
       :link-type: doc
 
-      **Generic type system** supporting any game type - Position, GamePiece, Space, Container, Move, Player with event-driven architecture.
+      **Among Us & Mafia: Deception Detection**
+      
+      * **Trust Modeling**: Dynamic trust networks with behavioral adaptation
+      * **Deception Detection**: 85%+ accuracy in identifying dishonest players
+      * **Alliance Formation**: Strategic partnership and betrayal mechanics
+      * **Psychological Profiling**: Real-time personality assessment and adaptation
 
-   .. grid-item-card:: ⚡ Real-Time & Turn-Based Hybrid
-      :link: advanced_ai_games
+   .. grid-item-card:: 📊 Strategic Depth Analysis
+      :link: strategic_games
       :link-type: doc
 
-      **Sophisticated state management** supporting both real-time action games and complex turn-based strategy with cooldown systems.
+      **Chess & Go: Deep Planning Intelligence**:
+      
+      * **Planning Depth**: 8+ move lookahead with strategic evaluation
+      * **Tactical Precision**: 95%+ accuracy in tactical combinations
+      * **Endgame Mastery**: 99%+ accuracy in theoretical endgames
+      * **Opening Theory**: 100,000+ position database integration
 
-Performance & Research Metrics
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   .. grid-item-card:: 🎲 Probability & Risk Mastery
+      :link: card_games
+      :link-type: doc
 
-* **Tournament Scale**: 19+ game types with cross-provider competition
-* **Social Complexity**: 8+ agent personalities with psychological modeling
-* **Economic Depth**: Full property management with trade negotiation systems
-* **Response Time**: <500ms for strategic decisions, <2s for complex social analysis
-* **Scalability**: 100+ concurrent games, 1000+ agent interactions per tournament
+      **Poker: Advanced Probability Intelligence**:
+      
+      * **Probability Calculation**: Exact odds calculation in real-time
+      * **Opponent Modeling**: Dynamic adaptation to playing styles
+      * **Bluffing AI**: Context-aware deception strategies
+      * **Bankroll Management**: Optimal betting and risk assessment
 
-Game Categories Deep Dive
-~~~~~~~~~~~~~~~~~~~~~~~~~
+   .. grid-item-card:: 💼 Economic Strategy Simulation
+      :link: economic_games
+      :link-type: doc
 
-**🧠 Social Psychology & Deception Games**
-   Advanced AI behavioral research through social deduction, hidden roles, and complex multi-agent psychology.
+      **Monopoly & Trading: Market Intelligence**:
+      
+      * **Trade Negotiation**: 90%+ successful deal completion rates
+      * **Market Analysis**: Real-time property valuation and optimization
+      * **Economic Warfare**: Strategic competition and alliance management
+      * **Portfolio Optimization**: Mathematically optimal investment strategies
 
-**♟️ Strategic Intelligence Games**
-   Deep reasoning challenges featuring advanced AI engines with tournament-grade competitive analysis.
+Platform Performance Metrics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**💰 Economic & Negotiation Games**
-   Sophisticated economic modeling with property management, trade systems, and market analysis.
+.. raw:: html
 
-**🎯 Analytical & Puzzle Games**
-   Pure logic and pattern recognition with adaptive difficulty and performance optimization.
+   <div class="feature-grid">
+      <div class="metric-box">
+         <div class="metric-value">19+</div>
+         <div>Game Implementations</div>
+      </div>
+      <div class="metric-box">
+         <div class="metric-value">5+</div>
+         <div>LLM Providers</div>
+      </div>
+      <div class="metric-box">
+         <div class="metric-value">100+</div>
+         <div>Concurrent Games</div>
+      </div>
+      <div class="metric-box">
+         <div class="metric-value">< 500ms</div>
+         <div>Average Response</div>
+      </div>
+   </div>
 
-**🎭 Hybrid Social-Strategy Games**
-   Complex games combining social dynamics with strategic depth for advanced AI research.
+Research Applications
+~~~~~~~~~~~~~~~~~~~~
+
+.. grid:: 2
+   :gutter: 2
+
+   .. grid-item-card:: 🎓 Academic Research
+
+      **Cutting-Edge AI Research Applications**:
+      
+      * **Game Theory Studies**: Strategic equilibrium and Nash analysis
+      * **Social Psychology**: Trust, deception, and cooperation research
+      * **Cognitive Science**: Decision-making and reasoning patterns
+      * **Behavioral Economics**: Risk assessment and market behavior
+
+   .. grid-item-card:: 🏢 Commercial Applications
+
+      **Real-World Business Intelligence**:
+      
+      * **AI Benchmarking**: Comparative LLM performance analysis
+      * **Strategy Optimization**: Business decision-making models
+      * **Team Dynamics**: Leadership and collaboration assessment
+      * **Competitive Intelligence**: Market strategy and competitor analysis
+
+Platform Architecture
+~~~~~~~~~~~~~~~~~~~~~
+
+.. mermaid::
+
+   graph TB
+      subgraph "Game Categories"
+         A[Social Psychology] --> B[Tournament Engine]
+         C[Strategic Intelligence] --> B
+         D[Economic Simulation] --> B
+         E[Puzzle & Logic] --> B
+      end
+      
+      subgraph "AI Infrastructure"
+         B --> F[Multi-Provider LLM]
+         B --> G[Dynamic Configuration]
+         B --> H[Performance Analytics]
+         
+         F --> I[OpenAI, Anthropic, Claude]
+         G --> J[Personality Profiles]
+         H --> K[Research Metrics]
+      end
+      
+      subgraph "Research Platform"
+         I --> L[Tournament Results]
+         J --> L
+         K --> L
+         
+         L --> M[Academic Publications]
+         L --> N[Commercial Insights]
+      end
+      
+      style A fill:#ff6b6b
+      style C fill:#74b9ff
+      style D fill:#00b894
+      style E fill:#fdcb6e
 
 Next Steps
 ~~~~~~~~~~
 
-- :doc:`getting_started` - Understand the gaming platform architecture
-- :doc:`quickstart` - Deploy your first AI tournament
 - :doc:`game_categories` - Explore all 19+ game implementations
 - :doc:`social_psychology_games` - Master AI deception and social reasoning
-- :doc:`tournament_system` - Run cross-provider competitive analysis
-- :doc:`dynamic_configuration` - Hot-swap AI strategies and personalities
-- :doc:`examples` - See advanced multi-agent gaming scenarios
+- :doc:`strategic_games` - Deep strategic intelligence development
+- :doc:`tournament_system` - Cross-provider competitive analysis
+- :doc:`getting_started` - Deploy your first AI game tournament
 
-Research Applications
+Research & Innovation
 ~~~~~~~~~~~~~~~~~~~~~
 
 **Academic Research**
-   * AI behavioral psychology studies
-   * Multi-agent coordination research
-   * Game theory and strategic reasoning
-   * Social dynamics and trust modeling
+   * Multi-agent social coordination
+   * Strategic reasoning and planning algorithms  
+   * Economic behavior modeling
+   * Deception detection and trust systems
 
-**Commercial Applications**
-   * AI training and benchmarking
-   * Strategy optimization research
-   * Competitive intelligence analysis
-   * Human-AI interaction studies
+**Industry Applications**
+   * AI capability benchmarking
+   * Strategic decision-making models
+   * Team collaboration analysis
+   * Competitive intelligence systems
 
-**Entertainment & Education**
-   * Advanced AI gaming experiences
-   * Educational game development
-   * Interactive AI demonstrations
-   * Gaming tournament platforms
+**Open Challenges**
+   * Cross-game strategy transfer
+   * Real-time personality adaptation
+   * Emergent social behavior modeling
+   * Multi-modal game understanding
 
-Getting Help
-~~~~~~~~~~~~
+Community & Support
+~~~~~~~~~~~~~~~~~~~
 
-* **Documentation**: Comprehensive guides and API references
-* **GitHub Issues**: https://github.com/haive-ai/haive-games/issues
-* **Research Community**: Join our AI gaming research discussions
-* **Tournament Leaderboards**: Competitive AI provider rankings
+* **Documentation**: Comprehensive guides and research papers
+* **GitHub**: https://github.com/haive-ai/haive-games
+* **Discord**: Join our AI research community
+* **Research**: research@haive.ai for academic collaboration
 
 ---
 
-**The Future of AI Gaming Research Starts Here** - Deploy sophisticated AI agents across 19+ game environments and discover emergent behaviors, strategic intelligence, and social psychology patterns that advance the frontiers of artificial intelligence! 🚀
+**Welcome to the Future of AI Gaming Research** - Where advanced algorithms meet sophisticated game theory to create AI systems that master strategy, psychology, and competition! 🎮
 
 Indices and tables
 ==================

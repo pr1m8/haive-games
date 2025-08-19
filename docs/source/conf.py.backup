@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- Project information -----------------------------------------------------
-project = "haive-games"
+project = "haive-core"
 copyright = "2025, Haive Team"
 author = "Haive Team"
 release = "0.1.0"
@@ -22,7 +22,7 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx.ext.graphviz",  # NEW: Architecture diagrams
-    # "sphinxcontrib.autodoc_pydantic",  # DISABLED: Pydantic model documentation (causing AttributeError)
+    "sphinxcontrib.autodoc_pydantic",  # NEW: Pydantic model documentation
     "sphinx_autodoc_typehints",
     "sphinx_copybutton",
     "sphinx_togglebutton",
@@ -35,7 +35,7 @@ extensions = [
     "notfound.extension",  # NEW: Custom 404 pages
     "sphinxext.opengraph",
     "myst_parser",
-    # "sphinx_exec_code",  # DISABLED: Execute example code in docs (causing build errors)
+    "sphinx_exec_code",  # NEW: Execute example code in docs
     "sphinx_toggleprompt",  # NEW: Toggle shell prompts in code
     "sphinx_issues",  # NEW: Link to GitHub issues
     "sphinx_git",  # NEW: Git integration for changelogs
@@ -330,16 +330,16 @@ autodoc_default_options = {
 napoleon_preprocess_types = True
 napoleon_attr_annotations = True
 
-# # NEW: Pydantic configuration - DISABLED due to autodoc_pydantic issues
-# autodoc_pydantic_model_show_json = True
-# autodoc_pydantic_model_show_config_summary = True
-# autodoc_pydantic_model_show_validator_summary = True
-# autodoc_pydantic_model_show_field_summary = True
-# autodoc_pydantic_model_show_validator_members = True
-# autodoc_pydantic_field_list_validators = True
-# autodoc_pydantic_field_show_constraints = True
-# autodoc_pydantic_model_erdantic_figure = False
-# autodoc_pydantic_model_erdantic_figure_collapsed = False
+# NEW: Pydantic configuration
+autodoc_pydantic_model_show_json = True
+autodoc_pydantic_model_show_config_summary = True
+autodoc_pydantic_model_show_validator_summary = True
+autodoc_pydantic_model_show_field_summary = True
+autodoc_pydantic_model_show_validator_members = True
+autodoc_pydantic_field_list_validators = True
+autodoc_pydantic_field_show_constraints = True
+autodoc_pydantic_model_erdantic_figure = False
+autodoc_pydantic_model_erdantic_figure_collapsed = False
 
 # MyST Parser
 myst_enable_extensions = [
@@ -457,30 +457,26 @@ tippy_add_class = "has-tooltip"
 
 # Custom tooltips for specific URLs or patterns
 tippy_custom_tips = {
-    # Game modules
-    "haive.games.chess": "Chess game implementation with AI agents for strategic gameplay.",
-    "haive.games.poker": "Texas Hold'em poker with AI agents and betting strategies.",
-    "haive.games.mafia": "Social deduction game with AI agents for role-playing and voting.",
-    "haive.games.debate": "Structured debate system with AI agents arguing different positions.",
-    "haive.games.among_us": "Social deduction game inspired by Among Us with AI crewmates and impostors.",
-    # Game concepts
-    "GameAgent": "AI agent designed to play specific games with strategic decision-making.",
-    "GameState": "Current state of a game including board position, player turns, and game phase.",
-    "GameEngine": "Core game logic and rule enforcement system.",
-    "PlayerAgent": "Individual AI player in a multi-player game environment.",
-    "BoardGame": "Grid-based games like chess, checkers, connect4, and tic-tac-toe.",
-    "CardGame": "Card-based games like poker, blackjack, and uno.",
-    "SocialGame": "Games involving social interaction like mafia, debate, and among us.",
-    # Game mechanics
-    "move_validation": "System for checking if a player's move is legal according to game rules.",
-    "game_state_manager": "Manages transitions between game states and maintains game history.",
-    "tournament_system": "Framework for organizing and running multi-game competitions.",
-    "voting_system": "Mechanism for players to vote on decisions in social games.",
-    # AI concepts
-    "strategy": "AI decision-making approach for optimal gameplay performance.",
-    "game_tree": "Tree structure representing possible moves and game outcomes.",
-    "minimax": "Algorithm for decision-making in adversarial games.",
-    "monte_carlo": "Simulation-based approach for evaluating game positions.",
+    # Core modules
+    "haive.core.engine": "The core engine module provides the foundation for all agent operations.",
+    "haive.core.schema": "Type-safe state management with Pydantic schemas.",
+    "haive.core.graph": "Graph-based workflow orchestration and routing.",
+    "haive.core.tools": "Tool integration and management system.",
+    # Key classes
+    "AugLLMConfig": "Enhanced LLM configuration with support for multiple providers and advanced features.",
+    "StateSchema": "Base class for all state schemas in Haive, providing persistence and validation.",
+    "MetaStateSchema": "Advanced meta-agent state management for complex agent workflows.",
+    "DynamicGraph": "Flexible graph builder for creating complex agent workflows.",
+    "ReactAgent": "An agent that uses ReAct (Reasoning and Acting) pattern for complex tasks.",
+    "SimpleAgent": "Basic agent implementation for straightforward LLM interactions.",
+    "BaseAgent": "Foundation class that all Haive agents inherit from.",
+    # Common terms
+    "LLM": "Large Language Model - AI models like GPT-4, Claude, etc.",
+    "RAG": "Retrieval-Augmented Generation - combining search with LLM generation.",
+    "embedding": "Vector representation of text for semantic search.",
+    "vectorstore": "Database optimized for storing and searching embeddings.",
+    "checkpoint": "Saved state snapshot for recovery and persistence.",
+    "tool": "External function or API that agents can call.",
     "mixin": "Reusable component that adds functionality to classes.",
     # Pydantic terms
     "Field": "Pydantic field descriptor for model attributes.",
@@ -523,17 +519,6 @@ exec_code_source_file_link = True
 
 # NEW: Sphinx-codeautolink configuration
 # Automatically link code references to their documentation
-
-# Mock torch to avoid CUDA errors during doc build
-class MockCuda:
-    def is_available(self):
-        return False
-
-class MockTorch:
-    cuda = MockCuda()
-
-sys.modules['torch'] = MockTorch()
-
 codeautolink_global_preface = """
 # Standard library
 import os
@@ -543,16 +528,6 @@ import asyncio
 from typing import Any, Dict, List, Optional, Union, Type
 from pathlib import Path
 
-# Mock torch for documentation build
-class MockCuda:
-    def is_available(self):
-        return False
-
-class MockTorch:
-    cuda = MockCuda()
-
-sys.modules['torch'] = MockTorch()
-
 # Third party
 import pydantic
 from pydantic import BaseModel, Field
@@ -561,7 +536,6 @@ from langchain_core.tools import Tool
 
 # Haive imports
 import haive
-from haive.games import *
 from haive.core import *
 from haive.core.engine import *
 from haive.core.engine.aug_llm import AugLLMConfig
@@ -694,23 +668,23 @@ hoverxref_role_types = {
 paramlinks_hyperlink_param = "name"
 
 # NEW: enum_tools configuration - Better enum documentation
-enum_tools_namespace = "haive.games"
+enum_tools_namespace = "haive.core"
 enum_tools_default_render_style = "table"  # or "list" or "definition"
 enum_tools_member_order = "bysource"  # Keep original order
 
-# # NEW: autodoc_pydantic configuration - DISABLED due to autodoc_pydantic issues
-# autodoc_pydantic_model_show_json = True
-# autodoc_pydantic_model_show_config_member = True
-# autodoc_pydantic_model_show_validator_summary = True
-# autodoc_pydantic_model_show_field_summary = True
-# autodoc_pydantic_model_members = True
-# autodoc_pydantic_model_member_order = "bysource"
-# autodoc_pydantic_model_undoc_members = True
-# autodoc_pydantic_model_hide_reused_validator = False
-# autodoc_pydantic_field_list_validators = True
-# autodoc_pydantic_field_show_default = True
-# autodoc_pydantic_field_show_required = True
-# autodoc_pydantic_field_show_alias = True
+# NEW: autodoc_pydantic configuration - Enhanced Pydantic model docs
+autodoc_pydantic_model_show_json = True
+autodoc_pydantic_model_show_config_member = True
+autodoc_pydantic_model_show_validator_summary = True
+autodoc_pydantic_model_show_field_summary = True
+autodoc_pydantic_model_members = True
+autodoc_pydantic_model_member_order = "bysource"
+autodoc_pydantic_model_undoc_members = True
+autodoc_pydantic_model_hide_reused_validator = False
+autodoc_pydantic_field_list_validators = True
+autodoc_pydantic_field_show_default = True
+autodoc_pydantic_field_show_required = True
+autodoc_pydantic_field_show_alias = True
 
 # AutoAPI + Pydantic integration
 autoapi_autodoc_typehints = "both"

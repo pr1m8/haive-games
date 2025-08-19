@@ -1,0 +1,27 @@
+{# Custom brand sidebar for Haive #}
+<div class="sidebar-brand">
+  <a class="sidebar-brand-logo" href="{{ pathto(master_doc) }}">
+    {%- if logo_url %}
+    <img src="{{ logo_url }}" alt="{{ project }} logo" />
+    {%- else %}
+    <span class="sidebar-brand-text">{{ project }}</span>
+    {%- endif %}
+  </a>
+  {%- if theme_light_logo and theme_dark_logo %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const themeSwitcher = document.querySelector(".theme-switch-button");
+      const logo = document.querySelector(".sidebar-brand-logo img");
+      if (logo && themeSwitcher) {
+        themeSwitcher.addEventListener("click", function () {
+          if (document.documentElement.dataset.theme === "dark") {
+            logo.src = "{{ pathto('_static/' + theme_dark_logo, 1) }}";
+          } else {
+            logo.src = "{{ pathto('_static/' + theme_light_logo, 1) }}";
+          }
+        });
+      }
+    });
+  </script>
+  {%- endif %}
+</div>
