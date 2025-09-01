@@ -3,18 +3,6 @@ games.chess.llm_utils
 
 .. py:module:: games.chess.llm_utils
 
-Chess-specific LLM utilities using the game LLM factory.
-
-This module provides chess-specific utilities for creating and configuring LLMs for
-chess gameplay, building on the core LLM factory system.
-
-
-
-.. raw:: html
-   
-   <div class="autoapi-module-summary">
-<span class="module-stat">4 functions</span>   </div>
-
 .. autoapi-nested-parse::
 
    Chess-specific LLM utilities using the game LLM factory.
@@ -24,151 +12,106 @@ chess gameplay, building on the core LLM factory system.
 
 
 
-      
-            
-            
-            
+Functions
+---------
 
-.. admonition:: Functions (4)
-   :class: info
+.. autoapisummary::
 
-   .. autoapisummary::
+   games.chess.llm_utils.create_chess_engines_from_config
+   games.chess.llm_utils.create_chess_engines_simple
+   games.chess.llm_utils.get_available_chess_providers
+   games.chess.llm_utils.get_recommended_chess_models
 
-      games.chess.llm_utils.create_chess_engines_from_config
-      games.chess.llm_utils.create_chess_engines_simple
-      games.chess.llm_utils.get_available_chess_providers
-      games.chess.llm_utils.get_recommended_chess_models
 
-            
-
-.. dropdown:: :octicon:`book` Complete API Documentation
-   :open:
-   :class-title: sd-font-weight-bold sd-text-info
-   :class-container: sd-border-info
-
-   .. grid:: 1 2 2 3
-      :gutter: 2
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
+Module Contents
+---------------
 
 .. py:function:: create_chess_engines_from_config(white_config: dict[str, Any], black_config: dict[str, Any], enable_analysis: bool = True, analyzer_configs: dict[str, dict[str, Any]] | None = None) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-            Create chess engines from simple configuration dictionaries.
+   Create chess engines from simple configuration dictionaries.
 
-            :param white_config: Config for white player with 'provider', 'model', etc.
-            :param black_config: Config for black player with 'provider', 'model', etc.
-            :param enable_analysis: Whether to create analyzer engines
-            :param analyzer_configs: Optional separate configs for analyzers
+   :param white_config: Config for white player with 'provider', 'model', etc.
+   :param black_config: Config for black player with 'provider', 'model', etc.
+   :param enable_analysis: Whether to create analyzer engines
+   :param analyzer_configs: Optional separate configs for analyzers
 
-            :returns: Dictionary of AugLLMConfig objects for all chess roles
+   :returns: Dictionary of AugLLMConfig objects for all chess roles
 
-            .. rubric:: Examples
+   .. rubric:: Examples
 
-            >>> # Simple provider-only config
-            >>> engines = create_chess_engines_from_config(
-            ...     white_config={"provider": "anthropic"},
-            ...     black_config={"provider": "openai"}
-            ... )
+   >>> # Simple provider-only config
+   >>> engines = create_chess_engines_from_config(
+   ...     white_config={"provider": "anthropic"},
+   ...     black_config={"provider": "openai"}
+   ... )
 
-            >>> # With custom models
-            >>> engines = create_chess_engines_from_config(
-            ...     white_config={
-            ...         "provider": "anthropic",
-            ...         "model": "claude-3-opus-20240229"
-            ...     },
-            ...     black_config={
-            ...         "provider": "azure",
-            ...         "model": "gpt-4-turbo"
-            ...     }
-            ... )
+   >>> # With custom models
+   >>> engines = create_chess_engines_from_config(
+   ...     white_config={
+   ...         "provider": "anthropic",
+   ...         "model": "claude-3-opus-20240229"
+   ...     },
+   ...     black_config={
+   ...         "provider": "azure",
+   ...         "model": "gpt-4-turbo"
+   ...     }
+   ... )
 
-            >>> # Separate analyzer configs
-            >>> engines = create_chess_engines_from_config(
-            ...     white_config={"provider": "anthropic"},
-            ...     black_config={"provider": "openai"},
-            ...     analyzer_configs={
-            ...         "white": {"provider": "azure"},
-            ...         "black": {"provider": "azure"}
-            ...     }
-            ... )
+   >>> # Separate analyzer configs
+   >>> engines = create_chess_engines_from_config(
+   ...     white_config={"provider": "anthropic"},
+   ...     black_config={"provider": "openai"},
+   ...     analyzer_configs={
+   ...         "white": {"provider": "azure"},
+   ...         "black": {"provider": "azure"}
+   ...     }
+   ... )
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: create_chess_engines_simple(white_provider: str = 'anthropic', white_model: str | None = None, black_provider: str = 'anthropic', black_model: str | None = None, temperature: float | None = None, enable_analysis: bool = True) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-            Create chess engines with simple provider/model specification.
+   Create chess engines with simple provider/model specification.
 
-            :param white_provider: Provider for white (e.g., "anthropic", "openai")
-            :param white_model: Model for white (uses default if None)
-            :param black_provider: Provider for black
-            :param black_model: Model for black (uses default if None)
-            :param temperature: Temperature for all engines
-            :param enable_analysis: Whether to create analyzer engines
+   :param white_provider: Provider for white (e.g., "anthropic", "openai")
+   :param white_model: Model for white (uses default if None)
+   :param black_provider: Provider for black
+   :param black_model: Model for black (uses default if None)
+   :param temperature: Temperature for all engines
+   :param enable_analysis: Whether to create analyzer engines
 
-            :returns: Dictionary of AugLLMConfig objects
+   :returns: Dictionary of AugLLMConfig objects
 
-            .. rubric:: Examples
+   .. rubric:: Examples
 
-            >>> # Use defaults
-            >>> engines = create_chess_engines_simple()
+   >>> # Use defaults
+   >>> engines = create_chess_engines_simple()
 
-            >>> # Different providers
-            >>> engines = create_chess_engines_simple(
-            ...     white_provider="anthropic",
-            ...     black_provider="openai"
-            ... )
+   >>> # Different providers
+   >>> engines = create_chess_engines_simple(
+   ...     white_provider="anthropic",
+   ...     black_provider="openai"
+   ... )
 
-            >>> # Custom models
-            >>> engines = create_chess_engines_simple(
-            ...     white_provider="anthropic",
-            ...     white_model="claude-3-opus-20240229",
-            ...     black_provider="openai",
-            ...     black_model="gpt-4-turbo"
-            ... )
+   >>> # Custom models
+   >>> engines = create_chess_engines_simple(
+   ...     white_provider="anthropic",
+   ...     white_model="claude-3-opus-20240229",
+   ...     black_provider="openai",
+   ...     black_model="gpt-4-turbo"
+   ... )
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: get_available_chess_providers() -> list[str]
 
-            Get list of available LLM providers for chess.
+   Get list of available LLM providers for chess.
 
-            :returns: List of provider names
+   :returns: List of provider names
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: get_recommended_chess_models() -> dict[str, str]
 
-            Get recommended models for chess gameplay.
+   Get recommended models for chess gameplay.
 
-            :returns: Dictionary mapping providers to recommended models
+   :returns: Dictionary mapping providers to recommended models
 
-
-
-
-
-----
-
-.. admonition:: Quick Reference
-   :class: tip
-
-   .. code-block:: python
-
-      from games.chess.llm_utils import *
-
-      # Module provides type hints for mypy compatibility
-      # View source: https://github.com/haive-ai/haive
 

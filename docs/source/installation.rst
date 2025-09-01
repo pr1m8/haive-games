@@ -1,7 +1,7 @@
 Installation Guide
 ==================
 
-This guide covers different ways to install haive-core and manage dependencies.
+This guide covers different ways to install haive-games and manage dependencies.
 
 Requirements
 ------------
@@ -16,11 +16,11 @@ Basic Installation
 Using pip
 ~~~~~~~~~
 
-The simplest way to install haive-core:
+The simplest way to install haive-games:
 
 .. code-block:: bash
 
-   pip install haive-core
+   pip install haive-games
 
 Using Poetry (Recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,12 +29,12 @@ For better dependency management:
 
 .. code-block:: bash
 
-   poetry add haive-core
+   poetry add haive-games
 
 Install with Extras
 -------------------
 
-haive-core includes optional dependencies for different features:
+haive-games includes optional dependencies for different features:
 
 All Features
 ~~~~~~~~~~~~
@@ -42,32 +42,32 @@ All Features
 .. code-block:: bash
 
    # With pip
-   pip install "haive-core[all]"
+   pip install "haive-games[all]"
    
    # With Poetry
-   poetry add "haive-core[all]"
+   poetry add "haive-games[all]"
 
 Specific Features
 ~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   # Vector stores only
-   pip install "haive-core[vectorstores]"
+   # Analytics and metrics
+   pip install "haive-games[analytics]"
    
-   # Embeddings support
-   pip install "haive-core[embeddings]"
+   # Tournament system
+   pip install "haive-games[tournament]"
    
-   # Popular LLM providers
-   pip install "haive-core[popular-llms]"
+   # AI provider support
+   pip install "haive-games[ai-providers]"
    
    # Multiple features
-   pip install "haive-core[vectorstores,embeddings]"
+   pip install "haive-games[analytics,tournament]"
 
 Development Installation
 ------------------------
 
-To contribute to haive-core or use the latest development version:
+To contribute to haive-games or use the latest development version:
 
 Clone the Repository
 ~~~~~~~~~~~~~~~~~~~~
@@ -75,7 +75,7 @@ Clone the Repository
 .. code-block:: bash
 
    git clone https://github.com/haive-ai/haive.git
-   cd haive/packages/haive-core
+   cd haive/packages/haive-games
 
 Install with Poetry
 ~~~~~~~~~~~~~~~~~~~
@@ -103,36 +103,30 @@ Install with pip
 Dependency Groups
 -----------------
 
-haive-core organizes dependencies into logical groups:
+haive-games organizes dependencies into logical groups:
 
-LLM Providers
-~~~~~~~~~~~~~
+Game Categories
+~~~~~~~~~~~~~~~
 
-- **popular-llms**: OpenAI, Anthropic, Google
-- **all-llms**: All supported LLM providers
-- **azure**: Azure OpenAI integration
-- **bedrock**: AWS Bedrock support
+- **board-games**: Chess, Go, Checkers, Reversi
+- **card-games**: Poker, Blackjack, UNO
+- **social-games**: Among Us, Mafia, Clue
+- **puzzle-games**: Sudoku, Wordle, Mastermind
 
-Vector Stores
-~~~~~~~~~~~~~
+AI & Analytics
+~~~~~~~~~~~~~~
 
-- **popular-vectorstores**: Chroma, Pinecone, FAISS
-- **all-vectorstores**: All supported vector stores
-- **postgres**: PostgreSQL vector support
-- **elasticsearch**: Elasticsearch integration
+- **ai-providers**: OpenAI, Anthropic, Google AI support
+- **analytics**: Performance metrics and analysis
+- **tournament**: Tournament system and rankings
+- **research**: Research data collection tools
 
-Embeddings
-~~~~~~~~~~
+Integrations
+~~~~~~~~~~~~
 
-- **popular-embeddings**: OpenAI, HuggingFace
-- **all-embeddings**: All embedding providers
-
-Tools & Integrations
-~~~~~~~~~~~~~~~~~~~~
-
-- **tools**: Common tool integrations
-- **mcp**: Model Context Protocol support
-- **persistence**: Database persistence
+- **visualization**: Game state visualization
+- **persistence**: Game state persistence
+- **multiplayer**: Multi-player game support
 
 Verifying Installation
 ----------------------
@@ -143,20 +137,22 @@ After installation, verify everything is working:
 
    # Test basic import
    from haive.core import __version__
-   print(f"haive-core version: {__version__}")
+   print(f"haive-games version: {__version__}")
    
-   # Test core components
+   # Test game components
+   from haive.games.chess import ChessAgent
+   from haive.games.poker import PokerAgent
    from haive.core.engine.aug_llm import AugLLMConfig
-   from haive.core.schema.state_schema import StateSchema
    
-   # Create a simple config
+   # Create a simple agent
    config = AugLLMConfig()
-   print("✓ Core components imported successfully")
+   chess_ai = ChessAgent(name="TestBot", engine=config)
+   print("✓ Game components imported successfully")
 
 Environment Variables
 ---------------------
 
-haive-core uses environment variables for configuration:
+haive-games uses environment variables for configuration:
 
 .. code-block:: bash
 
@@ -200,7 +196,7 @@ Common Installation Issues
 **ImportError: No module named 'haive'**
 
 - Ensure you've activated your virtual environment
-- Check installation: `pip show haive-core`
+- Check installation: `pip show haive-games`
 
 **Dependency Conflicts**
 
@@ -210,7 +206,7 @@ Common Installation Issues
 **Missing Optional Dependencies**
 
 - Install the appropriate extras group
-- Example: `pip install "haive-core[vectorstores]"`
+- Example: `pip install "haive-games[tournament]"`
 
 Platform-Specific Notes
 ~~~~~~~~~~~~~~~~~~~~~~~

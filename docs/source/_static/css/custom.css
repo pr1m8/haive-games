@@ -1,6 +1,57 @@
 /* Custom CSS for PyAutoDoc Documentation */
 
 /* ============================= */
+/* GAME CARD VISIBILITY FIXES    */
+/* ============================= */
+/* Fix white-on-white card issues */
+.sd-card {
+  background: #f8fafb !important;  /* Light blue-gray background */
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.sd-card:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Game-specific card styling */
+.game-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%) !important;
+}
+
+/* Dark mode card support */
+[data-theme="dark"] .sd-card {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .sd-card:hover {
+  background: #293548 !important;
+  border-color: #475569 !important;
+}
+
+.sd-card-title {
+  color: #ea580c !important;  /* Orange for games */
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] .sd-card-title {
+  color: #fb923c !important;
+}
+
+.sd-card-body {
+  color: #475569 !important;
+}
+
+[data-theme="dark"] .sd-card-body {
+  color: #cbd5e1 !important;
+}
+
+/* ============================= */
 /* Color Variables               */
 /* ============================= */
 :root {

@@ -1,7 +1,7 @@
 Configuration Guide
 ===================
 
-This guide covers all configuration options available in haive-core.
+This guide covers all configuration options available in haive-games.
 
 Engine Configuration
 --------------------
@@ -351,7 +351,7 @@ Environment Variables
 Core Environment Variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-haive-core recognizes these environment variables:
+haive-games recognizes these environment variables:
 
 .. code-block:: bash
 

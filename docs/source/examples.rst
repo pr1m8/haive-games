@@ -1,7 +1,7 @@
 Examples
 ========
 
-This section provides practical examples of using haive-core in various scenarios.
+This section provides practical examples of using haive-games in various scenarios.
 
 Basic Examples
 --------------
@@ -429,7 +429,7 @@ Integration Examples
 FastAPI Integration
 ~~~~~~~~~~~~~~~~~~~
 
-Integrate haive-core with FastAPI:
+Integrate haive-games with FastAPI:
 
 .. code-block:: python
 

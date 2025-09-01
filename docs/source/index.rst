@@ -8,7 +8,7 @@ Haive Games Documentation
       text-align: center;
       padding: 3rem 0;
       margin-bottom: 3rem;
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -53,6 +53,12 @@ Haive Games Documentation
       font-weight: bold;
       color: #d63031;
    }
+   .game-card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+   }
    </style>
 
    <div class="hero-section">
@@ -83,86 +89,81 @@ Haive Games Documentation
 Game Categories
 ---------------
 
-.. grid:: 2 2 3 3
-   :gutter: 2
+.. raw:: html
 
-   .. grid-item-card:: 🕵️ Social Psychology Games
-      :img-top: _static/social-icon.png
-      :link: social_psychology_games
-      :link-type: doc
+   <div class="feature-grid">
+      <div class="game-card">
+         <h3>🕵️ Social Psychology Games</h3>
+         <p><strong>Advanced Behavioral AI Research</strong></p>
+         <p>Among Us, Mafia, Debate, and Clue featuring deception detection, trust modeling, and social coordination.</p>
+         <ul>
+            <li>Hidden roles</li>
+            <li>Psychological profiling</li>
+            <li>Alliance formation</li>
+            <li>Behavioral adaptation</li>
+         </ul>
+      </div>
 
-      **Advanced Behavioral AI Research**
+      <div class="game-card">
+         <h3>♟️ Strategic Board Games</h3>
+         <p><strong>Deep Strategic Intelligence</strong></p>
+         <p>Chess, Go, Checkers, and Connect 4 with advanced planning, tactical analysis, and strategic depth.</p>
+         <ul>
+            <li>Deep planning</li>
+            <li>Tactical precision</li>
+            <li>Endgame databases</li>
+            <li>Tournament support</li>
+         </ul>
+      </div>
 
-      Among Us, Mafia, Debate, and Clue featuring deception detection, trust modeling, and social coordination.
+      <div class="game-card">
+         <h3>🎰 Card & Probability Games</h3>
+         <p><strong>Probability & Psychology</strong></p>
+         <p>Poker, Blackjack, UNO with sophisticated probability calculation, bluffing, and risk assessment.</p>
+         <ul>
+            <li>Probability calculation</li>
+            <li>Bluffing AI</li>
+            <li>Risk assessment</li>
+            <li>Bankroll management</li>
+         </ul>
+      </div>
 
-      +++
+      <div class="game-card">
+         <h3>💰 Economic Games</h3>
+         <p><strong>Complex Economic Simulation</strong></p>
+         <p>Monopoly, Risk, Trading games with property management, negotiation AI, and market analysis.</p>
+         <ul>
+            <li>Trade negotiation</li>
+            <li>Market analysis</li>
+            <li>Economic warfare</li>
+            <li>Portfolio optimization</li>
+         </ul>
+      </div>
 
-      Features: Hidden roles, Psychological profiling, Alliance formation, Behavioral adaptation
+      <div class="game-card">
+         <h3>🧩 Puzzle & Logic Games</h3>
+         <p><strong>Analytical Problem Solving</strong></p>
+         <p>Sudoku, Wordle, Mastermind, Minesweeper with constraint satisfaction and logical deduction.</p>
+         <ul>
+            <li>Constraint solving</li>
+            <li>Pattern recognition</li>
+            <li>Logic deduction</li>
+            <li>Optimization algorithms</li>
+         </ul>
+      </div>
 
-   .. grid-item-card:: ♟️ Strategic Board Games
-      :img-top: _static/strategy-icon.png
-      :link: strategic_games
-      :link-type: doc
-
-      **Deep Strategic Intelligence**
-
-      Chess, Go, Checkers, and Connect 4 with advanced planning, tactical analysis, and strategic depth.
-
-      +++
-
-      Features: Deep planning, Tactical precision, Endgame databases, Tournament support
-
-   .. grid-item-card:: 🎰 Card & Probability Games
-      :img-top: _static/cards-icon.png
-      :link: card_games
-      :link-type: doc
-
-      **Probability & Psychology**
-
-      Poker, Blackjack, UNO with sophisticated probability calculation, bluffing, and risk assessment.
-
-      +++
-
-      Features: Probability calculation, Bluffing AI, Risk assessment, Bankroll management
-
-   .. grid-item-card:: 💰 Economic Games
-      :img-top: _static/economy-icon.png
-      :link: economic_games
-      :link-type: doc
-
-      **Complex Economic Simulation**
-
-      Monopoly, Risk, Trading games with property management, negotiation AI, and market analysis.
-
-      +++
-
-      Features: Trade negotiation, Market analysis, Economic warfare, Portfolio optimization
-
-   .. grid-item-card:: 🧩 Puzzle & Logic Games
-      :img-top: _static/puzzle-icon.png
-      :link: puzzle_games
-      :link-type: doc
-
-      **Analytical Problem Solving**
-
-      Sudoku, Wordle, Mastermind, Minesweeper with constraint satisfaction and logical deduction.
-
-      +++
-
-      Features: Constraint solving, Pattern recognition, Logic deduction, Optimization algorithms
-
-   .. grid-item-card:: 🏆 Tournament System
-      :img-top: _static/tournament-icon.png
-      :link: tournament_system
-      :link-type: doc
-
-      **Cross-Game Competitive Analysis**
-
-      Multi-provider tournaments, benchmarking, and performance analytics across all game categories.
-
-      +++
-
-      Features: Multi-provider support, Cross-game rankings, Statistical analysis, Research tools
+      <div class="game-card">
+         <h3>🏆 Tournament System</h3>
+         <p><strong>Cross-Game Competitive Analysis</strong></p>
+         <p>Multi-provider tournaments, benchmarking, and performance analytics across all game categories.</p>
+         <ul>
+            <li>Multi-provider support</li>
+            <li>Cross-game rankings</li>
+            <li>Statistical analysis</li>
+            <li>Research tools</li>
+         </ul>
+      </div>
+   </div>
 
 .. toctree::
    :maxdepth: 2
@@ -182,10 +183,9 @@ Game Categories
 
    game_categories
    social_psychology_games
-   strategic_games
-   card_games
-   economic_games
-   puzzle_games
+   engine_architecture
+   configuration
+   common_module_overview
 
 .. toctree::
    :maxdepth: 2
@@ -193,32 +193,20 @@ Game Categories
    :hidden:
 
    tournament_system
-   configuration
-   dynamic_configuration
-   ai_personalities
-   performance_analysis
+   schema_system
+   graph_workflows
+   tool_integration
+   persistence_layer
 
 .. toctree::
    :maxdepth: 2
    :caption: Reference:
    :hidden:
 
+   api_reference
    changelog
-   troubleshooting
+   common_utilities
 
-.. toctree::
-   :maxdepth: 4
-   :caption: API Reference:
-   :titlesonly:
-   :hidden:
-
-   Game API Overview <autoapi/index>
-   Social Games <autoapi/games/among_us/index>
-   Strategic Games <autoapi/games/chess/index>
-   Card Games <autoapi/games/poker/index>
-   Economic Games <autoapi/games/monopoly/index>
-   Puzzle Games <autoapi/games/mastermind/index>
-   Tournament System <autoapi/games/tournament/index>
 
 Quick Start: AI Game Tournament
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -228,76 +216,67 @@ Experience the power of advanced AI gaming research::
     from haive.games.chess import ChessAgent
     from haive.games.poker import PokerAgent
     from haive.games.among_us import AmongUsAgent
-    from haive.games.tournament import MultiGameTournament
+    from haive.core.engine.aug_llm import AugLLMConfig
     
     # Create AI agents for different games
-    chess_ai = ChessAgent(provider="openai", skill_level="expert")
-    poker_ai = PokerAgent(provider="anthropic", style="aggressive")
-    social_ai = AmongUsAgent(provider="claude", personality="detective")
+    config = AugLLMConfig()
+    chess_ai = ChessAgent(name="ChessBot", engine=config)
+    poker_ai = PokerAgent(name="PokerBot", engine=config)
+    social_ai = AmongUsAgent(name="SocialBot", engine=config)
     
-    # Set up cross-game tournament
-    tournament = MultiGameTournament(
-        games=["chess", "poker", "among_us", "debate"],
-        providers=["openai", "anthropic", "claude", "google"],
-        format="round_robin",
-        matches_per_pair=10
-    )
-    
-    # Run comprehensive analysis
-    results = await tournament.run_analysis()
-    
-    # Generate research insights
-    insights = tournament.generate_cross_game_insights()
+    # Run games with configured agents
+    # Each agent uses sophisticated strategies tailored to their game type
 
 Featured Game Showcase
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. grid:: 2
-   :gutter: 2
+.. raw:: html
 
-   .. grid-item-card:: 🧠 Advanced Social Intelligence
-      :link: social_psychology_games
-      :link-type: doc
+   <div class="feature-grid">
+      <div class="feature-card">
+         <h3>🧠 Advanced Social Intelligence</h3>
+         <h4>Among Us & Mafia: Deception Detection</h4>
+         <ul>
+            <li><strong>Trust Modeling</strong>: Dynamic trust networks with behavioral adaptation</li>
+            <li><strong>Deception Detection</strong>: 85%+ accuracy in identifying dishonest players</li>
+            <li><strong>Alliance Formation</strong>: Strategic partnership and betrayal mechanics</li>
+            <li><strong>Psychological Profiling</strong>: Real-time personality assessment and adaptation</li>
+         </ul>
+      </div>
 
-      **Among Us & Mafia: Deception Detection**
-      
-      * **Trust Modeling**: Dynamic trust networks with behavioral adaptation
-      * **Deception Detection**: 85%+ accuracy in identifying dishonest players
-      * **Alliance Formation**: Strategic partnership and betrayal mechanics
-      * **Psychological Profiling**: Real-time personality assessment and adaptation
+      <div class="feature-card">
+         <h3>📊 Strategic Depth Analysis</h3>
+         <h4>Chess & Go: Deep Planning Intelligence</h4>
+         <ul>
+            <li><strong>Planning Depth</strong>: 8+ move lookahead with strategic evaluation</li>
+            <li><strong>Tactical Precision</strong>: 95%+ accuracy in tactical combinations</li>
+            <li><strong>Endgame Mastery</strong>: 99%+ accuracy in theoretical endgames</li>
+            <li><strong>Opening Theory</strong>: 100,000+ position database integration</li>
+         </ul>
+      </div>
 
-   .. grid-item-card:: 📊 Strategic Depth Analysis
-      :link: strategic_games
-      :link-type: doc
+      <div class="feature-card">
+         <h3>🎲 Probability & Risk Mastery</h3>
+         <h4>Poker: Advanced Probability Intelligence</h4>
+         <ul>
+            <li><strong>Probability Calculation</strong>: Exact odds calculation in real-time</li>
+            <li><strong>Opponent Modeling</strong>: Dynamic adaptation to playing styles</li>
+            <li><strong>Bluffing AI</strong>: Context-aware deception strategies</li>
+            <li><strong>Bankroll Management</strong>: Optimal betting and risk assessment</li>
+         </ul>
+      </div>
 
-      **Chess & Go: Deep Planning Intelligence**:
-      
-      * **Planning Depth**: 8+ move lookahead with strategic evaluation
-      * **Tactical Precision**: 95%+ accuracy in tactical combinations
-      * **Endgame Mastery**: 99%+ accuracy in theoretical endgames
-      * **Opening Theory**: 100,000+ position database integration
-
-   .. grid-item-card:: 🎲 Probability & Risk Mastery
-      :link: card_games
-      :link-type: doc
-
-      **Poker: Advanced Probability Intelligence**:
-      
-      * **Probability Calculation**: Exact odds calculation in real-time
-      * **Opponent Modeling**: Dynamic adaptation to playing styles
-      * **Bluffing AI**: Context-aware deception strategies
-      * **Bankroll Management**: Optimal betting and risk assessment
-
-   .. grid-item-card:: 💼 Economic Strategy Simulation
-      :link: economic_games
-      :link-type: doc
-
-      **Monopoly & Trading: Market Intelligence**:
-      
-      * **Trade Negotiation**: 90%+ successful deal completion rates
-      * **Market Analysis**: Real-time property valuation and optimization
-      * **Economic Warfare**: Strategic competition and alliance management
-      * **Portfolio Optimization**: Mathematically optimal investment strategies
+      <div class="feature-card">
+         <h3>💼 Economic Strategy Simulation</h3>
+         <h4>Monopoly & Trading: Market Intelligence</h4>
+         <ul>
+            <li><strong>Trade Negotiation</strong>: 90%+ successful deal completion rates</li>
+            <li><strong>Market Analysis</strong>: Real-time property valuation and optimization</li>
+            <li><strong>Economic Warfare</strong>: Strategic competition and alliance management</li>
+            <li><strong>Portfolio Optimization</strong>: Mathematically optimal investment strategies</li>
+         </ul>
+      </div>
+   </div>
 
 Platform Performance Metrics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -326,26 +305,31 @@ Platform Performance Metrics
 Research Applications
 ~~~~~~~~~~~~~~~~~~~~
 
-.. grid:: 2
-   :gutter: 2
+.. raw:: html
 
-   .. grid-item-card:: 🎓 Academic Research
+   <div class="feature-grid">
+      <div class="feature-card">
+         <h3>🎓 Academic Research</h3>
+         <p><strong>Cutting-Edge AI Research Applications</strong>:</p>
+         <ul>
+            <li><strong>Game Theory Studies</strong>: Strategic equilibrium and Nash analysis</li>
+            <li><strong>Social Psychology</strong>: Trust, deception, and cooperation research</li>
+            <li><strong>Cognitive Science</strong>: Decision-making and reasoning patterns</li>
+            <li><strong>Behavioral Economics</strong>: Risk assessment and market behavior</li>
+         </ul>
+      </div>
 
-      **Cutting-Edge AI Research Applications**:
-      
-      * **Game Theory Studies**: Strategic equilibrium and Nash analysis
-      * **Social Psychology**: Trust, deception, and cooperation research
-      * **Cognitive Science**: Decision-making and reasoning patterns
-      * **Behavioral Economics**: Risk assessment and market behavior
-
-   .. grid-item-card:: 🏢 Commercial Applications
-
-      **Real-World Business Intelligence**:
-      
-      * **AI Benchmarking**: Comparative LLM performance analysis
-      * **Strategy Optimization**: Business decision-making models
-      * **Team Dynamics**: Leadership and collaboration assessment
-      * **Competitive Intelligence**: Market strategy and competitor analysis
+      <div class="feature-card">
+         <h3>🏢 Commercial Applications</h3>
+         <p><strong>Real-World Business Intelligence</strong>:</p>
+         <ul>
+            <li><strong>AI Benchmarking</strong>: Comparative LLM performance analysis</li>
+            <li><strong>Strategy Optimization</strong>: Business decision-making models</li>
+            <li><strong>Team Dynamics</strong>: Leadership and collaboration assessment</li>
+            <li><strong>Competitive Intelligence</strong>: Market strategy and competitor analysis</li>
+         </ul>
+      </div>
+   </div>
 
 Platform Architecture
 ~~~~~~~~~~~~~~~~~~~~~
@@ -389,7 +373,7 @@ Next Steps
 
 - :doc:`game_categories` - Explore all 19+ game implementations
 - :doc:`social_psychology_games` - Master AI deception and social reasoning
-- :doc:`strategic_games` - Deep strategic intelligence development
+- :doc:`engine_architecture` - Deep strategic intelligence development
 - :doc:`tournament_system` - Cross-provider competitive analysis
 - :doc:`getting_started` - Deploy your first AI game tournament
 

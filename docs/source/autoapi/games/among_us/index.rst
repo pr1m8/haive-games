@@ -3,50 +3,30 @@ games.among_us
 
 .. py:module:: games.among_us
 
-Among Us social deduction game module.
-
-
-
 .. autoapi-nested-parse::
 
    Among Us social deduction game module.
 
 
 
+Submodules
+----------
 
-.. admonition:: Submodules (14)
-   :class: note
+.. toctree::
+   :maxdepth: 1
 
-   .. toctree::
-      :maxdepth: 1
-      :titlesonly:
+   /autoapi/games/among_us/agent/index
+   /autoapi/games/among_us/config/index
+   /autoapi/games/among_us/configurable_config/index
+   /autoapi/games/among_us/demo/index
+   /autoapi/games/among_us/engines/index
+   /autoapi/games/among_us/enhanced_ui/index
+   /autoapi/games/among_us/factory/index
+   /autoapi/games/among_us/generic_engines/index
+   /autoapi/games/among_us/models/index
+   /autoapi/games/among_us/prompts/index
+   /autoapi/games/among_us/state/index
+   /autoapi/games/among_us/state_manager/index
+   /autoapi/games/among_us/ui/index
 
-      /autoapi/games/among_us/agent/index
-      /autoapi/games/among_us/config/index
-      /autoapi/games/among_us/configurable_config/index
-      /autoapi/games/among_us/demo/index
-      /autoapi/games/among_us/engines/index
-      /autoapi/games/among_us/enhanced_ui/index
-      /autoapi/games/among_us/example/index
-      /autoapi/games/among_us/factory/index
-      /autoapi/games/among_us/generic_engines/index
-      /autoapi/games/among_us/models/index
-      /autoapi/games/among_us/prompts/index
-      /autoapi/games/among_us/state/index
-      /autoapi/games/among_us/state_manager/index
-      /autoapi/games/among_us/ui/index
-
-      
-
-----
-
-.. admonition:: Quick Reference
-   :class: tip
-
-   .. code-block:: python
-
-      from games.among_us import *
-
-      # Module provides type hints for mypy compatibility
-      # View source: https://github.com/haive-ai/haive
 

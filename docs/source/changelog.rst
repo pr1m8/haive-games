@@ -1,7 +1,7 @@
 Changelog
 =========
 
-All notable changes to haive-core will be documented in this file.
+All notable changes to haive-games will be documented in this file.
 
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
@@ -39,19 +39,19 @@ Fixed
 [0.1.0] - 2025-01-15
 --------------------
 
-Initial release of haive-core.
+Initial release of haive-games.
 
 Added
 ~~~~~
-- Core agent engine and infrastructure
-- State management and schema composition  
-- Graph-based workflow orchestration
-- Tool and retriever integration
-- Vector stores and embeddings support
-- Persistence and checkpointing
-- Comprehensive type system
-- Plugin architecture
-- MCP (Model Context Protocol) support
+- 19+ game implementations across multiple categories
+- Social psychology games (Among Us, Mafia, Clue)
+- Strategic board games (Chess, Go, Checkers, Reversi)
+- Card and probability games (Poker, Blackjack, UNO)
+- Economic simulation games (Monopoly, Risk)
+- Puzzle and logic games (Sudoku, Wordle, Mastermind)
+- Tournament system with multi-provider support
+- Cross-game performance analytics
+- AI agent implementations for each game
 
 Documentation Changes
 ---------------------

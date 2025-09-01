@@ -3,261 +3,36 @@ games.core.game.containers.container
 
 .. py:module:: games.core.game.containers.container
 
-Module documentation for games.core.game.containers.container
 
+Attributes
+----------
 
-.. raw:: html
-   
-   <div class="autoapi-module-summary">
-<span class="module-stat">4 classes</span> • <span class="module-stat">1 attributes</span>   </div>
+.. autoapisummary::
 
+   games.core.game.containers.container.T
 
-      
 
-.. admonition:: Attributes (1)
-   :class: tip
+Classes
+-------
 
-   .. autoapisummary::
+.. toctree::
+   :hidden:
 
-      games.core.game.containers.container.T
+   /autoapi/games/core/game/containers/container/Deck
+   /autoapi/games/core/game/containers/container/GamePieceContainer
+   /autoapi/games/core/game/containers/container/PlayerHand
+   /autoapi/games/core/game/containers/container/TileBag
 
-            
-            
+.. autoapisummary::
 
-.. admonition:: Classes (4)
-   :class: note
+   games.core.game.containers.container.Deck
+   games.core.game.containers.container.GamePieceContainer
+   games.core.game.containers.container.PlayerHand
+   games.core.game.containers.container.TileBag
 
-   .. autoapisummary::
 
-      games.core.game.containers.container.Deck
-      games.core.game.containers.container.GamePieceContainer
-      games.core.game.containers.container.PlayerHand
-      games.core.game.containers.container.TileBag
-
-            
-            
-
-.. dropdown:: :octicon:`book` Complete API Documentation
-   :open:
-   :class-title: sd-font-weight-bold sd-text-info
-   :class-container: sd-border-info
-
-   .. grid:: 1 2 2 3
-      :gutter: 2
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
-
-.. py:class:: Deck
-
-            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Card`\ ]
-
-
-            A deck of cards.
-
-
-            .. py:method:: create_standard_deck() -> Deck
-               :classmethod:
-
-
-               Create a standard 52-card deck.
-
-
-
-            .. py:method:: deal(num_players: int, cards_per_player: int) -> list[list[Card]]
-
-               Deal cards to multiple players.
-
-
-
-            .. py:method:: draw() -> Card | None
-
-               Draw the top card.
-
-
-
-            .. py:attribute:: face_down
-               :type:  bool
-               :value: True
-
-
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
-
-.. py:class:: GamePieceContainer(/, **data: Any)
-
-            Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`Generic`\ [\ :py:obj:`T`\ ]
-
-
-            Base container for game pieces.
-
-            Create a new model by parsing and validating input data from keyword arguments.
-
-            Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be
-            validated to form a valid model.
-
-            `self` is explicitly positional-only to allow `self` as a field name.
-
-
-            .. py:method:: add(piece: T, position: str = 'top') -> None
-
-               Add a piece to this container.
-
-
-
-            .. py:method:: count() -> int
-
-               Count pieces in the container.
-
-
-
-            .. py:method:: draw() -> T | None
-
-               Draw the top piece.
-
-
-
-            .. py:method:: draw_many(count: int) -> list[T]
-
-               Draw multiple pieces.
-
-
-
-            .. py:method:: filter(predicate: collections.abc.Callable[[T], bool]) -> list[T]
-
-               Filter pieces by predicate.
-
-
-
-            .. py:method:: find(predicate: collections.abc.Callable[[T], bool]) -> T | None
-
-               Find a piece matching the predicate.
-
-
-
-            .. py:method:: is_empty() -> bool
-
-               Check if container is empty.
-
-
-
-            .. py:method:: peek(count: int = 1) -> list[T]
-
-               Look at the top pieces without removing them.
-
-
-
-            .. py:method:: remove(piece_id: str) -> T | None
-
-               Remove a piece by ID.
-
-
-
-            .. py:method:: shuffle() -> None
-
-               Shuffle the pieces.
-
-
-
-            .. py:attribute:: id
-               :type:  str
-               :value: None
-
-
-
-            .. py:attribute:: name
-               :type:  str
-
-
-            .. py:attribute:: pieces
-               :type:  list[T]
-               :value: None
-
-
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
-
-.. py:class:: PlayerHand
-
-            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`T`\ ]
-
-
-            A player's hand of pieces.
-
-
-            .. py:method:: add_piece(piece: T) -> None
-
-               Add a piece to the hand and assign ownership.
-
-
-
-            .. py:method:: can_play(piece_id: str, position: Position, board: Board) -> bool
-
-               Check if a piece can be played at the given position.
-
-
-
-            .. py:method:: play_piece(piece_id: str) -> T | None
-
-               Play a piece (remove from hand).
-
-
-
-            .. py:attribute:: player_id
-               :type:  str
-
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
-
-.. py:class:: TileBag
-
-            Bases: :py:obj:`GamePieceContainer`\ [\ :py:obj:`Tile`\ ]
-
-
-            A bag of tiles (Scrabble, Mahjong).
-
-
-            .. py:method:: draw_many_random(count: int) -> list[Tile]
-
-               Draw multiple random tiles.
-
-
-
-            .. py:method:: draw_random() -> Tile | None
-
-               Draw a random tile from the bag.
-
-
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
+Module Contents
+---------------
 
 .. py:data:: T
-
-
-
-
-----
-
-.. admonition:: Quick Reference
-   :class: tip
-
-   .. code-block:: python
-
-      from games.core.game.containers.container import *
-
-      # Module provides type hints for mypy compatibility
-      # View source: https://github.com/haive-ai/haive
 

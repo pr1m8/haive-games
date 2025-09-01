@@ -3,32 +3,6 @@ games.chess.aug_llms
 
 .. py:module:: games.chess.aug_llms
 
-Chess game augmented LLM configurations module.
-
-This module provides augmented LLM configurations for the chess game, including:
-    - Move generation prompts for white and black players
-    - Position analysis prompts for both sides
-    - Structured output models for moves and analysis
-    - Pre-configured LLM configurations for easy agent setup
-
-The module provides an alternative to the engines.py approach, with a focus
-on customizability and different prompt styles for chess gameplay.
-
-.. rubric:: Example
-
->>> from haive.games.chess.aug_llms import aug_llm_configs
->>>
->>> # Access white player's move generation configuration
->>> white_config = aug_llm_configs["white_player"]
->>> white_prompt = white_config.prompt_template
-
-
-
-.. raw:: html
-   
-   <div class="autoapi-module-summary">
-<span class="module-stat">3 functions</span> • <span class="module-stat">1 attributes</span>   </div>
-
 .. autoapi-nested-parse::
 
    Chess game augmented LLM configurations module.
@@ -52,150 +26,105 @@ on customizability and different prompt styles for chess gameplay.
 
 
 
-      
+Attributes
+----------
 
-.. admonition:: Attributes (1)
-   :class: tip
+.. autoapisummary::
 
-   .. autoapisummary::
+   games.chess.aug_llms.aug_llm_configs
 
-      games.chess.aug_llms.aug_llm_configs
 
-            
-            
-            
+Functions
+---------
 
-.. admonition:: Functions (3)
-   :class: info
+.. autoapisummary::
 
-   .. autoapisummary::
+   games.chess.aug_llms.build_chess_aug_llms_per_color
+   games.chess.aug_llms.generate_analysis_prompt
+   games.chess.aug_llms.generate_move_prompt
 
-      games.chess.aug_llms.build_chess_aug_llms_per_color
-      games.chess.aug_llms.generate_analysis_prompt
-      games.chess.aug_llms.generate_move_prompt
 
-            
-
-.. dropdown:: :octicon:`book` Complete API Documentation
-   :open:
-   :class-title: sd-font-weight-bold sd-text-info
-   :class-container: sd-border-info
-
-   .. grid:: 1 2 2 3
-      :gutter: 2
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
+Module Contents
+---------------
 
 .. py:function:: build_chess_aug_llms_per_color(*, white_llm: haive.core.models.llm.base.LLMConfig | None = AzureLLMConfig(), black_llm: haive.core.models.llm.base.LLMConfig | None = DeepSeekLLMConfig()) -> dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 
-            Build LLM configs for both players and analyzers using per-color LLMs.
+   Build LLM configs for both players and analyzers using per-color LLMs.
 
-            Creates a comprehensive set of AugLLMConfig objects for chess gameplay,
-            allowing different LLM providers for white and black players.
+   Creates a comprehensive set of AugLLMConfig objects for chess gameplay,
+   allowing different LLM providers for white and black players.
 
-            :param white_llm: LLM configuration for white player and analyzer
-            :type white_llm: LLMConfig | None
-            :param black_llm: LLM configuration for black player and analyzer
-            :type black_llm: LLMConfig | None
+   :param white_llm: LLM configuration for white player and analyzer
+   :type white_llm: LLMConfig | None
+   :param black_llm: LLM configuration for black player and analyzer
+   :type black_llm: LLMConfig | None
 
-            :returns: Dictionary with configurations for all chess roles
-            :rtype: dict[str, AugLLMConfig]
+   :returns: Dictionary with configurations for all chess roles
+   :rtype: dict[str, AugLLMConfig]
 
-            .. rubric:: Examples
+   .. rubric:: Examples
 
-            >>> # Using default LLMs
-            >>> configs = build_chess_aug_llms_per_color()
-            >>> len(configs)
-            4
-            >>> sorted(list(configs.keys()))
-            ['black_analyzer', 'black_player', 'white_analyzer', 'white_player']
+   >>> # Using default LLMs
+   >>> configs = build_chess_aug_llms_per_color()
+   >>> len(configs)
+   4
+   >>> sorted(list(configs.keys()))
+   ['black_analyzer', 'black_player', 'white_analyzer', 'white_player']
 
-            >>> # Using custom LLMs
-            >>> from haive.core.models.llm.base import AnthropicLLMConfig
-            >>> configs = build_chess_aug_llms_per_color(
-            ...     white_llm=AnthropicLLMConfig(model="claude-3-opus-20240229"),
-            ...     black_llm=AnthropicLLMConfig(model="claude-3-sonnet-20240229"),
-            ... )
-            >>> configs["white_player"].llm_config.model
-            'claude-3-opus-20240229'
+   >>> # Using custom LLMs
+   >>> from haive.core.models.llm.base import AnthropicLLMConfig
+   >>> configs = build_chess_aug_llms_per_color(
+   ...     white_llm=AnthropicLLMConfig(model="claude-3-opus-20240229"),
+   ...     black_llm=AnthropicLLMConfig(model="claude-3-sonnet-20240229"),
+   ... )
+   >>> configs["white_player"].llm_config.model
+   'claude-3-opus-20240229'
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: generate_analysis_prompt(color: str) -> langchain.prompts.ChatPromptTemplate
 
-            Generate an analysis prompt for a given player color.
+   Generate an analysis prompt for a given player color.
 
-            Creates a ChatPromptTemplate with system and human messages designed
-            to elicit detailed position analysis from an LLM.
+   Creates a ChatPromptTemplate with system and human messages designed
+   to elicit detailed position analysis from an LLM.
 
-            :param color: Player color ("white" or "black")
-            :type color: str
+   :param color: Player color ("white" or "black")
+   :type color: str
 
-            :returns: A prompt template for generating chess position analysis
-            :rtype: ChatPromptTemplate
+   :returns: A prompt template for generating chess position analysis
+   :rtype: ChatPromptTemplate
 
-            .. rubric:: Examples
+   .. rubric:: Examples
 
-            >>> black_prompt = generate_analysis_prompt("black")
-            >>> isinstance(black_prompt, ChatPromptTemplate)
-            True
-            >>> "strategic themes" in black_prompt.messages[1][1]
-            True
+   >>> black_prompt = generate_analysis_prompt("black")
+   >>> isinstance(black_prompt, ChatPromptTemplate)
+   True
+   >>> "strategic themes" in black_prompt.messages[1][1]
+   True
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:function:: generate_move_prompt(color: str) -> langchain.prompts.ChatPromptTemplate
 
-            Generate a move prompt for a given player color.
+   Generate a move prompt for a given player color.
 
-            Creates a ChatPromptTemplate with system and human messages designed
-            to elicit high-quality chess moves from an LLM.
+   Creates a ChatPromptTemplate with system and human messages designed
+   to elicit high-quality chess moves from an LLM.
 
-            :param color: Player color ("white" or "black")
-            :type color: str
+   :param color: Player color ("white" or "black")
+   :type color: str
 
-            :returns: A prompt template for generating chess moves
-            :rtype: ChatPromptTemplate
+   :returns: A prompt template for generating chess moves
+   :rtype: ChatPromptTemplate
 
-            .. rubric:: Examples
+   .. rubric:: Examples
 
-            >>> white_prompt = generate_move_prompt("white")
-            >>> isinstance(white_prompt, ChatPromptTemplate)
-            True
-            >>> "UCI format" in white_prompt.messages[0][1]
-            True
+   >>> white_prompt = generate_move_prompt("white")
+   >>> isinstance(white_prompt, ChatPromptTemplate)
+   True
+   >>> "UCI format" in white_prompt.messages[0][1]
+   True
 
-
-
-      .. grid-item-card:: 
-         :class-card: sd-border-0 sd-shadow-sm
-         :class-title: sd-text-center sd-font-weight-bold
 
 .. py:data:: aug_llm_configs
-            :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
-
-
-
-
-----
-
-.. admonition:: Quick Reference
-   :class: tip
-
-   .. code-block:: python
-
-      from games.chess.aug_llms import *
-
-      # Module provides type hints for mypy compatibility
-      # View source: https://github.com/haive-ai/haive
+   :type:  dict[str, haive.core.engine.aug_llm.AugLLMConfig]
 

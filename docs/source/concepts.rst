@@ -1,12 +1,12 @@
 Core Concepts
 =============
 
-Understanding the fundamental concepts of haive-core will help you build powerful AI agent systems.
+Understanding the fundamental concepts of haive-games will help you build powerful AI gaming systems.
 
 Architecture Overview
 ---------------------
 
-haive-core provides the foundation for building AI agents with:
+haive-games provides comprehensive gaming capabilities with:
 
 - **Modular Design**: Composable components that work together
 - **Type Safety**: Full type hints and Pydantic models throughout
@@ -293,7 +293,7 @@ Create specialized engines:
 Plugin Architecture
 ~~~~~~~~~~~~~~~~~~~
 
-Extend haive-core with plugins:
+Extend haive-games with plugins:
 
 .. code-block:: python
 
