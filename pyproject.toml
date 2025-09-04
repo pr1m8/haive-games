@@ -43,8 +43,7 @@ sgfmill = "^1.1.1"
 sgfmill = "^1.1.1"
 
 [tool.poetry.group.docs.dependencies]
-# Use the shared pydevelop-docs system (contains all 43+ Sphinx extensions)
-pydevelop-docs = { path = "../../tools/pydevelop-docs", develop = true }
+# Documentation dependencies
 sphinx = "^8.2.3"
 sphinx-autoapi = "^3.6.0"
 sphinx-autodoc-typehints = "^3.1.0"
