@@ -1,6 +1,0 @@
-cell
-====
-
-.. py:module:: cell
-
-
