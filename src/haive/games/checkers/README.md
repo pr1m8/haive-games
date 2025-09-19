@@ -960,7 +960,7 @@ Contributions to the Checkers module are welcome! Please follow these guidelines
 
 ```bash
 # Clone the repository
-git clone https://github.com/haive-ai/haive
+git clone https://github.com/pr1m8/haive
 cd haive
 
 # Install dependencies

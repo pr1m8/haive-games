@@ -139,7 +139,7 @@ Next Steps
 1. **Explore Game Categories**: Check out all :doc:`game_categories`
 2. **Social Psychology Games**: Learn about :doc:`social_psychology_games`
 3. **Tournament System**: Master the :doc:`tournament_system`
-4. **Join the Community**: Visit our `GitHub repository <https://github.com/haive-ai/haive>`_
+4. **Join the Community**: Visit our `GitHub repository <https://github.com/pr1m8/haive>`_
 
 Common Patterns
 ---------------

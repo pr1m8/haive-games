@@ -1,4 +1,4 @@
-"""Sphinx configuration for haive-mcp documentation."""
+"""Sphinx configuration for haive-games documentation."""
 
 import os
 import sys
@@ -59,69 +59,141 @@ autoapi_python_use_implicit_namespaces = True
 # -- Options for HTML output -------------------------------------------------
 html_theme = "furo"
 html_static_path = ["_static"]
+html_css_files = ["custom.css"]  # Ensure our custom CSS loads
 
-html_css_files = ["custom.css"]
-
-# Furo theme configuration - Enhanced purple theme
+# Furo theme configuration - Enhanced purple theme with proper contrast
 html_theme_options = {
-    "navigation_with_keys": True,
-    "show_nav_level": 3,
-    "collapse_navigation": False,
-    "sidebar_hide_name": False, 
-    "navigation_depth": 4,
-    "show_toc_level": 3,
-    "light_css_variables": {
-        "color-brand-primary": "#8b5cf6",
-        "color-brand-content": "#7c3aed",
-        "color-sidebar-background": "#faf5ff",
-        "color-sidebar-background-border": "#e9d5ff",
+    # GitHub Integration in Header
     "announcement": (
-        '<div style="font-weight: 600;">'
+        '<div style="font-weight: 600;">' 
         '🚀 <a href="https://github.com/pr1m8/haive-games" target="_blank">Star us on GitHub</a> | '
-        '<a href="https://discord.gg/haive" target="_blank">Join Discord</a> | '
+        '<a href="https://github.com/pr1m8/haive-games/discussions" target="_blank">Join Discussions</a> | '
         '<a href="https://docs.haive.io" target="_blank">Haive Central Docs</a>'
         '</div>'
     ),
+    
+    # Source Repository Configuration
     "source_repository": "https://github.com/pr1m8/haive-games",
     "source_branch": "main",
     "source_directory": "docs/source/",
+    
+    # Enhanced Navigation Features
+    "navigation_with_keys": True,           # Keyboard navigation
+    "show_nav_level": 4,                   # Deeper navigation tree  
+    "collapse_navigation": False,           # Keep sections expanded
+    "sidebar_hide_name": False,            # Keep project name visible
+    "navigation_depth": 5,                 # More depth levels
+    "show_toc_level": 3,                   # Better table of contents
+    "show_prev_next": True,                # Navigation arrows
+    
+    # Light Mode CSS Variables - Complete contrast specifications
+    "light_css_variables": {
+        # Brand Colors
+        "color-brand-primary": "#8b5cf6",
+        "color-brand-content": "#7c3aed", 
+        
+        # Critical: Foreground/Background Pairs for Contrast
+        "color-foreground-primary": "#1f2937",      # Dark gray text
+        "color-foreground-secondary": "#6b7280",    # Medium gray text
+        "color-foreground-muted": "#9ca3af",        # Light gray text
+        "color-background-primary": "#ffffff",      # White background
+        "color-background-secondary": "#f9fafb",    # Light gray background
+        "color-background-hover": "#f3f4f6",       # Hover background
+        "color-background-border": "#e5e7eb",       # Border color
+        
+        # Sidebar - Light Mode
+        "color-sidebar-background": "#faf5ff",      # Light purple background
+        "color-sidebar-background-border": "#e9d5ff",
+        "color-sidebar-link-text": "#374151",      # Dark text for contrast
+        "color-sidebar-link-text--top-level": "#111827",  # Darker top level
+        "color-sidebar-item-background--hover": "#f3e8ff",
+        "color-sidebar-item-expander-background--hover": "#e9d5ff",
+        
+        # Content Area
+        "color-content-foreground": "#1f2937",     # Dark text on light bg
+        "color-content-background": "#ffffff",
+        
+        # Cards & Components (sphinx-design)
+        "color-card-background": "#ffffff",
+        "color-card-border": "#e5e7eb",
+        "color-card-marginals-background": "#f9fafb",
+        
+        # Code Blocks
+        "color-code-background": "#f8f9fa",
+        "color-code-foreground": "#1f2937",
+    },
+    
+    # Dark Mode CSS Variables - Complete contrast specifications  
+    "dark_css_variables": {
+        # Brand Colors
+        "color-brand-primary": "#a78bfa",
+        "color-brand-content": "#c084fc",
+        
+        # Critical: Foreground/Background Pairs for Contrast
+        "color-foreground-primary": "#f9fafb",      # Light text
+        "color-foreground-secondary": "#d1d5db",    # Medium light text
+        "color-foreground-muted": "#9ca3af",        # Muted text
+        "color-background-primary": "#0f0a1f",     # Dark purple background
+        "color-background-secondary": "#1a0f2e",    # Darker purple
+        "color-background-hover": "#2d1b45",        # Purple hover
+        "color-background-border": "#4c1d95",       # Purple border
+        
+        # Sidebar - Dark Mode  
+        "color-sidebar-background": "#14001f",      # Very dark purple
+        "color-sidebar-background-border": "#4c1d95",
+        "color-sidebar-link-text": "#e9d5ff",      # Light purple text
+        "color-sidebar-link-text--top-level": "#f3e8ff",  # Lighter top level
+        "color-sidebar-item-background--hover": "#2d0059",
+        "color-sidebar-item-expander-background--hover": "#4c1d95",
+        
+        # Content Area
+        "color-content-foreground": "#f9fafb",     # Light text on dark bg
+        "color-content-background": "#0f0a1f",
+        
+        # Cards & Components (sphinx-design)
+        "color-card-background": "#1e1b3a",
+        "color-card-border": "#4c1d95", 
+        "color-card-marginals-background": "#2d1b45",
+        
+        # Code Blocks
+        "color-code-background": "#1e0936",        # Dark purple code bg
+        "color-code-foreground": "#e9d5ff",
+    },
+    
+    # Footer Icons - GitHub & Discord Integration
     "footer_icons": [
         {
-            "name": "GitHub",
+            "name": "GitHub Repository",
             "url": "https://github.com/pr1m8/haive-games",
-            "html": '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>',
+            "html": """
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+            """,
             "class": "",
         },
         {
-            "name": "Discord",
-            "url": "https://discord.gg/haive",
-            "html": '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16"><path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"></path></svg>',
-            "class": "",
-        },
-        {
-            "name": "Haive Docs",
+            "name": "Haive Central Docs",
             "url": "https://docs.haive.io",
-            "html": '<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16"><path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/></svg>',
+            "html": """
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    <path d="M4.5 5.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+            """,
+            "class": "",
+        },
+        {
+            "name": "GitHub Discussions", 
+            "url": "https://github.com/pr1m8/haive-games/discussions",
+            "html": """
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 13.5 1h-11zm2.75 2.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V4.5h-.75a.75.75 0 0 1 0-1.5h1.5zm6.75 0a.75.75 0 0 1 .75.75v.75h.75a.75.75 0 0 1 0 1.5h-.75v.75a.75.75 0 0 1-1.5 0V5.5h-.75a.75.75 0 0 1 0-1.5h.75V3.75a.75.75 0 0 1 .75-.75zM3 7.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+            """,
             "class": "",
         },
     ],
-},
-    "dark_css_variables": {
-        "color-brand-primary": "#a78bfa",
-        "color-brand-content": "#c084fc",
-        "color-background-primary": "#0f0019",  # Very dark purple
-        "color-background-secondary": "#1a0033",  # Dark purple
-        "color-background-hover": "#2d0059",  # Purple hover
-        "color-background-border": "#4c1d95",  # Purple border
-        "color-sidebar-background": "#14001f",  # Darker purple sidebar
-        "color-sidebar-background-border": "#4c1d95",
-        "color-sidebar-link-text": "#e9d5ff",
-        "color-sidebar-link-text--top-level": "#f3e8ff",
-        "color-sidebar-item-background--hover": "#2d0059",
-        "color-sidebar-item-expander-background--hover": "#4c1d95",
-        "color-content-foreground": "#ffffff",
-        "color-code-background": "#1e0936",  # Dark purple code bg
-    },
 }
 
 # Napoleon settings
@@ -185,7 +257,7 @@ autosummary_imported_members = True
 
 # Code autolink configuration for GitHub links
 codeautolink_concat_default = True
-codeautolink_global_preface = "https://github.com/pr1m8/haive-games"
+codeautolink_global_preface = "https://github.com/pr1m8/haive-core"
 
 # MyST parser configuration for README.md files
 source_suffix = {

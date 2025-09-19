@@ -151,3 +151,10 @@ game_test_data/
 real_example_test_data/
 runs/
 **/example.py
+
+# Documentation builds
+docs/build/
+docs/source/_build/
+
+# Archives
+docs/archive/

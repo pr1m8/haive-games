@@ -74,7 +74,7 @@ Clone the Repository
 
 .. code-block:: bash
 
-   git clone https://github.com/haive-ai/haive.git
+   git clone https://github.com/pr1m8/haive.git
    cd haive/packages/haive-games
 
 Install with Poetry

@@ -266,7 +266,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 For questions and support:
 
 - 📧 Email: support@haive.ai
-- 🐛 Issues: [GitHub Issues](https://github.com/haive-ai/haive/issues)
+- 🐛 Issues: [GitHub Issues](https://github.com/pr1m8/haive/issues)
 - 📚 Documentation: [Full Documentation](https://docs.haive.ai)
 
 ## Citation
@@ -278,6 +278,6 @@ If you use Haive Games in your research, please cite:
   title={Haive Games: AI-Powered Game Implementations},
   author={Haive Team},
   year={2024},
-  url={https://github.com/haive-ai/haive}
+  url={https://github.com/pr1m8/haive}
 }
 ```

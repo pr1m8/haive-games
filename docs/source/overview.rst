@@ -292,7 +292,7 @@ Resources 📚
       Step-by-step guides and examples
 
    .. grid-item-card:: 💬 **Community**
-      :link: https://github.com/haive-ai/haive/discussions
+      :link: https://github.com/pr1m8/haive/discussions
       :link-type: url
 
       Join discussions and share strategies
@@ -301,8 +301,8 @@ Need Help? 🤝
 ------------
 
 - 📝 Check our :doc:`getting_started` for quick tutorials
-- 🐛 Found a bug? `Report it on GitHub <https://github.com/haive-ai/haive/issues>`_
-- 💡 Have a feature request? `Start a discussion <https://github.com/haive-ai/haive/discussions>`_
+- 🐛 Found a bug? `Report it on GitHub <https://github.com/pr1m8/haive/issues>`_
+- 💡 Have a feature request? `Start a discussion <https://github.com/pr1m8/haive/discussions>`_
 - 📧 Contact us at games@haive.ai
 
 .. toctree::

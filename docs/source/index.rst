@@ -402,7 +402,7 @@ Community & Support
 ~~~~~~~~~~~~~~~~~~~
 
 * **Documentation**: Comprehensive guides and research papers
-* **GitHub**: https://github.com/haive-ai/haive-games
+* **GitHub**: https://github.com/pr1m8/haive-games
 * **Discord**: Join our AI research community
 * **Research**: research@haive.ai for academic collaboration
 
