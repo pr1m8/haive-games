@@ -164,7 +164,7 @@ class BattleshipAgentConfig(AgentConfig):
         examples=[True, False],
     )
     runnable_config: RunnableConfig = Field(
-        default={"configurable": {"recursion_limit": 10000, "thread_id": None}},
+        default={"configurable": {"thread_id": None}, "recursion_limit": 10000},
         description="LangChain runnable configuration with execution parameters and thread management",
     )
     engines: dict[str, AugLLMConfig] = Field(

@@ -494,9 +494,22 @@ def run_game(agent: "GameAgent", initial_state: dict[str, Any] | None = None):
     print("\n🎮 Starting Game")
     print("=" * 50)
 
+    # Prepare config - promote recursion_limit to top level for LanGraph
+    run_config = dict(agent.runnable_config) if agent.runnable_config else {}
+    if "recursion_limit" not in run_config:
+        configurable_limit = run_config.get("configurable", {}).get("recursion_limit")
+        if configurable_limit:
+            run_config["recursion_limit"] = configurable_limit
+    # Ensure configurable has thread_id (required by checkpointer)
+    if "configurable" not in run_config:
+        run_config["configurable"] = {}
+    if "thread_id" not in run_config["configurable"] or not run_config["configurable"]["thread_id"]:
+        import uuid
+        run_config["configurable"]["thread_id"] = str(uuid.uuid4())
+
     # Stream through the game steps
     for step in agent.app.stream(
-        game_state, config=agent.runnable_config, debug=True, stream_mode="values"
+        game_state, config=run_config, debug=True, stream_mode="values"
     ):
         # Visualize the game state
         agent.visualize_state(step)

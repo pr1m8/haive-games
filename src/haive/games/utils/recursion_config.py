@@ -154,9 +154,9 @@ class RecursionConfig:
         # Update configurable settings
         configurable = runnable_config["configurable"]
 
-        # Set recursion limit (don't decrease if already higher)
-        current_limit = configurable.get("recursion_limit", 0)
-        configurable["recursion_limit"] = max(recursion_limit, current_limit)
+        # Set recursion limit at top level (LanGraph expects it there)
+        current_limit = runnable_config.get("recursion_limit", 0)
+        runnable_config["recursion_limit"] = max(recursion_limit, current_limit)
 
         # Set thread_id if not present
         if "thread_id" not in configurable and thread_id:

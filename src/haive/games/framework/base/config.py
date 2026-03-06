@@ -64,7 +64,7 @@ class GameConfig(AgentConfig):
         default=False, description="Whether to visualize the game"
     )  # Disabled by default to prevent hangs
     runnable_config: RunnableConfig = Field(
-        default={"configurable": {"recursion_limit": 10000}}
+        default={"configurable": {}, "recursion_limit": 10000}
     )
 
     class Config:

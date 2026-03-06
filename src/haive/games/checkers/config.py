@@ -241,7 +241,7 @@ class CheckersAgentConfig(AgentConfig):
     )
 
     runnable_config: RunnableConfig = Field(
-        default={"configurable": {"recursion_limit": 2000}},
+        default={"configurable": {}, "recursion_limit": 2000},
         description="Runtime configuration for the agent including recursion limits",
     )
 

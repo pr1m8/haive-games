@@ -54,17 +54,22 @@ def run_debate(
     # Create agent
     agent = DebateAgent(config)
 
+    # Build initial state with proper Topic and players
+    from haive.games.debate.models import Topic as DebateTopic
+
+    initial_state = {
+        "topic": DebateTopic(
+            title=topic,
+            description=description or f"Debate on: {topic}",
+            keywords=[w.lower() for w in topic.split() if len(w) > 3][:5],
+        ).model_dump(),
+        "players": [f"debater_{i+1}" for i in range(num_debaters)]
+                   + [f"judge_{i+1}" for i in range(num_judges)],
+    }
+
     # Run the debate
     print("Starting debate...")
-    result = agent.run(
-        input_data={
-            "topic": topic,
-            "description": description,
-            "max_rounds": max_rounds,
-            "num_debaters": num_debaters,
-            "num_judges": num_judges,
-        }
-    )
+    result = agent.run(input_data=initial_state)
 
     # Print the final transcript
     if "messages" in result:
