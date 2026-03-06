@@ -1346,7 +1346,7 @@ class Property(BaseModel):
 
     name: str = Field(
         ...,
-        min_length=3,
+        min_length=1,
         max_length=30,
         description="Official property name as displayed on the board",
         examples=[
@@ -1385,7 +1385,7 @@ class Property(BaseModel):
 
     rent: list[int] = Field(
         ...,
-        min_length=6,
+        min_length=1,
         max_length=6,
         description="Rent schedule [base, 1 house, 2 house, 3 house, 4 house, hotel]",
         examples=[
