@@ -1,7 +1,7 @@
 # src/haive/games/debate/engines.py
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.debate.models import Statement
@@ -206,7 +206,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
         "moderator": {
             "moderate": AugLLMConfig(
                 name="moderator_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_moderator_prompt(),
                 structured_output_model=Statement,
             )
@@ -214,19 +214,19 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
         "debater": {
             "statement": AugLLMConfig(
                 name="debater_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_debater_prompt(),
                 structured_output_model=Statement,
             ),
             "pro": AugLLMConfig(
                 name="pro_debater_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_debater_prompt("pro"),
                 structured_output_model=Statement,
             ),
             "con": AugLLMConfig(
                 name="con_debater_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_debater_prompt("con"),
                 structured_output_model=Statement,
             ),
@@ -234,7 +234,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
         "judge": {
             "judgment": AugLLMConfig(
                 name="judge_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_judge_prompt(),
                 structured_output_model=Statement,
             )
@@ -242,7 +242,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
         "prosecutor": {
             "statement": AugLLMConfig(
                 name="prosecutor_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_prosecutor_prompt(),
                 structured_output_model=Statement,
             )
@@ -250,7 +250,7 @@ def build_debate_engines() -> dict[str, dict[str, AugLLMConfig]]:
         "defense": {
             "statement": AugLLMConfig(
                 name="defense_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_defense_prompt(),
                 structured_output_model=Statement,
             )

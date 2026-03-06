@@ -5,7 +5,7 @@ Fixed variable naming consistency issues.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.hold_em.models import (
@@ -184,11 +184,11 @@ def build_player_engines(
         decision_model = AnthropicLLMConfig(
             model="claude-3-5-sonnet-20240620", temperature=0.7
         )
-        analysis_model = AzureLLMConfig(model="gpt-4o", temperature=0.6)
+        analysis_model = OpenAILLMConfig(model="gpt-4o", temperature=0.6)
     else:
         # Standard models for multi-way play
-        decision_model = AzureLLMConfig(model="gpt-4o", temperature=0.7)
-        analysis_model = AzureLLMConfig(model="gpt-4o", temperature=0.6)
+        decision_model = OpenAILLMConfig(model="gpt-4o", temperature=0.7)
+        analysis_model = OpenAILLMConfig(model="gpt-4o", temperature=0.6)
 
     return {
         "situation_analyzer": AugLLMConfig(
@@ -230,7 +230,7 @@ def build_player_engines(
 def build_holdem_game_engines() -> dict[str, AugLLMConfig]:
     """Build engines for the main game agent."""
     # Game management engines (if needed for complex decisions)
-    base_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)
+    base_model = OpenAILLMConfig(model="gpt-4o-mini", temperature=0.3)
 
     return {
         "game_narrator": AugLLMConfig(
@@ -364,13 +364,13 @@ def create_style_specific_engines(player_style: str) -> dict[str, AugLLMConfig]:
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=temp)
     elif player_style == "tight":
         temp = 0.4  # Lower variance for tight play
-        model = AzureLLMConfig(model="gpt-4o", temperature=temp)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=temp)
     elif player_style == "loose":
         temp = 0.9  # Higher variance for loose play
-        model = AzureLLMConfig(model="gpt-4o", temperature=temp)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=temp)
     else:
         temp = 0.7  # Balanced temperature
-        model = AzureLLMConfig(model="gpt-4o", temperature=temp)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=temp)
 
     return {
         "preflop_specialist": AugLLMConfig(

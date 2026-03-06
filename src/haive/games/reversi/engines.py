@@ -1,5 +1,5 @@
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.reversi.models import ReversiAnalysis, ReversiMove
@@ -75,25 +75,25 @@ def generate_analysis_prompt(player_symbol: str) -> ChatPromptTemplate:
 reversi_engines = {
     "B_player": AugLLMConfig(
         name="B_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
         prompt_template=generate_move_prompt("B"),
         structured_output_model=ReversiMove,
     ),
     "W_player": AugLLMConfig(
         name="W_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
         prompt_template=generate_move_prompt("W"),
         structured_output_model=ReversiMove,
     ),
     "B_analyzer": AugLLMConfig(
         name="B_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("B"),
         structured_output_model=ReversiAnalysis,
     ),
     "W_analyzer": AugLLMConfig(
         name="W_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("W"),
         structured_output_model=ReversiAnalysis,
     ),

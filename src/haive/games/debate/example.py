@@ -1,7 +1,7 @@
 # Example usage of the Multi-Agent Debate Framework
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 
 from haive.games.debate.agent import DebateAgent
 from haive.games.debate.config import DebateAgentConfig
@@ -38,15 +38,15 @@ def run_debate(
         num_judges=num_judges,
         participant_generator_llm=AugLLMConfig(
             name="participant_generator_llm",
-            llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.9}),
+            llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.9}),
         ),
         debater_llm=AugLLMConfig(
             name="debater_llm",
-            llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
+            llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
         ),
         judge_llm=AugLLMConfig(
             name="judge_llm",
-            llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.4}),
+            llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.4}),
         ),
         # state_schema=DebateState
     )

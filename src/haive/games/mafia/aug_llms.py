@@ -19,7 +19,7 @@ Example:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 # from haive.games.mafia.models import MafiaAnalysis  # TODO: Define this model
@@ -50,7 +50,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
     if analyzer_type == "suspicion":
         return AugLLMConfig(
             name="mafia_suspicion_analyzer",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=ChatPromptTemplate.from_messages(
                 [
                     (
@@ -80,7 +80,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
     if analyzer_type == "psychology":
         return AugLLMConfig(
             name="mafia_psychology_analyzer",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=ChatPromptTemplate.from_messages(
                 [
                     (
@@ -109,7 +109,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
     if analyzer_type == "strategy":
         return AugLLMConfig(
             name="mafia_strategy_analyzer",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=ChatPromptTemplate.from_messages(
                 [
                     (
@@ -140,7 +140,7 @@ def get_mafia_analyzer(analyzer_type: str) -> AugLLMConfig:
     if analyzer_type == "voting":
         return AugLLMConfig(
             name="mafia_voting_analyzer",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=ChatPromptTemplate.from_messages(
                 [
                     (

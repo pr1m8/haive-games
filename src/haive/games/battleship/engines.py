@@ -8,7 +8,7 @@ This module provides engine configurations for the Battleship game, including:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 
 from haive.games.battleship.models import Analysis, MoveCommand, ShipPlacementWrapper
 from haive.games.battleship.prompts import (
@@ -34,7 +34,7 @@ def build_battleship_engines() -> dict[str, AugLLMConfig]:
 
     """
     # Default LLM configuration
-    default_llm_config = AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.7})
+    default_llm_config = OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.7})
 
     engines = {
         "player1_ship_placement": AugLLMConfig(

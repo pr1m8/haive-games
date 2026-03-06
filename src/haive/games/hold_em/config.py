@@ -12,7 +12,7 @@ import uuid
 
 from haive.core.config.runnable import RunnableConfigManager
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
@@ -426,7 +426,7 @@ def create_fallback_engines(
     logger.info(f"🔄 Creating fallback engines for {player_name}")
 
     # Use a simple model for fallback
-    fallback_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.7)
+    fallback_model = OpenAILLMConfig(model="gpt-4o-mini", temperature=0.7)
 
     # Create minimal prompts
     simple_prompt = ChatPromptTemplate.from_messages(
@@ -487,7 +487,7 @@ def create_fallback_game_engines() -> dict[str, AugLLMConfig]:
     """Create minimal fallback game engines."""
     logger.info("🔄 Creating fallback game engines")
 
-    fallback_model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)
+    fallback_model = OpenAILLMConfig(model="gpt-4o-mini", temperature=0.3)
 
     simple_prompt = ChatPromptTemplate.from_messages(
         [

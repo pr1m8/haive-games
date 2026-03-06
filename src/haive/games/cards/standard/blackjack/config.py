@@ -1,6 +1,6 @@
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
@@ -95,13 +95,13 @@ class BlackjackAgentConfig(AgentConfig):
         return {
             "betting_engine": AugLLMConfig(
                 name="betting_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_betting_prompt(),
                 structured_output_model=BetAmount,  # Bet amount
             ),
             "player_action_engine": AugLLMConfig(
                 name="player_action_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_player_action_prompt(),
                 structured_output_model=PlayerAction,
             ),

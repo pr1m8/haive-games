@@ -7,7 +7,7 @@ and strategic way.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.tic_tac_toe.models import TicTacToeAnalysis, TicTacToeMove
@@ -94,28 +94,28 @@ def generate_analysis_prompt(player_symbol: str) -> ChatPromptTemplate:
 tictactoe_engines = {
     "X_player": AugLLMConfig(
         name="X_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
         prompt_template=generate_move_prompt("X"),
         structured_output_model=TicTacToeMove,
         structured_output_version="v1",
     ),
     "O_player": AugLLMConfig(
         name="O_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
         prompt_template=generate_move_prompt("O"),
         structured_output_model=TicTacToeMove,
         structured_output_version="v1",
     ),
     "X_analyzer": AugLLMConfig(
         name="X_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("X"),
         structured_output_model=TicTacToeAnalysis,
         structured_output_version="v1",
     ),
     "O_analyzer": AugLLMConfig(
         name="O_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("O"),
         structured_output_model=TicTacToeAnalysis,
         structured_output_version="v1",

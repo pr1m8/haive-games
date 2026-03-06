@@ -1,7 +1,7 @@
 """Engines for the Nim game."""
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.nim.models import NimAnalysis, NimMove
@@ -81,25 +81,25 @@ def generate_analysis_prompt(player: str) -> ChatPromptTemplate:
 nim_engines = {
     "player1_player": AugLLMConfig(
         name="player1_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
         prompt_template=generate_move_prompt("player1"),
         structured_output_model=NimMove,
     ),
     "player2_player": AugLLMConfig(
         name="player2_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.7}),
         prompt_template=generate_move_prompt("player2"),
         structured_output_model=NimMove,
     ),
     "player1_analyzer": AugLLMConfig(
         name="player1_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("player1"),
         structured_output_model=NimAnalysis,
     ),
     "player2_analyzer": AugLLMConfig(
         name="player2_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt("player2"),
         structured_output_model=NimAnalysis,
     ),

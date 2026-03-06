@@ -3,7 +3,7 @@
 from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -46,7 +46,7 @@ class AmongUsEngines:
         llm_config = {**default_llm_config, **(llm_config or {})}
 
         # Create Azure LLM config
-        azure_llm_config = AzureLLMConfig(**llm_config)
+        azure_llm_config = OpenAILLMConfig(**llm_config)
 
         # Create prompt templates
         crewmate_template = ChatPromptTemplate.from_messages(

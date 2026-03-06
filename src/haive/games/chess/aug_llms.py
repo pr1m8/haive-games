@@ -19,7 +19,7 @@ Example:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig, DeepSeekLLMConfig, LLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig, DeepSeekLLMConfig, LLMConfig
 from langchain.prompts import ChatPromptTemplate
 
 from haive.games.chess.models import ChessAnalysis, ChessPlayerDecision
@@ -111,7 +111,7 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
 
 def build_chess_aug_llms_per_color(
     *,
-    white_llm: LLMConfig | None = AzureLLMConfig(),
+    white_llm: LLMConfig | None = OpenAILLMConfig(),
     black_llm: LLMConfig | None = DeepSeekLLMConfig(),
 ) -> dict[str, AugLLMConfig]:
     """Build LLM configs for both players and analyzers using per-color LLMs.

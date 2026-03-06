@@ -326,7 +326,7 @@ class GameTemplateGenerator:
         from haive.games.framework.base import GameConfig
         from haive.games.models import {self.game_class_name}State, {self.game_class_name}PlayerDecision
         from haive.core.engine.aug_llm import AugLLMConfig
-        from haive.core.models.llm.azure import AzureLLMConfig
+        from haive.core.models.llm.azure import OpenAILLMConfig
         from langchain_core.prompts import ChatPromptTemplate
         from pydantic import Field
         from typing import Dict
@@ -396,13 +396,13 @@ class GameTemplateGenerator:
         aug_llm_configs = {{
             "{self.player1_name}_player": AugLLMConfig(
                 name="{self.player1_name}_player",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_move_prompt("{self.player1_name}"),
                 structured_output_model={self.game_class_name}PlayerDecision
             ),
             "{self.player2_name}_player": AugLLMConfig(
                 name="{self.player2_name}_player",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_move_prompt("{self.player2_name}"),
                 structured_output_model={self.game_class_name}PlayerDecision
             ),"""
@@ -414,13 +414,13 @@ class GameTemplateGenerator:
                 f"""
             "{self.player1_name}_analyzer": AugLLMConfig(
                 name="{self.player1_name}_analyzer",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_analysis_prompt("{self.player1_name}"),
                 structured_output_model={self.game_class_name}Analysis
             ),
             "{self.player2_name}_analyzer": AugLLMConfig(
                 name="{self.player2_name}_analyzer",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_analysis_prompt("{self.player2_name}"),
                 structured_output_model={self.game_class_name}Analysis
             ),"""

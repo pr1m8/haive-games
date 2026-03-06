@@ -6,7 +6,7 @@ analysis prompts.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.fox_and_geese.models import FoxAndGeeseAnalysis, FoxAndGeeseMove
@@ -146,28 +146,28 @@ def generate_geese_analysis_prompt() -> ChatPromptTemplate:
 fox_and_geese_engines = {
     "fox_player": AugLLMConfig(
         name="fox_player",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_fox_move_prompt(),
         structured_output_model=FoxAndGeeseMove,
         structured_output_version="v1",
     ),
     "geese_player": AugLLMConfig(
         name="geese_player",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_geese_move_prompt(),
         structured_output_model=FoxAndGeeseMove,
         structured_output_version="v1",
     ),
     "fox_analysis": AugLLMConfig(
         name="fox_analysis",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_fox_analysis_prompt(),
         structured_output_model=FoxAndGeeseAnalysis,
         structured_output_version="v1",
     ),
     "geese_analysis": AugLLMConfig(
         name="geese_analysis",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_geese_analysis_prompt(),
         structured_output_model=FoxAndGeeseAnalysis,
         structured_output_version="v1",

@@ -20,7 +20,7 @@ Example:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.mafia.models import MafiaPlayerDecisionSchema, NarratorDecisionSchema
@@ -291,7 +291,7 @@ aug_llm_configs = {
     "villager": {
         "player": AugLLMConfig(
             name="villager_player",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=generate_villager_prompt(),
             structured_output_model=MafiaPlayerDecisionSchema,
         )
@@ -299,7 +299,7 @@ aug_llm_configs = {
     "mafia": {
         "player": AugLLMConfig(
             name="mafia_player",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=generate_mafia_prompt(),
             structured_output_model=MafiaPlayerDecisionSchema,
         )
@@ -307,7 +307,7 @@ aug_llm_configs = {
     "detective": {
         "player": AugLLMConfig(
             name="detective_player",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=generate_detective_prompt(),
             structured_output_model=MafiaPlayerDecisionSchema,
         )
@@ -315,7 +315,7 @@ aug_llm_configs = {
     "doctor": {
         "player": AugLLMConfig(
             name="doctor_player",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=generate_doctor_prompt(),
             structured_output_model=MafiaPlayerDecisionSchema,
         )
@@ -323,7 +323,7 @@ aug_llm_configs = {
     "narrator": {
         "player": AugLLMConfig(
             name="narrator_player",
-            llm_config=AzureLLMConfig(model="gpt-4o"),
+            llm_config=OpenAILLMConfig(model="gpt-4o"),
             prompt_template=generate_narrator_prompt(),
             structured_output_model=NarratorDecisionSchema,
         )

@@ -12,7 +12,7 @@ with prompt templates designed to generate high-quality moves and analysis.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.checkers.models import CheckersAnalysis, CheckersPlayerDecision
@@ -187,7 +187,7 @@ def build_checkers_aug_llms() -> dict[str, AugLLMConfig]:
         <class 'haive.games.checkers.models.CheckersPlayerDecision'>
 
     """
-    default_llm_config = AzureLLMConfig(model="gpt-4o", temperature=0.7)
+    default_llm_config = OpenAILLMConfig(model="gpt-4o", temperature=0.7)
 
     return {
         "red_player": AugLLMConfig(

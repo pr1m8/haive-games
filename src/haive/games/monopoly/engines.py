@@ -10,7 +10,7 @@ including:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.monopoly.models import (
@@ -150,7 +150,7 @@ trade_decision_prompt = ChatPromptTemplate.from_messages(
 def build_monopoly_player_aug_llms() -> dict[str, AugLLMConfig]:
     """Build LLM configs for monopoly player decisions."""
     # Default LLM configuration - using Azure GPT-4
-    default_llm_config = AzureLLMConfig(model="gpt-4o", temperature=0.7)
+    default_llm_config = OpenAILLMConfig(model="gpt-4o", temperature=0.7)
 
     # Alternative: use Anthropic Claude for some decisions
     claude_llm_config = AnthropicLLMConfig(

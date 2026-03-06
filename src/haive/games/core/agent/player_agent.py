@@ -18,7 +18,7 @@ from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm import LLMConfig
 from haive.core.models.llm.base import (
     AnthropicLLMConfig,
-    AzureLLMConfig,
+    OpenAILLMConfig,
     OpenAILLMConfig,
 )
 from pydantic import BaseModel, Field
@@ -36,7 +36,7 @@ def create_llm_config(model: str, **kwargs) -> LLMConfig:
     elif "claude" in model.lower() or kwargs.get("model_provider") == "anthropic":
         return AnthropicLLMConfig(model=model, **kwargs)
     elif kwargs.get("model_provider") == "azure":
-        return AzureLLMConfig(model=model, **kwargs)
+        return OpenAILLMConfig(model=model, **kwargs)
     else:
         # Default to OpenAI
         return OpenAILLMConfig(model=model, **kwargs)

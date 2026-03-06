@@ -26,7 +26,7 @@ Examples:
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.hold_em.models import (
@@ -60,13 +60,13 @@ def get_hand_analyzer(level: str = "standard") -> AugLLMConfig:
     """
     # Select model based on complexity level
     if level == "basic":
-        model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.3)
+        model = OpenAILLMConfig(model="gpt-4o-mini", temperature=0.3)
         description = "Basic poker hand analyzer"
     elif level == "advanced":
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=0.4)
         description = "Advanced poker hand analyzer with equity calculations"
     else:  # standard
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.4)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.4)
         description = "Standard poker hand analyzer"
 
     # Create prompt with level-specific instructions
@@ -145,13 +145,13 @@ def get_opponent_profiler(tracking_depth: str = "standard") -> AugLLMConfig:
     """
     # Select model based on tracking depth
     if tracking_depth == "basic":
-        model = AzureLLMConfig(model="gpt-4o-mini", temperature=0.4)
+        model = OpenAILLMConfig(model="gpt-4o-mini", temperature=0.4)
         description = "Basic opponent profiler"
     elif tracking_depth == "deep":
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=0.5)
         description = "Deep opponent profiler with psychological modeling"
     else:  # standard
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.4)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.4)
         description = "Standard opponent profiler"
 
     # Create prompt with depth-specific instructions
@@ -233,13 +233,13 @@ def get_betting_strategist(style: str = "gto") -> AugLLMConfig:
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=0.6)
         description = "Exploitative betting strategist"
     elif style == "aggressive":
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.8)  # Higher variance
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.8)  # Higher variance
         description = "Aggressive betting strategist"
     elif style == "conservative":
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.3)  # Lower variance
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.3)  # Lower variance
         description = "Conservative betting strategist"
     else:  # gto
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.5)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.5)
         description = "GTO-based betting strategist"
 
     # Create prompt with style-specific instructions
@@ -331,7 +331,7 @@ def get_situation_analyzer(focus: str = "general") -> AugLLMConfig:
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=0.4)
         description = "Tournament situation analyzer with ICM considerations"
     else:  # general, positional, cash_game
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.4)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.4)
         description = f"{focus.capitalize()} poker situation analyzer"
 
     # Create prompt with focus-specific instructions
@@ -419,13 +419,13 @@ def get_bluff_detector(sensitivity: str = "balanced") -> AugLLMConfig:
     """
     # Select model and parameters based on sensitivity
     if sensitivity == "conservative":
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.3)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.3)
         description = "Conservative bluff detector"
     elif sensitivity == "aggressive":
         model = AnthropicLLMConfig(model="claude-3-5-sonnet-20240620", temperature=0.6)
         description = "Aggressive bluff detector"
     else:  # balanced
-        model = AzureLLMConfig(model="gpt-4o", temperature=0.4)
+        model = OpenAILLMConfig(model="gpt-4o", temperature=0.4)
         description = "Balanced bluff detector"
 
     # Create prompt with sensitivity-specific instructions
@@ -507,7 +507,7 @@ def get_table_dynamics_analyzer() -> AugLLMConfig:
         AugLLMConfig: Configured table dynamics analyzer
 
     """
-    model = AzureLLMConfig(model="gpt-4o", temperature=0.5)
+    model = OpenAILLMConfig(model="gpt-4o", temperature=0.5)
 
     prompt = ChatPromptTemplate.from_messages(
         [

@@ -17,7 +17,7 @@ import os
 from haive.core.engine.aug_llm import AugLLMConfig
 from haive.core.models.llm.base import (
     AnthropicLLMConfig,
-    AzureLLMConfig,
+    OpenAILLMConfig,
     DeepSeekLLMConfig,
     GeminiLLMConfig,
     LLMProvider,
@@ -161,7 +161,7 @@ def create_llm_config_for_provider(provider: LLMProvider, **kwargs):
         config_class = MistralLLMConfig
     else:
         # Default to Azure
-        config_class = AzureLLMConfig
+        config_class = OpenAILLMConfig
 
     # Create base configuration with default values
     base_config = {

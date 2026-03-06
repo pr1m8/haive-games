@@ -3,7 +3,7 @@
 from typing import Any
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -70,7 +70,7 @@ def create_among_us_game(
     final_game_config = {**default_game_config, **(game_config or {})}
 
     # Create LLM configuration
-    azure_llm_config = AzureLLMConfig(**final_llm_config)
+    azure_llm_config = OpenAILLMConfig(**final_llm_config)
 
     # Create prompt templates with placeholders instead of formatting them now
     # This prevents the KeyError because we're not attempting to format the

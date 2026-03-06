@@ -1,7 +1,7 @@
 # src/haive/agents/agent_games/connect4/config.py
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.connect4.models import Connect4Analysis, Connect4PlayerDecision
@@ -79,25 +79,25 @@ def generate_analysis_prompt(color: str) -> ChatPromptTemplate:
 aug_llm_configs = {
     "red_player": AugLLMConfig(
         name="red_player",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_move_prompt("red"),
         structured_output_model=Connect4PlayerDecision,
     ),
     "yellow_player": AugLLMConfig(
         name="yellow_player",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_move_prompt("yellow"),
         structured_output_model=Connect4PlayerDecision,
     ),
     "red_analyzer": AugLLMConfig(
         name="red_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_analysis_prompt("red"),
         structured_output_model=Connect4Analysis,
     ),
     "yellow_analyzer": AugLLMConfig(
         name="yellow_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o"),
+        llm_config=OpenAILLMConfig(model="gpt-4o"),
         prompt_template=generate_analysis_prompt("yellow"),
         structured_output_model=Connect4Analysis,
     ),

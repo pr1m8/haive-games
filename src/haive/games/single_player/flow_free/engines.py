@@ -6,7 +6,7 @@ position analysis in the Flow Free game.
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.single_player.flow_free.models import FlowFreeAnalysis, FlowFreeMove
@@ -110,13 +110,13 @@ Provide a detailed analysis and recommend the best next move.
 flow_free_engines = {
     "player_move": AugLLMConfig(
         name="flow_free_player",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.3}),
         prompt_template=generate_move_prompt(),
         structured_output_model=FlowFreeMove,
     ),
     "game_analyzer": AugLLMConfig(
         name="flow_free_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
+        llm_config=OpenAILLMConfig(model="gpt-4o", parameters={"temperature": 0.2}),
         prompt_template=generate_analysis_prompt(),
         structured_output_model=FlowFreeAnalysis,
     ),

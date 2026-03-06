@@ -2,7 +2,7 @@ from typing import Any
 
 from haive.core.engine.agent.agent import AgentConfig
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AzureLLMConfig
+from haive.core.models.llm.base import OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
@@ -83,13 +83,13 @@ class BullshitAgentConfig(AgentConfig):
         return {
             "claim_engine": AugLLMConfig(
                 name="claim_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_claim_prompt(),
                 structured_output_model=PlayerClaimAction,
             ),
             "challenge_engine": AugLLMConfig(
                 name="challenge_engine",
-                llm_config=AzureLLMConfig(model="gpt-4o"),
+                llm_config=OpenAILLMConfig(model="gpt-4o"),
                 prompt_template=generate_challenge_prompt(),
                 structured_output_model=ChallengeAction,
             ),

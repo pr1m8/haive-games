@@ -12,7 +12,7 @@ with prompt templates designed to generate high-quality chess moves and analysis
 """
 
 from haive.core.engine.aug_llm import AugLLMConfig
-from haive.core.models.llm.base import AnthropicLLMConfig, AzureLLMConfig
+from haive.core.models.llm.base import AnthropicLLMConfig, OpenAILLMConfig
 from langchain_core.prompts import ChatPromptTemplate
 
 from haive.games.chess.models import ChessPlayerDecision, SegmentedAnalysis
@@ -210,7 +210,7 @@ Analyze this position strategically from White's perspective.""",
 
     return AugLLMConfig(
         name="white_analyzer",
-        llm_config=AzureLLMConfig(model="gpt-4o", temperature=0.7),
+        llm_config=OpenAILLMConfig(model="gpt-4o", temperature=0.7),
         prompt_template=prompt,
         structured_output_model=SegmentedAnalysis,
         description="White position analysis",
