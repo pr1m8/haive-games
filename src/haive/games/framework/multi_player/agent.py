@@ -128,11 +128,9 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         and can be overridden for custom game flows.
 
         """
-        # Use DynamicGraph to build the workflow
-        graph_builder = DynamicGraph(
-            components=[],  # Not using components directly here
-            state_schema=self.config.state_schema,
-        )
+        from langgraph.graph import StateGraph as LGStateGraph
+
+        graph_builder = LGStateGraph(self.config.state_schema)
 
         # Add the phase nodes
         graph_builder.add_node("initialize_game", self.initialize_game)
@@ -141,9 +139,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         graph_builder.add_node("phase_transition", self.handle_phase_transition)
         graph_builder.add_node("end_game", self.handle_end_game)
 
-        # Standard flow:
-        # Start -> Initialize -> Setup -> Player Turns -> Phase Transitions ->
-        # End
+        # Standard flow
         graph_builder.add_edge(START, "initialize_game")
         graph_builder.add_edge("initialize_game", "setup_phase")
 
@@ -154,8 +150,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             {True: "player_turn", False: "end_game"},
         )
 
-        # Player turn can continue with next player, go to phase transition, or
-        # end
+        # Player turn can continue with next player, go to phase transition, or end
         graph_builder.add_conditional_edges(
             "player_turn",
             self.determine_next_step_after_player_turn,
@@ -176,8 +171,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         # End game goes to END
         graph_builder.add_edge("end_game", END)
 
-        # Build the graph
-        self.graph = graph_builder.build()
+        # Store as the graph for compilation
+        self.graph = graph_builder
 
     def get_player_role(self, state: MultiPlayerGameState, player_id: str) -> str:
         """Get the role of a player, handling case sensitivity.

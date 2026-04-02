@@ -175,6 +175,14 @@ class AmongUsState(MultiPlayerGameState):
         default_factory=dict,
         description="Player information mapping IDs to PlayerState objects",
     )
+
+    @property
+    def roles(self) -> dict[str, str]:
+        """Map player IDs to role strings for framework compatibility."""
+        return {
+            pid: pstate.role.value.upper() if hasattr(pstate.role, "value") else str(pstate.role).upper()
+            for pid, pstate in self.player_states.items()
+        }
     tasks: dict[str, Task] = Field(
         default_factory=dict,
         description="Task registry mapping task IDs to Task objects",

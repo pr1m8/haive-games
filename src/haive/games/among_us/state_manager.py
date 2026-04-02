@@ -282,6 +282,12 @@ class AmongUsStateManagerMixin(MultiPlayerGameStateManager[AmongUsState]):
         state.impostor_count = num_impostors
         state.crewmate_count = num_players - num_impostors
 
+        # Populate roles dict for framework compatibility
+        state.roles = {
+            pname: ps.role.value.upper() if hasattr(ps.role, "value") else str(ps.role).upper()
+            for pname, ps in player_states.items()
+        }
+
         return state
 
     @classmethod

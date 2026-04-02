@@ -77,6 +77,10 @@ class MultiPlayerGameState(BaseModel):
         default_factory=dict, description="Public game state visible to all players"
     )
     error_message: str | None = Field(default=None, description="Error message if any")
+    roles: dict[str, str] = Field(
+        default_factory=dict,
+        description="Mapping of player IDs to their roles",
+    )
 
     class Config:
         arbitrary_types_allowed = True
