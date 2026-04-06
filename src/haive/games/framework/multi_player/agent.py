@@ -128,9 +128,10 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         and can be overridden for custom game flows.
 
         """
-        from langgraph.graph import StateGraph as LGStateGraph
-
-        graph_builder = LGStateGraph(self.config.state_schema)
+        graph_builder = DynamicGraph(
+            components=[],
+            state_schema=self.config.state_schema,
+        )
 
         # Add the phase nodes
         graph_builder.add_node("initialize_game", self.initialize_game)
@@ -171,8 +172,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         # End game goes to END
         graph_builder.add_edge("end_game", END)
 
-        # Store as the graph for compilation
-        self.graph = graph_builder
+        # Build the graph
+        self.graph = graph_builder.build()
 
     def get_player_role(self, state: MultiPlayerGameState, player_id: str) -> str:
         """Get the role of a player, handling case sensitivity.
