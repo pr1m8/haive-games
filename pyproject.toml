@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "haive-games"
 version = "1.0.0"
-description = "haive-games for Haive framework"
+description = "LLM-powered game agents for chess, Go, poker, social deduction, and 20+ other games"
 authors = ["pr1m8 <william.astley@algebraicwealth.com>"]
 license = "MIT"
 readme = "README.md"

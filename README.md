@@ -1,350 +1,94 @@
 # haive-games
-> **LLM-powered games for agent evaluation, learning, and fun.**  
-> A curated suite of game environments + AI agents built on the Haive framework.
 
-[![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](#license)
-[![Haive](https://img.shields.io/badge/powered%20by-haive-7c3aed.svg)](https://tinyurl.com/haive-games)
-[![Rich](https://img.shields.io/badge/ui-rich-10b981.svg)](https://github.com/Textualize/rich)
-[![LangGraph](https://img.shields.io/badge/workflows-langgraph-f97316.svg)](https://github.com/langchain-ai/langgraph)
+[![PyPI version](https://img.shields.io/pypi/v/haive-games.svg)](https://pypi.org/project/haive-games/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/haive-games.svg)](https://pypi.org/project/haive-games/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/pr1m8/haive-games/actions/workflows/ci.yml/badge.svg)](https://github.com/pr1m8/haive-games/actions/workflows/ci.yml)
+[![Docs](https://github.com/pr1m8/haive-games/actions/workflows/docs.yml/badge.svg)](https://pr1m8.github.io/haive-games/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/haive-games.svg)](https://pypi.org/project/haive-games/)
 
----
+**LLM-powered game agents** for chess, Go, poker, social deduction, and 20+ other games.
 
-## 🚧 Status: Under Active Development
+A curated suite of game environments where LLM agents play against each other (or themselves). Each game has a state manager, role-based player agents, and a unified workflow.
 
-**haive-games is currently being migrated to the latest Haive framework APIs.**  
-Expect breaking changes while the package converges on the unified Haive runtime + agent protocol standards.
-
-- ✅ Core games and agents are usable today  
-- 🔄 APIs, configs, and imports may change during migration  
-- 🧪 Test coverage is expanding (no-mocks, real integration focus)
-
----
-
-## 🎯 Overview
-
-**Haive Games** is a comprehensive collection of **LLM-powered game agents** and **game environments** designed for:
-
-- **Agent evaluation** in structured, rule-based settings  
-- **Strategy + reasoning demonstrations** (planning, deduction, imperfect information)  
-- **Multi-agent coordination experiments** (teams, tournaments, meta-controllers)  
-- **Developer examples** of Haive patterns (state machines, tool use, graph workflows)
-
-**Highlights**
-
-- ✅ **22+ complete games** with consistent APIs  
-- 🤖 **LLM-powered players** with configurable personalities and difficulty  
-- 🎛️ **Rich terminal UI** with state visualization  
-- 🏟️ **Tournament mode** for benchmarking and comparisons  
-- 📊 **Metrics + telemetry hooks** (timing, turns, decisions)
-
-**Project link:** https://tinyurl.com/haive-games
-
----
-
-## 📦 Installation
-
-### From PyPI
+## Installation
 
 ```bash
 pip install haive-games
+
+# For Chess support:
+pip install haive-games[games-chess]
+
+# For Go support:
+pip install haive-games[go]
 ```
 
-### With Poetry
+## Features
 
-```bash
-poetry add haive-games
-```
+### 🎮 23 Working Games
 
-### From source (monorepo)
+**Two-player board games:**
+- ♟️ Chess, Go, Checkers, Connect4, Reversi, Tic Tac Toe
+- 🎲 Mancala, Nim, Fox and Geese, Battleship, Mastermind
 
-```bash
-cd haive/packages/haive-games
-pip install -e .
-```
+**Multi-player social/strategy:**
+- 🕵️ Among Us, Mafia, Clue, Debate
+- 🃏 Poker, Hold'em, Dominoes
+- 🌍 Risk
 
----
+**Single-player puzzles:**
+- 🟢 Flow Free, Wordle, Rubiks, 2048, Towers of Hanoi
 
-## 🚀 Quick Start
+### 🏗️ Framework
+- **GameAgent** — base class for all game agents
+- **GameStateManager[T]** — generic state transitions (initialize, apply_move, get_legal_moves, check_game_status)
+- **MultiPlayerGameAgent** — role-based multi-player coordination
 
-Below is a minimal example showing how to run two games with LLM-driven agents.
+## Quick Start
 
 ```python
-from haive.games.chess import ChessAgent, ChessConfig
-from haive.games.checkers import CheckersAgent, CheckersAgentConfig
-from haive.core.models.llm.configs import LLMConfig
+from haive.games.chess.agent import ChessAgent
+from haive.games.chess.config import ChessConfig
+from haive.core.engine.aug_llm import AugLLMConfig
 
-# 1) Configure LLMs for players
-llm_config = LLMConfig(
-    model="gpt-4",
-    temperature=0.7,
-    max_tokens=1000,
-)
-
-# 2) Chess
-chess_config = ChessConfig(
-    aug_llm_configs={
-        "white_player": llm_config,
-        "black_player": llm_config,
-    }
-)
-
-chess_agent = ChessAgent(chess_config)
-chess_result = chess_agent.run_game(visualize=True)
-
-# 3) Checkers
-checkers_config = CheckersAgentConfig(
-    aug_llm_configs={
-        "player1": llm_config,
-        "player2": llm_config,
-    }
-)
-
-checkers_agent = CheckersAgent(checkers_config)
-checkers_result = checkers_agent.run_game(visualize=True)
-
-print(f"Chess winner: {chess_result.get('winner')}")
-print(f"Checkers winner: {checkers_result.get('winner')}")
-```
-
----
-
-## 🗂️ Game Catalog
-
-haive-games includes a wide variety of games across multiple difficulty levels and reasoning types.
-
-### 🏆 Classic Board Games
-
-- **Chess** — FEN support, strategic analysis, configurable personalities  
-- **Checkers** — mandatory jumps, king promotion, rich UI  
-- **Go** — territory control and capture mechanics  
-- **Reversi (Othello)** — flipping mechanics + positional play  
-- **Clue** — mystery deduction and hypothesis tracking
-
-### 🎯 Strategy Games
-
-- **Tic-Tac-Toe** — position evaluation + forced wins  
-- **Connect 4** — gravity-based tactics and win detection  
-- **Battleship** — hidden placement, targeting, information gathering  
-- **Risk** — territorial control + dice combat  
-- **Mancala** — sowing/capture mechanics
-
-### 🃏 Card Games
-
-- **Poker** — Texas Hold’em + bluffing + hand evaluation  
-- **Texas Hold’em (advanced)** — tournaments + deeper betting model  
-- **Blackjack** — probabilistic play + strategy variants
-
-### 🎭 Social Deduction
-
-- **Among Us** — tasks, deception, voting mechanics  
-- **Mafia / Werewolf** — role-based day/night play
-
-### 🧩 Puzzle & Logic
-
-- **Mastermind** — code-breaking via deduction  
-- **Nim** — mathematical optimal play  
-- **Fox and Geese** — asymmetric strategy
-
-### 🏢 Economic
-
-- **Monopoly** — trading + development + risk management
-
-### 🎨 Other
-
-- **Dominoes** — tile-matching variants  
-- **Debate** — structured argumentation + scoring/judging
-
----
-
-## 🧠 How the Games Are Built
-
-Each game follows a consistent architecture designed for reuse and extensibility:
-
-```
-Game Agent (e.g., ChessAgent)
-├── Configuration (GameConfig)
-├── State Management (GameState, reducers, history)
-├── Player Engines (LLM configs / providers)
-├── Rules + Validation (legal actions, win conditions)
-├── UI Layer (Rich rendering, progress, panels)
-└── Workflow (graph-based game loop / stages)
-```
-
-### Core Components
-
-1. **Agent Controller**  
-   Orchestrates the game loop and delegates decisions to players.
-
-2. **State System**  
-   Tracks turns, legal moves, history, and derived information.
-
-3. **Player Engines**  
-   Configurable LLM-backed players (temperature, prompts, tool access).
-
-4. **UI/Visualization**  
-   Rich terminal UI for live play and debugging.
-
----
-
-## 🏟️ Tournament Mode
-
-Run multiple games repeatedly to compare agents, prompts, or models.
-
-```python
-from haive.games.tournament import Tournament
-
-tournament = Tournament([
-    (ChessAgent, chess_config),
-    (CheckersAgent, checkers_config),
-    # (ClueAgent, clue_config),
-])
-
-results = tournament.run(rounds=10)
-
-print(f"Tournament winner: {results.winner}")
-print(f"Leaderboard:\n{results.leaderboard}")
-```
-
----
-
-## 🎭 AI Personalities & Difficulty
-
-Tune player behavior by adjusting LLM configuration:
-
-```python
-from haive.core.models.llm.configs import LLMConfig
-
-aggressive = LLMConfig(
-    model="gpt-4",
-    temperature=0.9,
-    system_prompt="Play aggressively. Take calculated risks and pressure opponents."
-)
-
-defensive = LLMConfig(
-    model="gpt-4",
-    temperature=0.3,
-    system_prompt="Play defensively. Avoid losing positions and prioritize safety."
-)
-
-analyzer = LLMConfig(
-    model="gpt-4",
-    temperature=0.1,
-    system_prompt="Be objective. Evaluate positions carefully and explain key ideas."
-)
-```
-
----
-
-## 📊 Metrics & Monitoring
-
-Many games can collect timing and decision metadata:
-
-```python
 config = ChessConfig(
-    aug_llm_configs=llm_configs,
-    enable_analysis=True,
-    log_level="DEBUG",
-    collect_metrics=True,
+    aug_llm_configs={
+        "white": AugLLMConfig(temperature=0.3),
+        "black": AugLLMConfig(temperature=0.3),
+    }
 )
 
 agent = ChessAgent(config)
 result = agent.run_game()
-
-metrics = result.get("metrics", {})
-print("avg_move_time:", metrics.get("avg_move_time"))
-print("analysis_calls:", metrics.get("analysis_calls"))
 ```
 
----
-
-## 🧪 Testing
-
-haive-games follows a **production-style testing approach**, favoring real components whenever possible.
+## Run a Demo
 
 ```bash
-# Run all tests
-poetry run pytest packages/haive-games/tests/ -v
+# Two-player games
+poetry run python demos/games/14_chess.py
+poetry run python demos/games/31_tic_tac_toe.py
+poetry run python demos/games/33_checkers.py
 
-# Run a specific game test suite
-poetry run pytest packages/haive-games/tests/test_chess/ -v
+# Multi-player social
+poetry run python demos/games/28_among_us.py
+poetry run python demos/games/41_mafia.py
+
+# Single-player puzzles
+poetry run python demos/games/45_flow_free.py
 ```
 
-Lint / format:
+## Documentation
 
-```bash
-poetry run ruff check packages/haive-games/src/
-poetry run black packages/haive-games/src/
-```
+📖 **Full documentation:** https://pr1m8.github.io/haive-games/
 
----
+## Related Packages
 
-## 📁 Package Structure
+| Package | Description |
+|---------|-------------|
+| [haive-core](https://pypi.org/project/haive-core/) | Foundation: engines, graphs |
+| [haive-agents](https://pypi.org/project/haive-agents/) | Production agents |
 
-```
-haive-games/
-├── src/haive/games/           # Game implementations
-│   ├── chess/
-│   ├── checkers/
-│   ├── go/
-│   ├── among_us/
-│   ├── mafia/
-│   └── ...
-├── examples/                  # Demo scripts and usage patterns
-├── tests/                     # Game + integration tests
-└── project_docs/              # Guides, architecture notes, and references
-```
+## License
 
----
-
-## 🧩 Adding a New Game
-
-1. Create a game directory:
-   `src/haive/games/your_game/`
-
-2. Implement the required components:
-   - `agent.py` — main controller
-   - `config.py` — configuration models
-   - `state.py` — state + reducers + transitions
-   - `models.py` — structured models used by state/actions
-   - `README.md` — game docs + examples
-
-3. Add tests:
-   `tests/test_your_game/`
-
-4. Register it in the package index (if applicable)
-
----
-
-## 🗺️ Roadmap
-
-- 🎛️ Unified agent config for all games
-- 🧠 Better evaluation harness + standardized metrics output
-- 🏟️ Multi-league tournaments (ELO / TrueSkill)
-- 🖥️ Optional web UI for select games
-- 🔌 Tight integration with Haive MCP + tool ecosystems
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome:
-
-1. Fork the repository  
-2. Create a feature branch  
-3. Add tests for changes  
-4. Ensure formatting + lint passes  
-5. Open a PR
-
----
-
-## 📄 License
-
-MIT License — see `LICENSE`.
-
----
-
-## 🔗 Support
-
-- Issues: open a GitHub issue on the Haive monorepo (or relevant package repo)
-- Docs: see the Haive documentation hub
+MIT © [pr1m8](https://github.com/pr1m8)
