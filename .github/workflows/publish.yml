@@ -9,11 +9,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/haive-games/
     permissions:
-      id-token: write  # Required for PyPI trusted publishing (OIDC)
+      id-token: write  # For PyPI trusted publishing (OIDC)
       contents: read
 
     steps:
@@ -33,7 +30,17 @@ jobs:
       - name: Build package
         run: poetry build
 
-      - name: Publish to PyPI
+      - name: Publish to PyPI (trusted publisher)
+        if: vars.USE_TRUSTED_PUBLISHER == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
+
+      - name: Publish to PyPI (token)
+        if: vars.USE_TRUSTED_PUBLISHER != 'true'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          pip install twine
+          twine upload --skip-existing dist/*
