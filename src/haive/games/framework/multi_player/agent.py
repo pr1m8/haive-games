@@ -128,9 +128,8 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         and can be overridden for custom game flows.
 
         """
-        # Use DynamicGraph to build the workflow
         graph_builder = DynamicGraph(
-            components=[],  # Not using components directly here
+            components=[],
             state_schema=self.config.state_schema,
         )
 
@@ -141,9 +140,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
         graph_builder.add_node("phase_transition", self.handle_phase_transition)
         graph_builder.add_node("end_game", self.handle_end_game)
 
-        # Standard flow:
-        # Start -> Initialize -> Setup -> Player Turns -> Phase Transitions ->
-        # End
+        # Standard flow
         graph_builder.add_edge(START, "initialize_game")
         graph_builder.add_edge("initialize_game", "setup_phase")
 
@@ -154,8 +151,7 @@ class MultiPlayerGameAgent(Agent[MultiPlayerGameConfig], Generic[T]):
             {True: "player_turn", False: "end_game"},
         )
 
-        # Player turn can continue with next player, go to phase transition, or
-        # end
+        # Player turn can continue with next player, go to phase transition, or end
         graph_builder.add_conditional_edges(
             "player_turn",
             self.determine_next_step_after_player_turn,
