@@ -49,8 +49,18 @@ autoapi_own_page_level = "module"  # Module-level pages like haive-mcp
 autoapi_member_order = "groupwise"
 autoapi_generate_api_docs = True
 
-# Skip problematic patterns  
+# Skip problematic patterns
 autoapi_ignore = ["**/test_*.py", "**/tests/*", "**/*_test.py"]
+
+# Mock optional dependencies to prevent import errors during docs build
+autodoc_mock_imports = [
+    "langchain_openai",
+    "langchain_community",
+    "langchain_huggingface",
+    "sentence_transformers",
+    "torch",
+    "faiss",
+]
 
 # Enable both AutoAPI and autosummary to work together
 autoapi_python_class_content = "both"  # Include both class and __init__ docstrings
